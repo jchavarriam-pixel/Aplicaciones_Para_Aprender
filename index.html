@@ -385,6 +385,85 @@
     }
   </style>
 </head>
+
+<div id="registroModal" class="modal">
+  <div class="modal-contenido">
+    <h2>Registro de visita</h2>
+    <p>Ingresa tu nombre para continuar:</p>
+
+    <input type="text" id="nombreVisitante" placeholder="Tu nombre" />
+
+    <button onclick="registrarNombre()">Continuar</button>
+
+    <p id="mensajeError" class="error"></p>
+  </div>
+</div>
+
+<style>
+  .modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+
+  .modal-contenido {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 360px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+  }
+
+  .modal-contenido input {
+    width: 90%;
+    padding: 10px;
+    margin: 15px 0;
+    font-size: 16px;
+  }
+
+  .modal-contenido button {
+    padding: 10px 18px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .error {
+    color: red;
+    font-size: 14px;
+  }
+</style>
+
+<script>
+  const URL_GOOGLE_SCRIPT = "https://script.google.com/macros/s/AKfycbw9SRtTnUTYh77hwsxCcXexNkeYEO5AzjiGZaLKCpWW9amMOmtmzi9OnSUVsoQjLRw3Fg/exec";
+
+  function registrarNombre() {
+    const nombre = document.getElementById("nombreVisitante").value.trim();
+    const error = document.getElementById("mensajeError");
+
+    if (!nombre) {
+      error.textContent = "Por favor ingresa tu nombre.";
+      return;
+    }
+
+    const datos = new FormData();
+    datos.append("nombre", nombre);
+
+    fetch(URL_GOOGLE_SCRIPT, {
+      method: "POST",
+      body: datos,
+      mode: "no-cors"
+    });
+
+    document.getElementById("registroModal").style.display = "none";
+  }
+</script>
+
 <body>
   <div class="decoracion" aria-hidden="true">
     <div class="burbuja"></div>
