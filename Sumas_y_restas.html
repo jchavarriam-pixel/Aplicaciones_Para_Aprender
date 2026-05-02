@@ -1,0 +1,1458 @@
+<!doctype html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sumas y Restas</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; width: 100%; font-family: 'Nunito', sans-serif; overflow: auto; }
+    body { background: linear-gradient(135deg, #fef9c3 0%, #fbcfe8 50%, #c4b5fd 100%); }
+
+    .app-wrapper { width: 100%; min-height: 100%; display: flex; flex-direction: column; align-items: center; padding: 16px; }
+
+    .menu-screen { text-align: center; padding: 40px 20px; max-width: 560px; width: 100%; }
+    .menu-screen h1 { font-size: 3rem; font-weight: 900; color: #7c3aed; margin-bottom: 12px; text-shadow: 3px 3px 0 rgba(255,255,255,0.5), 6px 6px 12px rgba(0,0,0,0.1); letter-spacing: -1px; }
+    .menu-screen p { font-size: 1.15rem; color: #6b21a8; margin-bottom: 24px; font-weight: 700; }
+
+    .mode-section, .level-section {
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 24px 20px;
+      margin: 10px 0;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      width: 100%;
+    }
+    .mode-title, .level-title { font-size: 1.1rem; color: #7c3aed; font-weight: 800; margin-bottom: 14px; text-align: center; }
+    .mode-buttons, .level-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; }
+    .mode-btn, .level-btn-grid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 12px;
+      border: 3px solid #c4b5fd;
+      background: #fff;
+      border-radius: 16px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #7c3aed;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-height: 90px;
+      text-align: center;
+    }
+    .mode-btn:hover, .level-btn-grid:hover { transform: translateY(-4px); box-shadow: 0 6px 16px rgba(124, 58, 237, 0.25); border-color: #a78bfa; }
+    .mode-btn.active, .level-btn-grid.active { background: linear-gradient(135deg, #7c3aed, #a855f7); color: #fff; border-color: #a855f7; box-shadow: 0 8px 24px rgba(124, 58, 237, 0.4); transform: scale(1.05); }
+    .mode-btn-emoji, .level-btn-grid-emoji { font-size: 1.8rem; margin-bottom: 4px; display: block; }
+    .mode-btn-text, .level-btn-grid-text { font-size: 0.85rem; line-height: 1.2; }
+    .config-note { margin-top: 8px; font-size: 0.88rem; color: #7e22ce; font-weight: 700; }
+
+    .game-screen { width: 100%; max-width: 640px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .top-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: wrap; gap: 8px; }
+    .top-bar h2 { font-size: 1.25rem; color: #7c3aed; font-weight: 800; }
+    .score-badge { background: #7c3aed; color: #fff; padding: 6px 16px; border-radius: 50px; font-size: 1rem; font-weight: 800; }
+
+    .board { background: #fff; border-radius: 24px; padding: 24px 20px 20px; width: 100%; box-shadow: 0 4px 24px rgba(124,58,237,0.12); position: relative; }
+    .hint-bar { background: #fef3c7; border-radius: 12px; padding: 10px 14px; font-size: 1rem; color: #92400e; font-weight: 700; text-align: center; margin-bottom: 12px; min-height: 42px; }
+    .columns-container { display: flex; justify-content: center; align-items: flex-start; gap: 0; position: relative; }
+    .col { display: flex; flex-direction: column; align-items: center; width: 68px; position: relative; padding: 0 2px; }
+    .col.active-col { background: #ede9fe; border-radius: 12px; }
+    .borrow-zone { height: 34px; position: relative; display: flex; align-items: center; justify-content: center; width: 100%; }
+    .digit-cell { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; font-size: 2.2rem; font-weight: 900; color: #1e1b4b; }
+    .digit-cell.crossed::before { content: ''; position: absolute; width: 65%; height: 3px; background: #a0a0a0; top: 55%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); z-index: 2; }
+    .digit-cell.crossed { color: #a0a0a0; }
+    .digit-new { position: absolute; top: -28px; left: 50%; transform: translateX(-50%); text-align: center; font-size: 1.5rem; color: #dc2626; font-weight: 900; white-space: nowrap; z-index: 3; }
+
+    .carry-cell {
+      width: 28px;
+      height: 28px;
+      border: 3px dashed #f59e0b;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: #b45309;
+      background: #fff7ed;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .carry-cell.filled { border-style: solid; border-color: #f59e0b; background: #ffedd5; }
+    .carry-cell.correct { border-color: #10b981; background: #d1fae5; color: #065f46; }
+    .carry-cell.wrong { border-color: #ef4444; background: #fee2e2; color: #991b1b; }
+    .carry-cell.drop-hover { border-color: #7c3aed; background: #ede9fe; }
+    .carry-placeholder { width: 28px; height: 28px; }
+
+    .sign-col { width: 64px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; }
+    .sign-col .sign-spacer { height: 56px; width: 100%; }
+    .sign-col .sign {
+      font-size: 4rem;
+      font-weight: 900;
+      height: 56px;
+      width: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      border-radius: 14px;
+    }
+    .sign-col.addition .sign { color: #2563eb; }
+    .sign-col.subtraction .sign { color: #7f1d1d; }
+    .sign-col .sign.sign-minus { font-size: 0; }
+    .sign-col .sign.sign-minus .minus-line {
+      display: block;
+      width: 42px;
+      height: 6px;
+      border-radius: 999px;
+      background: #7f1d1d;
+    }
+    .blank-cell {
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: transparent;
+      background: transparent;
+      border: none;
+    }
+
+    .line-sep { width: 100%; height: 4px; background: #7c3aed; border-radius: 2px; margin: 4px 0 8px; }
+
+    .answer-cell {
+      width: 56px;
+      height: 56px;
+      border: 3px dashed #c4b5fd;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #7c3aed;
+      background: #f5f3ff;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .answer-cell.filled { border-style: solid; border-color: #7c3aed; background: #ede9fe; }
+    .answer-cell.correct { border-color: #10b981; background: #d1fae5; color: #065f46; }
+    .answer-cell.wrong { border-color: #ef4444; background: #fee2e2; color: #991b1b; }
+    .answer-cell.drop-hover { border-color: #f59e0b; background: #fef3c7; }
+
+    .bank-label { font-size: 1rem; color: #6b21a8; font-weight: 800; text-align: center; }
+    .number-bank { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 8px 0; }
+    .bank-chip { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 900; color: #fff; cursor: grab; user-select: none; -webkit-user-select: none; touch-action: none; transition: transform 0.1s; }
+    .bank-chip:active { transform: scale(0.92); cursor: grabbing; }
+    .bank-chip.c0 { background: #ef4444; } .bank-chip.c1 { background: #f97316; }
+    .bank-chip.c2 { background: #eab308; } .bank-chip.c3 { background: #22c55e; }
+    .bank-chip.c4 { background: #14b8a6; } .bank-chip.c5 { background: #3b82f6; }
+    .bank-chip.c6 { background: #6366f1; } .bank-chip.c7 { background: #8b5cf6; }
+    .bank-chip.c8 { background: #ec4899; } .bank-chip.c9 { background: #f43f5e; }
+
+    .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; width: 100%; }
+    .act-btn { padding: 12px 18px; border: none; border-radius: 16px; font-family: 'Nunito', sans-serif; font-size: 1rem; font-weight: 800; cursor: pointer; transition: transform 0.12s, opacity 0.2s; color: #fff; }
+    .act-btn:hover { transform: scale(1.05); }
+    .act-btn:disabled { opacity: 0.4; cursor: default; transform: none; }
+    .act-btn.borrow { background: #f59e0b; padding: 16px 28px; font-size: 1.15rem; }
+    .act-btn.check { background: #10b981; } .act-btn.new-game { background: #6366f1; } .act-btn.reset { background: #ec4899; }
+    .act-btn.back { background: #94a3b8; } .act-btn.help-toggle { background: #0ea5e9; }
+
+    .board .borrow-btn-container { position: absolute; top: 50%; right: 10px; transform: translateY(-50%); }
+    .board .borrow-btn-container .act-btn.borrow {
+      padding: 8px 6px;
+      font-size: 0.85rem;
+      width: 78px;
+      height: 60px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+      white-space: normal;
+      line-height: 1.1;
+      text-align: center;
+    }
+
+    .feedback { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 100; pointer-events: none; opacity: 0; transition: opacity 0.3s; }
+    .feedback.show { opacity: 1; pointer-events: auto; }
+    .feedback-card { background: #fff; border-radius: 28px; padding: 36px 28px; text-align: center; box-shadow: 0 12px 40px rgba(0,0,0,0.2); max-width: 360px; width: 90%; }
+    .feedback-card h3 { font-size: 2rem; margin-bottom: 8px; }
+    .feedback-card p { font-size: 1.15rem; color: #555; margin-bottom: 20px; font-weight: 700; }
+    .feedback-expression { font-size: 2.15rem; line-height: 1.1; color: #312e81; font-weight: 900; margin: 10px 0 16px; }
+    .feedback-note { font-size: 1.1rem; color: #555; margin-bottom: 20px; font-weight: 700; }
+    .feedback-card button { padding: 14px 28px; border: none; border-radius: 16px; font-family: 'Nunito', sans-serif; font-size: 1.1rem; font-weight: 800; color: #fff; background: #7c3aed; cursor: pointer; }
+
+    .drag-ghost { position: fixed; pointer-events: none; z-index: 200; width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 900; color: #fff; opacity: 0.9; transform: translate(-50%, -50%); }
+
+    @keyframes stars-explode {
+      0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
+      100% { transform: translate(var(--tx), var(--ty)) rotate(360deg) scale(0); opacity: 0; }
+    }
+    @keyframes pulse-highlight {
+      0%, 100% { background: #ede9fe; }
+      50% { background: #ddd6fe; }
+    }
+    .success-animation { position: fixed; pointer-events: none; z-index: 300; font-size: 3rem; }
+    .footer-credit { text-align: center; padding: 16px; font-size: 0.85rem; color: #9333ea; font-weight: 600; margin-top: 20px; }
+
+    .col.audio-highlight, .carry-cell.audio-highlight, .answer-cell.audio-highlight { background: #ede9fe !important; border-radius: 12px !important; }
+    .sign-col.audio-highlight .sign { background: #ede9fe; border-radius: 12px; width: 56px; height: 56px; padding: 0; box-sizing: border-box; animation: pulse-highlight 1s ease-in-out infinite; }
+    .sign-col.audio-highlight .sign.sign-minus .minus-line { width: 42px; height: 6px; }
+
+    @media (max-width: 520px) {
+      .mode-buttons, .level-buttons { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 420px) {
+      .col { width: 50px; }
+      .digit-cell, .answer-cell { width: 44px; height: 44px; font-size: 1.6rem; }
+      .carry-cell { width: 24px; height: 24px; font-size: 1rem; }
+      .bank-chip { width: 44px; height: 44px; font-size: 1.5rem; }
+      .sign-col { width: 40px; }
+      .sign-col .sign-spacer { height: 44px; }
+      .sign-col .sign { font-size: 2.8rem; width: 44px; height: 44px; }
+      .sign-col .sign.sign-minus .minus-line { width: 32px; height: 5px; }
+      .sign-col.audio-highlight .sign { width: 44px; height: 44px; }
+      .sign-col.audio-highlight .sign.sign-minus .minus-line { width: 32px; height: 5px; }
+      .blank-cell { width: 44px; height: 44px; }
+      .feedback-expression { font-size: 1.6rem; }
+      .menu-screen h1 { font-size: 2rem; }
+      .act-btn { padding: 10px 12px; font-size: 0.9rem; }
+      .board .borrow-btn-container { position: static; transform: none; display: flex; justify-content: center; margin-top: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-wrapper" id="app">
+    <audio id="bgMusic" loop preload="auto"><source src="data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQIAAAAAAAA=" type="audio/wav"></audio>
+
+    <div class="menu-screen" id="menuScreen">
+      <h1 id="gameTitle">🧮 Sumas y Restas</h1>
+      <div id="levelScreen" style="display:flex; flex-direction:column; gap:20px; align-items:center; width:100%; padding:20px;">
+        <p style="font-size: 1.15rem; color: #6b21a8; font-weight: 700;">¿Cuál es tu nombre?</p>
+        <input type="text" id="nameInput" placeholder="Escribe tu nombre aquí" style="width:100%; max-width:300px; padding:14px 16px; border:3px solid #c4b5fd; border-radius:14px; font-family:'Nunito', sans-serif; font-size:1.1rem; font-weight:700; text-align:center; color:#1e1b4b;">
+
+        <div class="mode-section">
+          <div class="mode-title">🧠 ¿Qué quieres practicar?</div>
+          <div class="mode-buttons">
+            <button class="mode-btn" data-group="operation" onclick="setOperationMode('solo_suma', this)">
+              <span class="mode-btn-emoji">➕</span>
+              <span class="mode-btn-text">Solo<br>sumas</span>
+            </button>
+            <button class="mode-btn active" data-group="operation" onclick="setOperationMode('solo_resta', this)">
+              <span class="mode-btn-emoji">➖</span>
+              <span class="mode-btn-text">Solo<br>restas</span>
+            </button>
+            <button class="mode-btn" data-group="operation" onclick="setOperationMode('mixto', this)">
+              <span class="mode-btn-emoji">🎲</span>
+              <span class="mode-btn-text">Mixto<br>(ambas)</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="mode-section" id="additionSection">
+          <div class="mode-title">➕ En las sumas...</div>
+          <div class="mode-buttons">
+            <button class="mode-btn" data-group="addition" onclick="setAdditionMode('sin_llevada', this)">
+              <span class="mode-btn-emoji">🙂</span>
+              <span class="mode-btn-text">Sin<br>llevadas</span>
+            </button>
+            <button class="mode-btn active" data-group="addition" onclick="setAdditionMode('con_llevada', this)">
+              <span class="mode-btn-emoji">📦</span>
+              <span class="mode-btn-text">Con<br>llevadas</span>
+            </button>
+            <button class="mode-btn" data-group="addition" onclick="setAdditionMode('mixta', this)">
+              <span class="mode-btn-emoji">🎲</span>
+              <span class="mode-btn-text">Mixta<br>(ambas)</span>
+            </button>
+          </div>
+          <div class="config-note">Cuando haya llevada, se arrastra el 1 a la casilla de arriba.</div>
+          <div class="option-checklist">
+            <label class="option-check">
+              <input type="checkbox" id="allowLeadingSumCheckbox" onchange="setAllowLeadingSum(this.checked)">
+              <span>Permitir sumas donde aparezca un nuevo dígito al inicio, por ejemplo: 58 + 47 = 105.</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="mode-section" id="subtractionSection">
+          <div class="mode-title">➖ En las restas...</div>
+          <div class="mode-buttons">
+            <button class="mode-btn" data-group="subtraction" onclick="setSubtractionMode('sin_prestamo', this)">
+              <span class="mode-btn-emoji">🙂</span>
+              <span class="mode-btn-text">Sin pedir<br>prestado</span>
+            </button>
+            <button class="mode-btn active" data-group="subtraction" onclick="setSubtractionMode('con_prestamo', this)">
+              <span class="mode-btn-emoji">🔄</span>
+              <span class="mode-btn-text">Con pedir<br>prestado</span>
+            </button>
+            <button class="mode-btn" data-group="subtraction" onclick="setSubtractionMode('mixta', this)">
+              <span class="mode-btn-emoji">🎲</span>
+              <span class="mode-btn-text">Mixta<br>(ambas)</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="level-section">
+          <div class="level-title">💪 ¡Elige cuántos dígitos quieres practicar!</div>
+          <div class="level-buttons">
+            <button class="level-btn-grid active" data-group="digits" onclick="setDigitLevel(2, this)">
+              <span class="level-btn-grid-emoji">2️⃣</span>
+              <span class="level-btn-grid-text">Dos dígitos</span>
+            </button>
+            <button class="level-btn-grid" data-group="digits" onclick="setDigitLevel(3, this)">
+              <span class="level-btn-grid-emoji">3️⃣</span>
+              <span class="level-btn-grid-text">Tres dígitos</span>
+            </button>
+            <button class="level-btn-grid" data-group="digits" onclick="setDigitLevel(4, this)">
+              <span class="level-btn-grid-emoji">4️⃣</span>
+              <span class="level-btn-grid-text">Cuatro dígitos</span>
+            </button>
+          </div>
+        </div>
+
+        <button class="act-btn check" onclick="startGameValidated()" style="margin-top:20px; width:100%; max-width:320px; font-size:1.2rem; padding:16px;">🎮 Empezar a jugar</button>
+        <p style="margin-top: 24px; font-size: 0.9rem; color: #9333ea; font-weight: 600;">✨ Creada para Gabriel por su familia con ayuda de la IA ✨</p>
+      </div>
+    </div>
+
+    <div class="game-screen" id="gameScreen" style="display:none;">
+      <div class="top-bar">
+        <button class="act-btn back" onclick="goMenu()">⬅ Menú</button>
+        <h2 id="levelLabel"></h2>
+        <span class="score-badge" id="scoreBadge">⭐ 0</span>
+      </div>
+
+      <div class="board" id="board">
+        <div class="hint-bar" id="hintBar"></div>
+        <div class="columns-container" id="colsContainer"></div>
+        <div class="line-sep"></div>
+        <div class="columns-container" id="ansContainer"></div>
+        <div class="borrow-btn-container">
+          <button class="act-btn borrow" id="borrowBtn" onclick="doBorrow()">Pedir<br>prestado</button>
+        </div>
+      </div>
+
+      <div class="bank-label">Arrastra un número 👇</div>
+      <div class="number-bank" id="numberBank"></div>
+      <div class="actions">
+        <button class="act-btn check" id="checkBtn" onclick="checkAnswer()" disabled>✅ Revisar</button>
+        <button class="act-btn new-game" onclick="newProblem()">🆕 Nueva cuenta</button>
+        <button class="act-btn reset" onclick="resetProblem()">🔁 Reiniciar</button>
+        <button class="act-btn help-toggle" id="helpBtn" onclick="toggleHelp()">💡 Ayuda</button>
+        <button class="act-btn help-toggle" id="audioHelpBtn" onclick="toggleAudioHelp()">🔊 Audio</button>
+        <button class="act-btn help-toggle" id="musicBtn" onclick="cycleMusicMode()">🎵 Alegre</button>
+      </div>
+      <div class="audio-settings">
+        <label class="option-check">
+          <input type="checkbox" id="speakResultCheckbox" onchange="setSpeakResult(this.checked)">
+          <span>Decir también el resultado en la ayuda verbal</span>
+        </label>
+      </div>
+
+      <div class="footer-credit">✨ Creado para Gabriel con ayuda de la IA y su familia ✨</div>
+    </div>
+  </div>
+
+  <div class="feedback" id="feedback">
+    <div class="feedback-card" id="feedbackCard"></div>
+  </div>
+
+  <div class="drag-ghost" id="dragGhost" style="display:none;"></div>
+
+  <script>
+    let digits = 2, score = 0, helpOn = false, audioHelpOn = false;
+    let topDigits = [], bottomDigits = [], currentTop = [], borrowed = [], answers = [];
+    let carrySlots = [], expectedCarryIn = [];
+    let dragValue = -1, studentName = '', isAnswerCorrect = false;
+    let currentOperation = '-';
+    let operationMode = 'solo_resta';
+    let additionMode = 'con_llevada';
+    let subtractionMode = 'con_prestamo';
+    let speakAudioResult = false;
+    let allowLeadingSum = false;
+    let expectedLeadingDigit = 0;
+    let leadingAnswer = null;
+    let audioGuideTimeout = null;
+    let currentMusicMode = 0;
+    let backgroundMusicTimeout = null;
+    const musicModes = ['sin música', 'alegre', 'energética', 'tranquila', 'clásica', 'moderna'];
+    const ghost = document.getElementById('dragGhost');
+
+    const defaultConfig = {
+      game_title: '🧮 Sumas y Restas',
+      background_color: '#fef9c3',
+      surface_color: '#ffffff',
+      text_color: '#1e1b4b',
+      primary_color: '#7c3aed',
+      accent_color: '#f59e0b'
+    };
+
+    function applyConfig(c) {
+      document.getElementById('gameTitle').textContent = c.game_title || defaultConfig.game_title;
+      document.body.style.background = `linear-gradient(135deg, ${c.background_color || defaultConfig.background_color} 0%, #fbcfe8 50%, #c4b5fd 100%)`;
+      document.querySelectorAll('.board').forEach(el => el.style.background = c.surface_color || defaultConfig.surface_color);
+      document.querySelectorAll('.digit-cell').forEach(el => el.style.color = c.text_color || defaultConfig.text_color);
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (c) => applyConfig(c),
+        mapToCapabilities: (c) => ({
+          recolorables: [
+            { get: () => c.background_color || defaultConfig.background_color, set: v => { c.background_color = v; window.elementSdk.setConfig({ background_color: v }); } },
+            { get: () => c.surface_color || defaultConfig.surface_color, set: v => { c.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); } },
+            { get: () => c.text_color || defaultConfig.text_color, set: v => { c.text_color = v; window.elementSdk.setConfig({ text_color: v }); } },
+            { get: () => c.primary_color || defaultConfig.primary_color, set: v => { c.primary_color = v; window.elementSdk.setConfig({ primary_color: v }); } },
+            { get: () => c.accent_color || defaultConfig.accent_color, set: v => { c.accent_color = v; window.elementSdk.setConfig({ accent_color: v }); } }
+          ],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (c) => new Map([['game_title', c.game_title || defaultConfig.game_title]])
+      });
+    }
+
+    function initBackgroundMusic() {
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      function playBackgroundMusic() {
+        if (currentMusicMode === 0) {
+          if (backgroundMusicTimeout) clearTimeout(backgroundMusicTimeout);
+          backgroundMusicTimeout = null;
+          return;
+        }
+
+        let sequence = [];
+        if (currentMusicMode === 1) {
+          const notes = [261.63, 293.66, 329.63, 349.23, 392.00];
+          sequence = [
+            { freq: notes[4], dur: 0.3 }, { freq: notes[4], dur: 0.3 }, { freq: notes[4], dur: 0.3 },
+            { freq: notes[3], dur: 0.3 }, { freq: notes[3], dur: 0.3 }, { freq: notes[3], dur: 0.3 },
+            { freq: notes[2], dur: 0.3 }, { freq: notes[2], dur: 0.2 }, { freq: notes[0], dur: 0.4 }
+          ];
+        } else if (currentMusicMode === 2) {
+          const notes = [392.00, 440.00, 493.88, 523.25, 587.33];
+          sequence = [
+            { freq: notes[0], dur: 0.15 }, { freq: notes[2], dur: 0.15 }, { freq: notes[4], dur: 0.15 },
+            { freq: notes[3], dur: 0.15 }, { freq: notes[1], dur: 0.15 }, { freq: notes[2], dur: 0.15 },
+            { freq: notes[4], dur: 0.3 }
+          ];
+        } else if (currentMusicMode === 3) {
+          const notes = [130.81, 146.83, 164.81, 174.61, 196.00];
+          sequence = [
+            { freq: notes[0], dur: 0.6 }, { freq: notes[1], dur: 0.6 }, { freq: notes[2], dur: 0.6 },
+            { freq: notes[3], dur: 0.6 }, { freq: notes[2], dur: 0.6 }, { freq: notes[1], dur: 0.6 }
+          ];
+        } else if (currentMusicMode === 4) {
+          const notes = [261.63, 329.63, 392.00, 523.25];
+          sequence = [
+            { freq: notes[0], dur: 0.2 }, { freq: notes[1], dur: 0.2 }, { freq: notes[2], dur: 0.2 },
+            { freq: notes[3], dur: 0.2 }, { freq: notes[2], dur: 0.2 }, { freq: notes[1], dur: 0.2 },
+            { freq: notes[0], dur: 0.4 }
+          ];
+        } else if (currentMusicMode === 5) {
+          const notes = [293.66, 349.23, 392.00, 440.00, 493.88];
+          sequence = [
+            { freq: notes[0], dur: 0.25 }, { freq: notes[2], dur: 0.25 }, { freq: notes[1], dur: 0.25 },
+            { freq: notes[3], dur: 0.25 }, { freq: notes[4], dur: 0.25 }, { freq: notes[3], dur: 0.25 },
+            { freq: notes[2], dur: 0.5 }
+          ];
+        }
+
+        function playNote(frequency, duration) {
+          const now = audioCtx.currentTime;
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.type = 'sine';
+          osc.frequency.value = frequency;
+          gain.gain.setValueAtTime(0.05, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+          osc.start(now);
+          osc.stop(now + duration);
+        }
+
+        let time = 0;
+        sequence.forEach(note => {
+          setTimeout(() => {
+            if (document.getElementById('bgMusic')) playNote(note.freq, note.dur);
+          }, time * 1000);
+          time += note.dur + 0.1;
+        });
+
+        if (document.getElementById('bgMusic')) backgroundMusicTimeout = setTimeout(playBackgroundMusic, time * 1000 + 500);
+      }
+
+      if (audioCtx.state === 'suspended') {
+        document.addEventListener('click', () => audioCtx.resume().then(() => playBackgroundMusic()), { once: true });
+      } else {
+        playBackgroundMusic();
+      }
+    }
+
+    function cycleMusicMode() {
+      currentMusicMode = (currentMusicMode + 1) % musicModes.length;
+      const musicBtn = document.getElementById('musicBtn');
+      const modeName = musicModes[currentMusicMode];
+      musicBtn.textContent = `🎵 ${modeName.charAt(0).toUpperCase() + modeName.slice(1)}`;
+      if (backgroundMusicTimeout) {
+        clearTimeout(backgroundMusicTimeout);
+        backgroundMusicTimeout = null;
+      }
+      initBackgroundMusic();
+    }
+
+    function setActiveButton(group, button) {
+      document.querySelectorAll(`[data-group="${group}"]`).forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+    }
+
+    function setOperationMode(mode, button) {
+      operationMode = mode;
+      setActiveButton('operation', button);
+      updateModeVisibility();
+    }
+
+    function setAdditionMode(mode, button) {
+      additionMode = mode;
+      setActiveButton('addition', button);
+    }
+
+    function setSubtractionMode(mode, button) {
+      subtractionMode = mode;
+      setActiveButton('subtraction', button);
+    }
+
+    function setDigitLevel(d, button) {
+      digits = d;
+      setActiveButton('digits', button);
+    }
+
+
+    function setAllowLeadingSum(checked) {
+      allowLeadingSum = checked;
+      const checkbox = document.getElementById('allowLeadingSumCheckbox');
+      if (checkbox) checkbox.checked = checked;
+
+      if (checked && additionMode === 'sin_llevada') {
+        additionMode = 'con_llevada';
+        const additionButtons = document.querySelectorAll('.mode-btn[data-group="addition"]');
+        additionButtons.forEach(btn => btn.classList.remove('active'));
+        const carryBtn = document.querySelector('.mode-btn[data-group="addition"][onclick*="con_llevada"]');
+        if (carryBtn) carryBtn.classList.add('active');
+      }
+
+      if (document.getElementById('gameScreen').style.display !== 'none' && currentOperation === '+') {
+        newProblem();
+      }
+    }
+
+    function setSpeakResult(checked) {
+      speakAudioResult = checked;
+      const checkbox = document.getElementById('speakResultCheckbox');
+      if (checkbox) checkbox.checked = checked;
+      if (audioHelpOn) startAudioGuide();
+    }
+
+    function updateModeVisibility() {
+      const additionSection = document.getElementById('additionSection');
+      const subtractionSection = document.getElementById('subtractionSection');
+
+      if (operationMode === 'solo_suma') {
+        additionSection.style.opacity = '1';
+        subtractionSection.style.opacity = '0.55';
+      } else if (operationMode === 'solo_resta') {
+        additionSection.style.opacity = '0.55';
+        subtractionSection.style.opacity = '1';
+      } else {
+        additionSection.style.opacity = '1';
+        subtractionSection.style.opacity = '1';
+      }
+    }
+
+    function goMenu() {
+      document.getElementById('menuScreen').style.display = '';
+      document.getElementById('gameScreen').style.display = 'none';
+      document.getElementById('levelScreen').style.display = 'flex';
+      clearAudioGuide();
+    }
+
+    function startGameValidated() {
+      const name = document.getElementById('nameInput').value.trim();
+      if (name === '') {
+        document.getElementById('nameInput').placeholder = '¡Por favor, escribe tu nombre!';
+        document.getElementById('nameInput').focus();
+        return;
+      }
+      studentName = name;
+      score = 0;
+      updateScore();
+      document.getElementById('menuScreen').style.display = 'none';
+      document.getElementById('gameScreen').style.display = '';
+      document.getElementById('levelLabel').textContent = `${getOperationModeText()} de ${digits} dígitos`;
+      newProblem();
+    }
+
+    function getOperationModeText() {
+      if (operationMode === 'solo_suma') return 'Sumas';
+      if (operationMode === 'solo_resta') return 'Restas';
+      return 'Cuentas';
+    }
+
+    function updateScore() {
+      document.getElementById('scoreBadge').textContent = `⭐ ${score}`;
+    }
+
+    function digitsToNumber(arr) {
+      return arr.reduce((acc, d) => acc * 10 + d, 0);
+    }
+
+    function numberToDigitsArray(num, size) {
+      const arr = new Array(size).fill(0);
+      let n = num;
+      for (let i = size - 1; i >= 0; i--) {
+        arr[i] = n % 10;
+        n = Math.floor(n / 10);
+      }
+      return arr;
+    }
+
+    function chooseOperationForProblem() {
+      if (operationMode === 'solo_suma') return '+';
+      if (operationMode === 'solo_resta') return '-';
+      return Math.random() < 0.5 ? '+' : '-';
+    }
+
+    function getRequiredAdditionCarryMode() {
+      if (additionMode === 'con_llevada') return true;
+      if (additionMode === 'sin_llevada') return false;
+      return Math.random() < 0.5;
+    }
+
+    function getRequiredSubtractionBorrowMode() {
+      if (subtractionMode === 'con_prestamo') return true;
+      if (subtractionMode === 'sin_prestamo') return false;
+      return Math.random() < 0.5;
+    }
+
+    function calculateAdditionCarryIn(aDigits, bDigits) {
+      const carryIn = new Array(aDigits.length).fill(0);
+      let carry = 0;
+      for (let i = aDigits.length - 1; i >= 0; i--) {
+        carryIn[i] = carry;
+        const total = aDigits[i] + bDigits[i] + carry;
+        carry = total >= 10 ? 1 : 0;
+      }
+      return carryIn;
+    }
+
+    function additionNeedsCarry(a, b, size) {
+      const aDigits = numberToDigitsArray(a, size);
+      const bDigits = numberToDigitsArray(b, size);
+      const carryIn = calculateAdditionCarryIn(aDigits, bDigits);
+      for (let i = size - 1; i >= 0; i--) {
+        if (aDigits[i] + bDigits[i] + carryIn[i] >= 10) return true;
+      }
+      return false;
+    }
+
+    function subtractionNeedsBorrow(a, b, size) {
+      const aDigits = numberToDigitsArray(a, size);
+      const bDigits = numberToDigitsArray(b, size);
+      let temp = [...aDigits];
+      for (let i = size - 1; i >= 0; i--) {
+        if (temp[i] < bDigits[i]) return true;
+        const diff = temp[i] - bDigits[i];
+        temp[i] = diff;
+      }
+      return false;
+    }
+
+    function generateAdditionProblem() {
+      const requireLeading = allowLeadingSum;
+      const requireCarry = requireLeading ? true : getRequiredAdditionCarryMode();
+      const lo = Math.pow(10, digits - 1);
+      const hi = Math.pow(10, digits) - 1;
+      const limit = Math.pow(10, digits);
+      let a, b, hasCarry, hasLeading, tries = 0;
+
+      do {
+        a = lo + Math.floor(Math.random() * (hi - lo + 1));
+        b = lo + Math.floor(Math.random() * (hi - lo + 1));
+        hasCarry = additionNeedsCarry(a, b, digits);
+        hasLeading = a + b >= limit;
+        tries++;
+      } while (((requireLeading && !hasLeading) || (!requireLeading && hasLeading) || hasCarry !== requireCarry) && tries < 20000);
+
+      if (tries >= 20000) {
+        if (requireLeading) {
+          a = hi;
+          b = hi;
+        } else if (requireCarry) {
+          a = hi;
+          b = lo;
+        } else {
+          a = lo;
+          b = lo;
+        }
+      }
+
+      topDigits = numberToDigitsArray(a, digits);
+      bottomDigits = numberToDigitsArray(b, digits);
+      expectedCarryIn = calculateAdditionCarryIn(topDigits, bottomDigits);
+      expectedLeadingDigit = Math.floor((a + b) / limit);
+      leadingAnswer = null;
+      carrySlots = new Array(digits).fill(null);
+      currentTop = [...topDigits];
+      borrowed = new Array(digits).fill(false);
+      answers = new Array(digits).fill(null);
+      currentOperation = '+';
+    }
+
+    function generateSubtractionProblem() {
+
+      const requireBorrow = getRequiredSubtractionBorrowMode();
+      const lo = Math.pow(10, digits - 1);
+      const hi = Math.pow(10, digits) - 1;
+      let a, b, needsBorrow, tries = 0;
+
+      do {
+        a = lo + Math.floor(Math.random() * (hi - lo + 1));
+        b = lo + Math.floor(Math.random() * (hi - lo + 1));
+        if (b > a) [a, b] = [b, a];
+        needsBorrow = subtractionNeedsBorrow(a, b, digits);
+        tries++;
+      } while (needsBorrow !== requireBorrow && tries < 20000);
+
+      topDigits = numberToDigitsArray(a, digits);
+      bottomDigits = numberToDigitsArray(b, digits);
+      expectedCarryIn = new Array(digits).fill(0);
+      carrySlots = new Array(digits).fill(null);
+      currentTop = [...topDigits];
+      borrowed = new Array(digits).fill(false);
+      answers = new Array(digits).fill(null);
+      currentOperation = '-';
+    }
+
+    function genProblem() {
+      const op = chooseOperationForProblem();
+      if (op === '+') generateAdditionProblem();
+      else generateSubtractionProblem();
+    }
+
+    function newProblem() {
+      genProblem();
+      isAnswerCorrect = false;
+      clearAudioGuide();
+      renderBoard();
+      updateHint();
+      closeFeedback();
+      if (audioHelpOn) startAudioGuide();
+    }
+
+    function resetProblem() {
+      currentTop = [...topDigits];
+      borrowed = new Array(digits).fill(false);
+      answers = new Array(digits).fill(null);
+      carrySlots = new Array(digits).fill(null);
+      leadingAnswer = null;
+      isAnswerCorrect = false;
+      clearAudioGuide();
+      renderBoard();
+      updateHint();
+      closeFeedback();
+      document.querySelectorAll('.answer-cell, .carry-cell').forEach(c => c.classList.remove('correct', 'wrong'));
+      if (audioHelpOn) startAudioGuide();
+    }
+
+    function shouldShowCarryCell(col) {
+      return currentOperation === '+' && expectedCarryIn[col] === 1;
+    }
+
+    function shouldShowLeadingAnswerCell() {
+      return currentOperation === '+' && expectedLeadingDigit > 0;
+    }
+
+    function renderBoard() {
+      const cols = document.getElementById('colsContainer');
+      const ans = document.getElementById('ansContainer');
+      const borrowBtn = document.getElementById('borrowBtn');
+      cols.innerHTML = '';
+      ans.innerHTML = '';
+
+      const signDiv = document.createElement('div');
+      signDiv.className = `sign-col ${currentOperation === '+' ? 'addition' : 'subtraction'}`;
+      signDiv.innerHTML = currentOperation === '+'
+        ? `<div class="borrow-zone"></div><div class="sign-spacer"></div><div class="sign sign-plus">+</div>`
+        : `<div class="borrow-zone"></div><div class="sign-spacer"></div><div class="sign sign-minus"><span class="minus-line"></span></div>`;
+      cols.appendChild(signDiv);
+
+      const ansSpacer = document.createElement('div');
+      ansSpacer.className = 'sign-col';
+      ans.appendChild(ansSpacer);
+
+      const activeTask = helpOn ? findCurrentTask() : null;
+
+      if (shouldShowLeadingAnswerCell()) {
+        const leadingCol = document.createElement('div');
+        let leadingClass = 'col leading-col';
+        if (activeTask && activeTask.type === 'leading') leadingClass += ' active-col';
+        leadingCol.className = leadingClass;
+        leadingCol.innerHTML = `<div class="borrow-zone"><div class="carry-placeholder"></div></div><div class="digit-cell blank-cell"></div><div class="digit-cell blank-cell"></div>`;
+        cols.appendChild(leadingCol);
+
+        const leadingCell = document.createElement('div');
+        leadingCell.className = 'answer-cell' + (leadingAnswer !== null ? ' filled' : '');
+        leadingCell.dataset.type = 'leading';
+        leadingCell.textContent = leadingAnswer !== null ? leadingAnswer : '';
+        leadingCell.addEventListener('click', () => {
+          if (leadingAnswer !== null) {
+            leadingAnswer = null;
+            leadingCell.textContent = '';
+            leadingCell.classList.remove('filled', 'correct', 'wrong');
+            updateCheckButtonState();
+            updateHint();
+            if (audioHelpOn) startAudioGuide();
+          }
+        });
+        leadingCell.addEventListener('pointerenter', () => { if (dragValue >= 0) leadingCell.classList.add('drop-hover'); });
+        leadingCell.addEventListener('pointerleave', () => leadingCell.classList.remove('drop-hover'));
+        ans.appendChild(leadingCell);
+      }
+
+      for (let i = 0; i < digits; i++) {
+        const col = document.createElement('div');
+        col.dataset.col = i;
+        let colClass = 'col';
+        if (activeTask && activeTask.col === i && activeTask.type !== 'done') colClass += ' active-col';
+        col.className = colClass;
+
+        const bZone = document.createElement('div');
+        bZone.className = 'borrow-zone';
+
+        if (currentOperation === '+') {
+          if (shouldShowCarryCell(i)) {
+            const carryCell = document.createElement('div');
+            carryCell.className = 'carry-cell' + (carrySlots[i] !== null ? ' filled' : '');
+            carryCell.dataset.col = i;
+            carryCell.dataset.type = 'carry';
+            carryCell.textContent = carrySlots[i] !== null ? carrySlots[i] : '';
+            carryCell.addEventListener('click', () => {
+              if (carrySlots[i] !== null) {
+                carrySlots[i] = null;
+                carryCell.textContent = '';
+                carryCell.classList.remove('filled', 'correct', 'wrong');
+                updateCheckButtonState();
+                updateHint();
+                if (audioHelpOn) startAudioGuide();
+              }
+            });
+            carryCell.addEventListener('pointerenter', () => { if (dragValue >= 0) carryCell.classList.add('drop-hover'); });
+            carryCell.addEventListener('pointerleave', () => carryCell.classList.remove('drop-hover'));
+            bZone.appendChild(carryCell);
+          } else {
+            const placeholder = document.createElement('div');
+            placeholder.className = 'carry-placeholder';
+            bZone.appendChild(placeholder);
+          }
+        }
+        col.appendChild(bZone);
+
+        const topCell = document.createElement('div');
+        topCell.className = 'digit-cell' + (currentOperation === '-' && borrowed[i] ? ' crossed' : '');
+        topCell.textContent = topDigits[i];
+        if (currentOperation === '-' && borrowed[i]) {
+          const newVal = document.createElement('div');
+          newVal.className = 'digit-new';
+          newVal.textContent = currentTop[i];
+          topCell.appendChild(newVal);
+        }
+        col.appendChild(topCell);
+
+        const bottomCell = document.createElement('div');
+        bottomCell.className = 'digit-cell';
+        bottomCell.textContent = bottomDigits[i];
+        col.appendChild(bottomCell);
+
+        cols.appendChild(col);
+
+        const ansCell = document.createElement('div');
+        ansCell.className = 'answer-cell' + (answers[i] !== null ? ' filled' : '');
+        ansCell.dataset.col = i;
+        ansCell.dataset.type = 'answer';
+        ansCell.textContent = answers[i] !== null ? answers[i] : '';
+        ansCell.addEventListener('click', () => {
+          if (answers[i] !== null) {
+            answers[i] = null;
+            ansCell.textContent = '';
+            ansCell.classList.remove('filled', 'correct', 'wrong');
+            updateCheckButtonState();
+            updateHint();
+            if (audioHelpOn) startAudioGuide();
+          }
+        });
+        ansCell.addEventListener('pointerenter', () => { if (dragValue >= 0) ansCell.classList.add('drop-hover'); });
+        ansCell.addEventListener('pointerleave', () => ansCell.classList.remove('drop-hover'));
+        ans.appendChild(ansCell);
+      }
+
+      borrowBtn.style.display = currentOperation === '-' ? 'flex' : 'none';
+      buildBank();
+      updateBorrowBtn();
+      updateCheckButtonState();
+    }
+
+    function buildBank() {
+      const bank = document.getElementById('numberBank');
+      bank.innerHTML = '';
+      for (let n = 0; n <= 9; n++) {
+        const chip = document.createElement('div');
+        chip.className = `bank-chip c${n}`;
+        chip.textContent = n;
+        chip.dataset.val = n;
+        chip.addEventListener('pointerdown', startDrag);
+        bank.appendChild(chip);
+      }
+    }
+
+    function startDrag(e) {
+      e.preventDefault();
+      const val = parseInt(e.target.dataset.val, 10);
+      dragValue = val;
+      ghost.style.display = 'flex';
+      ghost.textContent = val;
+      ghost.className = `drag-ghost c${val}`;
+      ghost.style.background = getComputedStyle(e.target).background;
+      moveGhost(e);
+      document.addEventListener('pointermove', moveGhost);
+      document.addEventListener('pointerup', endDrag);
+    }
+
+    function moveGhost(e) {
+      ghost.style.left = e.clientX + 'px';
+      ghost.style.top = e.clientY + 'px';
+    }
+
+    function endDrag(e) {
+      document.removeEventListener('pointermove', moveGhost);
+      document.removeEventListener('pointerup', endDrag);
+      ghost.style.display = 'none';
+
+      const el = document.elementFromPoint(e.clientX, e.clientY);
+      if (el && (el.classList.contains('answer-cell') || el.classList.contains('carry-cell'))) {
+        const type = el.dataset.type;
+        const col = el.dataset.col !== undefined ? parseInt(el.dataset.col, 10) : NaN;
+        if (type === 'answer') {
+          answers[col] = dragValue;
+        } else if (type === 'carry') {
+          carrySlots[col] = dragValue;
+        } else if (type === 'leading') {
+          leadingAnswer = dragValue;
+        }
+        el.textContent = dragValue;
+        el.classList.add('filled');
+        el.classList.remove('correct', 'wrong', 'drop-hover');
+        updateCheckButtonState();
+        updateHint();
+        if (audioHelpOn) startAudioGuide();
+      }
+
+      document.querySelectorAll('.drop-hover').forEach(c => c.classList.remove('drop-hover'));
+      dragValue = -1;
+    }
+
+    function doBorrow() {
+      if (currentOperation !== '-') return;
+      let col = -1;
+      for (let i = digits - 1; i >= 0; i--) {
+        if (currentTop[i] < bottomDigits[i] && i > 0) {
+          col = i;
+          break;
+        }
+      }
+      if (col < 0) return;
+
+      let lender = col - 1;
+      while (lender >= 0 && currentTop[lender] === 0) lender--;
+      if (lender < 0) return;
+
+      currentTop[lender] -= 1;
+      borrowed[lender] = true;
+      for (let z = lender + 1; z < col; z++) {
+        currentTop[z] = 9;
+        borrowed[z] = true;
+      }
+      currentTop[col] += 10;
+      borrowed[col] = true;
+      renderBoard();
+      updateHint();
+      if (audioHelpOn) startAudioGuide();
+    }
+
+    function updateBorrowBtn() {
+      const borrowBtn = document.getElementById('borrowBtn');
+      if (currentOperation !== '-') {
+        borrowBtn.disabled = true;
+        return;
+      }
+      let needsBorrow = false;
+      let canBorrow = false;
+      for (let i = digits - 1; i >= 0; i--) {
+        if (currentTop[i] < bottomDigits[i] && i > 0) {
+          needsBorrow = true;
+          let lender = i - 1;
+          while (lender >= 0 && currentTop[lender] === 0) lender--;
+          if (lender >= 0) canBorrow = true;
+          break;
+        }
+      }
+      borrowBtn.disabled = !(needsBorrow && canBorrow);
+    }
+
+    function findCurrentTask() {
+      if (currentOperation === '-') {
+        for (let i = digits - 1; i >= 0; i--) {
+          if (answers[i] === null) return { type: 'answer', col: i };
+        }
+        return { type: 'done', col: -1 };
+      }
+
+      for (let i = digits - 1; i >= 0; i--) {
+        if (answers[i] === null) {
+          if (i < digits - 1 && expectedCarryIn[i] === 1 && carrySlots[i] === null && answers[i + 1] !== null) {
+            return { type: 'carry', col: i };
+          }
+          return { type: 'answer', col: i };
+        }
+      }
+
+      if (shouldShowLeadingAnswerCell() && leadingAnswer === null) {
+        return { type: 'leading', col: 'lead' };
+      }
+
+      return { type: 'done', col: -1 };
+    }
+
+    function updateCheckButtonState() {
+      const checkBtn = document.getElementById('checkBtn');
+      if (isAnswerCorrect) {
+        checkBtn.disabled = true;
+        return;
+      }
+
+      const allAnswersFilled = answers.every(a => a !== null);
+      let carriesReady = true;
+      let leadingReady = true;
+      if (currentOperation === '+') {
+        for (let i = 0; i < digits; i++) {
+          if (shouldShowCarryCell(i) && carrySlots[i] === null) {
+            carriesReady = false;
+            break;
+          }
+        }
+        if (shouldShowLeadingAnswerCell() && leadingAnswer === null) leadingReady = false;
+      }
+      checkBtn.disabled = !(allAnswersFilled && carriesReady && leadingReady);
+    }
+
+    function toggleHelp() {
+      helpOn = !helpOn;
+      document.getElementById('helpBtn').textContent = helpOn ? '💡 Ayuda: ON' : '💡 Ayuda';
+      renderBoard();
+      updateHint();
+    }
+
+    function toggleAudioHelp() {
+      audioHelpOn = !audioHelpOn;
+      document.getElementById('audioHelpBtn').textContent = audioHelpOn ? '🔊 Audio: ON' : '🔊 Audio';
+      if (audioHelpOn) startAudioGuide();
+      else clearAudioGuide();
+    }
+
+    function updateHint() {
+      const bar = document.getElementById('hintBar');
+      if (!helpOn) { bar.textContent = ''; return; }
+
+      const task = findCurrentTask();
+      if (task.type === 'done') {
+        bar.textContent = '¡Ya completaste todo! Pulsa Revisar ✅';
+        return;
+      }
+
+      const col = task.col;
+      if (currentOperation === '-') {
+        if (currentTop[col] < bottomDigits[col]) {
+          bar.textContent = `👉 En esta columna ${currentTop[col]} es menor que ${bottomDigits[col]}. ¡Pide prestado!`;
+        } else {
+          bar.textContent = `👉 Ahora resta: ${currentTop[col]} − ${bottomDigits[col]} = ? Arrastra el número correcto.`;
+        }
+        return;
+      }
+
+      if (task.type === 'carry') {
+        const source = col + 1;
+        const carryFromRight = source < digits - 1 ? (carrySlots[source] || 0) : 0;
+        const total = topDigits[source] + bottomDigits[source] + carryFromRight;
+        bar.textContent = `👉 ${topDigits[source]} + ${bottomDigits[source]}${carryFromRight ? ' + ' + carryFromRight : ''} = ${total}. Arrastra el 1 arriba para llevarlo a la siguiente columna.`;
+      } else if (task.type === 'leading') {
+        bar.textContent = `👉 La última suma dio 10 o más. Arrastra el nuevo dígito al inicio del resultado.`;
+      } else {
+        const carryIn = col < digits - 1 ? (carrySlots[col] || 0) : 0;
+        bar.textContent = `👉 Ahora suma: ${topDigits[col]} + ${bottomDigits[col]}${carryIn ? ' + ' + carryIn : ''} = ? Arrastra el número correcto.`;
+      }
+    }
+
+    function clearAudioGuide() {
+      if (audioGuideTimeout) {
+        clearTimeout(audioGuideTimeout);
+        audioGuideTimeout = null;
+      }
+      clearAudioHighlight();
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    }
+
+    function startAudioGuide() {
+      clearAudioGuide();
+      const task = findCurrentTask();
+      if (task.type === 'done') return;
+      performAudioCycle(task, 1);
+    }
+
+    function performAudioCycle(task, iteration) {
+      const currentTask = findCurrentTask();
+      if (currentTask.type === 'done') {
+        audioGuideTimeout = null;
+        return;
+      }
+      if (currentTask.type !== task.type || currentTask.col !== task.col) {
+        startAudioGuide();
+        return;
+      }
+
+      const col = task.col;
+      let mainMessage = '';
+      let followMessage = '';
+      let needsSpecial = false;
+
+      if (currentOperation === '-') {
+        const top = currentTop[col];
+        const sub = bottomDigits[col];
+        mainMessage = `Tengo ${top} y le quito ${sub}`;
+        if (top < sub) {
+          needsSpecial = true;
+          followMessage = `A ${top} no se le puede quitar ${sub}. Debes pedir prestado.`;
+        } else if (speakAudioResult) {
+          needsSpecial = true;
+          followMessage = `El resultado es ${top - sub}.`;
+        }
+      } else {
+        if (task.type === 'carry') {
+          mainMessage = 'Arrastra el 1 que llevas a la siguiente columna';
+        } else if (task.type === 'leading') {
+          mainMessage = 'Arrastra el nuevo dígito al inicio del resultado';
+          if (speakAudioResult) {
+            needsSpecial = true;
+            followMessage = `El nuevo dígito es ${expectedLeadingDigit}.`;
+          }
+        } else {
+          const carryIn = col < digits - 1 ? (carrySlots[col] || 0) : 0;
+          const total = topDigits[col] + bottomDigits[col] + carryIn;
+          mainMessage = `Tengo ${topDigits[col]} y le sumo ${bottomDigits[col]}`;
+          if (carryIn) mainMessage += ` y ${carryIn} que llevo`;
+          if (speakAudioResult) {
+            needsSpecial = true;
+            if (total >= 10 && col > 0) {
+              followMessage = `Es ${total}. Escribe ${total % 10} y lleva 1.`;
+            } else {
+              followMessage = `El resultado es ${total % 10}.`;
+            }
+          }
+        }
+      }
+
+      highlightAudioStep(task);
+      speakText(mainMessage);
+
+      audioGuideTimeout = setTimeout(() => {
+        clearAudioHighlight();
+        const freshTask = findCurrentTask();
+        if (freshTask.type === 'done') return;
+        if (freshTask.type !== task.type || freshTask.col !== task.col) return;
+
+        if (!needsSpecial) {
+          if (iteration < 3) {
+            audioGuideTimeout = setTimeout(() => performAudioCycle(task, iteration + 1), 3000);
+          } else {
+            audioGuideTimeout = setTimeout(() => performAudioCycle(task, 1), 6000);
+          }
+        } else {
+          if (iteration < 3) {
+            audioGuideTimeout = setTimeout(() => performAudioCycle(task, iteration + 1), 3000);
+          } else {
+            audioGuideTimeout = setTimeout(() => {
+              highlightAudioStep(task);
+              speakText(followMessage);
+              audioGuideTimeout = setTimeout(() => {
+                clearAudioHighlight();
+                audioGuideTimeout = setTimeout(() => performAudioCycle(task, 1), 5000);
+              }, 3200);
+            }, 5000);
+          }
+        }
+      }, 3000);
+    }
+
+    function highlightAudioStep(task) {
+      clearAudioHighlight();
+      const colsContainer = document.getElementById('colsContainer');
+      const signDiv = colsContainer.querySelector('.sign-col');
+      if (signDiv) signDiv.classList.add('audio-highlight');
+
+      const activeCol = colsContainer.querySelector(`.col[data-col="${task.col}"]`);
+      if (activeCol) activeCol.classList.add('audio-highlight');
+
+      if (task.type === 'carry') {
+        const carry = document.querySelector(`.carry-cell[data-col="${task.col}"]`);
+        if (carry) carry.classList.add('audio-highlight');
+      } else if (task.type === 'answer') {
+        const ans = document.querySelector(`.answer-cell[data-col="${task.col}"]`);
+        if (ans) ans.classList.add('audio-highlight');
+      } else if (task.type === 'leading') {
+        const ans = document.querySelector('.answer-cell[data-type="leading"]');
+        if (ans) ans.classList.add('audio-highlight');
+      }
+    }
+
+    function clearAudioHighlight() {
+      document.querySelectorAll('.audio-highlight').forEach(el => el.classList.remove('audio-highlight'));
+    }
+
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'es-ES';
+        utterance.rate = 0.9;
+        utterance.pitch = 1;
+        utterance.volume = 1;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function checkAnswer() {
+      if (isAnswerCorrect) return;
+
+      const A = digitsToNumber(topDigits);
+      const B = digitsToNumber(bottomDigits);
+      const expectedResult = currentOperation === '+' ? A + B : A - B;
+      const expectedDigits = numberToDigitsArray(expectedResult, digits);
+
+      let allCorrect = true;
+      for (let i = 0; i < digits; i++) {
+        if (answers[i] !== expectedDigits[i]) allCorrect = false;
+      }
+
+      document.querySelectorAll('.answer-cell').forEach(cell => {
+        const col = parseInt(cell.dataset.col, 10);
+        cell.classList.remove('correct', 'wrong');
+        if (answers[col] !== null) cell.classList.add(answers[col] === expectedDigits[col] ? 'correct' : 'wrong');
+      });
+
+      if (currentOperation === '+') {
+        document.querySelectorAll('.carry-cell').forEach(cell => {
+          const col = parseInt(cell.dataset.col, 10);
+          cell.classList.remove('correct', 'wrong');
+          const ok = carrySlots[col] === 1;
+          if (carrySlots[col] !== null) cell.classList.add(ok ? 'correct' : 'wrong');
+          if (!ok) allCorrect = false;
+        });
+
+        const leadingCell = document.querySelector('.answer-cell[data-type="leading"]');
+        if (leadingCell) {
+          leadingCell.classList.remove('correct', 'wrong');
+          const ok = leadingAnswer === expectedLeadingDigit;
+          if (leadingAnswer !== null) leadingCell.classList.add(ok ? 'correct' : 'wrong');
+          if (!ok) allCorrect = false;
+        }
+      }
+
+      if (allCorrect) {
+        isAnswerCorrect = true;
+        updateCheckButtonState();
+        score++;
+        updateScore();
+        triggerSuccessAnimation();
+        const expressionText = `${A} ${currentOperation} ${B} = ${expectedResult}`;
+        showFeedback('🎉', '¡Excelente trabajo!', '¡Eres genial!', true, expressionText);
+      } else {
+        showFeedback('💪', '¡Casi! Inténtalo de nuevo', 'Revisa los espacios en rojo y corrígelos.', false);
+      }
+    }
+
+    function triggerSuccessAnimation() {
+      const explosionShapes = ['stars', 'rainbows', 'hearts', 'fireworks', 'confetti', 'crowns', 'flowers'];
+      const shapeEmojis = { stars: '⭐', rainbows: '🌈', hearts: '❤️', fireworks: '✨', confetti: '🎉', crowns: '👑', flowers: '🌟' };
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      const duration = 2;
+      const count = 72;
+
+      for (let rep = 0; rep < 3; rep++) {
+        setTimeout(() => {
+          const selected = [...explosionShapes].sort(() => Math.random() - 0.5).slice(0, 3);
+          const shape = selected[rep % selected.length];
+          const emoji = shapeEmojis[shape];
+          for (let i = 0; i < count; i++) {
+            const elem = document.createElement('div');
+            elem.className = 'success-animation';
+            elem.textContent = emoji;
+            let tx, ty;
+            if (shape === 'stars') {
+              const angle = (i / count) * Math.PI * 2;
+              const distance = 600 + Math.random() * 300;
+              tx = Math.cos(angle) * distance;
+              ty = Math.sin(angle) * distance;
+            } else if (shape === 'rainbows') {
+              const angle = (i / count) * Math.PI * 8;
+              const distance = 200 + (i / count) * 800;
+              tx = Math.cos(angle) * distance;
+              ty = Math.sin(angle) * distance;
+            } else if (shape === 'hearts') {
+              const angle = Math.random() * Math.PI * 2;
+              const distance = 500 + Math.random() * 600;
+              tx = Math.cos(angle) * distance;
+              ty = Math.sin(angle) * distance;
+            } else if (shape === 'fireworks') {
+              const angle = Math.random() * Math.PI * 2;
+              const distance = 400 + Math.random() * 500;
+              tx = Math.cos(angle) * distance;
+              ty = Math.sin(angle) * distance - 600;
+            } else if (shape === 'confetti') {
+              const angle = (i / count) * Math.PI * 2;
+              tx = Math.cos(angle) * 700;
+              ty = Math.sin(angle) * 400 + (Math.random() - 0.5) * 400;
+            } else if (shape === 'crowns') {
+              const angle = (i / count) * Math.PI * 2;
+              const distance = 550 + (i % 2) * 150;
+              tx = Math.cos(angle) * distance;
+              ty = Math.sin(angle) * distance - 400;
+            } else {
+              const petalAngle = Math.floor(i / (count / 6)) * (Math.PI * 2 / 6);
+              const offsetAngle = (i % (count / 6)) * (Math.PI * 2 / (count / 6));
+              const distance = 400 + Math.random() * 400;
+              tx = Math.cos(petalAngle + offsetAngle) * distance;
+              ty = Math.sin(petalAngle + offsetAngle) * distance;
+            }
+            elem.style.left = centerX + 'px';
+            elem.style.top = centerY + 'px';
+            elem.style.setProperty('--tx', tx + 'px');
+            elem.style.setProperty('--ty', ty + 'px');
+            elem.style.animation = `stars-explode ${duration}s ease-out forwards`;
+            elem.style.animationDelay = (i * 0.015) + 's';
+            elem.style.fontSize = (2 + Math.random() * 1.5) + 'rem';
+            document.body.appendChild(elem);
+            setTimeout(() => elem.remove(), (duration + i * 0.015) * 1000);
+          }
+        }, rep * (duration * 1000 + 300));
+      }
+    }
+
+    function playCelebrationSound() {
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const celebrationNotes = [
+        { freq: 523.25, dur: 0.2 },
+        { freq: 659.25, dur: 0.2 },
+        { freq: 783.99, dur: 0.4 }
+      ];
+      function playNote(frequency, duration, delay = 0) {
+        const now = audioCtx.currentTime + delay;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = 'sine';
+        osc.frequency.value = frequency;
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+        osc.start(now);
+        osc.stop(now + duration);
+      }
+      let delay = 0;
+      celebrationNotes.forEach(note => {
+        playNote(note.freq, note.dur, delay);
+        delay += note.dur + 0.1;
+      });
+    }
+
+    function getRandomMotivationalMessage() {
+      const messages = [
+        `Muy bien ${studentName}, buen trabajo.`,
+        `${studentName}, maravilloso. Lo hiciste muy bien.`,
+        `Qué buen trabajo ${studentName}. Lo has hecho genial.`,
+        `Súper bien, ${studentName}. Qué gran trabajo has realizado.`,
+        `Excelente ${studentName}. Sigue adelante, eres genial.`,
+        `Muy buen trabajo ${studentName}, lo haces genial.`,
+        `${studentName}, qué excelente trabajo haces. Sigue así.`,
+        `Sigue trabajando así de bien ${studentName}, excelente.`,
+        `¡${studentName}, eso fue perfecto! ¡Cada vez mejor!`,
+        `¡${studentName}, increíble! ¡Lo estás haciendo genial!`
+      ];
+      return messages[Math.floor(Math.random() * messages.length)];
+    }
+
+    function showFeedback(emoji, title, msg, isSuccess, expressionText = '') {
+      const fb = document.getElementById('feedback');
+      const card = document.getElementById('feedbackCard');
+      const personalMsg = isSuccess ? getRandomMotivationalMessage() : 'No te preocupes. ¡Tú puedes!';
+      card.innerHTML = `
+        <h3>${emoji} ${title}</h3>
+        ${expressionText ? `<div class="feedback-expression">${expressionText}</div>` : ''}
+        <p class="feedback-note">${msg}</p>
+        <button onclick="${isSuccess ? 'newProblem()' : 'closeFeedback()'}">${isSuccess ? '➡️ Siguiente' : '🔄 Seguir intentando'}</button>
+      `;
+      fb.classList.add('show');
+
+      if (isSuccess) {
+        playCelebrationSound();
+        const A = digitsToNumber(topDigits);
+        const B = digitsToNumber(bottomDigits);
+        const result = currentOperation === '+' ? A + B : A - B;
+        const operationMsg = currentOperation === '+' ? `${A} más ${B} es igual a ${result}` : `${A} menos ${B} es igual a ${result}`;
+        const utterance = new SpeechSynthesisUtterance(operationMsg);
+        utterance.lang = 'es-ES';
+        utterance.rate = 0.9;
+        utterance.pitch = 1;
+        utterance.volume = 1;
+        utterance.onend = () => setTimeout(() => speakText(personalMsg), 400);
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(utterance);
+      } else {
+        speakText('No te preocupes, inténtalo de nuevo. ¡Tú puedes!');
+      }
+    }
+
+    function closeFeedback() {
+      document.getElementById('feedback').classList.remove('show');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      applyConfig(defaultConfig);
+      updateModeVisibility();
+      const allowLeadingCheckbox = document.getElementById('allowLeadingSumCheckbox');
+      if (allowLeadingCheckbox) allowLeadingCheckbox.checked = allowLeadingSum;
+      const speakResultCheckbox = document.getElementById('speakResultCheckbox');
+      if (speakResultCheckbox) speakResultCheckbox.checked = speakAudioResult;
+      initBackgroundMusic();
+    });
+  </script>
+</body>
+</html>

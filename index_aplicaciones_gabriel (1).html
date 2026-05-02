@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aplicaciones de Gabriel</title>
+  <style>
+    :root {
+      --bg1: #e0f7ff;
+      --bg2: #fff3c4;
+      --bg3: #ffe1f0;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --accent: #f97316;
+      --green: #16a34a;
+      --purple: #7c3aed;
+      --pink: #db2777;
+      --card: rgba(255, 255, 255, 0.92);
+      --text: #123047;
+      --muted: #536575;
+      --shadow: 0 18px 40px rgba(37, 99, 235, 0.16);
+      --radius: 28px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(125, 211, 252, 0.7), transparent 28rem),
+        radial-gradient(circle at top right, rgba(253, 186, 116, 0.72), transparent 26rem),
+        radial-gradient(circle at bottom left, rgba(244, 114, 182, 0.42), transparent 24rem),
+        linear-gradient(135deg, var(--bg1), var(--bg2) 52%, var(--bg3));
+      overflow-x: hidden;
+    }
+
+    .decoracion {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .burbuja {
+      position: absolute;
+      border-radius: 999px;
+      opacity: 0.35;
+      animation: flotar 9s ease-in-out infinite alternate;
+    }
+
+    .burbuja:nth-child(1) { width: 90px; height: 90px; background: #60a5fa; left: 6%; top: 15%; animation-delay: 0s; }
+    .burbuja:nth-child(2) { width: 120px; height: 120px; background: #fbbf24; right: 8%; top: 20%; animation-delay: 1.2s; }
+    .burbuja:nth-child(3) { width: 80px; height: 80px; background: #f472b6; left: 12%; bottom: 16%; animation-delay: 2.1s; }
+    .burbuja:nth-child(4) { width: 140px; height: 140px; background: #86efac; right: 12%; bottom: 10%; animation-delay: 0.7s; }
+
+    @keyframes flotar {
+      from { transform: translateY(0) scale(1); }
+      to { transform: translateY(-28px) scale(1.08); }
+    }
+
+    .app {
+      position: relative;
+      z-index: 1;
+      width: min(1160px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 28px 0 32px;
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.7);
+      border: 2px solid rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: clamp(22px, 5vw, 42px);
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .etiqueta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #fff7ed;
+      color: #9a3412;
+      font-weight: 800;
+      border: 2px solid #fed7aa;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.15rem, 6vw, 4.8rem);
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+      color: #1d4ed8;
+    }
+
+    .subtitulo {
+      max-width: 720px;
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+      line-height: 1.55;
+    }
+
+    .panel-nino {
+      background: linear-gradient(160deg, #ffffff, #eff6ff);
+      border-radius: 30px;
+      padding: 22px;
+      border: 3px solid #bfdbfe;
+      box-shadow: 0 14px 28px rgba(29, 78, 216, 0.12);
+      text-align: center;
+    }
+
+    .carita {
+      width: 122px;
+      height: 122px;
+      margin: 0 auto 14px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #fde68a, #fbbf24);
+      border: 5px solid #fff;
+      box-shadow: 0 12px 25px rgba(245, 158, 11, 0.28);
+      display: grid;
+      place-items: center;
+      font-size: 4rem;
+    }
+
+    .nombre-wrap {
+      display: grid;
+      gap: 8px;
+    }
+
+    label {
+      font-weight: 850;
+      color: #1e3a8a;
+      font-size: 1.02rem;
+    }
+
+    #nombreNino {
+      width: 100%;
+      border: 3px solid #bfdbfe;
+      border-radius: 18px;
+      padding: 14px 16px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      text-align: center;
+      color: #1e3a8a;
+      background: #ffffff;
+      outline: none;
+      transition: 0.2s ease;
+    }
+
+    #nombreNino::placeholder {
+      color: #94a3b8;
+      font-weight: 750;
+    }
+
+    #nombreNino:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.15);
+    }
+
+    .toolbar {
+      margin: 26px 0 18px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .busqueda {
+      position: relative;
+    }
+
+    .busqueda span {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.35rem;
+    }
+
+    #buscar {
+      width: 100%;
+      min-height: 58px;
+      padding: 13px 18px 13px 54px;
+      border-radius: 20px;
+      border: 3px solid rgba(37, 99, 235, 0.22);
+      background: rgba(255, 255, 255, 0.9);
+      font-size: 1.05rem;
+      font-weight: 750;
+      color: var(--text);
+      outline: none;
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+    }
+
+    #buscar:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.14);
+    }
+
+    .contador {
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 18px;
+      border-radius: 20px;
+      background: #ffffff;
+      border: 3px solid #dbeafe;
+      font-weight: 900;
+      color: #1d4ed8;
+      white-space: nowrap;
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .card {
+      position: relative;
+      min-height: 238px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px;
+      border-radius: 30px;
+      background: var(--card);
+      border: 3px solid rgba(255, 255, 255, 0.88);
+      box-shadow: 0 16px 32px rgba(15, 23, 42, 0.12);
+      text-decoration: none;
+      color: inherit;
+      overflow: hidden;
+      transform: translateY(0);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+      touch-action: manipulation;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      right: -48px;
+      top: -52px;
+      background: var(--color-suave);
+      opacity: 0.9;
+    }
+
+    .card:hover,
+    .card:focus-visible {
+      transform: translateY(-6px) scale(1.01);
+      box-shadow: 0 24px 48px rgba(15, 23, 42, 0.17);
+      border-color: var(--color-fuerte);
+      outline: none;
+    }
+
+    .icono {
+      position: relative;
+      z-index: 1;
+      width: 72px;
+      height: 72px;
+      display: grid;
+      place-items: center;
+      border-radius: 24px;
+      background: #ffffff;
+      border: 3px solid var(--color-medio);
+      box-shadow: 0 12px 24px rgba(15, 23, 42, 0.10);
+      font-size: 2.55rem;
+    }
+
+    .card h2 {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      font-size: 1.28rem;
+      line-height: 1.12;
+      color: #0f172a;
+      letter-spacing: -0.02em;
+    }
+
+    .card p {
+      position: relative;
+      z-index: 1;
+      margin: 8px 0 0;
+      color: #5f6d7a;
+      font-size: 0.98rem;
+      line-height: 1.4;
+      font-weight: 650;
+    }
+
+    .abrir {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      width: 100%;
+      border-radius: 18px;
+      background: var(--color-fuerte);
+      color: #ffffff;
+      font-weight: 950;
+      box-shadow: 0 12px 18px rgba(15, 23, 42, 0.12);
+    }
+
+    .nota {
+      margin-top: 24px;
+      padding: 16px 18px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 2px dashed rgba(37, 99, 235, 0.35);
+      color: #355166;
+      font-weight: 720;
+      line-height: 1.45;
+    }
+
+    footer {
+      margin: 28px auto 0;
+      text-align: center;
+      color: #355166;
+      font-weight: 850;
+      padding: 18px;
+    }
+
+    .oculto {
+      display: none !important;
+    }
+
+    @media (max-width: 980px) {
+      header {
+        grid-template-columns: 1fr;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 620px) {
+      .app {
+        width: min(100% - 18px, 1160px);
+        padding-top: 10px;
+      }
+
+      header {
+        padding: 22px;
+        border-radius: 24px;
+      }
+
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .card {
+        min-height: 210px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="decoracion" aria-hidden="true">
+    <div class="burbuja"></div>
+    <div class="burbuja"></div>
+    <div class="burbuja"></div>
+    <div class="burbuja"></div>
+  </div>
+
+  <main class="app">
+    <header>
+      <section>
+        <div class="etiqueta">🌟 Centro de juegos educativos</div>
+        <h1>Aplicaciones de Gabriel</h1>
+        <p class="subtitulo">
+          Página principal para entrar rápidamente a las actividades de matemática, lectura,
+          escritura, ordenamiento y práctica visual. Cada botón abre una aplicación guardada
+          en esta misma carpeta.
+        </p>
+      </section>
+
+      <aside class="panel-nino" aria-label="Configuración del nombre del niño">
+        <div class="carita" aria-hidden="true">😊</div>
+        <div class="nombre-wrap">
+          <label for="nombreNino">Nombre del niño</label>
+          <input id="nombreNino" type="text" placeholder="Ej.: Gabriel" autocomplete="off" />
+        </div>
+      </aside>
+    </header>
+
+    <section class="toolbar" aria-label="Herramientas de búsqueda">
+      <div class="busqueda">
+        <span aria-hidden="true">🔎</span>
+        <input id="buscar" type="search" placeholder="Buscar una aplicación..." />
+      </div>
+      <div class="contador" id="contador">8 aplicaciones</div>
+    </section>
+
+    <section class="grid" id="contenedorApps" aria-label="Lista de aplicaciones"></section>
+
+    <div class="nota">
+      Para que los enlaces funcionen correctamente, este archivo debe llamarse
+      <strong>index.html</strong> y debe estar en la misma carpeta que las demás aplicaciones.
+      Si algún archivo tiene otro nombre exacto, solo se debe ajustar su dirección en la lista
+      <strong>aplicaciones</strong> del código.
+    </div>
+
+    <footer>
+      Aplicación creada para Gabriel por parte de su familia, con ayuda de la IA.
+    </footer>
+  </main>
+
+  <script>
+    const aplicaciones = [
+      {
+        nombre: "Aprende a restar quitando",
+        archivo: "aprende_a_restar_quitando.html",
+        icono: "🍎",
+        descripcion: "Práctica visual para comprender la resta quitando objetos.",
+        color: "azul"
+      },
+      {
+        nombre: "Generador de oraciones",
+        archivo: "generador-oraciones.html",
+        icono: "📝",
+        descripcion: "Construcción y lectura de oraciones con apoyo visual.",
+        color: "morado"
+      },
+      {
+        nombre: "Mayor y menor",
+        archivo: "Mayor_Menor.html",
+        icono: "🐊",
+        descripcion: "Comparación de números usando mayor que y menor que.",
+        color: "verde"
+      },
+      {
+        nombre: "Mayor, menor o igual",
+        archivo: "mayor_menor_igual.html",
+        icono: "⚖️",
+        descripcion: "Práctica de los signos >, < e = con actividades interactivas.",
+        color: "naranja"
+      },
+      {
+        nombre: "Orden alfabético",
+        archivo: "OrdenAlfabetico.html",
+        icono: "🔤",
+        descripcion: "Juego para ordenar palabras siguiendo el abecedario.",
+        color: "rosado"
+      },
+      {
+        nombre: "Ordenar ascendente y descendente",
+        archivo: "OrdenarAscendenteYDescendente.html",
+        icono: "📊",
+        descripcion: "Ordenamiento de números de menor a mayor y de mayor a menor.",
+        color: "azul"
+      },
+      {
+        nombre: "Reconocer números",
+        archivo: "reconocer_numeros.html",
+        icono: "🔢",
+        descripcion: "Identificación, lectura y práctica de números.",
+        color: "verde"
+      },
+      {
+        nombre: "Sumas y restas",
+        archivo: "Sumas_y_restas.html",
+        icono: "➕",
+        descripcion: "Ejercicios combinados para practicar cálculo básico.",
+        color: "morado"
+      },
+      {
+        nombre: "Sonidos agradables y desagradables",
+        archivo: "SonidosAgradablesYDesagradable.html",
+        icono: "🎧",
+        descripcion: "Actividad para escuchar y clasificar sonidos agradables y desagradables.",
+        color: "naranja"
+      }
+    ];
+
+    const colores = {
+      azul: {
+        suave: "#dbeafe",
+        medio: "#93c5fd",
+        fuerte: "#2563eb"
+      },
+      verde: {
+        suave: "#dcfce7",
+        medio: "#86efac",
+        fuerte: "#16a34a"
+      },
+      naranja: {
+        suave: "#ffedd5",
+        medio: "#fdba74",
+        fuerte: "#f97316"
+      },
+      morado: {
+        suave: "#ede9fe",
+        medio: "#c4b5fd",
+        fuerte: "#7c3aed"
+      },
+      rosado: {
+        suave: "#fce7f3",
+        medio: "#f9a8d4",
+        fuerte: "#db2777"
+      }
+    };
+
+    const contenedorApps = document.getElementById("contenedorApps");
+    const buscar = document.getElementById("buscar");
+    const contador = document.getElementById("contador");
+    const nombreNino = document.getElementById("nombreNino");
+
+    const nombreGuardado = localStorage.getItem("nombreNinoGabrielApps");
+    if (nombreGuardado) nombreNino.value = nombreGuardado;
+
+    nombreNino.addEventListener("input", () => {
+      localStorage.setItem("nombreNinoGabrielApps", nombreNino.value.trim());
+    });
+
+    function normalizar(texto) {
+      return texto
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function crearTarjeta(app) {
+      const c = colores[app.color] || colores.azul;
+      const tarjeta = document.createElement("a");
+      tarjeta.className = "card";
+      tarjeta.href = app.archivo;
+      tarjeta.setAttribute("aria-label", `Abrir ${app.nombre}`);
+      tarjeta.style.setProperty("--color-suave", c.suave);
+      tarjeta.style.setProperty("--color-medio", c.medio);
+      tarjeta.style.setProperty("--color-fuerte", c.fuerte);
+
+      tarjeta.innerHTML = `
+        <div>
+          <div class="icono">${app.icono}</div>
+          <h2>${app.nombre}</h2>
+          <p>${app.descripcion}</p>
+        </div>
+        <div class="abrir">Abrir actividad <span aria-hidden="true">➡️</span></div>
+      `;
+
+      return tarjeta;
+    }
+
+    function renderizarApps(filtro = "") {
+      const filtroLimpio = normalizar(filtro);
+      contenedorApps.innerHTML = "";
+
+      const appsFiltradas = aplicaciones.filter(app => {
+        const texto = `${app.nombre} ${app.descripcion} ${app.archivo}`;
+        return normalizar(texto).includes(filtroLimpio);
+      });
+
+      appsFiltradas.forEach(app => contenedorApps.appendChild(crearTarjeta(app)));
+
+      contador.textContent = appsFiltradas.length === 1
+        ? "1 aplicación"
+        : `${appsFiltradas.length} aplicaciones`;
+
+      if (appsFiltradas.length === 0) {
+        const mensaje = document.createElement("div");
+        mensaje.className = "nota";
+        mensaje.style.gridColumn = "1 / -1";
+        mensaje.innerHTML = "No se encontró ninguna aplicación con ese nombre.";
+        contenedorApps.appendChild(mensaje);
+      }
+    }
+
+    buscar.addEventListener("input", () => renderizarApps(buscar.value));
+
+    renderizarApps();
+  </script>
+</body>
+</html>

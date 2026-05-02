@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sonidos agradables y desagradables</title>
+<style>
+:root{--azul:#2563eb;--verde:#16a34a;--rojo:#dc2626;--amarillo:#facc15;--texto:#172554;--card:#ffffffee}*{box-sizing:border-box}body{margin:0;font-family:'Trebuchet MS',Arial,sans-serif;background:radial-gradient(circle at top left,#fff1c9,#e0f7ff 55%,#f5e8ff);color:var(--texto);min-height:100vh}.app{width:min(1180px,96vw);margin:auto;padding:18px 10px 40px}header{background:linear-gradient(135deg,#fff,#e9f5ff);border:5px solid #93c5fd;border-radius:28px;padding:18px;text-align:center;box-shadow:0 10px 30px #0002}h1{margin:4px 0 8px;font-size:clamp(30px,4vw,54px);color:#1d4ed8;text-shadow:2px 2px 0 #bfdbfe}.subtitle{font-size:clamp(18px,2vw,24px);margin:0}.toolbar{margin:18px 0;display:flex;gap:12px;flex-wrap:wrap;justify-content:center}button{border:0;border-radius:20px;padding:14px 22px;font-size:20px;font-weight:800;cursor:pointer;box-shadow:0 6px 0 #0003,0 12px 18px #0001;font-family:inherit}button:active{transform:translateY(4px);box-shadow:0 2px 0 #0003}.modeBtn{background:#dbeafe;color:#1e3a8a;border:3px solid #60a5fa}.modeBtn.active{background:#1d4ed8;color:#fff}.smallBtn{font-size:17px;padding:10px 15px;border-radius:16px;background:#ede9fe;color:#5b21b6;border:3px solid #c4b5fd}.resetBtn{background:#fee2e2;color:#991b1b;border-color:#f87171}.playBtn{background:#fef3c7;color:#92400e;border:3px solid #f59e0b}.panel{background:var(--card);border:5px solid #bae6fd;border-radius:30px;padding:20px;box-shadow:0 14px 35px #0002}.hidden{display:none!important}.single-layout{display:grid;gap:18px;justify-items:center}.progress{font-size:22px;font-weight:900;background:#eff6ff;color:#1e40af;border:3px solid #93c5fd;padding:10px 18px;border-radius:999px}.sound-card{width:min(980px,100%);background:#fff;border:5px solid #bae6fd;border-radius:32px;padding:18px;text-align:center;box-shadow:inset 0 0 0 6px #eff6ff,0 12px 25px #0002}.sound-img{width:min(460px,86vw);height:280px;object-fit:contain;display:block;margin:0 auto 10px;border-radius:24px;background:#f8fafc;box-shadow:0 8px 18px #0002}.sound-name{font-size:32px;font-weight:900;color:#0f172a;margin:5px 0 12px}.choices{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;margin-top:12px}.choice{width:min(430px,48vw);min-height:175px;background:#fff;border-radius:34px;border:6px solid #d1d5db;padding:10px 14px;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:12px;transition:.18s ease;position:relative;overflow:hidden}.choice img{width:96%;height:auto;max-height:150px;object-fit:contain;filter:drop-shadow(0 10px 8px #0002)}.choice span{display:none}.choice.good{border-color:#15803d;color:#15803d;background:linear-gradient(135deg,#f0fdf4,#dcfce7 70%,#bbf7d0)}.choice.bad{border-color:#dc2626;color:#dc2626;background:linear-gradient(135deg,#fff1f2,#fee2e2 70%,#fecaca)}.choice:hover{transform:translateY(-3px) scale(1.01)}.choice.selected{outline:9px solid #facc15;transform:scale(1.035)}.feedback{min-height:60px;font-size:27px;font-weight:900;text-align:center;padding:12px 16px;border-radius:20px;margin-top:10px}.feedback.ok{background:#dcfce7;color:#166534;border:3px solid #22c55e}.feedback.no{background:#fee2e2;color:#991b1b;border:3px solid #ef4444}.feedback.neutral{background:#eff6ff;color:#1d4ed8;border:3px solid #93c5fd}.score-row{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}.star{width:36px;height:36px;border-radius:50%;background:#e5e7eb;display:grid;place-items:center;font-weight:900;color:#64748b;border:3px solid #cbd5e1}.star.done{background:#fef08a;color:#854d0e;border-color:#facc15}.grid-mode{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}.mini-card{background:#fff;border:4px solid #c7d2fe;border-radius:28px;padding:14px;text-align:center;box-shadow:0 8px 20px #0001}.mini-card img.item{width:100%;height:145px;object-fit:contain;border-radius:20px;background:#f8fafc}.mini-card h3{margin:6px 0 8px;font-size:24px}.mini-choices{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.mini-choice{border:4px solid #d1d5db;border-radius:22px;background:#fff;padding:6px;font-size:0;font-weight:900;cursor:pointer;box-shadow:0 5px 0 #0002;min-height:95px;text-transform:uppercase}.mini-choice img{width:100%;height:auto;max-height:82px;display:block;margin:0 auto;object-fit:contain;filter:drop-shadow(0 6px 5px #0002)}.mini-choice.good{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-color:#15803d;color:#15803d}.mini-choice.bad{background:linear-gradient(135deg,#fff1f2,#fee2e2);border-color:#dc2626;color:#dc2626}.mini-choice.selected{outline:5px solid #facc15}.mini-result{font-weight:900;min-height:26px;margin-top:8px;font-size:17px}.mini-result.ok{color:#166534}.mini-result.no{color:#991b1b}.footer-help{margin-top:14px;font-size:16px;text-align:center;color:#334155}.celebration{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:20}.confetti{position:absolute;top:-40px;font-size:28px;animation:fall 2.2s linear forwards}@keyframes fall{to{transform:translateY(110vh) rotate(680deg);opacity:.9}}@media(max-width:560px){.choice{width:100%;min-height:150px}.choice img{width:96%;height:auto;max-height:130px}.sound-img{height:210px}button{font-size:18px;padding:12px 16px}.mini-choices{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="celebration" id="celebration"></div>
+<main class="app">
+<header><h1>¿Sonido agradable o desagradable?</h1><p class="subtitle">Escucha el sonido, observa la imagen y selecciona la opción que mejor corresponde.</p></header>
+<nav class="toolbar"><button class="modeBtn active" id="btnSingle">Modo 1: uno por uno</button><button class="modeBtn" id="btnGrid">Modo 2: todos juntos</button><button class="smallBtn" id="btnShuffle">Mezclar sonidos</button><button class="smallBtn resetBtn" id="btnReset">Reiniciar</button><button class="smallBtn" id="btnHelpAudio">Ayuda sonidos</button></nav>
+<section id="singleMode" class="panel single-layout"><div class="progress" id="progressText">Sonido 1 de 10</div><div class="score-row" id="stars"></div><article class="sound-card"><img class="sound-img" id="mainImage" alt="Imagen del sonido"/><div class="sound-name" id="mainName">Pájaros</div><button class="playBtn" id="mainPlay">▶ Escuchar sonido</button><div class="choices"><button class="choice good" id="mainGood"><img id="goodBtnImg1" alt="Agradable"/></button><button class="choice bad" id="mainBad"><img id="badBtnImg1" alt="Desagradable"/></button></div><div class="feedback neutral" id="mainFeedback">Primero escucha el sonido.</div></article><button class="smallBtn" id="btnNext">Siguiente sonido ➜</button></section>
+<section id="gridMode" class="panel hidden"><div class="grid-mode" id="gridContainer"></div><p class="footer-help">Para que funcione en GitHub Pages, coloque este archivo index.html y, al mismo nivel, una carpeta llamada ImagenesSonidos con todos los archivos PNG y MP3.</p></section>
+</main><audio id="audioPlayer" preload="auto"></audio>
+<script>
+/*
+  ESTRUCTURA DE CARPETAS PARA GITHUB PAGES
+
+  index.html
+  ImagenesSonidos/
+    aplausos.mp3
+    aplausos.png
+    bocina.mp3
+    bocina.png
+    boton_agradable.png
+    boton_desagradable.png
+    campana.png
+    campanas.mp3
+    lluvia.mp3
+    lluvia.png
+    musicasuave.mp3
+    musicasuave.png
+    pajaros.mp3
+    pajaros.png
+    sirena.mp3
+    sirena.png
+    taladro.mp3
+    taladro.png
+    trafico.mp3
+    trafico.png
+    viento.mp3
+    viento.png
+*/
+
+const CARPETA_RECURSOS = 'ImagenesSonidos/';
+const ruta = archivo => CARPETA_RECURSOS + archivo;
+
+const buttons = {
+  agradable: ruta('boton_agradable.png'),
+  desagradable: ruta('boton_desagradable.png')
+};
+
+const originalSounds = [
+  { name:'pajaros',      label:'Pájaros',       type:'agradable',    audio:[ruta('pajaros.mp3')],      image:ruta('pajaros.png') },
+  { name:'taladro',      label:'Taladro',       type:'desagradable', audio:[ruta('taladro.mp3')],      image:ruta('taladro.png') },
+  { name:'bocina',       label:'Bocina',        type:'desagradable', audio:[ruta('bocina.mp3')],       image:ruta('bocina.png') },
+  { name:'trafico',      label:'Tráfico',       type:'desagradable', audio:[ruta('trafico.mp3')],      image:ruta('trafico.png') },
+  { name:'musicasuave',  label:'Música suave',  type:'agradable',    audio:[ruta('musicasuave.mp3')],  image:ruta('musicasuave.png') },
+  { name:'campanas',     label:'Campanas',      type:'agradable',    audio:[ruta('campanas.mp3')],     image:ruta('campana.png') },
+  { name:'sirena',       label:'Sirena',        type:'desagradable', audio:[ruta('sirena.mp3')],       image:ruta('sirena.png') },
+  { name:'aplausos',     label:'Aplausos',      type:'agradable',    audio:[ruta('aplausos.mp3')],     image:ruta('aplausos.png') },
+  { name:'lluvia',       label:'Lluvia',        type:'agradable',    audio:[ruta('lluvia.mp3')],       image:ruta('lluvia.png') },
+  { name:'viento',       label:'Viento',        type:'agradable',    audio:[ruta('viento.mp3')],       image:ruta('viento.png') }
+];
+
+let sounds = [...originalSounds];
+let index = 0;
+let answers = Array(sounds.length).fill(null);
+
+const audio = document.getElementById('audioPlayer');
+const $ = id => document.getElementById(id);
+
+$('goodBtnImg1').src = buttons.agradable;
+$('badBtnImg1').src = buttons.desagradable;
+
+function stopAudio(){
+  audio.pause();
+  audio.currentTime = 0;
+}
+
+async function playSound(sound){
+  stopAudio();
+  let lastError = null;
+
+  for(const src of sound.audio){
+    try{
+      audio.src = src;
+      audio.load();
+      await audio.play();
+      return;
+    }catch(err){
+      lastError = err;
+    }
+  }
+
+  showFeedback('No se pudo reproducir el sonido. Revise que el archivo MP3 esté dentro de la carpeta ImagenesSonidos y que el nombre coincida exactamente.', false, true);
+  console.warn('Error de audio:', lastError, sound.audio);
+}
+
+function setImage(img, url, label){
+  img.onerror = () => {
+    img.onerror = null;
+    img.alt = label + ' (imagen no disponible)';
+    img.style.border = '4px dashed #fb923c';
+  };
+  img.src = url;
+}
+
+function renderStars(){
+  const box = $('stars');
+  box.innerHTML = '';
+  sounds.forEach((_, i) => {
+    const s = document.createElement('div');
+    s.className = 'star' + (answers[i] ? ' done' : '');
+    s.textContent = answers[i] === 'ok' ? '✓' : i + 1;
+    box.appendChild(s);
+  });
+}
+
+function showFeedback(text, ok=false, neutral=false){
+  const fb = $('mainFeedback');
+  fb.className = 'feedback ' + (neutral ? 'neutral' : ok ? 'ok' : 'no');
+  fb.textContent = text;
+}
+
+function renderSingle(){
+  const item = sounds[index];
+  $('progressText').textContent = `Sonido ${index + 1} de ${sounds.length}`;
+  setImage($('mainImage'), item.image, item.label);
+  $('mainName').textContent = item.label;
+  $('mainGood').classList.remove('selected');
+  $('mainBad').classList.remove('selected');
+  showFeedback('Primero escucha el sonido.', false, true);
+  renderStars();
+}
+
+function answerSingle(choice){
+  const item = sounds[index];
+  const ok = choice === item.type;
+  answers[index] = ok ? 'ok' : 'no';
+  $('mainGood').classList.toggle('selected', choice === 'agradable');
+  $('mainBad').classList.toggle('selected', choice === 'desagradable');
+
+  if(ok){
+    showFeedback('¡Muy bien! Respuesta correcta.', true);
+    celebrate();
+  }else{
+    showFeedback(`Intenta recordar: este sonido suele ser ${item.type}.`, false);
+  }
+  renderStars();
+}
+
+function nextSound(){
+  stopAudio();
+  index = (index + 1) % sounds.length;
+  renderSingle();
+}
+
+function renderGrid(){
+  const grid = $('gridContainer');
+  grid.innerHTML = '';
+
+  sounds.forEach((item, i) => {
+    const card = document.createElement('article');
+    card.className = 'mini-card';
+    card.innerHTML = `
+      <img class="item" src="${item.image}" alt="Imagen: ${item.label}" onerror="this.style.border='4px dashed #fb923c';this.alt='Imagen no disponible'">
+      <h3>${item.label}</h3>
+      <button class="smallBtn playBtn" data-play="${i}">▶ Escuchar</button>
+      <div class="mini-choices">
+        <button class="mini-choice good" data-choice="agradable" data-i="${i}"><img src="${buttons.agradable}" alt="Agradable"></button>
+        <button class="mini-choice bad" data-choice="desagradable" data-i="${i}"><img src="${buttons.desagradable}" alt="Desagradable"></button>
+      </div>
+      <div class="mini-result" id="result-${i}"></div>`;
+    grid.appendChild(card);
+  });
+
+  grid.querySelectorAll('[data-play]').forEach(btn =>
+    btn.addEventListener('click', () => playSound(sounds[Number(btn.dataset.play)]))
+  );
+
+  grid.querySelectorAll('[data-choice]').forEach(btn =>
+    btn.addEventListener('click', () => {
+      const i = Number(btn.dataset.i);
+      const choice = btn.dataset.choice;
+      const item = sounds[i];
+      const card = btn.closest('.mini-card');
+      card.querySelectorAll('.mini-choice').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      const r = card.querySelector(`#result-${i}`);
+
+      if(choice === item.type){
+        r.textContent = '✓ Correcto';
+        r.className = 'mini-result ok';
+        celebrate(18);
+      }else{
+        r.textContent = `Revisa: suele ser ${item.type}.`;
+        r.className = 'mini-result no';
+      }
+    })
+  );
+}
+
+function setMode(mode){
+  stopAudio();
+  const single = mode === 'single';
+  $('singleMode').classList.toggle('hidden', !single);
+  $('gridMode').classList.toggle('hidden', single);
+  $('btnSingle').classList.toggle('active', single);
+  $('btnGrid').classList.toggle('active', !single);
+  single ? renderSingle() : renderGrid();
+}
+
+function shuffle(){
+  stopAudio();
+  sounds = sounds.map(v => ({v, sort:Math.random()})).sort((a,b) => a.sort - b.sort).map(({v}) => v);
+  index = 0;
+  answers = Array(sounds.length).fill(null);
+  renderSingle();
+  if(!$('gridMode').classList.contains('hidden')) renderGrid();
+}
+
+function reset(){
+  stopAudio();
+  sounds = [...originalSounds];
+  index = 0;
+  answers = Array(sounds.length).fill(null);
+  renderSingle();
+  if(!$('gridMode').classList.contains('hidden')) renderGrid();
+}
+
+function celebrate(count=35){
+  const box = $('celebration');
+  const icons = ['⭐','✨','🎵','💛','🌈','🎉','👏'];
+  for(let i=0; i<count; i++){
+    const el = document.createElement('div');
+    el.className = 'confetti';
+    el.textContent = icons[Math.floor(Math.random()*icons.length)];
+    el.style.left = Math.random()*100 + 'vw';
+    el.style.animationDelay = Math.random()*0.35 + 's';
+    el.style.fontSize = 22 + Math.random()*24 + 'px';
+    box.appendChild(el);
+    setTimeout(() => el.remove(), 2600);
+  }
+}
+
+$('mainPlay').addEventListener('click', () => playSound(sounds[index]));
+$('mainGood').addEventListener('click', () => answerSingle('agradable'));
+$('mainBad').addEventListener('click', () => answerSingle('desagradable'));
+$('btnNext').addEventListener('click', nextSound);
+$('btnSingle').addEventListener('click', () => setMode('single'));
+$('btnGrid').addEventListener('click', () => setMode('grid'));
+$('btnShuffle').addEventListener('click', shuffle);
+$('btnReset').addEventListener('click', reset);
+$('btnHelpAudio').addEventListener('click', () => alert('Para GitHub Pages, coloque el archivo index.html y, al mismo nivel, una carpeta llamada ImagenesSonidos. Dentro de esa carpeta deben estar las imágenes PNG y los sonidos MP3 con los nombres exactos usados por la aplicación.'));
+
+renderSingle();
+</script>
+</body>
+</html>

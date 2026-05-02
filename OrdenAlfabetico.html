@@ -1,0 +1,1588 @@
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ordena Alfabéticamente</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet">
+  <style>
+* { font-family: 'Nunito', sans-serif; box-sizing: border-box; }
+html, body { height: 100%; margin: 0; overflow: auto; }
+
+.word-tile {
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  cursor: grab;
+  user-select: none;
+  transition: transform 0.15s, box-shadow 0.15s;
+  touch-action: none;
+  position: absolute;
+  z-index: 10;
+  white-space: nowrap;
+  display: inline-block;
+  width: fit-content;
+  height: fit-content;
+  line-height: 1.2;
+}
+.word-tile:active, .word-tile.dragging { cursor: grabbing; transform: scale(1.1); z-index: 100; box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
+
+.drop-slot {
+  border: 3px dashed #c4b5fd;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  position: relative;
+  height: 60px;
+  padding: 0 16px;
+}
+.drop-slot.empty {
+  background: #f5f3ff;
+  min-width: 120px;
+}
+.drop-slot.hover { background: #ede9fe; border-color: #8b5cf6; }
+.drop-slot.correct { background: #d1fae5; border-color: #34d399; }
+.drop-slot.incorrect { background: #fee2e2; border-color: #f87171; }
+.drop-slot .placed-word {
+  font-size: 1.2rem; font-weight: 800; cursor: grab; user-select: none; touch-action: none;
+}
+
+.slot-number {
+  position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  background: #8b5cf6; color: white; border-radius: 50%; width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700;
+}
+
+.btn {
+  padding: 12px 28px; border-radius: 14px; font-weight: 700; font-size: 1.05rem;
+  border: none; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 8px;
+}
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.confetti-piece {
+  position: fixed; z-index: 9999; pointer-events: none;
+  animation: confetti-fall linear forwards;
+}
+@keyframes confetti-fall {
+  0% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+  100% { opacity: 0; transform: translateY(600px) rotate(720deg) scale(0.3); }
+}
+
+@keyframes confetti-rain {
+  0% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+  100% { opacity: 0; transform: translateY(800px) rotate(360deg) scale(0.2); }
+}
+
+@keyframes firework-burst {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0); }
+}
+
+@keyframes spiral-spin {
+  0% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+  100% { opacity: 0; transform: translateY(-600px) rotate(720deg) scale(0.1); }
+}
+
+@keyframes explosion-bounce {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  50% { opacity: 1; transform: translate(var(--tx), var(--ty)) scale(1.1); }
+  100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0.2); }
+}
+
+@keyframes star-twinkle {
+  0% { opacity: 0; transform: translateY(100vh) scale(0); }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-100vh) scale(0); }
+}
+
+.celebration-title {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9998;
+  font-size: 4rem;
+  font-weight: 900;
+  text-align: center;
+  pointer-events: none;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  animation: title-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes title-pop {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3) rotate(-10deg); }
+  50% { transform: translate(-50%, -50%) scale(1.1) rotate(5deg); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+}
+
+
+@keyframes side-sweep {
+  0% { opacity: 0; transform: translateX(-15vw) translateY(0) rotate(0deg) scale(0.4); }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(120vw) translateY(var(--wave)) rotate(720deg) scale(1.2); }
+}
+
+@keyframes fountain-up {
+  0% { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(0.8); }
+  70% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--tx), var(--ty)) rotate(900deg) scale(0.2); }
+}
+
+@keyframes float-pulse {
+  0% { opacity: 0; transform: translateY(30vh) rotate(0deg) scale(0.2); }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-90vh) rotate(540deg) scale(1.4); }
+}
+
+.fade-in { animation: fadeIn 0.4s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+.tile-color-0 { background: #c4b5fd; color: #3b0764; }
+.tile-color-1 { background: #fbbf24; color: #78350f; }
+.tile-color-2 { background: #6ee7b7; color: #064e3b; }
+.tile-color-3 { background: #f9a8d4; color: #831843; }
+.tile-color-4 { background: #93c5fd; color: #1e3a5f; }
+.tile-color-5 { background: #fca5a5; color: #7f1d1d; }
+.tile-color-6 { background: #a5f3fc; color: #164e63; }
+.tile-color-7 { background: #d9f99d; color: #365314; }
+
+.scatter-area { position: relative; width: 100%; min-height: 200px; overflow: hidden; }
+.scatter-area-vertical { display: flex; flex-direction: column; gap: 10px; flex-wrap: wrap; align-content: flex-start; }
+
+.game-layout-vertical {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+}
+
+.game-layout-vertical .layout-left {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 75%;
+  margin-left: 75px;
+}
+
+.game-layout-vertical .layout-right {
+  position: relative;
+  background: rgba(255,255,255,0.5);
+  border: 2px dashed #ddd8fe;
+  border-radius: 16px;
+  padding: 16px;
+  min-height: 400px;
+  overflow: auto;
+  margin-right: 75px;
+}
+
+.words-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+  width: 100%;
+  overflow-y: auto;
+}
+
+.word-placeholder {
+  border: 2px solid #9ca3af;
+  border-radius: 12px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #d1d5db;
+  min-width: 80px;
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 800;
+  user-select: none;
+  padding: 10px 16px;
+  position: relative;
+  left: auto;
+  top: auto;
+  margin: 0;
+  width: fit-content;
+  height: fit-content;
+}
+
+.word-ghost {
+  border: 2px dashed #b4b8bf;
+  border-radius: 12px;
+  background: #d1d5db;
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 800;
+  user-select: none;
+  padding: 10px 16px;
+  position: relative;
+  left: auto;
+  top: auto;
+  margin: 0;
+  width: fit-content;
+  height: fit-content;
+  display: inline-block;
+  line-height: 1.2;
+}
+
+.vertical-slot {
+  min-width: 100%;
+  height: 60px;
+  border: 2px dashed #c4b5fd;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 12px;
+  position: relative;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.vertical-slot.hover { background: #ede9fe; border-color: #8b5cf6; }
+.vertical-slot.correct { background: #d1fae5; border-color: #34d399; }
+.vertical-slot.incorrect { background: #fee2e2; border-color: #f87171; }
+
+.vertical-slot-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #8b5cf6;
+  color: white;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.vertical-slot .placed-word {
+  font-size: 1.3rem;
+  font-weight: 800;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  padding: 0;
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.vertical-slot:empty {
+  color: #c4b5fd;
+  font-size: 0.9rem;
+}
+
+
+/* Reemplazo mínimo de clases usadas de Tailwind por si no carga internet */
+.w-full{width:100%;}.h-full{height:100%;}.max-w-lg{max-width:32rem}.max-w-6xl{max-width:72rem}.mx-auto{margin-left:auto;margin-right:auto}.mt-1{margin-top:.25rem}.mt-2{margin-top:.5rem}.mt-4{margin-top:1rem}.mt-8{margin-top:2rem}.mb-2{margin-bottom:.5rem}.mb-3{margin-bottom:.75rem}.mb-6{margin-bottom:1.5rem}.p-4{padding:1rem}.p-6{padding:1.5rem}.px-2{padding-left:.5rem;padding-right:.5rem}.px-4{padding-left:1rem;padding-right:1rem}.py-3{padding-top:.75rem;padding-bottom:.75rem}.flex{display:flex}.inline-flex{display:inline-flex}.hidden{display:none!important}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.justify-center{justify-content:center}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.text-center{text-align:center}.text-xs{font-size:.75rem}.text-sm{font-size:.875rem}.text-lg{font-size:1.125rem}.text-xl{font-size:1.25rem}.text-2xl{font-size:1.5rem}.text-3xl{font-size:1.875rem}.font-bold{font-weight:700}.font-black{font-weight:900}.block{display:block}.rounded-lg{border-radius:.5rem}.rounded-2xl{border-radius:1rem}.border-2{border-width:2px}.border-purple-300{border-color:#d8b4fe}.focus\:outline-none:focus{outline:none}.focus\:border-purple-600:focus{border-color:#9333ea}.overflow-auto{overflow:auto}
+
+/* Ajustes para uso independiente fuera de Canva */
+.hidden { display: none !important; }
+button, input { font-family: inherit; }
+@media (max-width: 800px) {
+  .game-layout-vertical { grid-template-columns: 1fr; }
+  .game-layout-vertical .layout-left { width: 100%; margin-left: 0; }
+  .game-layout-vertical .layout-right { margin-right: 0; min-height: 180px; }
+  #scatter-area { max-width: 100% !important; }
+  .celebration-title { font-size: 2.2rem; width: 90%; }
+}
+</style>
+  <style>body { box-sizing: border-box; }</style>
+  
+  
+ </head>
+ <body class="h-full" style="background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 40%, #fdf4ff 100%);">
+  <div id="app" class="w-full h-full overflow-auto flex flex-col items-center p-4"><!-- SETUP SCREEN -->
+   <div id="setup-screen" class="fade-in flex flex-col items-center justify-center gap-6 w-full max-w-lg mx-auto mt-8">
+    <div class="text-center">
+     <div style="font-size:3rem;">
+      📚
+     </div>
+     <h1 id="main-title" class="text-3xl font-black mt-2" style="color:#6d28d9;">Ordena Alfabéticamente</h1>
+     <p class="mt-2 text-lg" style="color:#7c3aed;">Arrastra las palabras y ponlas en orden de la A a la Z</p>
+    </div>
+    <div class="w-full rounded-2xl p-6" style="background:white; box-shadow: 0 4px 20px rgba(139,92,246,0.12);"><label class="block font-bold text-lg mb-3" style="color:#5b21b6;">¿Cuál es tu nombre?</label> <input type="text" id="student-name" placeholder="Escribe tu nombre..." class="w-full px-4 py-3 border-2 border-purple-300 rounded-lg focus:outline-none focus:border-purple-600" style="font-size:1.1rem;">
+    </div>
+    <div class="w-full rounded-2xl p-6" style="background:white; box-shadow: 0 4px 20px rgba(139,92,246,0.12);"><label class="block font-bold text-lg mb-3" style="color:#5b21b6;">¿Cuántas palabras?</label>
+     <div class="flex flex-wrap gap-3 mb-6" id="word-count-btns"></div><label class="block font-bold text-lg mb-3" style="color:#5b21b6;">Tipo de ordenamiento</label>
+     <div class="flex flex-wrap gap-3 mb-6" id="sort-type-btns"></div><label class="block font-bold text-lg mb-3" style="color:#5b21b6;">Nivel de dificultad</label>
+     <p class="text-sm mb-3" style="color:#7c3aed;">Cambia la longitud de las palabras (más cortas = fácil, más largas = difícil)</p>
+     <div class="flex flex-wrap gap-3 mb-6" id="diff-btns"></div><label class="block font-bold text-lg mb-3" style="color:#5b21b6;">Disposición de palabras</label>
+     <div class="flex flex-wrap gap-3" id="layout-btns"></div>
+    </div><button class="btn text-xl" style="background:#8b5cf6; color:white; padding:16px 48px; font-size:1.3rem;" onclick="startGame()"> 🎮 ¡Comenzar! </button>
+    <p id="credit-setup" class="text-sm mt-4" style="color:#a78bfa;">Creado para Gabriel por parte de su familia con ayuda de la IA</p>
+   </div><!-- GAME SCREEN -->
+   <div id="game-screen" class="hidden w-full max-w-6xl mx-auto fade-in flex flex-col gap-4">
+    <div class="text-center">
+     <h2 id="game-instruction" class="text-2xl font-black" style="color:#6d28d9;">📖 Ordena las palabras alfabéticamente (A → Z)</h2>
+     <p class="text-sm mt-1" style="color:#8b5cf6;" id="game-info"></p>
+    </div><!-- Horizontal Layout -->
+    <div id="horizontal-layout" class="hidden w-full flex flex-col gap-4">
+     <div class="text-center font-bold text-sm" style="color:#5b21b6;">
+      📦 Palabras disponibles
+     </div>
+     <div id="scatter-area" class="scatter-area rounded-2xl" style="background: rgba(255,255,255,0.5); border: 2px dashed #ddd8fe; max-width: 546px; margin: 0 auto;"></div>
+     <div class="text-center font-bold text-lg" style="color:#5b21b6;">
+      ⬇️ Coloca aquí en orden alfabético ⬇️
+     </div>
+     <div id="slots-container" class="flex flex-wrap justify-center gap-4 px-2"></div>
+    </div><!-- Vertical Layout -->
+    <div id="vertical-layout" class="hidden game-layout-vertical">
+     <div class="layout-left">
+      <div class="text-center font-bold text-lg mb-2" style="color:#5b21b6;">
+       📝 Posiciones
+      </div>
+      <div id="slots-container-vertical" class="flex flex-col gap-2"></div>
+     </div>
+     <div class="layout-right">
+      <div class="text-center font-bold text-sm mb-3" style="color:#5b21b6;">
+       📦 Palabras disponibles
+      </div>
+      <div id="scatter-area-vertical" class="words-grid"></div>
+     </div>
+    </div><!-- Feedback -->
+    <div id="feedback" class="text-center text-xl font-bold hidden" style="min-height:40px;"></div><!-- Buttons -->
+    <div class="flex flex-wrap justify-center gap-3"><button id="btn-check" class="btn" style="background:#8b5cf6; color:white;" onclick="checkAnswers()" disabled>✅ Revisar</button> <button class="btn" style="background:#fbbf24; color:#78350f;" onclick="newRound()">🔄 Nueva ronda</button> <button class="btn" style="background:#f9a8d4; color:#831843;" onclick="resetGame()">🔃 Reiniciar</button> <button class="btn" style="background:#6ee7b7; color:#064e3b;" onclick="changeLevel()">⚙️ Cambiar nivel</button>
+    </div>
+    <p id="credit-game" class="text-xs text-center mt-2" style="color:#a78bfa;">Creado para Gabriel por parte de su familia con ayuda de la IA</p>
+   </div>
+  </div>
+  <script>
+// Word banks - Bancos estratégicos para cada nivel
+const WORDS = {
+  easy: [
+    "abro", "acne", "acto", "afán", "agua", "aire", "ajo", "ala", "alas", "alga", "algo", "alma", "alta", "alto", "amar", "amo", "amor", "años", "arar", "arco", "área", "arma", "aro", "arpa", "arte", "asa", "asar", "asma", "aso", "aspa", "ata", "atar", "atún", "aula", "auto", "aval", "ave", "ayer", "azul", "baba", "baca", "baja", "bajo", "bala", "bar", "basa", "baso", "bata", "bate", "bebé", "beca", "beso", "bici", "bien", "boca", "boda", "bola", "bono", "bota", "bote", "buey", "búho", "buso", "cabo", "cada", "café", "caja", "cal", "cama", "caña", "capa", "cara", "casa", "cebo", "ceda", "cedo", "ceja", "cena", "cepa", "cero", "cien", "cita", "clan", "clip", "club", "coco", "codo", "col", "cola", "come", "cono", "copa", "coro", "cosa", "cruz", "cuba", "cubo", "cuna", "cura", "cuyo", "dado", "dama", "daño", "dedo", "deja", "dejo", "diez", "dino", "dios", "diva", "doce", "doma", "doña", "dora", "dote", "duda", "duna", "duro", "echa", "eco", "edad", "eje", "elfo", "ella", "ello", "era", "ese", "eso", "está", "este", "faja", "fama", "faro", "feo", "fiel", "fija", "fijo", "fin", "flán", "flor", "foca", "foco", "foto", "frío", "fuga", "fuma", "gajo", "gala", "gana", "gas", "gasa", "gato", "gel", "gema", "giro", "gol", "goma", "goza", "gozo", "grúa", "guía", "haba", "hada", "hala", "halo", "hice", "hijo", "hila", "hilo", "hoja", "hola", "hora", "hule", "humo", "idea", "iglú", "imán", "info", "iris", "isla", "jala", "jefa", "jefe", "jota", "joya", "juez", "jugo", "jura", "kilo", "kiwi", "lado", "lago", "lana", "lata", "lava", "lazo", "lego", "leña", "león", "lila", "lima", "lino", "lisa", "lobo", "loca", "loco", "lodo", "loma", "lomo", "lona", "loro", "lote", "lujo", "luna", "lupa", "luz", "maíz", "mala", "malo", "mamá", "mano", "mapa", "mar", "mara", "masa", "mate", "mayo", "mazo", "mes", "mesa", "meta", "mica", "mide", "miel", "mil", "mira", "misa", "moco", "moda", "mole", "mono", "mora", "moto", "muda", "mudo", "mula", "muro", "musa", "nabo", "nace", "nada", "nado", "nana", "nave", "nene", "nido", "niña", "niño", "nota", "nube", "nuca", "nudo", "nuez", "obra", "ocho", "ocio", "odia", "odio", "oído", "ojo", "ola", "olla", "once", "onda", "orar", "orca", "oro", "oso", "otra", "ovni", "pala", "palo", "pan", "pana", "papá", "para", "paro", "pase", "pata", "pato", "peca", "pelo", "pena", "pera", "peso", "pez", "pica", "pico", "pie", "piel", "pila", "pino", "pipa", "piso", "poco", "polo", "popa", "pozo", "proa", "pura", "puro", "rabo", "rama", "rana", "rata", "raya", "raza", "red", "remo", "reto", "rezo", "rica", "rico", "riel", "río", "risa", "rizo", "roba", "robo", "roca", "rojo", "ropa", "rosa", "rota", "roto", "rudo", "ruta", "saca", "saco", "sal", "sala", "sano", "sapo", "seca", "seco", "seda", "seta", "soda", "sol", "sopa", "sube", "suma", "sur", "taco", "tapa", "taza", "tel", "tela", "tema", "tina", "tipo", "tira", "tiro", "tiza", "toca", "toma", "toro", "tose", "tren", "tuna", "tusa", "una", "urna", "usar", "uso", "uva", "vaca", "vago", "vale", "vara", "vaso", "vela", "vena", "vida", "viga", "vino", "visa", "viva", "vive", "vivo", "voto", "wifi", "yate", "yema", "yeso", "yuca", "yugo", "zona", "zumo"
+  ],
+  medium: [
+    "acción", "acerca", "actitud", "acuerdo", "además", "ahora", "alguien", "algún", "alguna", "algunas", "algunos", "ambos", "américa", "amigo", "amigos", "antes", "apenas", "apoyo", "aquel", "aquella", "aunque", "autor", "ayuda", "banco", "blanco", "buena", "bueno", "buenos", "cabeza", "calidad", "calle", "cambio", "cambios", "camino", "campaña", "campo", "cargo", "carrera", "carta", "casos", "causa", "central", "centro", "cerca", "ciento", "cierta", "cierto", "cinco", "ciudad", "civil", "claro", "clase", "color", "común", "conocer", "contra", "control", "corazón", "cosas", "crisis", "cuadro", "cuáles", "cuándo", "cuánto", "cuarto", "cuatro", "cuenta", "cuerpo", "cultura", "datos", "deben", "debido", "decía", "decir", "defensa", "dejar", "demás", "dentro", "derecha", "derecho", "desde", "después", "diario", "dicho", "difícil", "dinero", "doctor", "dólares", "domingo", "dónde", "durante", "efecto", "efectos", "ejemplo", "ellas", "ellos", "empresa", "encima", "energía", "enero", "entrada", "entre", "época", "equipo", "escuela", "espacio", "especie", "espera", "estaba", "estaban", "estado", "estamos", "están", "estar", "éstas", "éstos", "estoy", "estudio", "estuvo", "europea", "evitar", "existe", "existen", "éxito", "fácil", "falta", "familia", "favor", "fecha", "figura", "final", "fondo", "forma", "formas", "Francia", "frente", "fuentes", "fuera", "fueron", "fuerte", "fuerza", "fuerzas", "función", "futuro", "García", "general", "gente", "gracias", "grande", "grandes", "grupo", "grupos", "haber", "había", "habían", "hablar", "habrá", "habría", "hacen", "hacer", "hacia", "hasta", "hecho", "hechos", "hemos", "hijos", "hombre", "hombres", "horas", "hubiera", "humano", "humanos", "ideas", "iglesia", "igual", "imagen", "incluso", "interés", "joven", "jóvenes", "juego", "junto", "largo", "lejos", "libre", "libro", "libros", "línea", "llega", "llegado", "llegar", "llegó", "lleva", "llevar", "lucha", "luego", "lugar", "madre", "mañana", "manera", "manos", "Manuel", "marcha", "materia", "mayor", "mayores", "mayoría", "media", "médico", "medida", "medidas", "medio", "medios", "mejor", "memoria", "menor", "menos", "mercado", "meses", "metros", "miedo", "Miguel", "militar", "minutos", "misma", "mismo", "mismos", "mitad", "modelo", "momento", "muchas", "mucho", "muchos", "muerte", "muestra", "mujer", "mujeres", "mundial", "mundo", "música", "nadie", "natural", "negro", "ningún", "ninguna", "niños", "nivel", "noche", "nombre", "norte", "nuestra", "nuestro", "nueva", "nuevas", "nuevo", "nuevos", "número", "nunca", "objeto", "obras", "oficial", "opinión", "orden", "origen", "otras", "otros", "padre", "padres", "países", "palabra", "papel", "parece", "parecía", "parte", "partes", "partir", "pasado", "pasar", "Pedro", "pensar", "pequeño", "permite", "persona", "pesar", "plaza", "plazo", "pocos", "podemos", "poder", "podía", "podría", "poner", "popular", "porque", "posible", "prensa", "primer", "primera", "primero", "proceso", "produce", "pronto", "propia", "propio", "próximo", "pública", "pueblo", "pueda", "puede", "pueden", "puedo", "puerta", "puesto", "punto", "puntos", "queda", "quedó", "quería", "quién", "quiénes", "quiere", "quiero", "quizá", "radio", "régimen", "región", "resto", "resulta", "reunión", "riesgo", "saber", "sabía", "salir", "salud", "sangre", "santa", "seguir", "según", "segunda", "segundo", "seguro", "semana", "sentido", "serán", "sería", "serie", "siempre", "siendo", "siete", "siglo", "sigue", "sistema", "sobre", "suelo", "también", "tampoco", "tanto", "tarde", "teatro", "tenemos", "tener", "tengo", "tenía", "tenían", "tenido", "texto", "tiempo", "tiempos", "tiene", "tienen", "tierra", "todas", "todavía", "todos", "tomar", "total", "trabajo", "trata", "través", "última", "último", "últimos", "única", "único", "unión", "usted", "valor", "valores", "vamos", "varias", "varios", "veces", "verdad", "viaje", "viejo", "viene", "vista", "visto", "vivir", "volver"
+  ],
+  hard: [
+    "abanicos", "acciones", "actividad", "actividades", "adelante", "administración", "aguacate", "alimentos", "almohada", "almohadas", "almuerzo", "almuerzos", "alrededor", "ambiente", "amigable", "amistades", "análisis", "animales", "anterior", "aplicación", "aplicaciones", "aprender", "aprenderá", "aprendizaje", "aquellas", "aquellos", "Argentina", "artículo", "artistas", "asimismo", "asociación", "aspectos", "atención", "audífono", "audífonos", "autoridades", "bailarina", "bailarines", "baloncesto", "banqueta", "banquito", "bastante", "batidora", "biblioteca", "bicicleta", "bicicletas", "bomberos", "borrador", "botellas", "botellita", "calcetines", "caminando", "caminata", "caminatas", "camiseta", "camisetas", "canciones", "cantante", "cantantes", "cantidad", "capacidad", "carácter", "características", "cargador", "cargadores", "carnicería", "carpintero", "carpinteros", "carretera", "carreteras", "cartuchera", "celulares", "cepillos", "champúes", "chaquetas", "chocolate", "ciencias", "cocinando", "cocinero", "cocineros", "cocodrilo", "cocodrilos", "comercio", "comisión", "compañía", "computadora", "computadoras", "comunicación", "comunidad", "concepto", "conciencia", "condiciones", "conejitos", "conjunto", "conocimiento", "consecuencia", "conseguir", "considera", "construcción", "consulta", "consultorio", "contenido", "contrario", "controles", "cortadora", "cortinas", "crayolas", "creación", "crecimiento", "cuadernillo", "cuaderno", "cuadernos", "cualquier", "cucharas", "cuchillos", "cuestión", "cultural", "decisión", "demasiado", "democracia", "derechos", "desarrollo", "desayuno", "descanso", "diciembre", "diferencia", "diferentes", "dinosaurio", "dinosaurios", "dirección", "director", "directorio", "distintas", "distintos", "diversas", "diversos", "doctores", "ducharse", "economía", "económica", "económico", "educación", "ejercicio", "ejercicios", "ejército", "elecciones", "electoral", "electricista", "electricistas", "elefantes", "elementos", "empresas", "enchufes", "encontrar", "encuentra", "encuentran", "encuentro", "enfermedad", "enfermera", "enfermeras", "entonces", "escritorio", "escritura", "escrituras", "esfuerzo", "española", "españoles", "especial", "especialmente", "estantería", "estructura", "estudiando", "estudiante", "estudiantes", "estudiar", "estudios", "existencia", "experiencia", "expresión", "exterior", "farmacia", "farmacias", "finalmente", "formación", "futbolista", "futbolistas", "galletas", "galletita", "generales", "geografía", "gobierno", "haciendo", "heladera", "heladito", "hicieron", "historia", "hospital", "hospitales", "imágenes", "importancia", "importante", "importantes", "imposible", "impresora", "impresoras", "industria", "información", "instituciones", "instituto", "intereses", "interior", "internacional", "internet", "investigación", "izquierda", "jabonera", "jardinero", "jardineros", "juguetero", "juguetes", "justicia", "lapicero", "lapiceros", "lavadora", "lecturas", "lenguaje", "libertad", "librería", "libretas", "licuadora", "lonchera", "loncheras", "mantener", "manzanas", "marcador", "marcadores", "mariposas", "mascotas", "matemáticas", "material", "mediante", "medicina", "medicinas", "mercados", "merienda", "meriendas", "microondas", "miembros", "mientras", "militares", "millones", "ministro", "mochilas", "mochilita", "momentos", "movimiento", "nacional", "naturaleza", "necesario", "necesidad", "nosotros", "noviembre", "nuestras", "nuestros", "objetivo", "obstante", "ocasiones", "operación", "oposición", "organización", "paciente", "pacientes", "pajaritos", "palabras", "panadería", "panadero", "panaderos", "pantalla", "pantallas", "pantalón", "paraguas", "parlante", "parlantes", "participación", "particular", "partidos", "pastelito", "peinarse", "peinetas", "peinilla", "película", "películas", "pelotita", "peluches", "perritos", "personal", "personas", "plomeros", "población", "policías", "política", "políticas", "político", "políticos", "portería", "posibilidad", "posibilidades", "posición", "práctica", "precisamente", "pregunta", "presencia", "presenta", "presente", "primeras", "primeros", "principal", "principales", "principio", "principios", "problema", "problemas", "producción", "producto", "productos", "profesional", "profesora", "profesores", "programa", "programas", "propuesta", "proyecto", "proyectos", "realidad", "realizar", "recreación", "recuerdo", "recursos", "refrigerador", "refrigerio", "relación", "relaciones", "respecto", "respuesta", "resultado", "resultados", "revolución", "sacapuntas", "sandalias", "secadora", "secretaría", "secretario", "sectores", "seguridad", "semáforo", "semáforos", "septiembre", "servicio", "servicios", "servilleta", "servilletas", "siguiente", "siguientes", "silencio", "siquiera", "sistemas", "situación", "sociales", "sociedad", "solamente", "solución", "sombrilla", "suéteres", "suficiente", "superior", "supuesto", "teclados", "teléfono", "teléfonos", "televisión", "tenedores", "términos", "toallero", "toallitas", "tortugas", "trabajadores", "trabajar", "tratamiento", "tribunal", "universidad", "vecindario", "ventanas", "ventilador", "ventiladores", "verduras", "victoria", "violencia", "vitaminas", "voluntad", "zapatillas"
+  ]
+};
+
+let config = {
+  wordCount: 5,
+  sortType: 'level1',
+  difficulty: 'easy',
+  layout: 'horizontal',
+  game_title: 'Ordena Alfabéticamente',
+  credit_text: 'Creado para Gabriel por parte de su familia con ayuda de la IA',
+  background_color: '#f5f3ff',
+  primary_color: '#8b5cf6',
+  text_color: '#3b0764',
+  accent_color: '#fbbf24',
+  surface_color: '#ffffff'
+};
+
+const defaultConfig = { ...config };
+
+// State
+let currentWords = [];
+let sortedWords = [];
+let slots = []; // each slot: { word: null }
+let dragData = null; // { word, source: 'scatter'|'slot', slotIndex }
+let studentName = ''; // Store student name
+let celebrationCount = 0; // Track number of celebrations shown
+let maxCelebrations = 3; // Maximum celebrations allowed
+
+// Frases motivacionales
+const motivationalPhrases = [
+  '¡Has demostrado que eres excelente en esto!',
+  '¡Tu dedicación es increíble, sigue así!',
+  '¡Eres una estrella del conocimiento!',
+  '¡Fantástico trabajo, estoy muy orgulloso de ti!',
+  '¡Acabas de alcanzar un nuevo nivel de éxito!',
+  '¡Tu esfuerzo merece todos los aplausos!',
+  '¡Eres imparable, sigue demostrando tu talento!',
+  '¡Este es el camino del ganador, bien hecho!',
+  '¡Tu inteligencia nos deja impresionados!',
+  '¡Hoy demuestraste ser un verdadero campeón!'
+];
+
+// Setup screen
+
+function buildSetup() {
+  const wcContainer = document.getElementById('word-count-btns');
+  wcContainer.innerHTML = '';
+  [3,4,5,6,7,8,9,10,11,12].forEach(n => {
+    const b = document.createElement('button');
+    b.className = 'btn';
+    b.textContent = n + ' palabras';
+    b.style.background = config.wordCount === n ? '#8b5cf6' : '#e9d5ff';
+    b.style.color = config.wordCount === n ? 'white' : '#5b21b6';
+    b.onclick = () => { config.wordCount = n; buildSetup(); };
+    wcContainer.appendChild(b);
+  });
+
+  const stContainer = document.getElementById('sort-type-btns');
+  stContainer.innerHTML = '';
+  [['level1','📝 Nivel 1: Primera letra'],['level2','📚 Nivel 2: Segunda letra'],['level3','🔍 Nivel 3: Tercera letra'],['level4','⭐ Nivel 4: Cuarta letra']].forEach(([k,label]) => {
+    const b = document.createElement('button');
+    b.className = 'btn';
+    b.textContent = label;
+    b.style.background = config.sortType === k ? '#8b5cf6' : '#e9d5ff';
+    b.style.color = config.sortType === k ? 'white' : '#5b21b6';
+    b.onclick = () => { config.sortType = k; buildSetup(); };
+    stContainer.appendChild(b);
+  });
+
+  const dContainer = document.getElementById('diff-btns');
+  dContainer.innerHTML = '';
+  [['easy','🟢 Fácil'],['medium','🟡 Medio'],['hard','🔴 Difícil']].forEach(([k,label]) => {
+    const b = document.createElement('button');
+    b.className = 'btn';
+    b.textContent = label;
+    b.style.background = config.difficulty === k ? '#8b5cf6' : '#e9d5ff';
+    b.style.color = config.difficulty === k ? 'white' : '#5b21b6';
+    b.onclick = () => { config.difficulty = k; buildSetup(); };
+    dContainer.appendChild(b);
+  });
+
+  const lContainer = document.getElementById('layout-btns');
+  lContainer.innerHTML = '';
+  [['horizontal','↔️ Horizontal'],['vertical','↕️ Vertical']].forEach(([k,label]) => {
+    const b = document.createElement('button');
+    b.className = 'btn';
+    b.textContent = label;
+    b.style.background = config.layout === k ? '#8b5cf6' : '#e9d5ff';
+    b.style.color = config.layout === k ? 'white' : '#5b21b6';
+    b.onclick = () => { config.layout = k; buildSetup(); };
+    lContainer.appendChild(b);
+  });
+}
+
+function startGame() {
+  const nameInput = document.getElementById('student-name');
+  if (!nameInput.value.trim()) {
+    nameInput.style.borderColor = '#ef4444';
+    return;
+  }
+  studentName = nameInput.value.trim();
+  document.getElementById('setup-screen').classList.add('hidden');
+  document.getElementById('game-screen').classList.remove('hidden');
+  newRound();
+}
+
+function changeLevel() {
+  document.getElementById('game-screen').classList.add('hidden');
+  document.getElementById('setup-screen').classList.remove('hidden');
+  buildSetup();
+}
+
+function resetGame() { newRound(); }
+
+function newRound() {
+  // Pick words with strict validation loop
+  const pool = [...WORDS[config.difficulty]];
+  let picked = [];
+  let maxAttempts = 1000;
+  let attemptCount = 0;
+
+  // Keep trying until we get a valid set
+  while (picked.length < config.wordCount && attemptCount < maxAttempts) {
+    attemptCount++;
+    picked = [];
+    const tempPool = [...pool];
+
+    // Build a candidate list
+    while (picked.length < config.wordCount && tempPool.length > 0) {
+      const randIdx = Math.floor(Math.random() * tempPool.length);
+      const candidate = tempPool[randIdx];
+
+      // Check if this candidate is valid with current picked words
+      if (isValidCandidate(candidate, picked)) {
+        picked.push(candidate);
+        tempPool.splice(randIdx, 1);
+      } else {
+        tempPool.splice(randIdx, 1);
+      }
+    }
+
+    // If we couldn't get enough words this round, validate what we have and try again
+    if (picked.length < config.wordCount) {
+      picked = [];
+    } else {
+      // Validate the entire set one more time
+      if (!validateFullSet(picked)) {
+        picked = [];
+      }
+    }
+  }
+
+  // Fallback if we still don't have enough
+  if (picked.length < config.wordCount) {
+    picked = [...pool].slice(0, config.wordCount);
+  }
+
+  currentWords = picked;
+  sortedWords = [...picked].sort((a, b) => compareByLevel(a, b));
+  slots = Array.from({ length: config.wordCount }, () => ({ word: null }));
+  celebrationCount = 0; // Reset celebration counter for new round
+
+  document.getElementById('feedback').classList.add('hidden');
+  document.getElementById('btn-check').disabled = true;
+
+  const diffLabel = { easy: 'Fácil', medium: 'Medio', hard: 'Difícil' }[config.difficulty];
+  const sortTypeLabel = { level1: 'Nivel 1: Primera letra', level2: 'Nivel 2: Segunda letra', level3: 'Nivel 3: Tercera letra', level4: 'Nivel 4: Cuarta letra' }[config.sortType];
+  document.getElementById('game-info').textContent = `${config.wordCount} palabras · Dificultad: ${diffLabel} · ${sortTypeLabel}`;
+
+  // Show/hide layouts
+  if (config.layout === 'vertical') {
+    document.getElementById('horizontal-layout').classList.add('hidden');
+    document.getElementById('vertical-layout').classList.remove('hidden');
+  } else {
+    document.getElementById('horizontal-layout').classList.remove('hidden');
+    document.getElementById('vertical-layout').classList.add('hidden');
+  }
+
+  renderScatter();
+  renderSlots();
+}
+
+function isValidCandidate(word, pickedList) {
+  if (pickedList.length === 0) return true;
+  
+  const level = getLevelNumber();
+  
+  // Nivel 1: Primera letra DIFERENTE
+  if (level === 1) {
+    const firstLetter = word.substring(0, 1);
+    return !pickedList.some(p => p.substring(0, 1) === firstLetter);
+  }
+  
+  // Nivel 2: Primera+segunda NO pueden ser iguales
+  if (level === 2) {
+    const prefix2 = word.substring(0, 2);
+    return !pickedList.some(p => p.substring(0, 2) === prefix2);
+  }
+  
+  // Nivel 3: Primera+segunda+tercera NO pueden ser iguales
+  if (level === 3) {
+    const prefix3 = word.substring(0, 3);
+    return !pickedList.some(p => p.substring(0, 3) === prefix3);
+  }
+  
+  // Nivel 4: Requiere al menos 4 letras y primera+segunda+tercera+cuarta NO pueden ser iguales
+  if (level === 4) {
+    if (word.length < 4) return false;
+    const prefix4 = word.substring(0, 4);
+    return !pickedList.some(p => p.substring(0, 4) === prefix4);
+  }
+  
+  return true;
+}
+
+function validateFullSet(wordList) {
+  if (wordList.length < 2) return true; // Need at least 2 words to validate
+  
+  const level = getLevelNumber();
+  
+  // ========== NIVEL 1 ==========
+  // Criterio: TODAS las palabras tienen PRIMERA LETRA diferente
+  if (level === 1) {
+    const firstLetters = new Set();
+    for (const word of wordList) {
+      const fl = word.substring(0, 1);
+      if (firstLetters.has(fl)) return false; // Duplicado
+      firstLetters.add(fl);
+    }
+    // Si llegamos aquí, todas tienen primera letra diferente ✓
+    return true;
+  }
+  
+  // ========== NIVEL 2 ==========
+  // Criterio:
+  // - NO puede haber dos palabras con iguales PRIMERA+SEGUNDA letra
+  // - DEBE haber al menos UN par que se resuelva por segunda letra
+  //   (es decir, primeras iguales, segundas diferentes)
+  if (level === 2) {
+    const prefix2Set = new Set();
+    let hasPairWithSameFirst = false;
+    
+    // Verificar que no haya duplicados en primeras 2 letras
+    for (const word of wordList) {
+      const p2 = word.substring(0, 2);
+      if (prefix2Set.has(p2)) return false;
+      prefix2Set.add(p2);
+    }
+    
+    // Verificar que existe al menos un par con PRIMERA letra igual pero SEGUNDA diferente
+    const firstLetterGroups = {};
+    for (const word of wordList) {
+      const fl = word.substring(0, 1);
+      if (!firstLetterGroups[fl]) firstLetterGroups[fl] = [];
+      firstLetterGroups[fl].push(word);
+    }
+    
+    // Si hay algún grupo con 2+ palabras, hay un par que necesita mirar segunda letra
+    for (const group of Object.values(firstLetterGroups)) {
+      if (group.length >= 2) {
+        hasPairWithSameFirst = true;
+        break;
+      }
+    }
+    
+    return hasPairWithSameFirst;
+  }
+  
+  // ========== NIVEL 3 ==========
+  // Criterio:
+  // - NO puede haber dos palabras con iguales PRIMERA+SEGUNDA+TERCERA letra
+  // - DEBE haber al menos UN par con PRIMERA+SEGUNDA iguales pero TERCERA diferente
+  if (level === 3) {
+    const prefix3Set = new Set();
+    let hasPairWithSamePrefix2 = false;
+    
+    // Verificar que no haya duplicados en primeras 3 letras
+    for (const word of wordList) {
+      const p3 = word.substring(0, 3);
+      if (prefix3Set.has(p3)) return false;
+      prefix3Set.add(p3);
+    }
+    
+    // Verificar que existe al menos un par con PRIMERA+SEGUNDA iguales
+    const prefix2Groups = {};
+    for (const word of wordList) {
+      const p2 = word.substring(0, 2);
+      if (!prefix2Groups[p2]) prefix2Groups[p2] = [];
+      prefix2Groups[p2].push(word);
+    }
+    
+    for (const group of Object.values(prefix2Groups)) {
+      if (group.length >= 2) {
+        hasPairWithSamePrefix2 = true;
+        break;
+      }
+    }
+    
+    return hasPairWithSamePrefix2;
+  }
+  
+  // ========== NIVEL 4 ==========
+  // Criterio:
+  // - Todas las palabras deben tener al menos 4 letras
+  // - NO puede haber dos palabras con iguales PRIMERA+SEGUNDA+TERCERA+CUARTA letra
+  // - DEBE haber al menos UN par con PRIMERA+SEGUNDA+TERCERA iguales pero CUARTA diferente
+  if (level === 4) {
+    // Verificar que todas tengan al menos 4 letras
+    for (const word of wordList) {
+      if (word.length < 4) return false;
+    }
+    
+    const prefix4Set = new Set();
+    let hasPairWithSamePrefix3 = false;
+    
+    // Verificar que no haya duplicados en primeras 4 letras
+    for (const word of wordList) {
+      const p4 = word.substring(0, 4);
+      if (prefix4Set.has(p4)) return false;
+      prefix4Set.add(p4);
+    }
+    
+    // Verificar que existe al menos un par con PRIMERA+SEGUNDA+TERCERA iguales
+    const prefix3Groups = {};
+    for (const word of wordList) {
+      const p3 = word.substring(0, 3);
+      if (!prefix3Groups[p3]) prefix3Groups[p3] = [];
+      prefix3Groups[p3].push(word);
+    }
+    
+    for (const group of Object.values(prefix3Groups)) {
+      if (group.length >= 2) {
+        hasPairWithSamePrefix3 = true;
+        break;
+      }
+    }
+    
+    return hasPairWithSamePrefix3;
+  }
+  
+  return true;
+}
+
+function getLevelNumber() {
+  const levelMap = { level1: 1, level2: 2, level3: 3, level4: 4 };
+  return levelMap[config.sortType] || 1;
+}
+
+function compareByLevel(a, b) {
+  const level = getLevelNumber();
+  
+  if (level === 1) {
+    // Only compare by first letter
+    const a1 = a.substring(0, 1);
+    const b1 = b.substring(0, 1);
+    return a1.localeCompare(b1, 'es');
+  } else if (level === 2) {
+    // Compare by first 2 letters only
+    const a2 = a.substring(0, 2);
+    const b2 = b.substring(0, 2);
+    return a2.localeCompare(b2, 'es');
+  } else if (level === 3) {
+    // Compare by first 3 letters only
+    const a3 = a.substring(0, 3);
+    const b3 = b.substring(0, 3);
+    return a3.localeCompare(b3, 'es');
+  } else if (level === 4) {
+    // Compare by first 4 letters only
+    const a4 = a.substring(0, 4);
+    const b4 = b.substring(0, 4);
+    return a4.localeCompare(b4, 'es');
+  }
+  
+  return a.localeCompare(b, 'es');
+}
+
+function renderScatter() {
+  if (config.layout === 'vertical') {
+    // Vertical layout - show all positions with placeholders for used words
+    const areaV = document.getElementById('scatter-area-vertical');
+    areaV.innerHTML = '';
+    areaV.style.gridTemplateColumns = 'repeat(3, 1fr)';
+    
+    currentWords.forEach((word, idx) => {
+      const colorIdx = idx % 8;
+      const isUsed = slots.some(s => s.word === word);
+      
+      if (isUsed) {
+        // Show ghost for used word
+        const ghost = document.createElement('div');
+        ghost.className = 'word-ghost';
+        ghost.setAttribute('data-word-ghost', word);
+        ghost.textContent = word;
+        areaV.appendChild(ghost);
+      } else {
+        // Show available word
+        const tile = document.createElement('div');
+        tile.className = `word-tile tile-color-${colorIdx}`;
+        tile.textContent = word;
+        tile.style.position = 'relative';
+        tile.style.left = 'auto';
+        tile.style.top = 'auto';
+        tile.style.margin = '0';
+        tile.setAttribute('data-word', word);
+        tile.setAttribute('data-draggable-source', 'scatter');
+        tile.addEventListener('pointerdown', (e) => {
+          e.preventDefault();
+          startDrag(e, word, 'scatter', -1, tile);
+        });
+        areaV.appendChild(tile);
+      }
+    });
+  } else {
+    // Horizontal layout - show in grid
+    const area = document.getElementById('scatter-area');
+    area.innerHTML = '';
+    area.className = 'scatter-area rounded-2xl';
+    
+    const cols = 3;
+    area.style.display = 'grid';
+    area.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+    area.style.gap = '12px';
+    area.style.padding = '16px';
+    area.style.minHeight = 'auto';
+
+    currentWords.forEach((word, idx) => {
+      const colorIdx = idx % 8;
+      const isUsed = slots.some(s => s.word === word);
+      
+      if (isUsed) {
+        // Show ghost for used word
+        const ghost = document.createElement('div');
+        ghost.className = 'word-ghost';
+        ghost.setAttribute('data-word-ghost', word);
+        ghost.textContent = word;
+        area.appendChild(ghost);
+      } else {
+        // Show available word
+        const tile = document.createElement('div');
+        tile.className = `word-tile tile-color-${colorIdx}`;
+        tile.textContent = word;
+        tile.style.position = 'relative';
+        tile.style.left = 'auto';
+        tile.style.top = 'auto';
+        tile.setAttribute('data-word', word);
+        tile.setAttribute('data-draggable-source', 'scatter');
+        tile.addEventListener('pointerdown', (e) => {
+          e.preventDefault();
+          startDrag(e, word, 'scatter', -1, tile);
+        });
+        area.appendChild(tile);
+      }
+    });
+  }
+}
+
+function renderSlots() {
+  if (config.layout === 'vertical') {
+    // Vertical layout - render in left column
+    const container = document.getElementById('slots-container-vertical');
+    container.innerHTML = '';
+    slots.forEach((slot, i) => {
+      const div = document.createElement('div');
+      div.className = 'vertical-slot';
+      if (!slot.word) div.classList.add('empty');
+      div.setAttribute('data-slot', i);
+
+      const numSpan = document.createElement('span');
+      numSpan.className = 'vertical-slot-number';
+      numSpan.textContent = i + 1;
+      div.appendChild(numSpan);
+
+      if (slot.word) {
+        const colorIdx = currentWords.indexOf(slot.word) % 8;
+        const span = document.createElement('span');
+        span.className = `placed-word tile-color-${colorIdx}`;
+        span.textContent = slot.word;
+        span.style.touchAction = 'none';
+        span.style.cursor = 'grab';
+        span.style.userSelect = 'none';
+        span.style.webkitUserSelect = 'none';
+        
+        span.addEventListener('pointerdown', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          startDrag(e, slot.word, 'slot', i, span);
+        });
+        div.appendChild(span);
+      }
+
+      // Drop target
+      div.addEventListener('pointerenter', () => div.classList.add('hover'));
+      div.addEventListener('pointerleave', () => div.classList.remove('hover'));
+
+      container.appendChild(div);
+    });
+  } else {
+    // Horizontal layout - render in normal container
+    const container = document.getElementById('slots-container');
+    container.innerHTML = '';
+    slots.forEach((slot, i) => {
+      const div = document.createElement('div');
+      div.className = 'drop-slot';
+      if (!slot.word) div.classList.add('empty');
+      div.setAttribute('data-slot', i);
+
+      div.innerHTML = `<span class="slot-number">${i+1}</span>`;
+
+      if (slot.word) {
+        const colorIdx = currentWords.indexOf(slot.word) % 8;
+        const span = document.createElement('span');
+        span.className = `placed-word tile-color-${colorIdx}`;
+        span.style.padding = '8px 18px';
+        span.style.borderRadius = '12px';
+        span.style.touchAction = 'none';
+        span.style.cursor = 'grab';
+        span.style.userSelect = 'none';
+        span.style.webkitUserSelect = 'none';
+        span.textContent = slot.word;
+        
+        span.addEventListener('pointerdown', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          startDrag(e, slot.word, 'slot', i, span);
+        });
+        div.appendChild(span);
+      }
+
+      // Drop target
+      div.addEventListener('pointerenter', () => div.classList.add('hover'));
+      div.addEventListener('pointerleave', () => div.classList.remove('hover'));
+
+      container.appendChild(div);
+    });
+  }
+
+  // Check if all slots filled
+  const allFilled = slots.every(s => s.word !== null);
+  document.getElementById('btn-check').disabled = !allFilled;
+}
+
+// Drag system - Pointer Events only, no touch event mixing
+let dragClone = null;
+let dragState = null;
+
+function startDrag(e, word, source, slotIndex, el) {
+  if (dragState || dragClone) return;
+  
+  e.preventDefault();
+  e.stopPropagation();
+  
+  const clientX = e.clientX;
+  const clientY = e.clientY;
+  
+  // Block scroll immediately
+  document.body.style.overflow = 'hidden';
+  document.documentElement.style.overflow = 'hidden';
+  
+  // Set up drag state - keep the original word in slot until drop
+  dragState = {
+    word,
+    sourceType: source,
+    sourceIndex: slotIndex,
+    startX: clientX,
+    startY: clientY,
+    currentX: clientX,
+    currentY: clientY,
+    el: el,
+    cloneCreated: false,
+    pointerId: e.pointerId
+  };
+  
+  // Attach pointer event listeners (global, not on element)
+  document.addEventListener('pointermove', handleDragMove, { passive: false });
+  document.addEventListener('pointerup', handleDragEnd, { passive: false });
+  document.addEventListener('pointercancel', handleDragEnd, { passive: false });
+}
+
+function createDragClone(clientX, clientY) {
+  if (dragClone) return;
+  
+  dragClone = document.createElement('div');
+  const colorIdx = currentWords.indexOf(dragState.word) % 8;
+  dragClone.className = `word-tile tile-color-${colorIdx} dragging`;
+  dragClone.textContent = dragState.word;
+  dragClone.style.position = 'fixed';
+  dragClone.style.zIndex = '9999';
+  dragClone.style.pointerEvents = 'none';
+  
+  const rect = dragState.el.getBoundingClientRect();
+  const offsetX = clientX - rect.left;
+  const offsetY = clientY - rect.top;
+  
+  dragClone.style.left = (clientX - offsetX) + 'px';
+  dragClone.style.top = (clientY - offsetY) + 'px';
+  dragClone.dataset.offsetX = offsetX;
+  dragClone.dataset.offsetY = offsetY;
+  
+  document.body.appendChild(dragClone);
+  dragState.el.style.visibility = 'hidden';
+  dragState.cloneCreated = true;
+}
+
+function handleDragMove(e) {
+  if (!dragState) return;
+  
+  // Only respond to the pointer that started the drag
+  if (e.pointerId !== dragState.pointerId) return;
+  
+  e.preventDefault();
+  e.stopPropagation();
+  
+  const clientX = e.clientX;
+  const clientY = e.clientY;
+  
+  dragState.currentX = clientX;
+  dragState.currentY = clientY;
+  
+  const movedX = Math.abs(clientX - dragState.startX);
+  const movedY = Math.abs(clientY - dragState.startY);
+  
+  // Create clone after threshold movement (for scatter words)
+  // For slot words, create clone immediately
+  if (!dragState.cloneCreated) {
+    if (dragState.sourceType === 'slot' || movedX > 3 || movedY > 3) {
+      createDragClone(dragState.startX, dragState.startY);
+    }
+  }
+  
+  // Update clone position
+  if (dragClone && dragState.cloneCreated) {
+    const offsetX = parseFloat(dragClone.dataset.offsetX) || 0;
+    const offsetY = parseFloat(dragClone.dataset.offsetY) || 0;
+    dragClone.style.left = (clientX - offsetX) + 'px';
+    dragClone.style.top = (clientY - offsetY) + 'px';
+  }
+}
+
+function handleDragEnd(e) {
+  if (!dragState || e.pointerId !== dragState.pointerId) return;
+  
+  document.removeEventListener('pointermove', handleDragMove);
+  document.removeEventListener('pointerup', handleDragEnd);
+  document.removeEventListener('pointercancel', handleDragEnd);
+  
+  const clientX = e.clientX;
+  const clientY = e.clientY;
+  
+  // Only process drop if clone was created (meaning user actually dragged)
+  if (dragState.cloneCreated) {
+    let targetSlot = -1;
+    let droppedInScatter = false;
+    
+    // Find target slot
+    const slotSelector = config.layout === 'vertical' ? '.vertical-slot' : '.drop-slot';
+    const slotEls = document.querySelectorAll(slotSelector);
+    slotEls.forEach((el, i) => {
+      const r = el.getBoundingClientRect();
+      if (clientX >= r.left && clientX <= r.right && clientY >= r.top && clientY <= r.bottom) {
+        targetSlot = i;
+      }
+    });
+    
+    // Check if dropped in scatter area
+    const scatterSelector = config.layout === 'vertical' ? '#scatter-area-vertical' : '#scatter-area';
+    const scatterArea = document.querySelector(scatterSelector);
+    if (scatterArea) {
+      const r = scatterArea.getBoundingClientRect();
+      if (clientX >= r.left && clientX <= r.right && clientY >= r.top && clientY <= r.bottom) {
+        droppedInScatter = true;
+      }
+    }
+    
+    // Process drop
+    if (droppedInScatter && dragState.sourceType === 'slot') {
+      // Dropped in scatter area from a slot - remove from slot
+      slots[dragState.sourceIndex].word = null;
+    } else if (targetSlot >= 0) {
+      if (!slots[targetSlot].word) {
+        // Target slot is empty - move word there
+        slots[targetSlot].word = dragState.word;
+        if (dragState.sourceType === 'slot') {
+          slots[dragState.sourceIndex].word = null;
+        }
+      } else if (dragState.sourceType === 'slot') {
+        // Swap with word in target slot
+        const temp = slots[targetSlot].word;
+        slots[targetSlot].word = dragState.word;
+        slots[dragState.sourceIndex].word = temp;
+      } else {
+        // From scatter - shift words right
+        const wordsToShift = slots.slice(targetSlot).map(s => s.word).filter(w => w !== null);
+        slots[targetSlot].word = dragState.word;
+        for (let i = 0; i < wordsToShift.length; i++) {
+          const nextIdx = targetSlot + 1 + i;
+          if (nextIdx < slots.length) {
+            slots[nextIdx].word = wordsToShift[i];
+          }
+        }
+      }
+    } else {
+      // Dropped outside valid zones - restore original state (word stays where it was)
+      // No changes needed - slots already has original word
+    }
+    
+    // Clear feedback
+    document.querySelectorAll('.drop-slot, .vertical-slot').forEach(el => {
+      el.classList.remove('correct', 'incorrect', 'hover');
+    });
+    document.getElementById('feedback').classList.add('hidden');
+    
+    renderScatter();
+    renderSlots();
+  }
+  
+  cleanup();
+}
+
+function cleanup() {
+  dragState = null;
+  if (dragClone) {
+    dragClone.remove();
+    dragClone = null;
+  }
+  document.querySelectorAll('[data-word], .placed-word').forEach(el => {
+    el.style.visibility = 'visible';
+  });
+  document.body.style.overflow = 'auto';
+  document.documentElement.style.overflow = 'auto';
+}
+
+function checkAnswers() {
+  let allCorrect = true;
+  
+  if (config.layout === 'vertical') {
+    // Vertical layout validation
+    const slotEls = document.querySelectorAll('.vertical-slot');
+    slots.forEach((slot, i) => {
+      if (slot.word === sortedWords[i]) {
+        slotEls[i].classList.add('correct');
+        slotEls[i].classList.remove('incorrect');
+        // Add green checkmark
+        const checkmark = document.createElement('span');
+        checkmark.textContent = '✓';
+        checkmark.style.fontSize = '2rem';
+        checkmark.style.color = '#34d399';
+        checkmark.style.fontWeight = 'bold';
+        checkmark.style.marginLeft = '8px';
+        slotEls[i].appendChild(checkmark);
+      } else {
+        slotEls[i].classList.add('incorrect');
+        slotEls[i].classList.remove('correct');
+        // Add red X mark
+        const xmark = document.createElement('span');
+        xmark.textContent = '✗';
+        xmark.style.fontSize = '2rem';
+        xmark.style.color = '#ef4444';
+        xmark.style.fontWeight = 'bold';
+        xmark.style.marginLeft = '8px';
+        slotEls[i].appendChild(xmark);
+        allCorrect = false;
+      }
+    });
+  } else {
+    // Horizontal layout validation
+    const slotEls = document.querySelectorAll('.drop-slot');
+    slots.forEach((slot, i) => {
+      if (slot.word === sortedWords[i]) {
+        slotEls[i].classList.add('correct');
+        slotEls[i].classList.remove('incorrect');
+        // Add green checkmark
+        const checkmark = document.createElement('span');
+        checkmark.textContent = '✓';
+        checkmark.style.fontSize = '2rem';
+        checkmark.style.color = '#34d399';
+        checkmark.style.fontWeight = 'bold';
+        checkmark.style.marginLeft = '8px';
+        slotEls[i].appendChild(checkmark);
+      } else {
+        slotEls[i].classList.add('incorrect');
+        slotEls[i].classList.remove('correct');
+        // Add red X mark
+        const xmark = document.createElement('span');
+        xmark.textContent = '✗';
+        xmark.style.fontSize = '2rem';
+        xmark.style.color = '#ef4444';
+        xmark.style.fontWeight = 'bold';
+        xmark.style.marginLeft = '8px';
+        slotEls[i].appendChild(xmark);
+        allCorrect = false;
+      }
+    });
+  }
+
+  const fb = document.getElementById('feedback');
+  fb.classList.remove('hidden');
+  
+  if (allCorrect) {
+    // Increment celebration counter
+    celebrationCount++;
+    
+    // Pick random motivational phrase
+    const randomPhrase = motivationalPhrases[Math.floor(Math.random() * motivationalPhrases.length)];
+    const fullMessage = `¡Excelente ${studentName}! ${randomPhrase}`;
+    fb.textContent = fullMessage;
+    fb.style.color = '#059669';
+    
+    // Speak the motivational phrase
+    speakPhrase(fullMessage);
+    
+    // Show celebration
+    celebrate();
+    
+    // Disable check button if max celebrations reached
+    if (celebrationCount >= maxCelebrations) {
+      document.getElementById('btn-check').disabled = true;
+    }
+  } else {
+    fb.textContent = '🔍 Revisa las casillas en rojo e inténtalo de nuevo';
+    fb.style.color = '#dc2626';
+  }
+}
+
+function speakPhrase(message) {
+  // Cancel any ongoing speech
+  if (window.speechSynthesis) {
+    window.speechSynthesis.cancel();
+    
+    // Create speech utterance
+    const utterance = new SpeechSynthesisUtterance(message);
+    utterance.lang = 'es-ES'; // Spanish language
+    utterance.rate = 0.9; // Slightly slower for clarity
+    utterance.pitch = 1;
+    utterance.volume = 1;
+    
+    // Speak the message
+    window.speechSynthesis.speak(utterance);
+  }
+}
+
+// Celebration with multiple random animations
+function celebrate() {
+  const shapes = ['⭐','🌟','💜','🎈','🎊','🎉','✨','💫','🦋','🌈','🎁','🎀','🎆','🎇','💝','🌸','🌺','🌻','🌷','🌹','💐','🧡','💛','💚','💙','❤️','🏆','🥳','👏','🙌','🍀','🌼','🌞','🚀','🪁','🧩','🔵','🟣','🟡','🟢','🔺','🔷','🔶'];
+  const colors = ['#8b5cf6','#fbbf24','#f472b6','#34d399','#60a5fa','#f87171','#a78bfa'];
+
+  // Show celebration title
+  const titleEl = document.createElement('div');
+  titleEl.className = 'celebration-title';
+  titleEl.textContent = '🎉 ¡Excelente Trabajo! 🎉';
+  titleEl.style.background = 'linear-gradient(135deg, #8b5cf6, #f472b6)';
+  titleEl.style.webkitBackgroundClip = 'text';
+  titleEl.style.webkitTextFillColor = 'transparent';
+  titleEl.style.backgroundClip = 'text';
+  document.body.appendChild(titleEl);
+  
+  setTimeout(() => titleEl.remove(), 7000);
+
+  // Show animation label
+  const labelEl = document.createElement('div');
+  labelEl.style.position = 'fixed';
+  labelEl.style.bottom = '20px';
+  labelEl.style.right = '20px';
+  labelEl.style.background = 'rgba(0,0,0,0.7)';
+  labelEl.style.color = 'white';
+  labelEl.style.padding = '12px 20px';
+  labelEl.style.borderRadius = '8px';
+  labelEl.style.fontSize = '14px';
+  labelEl.style.fontWeight = 'bold';
+  labelEl.style.zIndex = '9997';
+  document.body.appendChild(labelEl);
+
+  // Pick random animation style
+  const animations = [
+    { name: 'confetti', label: '🎊 Confeti intenso' },
+    { name: 'rain', label: '🌧️ Lluvia de iconos' },
+    { name: 'fireworks', label: '🎆 Fuegos artificiales' },
+    { name: 'spiral', label: '🌀 Espiral brillante' },
+    { name: 'explosion', label: '💥 Explosión de energía' },
+    { name: 'stars', label: '⭐ Estrellas voladoras' },
+    { name: 'sideSweep', label: '🚀 Barrido lateral' },
+    { name: 'geometric', label: '🔷 Figuras geométricas' },
+    { name: 'heartSpiral', label: '💜 Espiral de corazones' },
+    { name: 'iconFountain', label: '⛲ Chorros de iconos' }
+  ];
+  
+  const animationType = animations[Math.floor(Math.random() * animations.length)];
+  labelEl.textContent = animationType.label;
+  
+  setTimeout(() => labelEl.remove(), 6000);
+  
+  switch(animationType.name) {
+    case 'confetti':
+      celebrateConfetti(shapes, colors);
+      break;
+    case 'rain':
+      celebrateRain(shapes, colors);
+      break;
+    case 'fireworks':
+      celebrateFireworks(shapes, colors);
+      break;
+    case 'spiral':
+      celebrateSpiral(shapes, colors);
+      break;
+    case 'explosion':
+      celebrateExplosion(shapes, colors);
+      break;
+    case 'stars':
+      celebrateStars(shapes, colors);
+      break;
+    case 'sideSweep':
+      celebrateSideSweep(shapes, colors);
+      break;
+    case 'geometric':
+      celebrateGeometric(colors);
+      break;
+    case 'heartSpiral':
+      celebrateHeartSpiral(colors);
+      break;
+    case 'iconFountain':
+      celebrateIconFountain(shapes, colors);
+      break;
+  }
+
+  // Capa extra común: siempre agrega más movimiento visual, además de la animación elegida.
+  celebrateExtraSparkles(shapes, colors);
+}
+
+// Animation 1: Confetti (traditional falling)
+function celebrateConfetti(shapes, colors) {
+  for (let burst = 0; burst < 7; burst++) {
+    setTimeout(() => {
+      for (let i = 0; i < 130; i++) {
+        setTimeout(() => {
+          const el = document.createElement('div');
+          el.className = 'confetti-piece';
+          el.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+          el.style.left = (Math.random() * 100) + '%';
+          el.style.top = (-10 - Math.random() * 20) + 'px';
+          el.style.fontSize = (22 + Math.random() * 34) + 'px';
+          el.style.color = colors[Math.floor(Math.random() * colors.length)];
+          el.style.animationName = 'confetti-fall';
+          el.style.animationDuration = (2.3 + Math.random() * 2.1) + 's';
+          el.style.animationDelay = (Math.random() * 0.3) + 's';
+          el.style.animationFillMode = 'forwards';
+          document.body.appendChild(el);
+          setTimeout(() => el.remove(), 6500);
+        }, i * 20);
+      }
+    }, burst * 520);
+  }
+}
+
+// Animation 2: Rain (slow falling rain)
+function celebrateRain(shapes, colors) {
+  const rainShapes = ['💧','🌧️','💦','⚡','☔'];
+  for (let i = 0; i < 340; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.textContent = rainShapes[Math.floor(Math.random() * rainShapes.length)];
+      el.style.left = (Math.random() * 100) + '%';
+      el.style.top = '-50px';
+      el.style.fontSize = (22 + Math.random() * 32) + 'px';
+      el.style.color = colors[Math.floor(Math.random() * colors.length)];
+      el.style.animationName = 'confetti-rain';
+      el.style.animationDuration = (2.6 + Math.random() * 2.3) + 's';
+      el.style.animationDelay = (Math.random() * 0.5) + 's';
+      el.style.animationFillMode = 'forwards';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 5000);
+    }, i * 24);
+  }
+}
+
+// Animation 3: Fireworks (burst pattern)
+function celebrateFireworks(shapes, colors) {
+  const fireworkShapes = ['✨','⭐','💫','🌟','🎆','🎇'];
+  
+  for (let burst = 0; burst < 8; burst++) {
+    setTimeout(() => {
+      const centerX = Math.random() * 80 + 10;
+      const centerY = Math.random() * 60 + 10;
+      
+      for (let i = 0; i < 150; i++) {
+        const angle = (i / 150) * Math.PI * 2;
+        const distance = 250 + Math.random() * 360;
+        const tx = Math.cos(angle) * distance;
+        const ty = Math.sin(angle) * distance;
+        
+        const el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.textContent = fireworkShapes[Math.floor(Math.random() * fireworkShapes.length)];
+        el.style.left = centerX + '%';
+        el.style.top = centerY + '%';
+        el.style.fontSize = (18 + Math.random() * 30) + 'px';
+        el.style.color = colors[Math.floor(Math.random() * colors.length)];
+        el.style.setProperty('--tx', tx + 'px');
+        el.style.setProperty('--ty', ty + 'px');
+        el.style.animationName = 'firework-burst';
+        el.style.animationDuration = (1.7 + Math.random() * 1.2) + 's';
+        el.style.animationDelay = (Math.random() * 0.2) + 's';
+        el.style.animationFillMode = 'forwards';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 3000);
+      }
+    }, burst * 420);
+  }
+}
+
+// Animation 4: Spiral (upward spiral)
+function celebrateSpiral(shapes, colors) {
+  for (let i = 0; i < 340; i++) {
+    setTimeout(() => {
+      const angle = (i / 340) * Math.PI * 9; // More rotations
+      const radiusProgress = (i / 340);
+      const x = 50 + Math.cos(angle) * 42 * radiusProgress; // Larger radius
+      
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+      el.style.left = x + '%';
+      el.style.top = '100vh';
+      el.style.fontSize = (18 + Math.random() * 22) + 'px';
+      el.style.color = colors[Math.floor(Math.random() * colors.length)];
+      el.style.animationName = 'spiral-spin';
+      el.style.animationDuration = (3.2 + Math.random() * 1.8) + 's';
+      el.style.animationDelay = (Math.random() * 0.3) + 's';
+      el.style.animationFillMode = 'forwards';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 6500);
+    }, i * 14);
+  }
+}
+
+// Animation 5: Explosion (chaotic burst with bounce)
+function celebrateExplosion(shapes, colors) {
+  const explosionShapes = ['💥','🔥','⚡','💫','✨','🌪️'];
+  
+  for (let burst = 0; burst < 5; burst++) {
+    setTimeout(() => {
+      for (let i = 0; i < 180; i++) {
+        const angle = (i / 180) * Math.PI * 2;
+        const velocity = 140 + Math.random() * 430;
+        const tx = Math.cos(angle) * velocity;
+        const ty = Math.sin(angle) * velocity;
+        
+        const el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.textContent = explosionShapes[Math.floor(Math.random() * explosionShapes.length)];
+        el.style.left = '50%';
+        el.style.top = '50%';
+        el.style.fontSize = (24 + Math.random() * 32) + 'px';
+        el.style.color = colors[Math.floor(Math.random() * colors.length)];
+        el.style.setProperty('--tx', tx + 'px');
+        el.style.setProperty('--ty', ty + 'px');
+        el.style.animationName = 'explosion-bounce';
+        el.style.animationDuration = (1.1 + Math.random() * 1.0) + 's';
+        el.style.animationDelay = (Math.random() * 0.1) + 's';
+        el.style.animationFillMode = 'forwards';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 2500);
+      }
+    }, burst * 300);
+  }
+}
+
+// Animation 6: Stars (twinkling stars)
+function celebrateStars(shapes, colors) {
+  const starShapes = ['⭐','🌟','✨','💫','🌠'];
+  
+  for (let i = 0; i < 340; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.textContent = starShapes[Math.floor(Math.random() * starShapes.length)];
+      el.style.left = Math.random() * 100 + '%';
+      el.style.top = '100vh';
+      el.style.fontSize = (20 + Math.random() * 34) + 'px';
+      el.style.color = colors[Math.floor(Math.random() * colors.length)];
+      el.style.animationName = 'star-twinkle';
+      el.style.animationDuration = (3 + Math.random() * 2) + 's';
+      el.style.animationDelay = (Math.random() * 0.5) + 's';
+      el.style.animationFillMode = 'forwards';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 5000);
+    }, i * 18);
+  }
+}
+
+
+
+// Animation 7: Side sweep - iconos cruzan la pantalla de izquierda a derecha
+function celebrateSideSweep(shapes, colors) {
+  for (let i = 0; i < 260; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+      el.style.left = '-10vw';
+      el.style.top = (Math.random() * 90 + 3) + 'vh';
+      el.style.fontSize = (20 + Math.random() * 36) + 'px';
+      el.style.color = colors[Math.floor(Math.random() * colors.length)];
+      el.style.setProperty('--wave', ((Math.random() - 0.5) * 260) + 'px');
+      el.style.animationName = 'side-sweep';
+      el.style.animationDuration = (2.8 + Math.random() * 2.2) + 's';
+      el.style.animationDelay = (Math.random() * 0.5) + 's';
+      el.style.animationFillMode = 'forwards';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 6500);
+    }, i * 18);
+  }
+}
+
+// Animation 8: Geometric fireworks - figuras geométricas por toda la pantalla
+function celebrateGeometric(colors) {
+  const geoShapes = ['🔴','🟠','🟡','🟢','🔵','🟣','🟤','⬛','⬜','🔺','🔻','🔶','🔷','🟨','🟩','🟦','🟪','🟧'];
+  for (let burst = 0; burst < 7; burst++) {
+    setTimeout(() => {
+      const centerX = Math.random() * 90 + 5;
+      const centerY = Math.random() * 75 + 5;
+      for (let i = 0; i < 140; i++) {
+        const angle = (i / 140) * Math.PI * 2;
+        const distance = 180 + Math.random() * 430;
+        const el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.textContent = geoShapes[Math.floor(Math.random() * geoShapes.length)];
+        el.style.left = centerX + '%';
+        el.style.top = centerY + '%';
+        el.style.fontSize = (22 + Math.random() * 34) + 'px';
+        el.style.color = colors[Math.floor(Math.random() * colors.length)];
+        el.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
+        el.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
+        el.style.animationName = 'firework-burst';
+        el.style.animationDuration = (1.8 + Math.random() * 1.5) + 's';
+        el.style.animationFillMode = 'forwards';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 5200);
+      }
+    }, burst * 450);
+  }
+}
+
+// Animation 9: Heart spiral - corazones y estrellas suben en espiral
+function celebrateHeartSpiral(colors) {
+  const heartShapes = ['💜','💙','💚','💛','🧡','❤️','💖','💗','💓','⭐','🌟','✨'];
+  for (let i = 0; i < 360; i++) {
+    setTimeout(() => {
+      const angle = (i / 360) * Math.PI * 12;
+      const radiusProgress = i / 360;
+      const x = 50 + Math.cos(angle) * 44 * radiusProgress;
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.textContent = heartShapes[Math.floor(Math.random() * heartShapes.length)];
+      el.style.left = x + '%';
+      el.style.top = '104vh';
+      el.style.fontSize = (22 + Math.random() * 34) + 'px';
+      el.style.color = colors[Math.floor(Math.random() * colors.length)];
+      el.style.animationName = 'spiral-spin';
+      el.style.animationDuration = (3.4 + Math.random() * 1.7) + 's';
+      el.style.animationFillMode = 'forwards';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 6500);
+    }, i * 12);
+  }
+}
+
+// Animation 10: Icon fountain - chorros desde la parte inferior
+function celebrateIconFountain(shapes, colors) {
+  const fountains = [18, 35, 50, 65, 82];
+  fountains.forEach((left, fIndex) => {
+    for (let i = 0; i < 90; i++) {
+      setTimeout(() => {
+        const angle = (-110 + Math.random() * 40) * Math.PI / 180;
+        const power = 280 + Math.random() * 420;
+        const el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+        el.style.left = left + '%';
+        el.style.top = '96vh';
+        el.style.fontSize = (20 + Math.random() * 34) + 'px';
+        el.style.color = colors[Math.floor(Math.random() * colors.length)];
+        el.style.setProperty('--tx', Math.cos(angle) * power + 'px');
+        el.style.setProperty('--ty', Math.sin(angle) * power + 'px');
+        el.style.animationName = 'fountain-up';
+        el.style.animationDuration = (2.4 + Math.random() * 1.8) + 's';
+        el.style.animationFillMode = 'forwards';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 6200);
+      }, i * 22 + fIndex * 120);
+    }
+  });
+}
+
+// Extra layer: pequeños brillos en toda la pantalla para reforzar el estímulo visual
+function celebrateExtraSparkles(shapes, colors) {
+  for (let i = 0; i < 180; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+      el.style.left = Math.random() * 100 + '%';
+      el.style.top = (Math.random() * 100) + 'vh';
+      el.style.fontSize = (14 + Math.random() * 24) + 'px';
+      el.style.color = colors[Math.floor(Math.random() * colors.length)];
+      el.style.animationName = 'float-pulse';
+      el.style.animationDuration = (3 + Math.random() * 2.5) + 's';
+      el.style.animationDelay = (Math.random() * 0.6) + 's';
+      el.style.animationFillMode = 'forwards';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 7000);
+    }, i * 20);
+  }
+}
+
+// Init
+buildSetup();
+</script>
+ </body>
+</html>

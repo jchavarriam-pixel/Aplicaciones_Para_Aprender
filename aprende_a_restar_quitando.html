@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aprende a Restar</title>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Nunito:wght@700;900&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;width:100%;overflow:hidden}
+body{font-family:'Nunito',sans-serif;background:#FFF8E1;user-select:none;-webkit-user-select:none}
+
+.app-wrapper{height:100%;width:100%;overflow-y:auto;overflow-x:hidden;background:linear-gradient(180deg,#E3F2FD 0%,#FFF9C4 40%,#FCE4EC 100%);position:relative}
+
+.app-title{font-family:'Bubblegum Sans',cursive;font-size:clamp(28px,5vw,48px);color:#E65100;text-align:center;padding:12px 8px 4px;text-shadow:2px 2px 0 #FFE082;letter-spacing:1px}
+
+.operation-display{text-align:center;font-family:'Bubblegum Sans',cursive;font-size:clamp(48px,10vw,88px);color:#1565C0;padding:8px;line-height:1.2}
+.operation-display .num-a{color:#2E7D32}
+.operation-display .op-minus{color:#C62828;margin:0 8px}
+.operation-display .num-b{color:#AD1457}
+
+.info-row{display:flex;justify-content:center;gap:clamp(12px,3vw,32px);flex-wrap:wrap;padding:4px 12px;font-size:clamp(16px,2.8vw,26px);font-weight:900}
+.info-box{background:#fff;border-radius:16px;padding:6px 16px;box-shadow:0 3px 8px rgba(0,0,0,.12);border:3px solid #90CAF9;color:#1565C0}
+.info-box.warn{border-color:#EF9A9A;color:#C62828}
+
+.play-area{display:flex;flex-direction:column;align-items:center;gap:16px;padding:8px 12px;min-height:140px}
+
+.objects-box{background:linear-gradient(135deg,#64B5F6,#42A5F5);border:5px solid #1565C0;border-radius:24px;padding:16px 20px;min-width:200px;max-width:480px;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:12px;transition:all .4s ease;box-shadow:0 6px 16px rgba(21,101,192,.3)}
+.objects-box.empty{background:#B0BEC5;border-color:#78909C;box-shadow:0 6px 16px rgba(120,144,156,.3)}
+
+.objects-box-label{font-family:'Bubblegum Sans',cursive;font-size:clamp(16px,2.5vw,22px);color:#fff;width:100%;text-align:center;margin-bottom:4px;font-weight:bold;text-shadow:1px 1px 3px rgba(0,0,0,.2)}
+
+.obj-item{width:clamp(52px,10vw,80px);height:clamp(52px,10vw,80px);font-size:clamp(36px,7vw,58px);display:flex;align-items:center;justify-content:center;cursor:grab;transition:transform .2s,opacity .2s,filter .2s;filter:drop-shadow(2px 3px 2px rgba(0,0,0,.2));position:relative;z-index:2;touch-action:none;-webkit-tap-highlight-color:transparent}
+.obj-item:active{cursor:grabbing;transform:scale(1.18)}
+.obj-item.removed{opacity:0;pointer-events:none;transform:scale(.85);visibility:hidden}
+.obj-item.dragging{opacity:.5;transform:scale(1.1)}
+
+.empty-message{font-family:'Bubblegum Sans',cursive;font-size:clamp(20px,3.5vw,32px);color:#607D8B;text-align:center;display:flex;align-items:center;gap:8px;opacity:0;animation:fadeInDown .6s ease .3s forwards}
+
+@keyframes fadeInDown{0%{opacity:0;transform:translateY(-12px)}100%{opacity:1;transform:translateY(0)}}
+
+.drop-zone{margin:4px auto;width:min(90%,500px);min-height:clamp(70px,12vw,110px);background:linear-gradient(135deg,#FFCC80,#FFE0B2);border:4px dashed #E65100;border-radius:24px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;padding:10px 14px;transition:background .25s,transform .15s;position:relative;touch-action:none}
+.drop-zone.over{background:linear-gradient(135deg,#FFAB40,#FFD180);transform:scale(1.03);border-color:#BF360C}
+.drop-zone-label{font-family:'Bubblegum Sans',cursive;font-size:clamp(18px,3vw,28px);color:#BF360C;pointer-events:none;width:100%;text-align:center}
+.drop-zone .obj-in{font-size:clamp(28px,5vw,44px);filter:drop-shadow(1px 2px 1px rgba(0,0,0,.15))}
+
+.result-area{text-align:center;padding:8px;min-height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.result-msg{font-family:'Bubblegum Sans',cursive;font-size:clamp(22px,4.5vw,42px);padding:8px 20px;border-radius:20px;display:inline-block;animation:popIn .5s ease}
+.result-msg.success{background:#C8E6C9;color:#1B5E20;border:3px solid #66BB6A}
+.result-msg.fail{background:#FFCDD2;color:#B71C1C;border:3px solid #EF5350}
+.result-eq{font-family:'Bubblegum Sans',cursive;font-size:clamp(28px,5vw,48px);color:#1565C0;margin-top:4px}
+
+@keyframes popIn{0%{transform:scale(0) rotate(-5deg);opacity:0}60%{transform:scale(1.15) rotate(2deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+@keyframes shake{0%,100%{transform:translateX(0)}15%{transform:translateX(-12px) rotate(-2deg)}30%{transform:translateX(10px) rotate(2deg)}45%{transform:translateX(-8px)}60%{transform:translateX(6px)}75%{transform:translateX(-3px)}}
+.shake{animation:shake .6s ease}
+
+.controls{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;padding:8px 12px}
+.btn{font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(14px,2.2vw,18px);border:none;border-radius:14px;padding:8px 16px;cursor:pointer;transition:transform .15s,box-shadow .15s;box-shadow:0 4px 0 rgba(0,0,0,.15);display:flex;align-items:center;gap:6px}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.15)}
+.btn-new{background:#66BB6A;color:#fff}.btn-new:hover{background:#43A047}
+.btn-reset{background:#42A5F5;color:#fff}.btn-reset:hover{background:#1E88E5}
+.btn-audio{background:#AB47BC;color:#fff}.btn-audio:hover{background:#8E24AA}
+.btn-mute{background:#78909C;color:#fff}.btn-mute:hover{background:#546E7A}
+
+.mode-bar{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;padding:4px 12px 10px}
+.mode-btn{font-family:'Nunito',sans-serif;font-weight:700;font-size:clamp(12px,1.8vw,15px);border:3px solid #90CAF9;border-radius:12px;padding:5px 12px;cursor:pointer;background:#fff;color:#1565C0;transition:all .2s}
+.mode-btn.active{background:#1565C0;color:#fff;border-color:#1565C0}
+
+.remaining-label{font-family:'Bubblegum Sans',cursive;font-size:clamp(16px,2.5vw,22px);color:#6A1B9A;text-align:center;padding:2px}
+</style>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body>
+  <div class="app-wrapper" id="app">
+   <h1 class="app-title" id="titleEl">🌈 Aprende a Restar 🌈</h1>
+   <div class="operation-display" id="opDisplay">
+    <span class="num-a" id="numAEl">4</span> <span class="op-minus">−</span> <span class="num-b" id="numBEl">7</span>
+   </div>
+   <div class="info-row">
+    <div class="info-box">
+     Quitar: <span id="wantRemove">7</span>
+    </div>
+    <div class="info-box warn">
+     Quitados: <span id="removedCount">0</span>
+    </div>
+   </div>
+   <div class="play-area">
+    <div class="objects-box" id="objectsBox">
+     <div class="objects-box-label" id="objBoxLabel">
+      🎯 Objetos a restar 🎯
+     </div>
+     <div id="playArea" style="display:flex;flex-wrap:wrap;justify-content:center;gap:12px;width:100%"></div>
+    </div>
+   </div>
+   <div class="drop-zone" id="dropZone">
+    <span class="drop-zone-label">🧺 Quitar aquí ⬇️</span>
+   </div>
+   <div class="remaining-label" id="remainLabel"></div>
+   <div class="result-area" id="resultArea"></div>
+   <div class="controls">
+    <button class="btn btn-new" onclick="newExercise()">🎲 Nuevo</button> <button class="btn btn-reset" onclick="resetExercise()">🔄 Reiniciar</button> <button class="btn btn-audio" onclick="repeatAudio()">🔊 Repetir</button> <button class="btn btn-mute" id="muteBtn" onclick="toggleMute()">🔇 Silenciar</button>
+   </div>
+   <div class="mode-bar">
+    <button class="mode-btn active" data-mode="mix" onclick="setMode('mix',this)">🔀 Mixto</button> <button class="mode-btn" data-mode="yes" onclick="setMode('yes',this)">✅ Sí se puede</button> <button class="mode-btn" data-mode="no" onclick="setMode('no',this)">❌ No se puede</button>
+   </div>
+  </div>
+  <script>
+const EMOJIS = ['🍎','⭐','🎈','🌸','⚽','🚗','🦋','🍓','🐱','🎀'];
+let numA=0, numB=0, removed=0, emoji='🍎', done=false, muted=false, mode='mix', lastAudio='';
+const synth=window.speechSynthesis;
+
+const defaultConfig={main_title:'🌈 Aprende a Restar 🌈',bg_color:'#E3F2FD',text_color:'#E65100',primary_color:'#1565C0',accent_color:'#66BB6A',surface_color:'#FFFFFF'};
+
+function applyConfig(c){
+  document.getElementById('titleEl').textContent=c.main_title||defaultConfig.main_title;
+}
+
+if (window.elementSdk && window.elementSdk.init) {
+  window.elementSdk.init({
+    defaultConfig,
+    onConfigChange: async (c) => applyConfig(c),
+    mapToCapabilities: (c) => ({
+      recolorables: [],
+      borderables: [],
+      fontEditable: undefined,
+      fontSizeable: undefined
+    }),
+    mapToEditPanelValues: (c) => new Map([['main_title', c.main_title || defaultConfig.main_title]])
+  });
+} else {
+  applyConfig(defaultConfig);
+}
+
+function speak(text){
+  lastAudio=text;
+  if(muted)return;
+  synth.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='es-ES';u.rate=.85;u.pitch=1.1;
+  synth.speak(u);
+}
+
+function repeatAudio(){if(lastAudio)speak(lastAudio)}
+function toggleMute(){
+  muted=!muted;
+  const b=document.getElementById('muteBtn');
+  b.textContent=muted?'🔊 Activar':'🔇 Silenciar';
+  if(muted)synth.cancel();
+}
+
+function setMode(m,btn){
+  mode=m;
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  newExercise();
+}
+
+function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+
+function updateEmptyMessage(){
+  const totalRemaining=document.querySelectorAll('.obj-item:not(.removed)').length;
+  const ob=document.getElementById('objectsBox');
+  
+  if(totalRemaining===0){
+    ob.classList.add('empty');
+  } else {
+    ob.classList.remove('empty');
+  }
+}
+
+function generateNumbers(){
+  if(mode==='yes'){numA=rand(2,9);numB=rand(1,numA)}
+  else if(mode==='no'){numA=rand(1,7);numB=rand(numA+1,9)}
+  else{
+    if(Math.random()<.5){numA=rand(2,9);numB=rand(1,numA)}
+    else{numA=rand(1,7);numB=rand(numA+1,9)}
+  }
+}
+
+function buildObjects(){
+  const pa=document.getElementById('playArea');
+  pa.innerHTML='';
+  for(let i=0;i<numA;i++){
+    const d=document.createElement('div');
+    d.className='obj-item';
+    d.textContent=emoji;
+    d.dataset.idx=i;
+    d.draggable=false;
+    d.setAttribute('role','button');
+    d.setAttribute('aria-label',`Objeto ${i+1}`);
+    d.addEventListener('pointerdown',startPointerDrag);
+    pa.appendChild(d);
+  }
+}
+
+let activeDrag=null;
+
+function isInsideDropZone(x,y){
+  const dz=document.getElementById('dropZone');
+  const r=dz.getBoundingClientRect();
+  return x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom;
+}
+
+function moveDragClone(x,y){
+  if(!activeDrag)return;
+  const {clone,item}=activeDrag;
+  clone.style.left=(x-item.offsetWidth/2)+'px';
+  clone.style.top=(y-item.offsetHeight/2)+'px';
+  document.getElementById('dropZone').classList.toggle('over',isInsideDropZone(x,y));
+}
+
+function startPointerDrag(e){
+  const item=e.currentTarget;
+  if(done||item.classList.contains('removed'))return;
+  e.preventDefault();
+  item.setPointerCapture?.(e.pointerId);
+
+  const clone=item.cloneNode(true);
+  clone.classList.remove('dragging');
+  clone.style.position='fixed';
+  clone.style.zIndex='9999';
+  clone.style.pointerEvents='none';
+  clone.style.opacity='.85';
+  clone.style.width=item.offsetWidth+'px';
+  clone.style.height=item.offsetHeight+'px';
+  clone.style.transform='scale(1.15)';
+  clone.style.filter='drop-shadow(3px 6px 4px rgba(0,0,0,.35))';
+  document.body.appendChild(clone);
+
+  activeDrag={item,clone,pointerId:e.pointerId};
+  item.classList.add('dragging');
+  moveDragClone(e.clientX,e.clientY);
+
+  item.addEventListener('pointermove',onPointerMove);
+  item.addEventListener('pointerup',endPointerDrag);
+  item.addEventListener('pointercancel',cancelPointerDrag);
+}
+
+function onPointerMove(e){
+  if(!activeDrag||activeDrag.pointerId!==e.pointerId)return;
+  e.preventDefault();
+  moveDragClone(e.clientX,e.clientY);
+}
+
+function endPointerDrag(e){
+  if(!activeDrag||activeDrag.pointerId!==e.pointerId)return;
+  e.preventDefault();
+  const item=activeDrag.item;
+  if(isInsideDropZone(e.clientX,e.clientY)){
+    handleDrop(item);
+  }
+  cleanupPointerDrag();
+}
+
+function cancelPointerDrag(){
+  cleanupPointerDrag();
+}
+
+function cleanupPointerDrag(){
+  if(!activeDrag)return;
+  const {item,clone}=activeDrag;
+  item.classList.remove('dragging');
+  item.removeEventListener('pointermove',onPointerMove);
+  item.removeEventListener('pointerup',endPointerDrag);
+  item.removeEventListener('pointercancel',cancelPointerDrag);
+  clone.remove();
+  document.getElementById('dropZone').classList.remove('over');
+  activeDrag=null;
+}
+
+function handleDrop(item){
+  if(done||item.classList.contains('removed'))return;
+  item.classList.add('removed');
+  removed++;
+  document.getElementById('removedCount').textContent=removed;
+
+  // Add to drop zone visually
+  const dz=document.getElementById('dropZone');
+  const s=document.createElement('span');
+  s.className='obj-in';s.textContent=emoji;
+  dz.appendChild(s);
+
+  const quedaron=numA-removed;
+  document.getElementById('remainLabel').textContent=`Quedan: ${quedaron} ${emoji.repeat(quedaron)}`;
+
+  // Check if all objects in box have been removed
+  updateEmptyMessage();
+
+  // Announce if more need to be removed
+  if(removed<numB && !done){
+    const falta=numB-removed;
+    speak(`Debes quitar ${falta} más.`);
+  }
+
+  // Check if all original objects removed
+  if(removed>=numA && numB>numA){
+    // Can't subtract
+    done=true;
+    showFail();
+  } else if(removed===numB){
+    // Subtraction complete
+    done=true;
+    showSuccess(quedaron);
+  }
+}
+
+const numWords=['cero','uno','dos','tres','cuatro','cinco','seis','siete','ocho','nueve'];
+
+function showSuccess(res){
+  const ra=document.getElementById('resultArea');
+  ra.innerHTML=`<div class="result-msg success">¡Muy bien! ¡Sí se pudo! 🎉</div><div class="result-eq">${numA} − ${numB} = ${res}</div>`;
+  speak(`¡Muy bien! ${numWords[numA]} menos ${numWords[numB]} es igual a ${numWords[res]}.`);
+}
+
+function showFail(){
+  const ra=document.getElementById('resultArea');
+  ra.innerHTML=`<div class="result-msg fail shake">¡NO! ¡NO! ¡NO! 🚫<br>A ${numA} no se le puede quitar ${numB}.<br>¡No hay suficientes!</div>`;
+  speak(`¡No, no, no! A ${numWords[numA]} no se le puede quitar ${numWords[numB]}. No hay suficientes.`);
+}
+
+function resetExercise(){
+  done=false;removed=0;
+  document.getElementById('removedCount').textContent='0';
+  document.getElementById('resultArea').innerHTML='';
+  document.getElementById('remainLabel').textContent='';
+  const ob=document.getElementById('objectsBox');
+  ob.classList.remove('empty');
+  const dz=document.getElementById('dropZone');
+  dz.innerHTML='<span class="drop-zone-label">🧺 Quitar aquí ⬇️</span>';
+  buildObjects();
+}
+
+function newExercise(){
+  emoji=EMOJIS[rand(0,EMOJIS.length-1)];
+  generateNumbers();
+  document.getElementById('numAEl').textContent=numA;
+  document.getElementById('numBEl').textContent=numB;
+  document.getElementById('wantRemove').textContent=numB;
+  resetExercise();
+}
+
+// Con eventos pointer no se requieren eventos nativos de arrastrar y soltar.
+// Esto mejora el uso en pantallas touch y evita fallos en tabletas.
+
+newExercise();
+</script></body>
+</html>

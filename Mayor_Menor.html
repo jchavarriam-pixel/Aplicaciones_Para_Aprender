@@ -1,0 +1,1080 @@
+<!doctype html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Caja mayor y caja menor</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; width: 100%; font-family: 'Nunito', sans-serif; overflow: auto; }
+    body { background: linear-gradient(135deg, #fef9c3 0%, #fbcfe8 50%, #c4b5fd 100%); }
+
+    .app-wrapper { width: 100%; min-height: 100%; display: flex; flex-direction: column; align-items: center; padding: 16px; }
+
+    .menu-screen { text-align: center; padding: 36px 20px; max-width: 720px; width: 100%; }
+    .menu-screen h1 {
+      font-size: 3rem; font-weight: 900; color: #7c3aed; margin-bottom: 12px;
+      text-shadow: 3px 3px 0 rgba(255,255,255,0.5), 6px 6px 12px rgba(0,0,0,0.1);
+      letter-spacing: -1px;
+    }
+    .menu-screen p { font-size: 1.15rem; color: #6b21a8; margin-bottom: 22px; font-weight: 700; }
+
+    .config-card {
+      background: rgba(255,255,255,0.84); backdrop-filter: blur(10px); border-radius: 22px;
+      padding: 24px 20px; margin: 10px 0; box-shadow: 0 4px 16px rgba(0,0,0,0.08); width: 100%;
+    }
+    .section-title { font-size: 1.12rem; color: #7c3aed; font-weight: 800; margin-bottom: 14px; }
+    .section-note { font-size: 0.92rem; color: #7e22ce; font-weight: 700; margin-top: 10px; }
+
+    .name-input {
+      width: 100%; max-width: 320px; padding: 14px 16px; border: 3px solid #c4b5fd; border-radius: 14px;
+      font-family: 'Nunito', sans-serif; font-size: 1.1rem; font-weight: 700; text-align: center; color: #1e1b4b;
+      outline: none;
+    }
+    .name-input:focus { border-color: #a855f7; box-shadow: 0 0 0 4px rgba(168,85,247,0.12); }
+
+    .count-buttons, .digit-buttons { display: grid; gap: 10px; width: 100%; }
+    .count-buttons { grid-template-columns: repeat(6, 1fr); }
+    .digit-buttons { grid-template-columns: repeat(4, 1fr); }
+
+    .count-btn, .digit-btn {
+      display: flex; align-items: center; justify-content: center; min-height: 76px;
+      border: 3px solid #c4b5fd; background: #fff; border-radius: 16px; cursor: pointer;
+      font-size: 1.25rem; font-weight: 900; color: #7c3aed; transition: all 0.25s ease;
+      font-family: 'Nunito', sans-serif; text-align: center; padding: 8px;
+    }
+    .count-btn:hover, .digit-btn:hover { transform: translateY(-4px); box-shadow: 0 6px 16px rgba(124,58,237,0.25); border-color: #a78bfa; }
+    .count-btn.active, .digit-btn.active { background: linear-gradient(135deg, #7c3aed, #a855f7); color: #fff; border-color: #a855f7; box-shadow: 0 8px 24px rgba(124,58,237,0.4); transform: scale(1.05); }
+
+    .start-btn, .act-btn {
+      padding: 12px 18px; border: none; border-radius: 16px; font-family: 'Nunito', sans-serif;
+      font-size: 1rem; font-weight: 800; cursor: pointer; transition: transform 0.12s, opacity 0.2s; color: #fff;
+    }
+    .start-btn:hover, .act-btn:hover { transform: scale(1.05); }
+    .start-btn:disabled, .act-btn:disabled { opacity: 0.45; cursor: default; transform: none; }
+    .start-btn { background: #10b981; width: 100%; max-width: 340px; font-size: 1.2rem; padding: 16px; margin-top: 18px; }
+
+    .game-screen { width: 100%; max-width: 1120px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .top-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: wrap; gap: 8px; }
+    .top-bar h2 { font-size: 1.2rem; color: #7c3aed; font-weight: 800; }
+    .score-badge { background: #7c3aed; color: #fff; padding: 6px 16px; border-radius: 50px; font-size: 1rem; font-weight: 800; }
+
+    .board {
+      background: #fff; border-radius: 24px; padding: 24px 20px 20px; width: 100%;
+      box-shadow: 0 4px 24px rgba(124,58,237,0.12);
+    }
+    .hint-bar {
+      background: #fef3c7; border-radius: 12px; padding: 10px 14px; font-size: 1rem; color: #92400e;
+      font-weight: 700; text-align: center; margin-bottom: 14px; min-height: 42px;
+    }
+
+    .exercises-grid {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; width: 100%;
+    }
+    .exercises-grid.one-exercise {
+      grid-template-columns: minmax(320px, 460px);
+      justify-content: center;
+    }
+    .exercise-card {
+      border: 4px solid #ddd6fe; border-radius: 24px; background: linear-gradient(180deg, #faf5ff 0%, #ffffff 100%);
+      padding: 18px 12px 16px; min-height: 248px; position: relative; transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 8px 22px rgba(124,58,237,0.08);
+    }
+    .exercise-card.active { border-color: #f59e0b; box-shadow: 0 10px 24px rgba(245,158,11,0.18); }
+    .exercise-card.done { border-color: #10b981; background: linear-gradient(180deg, #ecfdf5 0%, #ffffff 100%); }
+    .exercise-title { text-align: center; color: #6b21a8; font-size: 1rem; font-weight: 800; margin-bottom: 10px; }
+
+    .relation-row {
+      display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; margin-bottom: 10px;
+    }
+    .drop-box {
+      min-height: 128px; border: 4px dashed #c4b5fd; border-radius: 22px; background: #f5f3ff;
+      display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 8px 4px;
+      transition: border-color 0.2s, background 0.2s, transform 0.15s;
+      position: relative;
+      overflow: hidden;
+    }
+    .drop-box.drop-hover { border-color: #f59e0b; background: #fef3c7; }
+    .drop-box.filled { border-style: solid; border-color: #7c3aed; background: #ede9fe; }
+    .drop-box.correct { border-color: #10b981; background: #d1fae5; color: #065f46; }
+    .drop-box.wrong { border-color: #ef4444; background: #fee2e2; color: #991b1b; }
+    .drop-box-label {
+      width: 100%;
+      text-align: center;
+      font-size: 0.92rem;
+      font-weight: 900;
+      color: #7c3aed;
+      min-height: 1.2rem;
+      margin-bottom: 4px;
+      line-height: 1.1;
+    }
+    
+    .exercise-audio-btn {
+      width: 34px; height: 34px; border: 2px solid #c4b5fd; border-radius: 999px; background: #ffffff; color: #7c3aed;
+      font-size: 0.95rem; font-weight: 900; display: flex; align-items: center; justify-content: center; cursor: pointer;
+      box-shadow: 0 4px 10px rgba(124,58,237,0.18); flex-shrink: 0; transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+    }
+    .exercise-audio-btn:hover { transform: scale(1.08); background: #ffffff; box-shadow: 0 6px 14px rgba(124,58,237,0.24); }
+    .exercise-audio-btn:active { transform: scale(0.96); }
+    .exercise-title-row { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom: 10px; }
+    .exercise-title { margin-bottom: 0; }
+    .exercise-card.speaking { box-shadow: 0 0 0 5px rgba(14,165,233,0.18), 0 10px 24px rgba(14,165,233,0.18); }
+
+.drop-box-inner {
+      width: 100%; min-height: 86px; display: flex; align-items: center; justify-content: center;
+      border-radius: 16px; padding: 0 2px;
+    }
+    .drop-value {
+      width: 100%;
+      text-align: center;
+      font-size: 2.15rem; font-weight: 900; color: #312e81; line-height: 0.95;
+      min-height: 3rem; display: flex; align-items: center; justify-content: center;
+      letter-spacing: -0.06em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: clip;
+      font-variant-numeric: tabular-nums;
+      transform: scaleX(0.92);
+      transform-origin: center center;
+    }
+
+    .relation-symbol {
+      font-size: clamp(3.2rem, 5vw, 4rem); font-weight: 900; color: #2563eb; line-height: 1;
+      width: 52px; display: flex; align-items: center; justify-content: center;
+      text-shadow: 0 2px 0 rgba(255,255,255,0.6);
+      flex-shrink: 0;
+    }
+
+    .exercise-help { display: none; }
+
+    .box-help-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      min-height: 40px;
+      margin-bottom: 2px;
+      color: #0ea5e9;
+      font-weight: 900;
+      text-align: center;
+      animation: bob-help 1.15s ease-in-out infinite;
+    }
+    .box-help-text {
+      font-size: 0.88rem;
+      line-height: 1.05;
+      text-transform: none;
+    }
+    .box-help-arrow {
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+
+    @keyframes bob-help {
+      0%, 100% { transform: translateY(-2px); }
+      50% { transform: translateY(4px); }
+    }
+
+    .number-bank-title { text-align: center; color: #6b21a8; font-size: 1rem; font-weight: 800; margin-bottom: 8px; }
+    .number-bank {
+      display: flex; justify-content: center; align-items: center; gap: 14px; flex-wrap: wrap;
+      min-height: 112px; border-radius: 18px; background: #fff7ed; padding: 10px;
+      border: 3px dashed #fdba74;
+    }
+    .bank-chip {
+      width: 100px; height: 100px; border-radius: 24px; display: flex; align-items: center; justify-content: center;
+      font-size: 2.15rem; font-weight: 900; color: #fff; cursor: grab; user-select: none; -webkit-user-select: none;
+      line-height: 0.95; letter-spacing: -0.06em;
+      touch-action: none; transition: transform 0.1s, opacity 0.2s, box-shadow 0.2s;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.13);
+    }
+    .bank-chip:active { transform: scale(0.94); cursor: grabbing; }
+    .bank-chip.used { opacity: 0.28; pointer-events: none; }
+    .bank-chip.c0 { background: #ef4444; } .bank-chip.c1 { background: #f97316; }
+    .bank-chip.c2 { background: #eab308; } .bank-chip.c3 { background: #22c55e; }
+    .bank-chip.c4 { background: #14b8a6; } .bank-chip.c5 { background: #3b82f6; }
+    .bank-chip.c6 { background: #6366f1; } .bank-chip.c7 { background: #8b5cf6; }
+    .bank-chip.c8 { background: #ec4899; } .bank-chip.c9 { background: #f43f5e; }
+    .bank-chip.c10 { background: #0ea5e9; } .bank-chip.c11 { background: #84cc16; }
+    .bank-chip.c12 { background: #f59e0b; } .bank-chip.c13 { background: #9333ea; }
+    .bank-chip.c14 { background: #10b981; } .bank-chip.c15 { background: #dc2626; }
+    .bank-chip.c16 { background: #7c3aed; } .bank-chip.c17 { background: #0891b2; }
+    .bank-chip.c18 { background: #be185d; } .bank-chip.c19 { background: #16a34a; }
+
+    .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; width: 100%; }
+    .act-btn.menu { background: #94a3b8; }
+    .act-btn.check { background: #10b981; }
+    .act-btn.new { background: #6366f1; }
+    .act-btn.reset { background: #ec4899; }
+    .act-btn.help { background: #0ea5e9; }
+
+    .feedback { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 100; pointer-events: none; opacity: 0; transition: opacity 0.3s; }
+    .feedback.show { opacity: 1; pointer-events: auto; }
+    .feedback-card { background: #fff; border-radius: 28px; padding: 36px 28px; text-align: center; box-shadow: 0 12px 40px rgba(0,0,0,0.2); max-width: 410px; width: 90%; }
+    .feedback-card h3 { font-size: 2rem; margin-bottom: 8px; }
+    .feedback-card p { font-size: 1.15rem; color: #555; margin-bottom: 18px; font-weight: 700; }
+    .feedback-note { font-size: 1.05rem; color: #555; margin-bottom: 18px; font-weight: 700; }
+    .feedback-card button { padding: 14px 28px; border: none; border-radius: 16px; font-family: 'Nunito', sans-serif; font-size: 1.1rem; font-weight: 800; color: #fff; background: #7c3aed; cursor: pointer; }
+
+    .drag-ghost {
+      position: fixed; pointer-events: none; z-index: 200; width: 100px; height: 100px; border-radius: 24px;
+      display: flex; align-items: center; justify-content: center; font-size: 2.15rem; font-weight: 900; color: #fff; opacity: 0.92;
+      line-height: 0.95; letter-spacing: -0.06em;
+      transform: translate(-50%, -50%); box-shadow: 0 10px 22px rgba(0,0,0,0.16);
+    }
+
+    .footer-credit { text-align: center; padding: 16px; font-size: 0.85rem; color: #9333ea; font-weight: 600; margin-top: 10px; }
+
+    @keyframes stars-explode {
+      0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
+      100% { transform: translate(var(--tx), var(--ty)) rotate(540deg) scale(0); opacity: 0; }
+    }
+    @keyframes float-pop {
+      0% { transform: translate(0, 0) scale(0.6); opacity: 0; }
+      20% { opacity: 1; }
+      100% { transform: translate(var(--tx), var(--ty)) scale(1.4); opacity: 0; }
+    }
+    .success-animation { position: fixed; pointer-events: none; z-index: 300; font-size: 3rem; }
+
+    @media (max-width: 720px) {
+      .count-buttons { grid-template-columns: repeat(3, 1fr); }
+      .menu-screen h1 { font-size: 2.2rem; }
+      .bank-chip, .drag-ghost { width: 82px; height: 82px; border-radius: 20px; font-size: 1.85rem; }
+      .relation-symbol { width: 44px; }
+      .drop-box { min-height: 116px; }
+      .drop-box-inner { min-height: 76px; }
+      .drop-value { font-size: 1.85rem; }
+      .number-bank { min-height: 98px; }
+    }
+
+    @media (max-width: 480px) {
+      .count-buttons { grid-template-columns: repeat(2, 1fr); }
+      .digit-buttons { grid-template-columns: repeat(2, 1fr); }
+      .exercises-grid { grid-template-columns: 1fr; }
+      .relation-row { gap: 6px; }
+      .drop-box { min-height: 108px; padding: 8px 4px; }
+      .drop-box-inner { min-height: 70px; }
+      .drop-value { font-size: 1.7rem; }
+      .bank-chip, .drag-ghost { width: 70px; height: 70px; font-size: 1.7rem; border-radius: 18px; }
+      .relation-symbol { width: 38px; font-size: 2.7rem; }
+      .exercise-card { min-height: 236px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-wrapper" id="app">
+    <div class="menu-screen" id="menuScreen">
+      <h1 id="gameTitle">📦 Caja mayor y caja menor</h1>
+      <p>Arrastra los números para que la comparación quede correcta.</p>
+
+      <div class="config-card">
+        <div class="section-title">😊 ¿Cuál es tu nombre?</div>
+        <div style="display:flex; justify-content:center;">
+          <input class="name-input" type="text" id="nameInput" placeholder="Escribe tu nombre aquí">
+        </div>
+      </div>
+
+      <div class="config-card">
+        <div class="section-title">🔢 ¿Cuántos ejercicios quieres por página?</div>
+        <div class="count-buttons" id="countButtons">
+          <button class="count-btn active" data-count="1">1</button>
+          <button class="count-btn" data-count="2">2</button>
+          <button class="count-btn" data-count="3">3</button>
+          <button class="count-btn" data-count="4">4</button>
+          <button class="count-btn" data-count="5">5</button>
+          <button class="count-btn" data-count="6">6</button>
+        </div>
+      </div>
+
+      <div class="config-card">
+        <div class="section-title">🔠 ¿Cuántos dígitos quieres usar?</div>
+        <div class="digit-buttons" id="digitButtons">
+          <button class="digit-btn active" data-digits="1">1 dígito</button>
+          <button class="digit-btn" data-digits="2">2 dígitos</button>
+          <button class="digit-btn" data-digits="3">3 dígitos</button>
+          <button class="digit-btn" data-digits="4">4 dígitos</button>
+        </div>
+        <div class="section-note" id="digitsRuleNote">Todos los números serán de 1 dígito.</div>
+      </div>
+
+      <button class="start-btn" onclick="startGameValidated()">🎮 Empezar a jugar</button>
+      <p style="margin-top: 24px; font-size: 0.9rem; color: #9333ea; font-weight: 600;">✨ Creada para Gabriel por su familia con ayuda de la IA ✨</p>
+    </div>
+
+    <div class="game-screen" id="gameScreen" style="display:none;">
+      <div class="top-bar">
+        <button class="act-btn menu" onclick="goMenu()">⬅ Menú</button>
+        <h2 id="pageLabel">Ejercicios de comparación</h2>
+        <span class="score-badge" id="scoreBadge">⭐ 0</span>
+      </div>
+
+      <div class="board">
+        <div class="hint-bar" id="hintBar">Arrastra cada número a su caja.</div>
+        <div class="exercises-grid" id="exercisesGrid"></div>
+      </div>
+
+      <div class="actions">
+        <button class="act-btn check" id="checkBtn" onclick="checkPage()" disabled>✅ Revisar</button>
+        <button class="act-btn help" id="helpBtn" onclick="toggleHelpMode()">💡 Ayuda: OFF</button>
+        <button class="act-btn new" onclick="newPage()">🆕 Nueva página</button>
+        <button class="act-btn reset" onclick="resetPage()">🔁 Reiniciar</button>
+      </div>
+
+      <div class="footer-credit">✨ Creado para Gabriel con ayuda de la IA y su familia ✨</div>
+    </div>
+  </div>
+
+  <div class="feedback" id="feedback">
+    <div class="feedback-card" id="feedbackCard"></div>
+  </div>
+
+  <div class="drag-ghost" id="dragGhost" style="display:none;"></div>
+
+  <script>
+    let studentName = '';
+    let exercisesPerPage = 1;
+    let selectedDigits = 1;
+    let score = 0;
+    let exercises = [];
+    let dragItemId = null;
+    let dragValue = null;
+    let dragOrigin = null;
+    let dragSourceExercise = null;
+    let isPageSolved = false;
+    let helpMode = false;
+    let currentAudioUtterance = null;
+
+    const ghost = document.getElementById('dragGhost');
+
+    const defaultConfig = {
+      game_title: '📦 Caja mayor y caja menor',
+      background_color: '#fef9c3',
+      surface_color: '#ffffff',
+      text_color: '#1e1b4b',
+      primary_color: '#7c3aed',
+      accent_color: '#f59e0b'
+    };
+
+    const motivationalMessages = [
+      '¡Lo hiciste increíble!',
+      '¡Qué buen trabajo!',
+      '¡Excelente esfuerzo!',
+      '¡Muy bien pensado!',
+      '¡Eres un campeón!',
+      '¡Fantástico!',
+      '¡Maravilloso trabajo!',
+      '¡Cada vez lo haces mejor!',
+      '¡Súper bien!',
+      '¡Eso estuvo genial!',
+      '¡Qué gran logro!',
+      '¡Buenísimo!',
+      '¡Sigue así!',
+      '¡Qué inteligente trabajo!',
+      '¡Perfecto!',
+      '¡Bravo!',
+      '¡Muy muy bien!',
+      '¡Tremendo trabajo!',
+      '¡Lo resolviste excelente!',
+      '¡Impresionante!',
+      '¡Qué bien ordenaste los números!',
+      '¡Eso quedó correcto!',
+      '¡Lo lograste!',
+      '¡Eres genial!',
+      '¡Qué bonito trabajo!',
+      '¡Una página excelente!',
+      '¡Lo estás haciendo súper!',
+      '¡Qué bien pensaste!',
+      '¡Muy ordenado todo!',
+      '¡Cada intento cuenta y este salió perfecto!'
+    ];
+
+    function getRandomMotivationalMessage() {
+      const msg = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
+      return studentName ? `${studentName}, ${msg}` : msg;
+    }
+
+    function applyConfig(c) {
+      document.getElementById('gameTitle').textContent = c.game_title || defaultConfig.game_title;
+      document.body.style.background = `linear-gradient(135deg, ${c.background_color || defaultConfig.background_color} 0%, #fbcfe8 50%, #c4b5fd 100%)`;
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (c) => applyConfig(c),
+        mapToCapabilities: (c) => ({
+          recolorables: [
+            { get: () => c.background_color || defaultConfig.background_color, set: v => { c.background_color = v; window.elementSdk.setConfig({ background_color: v }); } },
+            { get: () => c.surface_color || defaultConfig.surface_color, set: v => { c.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); } },
+            { get: () => c.text_color || defaultConfig.text_color, set: v => { c.text_color = v; window.elementSdk.setConfig({ text_color: v }); } },
+            { get: () => c.primary_color || defaultConfig.primary_color, set: v => { c.primary_color = v; window.elementSdk.setConfig({ primary_color: v }); } },
+            { get: () => c.accent_color || defaultConfig.accent_color, set: v => { c.accent_color = v; window.elementSdk.setConfig({ accent_color: v }); } }
+          ],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (c) => new Map([['game_title', c.game_title || defaultConfig.game_title]])
+      });
+    }
+
+    function setCountButtonState(value) {
+      exercisesPerPage = value;
+      document.querySelectorAll('.count-btn').forEach(btn => btn.classList.toggle('active', Number(btn.dataset.count) === value));
+    }
+
+    function setDigitButtonState(value) {
+      selectedDigits = value;
+      document.querySelectorAll('.digit-btn').forEach(btn => btn.classList.toggle('active', Number(btn.dataset.digits) === value));
+      const note = document.getElementById('digitsRuleNote');
+      if (value === 1) note.textContent = 'Todos los números serán de 1 dígito.';
+      if (value === 2) note.textContent = 'Al menos el 75% serán de 2 dígitos y el resto será aleatorio entre 1 y 2 dígitos.';
+      if (value === 3) note.textContent = 'Al menos el 75% serán de 3 dígitos y el resto será aleatorio entre 1, 2 y 3 dígitos.';
+      if (value === 4) note.textContent = 'Al menos el 75% serán de 4 dígitos y el resto será aleatorio entre 1, 2, 3 y 4 dígitos.';
+    }
+
+    function goMenu() {
+      document.getElementById('menuScreen').style.display = '';
+      document.getElementById('gameScreen').style.display = 'none';
+      closeFeedback();
+      clearSpeech();
+    }
+
+    function startGameValidated() {
+      const name = document.getElementById('nameInput').value.trim();
+      if (!name) {
+        const input = document.getElementById('nameInput');
+        input.placeholder = '¡Por favor, escribe tu nombre!';
+        input.focus();
+        return;
+      }
+      studentName = name;
+      score = 0;
+      updateScore();
+      document.getElementById('menuScreen').style.display = 'none';
+      document.getElementById('gameScreen').style.display = '';
+      newPage();
+    }
+
+    function updateScore() {
+      document.getElementById('scoreBadge').textContent = `⭐ ${score}`;
+    }
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function digitsCountOf(n) {
+      return String(Math.abs(n)).length;
+    }
+
+    function getRangeForDigits(d) {
+      if (d === 1) return [1, 9];
+      if (d === 2) return [10, 99];
+      if (d === 3) return [100, 999];
+      return [1000, 9999];
+    }
+
+    function pickRandomWithDigits(d, usedSet) {
+      const [min, max] = getRangeForDigits(d);
+      let tries = 0;
+      while (tries < 3000) {
+        const n = randomInt(min, max);
+        if (!usedSet.has(n)) return n;
+        tries++;
+      }
+      for (let n = min; n <= max; n++) {
+        if (!usedSet.has(n)) return n;
+      }
+      return null;
+    }
+
+    function buildDigitPlan(totalNumbers) {
+      if (selectedDigits === 1) return new Array(totalNumbers).fill(1);
+
+      const requiredMain = Math.ceil(totalNumbers * 0.75);
+      const plan = [];
+      for (let i = 0; i < requiredMain; i++) plan.push(selectedDigits);
+
+      while (plan.length < totalNumbers) {
+        if (selectedDigits === 2) plan.push(Math.random() < 0.5 ? 1 : 2);
+        else if (selectedDigits === 3) plan.push([1, 2, 3][randomInt(0, 2)]);
+        else plan.push([1, 2, 3, 4][randomInt(0, 3)]);
+      }
+      return shuffle(plan);
+    }
+
+    function generateUniqueNumbers(amount) {
+      const used = new Set();
+      const plan = buildDigitPlan(amount);
+      const numbers = [];
+
+      for (const digitSize of plan) {
+        const num = pickRandomWithDigits(digitSize, used);
+        if (num === null) continue;
+        used.add(num);
+        numbers.push(num);
+      }
+
+      while (numbers.length < amount) {
+        const fallbackDigits = selectedDigits;
+        const num = pickRandomWithDigits(fallbackDigits, used);
+        if (num === null) break;
+        used.add(num);
+        numbers.push(num);
+      }
+
+      return shuffle(numbers);
+    }
+
+    function generateExercises() {
+      const numbers = generateUniqueNumbers(exercisesPerPage * 2);
+      const items = [];
+      for (let i = 0; i < exercisesPerPage; i++) {
+        const a = numbers[i * 2];
+        const b = numbers[i * 2 + 1];
+        const mode = Math.random() < 0.5 ? 'mayor' : 'menor';
+        const symbol = mode === 'mayor' ? '>' : '<';
+        items.push({
+          id: i,
+          mode,
+          symbol,
+          numbers: [a, b],
+          slots: [null, null],
+          sources: [
+            { id: `ex${i}-n0`, value: a, used: false },
+            { id: `ex${i}-n1`, value: b, used: false }
+          ],
+          solved: false,
+          touched: false
+        });
+      }
+      return items;
+    }
+
+    function newPage() {
+      exercises = generateExercises();
+      isPageSolved = false;
+      document.getElementById('pageLabel').textContent = `${exercisesPerPage} ejercicio${exercisesPerPage > 1 ? 's' : ''} por página • ${selectedDigits} dígito${selectedDigits > 1 ? 's' : ''}`;
+      renderExercises();
+      updateHint();
+      updateCheckButton();
+      closeFeedback();
+      clearSpeech();
+    }
+
+    function resetPage() {
+      exercises = exercises.map(ex => ({
+        ...ex,
+        slots: [null, null],
+        solved: false,
+        touched: false,
+        sources: ex.sources.map(s => ({ ...s, used: false }))
+      }));
+      isPageSolved = false;
+      renderExercises();
+      updateHint();
+      updateCheckButton();
+      closeFeedback();
+      clearSpeech();
+    }
+
+    function toggleHelpMode() {
+      helpMode = !helpMode;
+      document.getElementById('helpBtn').textContent = helpMode ? '💡 Ayuda: ON' : '💡 Ayuda: OFF';
+      renderExercises();
+      updateHint();
+    }
+
+    function getExerciseHelpText(ex) {
+      return '';
+    }
+
+    function getBoxHelpLabel(ex, slotIndex) {
+      if (!helpMode) return '';
+      const wantsBig = (ex.mode === 'mayor' && slotIndex === 0) || (ex.mode === 'menor' && slotIndex === 1);
+      return wantsBig ? 'Número más grande' : 'Número más pequeño';
+    }
+
+    
+    function getExerciseSpeech(ex) {
+      const left = ex.slots[0];
+      const right = ex.slots[1];
+      if (left === null || right === null) {
+        return {
+          text: 'Todavía falta acomodar este ejercicio. Coloca los dos números antes de escuchar la comparación.',
+          hint: 'Primero acomoda los dos números en las cajas para escuchar la comparación.',
+          correct: false
+        };
+      }
+
+      const phrase = ex.symbol === '>' ? 'es mayor que' : 'es menor que';
+      const base = `${left} ${phrase} ${right}.`;
+      const correct = isExerciseCorrect(ex);
+
+      if (correct) {
+        return {
+          text: `${base} Sí está correcta. ¡Muy bien!`,
+          hint: `✅ ${base} Está correcta.`,
+          correct: true
+        };
+      }
+
+      const relationWord = ex.symbol === '>' ? 'Mayor' : 'Menor';
+      const correction = `No es correcto. ${left} NO ES ${relationWord} que ${right}. Este acomodo es incorrecto, intenta de nuevo.`;
+      return {
+        text: correction,
+        hint: `❌ ${correction}`,
+        correct: false
+      };
+    }
+
+    function speakExercise(exId) {
+      const ex = exercises[exId];
+      if (!ex) return;
+      const info = getExerciseSpeech(ex);
+      const bar = document.getElementById('hintBar');
+      if (bar) bar.textContent = info.hint;
+      document.querySelectorAll('.exercise-card').forEach(card => card.classList.remove('speaking'));
+      const card = document.querySelectorAll('.exercise-card')[exId];
+      if (card) {
+        card.classList.add('speaking');
+        setTimeout(() => card.classList.remove('speaking'), 1800);
+      }
+      speakText(info.text);
+    }
+
+    function renderExercises() {
+      const grid = document.getElementById('exercisesGrid');
+      grid.innerHTML = '';
+      grid.classList.toggle('one-exercise', exercises.length === 1);
+
+      exercises.forEach((ex, index) => {
+        const card = document.createElement('div');
+        card.className = 'exercise-card' + (ex.solved ? ' done' : (!isExerciseFilled(ex) ? '' : ' active'));
+        card.dataset.exerciseCard = ex.id;
+
+        const titleRow = document.createElement('div');
+        titleRow.className = 'exercise-title-row';
+
+        const title = document.createElement('div');
+        title.className = 'exercise-title';
+        title.textContent = `Ejercicio ${index + 1}`;
+        titleRow.appendChild(title);
+
+        const audioBtn = document.createElement('button');
+        audioBtn.className = 'exercise-audio-btn';
+        audioBtn.type = 'button';
+        audioBtn.title = 'Escuchar comparación';
+        audioBtn.setAttribute('aria-label', 'Escuchar comparación');
+        audioBtn.textContent = '🔊';
+        audioBtn.addEventListener('click', (ev) => {
+          ev.stopPropagation();
+          speakExercise(ex.id);
+        });
+        titleRow.appendChild(audioBtn);
+        card.appendChild(titleRow);
+
+        const relation = document.createElement('div');
+        relation.className = 'relation-row';
+        relation.appendChild(buildDropBox(ex.id, 0, ex.slots[0], ex));
+
+        const symbol = document.createElement('div');
+        symbol.className = 'relation-symbol';
+        symbol.textContent = ex.symbol;
+        relation.appendChild(symbol);
+
+        relation.appendChild(buildDropBox(ex.id, 1, ex.slots[1], ex));
+        card.appendChild(relation);
+
+
+        const bankTitle = document.createElement('div');
+        bankTitle.className = 'number-bank-title';
+        bankTitle.textContent = 'Arrastra un número 👇';
+        card.appendChild(bankTitle);
+
+        const bank = document.createElement('div');
+        bank.className = 'number-bank';
+        ex.sources.forEach((src, idx) => {
+          const chip = document.createElement('div');
+          chip.className = `bank-chip c${(ex.id * 2 + idx) % 20}` + (src.used ? ' used' : '');
+          chip.textContent = src.value;
+          chip.dataset.sourceId = src.id;
+          chip.dataset.exercise = ex.id;
+          chip.dataset.value = src.value;
+          if (!src.used) chip.addEventListener('pointerdown', startDrag);
+          bank.appendChild(chip);
+        });
+        card.appendChild(bank);
+
+        grid.appendChild(card);
+      });
+    }
+
+    function buildDropBox(exId, slotIndex, value, ex) {
+      const box = document.createElement('div');
+      box.className = 'drop-box' + (value !== null ? ' filled' : '');
+      box.dataset.exercise = exId;
+      box.dataset.slot = slotIndex;
+
+      const label = document.createElement('div');
+      label.className = 'drop-box-label';
+      label.textContent = '';
+      box.appendChild(label);
+
+      if (helpMode) {
+        const helpWrap = document.createElement('div');
+        helpWrap.className = 'box-help-wrap';
+
+        const helpText = document.createElement('div');
+        helpText.className = 'box-help-text';
+        helpText.textContent = getBoxHelpLabel(ex, slotIndex);
+        helpWrap.appendChild(helpText);
+
+        const helpArrow = document.createElement('div');
+        helpArrow.className = 'box-help-arrow';
+        helpArrow.textContent = '↓';
+        helpWrap.appendChild(helpArrow);
+
+        box.appendChild(helpWrap);
+      }
+
+      const inner = document.createElement('div');
+      inner.className = 'drop-box-inner';
+
+      const val = document.createElement('div');
+      val.className = 'drop-value';
+      val.textContent = value !== null ? value : '';
+      inner.appendChild(val);
+      box.appendChild(inner);
+
+      box.dataset.value = value !== null ? value : '';
+      box.addEventListener('pointerenter', () => { if (dragItemId !== null) box.classList.add('drop-hover'); });
+      box.addEventListener('pointerleave', () => box.classList.remove('drop-hover'));
+      box.addEventListener('click', () => clearSlot(exId, slotIndex));
+      if (value !== null) {
+        box.addEventListener('pointerdown', (e) => startDragFromSlot(e, exId, slotIndex));
+      }
+
+      return box;
+    }
+
+    function startDragFromSlot(e, exId, slotIndex) {
+      if (exercises[exId]?.slots?.[slotIndex] === null) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const value = exercises[exId].slots[slotIndex];
+      const src = exercises[exId].sources.find(s => s.value === value);
+      dragItemId = src ? src.id : `slot-${exId}-${slotIndex}`;
+      dragValue = Number(value);
+      dragOrigin = { exId, slotIndex, value, sourceId: dragItemId };
+      dragSourceExercise = exId;
+      ghost.style.display = 'flex';
+      ghost.textContent = dragValue;
+      ghost.className = 'drag-ghost';
+      ghost.style.left = e.clientX + 'px';
+      ghost.style.top = e.clientY + 'px';
+      document.addEventListener('pointermove', moveGhost);
+      document.addEventListener('pointerup', endDrag);
+    }
+
+    function startDrag(e) {
+      e.preventDefault();
+      dragOrigin = null;
+      dragItemId = e.currentTarget.dataset.sourceId;
+      dragValue = Number(e.currentTarget.dataset.value);
+      dragSourceExercise = Number(e.currentTarget.dataset.exercise);
+      ghost.style.display = 'flex';
+      ghost.textContent = dragValue;
+      ghost.className = e.currentTarget.className.replace('bank-chip', 'drag-ghost');
+      ghost.style.left = e.clientX + 'px';
+      ghost.style.top = e.clientY + 'px';
+      document.addEventListener('pointermove', moveGhost);
+      document.addEventListener('pointerup', endDrag);
+    }
+
+    function moveGhost(e) {
+      ghost.style.left = e.clientX + 'px';
+      ghost.style.top = e.clientY + 'px';
+    }
+
+    function endDrag(e) {
+      document.removeEventListener('pointermove', moveGhost);
+      document.removeEventListener('pointerup', endDrag);
+      ghost.style.display = 'none';
+
+      const el = document.elementFromPoint(e.clientX, e.clientY);
+      const box = el?.closest('.drop-box');
+
+      if (box && dragItemId !== null) {
+        const targetExercise = Number(box.dataset.exercise);
+        if (dragSourceExercise === null || targetExercise === dragSourceExercise) {
+          placeNumber(targetExercise, Number(box.dataset.slot), dragItemId, dragValue, dragOrigin);
+        } else if (dragOrigin) {
+          exercises[dragOrigin.exId].touched = true;
+          renderExercises();
+          speakText('Ese número solo puede colocarse en su propio ejercicio.');
+        }
+      } else if (dragOrigin) {
+        clearSlot(dragOrigin.exId, dragOrigin.slotIndex);
+      }
+
+      document.querySelectorAll('.drop-hover').forEach(node => node.classList.remove('drop-hover'));
+      dragItemId = null;
+      dragValue = null;
+      dragOrigin = null;
+      dragSourceExercise = null;
+    }
+
+    function placeNumber(exId, slotIndex, sourceId, value, origin = null) {
+      const ex = exercises[exId];
+      if (!ex) return;
+
+      if (origin) {
+        const originEx = exercises[origin.exId];
+        if (originEx && originEx.slots[origin.slotIndex] === origin.value) {
+          originEx.slots[origin.slotIndex] = null;
+          originEx.solved = false;
+          originEx.touched = true;
+        }
+      }
+
+      const previousAtSlot = ex.slots[slotIndex];
+      if (previousAtSlot !== null) {
+        const prevSource = ex.sources.find(s => s.value === previousAtSlot);
+        if (prevSource) prevSource.used = false;
+      }
+
+      const existingSlot = ex.slots.findIndex(v => v === value);
+      if (existingSlot !== -1) ex.slots[existingSlot] = null;
+
+      ex.slots[slotIndex] = value;
+      ex.sources.forEach(s => { if (s.id === sourceId) s.used = true; });
+      ex.solved = false;
+      ex.touched = true;
+      isPageSolved = false;
+      renderExercises();
+      clearCurrentColors();
+      updateHint();
+      updateCheckButton();
+    }
+
+    function clearSlot(exId, slotIndex) {
+      const ex = exercises[exId];
+      if (!ex || ex.slots[slotIndex] === null) return;
+      const value = ex.slots[slotIndex];
+      ex.slots[slotIndex] = null;
+      const src = ex.sources.find(s => s.value === value);
+      if (src) src.used = false;
+      ex.solved = false;
+      ex.touched = true;
+      isPageSolved = false;
+      renderExercises();
+      clearCurrentColors();
+      updateHint();
+      updateCheckButton();
+    }
+
+    function clearCurrentColors() {
+      document.querySelectorAll('.drop-box').forEach(box => box.classList.remove('correct', 'wrong'));
+    }
+
+    function isExerciseFilled(ex) {
+      return ex.slots[0] !== null && ex.slots[1] !== null;
+    }
+
+    function updateCheckButton() {
+      const allFilled = exercises.every(isExerciseFilled);
+      document.getElementById('checkBtn').disabled = !allFilled || isPageSolved;
+    }
+
+    function updateHint() {
+      const bar = document.getElementById('hintBar');
+      if (!helpMode) {
+        if (isPageSolved) {
+          bar.textContent = '¡Muy bien! Ya completaste la página.';
+        } else {
+          const pending = exercises.find(ex => !isExerciseFilled(ex));
+          bar.textContent = pending ? 'Arrastra los números a las cajas.' : 'Pulsa Revisar ✅';
+        }
+        return;
+      }
+
+      const wrongExists = exercises.some(ex => ex.touched && isExerciseFilled(ex) && !isExerciseCorrect(ex));
+      if (wrongExists) {
+        bar.textContent = 'Revisa las cajas en rojo. Puedes mover los números y corregir. También puedes tocar 🔊 para escuchar la comparación.';
+        return;
+      }
+
+      const pending = exercises.find(ex => !isExerciseFilled(ex));
+      if (pending) {
+        bar.textContent = 'Usa la ayuda de cada caja para acomodar los números.';
+        return;
+      }
+      if (isPageSolved) {
+        bar.textContent = '¡Muy bien! Ya completaste la página.';
+        return;
+      }
+      bar.textContent = '¡Ya están todas llenas! Pulsa Revisar ✅';
+    }
+
+    function isExerciseCorrect(ex) {
+      const [left, right] = ex.slots;
+      return ex.mode === 'mayor' ? left > right : left < right;
+    }
+
+    function checkPage() {
+      if (isPageSolved) return;
+      let allCorrect = true;
+
+      exercises.forEach(ex => {
+        ex.touched = true;
+        const ok = isExerciseCorrect(ex);
+        ex.solved = ok;
+        if (!ok) allCorrect = false;
+      });
+
+      colorBoxes();
+      updateHint();
+
+      if (allCorrect) {
+        isPageSolved = true;
+        score += exercises.length;
+        updateScore();
+        updateCheckButton();
+        triggerSuccessAnimation();
+        showFeedback('🎉', '¡Excelente trabajo!', getRandomMotivationalMessage(), true);
+      } else {
+        updateCheckButton();
+        speakText('Revisa las cajas rojas y vuelve a intentarlo.');
+      }
+    }
+
+    function colorBoxes() {
+      document.querySelectorAll('.drop-box').forEach(box => {
+        box.classList.remove('correct', 'wrong');
+        const ex = exercises[Number(box.dataset.exercise)];
+        const slot = Number(box.dataset.slot);
+        if (!isExerciseFilled(ex)) return;
+
+        const leftTarget = ex.mode === 'mayor' ? Math.max(...ex.numbers) : Math.min(...ex.numbers);
+        const rightTarget = ex.mode === 'mayor' ? Math.min(...ex.numbers) : Math.max(...ex.numbers);
+        const correctValue = slot === 0 ? leftTarget : rightTarget;
+        box.classList.add(ex.slots[slot] === correctValue ? 'correct' : 'wrong');
+      });
+    }
+
+    function showFeedback(emoji, title, msg, isSuccess) {
+      const fb = document.getElementById('feedback');
+      const card = document.getElementById('feedbackCard');
+      card.innerHTML = `
+        <h3>${emoji} ${title}</h3>
+        <p class="feedback-note">${msg}</p>
+        <button onclick="${isSuccess ? 'newPage()' : 'closeFeedback()'}">${isSuccess ? '➡️ Siguiente página' : '🔄 Seguir intentando'}</button>
+      `;
+      fb.classList.add('show');
+      speakText(msg);
+    }
+
+    function closeFeedback() {
+      document.getElementById('feedback').classList.remove('show');
+    }
+
+    function triggerSuccessAnimation() {
+      const sets = [
+        ['⭐', '🌈', '❤️', '✨', '🎉', '👑', '🦋', '🌟'],
+        ['🎈', '🎊', '💫', '🪄', '🥳', '🌸', '🌺', '🍭'],
+        ['🚀', '🦄', '🎵', '☀️', '🍀', '💖', '🐣', '🍬']
+      ];
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+
+      sets.forEach((emojis, waveIndex) => {
+        setTimeout(() => {
+          const count = 80 + waveIndex * 20;
+          for (let i = 0; i < count; i++) {
+            const elem = document.createElement('div');
+            elem.className = 'success-animation';
+            elem.textContent = emojis[i % emojis.length];
+            const angle = (i / count) * Math.PI * 2;
+            const distance = 280 + Math.random() * (420 + waveIndex * 120);
+            const tx = Math.cos(angle) * distance;
+            const ty = Math.sin(angle) * distance;
+            elem.style.left = centerX + 'px';
+            elem.style.top = centerY + 'px';
+            elem.style.setProperty('--tx', tx + 'px');
+            elem.style.setProperty('--ty', ty + 'px');
+            elem.style.animation = `${waveIndex % 2 === 0 ? 'stars-explode' : 'float-pop'} ${2.2 + waveIndex * 0.35}s ease-out forwards`;
+            elem.style.animationDelay = (i * 0.01) + 's';
+            elem.style.fontSize = (2 + Math.random() * 1.9) + 'rem';
+            document.body.appendChild(elem);
+            setTimeout(() => elem.remove(), 4800);
+          }
+        }, waveIndex * 450);
+      });
+
+      playCelebrationSound();
+    }
+
+    function playCelebrationSound() {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const audioCtx = new AudioCtx();
+      const melody = [523.25, 659.25, 783.99, 1046.50, 783.99, 1174.66];
+      melody.forEach((freq, i) => {
+        const now = audioCtx.currentTime + i * 0.13;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = i % 2 === 0 ? 'sine' : 'triangle';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(0.08, now + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.28);
+        osc.start(now);
+        osc.stop(now + 0.3);
+      });
+    }
+
+    function clearSpeech() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    }
+
+    function speakText(text) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'es-ES';
+      utterance.rate = 0.92;
+      utterance.pitch = 1;
+      utterance.volume = 1;
+      currentAudioUtterance = utterance;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      applyConfig(defaultConfig);
+      document.querySelectorAll('.count-btn').forEach(btn => {
+        btn.addEventListener('click', () => setCountButtonState(Number(btn.dataset.count)));
+      });
+      document.querySelectorAll('.digit-btn').forEach(btn => {
+        btn.addEventListener('click', () => setDigitButtonState(Number(btn.dataset.digits)));
+      });
+      setCountButtonState(1);
+      setDigitButtonState(1);
+    });
+  </script>
+</body>
+</html>

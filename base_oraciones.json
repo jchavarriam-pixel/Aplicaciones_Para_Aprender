@@ -1,0 +1,4430 @@
+{
+  "imagenes": {
+    "abre": {
+      "label": "abre",
+      "img": "ImagenesGeneradorOraciones/abre.png"
+    },
+    "al lado": {
+      "label": "al lado",
+      "img": "ImagenesGeneradorOraciones/al_lado.png"
+    },
+    "alto": {
+      "label": "alto",
+      "img": "ImagenesGeneradorOraciones/alto.png"
+    },
+    "amarillo": {
+      "label": "amarillo",
+      "img": "ImagenesGeneradorOraciones/amarillo.png"
+    },
+    "hamburguesa": {
+      "label": "hamburguesa",
+      "img": "ImagenesGeneradorOraciones/hamburguesa.png"
+    },
+    "Ana": {
+      "label": "Ana",
+      "img": "ImagenesGeneradorOraciones/Ana.png"
+    },
+    "árbol": {
+      "label": "árbol",
+      "img": "ImagenesGeneradorOraciones/arbol.png"
+    },
+    "autobús": {
+      "label": "autobús",
+      "img": "ImagenesGeneradorOraciones/autobus.png"
+    },
+    "avión": {
+      "label": "avión",
+      "img": "ImagenesGeneradorOraciones/avion.png"
+    },
+    "azul": {
+      "label": "azul",
+      "img": "ImagenesGeneradorOraciones/azul.png"
+    },
+    "barco": {
+      "label": "barco",
+      "img": "ImagenesGeneradorOraciones/barco.png"
+    },
+    "bicicleta": {
+      "label": "bicicleta",
+      "img": "ImagenesGeneradorOraciones/bicicleta.png"
+    },
+    "caballo": {
+      "label": "caballo",
+      "img": "ImagenesGeneradorOraciones/caballo.png"
+    },
+    "caluroso": {
+      "label": "caluroso",
+      "img": "ImagenesGeneradorOraciones/caluroso.png"
+    },
+    "cama": {
+      "label": "cama",
+      "img": "ImagenesGeneradorOraciones/cama.png"
+    },
+    "cancha": {
+      "label": "cancha",
+      "img": "ImagenesGeneradorOraciones/cancha.png"
+    },
+    "Carlos": {
+      "label": "Carlos",
+      "img": "ImagenesGeneradorOraciones/Carlos.png"
+    },
+    "carro": {
+      "label": "carro",
+      "img": "ImagenesGeneradorOraciones/carro.png"
+    },
+    "casa": {
+      "label": "casa",
+      "img": "ImagenesGeneradorOraciones/casa.png"
+    },
+    "cohete": {
+      "label": "cohete",
+      "img": "ImagenesGeneradorOraciones/cohete.png"
+    },
+    "columpio": {
+      "label": "columpio",
+      "img": "ImagenesGeneradorOraciones/columpio.png"
+    },
+    "come": {
+      "label": "come",
+      "img": "ImagenesGeneradorOraciones/come.png"
+    },
+    "conejo": {
+      "label": "conejo",
+      "img": "ImagenesGeneradorOraciones/conejo.png"
+    },
+    "corre": {
+      "label": "corre",
+      "img": "ImagenesGeneradorOraciones/corre.png"
+    },
+    "cuaderno": {
+      "label": "cuaderno",
+      "img": "ImagenesGeneradorOraciones/cuaderno.png"
+    },
+    "Daniel": {
+      "label": "Daniel",
+      "img": "ImagenesGeneradorOraciones/Daniel.png"
+    },
+    "debajo": {
+      "label": "debajo",
+      "img": "ImagenesGeneradorOraciones/debajo.png"
+    },
+    "duerme": {
+      "label": "duerme",
+      "img": "ImagenesGeneradorOraciones/duerme.png"
+    },
+    "edificio": {
+      "label": "edificio",
+      "img": "ImagenesGeneradorOraciones/edificio.png"
+    },
+    "encima": {
+      "label": "encima",
+      "img": "ImagenesGeneradorOraciones/encima.png"
+    },
+    "escribe": {
+      "label": "escribe",
+      "img": "ImagenesGeneradorOraciones/escribe.png"
+    },
+    "escuela": {
+      "label": "escuela",
+      "img": "ImagenesGeneradorOraciones/escuela.png"
+    },
+    "flores": {
+      "label": "flores",
+      "img": "ImagenesGeneradorOraciones/flores.png"
+    },
+    "frutas": {
+      "label": "frutas",
+      "img": "ImagenesGeneradorOraciones/frutas.png"
+    },
+    "gato": {
+      "label": "gato",
+      "img": "ImagenesGeneradorOraciones/gato.png"
+    },
+    "globos": {
+      "label": "globos",
+      "img": "ImagenesGeneradorOraciones/globos.png"
+    },
+    "grande": {
+      "label": "grande",
+      "img": "ImagenesGeneradorOraciones/grande.png"
+    },
+    "iglesia": {
+      "label": "iglesia",
+      "img": "ImagenesGeneradorOraciones/iglesia.png"
+    },
+    "Jimena": {
+      "label": "Jimena",
+      "img": "ImagenesGeneradorOraciones/Jimena.png"
+    },
+    "Juan": {
+      "label": "Juan",
+      "img": "ImagenesGeneradorOraciones/Juan.png"
+    },
+    "juega": {
+      "label": "juega",
+      "img": "ImagenesGeneradorOraciones/juega.png"
+    },
+    "juguetes": {
+      "label": "juguetes",
+      "img": "ImagenesGeneradorOraciones/juguetes.png"
+    },
+    "lee": {
+      "label": "lee",
+      "img": "ImagenesGeneradorOraciones/lee.png"
+    },
+    "libro": {
+      "label": "libro",
+      "img": "ImagenesGeneradorOraciones/libro.png"
+    },
+    "lluvioso": {
+      "label": "lluvioso",
+      "img": "ImagenesGeneradorOraciones/lluvioso.png"
+    },
+    "Manuel": {
+      "label": "Manuel",
+      "img": "ImagenesGeneradorOraciones/Manuel.png"
+    },
+    "Marta": {
+      "label": "Marta",
+      "img": "ImagenesGeneradorOraciones/Marta.png"
+    },
+    "mesa": {
+      "label": "mesa",
+      "img": "ImagenesGeneradorOraciones/mesa.png"
+    },
+    "multicolor": {
+      "label": "multicolor",
+      "img": "ImagenesGeneradorOraciones/multicolor.png"
+    },
+    "negro": {
+      "label": "negro",
+      "img": "ImagenesGeneradorOraciones/negro.png"
+    },
+    "niña": {
+      "label": "niña",
+      "img": "ImagenesGeneradorOraciones/nina.png"
+    },
+    "niño": {
+      "label": "niño",
+      "img": "ImagenesGeneradorOraciones/nino.png"
+    },
+    "parque": {
+      "label": "parque",
+      "img": "ImagenesGeneradorOraciones/parque.png"
+    },
+    "pelota": {
+      "label": "pelota",
+      "img": "ImagenesGeneradorOraciones/pelota.png"
+    },
+    "pequeño": {
+      "label": "pequeño",
+      "img": "ImagenesGeneradorOraciones/pequeno.png"
+    },
+    "perro": {
+      "label": "perro",
+      "img": "ImagenesGeneradorOraciones/perro.png"
+    },
+    "playa": {
+      "label": "playa",
+      "img": "ImagenesGeneradorOraciones/playa.png"
+    },
+    "pregunta": {
+      "label": "pregunta",
+      "img": "ImagenesGeneradorOraciones/pregunta.png"
+    },
+    "púrpura": {
+      "label": "púrpura",
+      "img": "ImagenesGeneradorOraciones/purpura.png"
+    },
+    "río": {
+      "label": "río",
+      "img": "ImagenesGeneradorOraciones/rio.png"
+    },
+    "rojo": {
+      "label": "rojo",
+      "img": "ImagenesGeneradorOraciones/rojo.png"
+    },
+    "salta": {
+      "label": "salta",
+      "img": "ImagenesGeneradorOraciones/salta.png"
+    },
+    "silla": {
+      "label": "silla",
+      "img": "ImagenesGeneradorOraciones/silla.png"
+    },
+    "sombrilla": {
+      "label": "sombrilla",
+      "img": "ImagenesGeneradorOraciones/sombrilla.png"
+    },
+    "sofá": {
+      "label": "sofá",
+      "img": "ImagenesGeneradorOraciones/sofa.png"
+    },
+    "sopa": {
+      "label": "sopa",
+      "img": "ImagenesGeneradorOraciones/sopa.png"
+    },
+    "super mercado": {
+      "label": "super mercado",
+      "img": "ImagenesGeneradorOraciones/super_mercado.png"
+    },
+    "tobogán": {
+      "label": "tobogán",
+      "img": "ImagenesGeneradorOraciones/tobogan.png"
+    },
+    "ver": {
+      "label": "ver",
+      "img": "ImagenesGeneradorOraciones/ver.png"
+    },
+    "verde": {
+      "label": "verde",
+      "img": "ImagenesGeneradorOraciones/verde.png"
+    },
+    "verduras": {
+      "label": "verduras",
+      "img": "ImagenesGeneradorOraciones/verduras.png"
+    },
+    "zanahoria": {
+      "label": "zanahoria",
+      "img": "ImagenesGeneradorOraciones/zanahoria.png"
+    }
+  },
+  "oraciones": [
+	  [
+  {
+    "level": 3,
+    "pics": ["Ana","juega","pelota","parque"],
+    "words": ["Ana","juega","con","la","pelota","en","el","parque","."]
+  },
+  {
+    "level": 3,
+    "pics": ["Ana","corre","pelota","cancha"],
+    "words": ["Ana","corre","en","la","cancha","con","la","pelota","."]
+  },
+  {
+    "level": 3,
+    "pics": ["Carlos","juega","pelota","parque"],
+    "words": ["Carlos","juega","con","la","pelota","en","el","parque","."]
+  },
+  {
+    "level": 3,
+    "pics": ["Daniel","juega","juguetes","casa"],
+    "words": ["Daniel","juega","con","los","juguetes","en","la","casa","."]
+  },
+  {
+    "level": 3,
+    "pics": ["Jimena","juega","columpio","parque"],
+    "words": ["Jimena","juega","en","el","columpio","del","parque","."]
+  },
+  {
+    "level": 3,
+    "pics": ["Juan","juega","bicicleta","parque"],
+    "words": ["Juan","juega","con","la","bicicleta","en","el","parque","."]
+  },
+  {
+    "level": 3,
+    "pics": ["Manuel","salta","pelota","cancha"],
+    "words": ["Manuel","salta","con","la","pelota","en","la","cancha","."]
+  },
+  {
+    "level": 3,
+    "pics": ["Marta","lee","libro","escuela"],
+    "words": ["Marta","lee","un","libro","en","la","escuela","."]
+  },
+  {
+    "level": 3,
+    "pics": ["niño","juega","juguetes","casa"],
+    "words": ["el","niño","juega","con","los","juguetes","en","la","casa","."]
+  },
+  {
+    "level": 3,
+    "pics": ["niña","corre","pelota","parque"],
+    "words": ["la","niña","corre","con","la","pelota","en","el","parque","."]
+  },
+  {
+    "level": 3,
+    "pics": ["perro","corre","pelota","parque"],
+    "words": ["el","perro","corre","con","la","pelota","en","el","parque","."]
+  },
+  {
+    "level": 3,
+    "pics": ["gato","duerme","cama","casa"],
+    "words": ["el","gato","duerme","en","la","cama","de","la","casa","."]
+  },
+  {
+    "level": 3,
+    "pics": ["conejo","come","zanahoria","parque"],
+    "words": ["el","conejo","come","una","zanahoria","en","el","parque","."]
+  },
+  {
+    "level": 3,
+    "pics": ["caballo","corre","árbol","parque"],
+    "words": ["el","caballo","corre","al","lado","del","árbol","en","el","parque","."]
+  },
+  {
+    "level": 3,
+    "pics": ["carro","rojo","casa","al lado"],
+    "words": ["el","carro","rojo","está","al","lado","de","la","casa","."]
+  },
+  {
+    "level": 3,
+    "pics": ["bicicleta","azul","árbol","al lado"],
+    "words": ["la","bicicleta","azul","está","al","lado","del","árbol","."]
+  },
+  {
+    "level": 3,
+    "pics": ["barco","azul","río","al lado"],
+    "words": ["el","barco","azul","está","al","lado","del","río","."]
+  },
+  {
+    "level": 3,
+    "pics": ["pelota","rojo","silla","debajo"],
+    "words": ["la","pelota","roja","está","debajo","de","la","silla","."]
+  },
+  {
+    "level": 3,
+    "pics": ["libro","azul","mesa","encima"],
+    "words": ["el","libro","azul","está","encima","de","la","mesa","."]
+  },
+  {
+    "level": 3,
+    "pics": ["globos","multicolor","mesa","encima"],
+    "words": ["los","globos","multicolores","están","encima","de","la","mesa","."]
+  },
+  {
+    "level": 3,
+    "pics": ["flores","amarillo","casa","al lado"],
+    "words": ["las","flores","amarillas","están","al","lado","de","la","casa","."]
+  },
+  {
+    "level": 3,
+    "pics": ["sombrilla","playa","azul","al lado"],
+    "words": ["la","sombrilla","azul","está","en","la","playa","."]
+  },
+  {
+    "level": 3,
+    "pics": ["avión","azul","alto","playa"],
+    "words": ["el","avión","azul","está","alto","sobre","la","playa","."]
+  },
+  {
+    "level": 3,
+    "pics": ["autobús","escuela","al lado","rojo"],
+    "words": ["el","autobús","está","al","lado","de","la","escuela","."]
+  },
+  {
+    "level": 3,
+    "pics": ["super mercado","carro","frutas","verduras"],
+    "words": ["el","carro","está","en","el","supermercado","."]
+  },
+  {
+    "level": 3,
+    "pics": ["Ana","lee","libro","casa"],
+    "words": ["Ana","lee","un","libro","en","la","casa","."]
+  },
+  {
+    "level": 3,
+    "pics": ["Carlos","corre","parque","pelota"],
+    "words": ["Carlos","corre","en","el","parque","con","la","pelota","."]
+  },
+  {
+    "level": 3,
+    "pics": ["Daniel","escribe","cuaderno","casa"],
+    "words": ["Daniel","escribe","en","el","cuaderno","en","la","casa","."]
+  },
+  {
+    "level": 3,
+    "pics": ["Jimena","salta","cancha","pelota"],
+    "words": ["Jimena","salta","en","la","cancha","con","la","pelota","."]
+  },
+  {
+    "level": 3,
+    "pics": ["Juan","corre","bicicleta","parque"],
+    "words": ["Juan","corre","al","lado","de","la","bicicleta","en","el","parque","."]
+  },
+  {
+    "level": 3,
+    "pics": ["Manuel","juega","juguetes","casa"],
+    "words": ["Manuel","juega","con","los","juguetes","en","la","casa","."]
+  },
+  {
+    "level": 3,
+    "pics": ["Marta","lee","libro","parque"],
+    "words": ["Marta","lee","un","libro","en","el","parque","."]
+  },
+  {
+    "level": 3,
+    "pics": ["niño","come","frutas","mesa"],
+    "words": ["el","niño","come","las","frutas","en","la","mesa","."]
+  },
+  {
+    "level": 3,
+    "pics": ["niña","come","verduras","mesa"],
+    "words": ["la","niña","come","las","verduras","en","la","mesa","."]
+  },
+  {
+    "level": 3,
+    "pics": ["perro","duerme","sofá","casa"],
+    "words": ["el","perro","duerme","en","el","sofá","de","la","casa","."]
+  },
+  {
+    "level": 3,
+    "pics": ["gato","duerme","cama","casa"],
+    "words": ["el","gato","duerme","en","la","cama","de","la","casa","."]
+  },
+  {
+    "level": 3,
+    "pics": ["conejo","salta","parque","árbol"],
+    "words": ["el","conejo","salta","al","lado","del","árbol","en","el","parque","."]
+  },
+  {
+    "level": 3,
+    "pics": ["caballo","corre","parque","árbol"],
+    "words": ["el","caballo","corre","al","lado","del","árbol","en","el","parque","."]
+  },
+  {
+    "level": 3,
+    "pics": ["carro","negro","casa","al lado"],
+    "words": ["el","carro","negro","está","al","lado","de","la","casa","."]
+  },
+  {
+    "level": 3,
+    "pics": ["bicicleta","verde","parque","al lado"],
+    "words": ["la","bicicleta","verde","está","al","lado","del","parque","."]
+  },
+  {
+    "level": 3,
+    "pics": ["barco","rojo","río","al lado"],
+    "words": ["el","barco","rojo","está","al","lado","del","río","."]
+  },
+  {
+    "level": 3,
+    "pics": ["pelota","azul","mesa","encima"],
+    "words": ["la","pelota","azul","está","encima","de","la","mesa","."]
+  },
+  {
+    "level": 3,
+    "pics": ["libro","verde","mesa","encima"],
+    "words": ["el","libro","verde","está","encima","de","la","mesa","."]
+  },
+  {
+    "level": 3,
+    "pics": ["globos","multicolor","cama","encima"],
+    "words": ["los","globos","multicolores","están","encima","de","la","cama","."]
+  },
+  {
+    "level": 3,
+    "pics": ["flores","amarillo","parque","al lado"],
+    "words": ["las","flores","amarillas","están","al","lado","del","parque","."]
+  },
+  {
+    "level": 3,
+    "pics": ["sombrilla","playa","al lado","azul"],
+    "words": ["la","sombrilla","azul","está","en","la","playa","."]
+  },
+  {
+    "level": 3,
+    "pics": ["avión","alto","azul","playa"],
+    "words": ["el","avión","azul","está","alto","sobre","la","playa","."]
+  },
+  {
+    "level": 3,
+    "pics": ["autobús","escuela","al lado","amarillo"],
+    "words": ["el","autobús","amarillo","está","al","lado","de","la","escuela","."]
+  },
+  {
+    "level": 3,
+    "pics": ["super mercado","frutas","carro","dentro"],
+    "words": ["el","carro","está","en","el","supermercado","."]
+  },
+  {
+    "level": 3,
+    "pics": ["niño","ver","cohete","parque"],
+    "words": ["el","niño","ve","el","cohete","en","el","parque","."]
+  },  
+    {
+      "level": 1,
+      "pics": [
+        "Ana",
+        "corre"
+      ],
+      "words": [
+        "Ana",
+        "corre",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "Ana",
+        "salta"
+      ],
+      "words": [
+        "Ana",
+        "salta",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "Ana",
+        "lee"
+      ],
+      "words": [
+        "Ana",
+        "lee",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "Ana",
+        "escribe"
+      ],
+      "words": [
+        "Ana",
+        "escribe",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "Ana",
+        "pregunta"
+      ],
+      "words": [
+        "Ana",
+        "pregunta",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "Carlos",
+        "corre"
+      ],
+      "words": [
+        "Carlos",
+        "corre",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "Carlos",
+        "salta"
+      ],
+      "words": [
+        "Carlos",
+        "salta",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "Carlos",
+        "lee"
+      ],
+      "words": [
+        "Carlos",
+        "lee",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "Daniel",
+        "corre"
+      ],
+      "words": [
+        "Daniel",
+        "corre",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "Daniel",
+        "salta"
+      ],
+      "words": [
+        "Daniel",
+        "salta",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "Daniel",
+        "pregunta"
+      ],
+      "words": [
+        "Daniel",
+        "pregunta",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "Jimena",
+        "lee"
+      ],
+      "words": [
+        "Jimena",
+        "lee",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "Jimena",
+        "escribe"
+      ],
+      "words": [
+        "Jimena",
+        "escribe",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "Juan",
+        "corre"
+      ],
+      "words": [
+        "Juan",
+        "corre",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "Juan",
+        "juega"
+      ],
+      "words": [
+        "Juan",
+        "juega",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "Manuel",
+        "salta"
+      ],
+      "words": [
+        "Manuel",
+        "salta",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "Manuel",
+        "corre"
+      ],
+      "words": [
+        "Manuel",
+        "corre",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "Marta",
+        "lee"
+      ],
+      "words": [
+        "Marta",
+        "lee",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "Marta",
+        "escribe"
+      ],
+      "words": [
+        "Marta",
+        "escribe",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "niño",
+        "corre"
+      ],
+      "words": [
+        "el",
+        "niño",
+        "corre",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "niño",
+        "salta"
+      ],
+      "words": [
+        "el",
+        "niño",
+        "salta",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "niño",
+        "duerme"
+      ],
+      "words": [
+        "el",
+        "niño",
+        "duerme",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "niña",
+        "corre"
+      ],
+      "words": [
+        "la",
+        "niña",
+        "corre",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "niña",
+        "salta"
+      ],
+      "words": [
+        "la",
+        "niña",
+        "salta",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "niña",
+        "duerme"
+      ],
+      "words": [
+        "la",
+        "niña",
+        "duerme",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "perro",
+        "corre"
+      ],
+      "words": [
+        "el",
+        "perro",
+        "corre",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "perro",
+        "salta"
+      ],
+      "words": [
+        "el",
+        "perro",
+        "salta",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "gato",
+        "duerme"
+      ],
+      "words": [
+        "el",
+        "gato",
+        "duerme",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "conejo",
+        "salta"
+      ],
+      "words": [
+        "el",
+        "conejo",
+        "salta",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "caballo",
+        "corre"
+      ],
+      "words": [
+        "el",
+        "caballo",
+        "corre",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "avión",
+        "alto"
+      ],
+      "words": [
+        "el",
+        "avión",
+        "está",
+        "alto",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "sopa",
+        "caluroso"
+      ],
+      "words": [
+        "la",
+        "sopa",
+        "está",
+        "caliente",
+        "."
+      ],
+      "validAnswers": [
+        [
+          "la",
+          "sopa",
+          "está",
+          "calurosa",
+          "."
+        ]
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "barco",
+        "azul"
+      ],
+      "words": [
+        "el",
+        "barco",
+        "es",
+        "azul",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "carro",
+        "rojo"
+      ],
+      "words": [
+        "el",
+        "carro",
+        "es",
+        "rojo",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "libro",
+        "verde"
+      ],
+      "words": [
+        "el",
+        "libro",
+        "es",
+        "verde",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "pelota",
+        "pequeño"
+      ],
+      "words": [
+        "la",
+        "pelota",
+        "es",
+        "pequeña",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "globos",
+        "multicolor"
+      ],
+      "words": [
+        "los",
+        "globos",
+        "son",
+        "multicolores",
+        "."
+      ]
+    },
+    {
+      "level": 1,
+      "pics": [
+        "flores",
+        "amarillo"
+      ],
+      "words": [
+        "las",
+        "flores",
+        "son",
+        "amarillas",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "Ana",
+        "come",
+        "hamburguesa"
+      ],
+      "words": [
+        "Ana",
+        "come",
+        "una",
+        "hamburguesa",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "Ana",
+        "lee",
+        "libro"
+      ],
+      "words": [
+        "Ana",
+        "lee",
+        "un",
+        "libro",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "Ana",
+        "escribe",
+        "cuaderno"
+      ],
+      "words": [
+        "Ana",
+        "escribe",
+        "en",
+        "el",
+        "cuaderno",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "Ana",
+        "juega",
+        "columpio"
+      ],
+      "words": [
+        "Ana",
+        "juega",
+        "en",
+        "el",
+        "columpio",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "Ana",
+        "juega",
+        "tobogán"
+      ],
+      "words": [
+        "Ana",
+        "juega",
+        "en",
+        "el",
+        "tobogán",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "Carlos",
+        "juega",
+        "pelota"
+      ],
+      "words": [
+        "Carlos",
+        "juega",
+        "con",
+        "la",
+        "pelota",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "Carlos",
+        "corre",
+        "cancha"
+      ],
+      "words": [
+        "Carlos",
+        "corre",
+        "en",
+        "la",
+        "cancha",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "Daniel",
+        "lee",
+        "libro"
+      ],
+      "words": [
+        "Daniel",
+        "lee",
+        "un",
+        "libro",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "Daniel",
+        "juega",
+        "juguetes"
+      ],
+      "words": [
+        "Daniel",
+        "juega",
+        "con",
+        "los",
+        "juguetes",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "Jimena",
+        "escribe",
+        "cuaderno"
+      ],
+      "words": [
+        "Jimena",
+        "escribe",
+        "en",
+        "el",
+        "cuaderno",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "Jimena",
+        "juega",
+        "columpio"
+      ],
+      "words": [
+        "Jimena",
+        "juega",
+        "en",
+        "el",
+        "columpio",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "Juan",
+        "corre",
+        "parque"
+      ],
+      "words": [
+        "Juan",
+        "corre",
+        "en",
+        "el",
+        "parque",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "Juan",
+        "juega",
+        "bicicleta"
+      ],
+      "words": [
+        "Juan",
+        "juega",
+        "con",
+        "la",
+        "bicicleta",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "Manuel",
+        "salta",
+        "cancha"
+      ],
+      "words": [
+        "Manuel",
+        "salta",
+        "en",
+        "la",
+        "cancha",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "Marta",
+        "lee",
+        "libro"
+      ],
+      "words": [
+        "Marta",
+        "lee",
+        "un",
+        "libro",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "Marta",
+        "escribe",
+        "cuaderno"
+      ],
+      "words": [
+        "Marta",
+        "escribe",
+        "en",
+        "el",
+        "cuaderno",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "niño",
+        "come",
+        "sopa"
+      ],
+      "words": [
+        "el",
+        "niño",
+        "come",
+        "la",
+        "sopa",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "niña",
+        "come",
+        "frutas"
+      ],
+      "words": [
+        "la",
+        "niña",
+        "come",
+        "las",
+        "frutas",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "niño",
+        "come",
+        "verduras"
+      ],
+      "words": [
+        "el",
+        "niño",
+        "come",
+        "las",
+        "verduras",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "conejo",
+        "come",
+        "zanahoria"
+      ],
+      "words": [
+        "el",
+        "conejo",
+        "come",
+        "una",
+        "zanahoria",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "perro",
+        "ver",
+        "pelota"
+      ],
+      "words": [
+        "el",
+        "perro",
+        "ve",
+        "la",
+        "pelota",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "gato",
+        "ver",
+        "árbol"
+      ],
+      "words": [
+        "el",
+        "gato",
+        "ve",
+        "el",
+        "árbol",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "niño",
+        "ver",
+        "cohete"
+      ],
+      "words": [
+        "el",
+        "niño",
+        "ve",
+        "el",
+        "cohete",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "niña",
+        "ver",
+        "flores"
+      ],
+      "words": [
+        "la",
+        "niña",
+        "ve",
+        "las",
+        "flores",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "niño",
+        "abre",
+        "libro"
+      ],
+      "words": [
+        "el",
+        "niño",
+        "abre",
+        "el",
+        "libro",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "niña",
+        "pregunta",
+        "escuela"
+      ],
+      "words": [
+        "la",
+        "niña",
+        "pregunta",
+        "en",
+        "la",
+        "escuela",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "carro",
+        "al lado",
+        "casa"
+      ],
+      "words": [
+        "el",
+        "carro",
+        "está",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "casa",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "perro",
+        "debajo",
+        "mesa"
+      ],
+      "words": [
+        "el",
+        "perro",
+        "está",
+        "debajo",
+        "de",
+        "la",
+        "mesa",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "gato",
+        "encima",
+        "silla"
+      ],
+      "words": [
+        "el",
+        "gato",
+        "está",
+        "encima",
+        "de",
+        "la",
+        "silla",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "libro",
+        "encima",
+        "mesa"
+      ],
+      "words": [
+        "el",
+        "libro",
+        "está",
+        "encima",
+        "de",
+        "la",
+        "mesa",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "pelota",
+        "debajo",
+        "silla"
+      ],
+      "words": [
+        "la",
+        "pelota",
+        "está",
+        "debajo",
+        "de",
+        "la",
+        "silla",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "juguetes",
+        "encima",
+        "sofá"
+      ],
+      "words": [
+        "los",
+        "juguetes",
+        "están",
+        "encima",
+        "del",
+        "sofá",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "globos",
+        "encima",
+        "cama"
+      ],
+      "words": [
+        "los",
+        "globos",
+        "están",
+        "encima",
+        "de",
+        "la",
+        "cama",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "sombrilla",
+        "al lado",
+        "playa"
+      ],
+      "words": [
+        "la",
+        "sombrilla",
+        "está",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "playa",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "barco",
+        "al lado",
+        "río"
+      ],
+      "words": [
+        "el",
+        "barco",
+        "está",
+        "al",
+        "lado",
+        "del",
+        "río",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "bicicleta",
+        "al lado",
+        "árbol"
+      ],
+      "words": [
+        "la",
+        "bicicleta",
+        "está",
+        "al",
+        "lado",
+        "del",
+        "árbol",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "caballo",
+        "al lado",
+        "árbol"
+      ],
+      "words": [
+        "el",
+        "caballo",
+        "está",
+        "al",
+        "lado",
+        "del",
+        "árbol",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "niño",
+        "corre",
+        "casa"
+      ],
+      "words": [
+        "el",
+        "niño",
+        "corre",
+        "en",
+        "la",
+        "casa",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "niño",
+        "corre",
+        "escuela"
+      ],
+      "words": [
+        "el",
+        "niño",
+        "corre",
+        "en",
+        "la",
+        "escuela",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "niño",
+        "corre",
+        "cancha"
+      ],
+      "words": [
+        "el",
+        "niño",
+        "corre",
+        "en",
+        "la",
+        "cancha",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "niño",
+        "corre",
+        "playa"
+      ],
+      "words": [
+        "el",
+        "niño",
+        "corre",
+        "en",
+        "la",
+        "playa",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "niño",
+        "corre",
+        "parque"
+      ],
+      "words": [
+        "el",
+        "niño",
+        "corre",
+        "en",
+        "el",
+        "parque",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "niña",
+        "corre",
+        "casa"
+      ],
+      "words": [
+        "la",
+        "niña",
+        "corre",
+        "en",
+        "la",
+        "casa",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "niña",
+        "corre",
+        "escuela"
+      ],
+      "words": [
+        "la",
+        "niña",
+        "corre",
+        "en",
+        "la",
+        "escuela",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "niña",
+        "corre",
+        "cancha"
+      ],
+      "words": [
+        "la",
+        "niña",
+        "corre",
+        "en",
+        "la",
+        "cancha",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "niña",
+        "corre",
+        "playa"
+      ],
+      "words": [
+        "la",
+        "niña",
+        "corre",
+        "en",
+        "la",
+        "playa",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "niña",
+        "corre",
+        "parque"
+      ],
+      "words": [
+        "la",
+        "niña",
+        "corre",
+        "en",
+        "el",
+        "parque",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "perro",
+        "corre",
+        "casa"
+      ],
+      "words": [
+        "el",
+        "perro",
+        "corre",
+        "en",
+        "la",
+        "casa",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "perro",
+        "corre",
+        "escuela"
+      ],
+      "words": [
+        "el",
+        "perro",
+        "corre",
+        "en",
+        "la",
+        "escuela",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "perro",
+        "corre",
+        "cancha"
+      ],
+      "words": [
+        "el",
+        "perro",
+        "corre",
+        "en",
+        "la",
+        "cancha",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "perro",
+        "corre",
+        "playa"
+      ],
+      "words": [
+        "el",
+        "perro",
+        "corre",
+        "en",
+        "la",
+        "playa",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "perro",
+        "corre",
+        "parque"
+      ],
+      "words": [
+        "el",
+        "perro",
+        "corre",
+        "en",
+        "el",
+        "parque",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "gato",
+        "salta",
+        "casa"
+      ],
+      "words": [
+        "el",
+        "gato",
+        "salta",
+        "en",
+        "la",
+        "casa",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "gato",
+        "salta",
+        "escuela"
+      ],
+      "words": [
+        "el",
+        "gato",
+        "salta",
+        "en",
+        "la",
+        "escuela",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "gato",
+        "salta",
+        "cancha"
+      ],
+      "words": [
+        "el",
+        "gato",
+        "salta",
+        "en",
+        "la",
+        "cancha",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "gato",
+        "salta",
+        "playa"
+      ],
+      "words": [
+        "el",
+        "gato",
+        "salta",
+        "en",
+        "la",
+        "playa",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "gato",
+        "salta",
+        "parque"
+      ],
+      "words": [
+        "el",
+        "gato",
+        "salta",
+        "en",
+        "el",
+        "parque",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "conejo",
+        "salta",
+        "casa"
+      ],
+      "words": [
+        "el",
+        "conejo",
+        "salta",
+        "en",
+        "la",
+        "casa",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "conejo",
+        "salta",
+        "escuela"
+      ],
+      "words": [
+        "el",
+        "conejo",
+        "salta",
+        "en",
+        "la",
+        "escuela",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "conejo",
+        "salta",
+        "cancha"
+      ],
+      "words": [
+        "el",
+        "conejo",
+        "salta",
+        "en",
+        "la",
+        "cancha",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "conejo",
+        "salta",
+        "playa"
+      ],
+      "words": [
+        "el",
+        "conejo",
+        "salta",
+        "en",
+        "la",
+        "playa",
+        "."
+      ]
+    },
+    {
+      "level": 2,
+      "pics": [
+        "conejo",
+        "salta",
+        "parque"
+      ],
+      "words": [
+        "el",
+        "conejo",
+        "salta",
+        "en",
+        "el",
+        "parque",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "Ana",
+        "lee",
+        "libro",
+        "escuela"
+      ],
+      "words": [
+        "Ana",
+        "lee",
+        "un",
+        "libro",
+        "en",
+        "la",
+        "escuela",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "Ana",
+        "escribe",
+        "cuaderno",
+        "escuela"
+      ],
+      "words": [
+        "Ana",
+        "escribe",
+        "en",
+        "el",
+        "cuaderno",
+        "en",
+        "la",
+        "escuela",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "Ana",
+        "juega",
+        "columpio",
+        "parque"
+      ],
+      "words": [
+        "Ana",
+        "juega",
+        "en",
+        "el",
+        "columpio",
+        "del",
+        "parque",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "Carlos",
+        "juega",
+        "pelota",
+        "cancha"
+      ],
+      "words": [
+        "Carlos",
+        "juega",
+        "con",
+        "la",
+        "pelota",
+        "en",
+        "la",
+        "cancha",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "Daniel",
+        "juega",
+        "juguetes",
+        "casa"
+      ],
+      "words": [
+        "Daniel",
+        "juega",
+        "con",
+        "los",
+        "juguetes",
+        "en",
+        "la",
+        "casa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "Jimena",
+        "lee",
+        "libro",
+        "parque"
+      ],
+      "words": [
+        "Jimena",
+        "lee",
+        "un",
+        "libro",
+        "en",
+        "el",
+        "parque",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "Juan",
+        "corre",
+        "bicicleta",
+        "parque"
+      ],
+      "words": [
+        "Juan",
+        "corre",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "bicicleta",
+        "en",
+        "el",
+        "parque",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "Manuel",
+        "salta",
+        "pelota",
+        "cancha"
+      ],
+      "words": [
+        "Manuel",
+        "salta",
+        "con",
+        "la",
+        "pelota",
+        "en",
+        "la",
+        "cancha",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "Marta",
+        "escribe",
+        "cuaderno",
+        "casa"
+      ],
+      "words": [
+        "Marta",
+        "escribe",
+        "en",
+        "el",
+        "cuaderno",
+        "en",
+        "la",
+        "casa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "niño",
+        "come",
+        "sopa",
+        "mesa"
+      ],
+      "words": [
+        "el",
+        "niño",
+        "come",
+        "la",
+        "sopa",
+        "en",
+        "la",
+        "mesa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "niña",
+        "come",
+        "hamburguesa",
+        "mesa"
+      ],
+      "words": [
+        "la",
+        "niña",
+        "come",
+        "una",
+        "hamburguesa",
+        "en",
+        "la",
+        "mesa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "conejo",
+        "come",
+        "zanahoria",
+        "parque"
+      ],
+      "words": [
+        "el",
+        "conejo",
+        "come",
+        "una",
+        "zanahoria",
+        "en",
+        "el",
+        "parque",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "perro",
+        "duerme",
+        "sofá",
+        "casa"
+      ],
+      "words": [
+        "el",
+        "perro",
+        "duerme",
+        "en",
+        "el",
+        "sofá",
+        "de",
+        "la",
+        "casa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "gato",
+        "duerme",
+        "cama",
+        "casa"
+      ],
+      "words": [
+        "el",
+        "gato",
+        "duerme",
+        "en",
+        "la",
+        "cama",
+        "de",
+        "la",
+        "casa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "libro",
+        "azul",
+        "encima",
+        "mesa"
+      ],
+      "words": [
+        "el",
+        "libro",
+        "azul",
+        "está",
+        "encima",
+        "de",
+        "la",
+        "mesa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "pelota",
+        "rojo",
+        "debajo",
+        "silla"
+      ],
+      "words": [
+        "la",
+        "pelota",
+        "roja",
+        "está",
+        "debajo",
+        "de",
+        "la",
+        "silla",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "carro",
+        "rojo",
+        "al lado",
+        "casa"
+      ],
+      "words": [
+        "el",
+        "carro",
+        "rojo",
+        "está",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "casa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "bicicleta",
+        "azul",
+        "al lado",
+        "árbol"
+      ],
+      "words": [
+        "la",
+        "bicicleta",
+        "azul",
+        "está",
+        "al",
+        "lado",
+        "del",
+        "árbol",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "barco",
+        "azul",
+        "al lado",
+        "río"
+      ],
+      "words": [
+        "el",
+        "barco",
+        "azul",
+        "está",
+        "al",
+        "lado",
+        "del",
+        "río",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "globos",
+        "multicolor",
+        "encima",
+        "mesa"
+      ],
+      "words": [
+        "los",
+        "globos",
+        "multicolores",
+        "están",
+        "encima",
+        "de",
+        "la",
+        "mesa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "flores",
+        "amarillo",
+        "al lado",
+        "casa"
+      ],
+      "words": [
+        "las",
+        "flores",
+        "amarillas",
+        "están",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "casa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "sombrilla",
+        "playa",
+        "caluroso",
+        "azul"
+      ],
+      "words": [
+        "la",
+        "sombrilla",
+        "azul",
+        "está",
+        "en",
+        "la",
+        "playa",
+        "calurosa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "lluvioso",
+        "niño",
+        "ver",
+        "casa"
+      ],
+      "words": [
+        "el",
+        "niño",
+        "ve",
+        "la",
+        "casa",
+        "en",
+        "un",
+        "día",
+        "lluvioso",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "cohete",
+        "alto",
+        "azul"
+      ],
+      "words": [
+        "el",
+        "cohete",
+        "azul",
+        "está",
+        "alto",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "avión",
+        "alto",
+        "azul",
+        "playa"
+      ],
+      "words": [
+        "el",
+        "avión",
+        "azul",
+        "está",
+        "alto",
+        "sobre",
+        "la",
+        "playa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "caballo",
+        "corre",
+        "al lado",
+        "árbol"
+      ],
+      "words": [
+        "el",
+        "caballo",
+        "corre",
+        "al",
+        "lado",
+        "del",
+        "árbol",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "autobús",
+        "al lado",
+        "escuela",
+        "rojo"
+      ],
+      "words": [
+        "el",
+        "autobús",
+        "está",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "escuela",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "super mercado",
+        "frutas",
+        "verduras",
+        "carro"
+      ],
+      "words": [
+        "el",
+        "carro",
+        "está",
+        "en",
+        "el",
+        "supermercado",
+        "."
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "Ana",
+        "come",
+        "hamburguesa"
+      ],
+      "words": [
+        "Ana",
+        "come",
+        "una",
+        "hamburguesa",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "Ana",
+        "lee",
+        "libro"
+      ],
+      "words": [
+        "Ana",
+        "lee",
+        "un",
+        "libro",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "mesa"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "Ana",
+        "escribe",
+        "cuaderno"
+      ],
+      "words": [
+        "Ana",
+        "escribe",
+        "en",
+        "el",
+        "cuaderno",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "Ana",
+        "juega",
+        "columpio"
+      ],
+      "words": [
+        "Ana",
+        "juega",
+        "en",
+        "el",
+        "columpio",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "Ana",
+        "juega",
+        "tobogán"
+      ],
+      "words": [
+        "Ana",
+        "juega",
+        "en",
+        "el",
+        "tobogán",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "Carlos",
+        "juega",
+        "pelota"
+      ],
+      "words": [
+        "Carlos",
+        "juega",
+        "con",
+        "la",
+        "pelota",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "Carlos",
+        "corre",
+        "cancha"
+      ],
+      "words": [
+        "Carlos",
+        "corre",
+        "en",
+        "la",
+        "cancha",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "Daniel",
+        "lee",
+        "libro"
+      ],
+      "words": [
+        "Daniel",
+        "lee",
+        "un",
+        "libro",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "mesa"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "Daniel",
+        "juega",
+        "juguetes"
+      ],
+      "words": [
+        "Daniel",
+        "juega",
+        "con",
+        "los",
+        "juguetes",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "Jimena",
+        "escribe",
+        "cuaderno"
+      ],
+      "words": [
+        "Jimena",
+        "escribe",
+        "en",
+        "el",
+        "cuaderno",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "Jimena",
+        "juega",
+        "columpio"
+      ],
+      "words": [
+        "Jimena",
+        "juega",
+        "en",
+        "el",
+        "columpio",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "Juan",
+        "corre",
+        "parque"
+      ],
+      "words": [
+        "Juan",
+        "corre",
+        "en",
+        "el",
+        "parque",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "Juan",
+        "juega",
+        "bicicleta"
+      ],
+      "words": [
+        "Juan",
+        "juega",
+        "con",
+        "la",
+        "bicicleta",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "Manuel",
+        "salta",
+        "cancha"
+      ],
+      "words": [
+        "Manuel",
+        "salta",
+        "en",
+        "la",
+        "cancha",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "Marta",
+        "lee",
+        "libro"
+      ],
+      "words": [
+        "Marta",
+        "lee",
+        "un",
+        "libro",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "mesa"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "Marta",
+        "escribe",
+        "cuaderno"
+      ],
+      "words": [
+        "Marta",
+        "escribe",
+        "en",
+        "el",
+        "cuaderno",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "niño",
+        "come",
+        "sopa"
+      ],
+      "words": [
+        "el",
+        "niño",
+        "come",
+        "la",
+        "sopa",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "niña",
+        "come",
+        "frutas"
+      ],
+      "words": [
+        "la",
+        "niña",
+        "come",
+        "las",
+        "frutas",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "niño",
+        "come",
+        "verduras"
+      ],
+      "words": [
+        "el",
+        "niño",
+        "come",
+        "las",
+        "verduras",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "conejo",
+        "come",
+        "zanahoria"
+      ],
+      "words": [
+        "el",
+        "conejo",
+        "come",
+        "una",
+        "zanahoria",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "perro",
+        "ver",
+        "pelota"
+      ],
+      "words": [
+        "el",
+        "perro",
+        "ve",
+        "la",
+        "pelota",
+        "."
+      ],
+      "extras": [
+        "gato",
+        "libro",
+        "mesa"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "gato",
+        "ver",
+        "árbol"
+      ],
+      "words": [
+        "el",
+        "gato",
+        "ve",
+        "el",
+        "árbol",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "libro",
+        "mesa"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "niño",
+        "ver",
+        "cohete"
+      ],
+      "words": [
+        "el",
+        "niño",
+        "ve",
+        "el",
+        "cohete",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "niña",
+        "ver",
+        "flores"
+      ],
+      "words": [
+        "la",
+        "niña",
+        "ve",
+        "las",
+        "flores",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "niño",
+        "abre",
+        "libro"
+      ],
+      "words": [
+        "el",
+        "niño",
+        "abre",
+        "el",
+        "libro",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "mesa"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "niña",
+        "pregunta",
+        "escuela"
+      ],
+      "words": [
+        "la",
+        "niña",
+        "pregunta",
+        "en",
+        "la",
+        "escuela",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "carro",
+        "al lado",
+        "casa"
+      ],
+      "words": [
+        "el",
+        "carro",
+        "está",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "casa",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "perro",
+        "debajo",
+        "mesa"
+      ],
+      "words": [
+        "el",
+        "perro",
+        "está",
+        "debajo",
+        "de",
+        "la",
+        "mesa",
+        "."
+      ],
+      "extras": [
+        "gato",
+        "libro",
+        "pelota"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "gato",
+        "encima",
+        "silla"
+      ],
+      "words": [
+        "el",
+        "gato",
+        "está",
+        "encima",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "libro",
+        "mesa"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "libro",
+        "encima",
+        "mesa"
+      ],
+      "words": [
+        "el",
+        "libro",
+        "está",
+        "encima",
+        "de",
+        "la",
+        "mesa",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "pelota"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "pelota",
+        "debajo",
+        "silla"
+      ],
+      "words": [
+        "la",
+        "pelota",
+        "está",
+        "debajo",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "juguetes",
+        "encima",
+        "sofá"
+      ],
+      "words": [
+        "los",
+        "juguetes",
+        "están",
+        "encima",
+        "del",
+        "sofá",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "globos",
+        "encima",
+        "cama"
+      ],
+      "words": [
+        "los",
+        "globos",
+        "están",
+        "encima",
+        "de",
+        "la",
+        "cama",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "sombrilla",
+        "al lado",
+        "playa"
+      ],
+      "words": [
+        "la",
+        "sombrilla",
+        "está",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "playa",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "barco",
+        "al lado",
+        "río"
+      ],
+      "words": [
+        "el",
+        "barco",
+        "está",
+        "al",
+        "lado",
+        "del",
+        "río",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "bicicleta",
+        "al lado",
+        "árbol"
+      ],
+      "words": [
+        "la",
+        "bicicleta",
+        "está",
+        "al",
+        "lado",
+        "del",
+        "árbol",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "caballo",
+        "al lado",
+        "árbol"
+      ],
+      "words": [
+        "el",
+        "caballo",
+        "está",
+        "al",
+        "lado",
+        "del",
+        "árbol",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "niño",
+        "corre",
+        "casa"
+      ],
+      "words": [
+        "el",
+        "niño",
+        "corre",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "niño",
+        "corre",
+        "escuela"
+      ],
+      "words": [
+        "el",
+        "niño",
+        "corre",
+        "en",
+        "la",
+        "escuela",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "niño",
+        "corre",
+        "cancha"
+      ],
+      "words": [
+        "el",
+        "niño",
+        "corre",
+        "en",
+        "la",
+        "cancha",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "niño",
+        "corre",
+        "playa"
+      ],
+      "words": [
+        "el",
+        "niño",
+        "corre",
+        "en",
+        "la",
+        "playa",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "niño",
+        "corre",
+        "parque"
+      ],
+      "words": [
+        "el",
+        "niño",
+        "corre",
+        "en",
+        "el",
+        "parque",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "niña",
+        "corre",
+        "casa"
+      ],
+      "words": [
+        "la",
+        "niña",
+        "corre",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "niña",
+        "corre",
+        "escuela"
+      ],
+      "words": [
+        "la",
+        "niña",
+        "corre",
+        "en",
+        "la",
+        "escuela",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "niña",
+        "corre",
+        "cancha"
+      ],
+      "words": [
+        "la",
+        "niña",
+        "corre",
+        "en",
+        "la",
+        "cancha",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "niña",
+        "corre",
+        "playa"
+      ],
+      "words": [
+        "la",
+        "niña",
+        "corre",
+        "en",
+        "la",
+        "playa",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "niña",
+        "corre",
+        "parque"
+      ],
+      "words": [
+        "la",
+        "niña",
+        "corre",
+        "en",
+        "el",
+        "parque",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "perro",
+        "corre",
+        "casa"
+      ],
+      "words": [
+        "el",
+        "perro",
+        "corre",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "extras": [
+        "gato",
+        "libro",
+        "mesa"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "perro",
+        "corre",
+        "escuela"
+      ],
+      "words": [
+        "el",
+        "perro",
+        "corre",
+        "en",
+        "la",
+        "escuela",
+        "."
+      ],
+      "extras": [
+        "gato",
+        "libro",
+        "mesa"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "perro",
+        "corre",
+        "cancha"
+      ],
+      "words": [
+        "el",
+        "perro",
+        "corre",
+        "en",
+        "la",
+        "cancha",
+        "."
+      ],
+      "extras": [
+        "gato",
+        "libro",
+        "mesa"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "perro",
+        "corre",
+        "playa"
+      ],
+      "words": [
+        "el",
+        "perro",
+        "corre",
+        "en",
+        "la",
+        "playa",
+        "."
+      ],
+      "extras": [
+        "gato",
+        "libro",
+        "mesa"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "perro",
+        "corre",
+        "parque"
+      ],
+      "words": [
+        "el",
+        "perro",
+        "corre",
+        "en",
+        "el",
+        "parque",
+        "."
+      ],
+      "extras": [
+        "gato",
+        "libro",
+        "mesa"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "gato",
+        "salta",
+        "casa"
+      ],
+      "words": [
+        "el",
+        "gato",
+        "salta",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "libro",
+        "mesa"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "gato",
+        "salta",
+        "escuela"
+      ],
+      "words": [
+        "el",
+        "gato",
+        "salta",
+        "en",
+        "la",
+        "escuela",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "libro",
+        "mesa"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "gato",
+        "salta",
+        "cancha"
+      ],
+      "words": [
+        "el",
+        "gato",
+        "salta",
+        "en",
+        "la",
+        "cancha",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "libro",
+        "mesa"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "gato",
+        "salta",
+        "playa"
+      ],
+      "words": [
+        "el",
+        "gato",
+        "salta",
+        "en",
+        "la",
+        "playa",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "libro",
+        "mesa"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "gato",
+        "salta",
+        "parque"
+      ],
+      "words": [
+        "el",
+        "gato",
+        "salta",
+        "en",
+        "el",
+        "parque",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "libro",
+        "mesa"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "conejo",
+        "salta",
+        "casa"
+      ],
+      "words": [
+        "el",
+        "conejo",
+        "salta",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "conejo",
+        "salta",
+        "escuela"
+      ],
+      "words": [
+        "el",
+        "conejo",
+        "salta",
+        "en",
+        "la",
+        "escuela",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "conejo",
+        "salta",
+        "cancha"
+      ],
+      "words": [
+        "el",
+        "conejo",
+        "salta",
+        "en",
+        "la",
+        "cancha",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "conejo",
+        "salta",
+        "playa"
+      ],
+      "words": [
+        "el",
+        "conejo",
+        "salta",
+        "en",
+        "la",
+        "playa",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "conejo",
+        "salta",
+        "parque"
+      ],
+      "words": [
+        "el",
+        "conejo",
+        "salta",
+        "en",
+        "el",
+        "parque",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "Ana",
+        "lee",
+        "libro",
+        "escuela"
+      ],
+      "words": [
+        "Ana",
+        "lee",
+        "un",
+        "libro",
+        "en",
+        "la",
+        "escuela",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "mesa"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "Ana",
+        "escribe",
+        "cuaderno",
+        "escuela"
+      ],
+      "words": [
+        "Ana",
+        "escribe",
+        "en",
+        "el",
+        "cuaderno",
+        "en",
+        "la",
+        "escuela",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "Ana",
+        "juega",
+        "columpio",
+        "parque"
+      ],
+      "words": [
+        "Ana",
+        "juega",
+        "en",
+        "el",
+        "columpio",
+        "del",
+        "parque",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "Carlos",
+        "juega",
+        "pelota",
+        "cancha"
+      ],
+      "words": [
+        "Carlos",
+        "juega",
+        "con",
+        "la",
+        "pelota",
+        "en",
+        "la",
+        "cancha",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "Daniel",
+        "juega",
+        "juguetes",
+        "casa"
+      ],
+      "words": [
+        "Daniel",
+        "juega",
+        "con",
+        "los",
+        "juguetes",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "Jimena",
+        "lee",
+        "libro",
+        "parque"
+      ],
+      "words": [
+        "Jimena",
+        "lee",
+        "un",
+        "libro",
+        "en",
+        "el",
+        "parque",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "mesa"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "Juan",
+        "corre",
+        "bicicleta",
+        "parque"
+      ],
+      "words": [
+        "Juan",
+        "corre",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "bicicleta",
+        "en",
+        "el",
+        "parque",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "Manuel",
+        "salta",
+        "pelota",
+        "cancha"
+      ],
+      "words": [
+        "Manuel",
+        "salta",
+        "con",
+        "la",
+        "pelota",
+        "en",
+        "la",
+        "cancha",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "Marta",
+        "escribe",
+        "cuaderno",
+        "casa"
+      ],
+      "words": [
+        "Marta",
+        "escribe",
+        "en",
+        "el",
+        "cuaderno",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "niño",
+        "come",
+        "sopa",
+        "mesa"
+      ],
+      "words": [
+        "el",
+        "niño",
+        "come",
+        "la",
+        "sopa",
+        "en",
+        "la",
+        "mesa",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "niña",
+        "come",
+        "hamburguesa",
+        "mesa"
+      ],
+      "words": [
+        "la",
+        "niña",
+        "come",
+        "una",
+        "hamburguesa",
+        "en",
+        "la",
+        "mesa",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "conejo",
+        "come",
+        "zanahoria",
+        "parque"
+      ],
+      "words": [
+        "el",
+        "conejo",
+        "come",
+        "una",
+        "zanahoria",
+        "en",
+        "el",
+        "parque",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "perro",
+        "duerme",
+        "sofá",
+        "casa"
+      ],
+      "words": [
+        "el",
+        "perro",
+        "duerme",
+        "en",
+        "el",
+        "sofá",
+        "de",
+        "la",
+        "casa",
+        "."
+      ],
+      "extras": [
+        "gato",
+        "libro",
+        "mesa"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "gato",
+        "duerme",
+        "cama",
+        "casa"
+      ],
+      "words": [
+        "el",
+        "gato",
+        "duerme",
+        "en",
+        "la",
+        "cama",
+        "de",
+        "la",
+        "casa",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "libro",
+        "mesa"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "libro",
+        "azul",
+        "encima",
+        "mesa"
+      ],
+      "words": [
+        "el",
+        "libro",
+        "azul",
+        "está",
+        "encima",
+        "de",
+        "la",
+        "mesa",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "pelota"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "pelota",
+        "rojo",
+        "debajo",
+        "silla"
+      ],
+      "words": [
+        "la",
+        "pelota",
+        "roja",
+        "está",
+        "debajo",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "carro",
+        "rojo",
+        "al lado",
+        "casa"
+      ],
+      "words": [
+        "el",
+        "carro",
+        "rojo",
+        "está",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "casa",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    },
+    {
+      "level": 4,
+      "pics": [
+        "bicicleta",
+        "azul",
+        "al lado",
+        "árbol"
+      ],
+      "words": [
+        "la",
+        "bicicleta",
+        "azul",
+        "está",
+        "al",
+        "lado",
+        "del",
+        "árbol",
+        "."
+      ],
+      "extras": [
+        "perro",
+        "gato",
+        "libro"
+      ]
+    }
+  ]
+}

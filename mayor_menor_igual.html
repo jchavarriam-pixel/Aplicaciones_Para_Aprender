@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Mayor, Menor o Igual</title>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#eff6ff; --ink:#1e293b; --card:#ffffff; --purple:#7c3aed;
+      --green:#22c55e; --red:#ef4444; --blue:#3b82f6; --yellow:#facc15;
+      --pink:#fce7f3; --orange:#fb923c; --cyan:#06b6d4; --shadow:rgba(15,23,42,.14);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+    html,body{width:100%;min-height:100%;background:linear-gradient(135deg,#ecfeff 0%,#eff6ff 35%,#fff7ed 72%,#fef9c3 100%);font-family:'Baloo 2',system-ui,sans-serif;color:var(--ink);overscroll-behavior:none;}
+    body.dragging-active{overflow:hidden;touch-action:none;}
+    button,input,select{font-family:inherit;}
+    .app{width:100%;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:18px;position:relative;overflow:hidden;}
+    .title{font-size:clamp(2.15rem,5.4vw,3.6rem);font-weight:800;text-align:center;color:#4c1d95;text-shadow:3px 3px 0 #fde68a,6px 6px 0 rgba(6,182,212,.22);margin-bottom:8px;letter-spacing:.3px;}
+    .subtitle{font-size:1.1rem;text-align:center;font-weight:800;color:#475569;margin-bottom:14px;background:rgba(255,255,255,.55);padding:7px 16px;border-radius:999px;border:2px solid rgba(255,255,255,.7);box-shadow:0 8px 18px rgba(59,130,246,.10);}
+    .start-description{width:min(640px,96%);background:linear-gradient(135deg,#ffffff 0%,#ecfeff 42%,#eef2ff 100%);border:3px solid #93c5fd;border-radius:28px;padding:18px 20px;text-align:center;font-size:1.08rem;font-weight:800;color:#334155;line-height:1.34;box-shadow:0 12px 26px rgba(59,130,246,.16);position:relative;overflow:hidden;}
+    .start-description::before{content:'🌟';position:absolute;left:15px;top:10px;font-size:1.55rem;}
+    .start-description::after{content:'🎈';position:absolute;right:16px;bottom:10px;font-size:1.55rem;}
+    .start-description strong{color:#6d28d9;background:#f5f3ff;border-radius:12px;padding:0 6px;white-space:nowrap;}
+    .friendly-icons{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:10px;}
+    .friendly-chip{display:inline-flex;align-items:center;gap:6px;background:#fff;border:2px solid #bfdbfe;color:#1d4ed8;border-radius:999px;padding:6px 12px;font-size:1rem;font-weight:800;box-shadow:0 4px 0 rgba(59,130,246,.12);}
+    .family-legend{width:min(620px,96%);margin-top:auto;padding:18px 10px 4px;text-align:center;font-size:.95rem;font-weight:800;color:#64748b;line-height:1.25;}
+    .name-input::placeholder{color:#94a3b8;opacity:1;}
+    .panel{width:min(780px,100%);background:rgba(255,255,255,.84);border:4px solid rgba(255,255,255,.92);border-radius:32px;padding:20px;box-shadow:0 18px 38px var(--shadow), inset 0 0 0 3px rgba(124,58,237,.08);backdrop-filter:blur(6px);}
+    .start{display:flex;flex-direction:column;align-items:center;gap:18px;margin-top:16px;position:relative;}
+    .label{font-size:1.38rem;font-weight:800;text-align:center;color:#334155;}
+    .name-input{width:min(380px,92%);padding:15px 18px;border:3px solid #60a5fa;border-radius:22px;font-size:1.28rem;font-weight:800;text-align:center;background:white;outline:none;box-shadow:0 5px 0 rgba(59,130,246,.16);}
+    .name-input:focus{box-shadow:0 0 0 5px rgba(59,130,246,.18);}
+    .level-grid{display:grid;grid-template-columns:repeat(2,minmax(130px,1fr));gap:12px;width:min(520px,100%);}
+    .level-btn,.game-btn,.control-btn{border:0;border-radius:18px;font-weight:800;cursor:pointer;box-shadow:0 5px 0 rgba(0,0,0,.14);transition:transform .12s ease,box-shadow .12s ease,opacity .2s ease;}
+    .level-btn{padding:16px 18px;font-size:1.25rem;border:3px solid transparent;}
+    .level-btn:active,.game-btn:active,.control-btn:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.14);}
+    .game{display:none;width:min(820px,100%);flex-direction:column;align-items:center;gap:12px;}
+    .game.active{display:flex;}
+    .topbar{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+    .badge{font-size:1rem;font-weight:800;padding:7px 15px;border-radius:999px;background:#e0f2fe;color:#0369a1;border:2px solid #7dd3fc;}
+    .help-text{font-size:.96rem;font-weight:700;color:#64748b;text-align:right;flex:1;}
+    .controls{width:100%;display:flex;justify-content:center;gap:9px;flex-wrap:wrap;padding:10px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:20px;}
+    .control-btn{padding:9px 13px;font-size:.95rem;border:2px solid #cbd5e1;background:white;color:#334155;}
+    .control-btn.active{background:#dcfce7;border-color:#22c55e;color:#166534;opacity:1;}
+    .control-btn:not(.active){opacity:.58;}
+    .symbol-tray{width:100%;display:flex;justify-content:center;gap:16px;flex-wrap:wrap;padding:10px 0 4px;position:sticky;top:0;background:linear-gradient(var(--bg),rgba(255,251,235,.88));z-index:50;border-radius:0 0 22px 22px;}
+    .symbol-card{width:82px;height:82px;border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:2.8rem;font-weight:800;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none;box-shadow:0 7px 0 rgba(0,0,0,.16);border:3px solid rgba(0,0,0,.08);transition:transform .12s ease,filter .12s ease,outline .12s ease;}
+    .symbol-card:active{cursor:grabbing;transform:scale(1.05);}
+    .symbol-card.selected{outline:5px solid #6366f1;outline-offset:3px;filter:saturate(1.2);}
+    .symbols-small{font-size:1rem;font-weight:800;color:#64748b;text-align:center;margin-top:-2px;}
+    .exercises{width:100%;display:flex;flex-direction:column;gap:10px;}
+    .exercise-row{width:100%;display:grid;grid-template-columns:minmax(82px,1fr) 76px minmax(82px,1fr) 42px;align-items:center;gap:10px;padding:10px 12px;border-radius:22px;border:2px solid rgba(15,23,42,.06);}
+    .num-box{min-height:64px;display:flex;align-items:center;justify-content:center;background:white;border-radius:18px;font-size:clamp(1.4rem,4.6vw,2.2rem);font-weight:800;box-shadow:inset 0 0 0 2px rgba(15,23,42,.05);padding:8px;overflow:hidden;}
+    .drop-zone{width:76px;height:76px;border:4px dashed #94a3b8;border-radius:20px;background:rgba(255,255,255,.52);display:flex;align-items:center;justify-content:center;font-size:2.45rem;font-weight:800;color:#4c1d95;user-select:none;-webkit-user-select:none;touch-action:none;position:relative;transition:background .15s,border-color .15s,transform .15s;}
+    .drop-zone.hover{transform:scale(1.08);border-color:var(--purple);background:#ede9fe;}
+    .drop-zone.filled{border-style:solid;background:var(--pink);border-color:var(--purple);}
+    .drop-zone.correct{border-color:var(--green)!important;background:#dcfce7!important;}
+    .drop-zone.incorrect{border-color:var(--red)!important;background:#fee2e2!important;animation:shake .32s ease;}
+    .feedback{width:38px;min-height:46px;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:800;opacity:0;}
+    .feedback.visible{opacity:1;animation:pop .18s ease-out;}
+    @keyframes pop{from{transform:scale(.2)}to{transform:scale(1)}}
+    @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+    .message{min-height:48px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:1.15rem;font-weight:800;padding:10px 18px;border-radius:18px;opacity:0;transition:opacity .2s ease;width:100%;}
+    .message.show{opacity:1;}
+    .buttons{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;width:100%;}
+    .game-btn{padding:12px 20px;font-size:1.05rem;}
+    .game-btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:0 5px 0 rgba(0,0,0,.09);}
+    .footer{font-size:.88rem;text-align:center;color:#64748b;font-weight:700;margin-top:8px;line-height:1.2;}
+    .drag-ghost{position:fixed;left:0;top:0;width:82px;height:82px;border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:2.8rem;font-weight:800;z-index:20000;pointer-events:none;box-shadow:0 18px 35px rgba(0,0,0,.22);transform:translate3d(-9999px,-9999px,0) scale(1.05);will-change:transform;opacity:.96;border:3px solid rgba(0,0,0,.08);}
+    .celebration{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:21000;}
+    .piece{position:absolute;display:flex;align-items:center;justify-content:center;line-height:1;will-change:transform,opacity;}
+    .congrats{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:22000;padding:20px;text-align:center;}
+    .congrats div{font-size:clamp(2.5rem,10vw,6rem);font-weight:800;color:#fbbf24;text-shadow:3px 3px 0 #7c3aed,6px 6px 0 rgba(59,130,246,.35);animation:congrats .85s cubic-bezier(.34,1.56,.64,1) forwards;}
+    @keyframes congrats{0%{transform:scale(0) rotate(-25deg);opacity:0}60%{transform:scale(1.14) rotate(7deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
+
+    .decor{position:absolute;pointer-events:none;user-select:none;opacity:.9;filter:drop-shadow(0 8px 12px rgba(15,23,42,.10));animation:floaty 5.5s ease-in-out infinite;}
+    .decor.one{left:max(12px,5vw);top:86px;font-size:2.6rem;}
+    .decor.two{right:max(12px,6vw);top:118px;font-size:2.4rem;animation-delay:1s;}
+    .decor.three{left:max(14px,8vw);bottom:72px;font-size:2.2rem;animation-delay:2s;}
+    .decor.four{right:max(14px,9vw);bottom:86px;font-size:2.25rem;animation-delay:1.6s;}
+    @keyframes floaty{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-12px) rotate(5deg)}}
+    @media (max-width:560px){
+      .decor{opacity:.35;font-size:1.7rem!important}.decor.three,.decor.four{display:none}.app{padding:12px}.panel{padding:13px;border-radius:22px}.level-grid{grid-template-columns:1fr 1fr}.symbol-card{width:74px;height:74px;font-size:2.45rem}.exercise-row{grid-template-columns:minmax(64px,1fr) 62px minmax(64px,1fr) 30px;gap:7px;padding:9px}.drop-zone{width:62px;height:62px;font-size:2rem;border-radius:18px}.num-box{min-height:56px;padding:6px}.help-text{text-align:center}.topbar{justify-content:center}.game-btn{padding:11px 14px;font-size:1rem}.feedback{width:28px;font-size:1.65rem}
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <div class="decor one">⭐</div>
+    <div class="decor two">🌈</div>
+    <div class="decor three">🔢</div>
+    <div class="decor four">🎈</div>
+    <h1 class="title">Mayor, Menor o Igual</h1>
+    <p class="subtitle">Arrastra el signo correcto con el dedo o tócalo y luego toca una casilla.</p>
+
+    <section class="panel start" id="startScreen">
+      <div class="start-description">
+        Practica los signos <strong>mayor que</strong>, <strong>menor que</strong> e <strong>igual</strong>.
+        Observa los dos números y coloca el signo correcto en el centro.
+        <div class="friendly-icons" aria-hidden="true">
+          <span class="friendly-chip">🐢 Menor que &lt;</span>
+          <span class="friendly-chip">⭐ Igual =</span>
+          <span class="friendly-chip">🚀 Mayor que &gt;</span>
+        </div>
+      </div>
+      <div class="label">¿Cuál es tu nombre?</div>
+      <input class="name-input" id="nameInput" placeholder="Ej: Gabriel" autocomplete="off" />
+      <div class="label">¿Cuántos dígitos quieres practicar?</div>
+      <div class="level-grid">
+        <button class="level-btn" style="background:#fef08a;border-color:#eab308;color:#854d0e" data-digits="1">🍎 1 dígito</button>
+        <button class="level-btn" style="background:#bbf7d0;border-color:#22c55e;color:#166534" data-digits="2">🌟 2 dígitos</button>
+        <button class="level-btn" style="background:#bfdbfe;border-color:#3b82f6;color:#1e3a5f" data-digits="3">🚀 3 dígitos</button>
+        <button class="level-btn" style="background:#e9d5ff;border-color:#a855f7;color:#581c87" data-digits="4">🏆 4 dígitos</button>
+      </div>
+    </section>
+
+    <div class="family-legend" id="startFooter">Aplicación creada para Gabriel por parte de su familia, con ayuda de la IA.</div>
+
+    <section class="game" id="gameArea">
+      <div class="topbar">
+        <div class="badge" id="levelBadge"></div>
+        <div class="help-text">Consejo: también se puede arrastrar un signo colocado para cambiarlo de casilla o sacarlo.</div>
+      </div>
+
+      <div class="controls">
+        <button class="control-btn active" id="helpOff">🔇 Sin ayuda</button>
+        <button class="control-btn" id="helpRead">👂 Ayuda 1</button>
+        <button class="control-btn" id="helpLive">✅ Ayuda 2</button>
+      </div>
+
+      <div class="symbol-tray" id="symbolTray" aria-label="signos">
+        <div class="symbol-card" data-symbol="<" style="background:#fde68a;color:#92400e">&lt;</div>
+        <div class="symbol-card" data-symbol="=" style="background:#a7f3d0;color:#065f46">=</div>
+        <div class="symbol-card" data-symbol=">" style="background:#c4b5fd;color:#4c1d95">&gt;</div>
+      </div>
+      <div class="symbols-small">Mayor que &gt; &nbsp;&nbsp; Menor que &lt; &nbsp;&nbsp; Igual =</div>
+
+      <div class="exercises" id="exercisesContainer"></div>
+      <div class="message" id="messageBox"></div>
+
+      <div class="buttons">
+        <button class="game-btn" id="btnCheck" style="background:#34d399;color:#064e3b">✓ Revisar</button>
+        <button class="game-btn" id="btnNew" style="background:#60a5fa;color:#1e3a5f">🔄 Nueva ronda</button>
+        <button class="game-btn" id="btnReset" style="background:#f87171;color:#7f1d1d">⟲ Reiniciar</button>
+        <button class="game-btn" id="btnLevel" style="background:#fbbf24;color:#78350f">🎯 Cambiar nivel</button>
+      </div>
+
+      <div class="footer">Juego creado para Gabriel por parte de su familia<br>con ayuda de la IA.</div>
+    </section>
+  </main>
+
+  <div class="celebration" id="celebration"></div>
+
+<script>
+(() => {
+  'use strict';
+
+  const $ = (sel, root=document) => root.querySelector(sel);
+  const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+
+  const state = {
+    childName: '',
+    maxDigits: 1,
+    exercises: [],
+    answers: [],
+    checked: false,
+    selectedSymbol: null,
+    helpMode: 0,
+    drag: null
+  };
+
+  const phrases = [
+    'Excelente {name}, qué buen trabajo has hecho.',
+    'Excelente {name}, eres muy bueno ordenando números. Sigue así.',
+    '{name}, estamos orgullosos de ti. Qué buen trabajo has realizado.',
+    '{name}, qué gran trabajo has realizado con esos números. Eres genial.',
+    'Excelente {name}, tu dedicación al trabajo ha sido admirable. Continúa así de bien.',
+    'Muy bien {name}, resolviste la ronda con mucho cuidado.',
+    'Fantástico {name}, cada vez comparas mejor los números.',
+    'Bravo {name}, tu esfuerzo se nota muchísimo.',
+    'Excelente {name}, lo hiciste con mucha concentración.',
+    'Qué lindo has trabajado {name}. Sigue así.',
+    '{name}, hiciste un trabajo maravilloso.',
+    'Muy bien {name}, estás aprendiendo con mucha alegría.',
+    'Excelente {name}, completaste la ronda como un campeón.',
+    '{name}, lo has hecho genial. Buen trabajo.',
+    'Estamos muy felices por tu esfuerzo, {name}.'
+  ];
+
+  function speak(text){
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'es-ES';
+    u.rate = 0.9;
+    window.speechSynthesis.speak(u);
+  }
+
+  function symbolText(s){ return s === '<' ? 'menor que' : s === '>' ? 'mayor que' : 'igual a'; }
+  function correctSymbol(a,b){ return a < b ? '<' : a > b ? '>' : '='; }
+
+  function randNum(maxD){
+    const minDigits = Math.max(1, maxD - 1);
+    const digits = minDigits + Math.floor(Math.random() * (maxD - minDigits + 1));
+    const min = digits === 1 ? 0 : Math.pow(10, digits - 1);
+    const max = Math.pow(10, digits) - 1;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  function generateExercises(){
+    state.exercises = [];
+    const equalityIndex = Math.floor(Math.random() * 6);
+    for(let i=0;i<6;i++){
+      let a,b;
+      if(i === equalityIndex){
+        a = randNum(state.maxDigits); b = a;
+      }else{
+        do { a = randNum(state.maxDigits); b = randNum(state.maxDigits); } while(a === b);
+      }
+      state.exercises.push({a,b});
+    }
+    state.answers = Array(6).fill(null);
+    state.checked = false;
+  }
+
+  function renderExercises(){
+    const colors = ['#fef9c3','#dcfce7','#dbeafe','#f3e8ff','#ffe4e6','#e0f2fe'];
+    const cont = $('#exercisesContainer');
+    cont.innerHTML = '';
+    state.exercises.forEach((ex,i) => {
+      const row = document.createElement('div');
+      row.className = 'exercise-row';
+      row.style.background = colors[i % colors.length];
+      row.innerHTML = `
+        <div class="num-box">${ex.a}</div>
+        <div class="drop-zone" id="drop${i}" data-index="${i}" aria-label="casilla ${i+1}"></div>
+        <div class="num-box">${ex.b}</div>
+        <div class="feedback" id="feedback${i}"></div>`;
+      cont.appendChild(row);
+    });
+    hideMessage();
+    updateAllDropZones();
+    updateCheckButton();
+  }
+
+  function setAnswer(index, symbol){
+    if(state.checked) return;
+    state.answers[index] = symbol;
+    state.checked = false;
+    updateDropZone(index);
+    updateLiveFeedback();
+    updateCheckButton();
+
+    const ex = state.exercises[index];
+    const correct = correctSymbol(ex.a, ex.b);
+    if(state.helpMode === 1 && symbol === correct) speak(`${ex.a} es ${symbolText(symbol)} ${ex.b}`);
+    if(state.helpMode === 2){
+      if(symbol === correct) speak(`Correcto. ${ex.a} es ${symbolText(symbol)} ${ex.b}`);
+      else speak(`Revisa bien. ${ex.a} no es ${symbolText(symbol)} ${ex.b}. Lo correcto es: ${ex.a} es ${symbolText(correct)} ${ex.b}`);
+    }
+  }
+
+  function clearAnswer(index){
+    if(state.checked) return;
+    state.answers[index] = null;
+    updateDropZone(index);
+    updateLiveFeedback();
+    updateCheckButton();
+  }
+
+  function updateDropZone(index){
+    const z = $('#drop'+index);
+    if(!z) return;
+    const ans = state.answers[index];
+    z.textContent = ans || '';
+    z.classList.toggle('filled', ans !== null);
+    z.classList.remove('correct','incorrect','hover');
+
+    if(ans !== null && state.helpMode === 2){
+      const ex = state.exercises[index];
+      const ok = ans === correctSymbol(ex.a, ex.b);
+      z.style.borderColor = ok ? '#22c55e' : '#ef4444';
+    }else{
+      z.style.borderColor = ans !== null ? '#7c3aed' : '#94a3b8';
+    }
+  }
+
+  function updateAllDropZones(){ for(let i=0;i<6;i++) updateDropZone(i); updateLiveFeedback(); }
+
+  function updateLiveFeedback(){
+    state.exercises.forEach((ex,i)=>{
+      const f = $('#feedback'+i);
+      const ans = state.answers[i];
+      if(!f) return;
+      if(state.helpMode === 2 && ans !== null){
+        const ok = ans === correctSymbol(ex.a, ex.b);
+        f.innerHTML = ok ? '<span style="color:#22c55e">✓</span>' : '<span style="color:#ef4444">✗</span>';
+        f.classList.add('visible');
+      }else{
+        f.innerHTML = '';
+        f.classList.remove('visible');
+      }
+    });
+  }
+
+  function updateCheckButton(){
+    $('#btnCheck').disabled = state.checked || state.answers.some(v => v === null);
+  }
+
+  function showMessage(text, kind){
+    const m = $('#messageBox');
+    m.textContent = text;
+    m.classList.add('show');
+    if(kind === 'ok'){ m.style.background = '#dcfce7'; m.style.color = '#166534'; }
+    else { m.style.background = '#fee2e2'; m.style.color = '#991b1b'; }
+  }
+  function hideMessage(){ const m = $('#messageBox'); m.classList.remove('show'); m.textContent = ''; }
+
+  function checkAnswers(){
+    if(state.answers.some(v=>v===null)) return;
+    state.checked = true;
+    let allCorrect = true;
+    state.exercises.forEach((ex,i)=>{
+      const z = $('#drop'+i);
+      const f = $('#feedback'+i);
+      const ok = state.answers[i] === correctSymbol(ex.a, ex.b);
+      z.classList.toggle('correct', ok);
+      z.classList.toggle('incorrect', !ok);
+      f.innerHTML = ok ? '<span style="color:#22c55e">✓</span>' : '<span style="color:#ef4444">✗</span>';
+      f.classList.add('visible');
+      if(!ok) allCorrect = false;
+    });
+
+    if(allCorrect){
+      const text = phrases[Math.floor(Math.random()*phrases.length)].replace('{name}', state.childName);
+      showMessage(text, 'ok');
+      speak(text);
+      celebrate();
+    }else{
+      showMessage('Revisa esta ronda. Los signos marcados con ✗ deben corregirse.', 'bad');
+      if(state.helpMode === 2){
+        const firstWrong = state.exercises.findIndex((ex,i)=> state.answers[i] !== correctSymbol(ex.a, ex.b));
+        if(firstWrong >= 0){
+          const ex = state.exercises[firstWrong];
+          const right = correctSymbol(ex.a, ex.b);
+          speak(`Revisa esta pregunta. ${ex.a} no es ${symbolText(state.answers[firstWrong])} ${ex.b}. Lo correcto es: ${ex.a} es ${symbolText(right)} ${ex.b}.`);
+        }
+      }
+    }
+    updateCheckButton();
+  }
+
+  function startGame(digits){
+    const input = $('#nameInput');
+    const name = input.value.trim();
+    if(!name){ input.focus(); input.style.borderColor = '#ef4444'; return; }
+    input.style.borderColor = '#3b82f6';
+    state.childName = name;
+    state.maxDigits = digits;
+    $('#startScreen').style.display = 'none';
+    $('#gameArea').classList.add('active');
+    $('#levelBadge').textContent = `Nivel: hasta ${digits} dígito${digits>1?'s':''}`;
+    newRound();
+  }
+
+  function newRound(){
+    window.speechSynthesis && window.speechSynthesis.cancel();
+    state.selectedSymbol = null;
+    $$('.symbol-card').forEach(c => c.classList.remove('selected'));
+    generateExercises();
+    renderExercises();
+  }
+
+  function changeLevel(){
+    $('#gameArea').classList.remove('active');
+    $('#startScreen').style.display = 'flex';
+    $('#nameInput').value = state.childName || '';
+    hideMessage();
+  }
+
+  function setHelpMode(mode){
+    state.helpMode = mode;
+    $('#helpOff').classList.toggle('active', mode === 0);
+    $('#helpRead').classList.toggle('active', mode === 1);
+    $('#helpLive').classList.toggle('active', mode === 2);
+    updateAllDropZones();
+  }
+
+  /* =========================================================
+     Arrastre táctil optimizado
+     - Usa Pointer Events, no mezcla touchstart con pointerdown.
+     - Usa setPointerCapture para no perder el dedo.
+     - Mueve el fantasma con requestAnimationFrame y transform GPU.
+     - Hace hit testing generoso por distancia al centro.
+     - Permite arrastrar desde el mazo o desde una casilla ya llena.
+     ========================================================= */
+  function getClientPoint(ev){ return {x:ev.clientX, y:ev.clientY}; }
+
+  function createGhost(symbol, sourceEl){
+    const g = document.createElement('div');
+    g.className = 'drag-ghost';
+    g.textContent = symbol;
+    const cs = getComputedStyle(sourceEl);
+    g.style.background = cs.backgroundColor;
+    g.style.color = cs.color;
+    document.body.appendChild(g);
+    return g;
+  }
+
+  function beginDrag(ev, symbol, sourceEl, fromIndex=null){
+    if(state.checked) return;
+    ev.preventDefault();
+    try{ sourceEl.setPointerCapture(ev.pointerId); }catch(_e){}
+    document.body.classList.add('dragging-active');
+    const pt = getClientPoint(ev);
+    state.drag = {
+      pointerId: ev.pointerId,
+      symbol,
+      fromIndex,
+      sourceEl,
+      ghost: createGhost(symbol, sourceEl),
+      x: pt.x,
+      y: pt.y,
+      raf: null,
+      currentHover: null,
+      moved: false
+    };
+    scheduleGhostMove();
+    window.addEventListener('pointermove', onPointerMove, {passive:false});
+    window.addEventListener('pointerup', onPointerUp, {passive:false});
+    window.addEventListener('pointercancel', cancelDrag, {passive:false});
+  }
+
+  function scheduleGhostMove(){
+    const d = state.drag;
+    if(!d || d.raf) return;
+    d.raf = requestAnimationFrame(()=>{
+      d.raf = null;
+      if(!state.drag) return;
+      d.ghost.style.transform = `translate3d(${d.x-41}px, ${d.y-41}px, 0) scale(1.05)`;
+      updateHoverZone(d.x,d.y);
+    });
+  }
+
+  function onPointerMove(ev){
+    const d = state.drag;
+    if(!d || ev.pointerId !== d.pointerId) return;
+    ev.preventDefault();
+    d.x = ev.clientX; d.y = ev.clientY; d.moved = true;
+    scheduleGhostMove();
+  }
+
+  function closestDropZone(x,y){
+    let best = null;
+    let bestDist = Infinity;
+    $$('.drop-zone').forEach(z=>{
+      const r = z.getBoundingClientRect();
+      const cx = (r.left + r.right)/2;
+      const cy = (r.top + r.bottom)/2;
+      const dx = Math.max(Math.abs(x-cx) - r.width*.55, 0);
+      const dy = Math.max(Math.abs(y-cy) - r.height*.55, 0);
+      const dist = Math.hypot(dx,dy);
+      const generousRadius = Math.max(42, Math.min(window.innerWidth, window.innerHeight)*0.055);
+      if(dist <= generousRadius && dist < bestDist){ best = z; bestDist = dist; }
+    });
+    return best;
+  }
+
+  function updateHoverZone(x,y){
+    const d = state.drag; if(!d) return;
+    const z = closestDropZone(x,y);
+    if(d.currentHover && d.currentHover !== z) d.currentHover.classList.remove('hover');
+    d.currentHover = z;
+    if(z) z.classList.add('hover');
+  }
+
+  function onPointerUp(ev){
+    const d = state.drag;
+    if(!d || ev.pointerId !== d.pointerId) return;
+    ev.preventDefault();
+    const z = closestDropZone(ev.clientX, ev.clientY);
+    const toIndex = z ? Number(z.dataset.index) : null;
+
+    if(toIndex !== null){
+      setAnswer(toIndex, d.symbol);
+      if(d.fromIndex !== null && d.fromIndex !== toIndex) clearAnswer(d.fromIndex);
+    }else if(d.fromIndex !== null){
+      clearAnswer(d.fromIndex);
+    }
+    cleanupDrag();
+  }
+
+  function cancelDrag(ev){
+    const d = state.drag;
+    if(d && ev.pointerId === d.pointerId) cleanupDrag();
+  }
+
+  function cleanupDrag(){
+    const d = state.drag;
+    if(d){
+      if(d.raf) cancelAnimationFrame(d.raf);
+      if(d.currentHover) d.currentHover.classList.remove('hover');
+      if(d.ghost) d.ghost.remove();
+      try{ d.sourceEl.releasePointerCapture(d.pointerId); }catch(_e){}
+    }
+    state.drag = null;
+    document.body.classList.remove('dragging-active');
+    window.removeEventListener('pointermove', onPointerMove);
+    window.removeEventListener('pointerup', onPointerUp);
+    window.removeEventListener('pointercancel', cancelDrag);
+  }
+
+  function celebrate(){
+    const cont = $('#celebration');
+    cont.innerHTML = '';
+    const overlay = document.createElement('div');
+    overlay.className = 'congrats';
+    overlay.innerHTML = '<div>¡FELICIDADES!</div>';
+    document.body.appendChild(overlay);
+
+    const emojis = ['⭐','🌙','🍎','❤️','🌈','🎉','🎊','✨','🎈','🌻','🦋','☀️','🍊','🍓','💫','🌟','🏆'];
+    const style = document.createElement('style');
+    style.textContent = `@keyframes burst{0%{transform:translate(0,0) scale(1) rotate(0);opacity:1}80%{opacity:1}100%{transform:translate(var(--x),var(--y)) scale(.1) rotate(720deg);opacity:0}}.piece{animation:burst 4.2s cubic-bezier(.22,.9,.25,1) forwards;}`;
+    document.head.appendChild(style);
+    const cx = innerWidth/2, cy = innerHeight/2;
+    for(let i=0;i<180;i++){
+      const p = document.createElement('div');
+      p.className = 'piece';
+      p.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+      p.style.left = cx + 'px'; p.style.top = cy + 'px';
+      p.style.fontSize = (24 + Math.random()*24) + 'px';
+      const a = Math.random()*Math.PI*2;
+      const r = 150 + Math.random()*Math.max(innerWidth,innerHeight)*.55;
+      p.style.setProperty('--x', Math.cos(a)*r + 'px');
+      p.style.setProperty('--y', Math.sin(a)*r + 'px');
+      p.style.animationDelay = (Math.random()*0.35) + 's';
+      cont.appendChild(p);
+    }
+    setTimeout(()=>{ cont.innerHTML=''; overlay.remove(); style.remove(); }, 4800);
+  }
+
+  function attachEvents(){
+    $$('.level-btn').forEach(btn => btn.addEventListener('click', () => startGame(Number(btn.dataset.digits))));
+    $('#btnCheck').addEventListener('click', checkAnswers);
+    $('#btnNew').addEventListener('click', newRound);
+    $('#btnReset').addEventListener('click', newRound);
+    $('#btnLevel').addEventListener('click', changeLevel);
+    $('#helpOff').addEventListener('click', () => setHelpMode(0));
+    $('#helpRead').addEventListener('click', () => setHelpMode(1));
+    $('#helpLive').addEventListener('click', () => setHelpMode(2));
+
+    $('#symbolTray').addEventListener('pointerdown', ev => {
+      const card = ev.target.closest('.symbol-card');
+      if(!card) return;
+      beginDrag(ev, card.dataset.symbol, card, null);
+    }, {passive:false});
+
+    $('#symbolTray').addEventListener('click', ev => {
+      if(state.drag) return;
+      const card = ev.target.closest('.symbol-card');
+      if(!card || state.checked) return;
+      state.selectedSymbol = card.dataset.symbol;
+      $$('.symbol-card').forEach(c => c.classList.toggle('selected', c === card));
+    });
+
+    $('#exercisesContainer').addEventListener('pointerdown', ev => {
+      const z = ev.target.closest('.drop-zone');
+      if(!z || state.checked) return;
+      const idx = Number(z.dataset.index);
+      const existing = state.answers[idx];
+      if(existing !== null) beginDrag(ev, existing, z, idx);
+    }, {passive:false});
+
+    $('#exercisesContainer').addEventListener('click', ev => {
+      const z = ev.target.closest('.drop-zone');
+      if(!z || state.checked || state.drag) return;
+      const idx = Number(z.dataset.index);
+      if(state.selectedSymbol) setAnswer(idx, state.selectedSymbol);
+      else if(state.answers[idx] !== null) clearAnswer(idx);
+    });
+  }
+
+  attachEvents();
+  setHelpMode(0);
+})();
+</script>
+</body>
+</html>
