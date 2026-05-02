@@ -290,257 +290,1014 @@
     }
   },
   "oraciones": [
-	  [
-  {
-    "level": 3,
-    "pics": ["Ana","juega","pelota","parque"],
-    "words": ["Ana","juega","con","la","pelota","en","el","parque","."]
-  },
-  {
-    "level": 3,
-    "pics": ["Ana","corre","pelota","cancha"],
-    "words": ["Ana","corre","en","la","cancha","con","la","pelota","."]
-  },
-  {
-    "level": 3,
-    "pics": ["Carlos","juega","pelota","parque"],
-    "words": ["Carlos","juega","con","la","pelota","en","el","parque","."]
-  },
-  {
-    "level": 3,
-    "pics": ["Daniel","juega","juguetes","casa"],
-    "words": ["Daniel","juega","con","los","juguetes","en","la","casa","."]
-  },
-  {
-    "level": 3,
-    "pics": ["Jimena","juega","columpio","parque"],
-    "words": ["Jimena","juega","en","el","columpio","del","parque","."]
-  },
-  {
-    "level": 3,
-    "pics": ["Juan","juega","bicicleta","parque"],
-    "words": ["Juan","juega","con","la","bicicleta","en","el","parque","."]
-  },
-  {
-    "level": 3,
-    "pics": ["Manuel","salta","pelota","cancha"],
-    "words": ["Manuel","salta","con","la","pelota","en","la","cancha","."]
-  },
-  {
-    "level": 3,
-    "pics": ["Marta","lee","libro","escuela"],
-    "words": ["Marta","lee","un","libro","en","la","escuela","."]
-  },
-  {
-    "level": 3,
-    "pics": ["niño","juega","juguetes","casa"],
-    "words": ["el","niño","juega","con","los","juguetes","en","la","casa","."]
-  },
-  {
-    "level": 3,
-    "pics": ["niña","corre","pelota","parque"],
-    "words": ["la","niña","corre","con","la","pelota","en","el","parque","."]
-  },
-  {
-    "level": 3,
-    "pics": ["perro","corre","pelota","parque"],
-    "words": ["el","perro","corre","con","la","pelota","en","el","parque","."]
-  },
-  {
-    "level": 3,
-    "pics": ["gato","duerme","cama","casa"],
-    "words": ["el","gato","duerme","en","la","cama","de","la","casa","."]
-  },
-  {
-    "level": 3,
-    "pics": ["conejo","come","zanahoria","parque"],
-    "words": ["el","conejo","come","una","zanahoria","en","el","parque","."]
-  },
-  {
-    "level": 3,
-    "pics": ["caballo","corre","árbol","parque"],
-    "words": ["el","caballo","corre","al","lado","del","árbol","en","el","parque","."]
-  },
-  {
-    "level": 3,
-    "pics": ["carro","rojo","casa","al lado"],
-    "words": ["el","carro","rojo","está","al","lado","de","la","casa","."]
-  },
-  {
-    "level": 3,
-    "pics": ["bicicleta","azul","árbol","al lado"],
-    "words": ["la","bicicleta","azul","está","al","lado","del","árbol","."]
-  },
-  {
-    "level": 3,
-    "pics": ["barco","azul","río","al lado"],
-    "words": ["el","barco","azul","está","al","lado","del","río","."]
-  },
-  {
-    "level": 3,
-    "pics": ["pelota","rojo","silla","debajo"],
-    "words": ["la","pelota","roja","está","debajo","de","la","silla","."]
-  },
-  {
-    "level": 3,
-    "pics": ["libro","azul","mesa","encima"],
-    "words": ["el","libro","azul","está","encima","de","la","mesa","."]
-  },
-  {
-    "level": 3,
-    "pics": ["globos","multicolor","mesa","encima"],
-    "words": ["los","globos","multicolores","están","encima","de","la","mesa","."]
-  },
-  {
-    "level": 3,
-    "pics": ["flores","amarillo","casa","al lado"],
-    "words": ["las","flores","amarillas","están","al","lado","de","la","casa","."]
-  },
-  {
-    "level": 3,
-    "pics": ["sombrilla","playa","azul","al lado"],
-    "words": ["la","sombrilla","azul","está","en","la","playa","."]
-  },
-  {
-    "level": 3,
-    "pics": ["avión","azul","alto","playa"],
-    "words": ["el","avión","azul","está","alto","sobre","la","playa","."]
-  },
-  {
-    "level": 3,
-    "pics": ["autobús","escuela","al lado","rojo"],
-    "words": ["el","autobús","está","al","lado","de","la","escuela","."]
-  },
-  {
-    "level": 3,
-    "pics": ["super mercado","carro","frutas","verduras"],
-    "words": ["el","carro","está","en","el","supermercado","."]
-  },
-  {
-    "level": 3,
-    "pics": ["Ana","lee","libro","casa"],
-    "words": ["Ana","lee","un","libro","en","la","casa","."]
-  },
-  {
-    "level": 3,
-    "pics": ["Carlos","corre","parque","pelota"],
-    "words": ["Carlos","corre","en","el","parque","con","la","pelota","."]
-  },
-  {
-    "level": 3,
-    "pics": ["Daniel","escribe","cuaderno","casa"],
-    "words": ["Daniel","escribe","en","el","cuaderno","en","la","casa","."]
-  },
-  {
-    "level": 3,
-    "pics": ["Jimena","salta","cancha","pelota"],
-    "words": ["Jimena","salta","en","la","cancha","con","la","pelota","."]
-  },
-  {
-    "level": 3,
-    "pics": ["Juan","corre","bicicleta","parque"],
-    "words": ["Juan","corre","al","lado","de","la","bicicleta","en","el","parque","."]
-  },
-  {
-    "level": 3,
-    "pics": ["Manuel","juega","juguetes","casa"],
-    "words": ["Manuel","juega","con","los","juguetes","en","la","casa","."]
-  },
-  {
-    "level": 3,
-    "pics": ["Marta","lee","libro","parque"],
-    "words": ["Marta","lee","un","libro","en","el","parque","."]
-  },
-  {
-    "level": 3,
-    "pics": ["niño","come","frutas","mesa"],
-    "words": ["el","niño","come","las","frutas","en","la","mesa","."]
-  },
-  {
-    "level": 3,
-    "pics": ["niña","come","verduras","mesa"],
-    "words": ["la","niña","come","las","verduras","en","la","mesa","."]
-  },
-  {
-    "level": 3,
-    "pics": ["perro","duerme","sofá","casa"],
-    "words": ["el","perro","duerme","en","el","sofá","de","la","casa","."]
-  },
-  {
-    "level": 3,
-    "pics": ["gato","duerme","cama","casa"],
-    "words": ["el","gato","duerme","en","la","cama","de","la","casa","."]
-  },
-  {
-    "level": 3,
-    "pics": ["conejo","salta","parque","árbol"],
-    "words": ["el","conejo","salta","al","lado","del","árbol","en","el","parque","."]
-  },
-  {
-    "level": 3,
-    "pics": ["caballo","corre","parque","árbol"],
-    "words": ["el","caballo","corre","al","lado","del","árbol","en","el","parque","."]
-  },
-  {
-    "level": 3,
-    "pics": ["carro","negro","casa","al lado"],
-    "words": ["el","carro","negro","está","al","lado","de","la","casa","."]
-  },
-  {
-    "level": 3,
-    "pics": ["bicicleta","verde","parque","al lado"],
-    "words": ["la","bicicleta","verde","está","al","lado","del","parque","."]
-  },
-  {
-    "level": 3,
-    "pics": ["barco","rojo","río","al lado"],
-    "words": ["el","barco","rojo","está","al","lado","del","río","."]
-  },
-  {
-    "level": 3,
-    "pics": ["pelota","azul","mesa","encima"],
-    "words": ["la","pelota","azul","está","encima","de","la","mesa","."]
-  },
-  {
-    "level": 3,
-    "pics": ["libro","verde","mesa","encima"],
-    "words": ["el","libro","verde","está","encima","de","la","mesa","."]
-  },
-  {
-    "level": 3,
-    "pics": ["globos","multicolor","cama","encima"],
-    "words": ["los","globos","multicolores","están","encima","de","la","cama","."]
-  },
-  {
-    "level": 3,
-    "pics": ["flores","amarillo","parque","al lado"],
-    "words": ["las","flores","amarillas","están","al","lado","del","parque","."]
-  },
-  {
-    "level": 3,
-    "pics": ["sombrilla","playa","al lado","azul"],
-    "words": ["la","sombrilla","azul","está","en","la","playa","."]
-  },
-  {
-    "level": 3,
-    "pics": ["avión","alto","azul","playa"],
-    "words": ["el","avión","azul","está","alto","sobre","la","playa","."]
-  },
-  {
-    "level": 3,
-    "pics": ["autobús","escuela","al lado","amarillo"],
-    "words": ["el","autobús","amarillo","está","al","lado","de","la","escuela","."]
-  },
-  {
-    "level": 3,
-    "pics": ["super mercado","frutas","carro","dentro"],
-    "words": ["el","carro","está","en","el","supermercado","."]
-  },
-  {
-    "level": 3,
-    "pics": ["niño","ver","cohete","parque"],
-    "words": ["el","niño","ve","el","cohete","en","el","parque","."]
-  },  
+    {
+      "level": 3,
+      "pics": [
+        "Ana",
+        "juega",
+        "pelota",
+        "parque"
+      ],
+      "words": [
+        "Ana",
+        "juega",
+        "con",
+        "la",
+        "pelota",
+        "en",
+        "el",
+        "parque",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "Ana",
+        "corre",
+        "pelota",
+        "cancha"
+      ],
+      "words": [
+        "Ana",
+        "corre",
+        "en",
+        "la",
+        "cancha",
+        "con",
+        "la",
+        "pelota",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "Carlos",
+        "juega",
+        "pelota",
+        "parque"
+      ],
+      "words": [
+        "Carlos",
+        "juega",
+        "con",
+        "la",
+        "pelota",
+        "en",
+        "el",
+        "parque",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "Daniel",
+        "juega",
+        "juguetes",
+        "casa"
+      ],
+      "words": [
+        "Daniel",
+        "juega",
+        "con",
+        "los",
+        "juguetes",
+        "en",
+        "la",
+        "casa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "Jimena",
+        "juega",
+        "columpio",
+        "parque"
+      ],
+      "words": [
+        "Jimena",
+        "juega",
+        "en",
+        "el",
+        "columpio",
+        "del",
+        "parque",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "Juan",
+        "juega",
+        "bicicleta",
+        "parque"
+      ],
+      "words": [
+        "Juan",
+        "juega",
+        "con",
+        "la",
+        "bicicleta",
+        "en",
+        "el",
+        "parque",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "Manuel",
+        "salta",
+        "pelota",
+        "cancha"
+      ],
+      "words": [
+        "Manuel",
+        "salta",
+        "con",
+        "la",
+        "pelota",
+        "en",
+        "la",
+        "cancha",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "Marta",
+        "lee",
+        "libro",
+        "escuela"
+      ],
+      "words": [
+        "Marta",
+        "lee",
+        "un",
+        "libro",
+        "en",
+        "la",
+        "escuela",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "niño",
+        "juega",
+        "juguetes",
+        "casa"
+      ],
+      "words": [
+        "el",
+        "niño",
+        "juega",
+        "con",
+        "los",
+        "juguetes",
+        "en",
+        "la",
+        "casa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "niña",
+        "corre",
+        "pelota",
+        "parque"
+      ],
+      "words": [
+        "la",
+        "niña",
+        "corre",
+        "con",
+        "la",
+        "pelota",
+        "en",
+        "el",
+        "parque",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "perro",
+        "corre",
+        "pelota",
+        "parque"
+      ],
+      "words": [
+        "el",
+        "perro",
+        "corre",
+        "con",
+        "la",
+        "pelota",
+        "en",
+        "el",
+        "parque",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "gato",
+        "duerme",
+        "cama",
+        "casa"
+      ],
+      "words": [
+        "el",
+        "gato",
+        "duerme",
+        "en",
+        "la",
+        "cama",
+        "de",
+        "la",
+        "casa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "conejo",
+        "come",
+        "zanahoria",
+        "parque"
+      ],
+      "words": [
+        "el",
+        "conejo",
+        "come",
+        "una",
+        "zanahoria",
+        "en",
+        "el",
+        "parque",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "caballo",
+        "corre",
+        "árbol",
+        "parque"
+      ],
+      "words": [
+        "el",
+        "caballo",
+        "corre",
+        "al",
+        "lado",
+        "del",
+        "árbol",
+        "en",
+        "el",
+        "parque",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "carro",
+        "rojo",
+        "casa",
+        "al lado"
+      ],
+      "words": [
+        "el",
+        "carro",
+        "rojo",
+        "está",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "casa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "bicicleta",
+        "azul",
+        "árbol",
+        "al lado"
+      ],
+      "words": [
+        "la",
+        "bicicleta",
+        "azul",
+        "está",
+        "al",
+        "lado",
+        "del",
+        "árbol",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "barco",
+        "azul",
+        "río",
+        "al lado"
+      ],
+      "words": [
+        "el",
+        "barco",
+        "azul",
+        "está",
+        "al",
+        "lado",
+        "del",
+        "río",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "pelota",
+        "rojo",
+        "silla",
+        "debajo"
+      ],
+      "words": [
+        "la",
+        "pelota",
+        "roja",
+        "está",
+        "debajo",
+        "de",
+        "la",
+        "silla",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "libro",
+        "azul",
+        "mesa",
+        "encima"
+      ],
+      "words": [
+        "el",
+        "libro",
+        "azul",
+        "está",
+        "encima",
+        "de",
+        "la",
+        "mesa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "globos",
+        "multicolor",
+        "mesa",
+        "encima"
+      ],
+      "words": [
+        "los",
+        "globos",
+        "multicolores",
+        "están",
+        "encima",
+        "de",
+        "la",
+        "mesa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "flores",
+        "amarillo",
+        "casa",
+        "al lado"
+      ],
+      "words": [
+        "las",
+        "flores",
+        "amarillas",
+        "están",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "casa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "sombrilla",
+        "playa",
+        "azul",
+        "al lado"
+      ],
+      "words": [
+        "la",
+        "sombrilla",
+        "azul",
+        "está",
+        "en",
+        "la",
+        "playa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "avión",
+        "azul",
+        "alto",
+        "playa"
+      ],
+      "words": [
+        "el",
+        "avión",
+        "azul",
+        "está",
+        "alto",
+        "sobre",
+        "la",
+        "playa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "autobús",
+        "escuela",
+        "al lado",
+        "rojo"
+      ],
+      "words": [
+        "el",
+        "autobús",
+        "está",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "escuela",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "super mercado",
+        "carro",
+        "frutas",
+        "verduras"
+      ],
+      "words": [
+        "el",
+        "carro",
+        "está",
+        "en",
+        "el",
+        "supermercado",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "Ana",
+        "lee",
+        "libro",
+        "casa"
+      ],
+      "words": [
+        "Ana",
+        "lee",
+        "un",
+        "libro",
+        "en",
+        "la",
+        "casa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "Carlos",
+        "corre",
+        "parque",
+        "pelota"
+      ],
+      "words": [
+        "Carlos",
+        "corre",
+        "en",
+        "el",
+        "parque",
+        "con",
+        "la",
+        "pelota",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "Daniel",
+        "escribe",
+        "cuaderno",
+        "casa"
+      ],
+      "words": [
+        "Daniel",
+        "escribe",
+        "en",
+        "el",
+        "cuaderno",
+        "en",
+        "la",
+        "casa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "Jimena",
+        "salta",
+        "cancha",
+        "pelota"
+      ],
+      "words": [
+        "Jimena",
+        "salta",
+        "en",
+        "la",
+        "cancha",
+        "con",
+        "la",
+        "pelota",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "Juan",
+        "corre",
+        "bicicleta",
+        "parque"
+      ],
+      "words": [
+        "Juan",
+        "corre",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "bicicleta",
+        "en",
+        "el",
+        "parque",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "Manuel",
+        "juega",
+        "juguetes",
+        "casa"
+      ],
+      "words": [
+        "Manuel",
+        "juega",
+        "con",
+        "los",
+        "juguetes",
+        "en",
+        "la",
+        "casa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "Marta",
+        "lee",
+        "libro",
+        "parque"
+      ],
+      "words": [
+        "Marta",
+        "lee",
+        "un",
+        "libro",
+        "en",
+        "el",
+        "parque",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "niño",
+        "come",
+        "frutas",
+        "mesa"
+      ],
+      "words": [
+        "el",
+        "niño",
+        "come",
+        "las",
+        "frutas",
+        "en",
+        "la",
+        "mesa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "niña",
+        "come",
+        "verduras",
+        "mesa"
+      ],
+      "words": [
+        "la",
+        "niña",
+        "come",
+        "las",
+        "verduras",
+        "en",
+        "la",
+        "mesa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "perro",
+        "duerme",
+        "sofá",
+        "casa"
+      ],
+      "words": [
+        "el",
+        "perro",
+        "duerme",
+        "en",
+        "el",
+        "sofá",
+        "de",
+        "la",
+        "casa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "gato",
+        "duerme",
+        "cama",
+        "casa"
+      ],
+      "words": [
+        "el",
+        "gato",
+        "duerme",
+        "en",
+        "la",
+        "cama",
+        "de",
+        "la",
+        "casa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "conejo",
+        "salta",
+        "parque",
+        "árbol"
+      ],
+      "words": [
+        "el",
+        "conejo",
+        "salta",
+        "al",
+        "lado",
+        "del",
+        "árbol",
+        "en",
+        "el",
+        "parque",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "caballo",
+        "corre",
+        "parque",
+        "árbol"
+      ],
+      "words": [
+        "el",
+        "caballo",
+        "corre",
+        "al",
+        "lado",
+        "del",
+        "árbol",
+        "en",
+        "el",
+        "parque",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "carro",
+        "negro",
+        "casa",
+        "al lado"
+      ],
+      "words": [
+        "el",
+        "carro",
+        "negro",
+        "está",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "casa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "bicicleta",
+        "verde",
+        "parque",
+        "al lado"
+      ],
+      "words": [
+        "la",
+        "bicicleta",
+        "verde",
+        "está",
+        "al",
+        "lado",
+        "del",
+        "parque",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "barco",
+        "rojo",
+        "río",
+        "al lado"
+      ],
+      "words": [
+        "el",
+        "barco",
+        "rojo",
+        "está",
+        "al",
+        "lado",
+        "del",
+        "río",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "pelota",
+        "azul",
+        "mesa",
+        "encima"
+      ],
+      "words": [
+        "la",
+        "pelota",
+        "azul",
+        "está",
+        "encima",
+        "de",
+        "la",
+        "mesa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "libro",
+        "verde",
+        "mesa",
+        "encima"
+      ],
+      "words": [
+        "el",
+        "libro",
+        "verde",
+        "está",
+        "encima",
+        "de",
+        "la",
+        "mesa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "globos",
+        "multicolor",
+        "cama",
+        "encima"
+      ],
+      "words": [
+        "los",
+        "globos",
+        "multicolores",
+        "están",
+        "encima",
+        "de",
+        "la",
+        "cama",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "flores",
+        "amarillo",
+        "parque",
+        "al lado"
+      ],
+      "words": [
+        "las",
+        "flores",
+        "amarillas",
+        "están",
+        "al",
+        "lado",
+        "del",
+        "parque",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "sombrilla",
+        "playa",
+        "al lado",
+        "azul"
+      ],
+      "words": [
+        "la",
+        "sombrilla",
+        "azul",
+        "está",
+        "en",
+        "la",
+        "playa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "avión",
+        "alto",
+        "azul",
+        "playa"
+      ],
+      "words": [
+        "el",
+        "avión",
+        "azul",
+        "está",
+        "alto",
+        "sobre",
+        "la",
+        "playa",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "autobús",
+        "escuela",
+        "al lado",
+        "amarillo"
+      ],
+      "words": [
+        "el",
+        "autobús",
+        "amarillo",
+        "está",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "escuela",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "super mercado",
+        "frutas",
+        "carro",
+        "dentro"
+      ],
+      "words": [
+        "el",
+        "carro",
+        "está",
+        "en",
+        "el",
+        "supermercado",
+        "."
+      ]
+    },
+    {
+      "level": 3,
+      "pics": [
+        "niño",
+        "ver",
+        "cohete",
+        "parque"
+      ],
+      "words": [
+        "el",
+        "niño",
+        "ve",
+        "el",
+        "cohete",
+        "en",
+        "el",
+        "parque",
+        "."
+      ]
+    },
     {
       "level": 1,
       "pics": [
