@@ -15,6 +15,21 @@ body{font-family:'Nunito',sans-serif;background:#FFF8E1;user-select:none;-webkit
 
 .app-title{font-family:'Bubblegum Sans',cursive;font-size:clamp(28px,5vw,48px);color:#E65100;text-align:center;padding:12px 8px 4px;text-shadow:2px 2px 0 #FFE082;letter-spacing:1px}
 
+.student-name-pill{
+  width:max-content;
+  max-width:90%;
+  margin:0 auto 4px;
+  background:#ffffff;
+  border:3px solid #90CAF9;
+  color:#1565C0;
+  border-radius:999px;
+  padding:6px 16px;
+  font-family:'Nunito',sans-serif;
+  font-size:clamp(15px,2.4vw,22px);
+  font-weight:900;
+  box-shadow:0 3px 8px rgba(0,0,0,.12);
+}
+
 .operation-display{text-align:center;font-family:'Bubblegum Sans',cursive;font-size:clamp(48px,10vw,88px);color:#1565C0;padding:8px;line-height:1.2}
 .operation-display .num-a{color:#2E7D32}
 .operation-display .op-minus{color:#C62828;margin:0 8px}
@@ -74,6 +89,7 @@ body{font-family:'Nunito',sans-serif;background:#FFF8E1;user-select:none;-webkit
  <body>
   <div class="app-wrapper" id="app">
    <h1 class="app-title" id="titleEl">🌈 Aprende a Restar 🌈</h1>
+   <div class="student-name-pill" id="studentNamePill" style="display:none"></div>
    <div class="operation-display" id="opDisplay">
     <span class="num-a" id="numAEl">4</span> <span class="op-minus">−</span> <span class="num-b" id="numBEl">7</span>
    </div>
@@ -110,10 +126,29 @@ const EMOJIS = ['🍎','⭐','🎈','🌸','⚽','🚗','🦋','🍓','🐱','�
 let numA=0, numB=0, removed=0, emoji='🍎', done=false, muted=false, mode='mix', lastAudio='';
 const synth=window.speechSynthesis;
 
+const CLAVE_NOMBRE = 'nombreNinoGabrielApps';
+
+function obtenerNombreNino(){
+  const nombre = localStorage.getItem(CLAVE_NOMBRE);
+  return nombre ? nombre.trim() : '';
+}
+
 const defaultConfig={main_title:'🌈 Aprende a Restar 🌈',bg_color:'#E3F2FD',text_color:'#E65100',primary_color:'#1565C0',accent_color:'#66BB6A',surface_color:'#FFFFFF'};
 
 function applyConfig(c){
   document.getElementById('titleEl').textContent=c.main_title||defaultConfig.main_title;
+}
+
+function cargarNombreEstudiante(){
+  const nombre = obtenerNombreNino();
+  const pill = document.getElementById('studentNamePill');
+
+  if(pill && nombre){
+    pill.textContent = `👋 Hola, ${nombre}`;
+    pill.style.display = 'block';
+  } else if(pill){
+    pill.style.display = 'none';
+  }
 }
 
 if (window.elementSdk && window.elementSdk.init) {
@@ -309,14 +344,18 @@ const numWords=['cero','uno','dos','tres','cuatro','cinco','seis','siete','ocho'
 
 function showSuccess(res){
   const ra=document.getElementById('resultArea');
-  ra.innerHTML=`<div class="result-msg success">¡Muy bien! ¡Sí se pudo! 🎉</div><div class="result-eq">${numA} − ${numB} = ${res}</div>`;
-  speak(`¡Muy bien! ${numWords[numA]} menos ${numWords[numB]} es igual a ${numWords[res]}.`);
+  const nombre = obtenerNombreNino();
+  const saludo = nombre ? `¡Muy bien, ${nombre}!` : '¡Muy bien!';
+  ra.innerHTML=`<div class="result-msg success">${saludo} ¡Sí se pudo! 🎉</div><div class="result-eq">${numA} − ${numB} = ${res}</div>`;
+  speak(`${saludo} ${numWords[numA]} menos ${numWords[numB]} es igual a ${numWords[res]}.`);
 }
 
 function showFail(){
   const ra=document.getElementById('resultArea');
-  ra.innerHTML=`<div class="result-msg fail shake">¡NO! ¡NO! ¡NO! 🚫<br>A ${numA} no se le puede quitar ${numB}.<br>¡No hay suficientes!</div>`;
-  speak(`¡No, no, no! A ${numWords[numA]} no se le puede quitar ${numWords[numB]}. No hay suficientes.`);
+  const nombre = obtenerNombreNino();
+  const inicio = nombre ? `${nombre}, ` : '';
+  ra.innerHTML=`<div class="result-msg fail shake">¡NO! ¡NO! ¡NO! 🚫<br>${inicio}a ${numA} no se le puede quitar ${numB}.<br>¡No hay suficientes!</div>`;
+  speak(`${inicio}no, no, no. A ${numWords[numA]} no se le puede quitar ${numWords[numB]}. No hay suficientes.`);
 }
 
 function resetExercise(){
@@ -343,6 +382,7 @@ function newExercise(){
 // Con eventos pointer no se requieren eventos nativos de arrastrar y soltar.
 // Esto mejora el uso en pantallas touch y evita fallos en tabletas.
 
+cargarNombreEstudiante();
 newExercise();
 </script></body>
 </html>

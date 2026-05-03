@@ -170,6 +170,37 @@
     drag: null
   };
 
+  const CLAVE_NOMBRE = 'nombreNinoGabrielApps';
+
+  function obtenerNombreGuardado(){
+    const nombre = localStorage.getItem(CLAVE_NOMBRE);
+    return nombre ? nombre.trim() : '';
+  }
+
+  function guardarNombreEstudiante(nombre){
+    const nombreLimpio = (nombre || '').trim();
+    if(nombreLimpio){
+      localStorage.setItem(CLAVE_NOMBRE, nombreLimpio);
+    }
+    return nombreLimpio;
+  }
+
+  function cargarNombreDesdeIndex(){
+    const input = $('#nameInput');
+    const nombreGuardado = obtenerNombreGuardado();
+
+    if(input && nombreGuardado){
+      input.value = nombreGuardado;
+      state.childName = nombreGuardado;
+    }
+
+    if(input){
+      input.addEventListener('input', () => {
+        state.childName = guardarNombreEstudiante(input.value);
+      });
+    }
+  }
+
   const phrases = [
     'Excelente {name}, qué buen trabajo has hecho.',
     'Excelente {name}, eres muy bueno ordenando números. Sigue así.',
@@ -333,7 +364,8 @@
     });
 
     if(allCorrect){
-      const text = phrases[Math.floor(Math.random()*phrases.length)].replace('{name}', state.childName);
+      const nombre = state.childName || obtenerNombreGuardado() || 'campeón';
+      const text = phrases[Math.floor(Math.random()*phrases.length)].replace('{name}', nombre);
       showMessage(text, 'ok');
       speak(text);
       celebrate();
@@ -353,8 +385,19 @@
 
   function startGame(digits){
     const input = $('#nameInput');
-    const name = input.value.trim();
-    if(!name){ input.focus(); input.style.borderColor = '#ef4444'; return; }
+    let name = guardarNombreEstudiante(input.value);
+
+    if(!name){
+      name = obtenerNombreGuardado();
+    }
+
+    if(!name){
+      input.focus();
+      input.style.borderColor = '#ef4444';
+      return;
+    }
+
+    input.value = name;
     input.style.borderColor = '#3b82f6';
     state.childName = name;
     state.maxDigits = digits;
@@ -375,7 +418,8 @@
   function changeLevel(){
     $('#gameArea').classList.remove('active');
     $('#startScreen').style.display = 'flex';
-    $('#nameInput').value = state.childName || '';
+    const nombre = state.childName || obtenerNombreGuardado();
+    $('#nameInput').value = nombre || '';
     hideMessage();
   }
 
@@ -581,6 +625,7 @@
     });
   }
 
+  cargarNombreDesdeIndex();
   attachEvents();
   setHelpMode(0);
 })();

@@ -385,6 +385,37 @@
     const musicModes = ['sin música', 'alegre', 'energética', 'tranquila', 'clásica', 'moderna'];
     const ghost = document.getElementById('dragGhost');
 
+    const CLAVE_NOMBRE = 'nombreNinoGabrielApps';
+
+    function obtenerNombreGuardado() {
+      const nombre = localStorage.getItem(CLAVE_NOMBRE);
+      return nombre ? nombre.trim() : '';
+    }
+
+    function guardarNombreEstudiante(nombre) {
+      const nombreLimpio = (nombre || '').trim();
+      if (nombreLimpio) {
+        localStorage.setItem(CLAVE_NOMBRE, nombreLimpio);
+      }
+      return nombreLimpio;
+    }
+
+    function cargarNombreDesdeIndex() {
+      const input = document.getElementById('nameInput');
+      const nombreGuardado = obtenerNombreGuardado();
+
+      if (input && nombreGuardado) {
+        input.value = nombreGuardado;
+        studentName = nombreGuardado;
+      }
+
+      if (input) {
+        input.addEventListener('input', () => {
+          studentName = guardarNombreEstudiante(input.value);
+        });
+      }
+    }
+
     const defaultConfig = {
       game_title: '🧮 Sumas y Restas',
       background_color: '#fef9c3',
@@ -583,16 +614,26 @@
       document.getElementById('menuScreen').style.display = '';
       document.getElementById('gameScreen').style.display = 'none';
       document.getElementById('levelScreen').style.display = 'flex';
+      const nombre = studentName || obtenerNombreGuardado();
+      if (nombre) document.getElementById('nameInput').value = nombre;
       clearAudioGuide();
     }
 
     function startGameValidated() {
-      const name = document.getElementById('nameInput').value.trim();
+      const input = document.getElementById('nameInput');
+      let name = guardarNombreEstudiante(input.value);
+
+      if (!name) {
+        name = obtenerNombreGuardado();
+      }
+
       if (name === '') {
-        document.getElementById('nameInput').placeholder = '¡Por favor, escribe tu nombre!';
-        document.getElementById('nameInput').focus();
+        input.placeholder = '¡Por favor, escribe tu nombre!';
+        input.focus();
         return;
       }
+
+      input.value = name;
       studentName = name;
       score = 0;
       updateScore();
@@ -1394,17 +1435,18 @@
     }
 
     function getRandomMotivationalMessage() {
+      const nombre = studentName || obtenerNombreGuardado() || 'campeón';
       const messages = [
-        `Muy bien ${studentName}, buen trabajo.`,
-        `${studentName}, maravilloso. Lo hiciste muy bien.`,
-        `Qué buen trabajo ${studentName}. Lo has hecho genial.`,
-        `Súper bien, ${studentName}. Qué gran trabajo has realizado.`,
-        `Excelente ${studentName}. Sigue adelante, eres genial.`,
-        `Muy buen trabajo ${studentName}, lo haces genial.`,
-        `${studentName}, qué excelente trabajo haces. Sigue así.`,
-        `Sigue trabajando así de bien ${studentName}, excelente.`,
-        `¡${studentName}, eso fue perfecto! ¡Cada vez mejor!`,
-        `¡${studentName}, increíble! ¡Lo estás haciendo genial!`
+        `Muy bien ${nombre}, buen trabajo.`,
+        `${nombre}, maravilloso. Lo hiciste muy bien.`,
+        `Qué buen trabajo ${nombre}. Lo has hecho genial.`,
+        `Súper bien, ${nombre}. Qué gran trabajo has realizado.`,
+        `Excelente ${nombre}. Sigue adelante, eres genial.`,
+        `Muy buen trabajo ${nombre}, lo haces genial.`,
+        `${nombre}, qué excelente trabajo haces. Sigue así.`,
+        `Sigue trabajando así de bien ${nombre}, excelente.`,
+        `¡${nombre}, eso fue perfecto! ¡Cada vez mejor!`,
+        `¡${nombre}, increíble! ¡Lo estás haciendo genial!`
       ];
       return messages[Math.floor(Math.random() * messages.length)];
     }
@@ -1446,6 +1488,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       applyConfig(defaultConfig);
+      cargarNombreDesdeIndex();
       updateModeVisibility();
       const allowLeadingCheckbox = document.getElementById('allowLeadingSumCheckbox');
       if (allowLeadingCheckbox) allowLeadingCheckbox.checked = allowLeadingSum;

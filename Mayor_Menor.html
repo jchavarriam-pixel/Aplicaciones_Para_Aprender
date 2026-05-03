@@ -346,6 +346,37 @@
     let helpMode = false;
     let currentAudioUtterance = null;
 
+    const CLAVE_NOMBRE = 'nombreNinoGabrielApps';
+
+    function obtenerNombreGuardado() {
+      const nombre = localStorage.getItem(CLAVE_NOMBRE);
+      return nombre ? nombre.trim() : '';
+    }
+
+    function guardarNombreEstudiante(nombre) {
+      const nombreLimpio = (nombre || '').trim();
+      if (nombreLimpio) {
+        localStorage.setItem(CLAVE_NOMBRE, nombreLimpio);
+      }
+      return nombreLimpio;
+    }
+
+    function cargarNombreDesdeIndex() {
+      const input = document.getElementById('nameInput');
+      const nombreGuardado = obtenerNombreGuardado();
+
+      if (input && nombreGuardado) {
+        input.value = nombreGuardado;
+        studentName = nombreGuardado;
+      }
+
+      if (input) {
+        input.addEventListener('input', () => {
+          studentName = guardarNombreEstudiante(input.value);
+        });
+      }
+    }
+
     const ghost = document.getElementById('dragGhost');
 
     const defaultConfig = {
@@ -392,7 +423,8 @@
 
     function getRandomMotivationalMessage() {
       const msg = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
-      return studentName ? `${studentName}, ${msg}` : msg;
+      const nombre = studentName || obtenerNombreGuardado();
+      return nombre ? `${nombre}, ${msg}` : msg;
     }
 
     function applyConfig(c) {
@@ -440,16 +472,24 @@
       document.getElementById('gameScreen').style.display = 'none';
       closeFeedback();
       clearSpeech();
+      cargarNombreDesdeIndex();
     }
 
     function startGameValidated() {
-      const name = document.getElementById('nameInput').value.trim();
+      const input = document.getElementById('nameInput');
+      let name = guardarNombreEstudiante(input.value);
+
       if (!name) {
-        const input = document.getElementById('nameInput');
+        name = obtenerNombreGuardado();
+      }
+
+      if (!name) {
         input.placeholder = '¡Por favor, escribe tu nombre!';
         input.focus();
         return;
       }
+
+      input.value = name;
       studentName = name;
       score = 0;
       updateScore();
@@ -1066,6 +1106,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       applyConfig(defaultConfig);
+      cargarNombreDesdeIndex();
       document.querySelectorAll('.count-btn').forEach(btn => {
         btn.addEventListener('click', () => setCountButtonState(Number(btn.dataset.count)));
       });

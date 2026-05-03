@@ -113,6 +113,36 @@ body{background:linear-gradient(135deg,#fef9c3 0%,#fbcfe8 50%,#c4b5fd 100%);colo
 let WORDS = {};
 let SENTENCES = [];
 const BASE_DATOS_URL = "base_oraciones.json";
+const CLAVE_NOMBRE = "nombreNinoGabrielApps";
+
+function obtenerNombreGuardado(){
+  const nombre = localStorage.getItem(CLAVE_NOMBRE);
+  return nombre ? nombre.trim() : "";
+}
+
+function guardarNombreEstudiante(nombre){
+  const nombreLimpio = (nombre || "").trim();
+  if(nombreLimpio){
+    localStorage.setItem(CLAVE_NOMBRE, nombreLimpio);
+  }
+  return nombreLimpio;
+}
+
+function cargarNombreDesdeIndex(){
+  const input = document.getElementById("nameInput");
+  const nombreGuardado = obtenerNombreGuardado();
+
+  if(input && nombreGuardado){
+    input.value = nombreGuardado;
+    studentName = nombreGuardado;
+  }
+
+  if(input){
+    input.addEventListener("input", ()=>{
+      studentName = guardarNombreEstudiante(input.value);
+    });
+  }
+}
 
 async function cargarBaseDeDatos(){
   const startBtn = document.getElementById('startBtn');
@@ -161,12 +191,28 @@ function validarBaseDeDatos(){
 
 cargarBaseDeDatos();
 let currentLevel=1,current=null,score=0,showLabels=false,studentName='';
+cargarNombreDesdeIndex();
 let checkAttempts=0,hasReviewed=false,isSolved=false;
 let sentenceItems=[],bankItems=[],dragging=null,ghost=null,marker=null;
 const menu=document.getElementById('menu'),game=document.getElementById('game'),imageRow=document.getElementById('imageRow'),sentenceZone=document.getElementById('sentenceZone'),wordBank=document.getElementById('wordBank'),hint=document.getElementById('hint');
 document.querySelectorAll('.level-btn').forEach(btn=>btn.addEventListener('click',()=>{currentLevel=Number(btn.dataset.level);document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b===btn));}));
-document.getElementById('startBtn').onclick=()=>{studentName=document.getElementById('nameInput').value.trim();score=0;updateScore();menu.style.display='none';game.style.display='block';newExercise();};
-document.getElementById('backBtn').onclick=()=>{menu.style.display='block';game.style.display='none';stopSpeech();};
+document.getElementById('startBtn').onclick=()=>{
+  studentName = guardarNombreEstudiante(document.getElementById('nameInput').value);
+  if(!studentName){
+    studentName = obtenerNombreGuardado();
+  }
+  score=0;
+  updateScore();
+  menu.style.display='none';
+  game.style.display='block';
+  newExercise();
+};
+document.getElementById('backBtn').onclick=()=>{
+  menu.style.display='block';
+  game.style.display='none';
+  stopSpeech();
+  cargarNombreDesdeIndex();
+};
 document.getElementById('nextBtn').onclick=()=>{if(isSolved)newExercise();};
 document.getElementById('resetBtn').onclick=()=>loadCurrent();
 document.getElementById('checkBtn').onclick=()=>checkAnswer();
@@ -229,7 +275,11 @@ if(checkAttempts>=3)msg+=' Ya usaste 3 revisiones. Mueve una palabra para intent
 hint.textContent=`Revisión ${checkAttempts} de 3. ${msg}`;
 updateButtons();
 speak(msg);}}
-function getPraise(){const name=studentName||'campeón';const phrases=[`¡Excelente trabajo, ${name}!`,`¡Muy bien, ${name}!`,`¡Lo lograste, ${name}!`,`¡Qué gran esfuerzo, ${name}!`,`¡Sigue así, ${name}!`,`¡Estás construyendo oraciones muy bien, ${name}!`,`¡Fantástico, ${name}!`,`¡Qué buena lectura, ${name}!`,`¡Estoy orgulloso de tu trabajo, ${name}!`,`¡Cada vez lo haces mejor, ${name}!`];return phrases[Math.floor(Math.random()*phrases.length)];}
+function getPraise(){
+  const name = studentName || obtenerNombreGuardado() || 'campeón';
+  const phrases=[`¡Excelente trabajo, ${name}!`,`¡Muy bien, ${name}!`,`¡Lo lograste, ${name}!`,`¡Qué gran esfuerzo, ${name}!`,`¡Sigue así, ${name}!`,`¡Estás construyendo oraciones muy bien, ${name}!`,`¡Fantástico, ${name}!`,`¡Qué buena lectura, ${name}!`,`¡Estamos orgullosos de tu trabajo, ${name}!`,`¡Cada vez lo haces mejor, ${name}!`];
+  return phrases[Math.floor(Math.random()*phrases.length)];
+}
 function showReviewMessage(html,success=false,duration=7200){const overlay=document.getElementById('reviewOverlay');const msg=document.getElementById('reviewMessage');msg.className='review-message '+(success?'ok':'bad');msg.innerHTML=html;overlay.classList.add('show');clearTimeout(showReviewMessage._timer);showReviewMessage._timer=setTimeout(()=>overlay.classList.remove('show'),duration);}
 function rand(min,max){return Math.random()*(max-min)+min;}
 function makeParticle(symbol,anim,duration,vars={}){const el=document.createElement('div');el.className='celebration-particle';el.textContent=symbol;el.style.fontSize=rand(1.6,3.7)+'rem';for(const [k,v]of Object.entries(vars))el.style.setProperty(k,v);el.style.animation=`${anim} ${duration}s ease-out forwards`;document.body.appendChild(el);setTimeout(()=>el.remove(),duration*1000+500);}

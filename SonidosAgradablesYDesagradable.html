@@ -11,7 +11,7 @@
 <body>
 <div class="celebration" id="celebration"></div>
 <main class="app">
-<header><h1>¿Sonido agradable o desagradable?</h1><p class="subtitle">Escucha el sonido, observa la imagen y selecciona la opción que mejor corresponde.</p></header>
+<header><h1>¿Sonido agradable o desagradable?</h1><p class="subtitle">Escucha el sonido, observa la imagen y selecciona la opción que mejor corresponde.</p><p id="studentGreeting" class="subtitle" style="margin-top:8px;color:#16a34a;font-weight:900;"></p></header>
 <nav class="toolbar"><button class="modeBtn active" id="btnSingle">Modo 1: uno por uno</button><button class="modeBtn" id="btnGrid">Modo 2: todos juntos</button><button class="smallBtn" id="btnShuffle">Mezclar sonidos</button><button class="smallBtn resetBtn" id="btnReset">Reiniciar</button><button class="smallBtn" id="btnHelpAudio">Ayuda sonidos</button></nav>
 <section id="singleMode" class="panel single-layout"><div class="progress" id="progressText">Sonido 1 de 10</div><div class="score-row" id="stars"></div><article class="sound-card"><img class="sound-img" id="mainImage" alt="Imagen del sonido"/><div class="sound-name" id="mainName">Pájaros</div><button class="playBtn" id="mainPlay">▶ Escuchar sonido</button><div class="choices"><button class="choice good" id="mainGood"><img id="goodBtnImg1" alt="Agradable"/></button><button class="choice bad" id="mainBad"><img id="badBtnImg1" alt="Desagradable"/></button></div><div class="feedback neutral" id="mainFeedback">Primero escucha el sonido.</div></article><button class="smallBtn" id="btnNext">Siguiente sonido ➜</button></section>
 <section id="gridMode" class="panel hidden"><div class="grid-mode" id="gridContainer"></div><p class="footer-help">Para que funcione en GitHub Pages, coloque este archivo index.html y, al mismo nivel, una carpeta llamada ImagenesSonidos con todos los archivos PNG y MP3.</p></section>
@@ -48,6 +48,17 @@
 
 const CARPETA_RECURSOS = 'ImagenesSonidos/';
 const ruta = archivo => CARPETA_RECURSOS + archivo;
+
+const CLAVE_NOMBRE = 'nombreNinoGabrielApps';
+
+function obtenerNombreGuardado(){
+  const nombre = localStorage.getItem(CLAVE_NOMBRE);
+  return nombre ? nombre.trim() : '';
+}
+
+function nombreParaMensaje(){
+  return obtenerNombreGuardado() || 'campeón';
+}
 
 const buttons = {
   agradable: ruta('boton_agradable.png'),
@@ -146,7 +157,8 @@ function answerSingle(choice){
   $('mainBad').classList.toggle('selected', choice === 'desagradable');
 
   if(ok){
-    showFeedback('¡Muy bien! Respuesta correcta.', true);
+    const nombre = nombreParaMensaje();
+    showFeedback(`¡Muy bien, ${nombre}! Respuesta correcta.`, true);
     celebrate();
   }else{
     showFeedback(`Intenta recordar: este sonido suele ser ${item.type}.`, false);
@@ -194,7 +206,8 @@ function renderGrid(){
       const r = card.querySelector(`#result-${i}`);
 
       if(choice === item.type){
-        r.textContent = '✓ Correcto';
+        const nombre = nombreParaMensaje();
+        r.textContent = `✓ Correcto, ${nombre}`;
         r.className = 'mini-result ok';
         celebrate(18);
       }else{
@@ -258,6 +271,15 @@ $('btnShuffle').addEventListener('click', shuffle);
 $('btnReset').addEventListener('click', reset);
 $('btnHelpAudio').addEventListener('click', () => alert('Para GitHub Pages, coloque el archivo index.html y, al mismo nivel, una carpeta llamada ImagenesSonidos. Dentro de esa carpeta deben estar las imágenes PNG y los sonidos MP3 con los nombres exactos usados por la aplicación.'));
 
+function cargarSaludoEstudiante(){
+  const saludo = $('studentGreeting');
+  const nombre = obtenerNombreGuardado();
+  if(saludo && nombre){
+    saludo.textContent = `👋 Hola, ${nombre}`;
+  }
+}
+
+cargarSaludoEstudiante();
 renderSingle();
 </script>
 </body>

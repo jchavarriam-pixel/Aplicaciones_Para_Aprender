@@ -395,6 +395,37 @@ let studentName = ''; // Store student name
 let celebrationCount = 0; // Track number of celebrations shown
 let maxCelebrations = 3; // Maximum celebrations allowed
 
+const CLAVE_NOMBRE = 'nombreNinoGabrielApps';
+
+function obtenerNombreGuardado() {
+  const nombre = localStorage.getItem(CLAVE_NOMBRE);
+  return nombre ? nombre.trim() : '';
+}
+
+function guardarNombreEstudiante(nombre) {
+  const nombreLimpio = (nombre || '').trim();
+  if (nombreLimpio) {
+    localStorage.setItem(CLAVE_NOMBRE, nombreLimpio);
+  }
+  return nombreLimpio;
+}
+
+function cargarNombreDesdeIndex() {
+  const input = document.getElementById('student-name');
+  const nombreGuardado = obtenerNombreGuardado();
+
+  if (input && nombreGuardado) {
+    input.value = nombreGuardado;
+    studentName = nombreGuardado;
+  }
+
+  if (input) {
+    input.addEventListener('input', () => {
+      studentName = guardarNombreEstudiante(input.value);
+    });
+  }
+}
+
 // Frases motivacionales
 const motivationalPhrases = [
   '¡Has demostrado que eres excelente en esto!',
@@ -463,11 +494,21 @@ function buildSetup() {
 
 function startGame() {
   const nameInput = document.getElementById('student-name');
-  if (!nameInput.value.trim()) {
+  let nombre = guardarNombreEstudiante(nameInput.value);
+
+  if (!nombre) {
+    nombre = obtenerNombreGuardado();
+  }
+
+  if (!nombre) {
     nameInput.style.borderColor = '#ef4444';
+    nameInput.focus();
     return;
   }
-  studentName = nameInput.value.trim();
+
+  nameInput.value = nombre;
+  nameInput.style.borderColor = '#d8b4fe';
+  studentName = nombre;
   document.getElementById('setup-screen').classList.add('hidden');
   document.getElementById('game-screen').classList.remove('hidden');
   newRound();
@@ -476,6 +517,9 @@ function startGame() {
 function changeLevel() {
   document.getElementById('game-screen').classList.add('hidden');
   document.getElementById('setup-screen').classList.remove('hidden');
+  const input = document.getElementById('student-name');
+  const nombre = studentName || obtenerNombreGuardado();
+  if (input && nombre) input.value = nombre;
   buildSetup();
 }
 
@@ -1170,7 +1214,8 @@ function checkAnswers() {
     
     // Pick random motivational phrase
     const randomPhrase = motivationalPhrases[Math.floor(Math.random() * motivationalPhrases.length)];
-    const fullMessage = `¡Excelente ${studentName}! ${randomPhrase}`;
+    const nombre = studentName || obtenerNombreGuardado() || 'campeón';
+    const fullMessage = `¡Excelente ${nombre}! ${randomPhrase}`;
     fb.textContent = fullMessage;
     fb.style.color = '#059669';
     
@@ -1582,6 +1627,7 @@ function celebrateExtraSparkles(shapes, colors) {
 }
 
 // Init
+cargarNombreDesdeIndex();
 buildSetup();
 </script>
  </body>

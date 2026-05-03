@@ -59,6 +59,37 @@ button,input{font-family:inherit}.app{min-height:100svh;padding:18px;display:fle
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const colors=[['#c4b5fd','#3b0764'],['#93c5fd','#1e3a8a'],['#fca5a5','#7f1d1d'],['#86efac','#14532d'],['#fde68a','#78350f'],['#f9a8d4','#831843'],['#a5f3fc','#164e63'],['#fdba74','#7c2d12']];
 
+const CLAVE_NOMBRE = 'nombreNinoGabrielApps';
+
+function obtenerNombreGuardado(){
+  const nombre = localStorage.getItem(CLAVE_NOMBRE);
+  return nombre ? nombre.trim() : '';
+}
+
+function guardarNombreEstudiante(nombre){
+  const nombreLimpio = (nombre || '').trim();
+  if(nombreLimpio){
+    localStorage.setItem(CLAVE_NOMBRE, nombreLimpio);
+  }
+  return nombreLimpio;
+}
+
+function cargarNombreDesdeIndex(){
+  const input = $('#childName');
+  const nombreGuardado = obtenerNombreGuardado();
+
+  if(input && nombreGuardado){
+    input.value = nombreGuardado;
+    state.name = nombreGuardado;
+  }
+
+  if(input){
+    input.addEventListener('input', ()=>{
+      state.name = guardarNombreEstudiante(input.value);
+    });
+  }
+}
+
 const frasesGabriel=[
   'Excelente Gabriel, qué buen trabajo has hecho.',
   'Excelente Gabriel, eres muy bueno ordenando números. Sigue así.',
@@ -84,6 +115,7 @@ function fraseCorrecta(){
   return frasesGenerales[rand(0,frasesGenerales.length-1)].replaceAll('{name}',nombre);
 }
 let state={mode:null,digits:null,count:null,name:'',numbers:[],order:'asc',slots:[],positions:{},symbols:false,hintLevel:0,layoutKey:'',drag:null,correctChecks:0};
+cargarNombreDesdeIndex();
 for(let i=3;i<=15;i++){const d=document.createElement('div');d.className='option';d.dataset.count=i;d.textContent=i;$('#countOptions').appendChild(d)}
 function selectOption(group, el){$$(group+' .option').forEach(x=>x.classList.remove('selected'));el.classList.add('selected')}
 $('#modeOptions').addEventListener('click',e=>{const el=e.target.closest('.option');if(!el)return;selectOption('#modeOptions',el);state.mode=el.dataset.mode;ready()});
@@ -91,8 +123,26 @@ $('#digitOptions').addEventListener('click',e=>{const el=e.target.closest('.opti
 $('#countOptions').addEventListener('click',e=>{const el=e.target.closest('.option:not(.disabled)');if(!el)return;selectOption('#countOptions',el);state.count=+el.dataset.count;ready()});
 function ready(){$('#startBtn').disabled=!(state.mode&&state.digits&&state.count)}
 function updateCountLimits(){ $$('#countOptions .option').forEach(el=>{const n=+el.dataset.count; const off=state.digits===1&&n>11; el.classList.toggle('disabled',off); if(off&&el.classList.contains('selected')){el.classList.remove('selected');state.count=null}})}
-$('#startBtn').onclick=()=>{state.name=$('#childName').value.trim()||'Gabriel';$('#setup').style.display='none';$('#game').style.display='block';newRound()};
-$('#setupBtn').onclick=()=>{$('#game').style.display='none';$('#setup').style.display='grid';speechSynthesis?.cancel?.()};
+$('#startBtn').onclick=()=>{
+  let nombre = guardarNombreEstudiante($('#childName').value);
+
+  if(!nombre){
+    nombre = obtenerNombreGuardado();
+  }
+
+  state.name = nombre || 'Gabriel';
+  $('#childName').value = state.name;
+  $('#setup').style.display='none';
+  $('#game').style.display='block';
+  newRound();
+};
+$('#setupBtn').onclick=()=>{
+  $('#game').style.display='none';
+  $('#setup').style.display='grid';
+  const nombre = state.name || obtenerNombreGuardado();
+  if(nombre) $('#childName').value = nombre;
+  speechSynthesis?.cancel?.();
+};
 $('#newBtn').onclick=()=>newRound(); $('#resetBtn').onclick=()=>resetRound(); $('#checkBtn').onclick=()=>check();
 $('#symbolsBtn').onclick=()=>{state.symbols=!state.symbols;$('#slots').classList.toggle('symbols-on',state.symbols);$('#symbolsBtn').textContent=state.symbols?'🙈 Ocultar < >':'🔎 Ver < >'};
 $('#hint1Btn').onclick=()=>showHint1();

@@ -18,30 +18,89 @@ button,input,select{font-family:inherit}.pantalla{display:none;min-height:100vh;
 </style>
 </head>
 <body>
-<section id="home" class="pantalla activa"><div class="encabezado"><div class="titulo"><h1>🔢 Reconocer números</h1><div class="sub">Números, nombres, escucha, pareo y escritura.</div></div></div><div class="home-grid"><div class="tarjeta"><h2>Configuración general</h2><div class="fila uno"><div><label>Nombre del niño</label><input id="childName" value="Gabriel"></div></div><div class="fila uno"><div><label>Forma de escoger los números</label><div class="radio"><label class="pill"><input type="radio" name="selectType" value="digits" checked> Por cantidad de cifras</label><label class="pill"><input type="radio" name="selectType" value="range"> Por mínimo y máximo</label></div></div></div><div id="digitsConfig" class="fila uno"><div><label>Cantidad de cifras</label><select id="digitsCount"><option value="1">1 cifra: 0 a 9</option><option value="2">2 cifras: 10 a 99</option><option value="3">3 cifras: 100 a 999</option><option value="4">4 cifras: 1 000 a 9 999</option><option value="5">5 cifras: 10 000 a 99 999</option><option value="6">6 cifras: 100 000 a 999 999</option></select></div></div><div id="rangeConfig" class="fila oculto"><div><label>Mínimo</label><input id="minNumber" type="number" value="0" min="0" max="999999"></div><div><label>Máximo</label><input id="maxNumber" type="number" value="30" min="0" max="999999"></div></div><button class="btn orange" onclick="speak('Hola Gabriel. Vamos a reconocer números.')">🔊 Probar voz</button></div><div class="tarjeta"><h2>Modos de juego</h2><div class="modos"><div class="modo" onclick="openModeSetup(1)"><div class="emoji">🔗</div><h3>Modo 1: Pareo</h3><p>Unir números con sus nombres.</p></div><div class="modo" onclick="openModeSetup(2)"><div class="emoji">🐮</div><h3>Modo 2: Corral</h3><p>Atrapar el número indicado.</p></div><div class="modo" onclick="openModeSetup(3)"><div class="emoji">📦</div><h3>Modo 3: Cajas con sonido</h3><p>Escuchar y colocar.</p></div><div class="modo" onclick="openModeSetup(4)"><div class="emoji">✍️</div><h3>Modo 4: Escritura</h3><p>Formar el nombre del número.</p></div></div></div></div></section>
+<section id="home" class="pantalla activa"><div class="encabezado"><div class="titulo"><h1>🔢 Reconocer números</h1><div class="sub">Números, nombres, escucha, pareo y escritura.</div></div></div><div class="home-grid"><div class="tarjeta"><h2>Configuración general</h2><div class="fila uno"><div><label>Nombre del niño</label><input id="childName" value="Gabriel"></div></div><div class="fila uno"><div><label>Forma de escoger los números</label><div class="radio"><label class="pill"><input type="radio" name="selectType" value="digits" checked> Por cantidad de cifras</label><label class="pill"><input type="radio" name="selectType" value="range"> Por mínimo y máximo</label></div></div></div><div id="digitsConfig" class="fila uno"><div><label>Cantidad de cifras</label><select id="digitsCount"><option value="1">1 cifra: 0 a 9</option><option value="2">2 cifras: 10 a 99</option><option value="3">3 cifras: 100 a 999</option><option value="4">4 cifras: 1 000 a 9 999</option><option value="5">5 cifras: 10 000 a 99 999</option><option value="6">6 cifras: 100 000 a 999 999</option></select></div></div><div id="rangeConfig" class="fila oculto"><div><label>Mínimo</label><input id="minNumber" type="number" value="0" min="0" max="999999"></div><div><label>Máximo</label><input id="maxNumber" type="number" value="30" min="0" max="999999"></div></div><button class="btn orange" onclick="probarVoz()">🔊 Probar voz</button></div><div class="tarjeta"><h2>Modos de juego</h2><div class="modos"><div class="modo" onclick="openModeSetup(1)"><div class="emoji">🔗</div><h3>Modo 1: Pareo</h3><p>Unir números con sus nombres.</p></div><div class="modo" onclick="openModeSetup(2)"><div class="emoji">🐮</div><h3>Modo 2: Corral</h3><p>Atrapar el número indicado.</p></div><div class="modo" onclick="openModeSetup(3)"><div class="emoji">📦</div><h3>Modo 3: Cajas con sonido</h3><p>Escuchar y colocar.</p></div><div class="modo" onclick="openModeSetup(4)"><div class="emoji">✍️</div><h3>Modo 4: Escritura</h3><p>Formar el nombre del número.</p></div></div></div></div></section>
 <section id="setup" class="pantalla"><div class="encabezado"><div class="titulo"><h2 id="setupTitle"></h2><div id="setupSubtitle" class="sub"></div></div><button class="btn gray" onclick="goHome()">🏠 Inicio</button></div><div id="setupContent" class="area tarjeta"></div></section>
 <section id="game" class="pantalla"><div class="encabezado"><div class="titulo"><h2 id="gameTitle"></h2><div id="gameSubtitle" class="sub"></div></div><div class="control"><span id="progressPill" class="contador">0/0</span><button class="btn gray small" onclick="goHome()">🏠 Inicio</button></div></div><div id="gameContent" class="area"></div></section>
 <div id="modal" class="modal"><div class="modal-card"><div style="font-size:4rem">🎉</div><h2>¡Excelente!</h2><p id="modalText"></p><button class="btn green" onclick="closeModal()">Continuar</button></div></div>
 <script>
 const state={mode:null,childName:'Gabriel',numbers:[],data:null,voice:false,temp:null,drag:null,timer:null,speed:1700,hint:null};
+
+const CLAVE_NOMBRE = 'nombreNinoGabrielApps';
+
+function obtenerNombreGuardado(){
+  const nombre = localStorage.getItem(CLAVE_NOMBRE);
+  return nombre ? nombre.trim() : '';
+}
+
+function guardarNombreEstudiante(nombre){
+  const nombreLimpio = (nombre || '').trim();
+  if(nombreLimpio){
+    localStorage.setItem(CLAVE_NOMBRE, nombreLimpio);
+  }
+  return nombreLimpio;
+}
+
+function cargarNombreDesdeIndex(){
+  const input = document.getElementById('childName');
+  const nombreGuardado = obtenerNombreGuardado();
+
+  if(input && nombreGuardado){
+    input.value = nombreGuardado;
+    state.childName = nombreGuardado;
+  }
+
+  if(input){
+    input.addEventListener('input', ()=>{
+      state.childName = guardarNombreEstudiante(input.value) || 'Gabriel';
+    });
+  }
+}
+
 const ones=['cero','uno','dos','tres','cuatro','cinco','seis','siete','ocho','nueve'];
 const specials={10:'diez',11:'once',12:'doce',13:'trece',14:'catorce',15:'quince',16:'dieciséis',17:'diecisiete',18:'dieciocho',19:'diecinueve',20:'veinte',21:'veintiuno',22:'veintidós',23:'veintitrés',24:'veinticuatro',25:'veinticinco',26:'veintiséis',27:'veintisiete',28:'veintiocho',29:'veintinueve',100:'cien'};
 const tens={30:'treinta',40:'cuarenta',50:'cincuenta',60:'sesenta',70:'setenta',80:'ochenta',90:'noventa'};
 const hundreds={100:'ciento',200:'doscientos',300:'trescientos',400:'cuatrocientos',500:'quinientos',600:'seiscientos',700:'setecientos',800:'ochocientos',900:'novecientos'};
 function numberToSpanish(n){n=Number(n);if(n in specials)return specials[n];if(n<10)return ones[n];if(n<100){let t=Math.floor(n/10)*10,u=n%10;return u===0?tens[t]:`${tens[t]} y ${ones[u]}`;}if(n<1000){let h=Math.floor(n/100)*100,r=n%100;return r===0?(hundreds[h]||specials[h]):`${hundreds[h]} ${numberToSpanish(r)}`;}let th=Math.floor(n/1000),r=n%1000;let pre=th===1?'mil':`${numberToSpanish(th)} mil`;return r===0?pre:`${pre} ${numberToSpanish(r)}`;}
 function speak(text,interrupt=true){if(!('speechSynthesis' in window))return null;if(interrupt)speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(text);u.lang='es-ES';u.rate=.65;u.pitch=1;speechSynthesis.speak(u);return u;}
+function probarVoz(){
+  const input = document.getElementById('childName');
+  let nombre = guardarNombreEstudiante(input.value);
+  if(!nombre) nombre = obtenerNombreGuardado();
+  state.childName = nombre || 'Gabriel';
+  input.value = state.childName;
+  speak(`Hola ${state.childName}. Vamos a reconocer números.`);
+}
 function stopAudio(){if(state.timer){clearTimeout(state.timer);state.timer=null;} if('speechSynthesis' in window)speechSynthesis.cancel();}
 function startLoop(text){stopAudio();function loop(){let u=speak(text,true);if(!u)return;u.onend=function(){state.timer=setTimeout(loop,4000);};}loop();}
 function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function sample(a,n){return shuffle(a).slice(0,Math.min(n,a.length));}
 function norm(s){return(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim();}
 function screen(id){document.querySelectorAll('.pantalla').forEach(x=>x.classList.remove('activa'));document.getElementById(id).classList.add('activa');}
-function goHome(){stopAudio();screen('home');}
+function goHome(){
+  stopAudio();
+  const nombre = state.childName || obtenerNombreGuardado();
+  if(nombre) document.getElementById('childName').value = nombre;
+  screen('home');
+}
 function setGame(t,s){document.getElementById('gameTitle').textContent=t;document.getElementById('gameSubtitle').textContent=s;screen('game');}
 function progress(a,b){document.getElementById('progressPill').textContent=`${a}/${b}`;}
 document.querySelectorAll('input[name="selectType"]').forEach(r=>r.addEventListener('change',()=>{let t=document.querySelector('input[name="selectType"]:checked').value;document.getElementById('digitsConfig').classList.toggle('oculto',t!=='digits');document.getElementById('rangeConfig').classList.toggle('oculto',t!=='range');}));
 function getNums(){let type=document.querySelector('input[name="selectType"]:checked').value,arr=[];if(type==='digits'){let d=+document.getElementById('digitsCount').value;let min=d===1?0:10**(d-1),max=10**d-1;for(let i=min;i<=max;i++)arr.push(i);}else{let min=Math.max(0,Math.min(999999,+document.getElementById('minNumber').value||0));let max=Math.max(0,Math.min(999999,+document.getElementById('maxNumber').value||30));if(min>max)[min,max]=[max,min];for(let i=min;i<=max;i++)arr.push(i);}return arr;}
-function openModeSetup(m){stopAudio();state.mode=m;state.childName=document.getElementById('childName').value.trim()||'Gabriel';state.numbers=getNums();let title={1:'Configurar Modo 1: Pareo',2:'Configurar Modo 2: Corral',3:'Configurar Modo 3: Cajas con sonido',4:'Configurar Modo 4: Escritura'}[m];document.getElementById('setupTitle').textContent=title;document.getElementById('setupSubtitle').textContent=`Números disponibles: ${state.numbers[0]} a ${state.numbers[state.numbers.length-1]}`;renderSetup(m);screen('setup');}
+function openModeSetup(m){
+  stopAudio();
+  state.mode=m;
+  const input = document.getElementById('childName');
+  let nombre = guardarNombreEstudiante(input.value);
+  if(!nombre) nombre = obtenerNombreGuardado();
+  state.childName = nombre || 'Gabriel';
+  input.value = state.childName;
+  state.numbers=getNums();
+  let title={1:'Configurar Modo 1: Pareo',2:'Configurar Modo 2: Corral',3:'Configurar Modo 3: Cajas con sonido',4:'Configurar Modo 4: Escritura'}[m];
+  document.getElementById('setupTitle').textContent=title;
+  document.getElementById('setupSubtitle').textContent=`Números disponibles: ${state.numbers[0]} a ${state.numbers[state.numbers.length-1]}`;
+  renderSetup(m);
+  screen('setup');
+}
 function renderSetup(m){let c=document.getElementById('setupContent');if(m===1)c.innerHTML=`<h2>🔗 Opciones de pareo</h2><div class="fila"><div><label>Cantidad</label><select id="m1Count">${Array.from({length:13},(_,i)=>i+3).map(n=>`<option ${n===6?'selected':''}>${n}</option>`).join('')}</select></div><div><label>Dificultad</label><select id="m1Diff"><option value="low">Baja: exacto</option><option value="medium">Media: sobra 1</option><option value="high">Alta: sobran 2</option></select></div></div><div class="fila"><div><label>Orden</label><select id="m1Order"><option value="num-name">Números → Nombres</option><option value="name-num">Nombres → Números</option></select></div><div><label>Ayuda verbal</label><select id="m1Voice"><option value="no">Desactivada</option><option value="yes">Activada</option></select></div></div><button class="btn green" onclick="startMode1()">▶️ Iniciar pareo</button>`;if(m===2)c.innerHTML=`<h2>🐮 Opciones del corral</h2><div class="fila"><div><label>Cantidad</label><select id="m2Count">${Array.from({length:13},(_,i)=>i+3).map(n=>`<option ${n===6?'selected':''}>${n}</option>`).join('')}</select></div><div><label>Audio</label><select disabled><option>Frase única cada 4 segundos</option></select></div></div><button class="btn green" onclick="startMode2()">▶️ Iniciar corral</button>`;if(m===3)c.innerHTML=`<h2>📦 Opciones</h2><div class="fila"><div><label>Cantidad</label><select id="m3Count">${Array.from({length:13},(_,i)=>i+3).map(n=>`<option ${n===6?'selected':''}>${n}</option>`).join('')}</select></div></div><button class="btn green" onclick="startMode3()">▶️ Iniciar cajas</button>`;if(m===4)c.innerHTML=`<h2>✍️ Opciones</h2><div class="fila"><div><label>Cantidad</label><select id="m4Count">${Array.from({length:18},(_,i)=>i+3).map(n=>`<option ${n===8?'selected':''}>${n}</option>`).join('')}</select></div><div><label>Teclado</label><select id="m4Key"><option value="abc">ABC</option><option value="qwerty">QWERTY</option></select></div></div><div class="fila uno"><div><label>Pista por pausa</label><select id="m4Hint"><option value="no">Desactivada</option><option value="yes">Activada</option></select></div></div><button class="btn green" onclick="startMode4()">▶️ Iniciar escritura</button>`;}
 function startMode1(){let count=+document.getElementById('m1Count').value,diff=document.getElementById('m1Diff').value,order=document.getElementById('m1Order').value;state.voice=document.getElementById('m1Voice').value==='yes';let base=sample(state.numbers,count),extras=diff==='low'?0:(diff==='medium'?1:2),extra=sample(state.numbers.filter(n=>!base.includes(n)),extras),extraRight=Math.random()<.5,left=[],right=[];if(order==='num-name'){left=base.map(n=>({id:`n${n}`,num:n,type:'num',text:String(n)}));right=base.map(n=>({id:`w${n}`,num:n,type:'nom',text:numberToSpanish(n)}));if(extraRight)right.push(...extra.map(n=>({id:`w${n}`,num:n,type:'nom',text:numberToSpanish(n),extra:true})));else left.push(...extra.map(n=>({id:`n${n}`,num:n,type:'num',text:String(n),extra:true})));}else{left=base.map(n=>({id:`w${n}`,num:n,type:'nom',text:numberToSpanish(n)}));right=base.map(n=>({id:`n${n}`,num:n,type:'num',text:String(n)}));if(extraRight)right.push(...extra.map(n=>({id:`n${n}`,num:n,type:'num',text:String(n),extra:true})));else left.push(...extra.map(n=>({id:`w${n}`,num:n,type:'nom',text:numberToSpanish(n),extra:true})));}state.data={base,left:shuffle(left),right:shuffle(right),links:new Map(),colors:{}};['#2563eb','#f97316','#16a34a','#9333ea','#dc2626','#0891b2','#ca8a04','#db2777','#4f46e5','#65a30d'].forEach((c,i)=>{if(state.data.left[i])state.data.colors[state.data.left[i].id]=c;});setGame('🔗 Modo 1: Pareo','Une cada número con su nombre.');document.getElementById('progressPill').classList.remove('oculto');renderPareo();progress(0,base.length);if(state.voice)speak('Arrastra cada cohete hasta el planeta que tiene el nombre correcto del número.');}
 function renderPareo(){let d=state.data;document.getElementById('gameContent').innerHTML=`<div class="pareo" id="pareo"><div class="inst">🚀 Arrastra cada cohete hasta el planeta que tiene el nombre correcto del número.</div><svg id="svgPareo"></svg><div class="col izq" id="leftCol">${d.left.map(x=>parHTML(x,'left')).join('')}</div><div class="col der" id="rightCol">${d.right.map(x=>parHTML(x,'right')).join('')}</div><div class="acciones"><button id="checkPareo" class="btn green small" onclick="checkMode1()" disabled>✅ Revisar</button><button class="btn orange small" onclick="startMode1()">🔄 Nueva ronda</button></div></div>`;ajustarAnchos();document.querySelectorAll('.bandera').forEach(b=>{b.onpointerdown=flagDown;b.onpointermove=flagMove;b.onpointerup=flagUp;b.onpointercancel=flagCancel;});drawLinks();}
@@ -210,6 +269,8 @@ function finishSuccess(){
   speak(frase);
 }
 function closeModal(){document.getElementById('modal').classList.remove('show');}
+cargarNombreDesdeIndex();
+
 window.addEventListener('resize',()=>{if(state.mode===1)setTimeout(drawLinks,100);});
 </script>
 </body>
