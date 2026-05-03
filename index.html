@@ -10,8 +10,6 @@
       --bg1: #e0f7ff;
       --bg2: #fff3c4;
       --bg3: #ffe1f0;
-      --primary: #2563eb;
-      --accent: #f97316;
       --card: rgba(255, 255, 255, 0.92);
       --text: #123047;
       --muted: #536575;
@@ -19,7 +17,9 @@
       --radius: 28px;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -152,7 +152,10 @@
       transition: 0.2s ease;
     }
 
-    #nombreNino::placeholder { color: #94a3b8; font-weight: 750; }
+    #nombreNino::placeholder {
+      color: #94a3b8;
+      font-weight: 750;
+    }
 
     #nombreNino:focus {
       border-color: #2563eb;
@@ -175,7 +178,9 @@
       align-items: center;
     }
 
-    .busqueda { position: relative; }
+    .busqueda {
+      position: relative;
+    }
 
     .busqueda span {
       position: absolute;
@@ -350,8 +355,14 @@
     }
 
     @keyframes aparecer {
-      from { opacity: 0; transform: translateY(12px) scale(0.98); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
 
     .modal-carita {
@@ -434,8 +445,13 @@
     }
 
     @media (max-width: 980px) {
-      header { grid-template-columns: 1fr; }
-      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      header {
+        grid-template-columns: 1fr;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
 
     @media (max-width: 620px) {
@@ -449,9 +465,18 @@
         border-radius: 24px;
       }
 
-      .toolbar { grid-template-columns: 1fr; }
-      .grid { grid-template-columns: 1fr; gap: 14px; }
-      .card { min-height: 210px; }
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .card {
+        min-height: 210px;
+      }
     }
   </style>
 </head>
@@ -518,12 +543,6 @@
 
   <script>
     const URL_GOOGLE_SCRIPT = "https://script.google.com/macros/s/AKfycbyENiFqFkDqiesWvdNQuBVBAiAhMtyHc2QLXYOA-rB9uCb8P1Tb6LGKMxDKrXFa8Ow3DA/exec";
-
-    /*
-      Clave compartida con todas las aplicaciones.
-      Todas las aplicaciones deben leer:
-      localStorage.getItem("nombreNinoGabrielApps")
-    */
     const CLAVE_NOMBRE = "nombreNinoGabrielApps";
 
     const aplicaciones = [
@@ -667,24 +686,24 @@
     });
 
     /*
-      Reporte de visita a una aplicación.
-      Se envía por GET porque la prueba directa con parámetros en la URL funcionó.
-      El Apps Script debe tener doGet(e) y guardar e.parameter.nombre,
-      e.parameter.aplicacion, e.parameter.archivo y e.parameter.fechaLocal.
+      Reporte mínimo.
+      El index solo envía estos tres datos:
+      fechaLocal, nombre y archivo.
+      Se usa GET con keepalive para que el envío no se cancele al abrir la aplicación.
     */
-    function reportarVisita(nombre, aplicacion, archivo) {
+    function reportarVisita(nombre, archivo) {
       const url = URL_GOOGLE_SCRIPT
-        + "?nombre=" + encodeURIComponent(nombre || "")
-        + "&aplicacion=" + encodeURIComponent(aplicacion || "")
-        + "&archivo=" + encodeURIComponent(archivo || "")
-        + "&fechaLocal=" + encodeURIComponent(new Date().toLocaleString("es-CR"));
+        + "?fechaLocal=" + encodeURIComponent(new Date().toLocaleString("es-CR"))
+        + "&nombre=" + encodeURIComponent(nombre || "")
+        + "&archivo=" + encodeURIComponent(archivo || "");
 
-      return fetch(url, {
-        method: "GET",
-        mode: "no-cors"
-      }).catch(() => {
-        console.log("No se pudo reportar la visita.");
-      });
+      try {
+        fetch(url, {
+          method: "GET",
+          mode: "no-cors",
+          keepalive: true
+        }).catch(() => {});
+      } catch (e) {}
     }
 
     function normalizar(texto) {
@@ -692,6 +711,29 @@
         .toLowerCase()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function abrirAplicacion(app) {
+      let nombre = guardarNombre(nombreNino.value);
+
+      if (!nombre) {
+        nombre = obtenerNombreGuardado();
+      }
+
+      if (!nombre) {
+        registroModal.style.display = "flex";
+        setTimeout(() => nombreVisitante.focus(), 100);
+        return;
+      }
+
+      reportarVisita(nombre, app.archivo);
+
+      /*
+        Pausa muy corta para que el reporte GET inicie sin que el clic se sienta lento.
+      */
+      setTimeout(() => {
+        window.location.href = app.archivo;
+      }, 150);
     }
 
     function crearTarjeta(app) {
@@ -704,34 +746,9 @@
       tarjeta.style.setProperty("--color-medio", c.medio);
       tarjeta.style.setProperty("--color-fuerte", c.fuerte);
 
-      tarjeta.addEventListener("click", async (evento) => {
+      tarjeta.addEventListener("click", (evento) => {
         evento.preventDefault();
-
-        let nombre = guardarNombre(nombreNino.value);
-
-        if (!nombre) {
-          nombre = obtenerNombreGuardado();
-        }
-
-        if (!nombre) {
-          registroModal.style.display = "flex";
-          setTimeout(() => nombreVisitante.focus(), 100);
-          return;
-        }
-
-        /*
-          Aquí se envía el nombre del niño, el nombre visible de la aplicación
-          y el archivo HTML de la aplicación.
-        */
-        await reportarVisita(nombre, app.nombre, app.archivo);
-
-        /*
-          Pausa corta para aumentar la probabilidad de que el envío llegue
-          antes de abrir la aplicación en GitHub Pages.
-        */
-        setTimeout(() => {
-          window.location.href = app.archivo;
-        }, 500);
+        abrirAplicacion(app);
       });
 
       tarjeta.innerHTML = `
