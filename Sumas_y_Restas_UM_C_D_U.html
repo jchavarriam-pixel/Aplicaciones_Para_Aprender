@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sumas y Restas - Versión personalizada</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --morado:#7c3aed;
+      --morado2:#a855f7;
+      --lila:#ede9fe;
+      --azul:#2563eb;
+      --verde:#10b981;
+      --rojo:#ef4444;
+      --amarillo:#f59e0b;
+      --texto:#1e1b4b;
+      --sombra:0 12px 28px rgba(76,29,149,.18);
+      --borde:rgba(124,58,237,.25);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{min-height:100%;font-family:'Nunito',system-ui,sans-serif;color:var(--texto)}
+    body{background:linear-gradient(135deg,#fef9c3 0%,#fbcfe8 48%,#c4b5fd 100%);overflow-x:hidden}
+    button,input{font-family:inherit}
+    .app{width:100%;min-height:100vh;padding:16px;display:flex;justify-content:center;align-items:flex-start}
+    .screen{width:100%;max-width:880px;display:none}
+    .screen.active{display:block}
+    .card{background:rgba(255,255,255,.9);border:3px solid rgba(255,255,255,.65);border-radius:28px;box-shadow:var(--sombra);padding:22px;backdrop-filter:blur(10px)}
+    .hero{text-align:center;padding:28px 18px;margin-top:10px}
+    .title{font-size:clamp(2.1rem,6vw,4rem);font-weight:900;color:var(--morado);text-shadow:3px 3px 0 rgba(255,255,255,.7);letter-spacing:-1px}
+    .subtitle{font-size:1.12rem;color:#6b21a8;font-weight:800;margin:10px auto 18px;max-width:720px;line-height:1.35}
+    .subtitle-main{display:block}
+    .pos-format{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;margin-top:8px;padding:5px 10px;border-radius:999px;background:#f5f3ff;border:2px solid #ddd6fe;color:#6b21a8;font-weight:900;letter-spacing:.5px}
+    .pos-format.small{font-size:.95em;margin-top:4px;padding:3px 8px}
+    .name-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:12px 0 22px}
+    .name-input,.operation-input{width:min(100%,360px);padding:14px 16px;border:3px solid #c4b5fd;border-radius:18px;background:#fff;color:var(--texto);font-size:1.15rem;font-weight:900;text-align:center;outline:none}
+    .operation-input{font-size:1.45rem;letter-spacing:1px;text-transform:uppercase}
+    .name-input:focus,.operation-input:focus{border-color:var(--morado);box-shadow:0 0 0 5px rgba(124,58,237,.13)}
+    .mode-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:14px}
+    .mode-card{border:4px solid #ddd6fe;background:#fff;border-radius:24px;padding:20px;cursor:pointer;transition:.18s transform,.18s box-shadow,.18s border-color;text-align:center;min-height:210px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+    .mode-card:hover{transform:translateY(-5px);box-shadow:0 14px 28px rgba(124,58,237,.22);border-color:#a78bfa}
+    .mode-emoji{font-size:3.8rem;line-height:1}
+    .mode-name{font-size:1.35rem;font-weight:900;color:var(--morado)}
+    .mode-desc{font-size:1rem;font-weight:800;color:#6b21a8;line-height:1.3}
+    .topbar{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+    .small-title{font-size:1.45rem;color:var(--morado);font-weight:900;text-align:center;flex:1}
+    .btn{border:none;border-radius:18px;padding:12px 17px;font-size:1rem;font-weight:900;color:#fff;cursor:pointer;transition:.12s transform,.12s opacity;box-shadow:0 7px 14px rgba(0,0,0,.12);touch-action:manipulation}
+    .btn:hover{transform:scale(1.04)}
+    .borrow-btn:hover{transform:none}
+    .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+    .btn.back{background:#94a3b8}.btn.ok{background:var(--verde)}.btn.purple{background:var(--morado)}.btn.pink{background:#ec4899}.btn.blue{background:#0ea5e9}.btn.orange{background:var(--amarillo)}
+    .panel-title{font-weight:900;color:#6b21a8;font-size:1.08rem;text-align:center;margin-bottom:10px}
+    .options{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:12px 0}
+    .option-check{display:flex;align-items:center;justify-content:center;gap:10px;max-width:650px;margin:10px auto 4px;padding:10px 14px;border:3px solid #ddd6fe;background:#fff;border-radius:18px;color:#6b21a8;font-size:.98rem;font-weight:900;line-height:1.25}
+    .option-check input{width:22px;height:22px;accent-color:var(--morado);flex-shrink:0}
+    .pill{padding:10px 14px;border:3px solid #c4b5fd;background:#fff;color:var(--morado);border-radius:999px;font-weight:900;cursor:pointer;box-shadow:none}
+    .pill.active{background:linear-gradient(135deg,var(--morado),var(--morado2));color:#fff;border-color:var(--morado2)}
+    .message{min-height:44px;border-radius:16px;padding:11px 14px;margin:12px 0;background:#fef3c7;color:#92400e;font-weight:900;text-align:center;display:flex;align-items:center;justify-content:center;line-height:1.25}
+    .message.good{background:#d1fae5;color:#065f46}.message.bad{background:#fee2e2;color:#991b1b}.message.info{background:#dbeafe;color:#1e40af}
+    .operation-preview{font-size:2.2rem;font-weight:900;text-align:center;color:#312e81;background:#f5f3ff;border:3px solid #ddd6fe;border-radius:22px;padding:12px;margin:12px auto;max-width:430px}
+    .value-guide{font-size:1.35rem;font-weight:900;text-align:center;color:#6b21a8;background:#fff;border:3px solid #ddd6fe;border-radius:18px;padding:9px 12px;margin:0 auto 10px;max-width:420px;letter-spacing:1px}
+
+    .workspace{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+    .board{background:#fff;border-radius:26px;border:3px solid rgba(124,58,237,.15);box-shadow:var(--sombra);padding:18px;position:relative;overflow-x:auto}
+    .vertical-op{--rowh:58px;display:flex;justify-content:center;align-items:flex-start;min-width:max-content;position:relative;padding-bottom:2px}
+    .vertical-op::after{content:"";position:absolute;left:62px;right:3px;top:calc(var(--rowh)*4 + var(--rowh)/2);height:5px;background:var(--morado);border-radius:999px;z-index:1;pointer-events:none}
+    .vertical-op.no-head::after{top:calc(var(--rowh)*3 + var(--rowh)/2)}
+    .sign-col{width:62px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;flex-shrink:0}
+    .place-head-row,.carry-row,.top-row,.bottom-row,.line-row,.answer-row{height:58px;display:flex;align-items:center;justify-content:center}
+    .sign-space{height:58px}.sign{width:55px;height:55px;display:flex;align-items:center;justify-content:center;font-size:3.6rem;font-weight:900;color:var(--azul);line-height:1}.sign.minus{font-size:0}.minus-line{width:42px;height:7px;border-radius:999px;background:#7f1d1d;display:block}
+    .digit-col{width:70px;display:flex;flex-direction:column;align-items:center;flex-shrink:0;border-radius:16px;padding:0 3px}.digit-col.active{background:#f5f3ff;animation:pulse 1s infinite}
+    .carry-slot,.answer-slot,.place-slot,.sign-slot{width:54px;height:54px;border:3px dashed #c4b5fd;border-radius:16px;background:#f5f3ff;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:900;color:var(--morado);cursor:pointer;transition:.15s;user-select:none}
+    .place-head{width:62px;min-height:48px;border-radius:15px;background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;font-size:.82rem;font-weight:900;line-height:1.05;padding:5px}
+    .sign-slot{font-size:2.4rem;color:#7f1d1d;background:#fff7ed;border-color:#f59e0b}
+    .carry-slot{width:31px;height:31px;font-size:1.1rem;border-color:#f59e0b;background:#fff7ed;color:#b45309;border-radius:10px}
+    .slot-filled{border-style:solid;background:#ede9fe}.slot-good{border-color:var(--verde)!important;background:#d1fae5!important;color:#065f46!important}.slot-bad{border-color:var(--rojo)!important;background:#fee2e2!important;color:#991b1b!important}.drop-hover{transform:scale(1.08);box-shadow:0 0 0 6px rgba(245,158,11,.22)}
+    .digit{width:54px;height:54px;display:flex;align-items:center;justify-content:center;font-size:2.2rem;font-weight:900}.blank{color:transparent}.line{height:5px;background:var(--morado);border-radius:999px;width:100%;position:relative;z-index:2}
+    .new-above{position:absolute;margin-top:-81px;font-size:1.3rem;color:#dc2626;font-weight:900;z-index:6}.crossed{position:relative;color:#a1a1aa}.crossed:after{content:"";position:absolute;width:70%;height:4px;background:#a1a1aa;left:15%;top:50%;transform:rotate(-15deg);border-radius:99px}
+    .bank-wrap{background:rgba(255,255,255,.82);border-radius:22px;padding:12px;border:3px solid rgba(255,255,255,.65)}
+    .bank-label{text-align:center;color:#6b21a8;font-weight:900;margin-bottom:8px}.number-bank{display:flex;flex-wrap:wrap;justify-content:center;gap:9px}.chip{width:54px;height:54px;border-radius:16px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:1.8rem;cursor:grab;user-select:none;touch-action:none;box-shadow:0 7px 13px rgba(0,0,0,.16)}.chip:active{cursor:grabbing;transform:scale(.94)}
+    .signchip{background:#7f1d1d}.c0{background:#ef4444}.c1{background:#f97316}.c2{background:#eab308}.c3{background:#22c55e}.c4{background:#14b8a6}.c5{background:#3b82f6}.c6{background:#6366f1}.c7{background:#8b5cf6}.c8{background:#ec4899}.c9{background:#f43f5e}
+    .ghost{position:fixed;pointer-events:none;z-index:1000;width:56px;height:56px;border-radius:16px;display:none;align-items:center;justify-content:center;color:#fff;font-size:1.9rem;font-weight:900;transform:translate(-50%,-50%);box-shadow:0 15px 28px rgba(0,0,0,.25)}
+    .actions{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:12px}.borrow-btn{position:absolute;right:12px;top:92px;transform:none;width:88px;min-height:64px;padding:8px;font-size:.86rem;line-height:1.05;z-index:5}
+
+    .house-board{background:#fff;border-radius:26px;border:3px solid rgba(124,58,237,.15);box-shadow:var(--sombra);padding:18px;overflow-x:auto}.house{min-width:max-content;margin:auto;display:grid;grid-template-columns:82px repeat(var(--cols),76px);gap:7px;align-items:stretch;justify-content:center}.house-cell{min-height:58px;border-radius:16px;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:900}.house-head{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;font-size:.9rem;line-height:1.05;padding:8px}.row-label{background:#fef3c7;color:#92400e;font-size:1rem;padding:8px}.place-slot{width:62px;height:58px;font-size:2rem;margin:auto}.house-empty-slot{width:62px;height:58px;margin:auto}.sign-fixed{font-size:2rem;color:#7f1d1d}.house-ok{outline:4px solid rgba(16,185,129,.35)}.house-bad{outline:4px solid rgba(239,68,68,.35)}
+
+    .feedback{position:fixed;inset:0;background:rgba(49,46,129,.18);display:none;align-items:center;justify-content:center;z-index:900;padding:18px}.feedback.show{display:flex}.feedback-card{background:#fff;border-radius:30px;box-shadow:0 24px 60px rgba(0,0,0,.28);padding:28px;text-align:center;max-width:420px;width:100%;border:4px solid #ddd6fe}.feedback-card h3{font-size:2rem;margin-bottom:8px;color:var(--morado)}.feedback-card p{font-size:1.15rem;font-weight:800;color:#4c1d95;margin:10px 0 16px}.big-expression{font-size:2rem;font-weight:900;color:#312e81;background:#f5f3ff;border-radius:18px;padding:10px;margin:10px 0}
+    .footer{text-align:center;color:#9333ea;font-weight:800;font-size:.92rem;margin:18px 0 4px}.hidden{display:none!important}
+    @keyframes pulse{0%,100%{background:#f5f3ff}50%{background:#ede9fe}}
+    @keyframes celebrationMove{
+      0%{transform:translate(0,0) rotate(0deg);opacity:1}
+      75%{opacity:1}
+      100%{transform:translate(var(--tx),var(--ty)) rotate(var(--rot));opacity:0}
+    }
+    .celebration-layer{position:fixed;inset:0;z-index:950;pointer-events:none;overflow:hidden}
+    .celebration-particle{
+      position:fixed;
+      pointer-events:none;
+      font-size:1.12rem;
+      line-height:1;
+      font-weight:900;
+      opacity:1;
+      text-shadow:0 2px 4px rgba(255,255,255,.75);
+      animation:celebrationMove 5s linear forwards;
+    }
+
+    .audio-highlight{background:#ede9fe!important;border-radius:14px!important;animation:pulse 1s ease-in-out infinite!important}
+    .digit-col.audio-highlight{background:#ede9fe!important}
+    .sign-col.audio-highlight .sign,.sign-col.audio-highlight .sign-slot{background:#ede9fe!important;border-radius:14px!important;animation:pulse 1s ease-in-out infinite!important}
+    .answer-slot.audio-highlight,.carry-slot.audio-highlight,.place-slot.audio-highlight,.sign-slot.audio-highlight{box-shadow:0 0 0 7px rgba(124,58,237,.16)!important}
+    @media(max-width:700px){.subtitle{font-size:1rem;max-width:95%}.pos-format{font-size:.96rem}.mode-grid{grid-template-columns:1fr}.card{padding:16px}.vertical-op{--rowh:50px}.digit-col{width:58px}.digit,.answer-slot{width:46px;height:46px;font-size:1.65rem}.place-head-row,.carry-row,.top-row,.bottom-row,.line-row,.answer-row{height:50px}.sign-col{width:46px}.sign-space{height:50px}.sign{width:45px;height:45px;font-size:2.9rem}.minus-line{width:34px}.borrow-btn{position:sticky;right:8px;bottom:8px;transform:none;margin:10px auto 0;display:flex}.house{grid-template-columns:70px repeat(var(--cols),64px)}.place-slot,.sign-slot{width:54px;height:52px}.place-head{width:54px;font-size:.72rem}.house-cell{min-height:52px}.operation-preview{font-size:1.7rem}.chip{width:48px;height:48px;font-size:1.55rem}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <main id="menu" class="screen active">
+    <section class="card hero">
+      <h1 class="title">🧮 Sumas y Restas</h1>
+      <p class="subtitle"><span class="subtitle-main">Elige cómo practicar: escribe tu propia operación o acomoda una operación sorpresa.</span><span class="pos-format">| UM | C | D | U |</span></p>
+      <div class="name-row">
+        <input id="nameInput" class="name-input" type="text" placeholder="Nombre del estudiante" autocomplete="off" />
+      </div>
+      <div class="mode-grid">
+        <button class="mode-card" onclick="openMode('custom')">
+          <span class="mode-emoji">✍️🧮</span>
+          <span class="mode-name">Escribo mi operación</span>
+          <span class="mode-desc">El estudiante decide la cuenta que quiere practicar, la escribe y luego la resuelve en formato vertical.</span>
+        </button>
+        <button class="mode-card" onclick="openMode('house')">
+          <span class="mode-emoji">🎲🏠</span>
+          <span class="mode-name">Operación sorpresa y valor posicional</span>
+          <span class="mode-desc">La aplicación genera una cuenta al azar. El estudiante escoge los dígitos, coloca el signo y la acomoda por valor posicional.<br><span class="pos-format small">| UM | C | D | U |</span></span>
+        </button>
+      </div>
+      <p class="footer">✨ Creada para Gabriel por su familia, con ayuda de la IA ✨</p>
+    </section>
+  </main>
+
+  <main id="customScreen" class="screen">
+    <div class="topbar">
+      <button class="btn back" onclick="goMenu()">⬅ Menú</button>
+      <h2 class="small-title">Escribo mi operación</h2>
+      <span></span>
+    </div>
+    <section class="card">
+      <p class="panel-title">Escribe la operación que quieres practicar.</p>
+      <div class="name-row">
+        <input id="operationInput" class="operation-input" type="text" inputmode="text" placeholder="" autocomplete="off" />
+        <button class="btn ok" onclick="generateFromInput()">✅ Generar</button>
+      </div>
+      <label class="option-check">
+        <input id="showZerosCustom" type="checkbox" onchange="setShowLeadingZeros(this.checked)">
+        <span>Mostrar ceros de apoyo para completar las cifras.</span>
+      </label>
+      <div id="customMsg" class="message info">Se aceptan sumas y restas con números enteros positivos. Ejemplos: 345+544, 233-98.</div>
+    </section>
+    <section id="solverCustom" class="workspace hidden"></section>
+  </main>
+
+  <main id="houseScreen" class="screen">
+    <div class="topbar">
+      <button class="btn back" onclick="goMenu()">⬅ Menú</button>
+      <h2 class="small-title">Operación sorpresa y valor posicional</h2>
+      <span id="houseScore" class="btn purple" style="cursor:default">⭐ 0</span>
+    </div>
+    <section class="card">
+      <p class="panel-title">Elige el tipo de operación y la cantidad de dígitos.</p>
+      <div class="options" id="opOptions">
+        <button class="pill active" data-op="+" onclick="setHouseOp('+',this)">➕ Sumas</button>
+        <button class="pill" data-op="-" onclick="setHouseOp('-',this)">➖ Restas</button>
+        <button class="pill" data-op="mix" onclick="setHouseOp('mix',this)">🎲 Mixto</button>
+      </div>
+      <div class="options" id="digitOptions">
+        <button class="pill active" data-d="2" onclick="setHouseDigits(2,this)">2 dígitos</button>
+        <button class="pill" data-d="3" onclick="setHouseDigits(3,this)">3 dígitos</button>
+        <button class="pill" data-d="4" onclick="setHouseDigits(4,this)">4 dígitos</button>
+      </div>
+      <label class="option-check">
+        <input id="showZerosHouse" type="checkbox" onchange="setShowLeadingZeros(this.checked)">
+        <span>Mostrar ceros de apoyo para completar las cifras.</span>
+      </label>
+      <div class="actions">
+        <button class="btn ok" onclick="newHouseProblem()">🎲 Nueva operación</button>
+        <button class="btn blue" onclick="resetHouseOnly()">🔁 Reiniciar tabla</button>
+      </div>
+      <div id="houseMsg" class="message info">Pulsa “Nueva operación” para comenzar.</div>
+    </section>
+    <section id="houseArea" class="workspace hidden"></section>
+  </main>
+</div>
+
+<div id="feedback" class="feedback"><div id="feedbackCard" class="feedback-card"></div></div>
+<div id="ghost" class="ghost"></div>
+
+<script>
+const CLAVE_NOMBRE='nombreNinoGabrielApps';
+let studentName='';
+let activeScreen='menu';
+let current={a:0,b:0,op:'+',digits:2,mode:'custom',resultDigits:[],topDigits:[],bottomDigits:[],answers:[],carrySlots:[],borrowed:[],currentTop:[],leadingAnswer:null,expectedLeading:0,solved:false};
+let drag={value:null,source:null};
+let house={opMode:'+',digits:2,score:0,a:0,b:0,op:'+',cols:2,topSlots:[],bottomSlots:[],signSlot:null,ready:false};
+let showLeadingZeros=false;
+let audioHelpOn=false;
+let audioGuideTimeout=null;
+const ghost=document.getElementById('ghost');
+function $(id){return document.getElementById(id)}
+function saveName(){const inp=$('nameInput');studentName=(inp.value||'').trim();if(studentName)localStorage.setItem(CLAVE_NOMBRE,studentName)}
+function loadName(){const saved=(localStorage.getItem(CLAVE_NOMBRE)||'').trim();if(saved){$('nameInput').value=saved;studentName=saved}$('nameInput').addEventListener('input',saveName)}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');activeScreen=id;closeFeedback()}
+function goMenu(){clearAudioGuide();showScreen('menu')}
+function openMode(mode){saveName();if(mode==='custom'){showScreen('customScreen');setTimeout(()=>$('operationInput').focus(),100)}else{showScreen('houseScreen')}}
+function cleanOperationText(t){return (t||'').replace(/\s+/g,'').replace(/−/g,'-').replace(/–/g,'-')}
+function parseOperation(text){const clean=cleanOperationText(text);const m=clean.match(/^(\d{1,6})([+\-])(\d{1,6})$/);if(!m)return {ok:false,msg:'Escribe una operación válida, por ejemplo 345+544 o 233-98.'};let a=parseInt(m[1],10),op=m[2],b=parseInt(m[3],10);if(op==='-'&&a<b)return {ok:false,msg:'Para esta versión se usan restas sin resultado negativo. Escribe primero el número mayor.'};if(a===0&&b===0)return {ok:false,msg:'Escribe una operación con números mayores que cero.'};return {ok:true,a,b,op}}
+function digitsArray(num,size){const s=String(Math.max(0,num)).padStart(size,'0');return s.split('').map(Number)}
+function numDigits(n){return String(Math.max(0,n)).length}
+function leadingPaddingCount(num,size){return Math.max(0,size-numDigits(num))}
+function bothOperandsPaddingAt(i,size){return i<leadingPaddingCount(current.a,size)&&i<leadingPaddingCount(current.b,size)}
+function displayProblemDigit(num,arr,i){if(bothOperandsPaddingAt(i,current.digits))return '';return i<leadingPaddingCount(num,current.digits)?(showLeadingZeros?0:''):arr[i]}
+function expectedHouseSlots(num,size){const arr=digitsArray(num,size);const pad=leadingPaddingCount(num,size);return arr.map((d,i)=>bothOperandsPaddingAt(i,size)?null:(i<pad?(showLeadingZeros?0:null):d))}
+function setShowLeadingZeros(checked){
+  showLeadingZeros=!!checked;
+  const c1=$('showZerosCustom'),c2=$('showZerosHouse');
+  if(c1)c1.checked=showLeadingZeros;
+  if(c2)c2.checked=showLeadingZeros;
+  if(activeScreen==='customScreen'&&current.a){renderSolver('solverCustom');}
+  if(activeScreen==='houseScreen'&&house.ready){renderHouse();}
+}
+function makeProblem(a,b,op,mode){const result=op==='+'?a+b:a-b;const maxLen=Math.max(numDigits(a),numDigits(b),numDigits(result));current={a,b,op,digits:Math.max(1,maxLen),mode,resultDigits:digitsArray(result,Math.max(1,maxLen)),topDigits:digitsArray(a,Math.max(1,maxLen)),bottomDigits:digitsArray(b,Math.max(1,maxLen)),answers:new Array(Math.max(1,maxLen)).fill(null),carrySlots:new Array(Math.max(1,maxLen)).fill(null),borrowed:new Array(Math.max(1,maxLen)).fill(false),currentTop:digitsArray(a,Math.max(1,maxLen)),leadingAnswer:null,expectedLeading:0,solved:false};if(op==='+')prepareCarries();renderSolver(mode==='custom'?'solverCustom':'houseArea')}
+function prepareCarries(){let carry=0;const expected=new Array(current.digits).fill(0);for(let i=current.digits-1;i>=0;i--){expected[i]=carry;const total=current.topDigits[i]+current.bottomDigits[i]+carry;carry=total>=10?1:0}current.expectedCarryIn=expected}
+function generateFromInput(){clearAudioGuide(false);const p=parseOperation($('operationInput').value);const msg=$('customMsg');if(!p.ok){msg.textContent=p.msg;msg.className='message bad';$('solverCustom').classList.add('hidden');return}msg.textContent='¡Lista! Ahora resuelve la operación arrastrando los números.';msg.className='message good';makeProblem(p.a,p.b,p.op,'custom');$('solverCustom').classList.remove('hidden')}
+function expectedAnswerDigits(){return digitsArray(current.op==='+'?current.a+current.b:current.a-current.b,current.digits)}
+function expectedCarryAt(i){if(current.op!=='+')return 0;return current.expectedCarryIn?current.expectedCarryIn[i]:0}
+function needsCarrySlot(i){return current.op==='+'&&expectedCarryAt(i)===1&&!bothOperandsPaddingAt(i,current.digits)}
+function renderSolver(containerId){const cont=$(containerId);cont.innerHTML='';cont.classList.remove('hidden');const title=document.createElement('div');title.className='operation-preview';title.textContent=`${current.a} ${current.op} ${current.b} = ?`;cont.appendChild(title);const board=document.createElement('div');board.className='board';board.innerHTML=`<div id="hint_${containerId}" class="message info">Resuelve de derecha a izquierda. Arrastra los números a los espacios.</div>`;const wrap=document.createElement('div');wrap.className='vertical-op no-head';const signCol=document.createElement('div');signCol.className='sign-col';signCol.innerHTML=`<div class="carry-row"></div><div class="sign-space"></div><div class="bottom-row"><div class="sign ${current.op==='-'?'minus':''}">${current.op==='-'?'<span class="minus-line"></span>':'+'}</div></div><div class="line-row"><div class="line"></div></div><div class="answer-row"></div>`;wrap.appendChild(signCol);
+for(let i=0;i<current.digits;i++){const col=document.createElement('div');col.className='digit-col';col.dataset.col=i;const carry=current.op==='+'?(needsCarrySlot(i)?`<div class="carry-slot ${current.carrySlots[i]!==null?'slot-filled':''}" data-type="carry" data-col="${i}">${current.carrySlots[i]??''}</div>`:`<div style="width:31px;height:31px"></div>`):`<div style="width:31px;height:31px"></div>`;const topDisplay=displayProblemDigit(current.a,current.topDigits,i);const bottomDisplay=displayProblemDigit(current.b,current.bottomDigits,i);let top=`<div class="digit ${current.op==='-'&&current.borrowed[i]?'crossed':''} ${topDisplay===''?'blank':''}">${topDisplay}${current.op==='-'&&current.borrowed[i]?`<span class="new-above">${current.currentTop[i]}</span>`:''}</div>`;let bottom=`<div class="digit ${bottomDisplay===''?'blank':''}">${bottomDisplay}</div>`;col.innerHTML=`<div class="carry-row">${carry}</div><div class="top-row">${top}</div><div class="bottom-row">${bottom}</div><div class="line-row"><div class="line"></div></div><div class="answer-row"><div class="answer-slot ${current.answers[i]!==null?'slot-filled':''}" data-type="answer" data-col="${i}">${current.answers[i]??''}</div></div>`;wrap.appendChild(col)}
+board.appendChild(wrap);if(current.op==='-'){const b=document.createElement('button');b.className='btn orange borrow-btn';b.id='borrowBtn';b.innerHTML='Pedir<br>prestado';b.onclick=doBorrow;board.appendChild(b)}cont.appendChild(board);const bank=document.createElement('div');bank.className='bank-wrap';bank.innerHTML='<div class="bank-label">Arrastra un número 👇</div><div class="number-bank"></div>';cont.appendChild(bank);const nb=bank.querySelector('.number-bank');for(let n=0;n<=9;n++){const chip=document.createElement('div');chip.className=`chip c${n}`;chip.dataset.val=n;chip.textContent=n;chip.addEventListener('pointerdown',startDrag);nb.appendChild(chip)}const actions=document.createElement('div');actions.className='actions';actions.innerHTML=`<button class="btn ok" onclick="checkSolver('${containerId}')">✅ Revisar</button><button class="btn blue" id="audioHelpBtn_${containerId}" onclick="toggleAudioHelp('${containerId}')">🔊 Ayuda verbal</button><button class="btn pink" onclick="resetSolver('${containerId}')">🔁 Reiniciar respuesta</button>${current.mode==='custom'?'<button class="btn purple" onclick="generateFromInput()">🔄 Generar otra vez</button>':'<button class="btn purple" onclick="newHouseProblem()">🆕 Nueva operación</button>'}`;cont.appendChild(actions);attachDropEvents(cont);updateBorrowButton();updateHint(containerId)}
+function attachDropEvents(root){root.querySelectorAll('.answer-slot,.carry-slot,.place-slot,.sign-slot').forEach(el=>{el.addEventListener('pointerenter',()=>{if(drag.value!==null)el.classList.add('drop-hover')});el.addEventListener('pointerleave',()=>el.classList.remove('drop-hover'));el.addEventListener('click',()=>clearSlot(el))})}
+function clearSlot(el){const type=el.dataset.type;const col=parseInt(el.dataset.col,10);if(type==='answer'){current.answers[col]=null}else if(type==='carry'){current.carrySlots[col]=null}else if(type==='houseTop'){house.topSlots[col]=null}else if(type==='houseBottom'){house.bottomSlots[col]=null}else if(type==='houseSign'){house.signSlot=null}rerenderActive()}
+function startDrag(e){e.preventDefault();const raw=e.currentTarget.dataset.val;drag.value=(raw==='+'||raw==='-')?raw:parseInt(raw,10);drag.source=e.currentTarget;ghost.textContent=drag.value;ghost.className=(drag.value==='+'||drag.value==='-')?'ghost signchip':`ghost c${drag.value}`;ghost.style.display='flex';ghost.style.background=getComputedStyle(e.currentTarget).backgroundColor;moveGhost(e);document.addEventListener('pointermove',moveGhost);document.addEventListener('pointerup',endDrag)}
+function moveGhost(e){ghost.style.left=e.clientX+'px';ghost.style.top=e.clientY+'px'}
+function endDrag(e){document.removeEventListener('pointermove',moveGhost);document.removeEventListener('pointerup',endDrag);ghost.style.display='none';const el=document.elementFromPoint(e.clientX,e.clientY);if(el&&(el.classList.contains('answer-slot')||el.classList.contains('carry-slot')||el.classList.contains('place-slot')||el.classList.contains('sign-slot'))){const type=el.dataset.type;const col=parseInt(el.dataset.col,10);const isSign=(drag.value==='+'||drag.value==='-');if((type==='answer'||type==='carry'||type==='houseTop'||type==='houseBottom')&&isSign){drag.value=null;return}else if(type==='houseSign'&&!isSign){drag.value=null;return}else if(type==='answer')current.answers[col]=drag.value;else if(type==='carry')current.carrySlots[col]=drag.value;else if(type==='houseTop')house.topSlots[col]=drag.value;else if(type==='houseBottom')house.bottomSlots[col]=drag.value;else if(type==='houseSign')house.signSlot=drag.value;rerenderActive()}document.querySelectorAll('.drop-hover').forEach(x=>x.classList.remove('drop-hover'));drag.value=null}
+function rerenderActive(){if(activeScreen==='customScreen')renderSolver('solverCustom');else if(activeScreen==='houseScreen'){if(house.ready)renderHouse();else renderSolver('houseArea')}if(audioHelpOn)startAudioGuide(getActiveContainerId())}
+function resetSolver(containerId){clearAudioGuide(false);current.answers=new Array(current.digits).fill(null);current.carrySlots=new Array(current.digits).fill(null);current.borrowed=new Array(current.digits).fill(false);current.currentTop=[...current.topDigits];current.solved=false;renderSolver(containerId);if(audioHelpOn)startAudioGuide(containerId)}
+function updateHint(containerId){const h=$(`hint_${containerId}`);if(!h)return;const task=findTask();if(task.done){h.textContent='¡Ya llenaste los espacios! Pulsa Revisar ✅';h.className='message good';return}if(current.op==='-'){const i=task.col;if(current.currentTop[i]<current.bottomDigits[i]){h.textContent=`En la columna actual, ${current.currentTop[i]} es menor que ${current.bottomDigits[i]}. Usa “Pedir prestado”.`;h.className='message bad'}else{h.textContent=`Ahora resta ${current.currentTop[i]} − ${current.bottomDigits[i]} y coloca el resultado.`;h.className='message info'}}else{const i=task.col;if(task.type==='carry'){h.textContent='Recuerda colocar el 1 que llevas en la casilla de arriba.';h.className='message info'}else{const c=i<current.digits-1?(current.carrySlots[i]||0):0;const exp=expectedAnswerDigits();const topTxt=displayProblemDigit(current.a,current.topDigits,i);const bottomTxt=displayProblemDigit(current.b,current.bottomDigits,i);if(topTxt===''&&bottomTxt===''&&exp[i]>0){h.textContent='Coloca el nuevo dígito que aparece al inicio del resultado.';}else{h.textContent=`Ahora suma ${topTxt===''?0:topTxt} + ${bottomTxt===''?0:bottomTxt}${c?` + ${c} que llevas`:''}.`;}h.className='message info'}}}
+function findTask(){if(current.op==='-'){for(let i=current.digits-1;i>=0;i--){if(current.answers[i]===null)return {type:'answer',col:i}}return {done:true}}for(let i=current.digits-1;i>=0;i--){if(current.answers[i]===null)return {type:'answer',col:i};if(i>0&&needsCarrySlot(i-1)&&current.carrySlots[i-1]===null&&current.answers[i]!==null)return {type:'carry',col:i-1}}return {done:true}}
+function getCurrentSubtractionColumn(){
+  if(current.op!=='-')return -1;
+  const layoutTask=getHouseLayoutTask();
+  if(layoutTask)return -1;
+  const task=findTask();
+  if(task.done||task.type!=='answer')return -1;
+  return task.col;
+}
+function doBorrow(){
+  if(current.op!=='-')return;
+  const col=getCurrentSubtractionColumn();
+  if(col<=0)return;
+  if(current.currentTop[col]>=current.bottomDigits[col])return;
+  let lender=col-1;
+  while(lender>=0&&current.currentTop[lender]===0)lender--;
+  if(lender<0)return;
+  current.currentTop[lender]-=1;
+  current.borrowed[lender]=true;
+  for(let z=lender+1;z<col;z++){
+    current.currentTop[z]=9;
+    current.borrowed[z]=true;
+  }
+  current.currentTop[col]+=10;
+  current.borrowed[col]=true;
+  rerenderActive();
+}
+function updateBorrowButton(){
+  const b=$('borrowBtn');
+  if(!b)return;
+  let can=false;
+  const col=getCurrentSubtractionColumn();
+  if(col>0&&current.currentTop[col]<current.bottomDigits[col]){
+    let lender=col-1;
+    while(lender>=0&&current.currentTop[lender]===0)lender--;
+    can=lender>=0;
+  }
+  b.disabled=!can;
+  b.classList.toggle('borrow-ready',can);
+}
+function checkSolver(containerId){const exp=expectedAnswerDigits();let ok=true;for(let i=0;i<current.digits;i++){if(current.answers[i]!==exp[i])ok=false}if(current.op==='+'){for(let i=0;i<current.digits;i++){if(needsCarrySlot(i)&&current.carrySlots[i]!==1)ok=false}}const cont=$(containerId);cont.querySelectorAll('.answer-slot').forEach(s=>{const i=parseInt(s.dataset.col,10);s.classList.add(current.answers[i]===exp[i]?'slot-good':'slot-bad')});cont.querySelectorAll('.carry-slot').forEach(s=>{const i=parseInt(s.dataset.col,10);s.classList.add(current.carrySlots[i]===1?'slot-good':'slot-bad')});if(ok){if(current.mode==='house'){house.score++;$('houseScore').textContent=`⭐ ${house.score}`}celebrate();showFeedback(true,`${current.a} ${current.op} ${current.b} = ${current.op==='+'?current.a+current.b:current.a-current.b}`)}else{showFeedback(false,'Revisa los espacios en rojo y vuelve a intentarlo.')}}
+function setHouseOp(op,btn){house.opMode=op;document.querySelectorAll('#opOptions .pill').forEach(b=>b.classList.remove('active'));btn.classList.add('active')}
+function setHouseDigits(d,btn){house.digits=d;document.querySelectorAll('#digitOptions .pill').forEach(b=>b.classList.remove('active'));btn.classList.add('active')}
+function randInt(lo,hi){return lo+Math.floor(Math.random()*(hi-lo+1))}
+function randomProblem(){const d=house.digits;const lo=Math.pow(10,d-1),hi=Math.pow(10,d)-1;let op,a,b,result,tries=0;do{op=house.opMode==='mix'?(Math.random()<.5?'+':'-'):house.opMode;a=randInt(lo,hi);b=randInt(lo,hi);if(op==='-'&&b>a)[a,b]=[b,a];result=op==='+'?a+b:a-b;tries++}while((numDigits(result)>4)&&tries<1000);if(numDigits(result)>4){op='+';const safeHi=Math.min(hi,9999-lo);a=randInt(lo,safeHi);b=randInt(lo,9999-a);result=a+b}return {a,b,op}}
+function setupCurrentForHouse(){const result=house.op==='+'?house.a+house.b:house.a-house.b;const maxLen=Math.max(numDigits(house.a),numDigits(house.b),numDigits(result));house.cols=maxLen;current={a:house.a,b:house.b,op:house.op,digits:maxLen,mode:'house',resultDigits:digitsArray(result,maxLen),topDigits:digitsArray(house.a,maxLen),bottomDigits:digitsArray(house.b,maxLen),answers:current.mode==='house'&&current.answers.length===maxLen?current.answers:new Array(maxLen).fill(null),carrySlots:current.mode==='house'&&current.carrySlots.length===maxLen?current.carrySlots:new Array(maxLen).fill(null),borrowed:current.mode==='house'&&current.borrowed.length===maxLen?current.borrowed:new Array(maxLen).fill(false),currentTop:current.mode==='house'&&current.currentTop.length===maxLen?current.currentTop:digitsArray(house.a,maxLen),leadingAnswer:null,expectedLeading:0,solved:false};if(house.op==='+')prepareCarries();}
+function newHouseProblem(){clearAudioGuide(false);const p=randomProblem();house.a=p.a;house.b=p.b;house.op=p.op;house.ready=true;house.signSlot=null;const result=p.op==='+'?p.a+p.b:p.a-p.b;house.cols=Math.max(numDigits(p.a),numDigits(p.b),numDigits(result));house.topSlots=new Array(house.cols).fill(null);house.bottomSlots=new Array(house.cols).fill(null);current.answers=new Array(house.cols).fill(null);current.carrySlots=new Array(house.cols).fill(null);current.borrowed=new Array(house.cols).fill(false);current.currentTop=digitsArray(p.a,house.cols);$('houseMsg').textContent='Acomoda los números en la tabla de valor posicional: UM | C | D | U, según corresponda. También arrastra el signo correcto. Luego resuelve en la misma tabla.';$('houseMsg').className='message info';setupCurrentForHouse();renderHouse()}
+function resetHouseOnly(){clearAudioGuide(false);if(!house.ready){newHouseProblem();return}house.topSlots=new Array(house.cols).fill(null);house.bottomSlots=new Array(house.cols).fill(null);house.signSlot=null;current.answers=new Array(house.cols).fill(null);current.carrySlots=new Array(house.cols).fill(null);current.borrowed=new Array(house.cols).fill(false);current.currentTop=digitsArray(house.a,house.cols);renderHouse()}
+function renderHouse(){const area=$('houseArea');area.innerHTML='';area.classList.remove('hidden');setupCurrentForHouse();const prev=document.createElement('div');prev.className='operation-preview';prev.textContent=`Acomoda y resuelve: ${house.a} ${house.op} ${house.b}`;area.appendChild(prev);const guide=document.createElement('div');guide.className='value-guide';guide.textContent='UM | C | D | U';area.appendChild(guide);const board=document.createElement('div');board.className='board';board.innerHTML='<div id="hint_houseArea" class="message info">Primero acomoda los números en la tabla de valor posicional: UM | C | D | U. Luego completa la respuesta.</div>';const wrap=document.createElement('div');wrap.className='vertical-op';const names=['U','D','C','UM'];const signCol=document.createElement('div');signCol.className='sign-col';signCol.innerHTML=`<div class="place-head-row"><div class="place-head">Signo</div></div><div class="carry-row"></div><div class="top-row"></div><div class="bottom-row"><div class="sign-slot ${house.signSlot!==null?'slot-filled':''}" data-type="houseSign">${house.signSlot??''}</div></div><div class="line-row"><div class="line"></div></div><div class="answer-row"></div>`;wrap.appendChild(signCol);for(let i=0;i<house.cols;i++){const placeIndex=house.cols-1-i;const col=document.createElement('div');col.className='digit-col';col.dataset.col=i;const carry=current.op==='+'?(needsCarrySlot(i)?`<div class="carry-slot ${current.carrySlots[i]!==null?'slot-filled':''}" data-type="carry" data-col="${i}">${current.carrySlots[i]??''}</div>`:`<div style="width:31px;height:31px"></div>`):`<div style="width:31px;height:31px"></div>`;const topExpected=expectedHouseSlots(house.a,house.cols)[i];const bottomExpected=expectedHouseSlots(house.b,house.cols)[i];if(topExpected===null)house.topSlots[i]=null;if(bottomExpected===null)house.bottomSlots[i]=null;const topVal=house.topSlots[i];const botVal=house.bottomSlots[i];const solvedTop=(topVal!==null && current.op==='-' && current.borrowed[i]);const topCell=topExpected===null?`<div class="house-empty-slot"></div>`:`<div class="place-slot ${topVal!==null?'slot-filled':''} ${solvedTop?'crossed':''}" data-type="houseTop" data-col="${i}">${topVal??''}${solvedTop?`<span class="new-above">${current.currentTop[i]}</span>`:''}</div>`;const bottomCell=bottomExpected===null?`<div class="house-empty-slot"></div>`:`<div class="place-slot ${botVal!==null?'slot-filled':''}" data-type="houseBottom" data-col="${i}">${botVal??''}</div>`;col.innerHTML=`<div class="place-head-row"><div class="place-head">${names[placeIndex]||''}</div></div><div class="carry-row">${carry}</div><div class="top-row">${topCell}</div><div class="bottom-row">${bottomCell}</div><div class="line-row"><div class="line"></div></div><div class="answer-row"><div class="answer-slot ${current.answers[i]!==null?'slot-filled':''}" data-type="answer" data-col="${i}">${current.answers[i]??''}</div></div>`;wrap.appendChild(col)}board.appendChild(wrap);if(current.op==='-'){const b=document.createElement('button');b.className='btn orange borrow-btn';b.id='borrowBtn';b.innerHTML='Pedir<br>prestado';b.onclick=doBorrow;board.appendChild(b)}area.appendChild(board);const bank=document.createElement('div');bank.className='bank-wrap';bank.innerHTML='<div class="bank-label">Arrastra los dígitos y el signo 👇</div><div class="number-bank"></div>';const nb=bank.querySelector('.number-bank');let houseDigitsBank=[0,1,2,3,4,5,6,7,8,9];houseDigitsBank.forEach(n=>{const chip=document.createElement('div');chip.className=`chip c${n}`;chip.dataset.val=n;chip.textContent=n;chip.addEventListener('pointerdown',startDrag);nb.appendChild(chip)});['+','-'].forEach(sign=>{const chip=document.createElement('div');chip.className='chip signchip';chip.dataset.val=sign;chip.textContent=sign;chip.addEventListener('pointerdown',startDrag);nb.appendChild(chip)});area.appendChild(bank);const actions=document.createElement('div');actions.className='actions';actions.innerHTML='<button class="btn ok" onclick="checkHouse()">✅ Revisar todo</button><button class="btn blue" id="audioHelpBtn_houseArea" onclick="toggleAudioHelp(\'houseArea\')">🔊 Ayuda verbal</button><button class="btn pink" onclick="resetHouseOnly()">🔁 Reiniciar tabla</button><button class="btn purple" onclick="newHouseProblem()">🆕 Nueva operación</button>';area.appendChild(actions);attachDropEvents(area);updateBorrowButton();updateHint('houseArea')}
+function checkHouse(){const top=expectedHouseSlots(house.a,house.cols);const bottom=expectedHouseSlots(house.b,house.cols);let layoutOk=true;for(let i=0;i<house.cols;i++){if(house.topSlots[i]!==top[i])layoutOk=false;if(house.bottomSlots[i]!==bottom[i])layoutOk=false}if(house.signSlot!==house.op)layoutOk=false;document.querySelectorAll('[data-type="houseTop"]').forEach(s=>{const i=parseInt(s.dataset.col,10);s.classList.remove('slot-good','slot-bad');s.classList.add(house.topSlots[i]===top[i]?'slot-good':'slot-bad')});document.querySelectorAll('[data-type="houseBottom"]').forEach(s=>{const i=parseInt(s.dataset.col,10);s.classList.remove('slot-good','slot-bad');s.classList.add(house.bottomSlots[i]===bottom[i]?'slot-good':'slot-bad')});document.querySelectorAll('[data-type="houseSign"]').forEach(s=>{s.classList.remove('slot-good','slot-bad');s.classList.add(house.signSlot===house.op?'slot-good':'slot-bad')});if(!layoutOk){$('houseMsg').textContent='Revisa la tabla: algún número o el signo no está en su lugar.';$('houseMsg').className='message bad';speak('Revisa la tabla. Hay algo que no está en su lugar.');return}const answersReady=current.answers.every(x=>x!==null);let carriesReady=true;if(current.op==='+'){for(let i=0;i<current.digits;i++){if(needsCarrySlot(i)&&current.carrySlots[i]===null)carriesReady=false}}if(!answersReady||!carriesReady){$('houseMsg').textContent='¡La tabla está bien! Ahora completa la respuesta en los espacios de abajo.';$('houseMsg').className='message good';speak('Muy bien. La tabla está correcta. Ahora completa la respuesta.');return}checkSolver('houseArea')}
+function getActiveContainerId(){return activeScreen==='customScreen'?'solverCustom':'houseArea'}
+function getHouseLayoutTask(){if(activeScreen!=='houseScreen'||!house.ready)return null;if(house.signSlot===null)return {type:'houseSign'};const top=expectedHouseSlots(house.a,house.cols);const bottom=expectedHouseSlots(house.b,house.cols);for(let i=0;i<house.cols;i++){if(top[i]!==null&&house.topSlots[i]===null)return {type:'houseTop',col:i}}for(let i=0;i<house.cols;i++){if(bottom[i]!==null&&house.bottomSlots[i]===null)return {type:'houseBottom',col:i}}return null}
+function toggleAudioHelp(containerId){audioHelpOn=!audioHelpOn;document.querySelectorAll('[id^="audioHelpBtn_"]').forEach(b=>b.textContent=audioHelpOn?'🔊 Audio: ON':'🔊 Ayuda verbal');if(audioHelpOn)startAudioGuide(containerId);else clearAudioGuide()}
+function clearAudioGuide(keepButtonText){if(audioGuideTimeout){clearTimeout(audioGuideTimeout);audioGuideTimeout=null}clearAudioHighlight();clearSpeech();if(keepButtonText!==false&&!audioHelpOn){document.querySelectorAll('[id^="audioHelpBtn_"]').forEach(b=>b.textContent='🔊 Ayuda verbal')}}
+function startAudioGuide(containerId){clearAudioGuide(false);if(!audioHelpOn)return;const layoutTask=getHouseLayoutTask();if(layoutTask){performLayoutAudioCycle(layoutTask,1);return}const task=findTask();if(task.done)return;performAudioCycle(task,1)}
+function performLayoutAudioCycle(task,iteration){const fresh=getHouseLayoutTask();if(!fresh){startAudioGuide(getActiveContainerId());return}if(fresh.type!==task.type||fresh.col!==task.col){startAudioGuide(getActiveContainerId());return}highlightLayoutStep(task);let msg='';if(task.type==='houseSign')msg='Arrastra el signo correcto al espacio del signo.';else if(task.type==='houseTop')msg='Acomoda el primer número en la fila de arriba.';else msg='Acomoda el segundo número en la fila de abajo.';speak(msg);audioGuideTimeout=setTimeout(()=>{clearAudioHighlight();audioGuideTimeout=setTimeout(()=>performLayoutAudioCycle(task,iteration>=3?1:iteration+1),iteration>=3?5000:3000)},3000)}
+function performAudioCycle(task,iteration){const currentTask=findTask();if(currentTask.done){audioGuideTimeout=null;return}if(currentTask.type!==task.type||currentTask.col!==task.col){startAudioGuide(getActiveContainerId());return}const col=task.col;let mainMessage='',followMessage='',needsSpecial=false;if(current.op==='-'){const top=current.currentTop[col];const sub=current.bottomDigits[col];mainMessage=`Tengo ${top} y le quito ${sub}`;if(top<sub){needsSpecial=true;followMessage=`A ${top} no se le puede quitar ${sub}. Debes pedir prestado.`}}else{if(task.type==='carry'){mainMessage='Arrastra el 1 que llevas a la siguiente columna'}else{const carryIn=col<current.digits-1?(current.carrySlots[col]||0):0;const topVal=displayProblemDigit(current.a,current.topDigits,col);const bottomVal=displayProblemDigit(current.b,current.bottomDigits,col);mainMessage=`Tengo ${topVal===''?0:topVal} y le sumo ${bottomVal===''?0:bottomVal}`;if(carryIn)mainMessage+=` y ${carryIn} que llevo`}}highlightAudioStep(task);speak(mainMessage);audioGuideTimeout=setTimeout(()=>{clearAudioHighlight();const freshTask=findTask();if(freshTask.done)return;if(freshTask.type!==task.type||freshTask.col!==task.col)return;if(!needsSpecial){audioGuideTimeout=setTimeout(()=>performAudioCycle(task,iteration>=3?1:iteration+1),iteration>=3?6000:3000)}else if(iteration<3){audioGuideTimeout=setTimeout(()=>performAudioCycle(task,iteration+1),3000)}else{audioGuideTimeout=setTimeout(()=>{highlightAudioStep(task);speak(followMessage);audioGuideTimeout=setTimeout(()=>{clearAudioHighlight();audioGuideTimeout=setTimeout(()=>performAudioCycle(task,1),5000)},3200)},5000)}},3000)}
+function highlightAudioStep(task){clearAudioHighlight();const container=$(getActiveContainerId());if(!container)return;const signDiv=container.querySelector('.sign-col');if(signDiv)signDiv.classList.add('audio-highlight');const col=container.querySelector(`.digit-col[data-col="${task.col}"]`);if(col)col.classList.add('audio-highlight');if(task.type==='carry'){const carry=container.querySelector(`.carry-slot[data-col="${task.col}"]`);if(carry)carry.classList.add('audio-highlight')}else{const ans=container.querySelector(`.answer-slot[data-col="${task.col}"]`);if(ans)ans.classList.add('audio-highlight')}}
+function highlightLayoutStep(task){clearAudioHighlight();const container=$('houseArea');if(!container)return;if(task.type==='houseSign'){const sign=container.querySelector('[data-type="houseSign"]');if(sign)sign.classList.add('audio-highlight');return}const slot=container.querySelector(`[data-type="${task.type}"][data-col="${task.col}"]`);if(slot)slot.classList.add('audio-highlight');const col=container.querySelector(`.digit-col[data-col="${task.col}"]`);if(col)col.classList.add('audio-highlight')}
+function clearAudioHighlight(){document.querySelectorAll('.audio-highlight').forEach(el=>el.classList.remove('audio-highlight'))}
+function speakCurrentHelp(containerId){audioHelpOn=true;document.querySelectorAll('[id^="audioHelpBtn_"]').forEach(b=>b.textContent='🔊 Audio: ON');startAudioGuide(containerId)}
+function speakHouseHelp(){speakCurrentHelp('houseArea')}
+function getMotivationalPhrase(nombre,op){
+const tipo=op==='+'?'suma':'resta';
+const phrases=[
+`Excelente ${nombre}, has hecho un muy buen trabajo.`,
+`Qué buen trabajo has hecho ${nombre}, sigue trabajando así. Eres fantástico.`,
+`Qué orgullosos estamos de ti, ${nombre}. Qué lindo has trabajado.`,
+`Esa ${tipo} estuvo muy bien, ${nombre}. Qué bueno eres en matemática.`,
+`Muy bien ${nombre}, cada vez resuelves mejor.`,
+`${nombre}, lo hiciste con mucho cuidado. Sigue así.`,
+`Gran trabajo ${nombre}, pensaste muy bien esa operación.`,
+`Bravo ${nombre}, tu esfuerzo se nota muchísimo.`,
+`Excelente concentración, ${nombre}. Vas aprendiendo muy bien.`,
+`${nombre}, esa operación quedó perfecta. Qué bonito trabajaste.`,
+`Muy bien hecho ${nombre}. Hoy estás practicando como un campeón.`,
+`Qué alegría verte avanzar, ${nombre}. Sigue practicando con esa energía.`,
+`${nombre}, lo lograste. Tu familia está muy orgullosa de ti.`,
+`${nombre}, resolviste la ${tipo} con mucho esfuerzo.`,
+`Fantástico ${nombre}, cada día eres más fuerte en matemática.`
+];
+return phrases[Math.floor(Math.random()*phrases.length)];
+}
+function operationSpeech(text){return text.replace(/\+/g,' más ').replace(/-/g,' menos ').replace(/=/g,' es igual a ')}
+function speakSequence(first,second){
+if(!('speechSynthesis'in window))return;
+clearSpeech();
+const u1=new SpeechSynthesisUtterance(first);
+u1.lang='es-ES';u1.rate=.9;u1.pitch=1;
+u1.onend=()=>setTimeout(()=>{const u2=new SpeechSynthesisUtterance(second);u2.lang='es-ES';u2.rate=.9;u2.pitch=1;window.speechSynthesis.speak(u2)},400);
+window.speechSynthesis.speak(u1);
+}
+function showFeedback(success,text){
+clearAudioGuide(false);
+const fb=$('feedback'),card=$('feedbackCard');
+const nombre=studentName||localStorage.getItem(CLAVE_NOMBRE)||'campeón';
+if(success){
+const phrase=getMotivationalPhrase(nombre,current.op);
+card.innerHTML=`<h3>🎉 ¡Excelente!</h3><div class="big-expression">${text}</div><p>${phrase}</p><button class="btn purple" onclick="closeFeedback()">✅ Continuar</button>`;
+speakSequence(operationSpeech(text),phrase);
+}else{
+card.innerHTML=`<h3>💪 ¡Casi!</h3><p>${text}</p><button class="btn purple" onclick="closeFeedback()">🔄 Seguir intentando</button>`;
+speak('Casi. Revisa los espacios en rojo y vuelve a intentarlo.');
+}
+fb.classList.add('show')
+}
+function closeFeedback(){$('feedback').classList.remove('show')}
+function clearSpeech(){if('speechSynthesis'in window)window.speechSynthesis.cancel()}
+function speak(t){if(!('speechSynthesis'in window))return;clearSpeech();const u=new SpeechSynthesisUtterance(t);u.lang='es-ES';u.rate=.9;u.pitch=1;window.speechSynthesis.speak(u)}
+function celebrate(){
+const old=document.querySelector('.celebration-layer');
+if(old)old.remove();
+const layer=document.createElement('div');
+layer.className='celebration-layer';
+document.body.appendChild(layer);
+const symbols=['0','1','2','3','4','5','6','7','8','9','●','▲','■','◆','⬟','⬢','★','✦','✚','▬'];
+const colors=['#ef4444','#f97316','#eab308','#22c55e','#14b8a6','#3b82f6','#6366f1','#8b5cf6','#ec4899','#f43f5e','#10b981','#7c3aed'];
+const W=window.innerWidth,H=window.innerHeight,cx=W/2,cy=H/2;
+const patterns=['lluvia','juegosArtificiales','fuegosMultiples','choqueParticulas','choqueCentral','anillos','espiralDoble','chorros','espiral','remolino','fuente','cortina','zigzag','corazon','ola','orbita','diagonales','dobleChorro','explosionSuave','numerosSaltando'];
+const pattern=patterns[Math.floor(Math.random()*patterns.length)];
+const total=375;
+function addParticle(i){
+const el=document.createElement('div');
+el.className='celebration-particle';
+el.textContent=symbols[Math.floor(Math.random()*symbols.length)];
+el.style.color=colors[Math.floor(Math.random()*colors.length)];
+el.style.fontSize=(0.82+Math.random()*0.5)+'rem';
+let x=cx,y=cy,tx=0,ty=0,ang=0,dist=0;
+const t=i/total;
+if(pattern==='lluvia'){
+x=Math.random()*W;y=-25-Math.random()*80;tx=(Math.random()-.5)*80;ty=H+110;
+}else if(pattern==='juegosArtificiales'){
+const bursts=[{x:W*.28,y:H*.34},{x:W*.52,y:H*.24},{x:W*.72,y:H*.40},{x:W*.42,y:H*.55}];
+const b=bursts[i%bursts.length];x=b.x+(Math.random()-.5)*34;y=b.y+(Math.random()-.5)*34;ang=Math.random()*Math.PI*2;dist=190+Math.random()*520;tx=Math.cos(ang)*dist;ty=Math.sin(ang)*dist;
+}else if(pattern==='fuegosMultiples'){
+const bcount=5;const bx=(.18+((i%bcount)/(bcount-1))*.64)*W;const by=(.22+Math.random()*.26)*H;x=bx;y=by;ang=Math.random()*Math.PI*2;dist=120+Math.random()*330;tx=Math.cos(ang)*dist;ty=Math.sin(ang)*dist;
+}else if(pattern==='choqueParticulas'){
+x=i%2===0?-30:W+30;y=H*(.25+Math.random()*.5);tx=(i%2===0?W*.55:-W*.55)+(Math.random()-.5)*80;ty=(cy-y)+(Math.random()-.5)*220;
+}else if(pattern==='choqueCentral'){
+const side=i%4;x=side===0?-25:side===1?W+25:Math.random()*W;y=side===2?-25:side===3?H+25:Math.random()*H;tx=cx-x+(Math.random()-.5)*170;ty=cy-y+(Math.random()-.5)*170;
+}else if(pattern==='anillos'){
+const ring=i%3;ang=t*Math.PI*2*(ring+1);dist=140+ring*120;x=cx+Math.cos(ang)*20;y=cy+Math.sin(ang)*20;tx=Math.cos(ang)*dist;ty=Math.sin(ang)*dist;
+}else if(pattern==='espiralDoble'){
+ang=t*Math.PI*10+(i%2?Math.PI:0);dist=80+t*520;x=cx;y=cy;tx=Math.cos(ang)*dist;ty=Math.sin(ang)*dist;
+}else if(pattern==='chorros'){
+x=cx;y=H-30;ang=-Math.PI/2+(Math.random()-.5)*1.2;dist=280+Math.random()*460;tx=Math.cos(ang)*dist;ty=Math.sin(ang)*dist;
+}else if(pattern==='espiral'){
+ang=t*Math.PI*8;dist=70+t*520;x=cx;y=cy;tx=Math.cos(ang)*dist;ty=Math.sin(ang)*dist;
+}else if(pattern==='remolino'){
+ang=t*Math.PI*12;dist=520-t*360;x=cx+Math.cos(ang)*dist;y=cy+Math.sin(ang)*dist;tx=-Math.cos(ang)*260;ty=-Math.sin(ang)*260;
+}else if(pattern==='fuente'){
+x=cx+(Math.random()-.5)*120;y=H-20;ang=-Math.PI/2+(Math.random()-.5)*.9;dist=250+Math.random()*430;tx=Math.cos(ang)*dist;ty=Math.sin(ang)*dist+Math.random()*100;
+}else if(pattern==='cortina'){
+x=(t*W);y=10;tx=(Math.random()-.5)*90;ty=H*.65+Math.random()*160;
+}else if(pattern==='zigzag'){
+x=t*W;y=H*.25+(i%2)*H*.28;tx=(i%2?180:-180);ty=(Math.random()-.5)*260;
+}else if(pattern==='corazon'){
+ang=t*Math.PI*2;const hx=16*Math.pow(Math.sin(ang),3);const hy=-(13*Math.cos(ang)-5*Math.cos(2*ang)-2*Math.cos(3*ang)-Math.cos(4*ang));x=cx+hx*13;y=cy+hy*13;tx=hx*18;ty=hy*18;
+}else if(pattern==='ola'){
+x=t*W;y=cy+Math.sin(t*Math.PI*6)*100;tx=(Math.random()-.5)*160;ty=Math.sin(t*Math.PI*6+Math.PI)*240;
+}else if(pattern==='orbita'){
+ang=t*Math.PI*2;const r=150+Math.random()*150;x=cx+Math.cos(ang)*r;y=cy+Math.sin(ang)*r;tx=Math.cos(ang+Math.PI/2)*280;ty=Math.sin(ang+Math.PI/2)*280;
+}else if(pattern==='diagonales'){
+x=Math.random()<.5?-20:W+20;y=Math.random()*H;tx=(x<0?W:-W)+(Math.random()-.5)*150;ty=(Math.random()-.5)*380;
+}else if(pattern==='dobleChorro'){
+x=i%2?W*.25:W*.75;y=H-25;ang=-Math.PI/2+(i%2?.35:-.35)+(Math.random()-.5)*.45;dist=280+Math.random()*430;tx=Math.cos(ang)*dist;ty=Math.sin(ang)*dist;
+}else if(pattern==='explosionSuave'){
+x=cx;y=cy;ang=t*Math.PI*2;dist=220+Math.random()*360;tx=Math.cos(ang)*dist;ty=Math.sin(ang)*dist;
+}else{
+x=Math.random()*W;y=H+20;tx=(Math.random()-.5)*180;ty=-(220+Math.random()*480);
+}
+el.style.left=x+'px';el.style.top=y+'px';
+el.style.setProperty('--tx',tx+'px');
+el.style.setProperty('--ty',ty+'px');
+el.style.setProperty('--rot',(Math.random()<.5?'-':'')+(120+Math.random()*520)+'deg');
+layer.appendChild(el);
+setTimeout(()=>el.remove(),5200);
+}
+for(let i=0;i<total;i++)setTimeout(()=>addParticle(i),Math.random()*3000);
+setTimeout(()=>{layer.style.transition='opacity 2s ease';layer.style.opacity='0'},6000);
+setTimeout(()=>layer.remove(),8200);
+}
+window.addEventListener('DOMContentLoaded',()=>{loadName();setShowLeadingZeros(false);$('operationInput').addEventListener('keydown',e=>{if(e.key==='Enter')generateFromInput()})});
+</script>
+</body>
+</html>
