@@ -21,6 +21,60 @@ body{background:linear-gradient(135deg,#fef9c3 0%,#fbcfe8 48%,#c4b5fd 100%);colo
 
 .gallery{display:none}.gallery-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:10px 0 14px}.gallery-title{font-size:clamp(1.6rem,4vw,2.5rem);font-weight:900;color:#7c3aed;text-shadow:2px 2px 0 rgba(255,255,255,.7)}.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}.gallery-card{background:rgba(255,255,255,.94);border:3px solid #c4b5fd;border-radius:22px;padding:10px;min-height:178px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 8px 18px rgba(124,58,237,.12)}.gallery-card img{width:100%;height:112px;object-fit:contain;border-radius:14px;background:#fff}.gallery-label{margin-top:8px;color:#5b21b6;font-weight:900;text-align:center;font-size:1rem}.gallery-error{color:#dc2626;font-size:.82rem;font-weight:900;margin-top:5px;text-align:center}.gallery-btn{background:#14b8a6;color:#fff;font-size:1.05rem;padding:13px 18px;margin:10px 6px 0}.gallery-count{color:#6b21a8;font-weight:900;margin-bottom:12px;text-align:center}.gallery-img-error{font-size:2.2rem;color:#dc2626;font-weight:900;text-align:center}
 @media(max-width:860px){.bank-grid:has(.bank-block.functions.show){grid-template-columns:1fr}.bank-grid:has(.bank-block.functions.show) .function-bank{grid-template-columns:repeat(4,max-content);justify-content:center;min-height:auto}.bank-grid:has(.bank-block.functions.show) .word-bank{display:flex;flex-wrap:wrap;min-height:auto}.levels{grid-template-columns:repeat(2,1fr)}.image-row.n4,.image-row.n5{grid-template-columns:repeat(2,minmax(120px,1fr))}.pic-card{min-height:145px}.pic-card img{height:92px}.word-chip{font-size:1.05rem;padding:10px 13px}.board{padding:14px}}@media(max-width:520px){.app{padding:10px}.levels{grid-template-columns:1fr}.image-row.n2,.image-row.n3,.image-row.n4,.image-row.n5{grid-template-columns:repeat(2,minmax(120px,1fr))}.pic-card img{height:86px}.sentence-zone{min-height:120px}.title{font-size:2rem}}
+
+.pill-soft{background:#ddd6fe;color:#4c1d95}
+.device-footer{color:#5b21b6}
+@media(min-width:1101px){
+  body.device-desktop .screen{max-width:1260px}
+  body.device-desktop .image-row.n5{grid-template-columns:repeat(5,minmax(110px,170px))}
+  body.device-desktop .gallery-grid{grid-template-columns:repeat(auto-fill,minmax(165px,1fr))}
+}
+@media(min-width:701px) and (max-width:1100px){
+  body.device-tablet .app{padding:14px}
+  body.device-tablet .screen{max-width:980px}
+  body.device-tablet .levels{grid-template-columns:repeat(2,1fr)}
+  body.device-tablet .topbar{justify-content:center}
+  body.device-tablet .board{padding:16px}
+  body.device-tablet .image-row.n2{grid-template-columns:repeat(2,minmax(150px,1fr))}
+  body.device-tablet .image-row.n3{grid-template-columns:repeat(3,minmax(120px,1fr))}
+  body.device-tablet .image-row.n4{grid-template-columns:repeat(4,minmax(110px,1fr))}
+  body.device-tablet .image-row.n5{grid-template-columns:repeat(3,minmax(120px,1fr))}
+  body.device-tablet .pic-card{min-height:150px}
+  body.device-tablet .pic-card img{height:94px}
+  body.device-tablet .bank-grid:has(.bank-block.functions.show){grid-template-columns:minmax(0,1.05fr) minmax(240px,.95fr);gap:12px}
+  body.device-tablet .bank-grid:has(.bank-block.functions.show) .function-bank{grid-template-columns:repeat(3,max-content);justify-content:flex-start;min-height:auto}
+  body.device-tablet .actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));justify-content:stretch}
+  body.device-tablet .action-btn{width:100%}
+  body.device-tablet .gallery-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media(max-width:700px){
+  body.device-phone .app{padding:10px}
+  body.device-phone .screen{max-width:100%}
+  body.device-phone .levels{grid-template-columns:1fr}
+  body.device-phone .title{font-size:2rem}
+  body.device-phone .subtitle{font-size:1rem}
+  body.device-phone .name-input{width:100%}
+  body.device-phone .card{padding:16px}
+  body.device-phone .topbar{justify-content:center}
+  body.device-phone .topbar .pill{padding:8px 12px;font-size:.95rem}
+  body.device-phone .board{padding:12px;border-radius:22px}
+  body.device-phone .image-row.n2, body.device-phone .image-row.n3, body.device-phone .image-row.n4, body.device-phone .image-row.n5{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  body.device-phone .pic-card{min-height:132px;padding:8px}
+  body.device-phone .pic-card img{height:84px}
+  body.device-phone .sentence-wrap{padding:10px 10px 12px}
+  body.device-phone .sentence-zone{min-height:118px;padding:10px;gap:8px}
+  body.device-phone .bank-grid:has(.bank-block.functions.show){grid-template-columns:1fr}
+  body.device-phone .bank-grid:has(.bank-block.functions.show) .function-bank{grid-template-columns:repeat(3,max-content);justify-content:center;min-height:auto}
+  body.device-phone .bank-grid:has(.bank-block.functions.show) .word-bank{min-height:auto}
+  body.device-phone .word-chip{font-size:1rem;padding:10px 12px}
+  body.device-phone .word-chip.period{font-size:1.45rem;padding:6px 14px}
+  body.device-phone .actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  body.device-phone .action-btn{width:100%;padding:11px 10px;font-size:.94rem}
+  body.device-phone .gallery-top{gap:8px;justify-content:center}
+  body.device-phone .gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  body.device-phone .gallery-card{min-height:160px;padding:8px}
+  body.device-phone .gallery-card img{height:90px}
+}
 </style>
 </head>
 <body>
@@ -40,6 +94,7 @@ body{background:linear-gradient(135deg,#fef9c3 0%,#fbcfe8 48%,#c4b5fd 100%);colo
 <button class="start-btn" id="startBtn" disabled>⏳ Cargando base...</button>
 <button class="action-btn gallery-btn" id="galleryBtn" disabled>🖼️ Revisar imágenes</button>
 <div id="dbStatus" class="footer">Cargando base_oraciones.json...</div>
+<div class="footer device-footer" id="deviceModeText">Vista actual: escritorio</div>
 <div class="footer">✨ Creado para Gabriel con ayuda de la IA y su familia ✨</div>
 </section>
 <section id="gallery" class="screen gallery">
@@ -55,7 +110,7 @@ body{background:linear-gradient(135deg,#fef9c3 0%,#fbcfe8 48%,#c4b5fd 100%);colo
 </div>
 </section>
 <section id="game" class="screen game">
-<div class="topbar"><button class="action-btn menu-btn" id="backBtn">⬅ Menú</button><div class="pill" id="levelLabel">Nivel 1</div><div class="pill" id="scoreLabel">⭐ 0</div></div>
+<div class="topbar"><button class="action-btn menu-btn" id="backBtn">⬅ Menú</button><div class="pill" id="levelLabel">Nivel 1</div><div class="pill" id="scoreLabel">⭐ 0</div><div class="pill pill-soft" id="viewModeBadge">🖥️ Escritorio</div></div>
 <div class="board">
 <div class="hint" id="hint">Arrastra las palabras para construir la oración.</div>
 <div id="imageRow" class="image-row"></div>
