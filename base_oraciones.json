@@ -287,6 +287,10 @@
     "zanahoria": {
       "label": "zanahoria",
       "img": "ImagenesGeneradorOraciones/zanahoria.png"
+    },
+    "día lluvioso": {
+      "label": "día lluvioso",
+      "img": "ImagenesGeneradorOraciones/dia_lluvioso.png"
     }
   },
   "oraciones": [
@@ -315,8 +319,8 @@
       "pics": [
         "Ana",
         "corre",
-        "pelota",
-        "cancha"
+        "cancha",
+        "pelota"
       ],
       "words": [
         "Ana",
@@ -368,6 +372,19 @@
         "la",
         "casa",
         "."
+      ],
+      "validAnswers": [
+        [
+          "Daniel",
+          "juega",
+          "con",
+          "los",
+          "juguetes",
+          "de",
+          "la",
+          "casa",
+          "."
+        ]
       ]
     },
     {
@@ -387,6 +404,19 @@
         "del",
         "parque",
         "."
+      ],
+      "validAnswers": [
+        [
+          "Jimena",
+          "juega",
+          "en",
+          "el",
+          "columpio",
+          "en",
+          "el",
+          "parque",
+          "."
+        ]
       ]
     },
     {
@@ -467,6 +497,20 @@
         "la",
         "casa",
         "."
+      ],
+      "validAnswers": [
+        [
+          "el",
+          "niño",
+          "juega",
+          "con",
+          "los",
+          "juguetes",
+          "de",
+          "la",
+          "casa",
+          "."
+        ]
       ]
     },
     {
@@ -530,6 +574,20 @@
         "la",
         "casa",
         "."
+      ],
+      "validAnswers": [
+        [
+          "el",
+          "gato",
+          "duerme",
+          "en",
+          "la",
+          "cama",
+          "en",
+          "la",
+          "casa",
+          "."
+        ]
       ]
     },
     {
@@ -557,6 +615,7 @@
       "pics": [
         "caballo",
         "corre",
+        "al lado",
         "árbol",
         "parque"
       ],
@@ -572,6 +631,20 @@
         "el",
         "parque",
         "."
+      ],
+      "validAnswers": [
+        [
+          "el",
+          "caballo",
+          "corre",
+          "al",
+          "lado",
+          "del",
+          "árbol",
+          "del",
+          "parque",
+          "."
+        ]
       ]
     },
     {
@@ -579,8 +652,8 @@
       "pics": [
         "carro",
         "rojo",
-        "casa",
-        "al lado"
+        "al lado",
+        "casa"
       ],
       "words": [
         "el",
@@ -600,8 +673,8 @@
       "pics": [
         "bicicleta",
         "azul",
-        "árbol",
-        "al lado"
+        "al lado",
+        "árbol"
       ],
       "words": [
         "la",
@@ -620,8 +693,8 @@
       "pics": [
         "barco",
         "azul",
-        "río",
-        "al lado"
+        "al lado",
+        "río"
       ],
       "words": [
         "el",
@@ -640,8 +713,8 @@
       "pics": [
         "pelota",
         "rojo",
-        "silla",
-        "debajo"
+        "debajo",
+        "silla"
       ],
       "words": [
         "la",
@@ -660,8 +733,8 @@
       "pics": [
         "libro",
         "azul",
-        "mesa",
-        "encima"
+        "encima",
+        "mesa"
       ],
       "words": [
         "el",
@@ -680,8 +753,8 @@
       "pics": [
         "globos",
         "multicolor",
-        "mesa",
-        "encima"
+        "encima",
+        "mesa"
       ],
       "words": [
         "los",
@@ -700,8 +773,8 @@
       "pics": [
         "flores",
         "amarillo",
-        "casa",
-        "al lado"
+        "al lado",
+        "casa"
       ],
       "words": [
         "las",
@@ -720,9 +793,9 @@
       "level": 3,
       "pics": [
         "sombrilla",
-        "playa",
         "azul",
-        "al lado"
+        "playa",
+        "caluroso"
       ],
       "words": [
         "la",
@@ -732,6 +805,7 @@
         "en",
         "la",
         "playa",
+        "calurosa",
         "."
       ]
     },
@@ -759,13 +833,14 @@
       "level": 3,
       "pics": [
         "autobús",
-        "escuela",
+        "rojo",
         "al lado",
-        "rojo"
+        "escuela"
       ],
       "words": [
         "el",
         "autobús",
+        "rojo",
         "está",
         "al",
         "lado",
@@ -778,8 +853,8 @@
     {
       "level": 3,
       "pics": [
-        "super mercado",
         "carro",
+        "super mercado",
         "frutas",
         "verduras"
       ],
@@ -790,6 +865,10 @@
         "en",
         "el",
         "supermercado",
+        "con",
+        "frutas",
+        "y",
+        "verduras",
         "."
       ]
     },
@@ -877,6 +956,7 @@
       "pics": [
         "Juan",
         "corre",
+        "al lado",
         "bicicleta",
         "parque"
       ],
@@ -912,6 +992,19 @@
         "la",
         "casa",
         "."
+      ],
+      "validAnswers": [
+        [
+          "Manuel",
+          "juega",
+          "con",
+          "los",
+          "juguetes",
+          "de",
+          "la",
+          "casa",
+          "."
+        ]
       ]
     },
     {
@@ -992,6 +1085,20 @@
         "la",
         "casa",
         "."
+      ],
+      "validAnswers": [
+        [
+          "el",
+          "perro",
+          "duerme",
+          "en",
+          "el",
+          "sofá",
+          "en",
+          "la",
+          "casa",
+          "."
+        ]
       ]
     },
     {
@@ -1013,6 +1120,20 @@
         "la",
         "casa",
         "."
+      ],
+      "validAnswers": [
+        [
+          "el",
+          "gato",
+          "duerme",
+          "en",
+          "la",
+          "cama",
+          "en",
+          "la",
+          "casa",
+          "."
+        ]
       ]
     },
     {
@@ -1020,8 +1141,9 @@
       "pics": [
         "conejo",
         "salta",
-        "parque",
-        "árbol"
+        "al lado",
+        "árbol",
+        "parque"
       ],
       "words": [
         "el",
@@ -1035,6 +1157,20 @@
         "el",
         "parque",
         "."
+      ],
+      "validAnswers": [
+        [
+          "el",
+          "conejo",
+          "salta",
+          "al",
+          "lado",
+          "del",
+          "árbol",
+          "del",
+          "parque",
+          "."
+        ]
       ]
     },
     {
@@ -1042,8 +1178,9 @@
       "pics": [
         "caballo",
         "corre",
-        "parque",
-        "árbol"
+        "al lado",
+        "árbol",
+        "parque"
       ],
       "words": [
         "el",
@@ -1057,6 +1194,20 @@
         "el",
         "parque",
         "."
+      ],
+      "validAnswers": [
+        [
+          "el",
+          "caballo",
+          "corre",
+          "al",
+          "lado",
+          "del",
+          "árbol",
+          "del",
+          "parque",
+          "."
+        ]
       ]
     },
     {
@@ -1064,8 +1215,8 @@
       "pics": [
         "carro",
         "negro",
-        "casa",
-        "al lado"
+        "al lado",
+        "casa"
       ],
       "words": [
         "el",
@@ -1085,8 +1236,8 @@
       "pics": [
         "bicicleta",
         "verde",
-        "parque",
-        "al lado"
+        "al lado",
+        "parque"
       ],
       "words": [
         "la",
@@ -1105,8 +1256,8 @@
       "pics": [
         "barco",
         "rojo",
-        "río",
-        "al lado"
+        "al lado",
+        "río"
       ],
       "words": [
         "el",
@@ -1125,8 +1276,8 @@
       "pics": [
         "pelota",
         "azul",
-        "mesa",
-        "encima"
+        "encima",
+        "mesa"
       ],
       "words": [
         "la",
@@ -1145,8 +1296,8 @@
       "pics": [
         "libro",
         "verde",
-        "mesa",
-        "encima"
+        "encima",
+        "mesa"
       ],
       "words": [
         "el",
@@ -1165,8 +1316,8 @@
       "pics": [
         "globos",
         "multicolor",
-        "cama",
-        "encima"
+        "encima",
+        "cama"
       ],
       "words": [
         "los",
@@ -1185,8 +1336,8 @@
       "pics": [
         "flores",
         "amarillo",
-        "parque",
-        "al lado"
+        "al lado",
+        "parque"
       ],
       "words": [
         "las",
@@ -1204,9 +1355,9 @@
       "level": 3,
       "pics": [
         "sombrilla",
+        "azul",
         "playa",
-        "al lado",
-        "azul"
+        "caluroso"
       ],
       "words": [
         "la",
@@ -1216,6 +1367,7 @@
         "en",
         "la",
         "playa",
+        "calurosa",
         "."
       ]
     },
@@ -1223,8 +1375,8 @@
       "level": 3,
       "pics": [
         "avión",
-        "alto",
         "azul",
+        "alto",
         "playa"
       ],
       "words": [
@@ -1243,9 +1395,9 @@
       "level": 3,
       "pics": [
         "autobús",
-        "escuela",
+        "amarillo",
         "al lado",
-        "amarillo"
+        "escuela"
       ],
       "words": [
         "el",
@@ -1263,9 +1415,9 @@
     {
       "level": 3,
       "pics": [
+        "carro",
         "super mercado",
         "frutas",
-        "carro",
         "verduras"
       ],
       "words": [
@@ -1275,6 +1427,10 @@
         "en",
         "el",
         "supermercado",
+        "con",
+        "frutas",
+        "y",
+        "verduras",
         "."
       ]
     },
@@ -2883,6 +3039,19 @@
         "del",
         "parque",
         "."
+      ],
+      "validAnswers": [
+        [
+          "Ana",
+          "juega",
+          "en",
+          "el",
+          "columpio",
+          "en",
+          "el",
+          "parque",
+          "."
+        ]
       ]
     },
     {
@@ -2923,6 +3092,19 @@
         "la",
         "casa",
         "."
+      ],
+      "validAnswers": [
+        [
+          "Daniel",
+          "juega",
+          "con",
+          "los",
+          "juguetes",
+          "de",
+          "la",
+          "casa",
+          "."
+        ]
       ]
     },
     {
@@ -2949,6 +3131,7 @@
       "pics": [
         "Juan",
         "corre",
+        "al lado",
         "bicicleta",
         "parque"
       ],
@@ -3085,6 +3268,20 @@
         "la",
         "casa",
         "."
+      ],
+      "validAnswers": [
+        [
+          "el",
+          "perro",
+          "duerme",
+          "en",
+          "el",
+          "sofá",
+          "en",
+          "la",
+          "casa",
+          "."
+        ]
       ]
     },
     {
@@ -3106,6 +3303,20 @@
         "la",
         "casa",
         "."
+      ],
+      "validAnswers": [
+        [
+          "el",
+          "gato",
+          "duerme",
+          "en",
+          "la",
+          "cama",
+          "en",
+          "la",
+          "casa",
+          "."
+        ]
       ]
     },
     {
@@ -3254,9 +3465,9 @@
       "level": 3,
       "pics": [
         "sombrilla",
+        "azul",
         "playa",
-        "caluroso",
-        "azul"
+        "caluroso"
       ],
       "words": [
         "la",
@@ -3273,10 +3484,10 @@
     {
       "level": 3,
       "pics": [
-        "lluvioso",
         "niño",
         "ver",
-        "casa"
+        "casa",
+        "día lluvioso"
       ],
       "words": [
         "el",
@@ -3295,8 +3506,8 @@
       "level": 3,
       "pics": [
         "cohete",
-        "alto",
-        "azul"
+        "azul",
+        "alto"
       ],
       "words": [
         "el",
@@ -3311,8 +3522,8 @@
       "level": 3,
       "pics": [
         "avión",
-        "alto",
         "azul",
+        "alto",
         "playa"
       ],
       "words": [
@@ -3350,13 +3561,14 @@
       "level": 3,
       "pics": [
         "autobús",
+        "rojo",
         "al lado",
-        "escuela",
-        "rojo"
+        "escuela"
       ],
       "words": [
         "el",
         "autobús",
+        "rojo",
         "está",
         "al",
         "lado",
@@ -3369,10 +3581,10 @@
     {
       "level": 3,
       "pics": [
+        "carro",
         "super mercado",
         "frutas",
-        "verduras",
-        "carro"
+        "verduras"
       ],
       "words": [
         "el",
@@ -3381,6 +3593,10 @@
         "en",
         "el",
         "supermercado",
+        "con",
+        "frutas",
+        "y",
+        "verduras",
         "."
       ]
     },
@@ -4883,6 +5099,7 @@
       "pics": [
         "Juan",
         "corre",
+        "al lado",
         "bicicleta",
         "parque"
       ],
@@ -5183,5 +5400,23 @@
         "libro"
       ]
     }
+  ],
+  "conectores_reutilizables": [
+    "la",
+    "las",
+    "los",
+    "el",
+    "un",
+    "una",
+    "unos",
+    "unas",
+    "de",
+    "del",
+    "está",
+    "están",
+    "es",
+    "son",
+    "en",
+    "con"
   ]
 }
