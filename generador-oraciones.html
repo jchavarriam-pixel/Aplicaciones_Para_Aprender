@@ -218,6 +218,64 @@ body.device-phone.orient-portrait .actions{grid-template-columns:repeat(2,minmax
   }
 }
 
+
+
+/* === AJUSTE 2: imágenes centradas y cajas laterales iguales === */
+.image-row,
+.image-row.n2,
+.image-row.n3,
+.image-row.n4,
+.image-row.n5{
+  justify-content:center !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+.image-row.is-overflowing{
+  justify-content:flex-start !important;
+}
+
+.bank-grid:has(.bank-block.functions.show){
+  grid-template-columns:minmax(290px,1fr) minmax(290px,1fr) !important;
+  align-items:stretch !important;
+  gap:16px !important;
+  width:100% !important;
+}
+.bank-grid:has(.bank-block.functions.show) .bank-block{
+  min-width:290px !important;
+  height:auto !important;
+  min-height:210px !important;
+  display:flex !important;
+  flex-direction:column !important;
+}
+.bank-grid:has(.bank-block.functions.show) .bank-block.functions{
+  min-width:290px !important;
+}
+.bank-grid:has(.bank-block.functions.show) .word-bank,
+.bank-grid:has(.bank-block.functions.show) .function-bank{
+  flex:1 1 auto !important;
+  min-height:150px !important;
+  display:flex !important;
+  flex-wrap:wrap !important;
+  align-items:flex-start !important;
+  align-content:flex-start !important;
+  justify-content:flex-start !important;
+  gap:10px !important;
+}
+.bank-grid:has(.bank-block.functions.show) .function-bank{
+  grid-template-columns:none !important;
+}
+@media(max-width:700px){
+  .bank-grid:has(.bank-block.functions.show){
+    grid-template-columns:minmax(260px,1fr) minmax(260px,1fr) !important;
+    gap:12px !important;
+  }
+  .bank-grid:has(.bank-block.functions.show) .bank-block,
+  .bank-grid:has(.bank-block.functions.show) .bank-block.functions{
+    min-width:260px !important;
+    min-height:190px !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -337,6 +395,17 @@ if(window.visualViewport){
   window.visualViewport.addEventListener('scroll',scheduleResponsiveUpdate,{passive:true});
 }
 updateResponsiveMode();
+function updateImageRowCentering(){
+  if(!imageRow)return;
+  requestAnimationFrame(()=>{
+    const overflowing=imageRow.scrollWidth>imageRow.clientWidth+4;
+    imageRow.classList.toggle('is-overflowing',overflowing);
+  });
+}
+['resize','orientationchange'].forEach(evt=>window.addEventListener(evt,()=>setTimeout(updateImageRowCentering,180),{passive:true}));
+if(window.visualViewport){
+  window.visualViewport.addEventListener('resize',()=>setTimeout(updateImageRowCentering,120),{passive:true});
+}
 
 function obtenerNombreGuardado(){return (localStorage.getItem(CLAVE_NOMBRE)||'').trim();}
 function guardarNombreEstudiante(nombre){const n=(nombre||'').trim(); if(n)localStorage.setItem(CLAVE_NOMBRE,n); return n;}
@@ -388,7 +457,7 @@ function markChanged(){if(isSolved)return;document.getElementById('reviewOverlay
 function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function newExercise(){let pool=SENTENCES.filter(s=>s.level===currentLevel);if(!pool.length && (currentLevel===5||currentLevel===6)){pool=generarNivelConConectores(currentLevel);} if(!pool.length){alert('No hay oraciones para este nivel en la base.');return;} current=pool[Math.floor(Math.random()*pool.length)];loadCurrent();}
 function generarNivelConConectores(level){const fn=new Set(CONNECTORS.length?CONNECTORS:DEFAULT_CONNECTORS);const universe=[];SENTENCES.forEach(o=>o.words.forEach(w=>{if(!fn.has(w)&&!universe.includes(w))universe.push(w);}));return SENTENCES.filter(o=>o.level===3&&o.pics.length===4).map(o=>{const content=o.words.filter(w=>!fn.has(w));const available=universe.filter(w=>!content.includes(w));const cantidadExtras=level===5?0:(2+Math.floor(Math.random()*2));const extras=shuffle(available).slice(0,cantidadExtras);return {...o,level,mode:'connectors_free',contentWords:content,extras};});}
-function loadCurrent(){stopSpeech();hideSentenceHint();checkAttempts=0;hasReviewed=false;isSolved=false;document.getElementById('levelLabel').textContent='Nivel '+currentLevel;const free=isConnectorLevel();hint.textContent=free?(currentLevel===5?'Usa todas las palabras del mazo principal y agrega los conectores necesarios. Los conectores no se gastan.':'Usa las palabras necesarias del mazo principal y agrega los conectores necesarios. En este nivel sobran 2 o 3 palabras. Los conectores no se gastan.'):(currentLevel===4?'Arrastra solo las palabras necesarias. Sobran palabras. Debes revisar antes de pasar a la siguiente.':'Arrastra las palabras para construir la oración. Debes revisar antes de pasar a la siguiente.');imageRow.className='image-row n'+current.pics.length+(showLabels?' show-labels':'');imageRow.innerHTML='';current.pics.forEach(k=>{const w=WORDS[k];const card=document.createElement('div');card.className='pic-card';if(!w){card.innerHTML='<div style="font-size:1rem;color:#ef4444;font-weight:900">Falta imagen:<br>'+k+'</div>';}else{card.innerHTML=`<img src="${w.img}" alt="${w.label}" loading="eager" onerror="tryImageFallback(this)"><div class="pic-label">${w.label}</div>`;}imageRow.appendChild(card);});sentenceItems=[];if(free){const content=current.contentWords||current.words.filter(w=>!CONNECTORS.includes(w));const initial=[...content,...(current.extras||[])];bankItems=shuffle(initial.map((word,i)=>({id:'w'+i,base:word,text:word,extra:!(content.includes(word))})));functionItems=(CONNECTORS.length?CONNECTORS:DEFAULT_CONNECTORS).map((word,i)=>({id:'f'+i,base:word,text:word,reusable:true}));functionBlock.classList.add('show');document.getElementById('wordBankTitle').textContent=currentLevel===5?'Palabras principales:':'Palabras principales y palabras extra:';}else{const initial=[...current.words,...(current.extras||[])];bankItems=shuffle(initial.map((word,i)=>({id:'w'+i,base:word,text:word,extra:(current.extras||[]).includes(word)})));functionItems=[];functionBlock.classList.remove('show');document.getElementById('wordBankTitle').textContent='Mazo de palabras:';}renderWords();updateExtraGrayButton();updateButtons();}
+function loadCurrent(){stopSpeech();hideSentenceHint();checkAttempts=0;hasReviewed=false;isSolved=false;document.getElementById('levelLabel').textContent='Nivel '+currentLevel;const free=isConnectorLevel();hint.textContent=free?(currentLevel===5?'Usa todas las palabras del mazo principal y agrega los conectores necesarios. Los conectores no se gastan.':'Usa las palabras necesarias del mazo principal y agrega los conectores necesarios. En este nivel sobran 2 o 3 palabras. Los conectores no se gastan.'):(currentLevel===4?'Arrastra solo las palabras necesarias. Sobran palabras. Debes revisar antes de pasar a la siguiente.':'Arrastra las palabras para construir la oración. Debes revisar antes de pasar a la siguiente.');imageRow.className='image-row n'+current.pics.length+(showLabels?' show-labels':'');imageRow.innerHTML='';current.pics.forEach(k=>{const w=WORDS[k];const card=document.createElement('div');card.className='pic-card';if(!w){card.innerHTML='<div style="font-size:1rem;color:#ef4444;font-weight:900">Falta imagen:<br>'+k+'</div>';}else{card.innerHTML=`<img src="${w.img}" alt="${w.label}" loading="eager" onerror="tryImageFallback(this)"><div class="pic-label">${w.label}</div>`;}imageRow.appendChild(card);});updateImageRowCentering();setTimeout(updateImageRowCentering,250);sentenceItems=[];if(free){const content=current.contentWords||current.words.filter(w=>!CONNECTORS.includes(w));const initial=[...content,...(current.extras||[])];bankItems=shuffle(initial.map((word,i)=>({id:'w'+i,base:word,text:word,extra:!(content.includes(word))})));functionItems=(CONNECTORS.length?CONNECTORS:DEFAULT_CONNECTORS).map((word,i)=>({id:'f'+i,base:word,text:word,reusable:true}));functionBlock.classList.add('show');document.getElementById('wordBankTitle').textContent=currentLevel===5?'Palabras principales:':'Palabras principales y palabras extra:';}else{const initial=[...current.words,...(current.extras||[])];bankItems=shuffle(initial.map((word,i)=>({id:'w'+i,base:word,text:word,extra:(current.extras||[]).includes(word)})));functionItems=[];functionBlock.classList.remove('show');document.getElementById('wordBankTitle').textContent='Mazo de palabras:';}renderWords();updateExtraGrayButton();updateButtons();}
 function isConnectorLevel(){return currentLevel===5||currentLevel===6||current?.mode==='connectors_free';}
 function capWord(word){if(word==='.')return word;return word.charAt(0).toUpperCase()+word.slice(1);}
 function normalizeVisible(){sentenceItems=sentenceItems.map((it,i)=>({...it,text:i===0?capWord(it.base):it.base}));bankItems=bankItems.map(it=>({...it,text:it.base}));functionItems=functionItems.map(it=>({...it,text:it.base}));}
