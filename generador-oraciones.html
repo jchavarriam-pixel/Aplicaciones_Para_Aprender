@@ -75,6 +75,149 @@ body{background:linear-gradient(135deg,#fef9c3 0%,#fbcfe8 48%,#c4b5fd 100%);colo
   body.device-phone .gallery-card{min-height:160px;padding:8px}
   body.device-phone .gallery-card img{height:90px}
 }
+
+/* Ajustes de orientación y detección real de dispositivo */
+body.device-tablet.orient-landscape .screen{max-width:1180px}
+body.device-tablet.orient-landscape .image-row.n5{grid-template-columns:repeat(5,minmax(100px,1fr))}
+body.device-tablet.orient-landscape .pic-card{min-height:138px}
+body.device-tablet.orient-landscape .pic-card img{height:88px}
+body.device-tablet.orient-landscape .bank-grid:has(.bank-block.functions.show){grid-template-columns:minmax(0,1.2fr) minmax(260px,.8fr)}
+body.device-tablet.orient-landscape .actions{grid-template-columns:repeat(4,minmax(0,1fr))}
+body.device-tablet.orient-portrait .image-row.n5{grid-template-columns:repeat(3,minmax(110px,1fr))}
+body.device-tablet.orient-portrait .bank-grid:has(.bank-block.functions.show){grid-template-columns:1fr}
+body.device-tablet.orient-portrait .bank-grid:has(.bank-block.functions.show) .function-bank{grid-template-columns:repeat(4,max-content);justify-content:center}
+body.device-phone.orient-landscape .app{padding:8px}
+body.device-phone.orient-landscape .title{font-size:1.65rem;margin:6px 0}
+body.device-phone.orient-landscape .subtitle{font-size:.92rem;margin-bottom:8px}
+body.device-phone.orient-landscape .card{padding:10px;margin:8px 0}
+body.device-phone.orient-landscape .levels{grid-template-columns:repeat(3,1fr);gap:8px}
+body.device-phone.orient-landscape .level-btn{min-height:82px;padding:8px 6px;font-size:.9rem}
+body.device-phone.orient-landscape .level-btn span{font-size:.72rem}
+body.device-phone.orient-landscape .board{padding:10px}
+body.device-phone.orient-landscape .hint{padding:8px;font-size:.9rem;margin-bottom:8px}
+body.device-phone.orient-landscape .image-row.n2, body.device-phone.orient-landscape .image-row.n3, body.device-phone.orient-landscape .image-row.n4, body.device-phone.orient-landscape .image-row.n5{grid-template-columns:repeat(5,minmax(74px,1fr));gap:8px}
+body.device-phone.orient-landscape .pic-card{min-height:94px;padding:5px;border-width:3px;border-radius:16px}
+body.device-phone.orient-landscape .pic-card img{height:58px}
+body.device-phone.orient-landscape .sentence-zone{min-height:76px;padding:7px}
+body.device-phone.orient-landscape .sentence-wrap{margin:8px 0}
+body.device-phone.orient-landscape .bank-block{padding:8px;border-width:3px}
+body.device-phone.orient-landscape .word-chip{font-size:.9rem;padding:7px 9px;border-radius:14px}
+body.device-phone.orient-landscape .bank-grid:has(.bank-block.functions.show){grid-template-columns:minmax(0,1.1fr) minmax(230px,.9fr);gap:8px}
+body.device-phone.orient-landscape .bank-grid:has(.bank-block.functions.show) .function-bank{grid-template-columns:repeat(4,max-content);gap:6px;justify-content:center}
+body.device-phone.orient-landscape .actions{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:8px}
+body.device-phone.orient-landscape .action-btn{padding:8px 6px;font-size:.78rem;border-radius:13px}
+body.device-phone.orient-portrait .image-row.n5{grid-template-columns:repeat(2,minmax(0,1fr))}
+body.device-phone.orient-portrait .bank-grid:has(.bank-block.functions.show) .function-bank{grid-template-columns:repeat(4,max-content);justify-content:center}
+body.device-phone.orient-portrait .actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+
+
+/* === AJUSTE ESTABLE: imágenes en fila y bancos laterales === */
+.pill-soft,
+.device-footer{
+  display:none !important;
+}
+
+/* Las imágenes siempre se mantienen en una sola fila. Si no caben, se puede deslizar horizontalmente. */
+.image-row,
+.image-row.n2,
+.image-row.n3,
+.image-row.n4,
+.image-row.n5{
+  display:flex !important;
+  flex-wrap:nowrap !important;
+  align-items:stretch !important;
+  justify-content:flex-start !important;
+  gap:12px !important;
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+  padding:4px 4px 10px !important;
+  scroll-snap-type:x proximity;
+  -webkit-overflow-scrolling:touch;
+}
+.image-row::-webkit-scrollbar,
+.bank-grid::-webkit-scrollbar{
+  height:10px;
+}
+.image-row::-webkit-scrollbar-thumb,
+.bank-grid::-webkit-scrollbar-thumb{
+  background:#c4b5fd;
+  border-radius:999px;
+}
+.image-row .pic-card{
+  flex:0 0 clamp(118px, 18vw, 170px) !important;
+  min-width:clamp(118px, 18vw, 170px) !important;
+  scroll-snap-align:start;
+}
+.image-row .pic-card img{
+  height:clamp(78px, 10vw, 118px) !important;
+}
+
+/* En los niveles con conectores: palabras siempre a la izquierda y conectores siempre a la derecha. */
+.bank-grid:has(.bank-block.functions.show){
+  display:grid !important;
+  grid-template-columns:minmax(300px,1fr) minmax(250px,max-content) !important;
+  align-items:start !important;
+  gap:14px !important;
+  overflow-x:auto !important;
+  padding-bottom:8px !important;
+  -webkit-overflow-scrolling:touch;
+}
+.bank-grid:has(.bank-block.functions.show) .bank-block{
+  min-width:300px !important;
+  height:100% !important;
+}
+.bank-grid:has(.bank-block.functions.show) .bank-block.functions{
+  min-width:250px !important;
+}
+.bank-grid:has(.bank-block.functions.show) .word-bank{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  align-items:flex-start !important;
+  align-content:flex-start !important;
+  justify-content:flex-start !important;
+  gap:10px !important;
+  min-height:150px !important;
+}
+.bank-grid:has(.bank-block.functions.show) .function-bank{
+  display:grid !important;
+  grid-template-columns:repeat(4,max-content) !important;
+  justify-content:start !important;
+  align-items:start !important;
+  align-content:start !important;
+  gap:10px !important;
+  min-height:150px !important;
+}
+.bank-grid:has(.bank-block.functions.show) .word-chip{
+  width:auto !important;
+  min-width:max-content !important;
+  flex:0 0 auto !important;
+  white-space:nowrap !important;
+}
+
+@media(max-width:700px){
+  .image-row .pic-card{
+    flex-basis:112px !important;
+    min-width:112px !important;
+    min-height:122px !important;
+    padding:7px !important;
+  }
+  .image-row .pic-card img{
+    height:76px !important;
+  }
+  .bank-grid:has(.bank-block.functions.show){
+    grid-template-columns:minmax(270px,1fr) minmax(235px,max-content) !important;
+  }
+  .bank-grid:has(.bank-block.functions.show) .bank-block{
+    min-width:270px !important;
+  }
+  .bank-grid:has(.bank-block.functions.show) .bank-block.functions{
+    min-width:235px !important;
+  }
+  .bank-grid:has(.bank-block.functions.show) .function-bank{
+    grid-template-columns:repeat(4,max-content) !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -142,6 +285,59 @@ const DEFAULT_CONNECTORS=['la','las','los','el','un','una','unos','unas','de','d
 let currentLevel=1,current=null,score=0,showLabels=false,showExtraGray=false,studentName='',checkAttempts=0,hasReviewed=false,isSolved=false;
 let sentenceItems=[],bankItems=[],functionItems=[],dragging=null,ghost=null,marker=null;
 const menu=document.getElementById('menu'), gallery=document.getElementById('gallery'), game=document.getElementById('game'), imageRow=document.getElementById('imageRow'), sentenceZone=document.getElementById('sentenceZone'), wordBank=document.getElementById('wordBank'), functionBank=document.getElementById('functionBank'), functionBlock=document.getElementById('functionBlock'), hint=document.getElementById('hint'), sentenceHintBox=document.getElementById('sentenceHintBox'), sentenceHintText=document.getElementById('sentenceHintText'), galleryBtn=document.getElementById('galleryBtn'), galleryGrid=document.getElementById('galleryGrid'), galleryCount=document.getElementById('galleryCount'), galleryStatus=document.getElementById('galleryStatus');
+const deviceModeText=document.getElementById('deviceModeText');
+const viewModeBadge=document.getElementById('viewModeBadge');
+let responsiveTimer=null;
+function getViewportSize(){
+  const vv=window.visualViewport;
+  const w=Math.round(vv?.width || window.innerWidth || document.documentElement.clientWidth || screen.width || 0);
+  const h=Math.round(vv?.height || window.innerHeight || document.documentElement.clientHeight || screen.height || 0);
+  return {w,h};
+}
+function isTouchLikeDevice(){
+  return (navigator.maxTouchPoints && navigator.maxTouchPoints>0) ||
+         window.matchMedia('(pointer: coarse)').matches ||
+         window.matchMedia('(hover: none)').matches;
+}
+function updateResponsiveMode(){
+  const {w,h}=getViewportSize();
+  const minSide=Math.min(w,h);
+  const maxSide=Math.max(w,h);
+  const touch=isTouchLikeDevice();
+  const orientation=w>=h?'landscape':'portrait';
+  let mode='desktop';
+
+  // Teléfono: se detecta por lado menor reducido, incluso si está en horizontal.
+  if(minSide<=520 || (touch && minSide<=640 && maxSide<=980)){
+    mode='phone';
+  }
+  // Tableta: dispositivo táctil con pantalla mediana/grande, aunque el ancho sea similar a escritorio.
+  else if(touch || maxSide<=1366 || (w<=1180 && h<=1180)){
+    mode='tablet';
+  }
+
+  document.body.classList.remove('device-desktop','device-tablet','device-phone','orient-landscape','orient-portrait');
+  document.body.classList.add('device-'+mode,'orient-'+orientation);
+
+  const labels={desktop:'🖥️ Escritorio',tablet:'📲 Tableta',phone:'📱 Teléfono'};
+  const orientationText=orientation==='landscape'?'horizontal':'vertical';
+  if(deviceModeText) deviceModeText.textContent=`Vista actual: ${mode==='desktop'?'escritorio':mode==='tablet'?'tableta':'teléfono'} ${orientationText}`;
+  if(viewModeBadge) viewModeBadge.textContent=`${labels[mode]} ${orientation==='landscape'?'↔️':'↕️'}`;
+}
+function scheduleResponsiveUpdate(){
+  clearTimeout(responsiveTimer);
+  responsiveTimer=setTimeout(updateResponsiveMode,80);
+}
+window.addEventListener('resize',scheduleResponsiveUpdate,{passive:true});
+window.addEventListener('orientationchange',()=>setTimeout(updateResponsiveMode,250),{passive:true});
+window.addEventListener('load',updateResponsiveMode,{passive:true});
+window.addEventListener('pageshow',updateResponsiveMode,{passive:true});
+if(window.visualViewport){
+  window.visualViewport.addEventListener('resize',scheduleResponsiveUpdate,{passive:true});
+  window.visualViewport.addEventListener('scroll',scheduleResponsiveUpdate,{passive:true});
+}
+updateResponsiveMode();
+
 function obtenerNombreGuardado(){return (localStorage.getItem(CLAVE_NOMBRE)||'').trim();}
 function guardarNombreEstudiante(nombre){const n=(nombre||'').trim(); if(n)localStorage.setItem(CLAVE_NOMBRE,n); return n;}
 function cargarNombreDesdeIndex(){const input=document.getElementById('nameInput'); const n=obtenerNombreGuardado(); if(input&&n){input.value=n;studentName=n;} if(input&&!input._ready){input._ready=true;input.addEventListener('input',()=>{studentName=guardarNombreEstudiante(input.value);});}}
