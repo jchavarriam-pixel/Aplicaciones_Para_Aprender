@@ -1,0 +1,1409 @@
+@ -1,1408 +0,0 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comprensión Lectora</title>
+
+<style>
+:root{
+    --azul:#2563eb;
+    --azul-oscuro:#1e3a8a;
+    --celeste:#dbeafe;
+    --verde:#16a34a;
+    --rojo:#dc2626;
+    --amarillo:#facc15;
+    --fondo:#eef8ff;
+    --texto:#1f2937;
+    --morado:#7c3aed;
+    --naranja:#fb923c;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:
+        radial-gradient(circle at top left,#fff7ad 0,#fff7ad 120px,transparent 121px),
+        radial-gradient(circle at top right,#b6f5d8 0,#b6f5d8 150px,transparent 151px),
+        linear-gradient(180deg,#dff4ff,#fffdf4);
+    min-height:100vh;
+    color:var(--texto);
+}
+
+header{
+    text-align:center;
+    padding:24px 14px 12px;
+}
+
+h1{
+    margin:0;
+    color:var(--azul-oscuro);
+    font-size:clamp(2rem,5vw,3.5rem);
+    text-shadow:1px 2px 0 #ffffff;
+}
+
+.subtitulo{
+    max-width:800px;
+    margin:10px auto 0;
+    color:#374151;
+    font-size:1.15rem;
+    line-height:1.4;
+}
+
+main{
+    width:min(1180px,96%);
+    margin:0 auto;
+    padding:16px 0 30px;
+}
+
+.panel{
+    background:rgba(255,255,255,0.95);
+    border-radius:28px;
+    padding:22px;
+    margin-bottom:18px;
+    box-shadow:0 10px 24px rgba(30,58,138,0.16);
+    border:3px solid rgba(191,219,254,0.9);
+}
+
+.oculto{
+    display:none !important;
+}
+
+.grid-inicio{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:18px;
+}
+
+.bloque-rutina{
+    display:grid;
+    grid-template-columns:1.15fr 0.85fr;
+    gap:18px;
+    align-items:stretch;
+}
+
+.tarjeta{
+    background:#f8fbff;
+    border:3px solid #dbeafe;
+    border-radius:24px;
+    padding:18px;
+}
+
+label{
+    display:block;
+    font-weight:800;
+    color:var(--azul-oscuro);
+    margin-bottom:8px;
+    font-size:1.05rem;
+}
+
+input[type="text"]{
+    width:100%;
+    border:3px solid #bfdbfe;
+    border-radius:18px;
+    padding:14px 16px;
+    font-size:1.1rem;
+    outline:none;
+}
+
+input[type="text"]:focus{
+    border-color:var(--azul);
+    box-shadow:0 0 0 4px #dbeafe;
+}
+
+.ayuda-verbal{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    background:#fff7dd;
+    border:3px solid #fde68a;
+    border-radius:22px;
+    padding:14px 16px;
+}
+
+.ayuda-verbal strong{
+    color:#92400e;
+}
+
+.switch{
+    position:relative;
+    width:78px;
+    height:42px;
+    flex:0 0 auto;
+}
+
+.switch input{
+    opacity:0;
+    width:0;
+    height:0;
+}
+
+.slider{
+    position:absolute;
+    cursor:pointer;
+    inset:0;
+    background:#cbd5e1;
+    transition:.25s;
+    border-radius:999px;
+    border:3px solid #94a3b8;
+}
+
+.slider:before{
+    content:"";
+    position:absolute;
+    height:28px;
+    width:28px;
+    left:4px;
+    top:4px;
+    background:white;
+    transition:.25s;
+    border-radius:50%;
+    box-shadow:0 2px 5px rgba(0,0,0,.25);
+}
+
+.switch input:checked + .slider{
+    background:#4ade80;
+    border-color:#16a34a;
+}
+
+.switch input:checked + .slider:before{
+    transform:translateX(35px);
+}
+
+.niveles{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+}
+
+.botonNivel{
+    border:none;
+    border-radius:26px;
+    padding:18px 15px;
+    color:white;
+    cursor:pointer;
+    min-height:170px;
+    transition:.2s ease;
+    box-shadow:0 7px 0 rgba(0,0,0,.15);
+    text-align:left;
+}
+
+.botonNivel:hover{
+    transform:translateY(-3px) scale(1.01);
+}
+
+.botonNivel.seleccionado{
+    outline:6px solid #facc15;
+    transform:translateY(-3px);
+}
+
+.botonNivel h2{
+    margin:0 0 8px;
+    font-size:1.45rem;
+}
+
+.botonNivel p{
+    margin:0;
+    line-height:1.32;
+    font-size:.98rem;
+}
+
+.n1{background:linear-gradient(135deg,#38bdf8,#2563eb);}
+.n2{background:linear-gradient(135deg,#34d399,#059669);}
+.n3{background:linear-gradient(135deg,#a78bfa,#7c3aed);}
+.n4{background:linear-gradient(135deg,#fb923c,#ea580c);}
+
+.configuracion{
+    display:grid;
+    grid-template-columns:1.2fr .8fr;
+    gap:16px;
+    align-items:stretch;
+}
+
+.modos{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+}
+
+.modo{
+    border:3px solid #dbeafe;
+    background:#f8fbff;
+    border-radius:22px;
+    padding:14px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.modo:hover{
+    transform:scale(1.02);
+}
+
+.modo.seleccionado{
+    border-color:var(--azul);
+    background:#dbeafe;
+}
+
+.modo h3{
+    margin:0 0 8px;
+    color:var(--azul-oscuro);
+    font-size:1.05rem;
+}
+
+.modo p{
+    margin:0;
+    font-size:.92rem;
+    line-height:1.35;
+}
+
+.checkline{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:#f8fbff;
+    border:3px solid #dbeafe;
+    border-radius:18px;
+    padding:14px;
+    margin-top:12px;
+}
+
+.checkline input{
+    width:24px;
+    height:24px;
+}
+
+.acciones-inicio{
+    display:flex;
+    justify-content:center;
+    margin-top:18px;
+}
+
+.btn-principal,
+.btn-secundario,
+.btn-verde{
+    border:none;
+    border-radius:22px;
+    padding:15px 24px;
+    font-weight:900;
+    font-size:1.08rem;
+    cursor:pointer;
+    box-shadow:0 5px 0 rgba(0,0,0,.15);
+    transition:.15s;
+}
+
+.btn-principal{
+    background:linear-gradient(135deg,#facc15,#f97316);
+    color:#78350f;
+}
+
+.btn-verde{
+    background:linear-gradient(135deg,#86efac,#22c55e);
+    color:#064e3b;
+}
+
+.btn-secundario{
+    background:#e0f2fe;
+    color:#075985;
+}
+
+.btn-principal:hover,
+.btn-secundario:hover,
+.btn-verde:hover{
+    transform:translateY(-2px);
+}
+
+.mensaje-error{
+    background:#fee2e2;
+    color:#7f1d1d;
+    border:3px solid #fca5a5;
+    border-radius:20px;
+    padding:15px;
+    font-weight:bold;
+    margin-top:14px;
+}
+
+.barra-juego{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    align-items:center;
+    flex-wrap:wrap;
+    background:#eff6ff;
+    border:3px solid #bfdbfe;
+    border-radius:24px;
+    padding:14px;
+    margin-bottom:16px;
+}
+
+.etiqueta{
+    background:white;
+    border:2px solid #bfdbfe;
+    border-radius:999px;
+    padding:8px 14px;
+    font-weight:800;
+    color:var(--azul-oscuro);
+}
+
+.lectura{
+    background:#fffdf7;
+    border:4px solid #fde68a;
+    border-radius:26px;
+    padding:20px;
+    font-size:clamp(1.1rem,2.2vw,1.35rem);
+    line-height:1.85;
+}
+
+.parrafo-linea{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    margin:0 0 12px;
+}
+
+.parrafo-linea p{
+    margin:0;
+    flex:1;
+}
+
+.speaker{
+    border:none;
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:#dbeafe;
+    color:#1d4ed8;
+    font-size:1.35rem;
+    cursor:pointer;
+    flex:0 0 auto;
+    box-shadow:0 3px 0 #93c5fd;
+}
+
+.contenedor-preguntas{
+    margin-top:18px;
+}
+
+.pregunta{
+    background:white;
+    border:3px solid #dbeafe;
+    border-radius:24px;
+    padding:18px;
+    margin-bottom:15px;
+}
+
+.pregunta h3{
+    margin:0;
+    color:#1e3a8a;
+    font-size:1.15rem;
+    line-height:1.35;
+}
+
+.pregunta-header{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    margin-bottom:14px;
+}
+
+.pregunta-header h3{
+    flex:1;
+}
+
+.opciones{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+}
+
+.opcion{
+    background:#eff6ff;
+    border:3px solid #bfdbfe;
+    border-radius:18px;
+    padding:12px 16px;
+    cursor:pointer;
+    font-size:1.05rem;
+    font-weight:800;
+    color:#1e3a8a;
+    user-select:none;
+}
+
+.opcion:hover{
+    transform:scale(1.03);
+}
+
+.opcion.seleccionada{
+    background:#fef3c7;
+    border-color:#facc15;
+}
+
+.layout-arrastre{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:18px;
+    align-items:start;
+}
+
+.col-preguntas{
+    min-width:0;
+}
+
+.banco{
+    background:#f0fdf4;
+    border:4px solid #bbf7d0;
+    border-radius:24px;
+    padding:15px;
+    min-height:220px;
+    position:sticky;
+    top:10px;
+}
+
+.banco h3{
+    margin:0 0 12px;
+    color:#166534;
+    font-size:1.1rem;
+}
+
+.banco-items{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.token{
+    background:#fff7cc;
+    border:3px solid #facc15;
+    color:#78350f;
+    border-radius:16px;
+    padding:10px 13px;
+    cursor:grab;
+    font-weight:900;
+    user-select:none;
+    touch-action:none;
+}
+
+.token.usado{
+    opacity:.45;
+}
+
+.zona-respuesta{
+    min-height:58px;
+    border:3px dashed #93c5fd;
+    background:#f8fbff;
+    border-radius:17px;
+    padding:10px;
+    margin-top:12px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    align-items:center;
+}
+
+.zona-respuesta.sobre{
+    background:#dbeafe;
+}
+
+.chip-respuesta{
+    background:#dbeafe;
+    border:2px solid #60a5fa;
+    color:#1e3a8a;
+    border-radius:14px;
+    padding:8px 11px;
+    font-weight:900;
+    cursor:pointer;
+}
+
+.correcta{
+    border-color:#16a34a !important;
+    background:#dcfce7 !important;
+}
+
+.incorrecta{
+    border-color:#dc2626 !important;
+    background:#fee2e2 !important;
+}
+
+.retro{
+    margin-top:10px;
+    font-weight:900;
+}
+
+.retro.ok{
+    color:#166534;
+}
+
+.retro.no{
+    color:#991b1b;
+}
+
+.botones-juego{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-top:18px;
+}
+
+.celebracion{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:999;
+}
+
+.particula{
+    position:absolute;
+    font-weight:900;
+    animation:celebrar 8s ease-out forwards;
+}
+
+@keyframes celebrar{
+    0%{transform:translateY(0) scale(.8) rotate(0deg); opacity:0;}
+    12%{opacity:1;}
+    38%{transform:translateY(-170px) scale(1) rotate(180deg); opacity:1;}
+    72%{opacity:1;}
+    100%{transform:translateY(100vh) scale(.9) rotate(720deg); opacity:0;}
+}
+
+footer{
+    text-align:center;
+    color:#475569;
+    padding:18px;
+    font-size:.95rem;
+}
+
+@media(max-width:980px){
+    .niveles{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .configuracion,
+    .bloque-rutina,
+    .layout-arrastre{
+        grid-template-columns:1fr;
+    }
+
+    .banco{
+        position:static;
+    }
+}
+
+@media(max-width:650px){
+    .niveles,
+    .modos{
+        grid-template-columns:1fr;
+    }
+
+    .panel{
+        padding:15px;
+    }
+
+    .botonNivel{
+        min-height:auto;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>📚 Comprensión lectora</h1>
+    <div class="subtitulo">
+        Lee con calma, comprende la historia y responde de diferentes maneras.
+    </div>
+</header>
+
+<main>
+
+<section id="pantallaInicio" class="panel">
+
+    <div class="grid-inicio">
+
+        <div class="bloque-rutina">
+
+            <div class="tarjeta">
+                <label for="nombreNino">Nombre del estudiante</label>
+                <input id="nombreNino" type="text" placeholder="Ejemplo: Gabriel">
+                <div style="margin-top:10px;color:#64748b;font-size:.95rem;">
+                    El nombre se guarda en este dispositivo para la próxima vez.
+                </div>
+            </div>
+
+            <div class="ayuda-verbal">
+                <div>
+                    <strong>🔊 Ayuda verbal</strong>
+                    <div style="font-size:.95rem;color:#78350f;margin-top:4px;">
+                        Al activarla, aparecen parlantes en los párrafos y preguntas.
+                    </div>
+                </div>
+
+                <label class="switch" title="Activar o desactivar ayuda verbal">
+                    <input id="ayudaVerbal" type="checkbox">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+        </div>
+
+        <div class="tarjeta">
+            <label>Escoge el nivel</label>
+
+            <div class="niveles">
+
+                <button class="botonNivel n1" data-nivel="1">
+                    <h2>Nivel 1</h2>
+                    <p>
+                        3 oraciones. 2 preguntas. Respuestas con palabras individuales.
+                    </p>
+                </button>
+
+                <button class="botonNivel n2" data-nivel="2">
+                    <h2>Nivel 2</h2>
+                    <p>
+                        4 oraciones. 3 preguntas. Respuestas con palabras o frases cortas.
+                    </p>
+                </button>
+
+                <button class="botonNivel n3" data-nivel="3">
+                    <h2>Nivel 3</h2>
+                    <p>
+                        2 párrafos. Más información para leer y 4 preguntas.
+                    </p>
+                </button>
+
+                <button class="botonNivel n4" data-nivel="4">
+                    <h2>Nivel 4</h2>
+                    <p>
+                        3 o 4 párrafos. Lecturas más largas con 5 preguntas.
+                    </p>
+                </button>
+
+            </div>
+        </div>
+
+        <div class="configuracion">
+
+            <div class="tarjeta">
+                <label>Forma de responder</label>
+
+                <div class="modos">
+
+                    <div class="modo seleccionado" data-modo="seleccion">
+                        <h3>Selección única</h3>
+                        <p>
+                            Se presentan 3 opciones y se marca la correcta.
+                        </p>
+                    </div>
+
+                    <div class="modo" data-modo="arrastrar-respuesta">
+                        <h3>Arrastrar respuesta</h3>
+                        <p>
+                            Las preguntas quedan a la izquierda y las respuestas disponibles a la derecha.
+                        </p>
+                    </div>
+
+                    <div class="modo" data-modo="armar-frase">
+                        <h3>Armar la respuesta</h3>
+                        <p>
+                            Se arrastran palabras para construir la frase de respuesta.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="tarjeta">
+                <label>Banco de respuestas</label>
+
+                <div class="checkline">
+                    <input id="usarSenuelos" type="checkbox" checked>
+                    <div>
+                        <strong>Incluir respuestas sobrantes o señuelos</strong>
+                        <div style="font-size:.92rem;color:#475569;">
+                            Si se desactiva, aparecen solo las respuestas necesarias.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checkline">
+                    <input id="mezclarBanco" type="checkbox" checked>
+                    <div>
+                        <strong>Mezclar opciones</strong>
+                        <div style="font-size:.92rem;color:#475569;">
+                            Reordena las opciones para variar cada intento.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="mensajeError" class="mensaje-error oculto"></div>
+
+        <div class="acciones-inicio">
+            <button id="btnIniciar" class="btn-principal">
+                Empezar lectura 🌟
+            </button>
+        </div>
+
+    </div>
+
+</section>
+
+<section id="pantallaJuego" class="panel oculto">
+
+    <div class="barra-juego">
+        <div class="etiqueta" id="infoNivel">Nivel</div>
+        <div class="etiqueta" id="infoModo">Modo</div>
+        <div class="etiqueta" id="infoNombre">Estudiante</div>
+    </div>
+
+    <article id="lectura" class="lectura"></article>
+
+    <section id="zonaPreguntas" class="contenedor-preguntas"></section>
+
+    <div class="botones-juego">
+        <button id="btnVerificar" class="btn-verde">Verificar respuestas ✅</button>
+        <button id="btnVolver" class="btn-secundario">Volver al inicio</button>
+    </div>
+
+</section>
+
+</main>
+
+<footer>
+    Aplicación creada para Gabriel por parte de su familia, con ayuda de la IA.
+</footer>
+
+<div id="celebracion" class="celebracion"></div>
+
+<script>
+const CONFIG_REGISTRO = {
+    urlAppsScript: "",
+    activarRegistro: true
+};
+
+const preguntasPorNivel = {
+    1: 2,
+    2: 3,
+    3: 4,
+    4: 5
+};
+
+const nombresModo = {
+    "seleccion":"Selección única",
+    "arrastrar-respuesta":"Arrastrar respuesta",
+    "armar-frase":"Armar frase"
+};
+
+let baseLecturas = [];
+let nivelSeleccionado = 1;
+let modoSeleccionado = "seleccion";
+let ayudaVerbalActiva = false;
+let lecturaActual = null;
+let preguntasActuales = [];
+let respuestasBanco = [];
+let respuestasUsuario = {};
+let respuestasSeleccion = {};
+
+document.addEventListener("DOMContentLoaded", iniciarAplicacion);
+
+function iniciarAplicacion(){
+    prepararRutina();
+    prepararEventos();
+    cargarBase();
+}
+
+function prepararRutina(){
+    const nombreGuardado = localStorage.getItem("nombre_estudiante_comprension") || "";
+    const ayudaGuardada = localStorage.getItem("ayuda_verbal_comprension") === "true";
+
+    document.getElementById("nombreNino").value = nombreGuardado;
+    document.getElementById("ayudaVerbal").checked = ayudaGuardada;
+    ayudaVerbalActiva = ayudaGuardada;
+}
+
+function prepararEventos(){
+    document.querySelectorAll(".botonNivel").forEach(btn=>{
+        btn.addEventListener("click",()=>{
+            nivelSeleccionado = Number(btn.dataset.nivel);
+
+            document.querySelectorAll(".botonNivel").forEach(b=>b.classList.remove("seleccionado"));
+            btn.classList.add("seleccionado");
+        });
+    });
+
+    document.querySelector('.botonNivel[data-nivel="1"]').classList.add("seleccionado");
+
+    document.querySelectorAll(".modo").forEach(modo=>{
+        modo.addEventListener("click",()=>{
+            modoSeleccionado = modo.dataset.modo;
+
+            document.querySelectorAll(".modo").forEach(m=>m.classList.remove("seleccionado"));
+            modo.classList.add("seleccionado");
+        });
+    });
+
+    document.getElementById("ayudaVerbal").addEventListener("change",e=>{
+        ayudaVerbalActiva = e.target.checked;
+        localStorage.setItem("ayuda_verbal_comprension", ayudaVerbalActiva ? "true":"false");
+    });
+
+    document.getElementById("nombreNino").addEventListener("input",e=>{
+        localStorage.setItem("nombre_estudiante_comprension", e.target.value.trim());
+    });
+
+    document.getElementById("btnIniciar").addEventListener("click",iniciarLectura);
+
+    document.getElementById("btnVerificar").addEventListener("click",verificarRespuestas);
+
+    document.getElementById("btnVolver").addEventListener("click",()=>{
+        detenerVoz();
+        document.getElementById("pantallaJuego").classList.add("oculto");
+        document.getElementById("pantallaInicio").classList.remove("oculto");
+    });
+}
+
+async function cargarBase(){
+    const error = document.getElementById("mensajeError");
+
+    try{
+        const resp = await fetch("Base_de_lecturas.json", {cache:"no-store"});
+
+        if(!resp.ok){
+            throw new Error("No se pudo abrir Base_de_lecturas.json.");
+        }
+
+        const data = await resp.json();
+
+        if(!Array.isArray(data)){
+            throw new Error("La base debe ser una lista de lecturas.");
+        }
+
+        baseLecturas = data;
+        error.classList.add("oculto");
+        error.textContent = "";
+
+    }catch(e){
+        baseLecturas = [];
+        error.classList.remove("oculto");
+        error.innerHTML = `
+            ⚠️ No se pudo cargar la base <strong>Base_de_lecturas.json</strong>.<br>
+            Revise que el archivo esté en la misma carpeta que este index y que el nombre sea exactamente:
+            <strong>Base_de_lecturas.json</strong>.
+        `;
+    }
+}
+
+function iniciarLectura(){
+    const nombre = document.getElementById("nombreNino").value.trim();
+
+    if(!nombre){
+        mostrarError("Escriba el nombre del estudiante antes de iniciar.");
+        return;
+    }
+
+    localStorage.setItem("nombre_estudiante_comprension", nombre);
+
+    if(!baseLecturas.length){
+        mostrarError("No se puede iniciar porque no se cargó Base_de_lecturas.json.");
+        return;
+    }
+
+    const candidatas = baseLecturas.filter(l=>Number(l.level)===nivelSeleccionado);
+
+    if(!candidatas.length){
+        mostrarError(`No hay lecturas disponibles para el nivel ${nivelSeleccionado}.`);
+        return;
+    }
+
+    lecturaActual = escogerAleatorio(candidatas);
+    preguntasActuales = escogerPreguntasNivel(lecturaActual, nivelSeleccionado);
+
+    respuestasUsuario = {};
+    respuestasSeleccion = {};
+
+    document.getElementById("pantallaInicio").classList.add("oculto");
+    document.getElementById("pantallaJuego").classList.remove("oculto");
+
+    document.getElementById("infoNivel").textContent = `Nivel ${nivelSeleccionado}`;
+    document.getElementById("infoModo").textContent = nombresModo[modoSeleccionado];
+    document.getElementById("infoNombre").textContent = nombre;
+
+    renderLectura();
+    renderPreguntas();
+
+    registrarUso(nombre);
+}
+
+function mostrarError(texto){
+    const error = document.getElementById("mensajeError");
+    error.classList.remove("oculto");
+    error.textContent = texto;
+}
+
+function escogerPreguntasNivel(lectura,nivel){
+    const cantidad = preguntasPorNivel[nivel];
+    const preguntas = Array.isArray(lectura.questions) ? lectura.questions : [];
+    return mezclar(preguntas).slice(0,cantidad);
+}
+
+function renderLectura(){
+    const cont = document.getElementById("lectura");
+    const partes = Array.isArray(lecturaActual.text) ? lecturaActual.text : [];
+
+    cont.innerHTML = partes.map(parrafo=>{
+        return `
+        <div class="parrafo-linea">
+            ${ayudaVerbalActiva ? botonVoz(parrafo) : ""}
+            <p>${escapar(parrafo)}</p>
+        </div>
+        `;
+    }).join("");
+}
+
+function renderPreguntas(){
+    const zona = document.getElementById("zonaPreguntas");
+
+    if(modoSeleccionado === "seleccion"){
+        zona.innerHTML = preguntasActuales.map((p,i)=>renderPreguntaSeleccion(p,i)).join("");
+        activarSeleccion();
+        return;
+    }
+
+    prepararBancoRespuestas();
+
+    zona.innerHTML = `
+        <div class="layout-arrastre">
+            <div class="col-preguntas">
+                ${preguntasActuales.map((p,i)=>renderPreguntaArrastre(p,i)).join("")}
+            </div>
+            <aside class="banco">
+                <h3>Respuestas disponibles</h3>
+                <div class="banco-items">
+                    ${respuestasBanco.map((item,i)=>renderToken(item,i)).join("")}
+                </div>
+            </aside>
+        </div>
+    `;
+
+    activarArrastre();
+}
+
+function renderPreguntaSeleccion(p,i){
+    const opciones = obtenerOpcionesSeleccion(p);
+
+    return `
+    <div class="pregunta" data-index="${i}">
+        <div class="pregunta-header">
+            ${ayudaVerbalActiva ? botonVoz(p.question) : ""}
+            <h3>${i+1}. ${escapar(p.question)}</h3>
+        </div>
+        <div class="opciones">
+            ${opciones.map(op=>`
+                <button class="opcion" data-index="${i}" data-respuesta="${escaparAttr(op)}">
+                    ${escapar(op)}
+                </button>
+            `).join("")}
+        </div>
+        <div class="retro" id="retro-${i}"></div>
+    </div>
+    `;
+}
+
+function renderPreguntaArrastre(p,i){
+    return `
+    <div class="pregunta" data-index="${i}">
+        <div class="pregunta-header">
+            ${ayudaVerbalActiva ? botonVoz(p.question) : ""}
+            <h3>${i+1}. ${escapar(p.question)}</h3>
+        </div>
+        <div class="zona-respuesta" data-index="${i}" aria-label="Campo de respuesta"></div>
+        <div class="retro" id="retro-${i}"></div>
+    </div>
+    `;
+}
+
+function obtenerOpcionesSeleccion(p){
+    let opciones = [];
+
+    if(Array.isArray(p.options) && p.options.length){
+        opciones = [...p.options];
+    }
+
+    if(!opciones.includes(p.answer)){
+        opciones.push(p.answer);
+    }
+
+    if(opciones.length < 3 && Array.isArray(p.distractors)){
+        p.distractors.forEach(d=>{
+            if(opciones.length < 3 && !opciones.includes(d)){
+                opciones.push(d);
+            }
+        });
+    }
+
+    opciones = opciones.slice(0,3);
+
+    if(document.getElementById("mezclarBanco").checked){
+        opciones = mezclar(opciones);
+    }
+
+    return opciones;
+}
+
+function prepararBancoRespuestas(){
+    const usarSenuelos = document.getElementById("usarSenuelos").checked;
+    const mezclarBanco = document.getElementById("mezclarBanco").checked;
+
+    respuestasBanco = [];
+
+    preguntasActuales.forEach((p,i)=>{
+        if(modoSeleccionado === "arrastrar-respuesta"){
+            respuestasBanco.push({
+                texto:p.answer,
+                tipo:"respuesta",
+                pregunta:i
+            });
+
+            if(usarSenuelos && Array.isArray(p.distractors)){
+                p.distractors.forEach(d=>{
+                    respuestasBanco.push({
+                        texto:d,
+                        tipo:"senuelo",
+                        pregunta:null
+                    });
+                });
+            }
+        }
+
+        if(modoSeleccionado === "armar-frase"){
+            const palabras = Array.isArray(p.answerWords)
+                ? p.answerWords
+                : String(p.answer).split(/\s+/);
+
+            palabras.forEach((palabra,orden)=>{
+                respuestasBanco.push({
+                    texto:palabra,
+                    tipo:"palabra",
+                    pregunta:i,
+                    orden
+                });
+            });
+
+            if(usarSenuelos && Array.isArray(p.extraWords)){
+                p.extraWords.forEach(extra=>{
+                    respuestasBanco.push({
+                        texto:extra,
+                        tipo:"senuelo",
+                        pregunta:null,
+                        orden:null
+                    });
+                });
+            }
+        }
+    });
+
+    if(mezclarBanco){
+        respuestasBanco = mezclar(respuestasBanco);
+    }
+}
+
+function renderToken(item,i){
+    return `
+    <div class="token"
+         draggable="true"
+         data-token="${i}"
+         data-texto="${escaparAttr(item.texto)}">
+         ${escapar(item.texto)}
+    </div>
+    `;
+}
+
+function activarSeleccion(){
+    document.querySelectorAll(".opcion").forEach(btn=>{
+        btn.addEventListener("click",()=>{
+            const index = Number(btn.dataset.index);
+            respuestasSeleccion[index] = btn.dataset.respuesta;
+
+            btn.closest(".opciones").querySelectorAll(".opcion").forEach(b=>{
+                b.classList.remove("seleccionada");
+            });
+
+            btn.classList.add("seleccionada");
+        });
+    });
+}
+
+function activarArrastre(){
+    document.querySelectorAll(".token").forEach(token=>{
+        token.addEventListener("dragstart",e=>{
+            e.dataTransfer.setData("text/plain", token.dataset.token);
+        });
+
+        token.addEventListener("click",()=>{
+            const primeraZonaVacia = [...document.querySelectorAll(".zona-respuesta")]
+                .find(z=>!z.dataset.bloqueada);
+            if(primeraZonaVacia){
+                agregarTokenAZona(token, primeraZonaVacia);
+            }
+        });
+    });
+
+    document.querySelectorAll(".zona-respuesta").forEach(zona=>{
+        zona.addEventListener("dragover",e=>{
+            e.preventDefault();
+            zona.classList.add("sobre");
+        });
+
+        zona.addEventListener("dragleave",()=>{
+            zona.classList.remove("sobre");
+        });
+
+        zona.addEventListener("drop",e=>{
+            e.preventDefault();
+            zona.classList.remove("sobre");
+
+            const tokenId = e.dataTransfer.getData("text/plain");
+            const token = document.querySelector(`.token[data-token="${tokenId}"]`);
+
+            if(token){
+                agregarTokenAZona(token,zona);
+            }
+        });
+    });
+}
+
+function agregarTokenAZona(token,zona){
+    const index = Number(zona.dataset.index);
+    const tokenId = Number(token.dataset.token);
+    const texto = token.dataset.texto;
+
+    if(modoSeleccionado === "arrastrar-respuesta"){
+        zona.innerHTML = "";
+        respuestasUsuario[index] = [tokenId];
+
+        const chip = crearChip(texto,()=>{
+            zona.innerHTML = "";
+            delete respuestasUsuario[index];
+        });
+
+        zona.appendChild(chip);
+        return;
+    }
+
+    if(modoSeleccionado === "armar-frase"){
+        if(!respuestasUsuario[index]){
+            respuestasUsuario[index] = [];
+        }
+
+        respuestasUsuario[index].push(tokenId);
+
+        const chip = crearChip(texto,()=>{
+            respuestasUsuario[index] = respuestasUsuario[index].filter(x=>x!==tokenId);
+            chip.remove();
+        });
+
+        zona.appendChild(chip);
+    }
+}
+
+function crearChip(texto,onRemove){
+    const chip = document.createElement("span");
+    chip.className = "chip-respuesta";
+    chip.textContent = texto;
+    chip.title = "Clic para quitar";
+    chip.addEventListener("click",onRemove);
+    return chip;
+}
+
+function verificarRespuestas(){
+    let correctas = 0;
+
+    preguntasActuales.forEach((p,i)=>{
+        const retro = document.getElementById(`retro-${i}`);
+        const tarjeta = document.querySelector(`.pregunta[data-index="${i}"]`);
+        tarjeta.classList.remove("correcta","incorrecta");
+
+        let ok = false;
+
+        if(modoSeleccionado === "seleccion"){
+            ok = normalizar(respuestasSeleccion[i] || "") === normalizar(p.answer);
+        }
+
+        if(modoSeleccionado === "arrastrar-respuesta"){
+            const ids = respuestasUsuario[i] || [];
+            const texto = ids.map(id=>respuestasBanco[id]?.texto || "").join(" ");
+            ok = normalizar(texto) === normalizar(p.answer);
+        }
+
+        if(modoSeleccionado === "armar-frase"){
+            const ids = respuestasUsuario[i] || [];
+            const texto = ids.map(id=>respuestasBanco[id]?.texto || "").join(" ");
+            ok = normalizar(texto) === normalizar(p.answer);
+        }
+
+        if(ok){
+            correctas++;
+            tarjeta.classList.add("correcta");
+            retro.className = "retro ok";
+            retro.textContent = "¡Correcto!";
+        }else{
+            tarjeta.classList.add("incorrecta");
+            retro.className = "retro no";
+            retro.textContent = "Revisa esta respuesta.";
+        }
+    });
+
+    if(correctas === preguntasActuales.length){
+        celebrar();
+        felicitar();
+    }else{
+        hablar(`Tienes ${correctas} de ${preguntasActuales.length} correctas. Puedes revisar y volver a intentar.`);
+    }
+}
+
+function felicitar(){
+    const nombre = document.getElementById("nombreNino").value.trim() || "campeón";
+
+    const frases = [
+        `Excelente trabajo, ${nombre}.`,
+        `Muy bien, ${nombre}. Leíste con mucha atención.`,
+        `Bravo, ${nombre}. Lo hiciste genial.`,
+        `Qué buen esfuerzo, ${nombre}.`,
+        `Fantástico, ${nombre}. Sigue así.`,
+        `Muy buen trabajo, ${nombre}. Comprendiste la lectura.`,
+        `Súper, ${nombre}. Respondiste con cuidado.`,
+        `Felicitaciones, ${nombre}.`,
+        `Lo lograste, ${nombre}.`,
+        `Qué alegría, ${nombre}. Todas están correctas.`
+    ];
+
+    setTimeout(()=>{
+        hablar(frases[Math.floor(Math.random()*frases.length)]);
+    },400);
+}
+
+function celebrar(){
+    const cont = document.getElementById("celebracion");
+    cont.innerHTML = "";
+
+    const figuras = ["●","■","▲","◆","★","1","2","3","4","5","✓"];
+    const animaciones = 12;
+
+    for(let i=0;i<90;i++){
+        const p = document.createElement("div");
+        p.className = "particula";
+        p.textContent = figuras[Math.floor(Math.random()*figuras.length)];
+        p.style.left = Math.random()*100 + "vw";
+        p.style.top = (50 + Math.random()*35) + "vh";
+        p.style.fontSize = (14 + Math.random()*14) + "px";
+        p.style.color = `hsl(${Math.random()*360},85%,45%)`;
+        p.style.animationDelay = (Math.random()*0.6) + "s";
+        p.style.animationDuration = (7.5 + Math.random()*1.2) + "s";
+        p.style.transform = `rotate(${Math.random()*360}deg)`;
+
+        if(i % animaciones === 0){
+            p.style.left = "50vw";
+        }
+
+        cont.appendChild(p);
+    }
+
+    setTimeout(()=>{
+        cont.innerHTML = "";
+    },8200);
+}
+
+function botonVoz(texto){
+    return `<button class="speaker" onclick="hablar('${escaparAttr(texto)}')" title="Escuchar">🔊</button>`;
+}
+
+function hablar(texto){
+    if(!("speechSynthesis" in window)) return;
+
+    detenerVoz();
+
+    const u = new SpeechSynthesisUtterance(texto);
+    u.lang = "es-CR";
+    u.rate = 0.9;
+    u.pitch = 1.05;
+
+    window.speechSynthesis.speak(u);
+}
+
+function detenerVoz(){
+    if("speechSynthesis" in window){
+        window.speechSynthesis.cancel();
+    }
+}
+
+function registrarUso(nombre){
+    if(!CONFIG_REGISTRO.activarRegistro) return;
+
+    const archivo = obtenerNombreArchivoIndex();
+
+    const datos = {
+        horaLocal: new Date().toLocaleString("es-CR"),
+        nombre,
+        archivo
+    };
+
+    if(CONFIG_REGISTRO.urlAppsScript){
+        fetch(CONFIG_REGISTRO.urlAppsScript,{
+            method:"POST",
+            mode:"no-cors",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify(datos)
+        }).catch(()=>{});
+    }
+}
+
+function obtenerNombreArchivoIndex(){
+    const path = window.location.pathname;
+    const archivo = path.substring(path.lastIndexOf("/") + 1);
+    return archivo || "index.html";
+}
+
+function escogerAleatorio(lista){
+    return lista[Math.floor(Math.random()*lista.length)];
+}
+
+function mezclar(lista){
+    return [...lista].sort(()=>Math.random()-0.5);
+}
+
+function normalizar(txt){
+    return String(txt)
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g,"")
+        .replace(/[¿?¡!.,;:]/g,"")
+        .replace(/\s+/g," ")
+        .trim();
+}
+
+function escapar(txt){
+    return String(txt)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+}
+
+function escaparAttr(txt){
+    return escapar(txt).replaceAll("\n"," ");
+}
+</script>
+
+</body>
+</html>
