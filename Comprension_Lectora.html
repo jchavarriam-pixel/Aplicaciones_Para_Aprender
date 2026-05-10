@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Comprensión Lectora</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
 
 <style>
 :root{
@@ -17,6 +20,7 @@
     --texto:#1f2937;
     --morado:#7c3aed;
     --naranja:#fb923c;
+    --fuente-lectura:"Atkinson Hyperlegible", "Nunito", Arial, sans-serif;
 }
 
 *{
@@ -25,7 +29,7 @@
 
 body{
     margin:0;
-    font-family:Arial, Helvetica, sans-serif;
+    font-family:"Nunito", Arial, Helvetica, sans-serif;
     background:
         radial-gradient(circle at top left,#fff7ad 0,#fff7ad 120px,transparent 121px),
         radial-gradient(circle at top right,#b6f5d8 0,#b6f5d8 150px,transparent 151px),
@@ -353,9 +357,11 @@ input[type="text"]:focus{
     background:#fffdf7;
     border:4px solid #fde68a;
     border-radius:26px;
-    padding:20px;
-    font-size:clamp(1.1rem,2.2vw,1.35rem);
-    line-height:1.85;
+    padding:clamp(18px,2.4vw,28px);
+    font-family:var(--fuente-lectura);
+    font-size:clamp(1.28rem,2.15vw,1.72rem);
+    line-height:1.78;
+    letter-spacing:0.01em;
 }
 
 .parrafo-linea{
@@ -368,6 +374,7 @@ input[type="text"]:focus{
 .parrafo-linea p{
     margin:0;
     flex:1;
+    max-width:72ch;
 }
 
 .speaker{
@@ -398,8 +405,10 @@ input[type="text"]:focus{
 .pregunta h3{
     margin:0;
     color:#1e3a8a;
-    font-size:1.15rem;
-    line-height:1.35;
+    font-family:var(--fuente-lectura);
+    font-size:clamp(1.15rem,1.7vw,1.38rem);
+    line-height:1.42;
+    letter-spacing:0.01em;
 }
 
 .pregunta-header{
@@ -423,10 +432,11 @@ input[type="text"]:focus{
     background:#eff6ff;
     border:3px solid #bfdbfe;
     border-radius:18px;
-    padding:12px 16px;
+    padding:13px 18px;
     cursor:pointer;
-    font-size:1.05rem;
-    font-weight:800;
+    font-family:var(--fuente-lectura);
+    font-size:clamp(1.06rem,1.5vw,1.22rem);
+    font-weight:700;
     color:#1e3a8a;
     user-select:none;
 }
@@ -478,9 +488,11 @@ input[type="text"]:focus{
     border:3px solid #facc15;
     color:#78350f;
     border-radius:16px;
-    padding:10px 13px;
+    padding:11px 14px;
     cursor:grab;
-    font-weight:900;
+    font-family:var(--fuente-lectura);
+    font-size:clamp(1rem,1.45vw,1.18rem);
+    font-weight:700;
     user-select:none;
     touch-action:none;
 }
@@ -511,8 +523,10 @@ input[type="text"]:focus{
     border:2px solid #60a5fa;
     color:#1e3a8a;
     border-radius:14px;
-    padding:8px 11px;
-    font-weight:900;
+    padding:9px 12px;
+    font-family:var(--fuente-lectura);
+    font-size:clamp(1rem,1.45vw,1.16rem);
+    font-weight:700;
     cursor:pointer;
 }
 
@@ -574,6 +588,95 @@ footer{
     color:#475569;
     padding:18px;
     font-size:.95rem;
+}
+
+@media (min-width:700px) and (max-width:1180px){
+    main{
+        width:min(100% - 24px,1100px);
+        padding-top:10px;
+    }
+
+    header{
+        padding:18px 12px 8px;
+    }
+
+    h1{
+        font-size:clamp(2rem,4.2vw,3rem);
+    }
+
+    .panel{
+        padding:clamp(16px,2vw,22px);
+        border-radius:24px;
+    }
+
+    .bloque-rutina,
+    .configuracion{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .niveles{
+        grid-template-columns:repeat(4,minmax(0,1fr));
+        gap:10px;
+    }
+
+    .botonNivel{
+        min-height:145px;
+        padding:15px 12px;
+    }
+
+    .botonNivel h2{
+        font-size:1.22rem;
+    }
+
+    .botonNivel p{
+        font-size:.9rem;
+    }
+
+    .modos{
+        grid-template-columns:repeat(3,minmax(0,1fr));
+        gap:10px;
+    }
+
+    .lectura{
+        font-size:clamp(1.32rem,2.2vw,1.62rem);
+    }
+
+    .layout-arrastre{
+        grid-template-columns:minmax(0,1.65fr) minmax(230px,.75fr);
+        gap:14px;
+    }
+
+    .banco{
+        position:sticky;
+        top:8px;
+        max-height:72vh;
+        overflow:auto;
+    }
+}
+
+@media (orientation:landscape) and (min-width:700px) and (max-height:820px){
+    header{
+        padding:12px 10px 4px;
+    }
+
+    .subtitulo{
+        margin-top:6px;
+        font-size:1rem;
+    }
+
+    .panel{
+        margin-bottom:12px;
+    }
+
+    .barra-juego{
+        padding:10px;
+        margin-bottom:12px;
+    }
+
+    .lectura{
+        padding:16px 18px;
+        line-height:1.62;
+    }
 }
 
 @media(max-width:980px){
@@ -769,6 +872,7 @@ footer{
 
     <div class="botones-juego">
         <button id="btnVerificar" class="btn-verde">Verificar respuestas ✅</button>
+        <button id="btnSiguiente" class="btn-principal">Siguiente lectura ➡️</button>
         <button id="btnVolver" class="btn-secundario">Volver al inicio</button>
     </div>
 
@@ -862,6 +966,12 @@ function prepararEventos(){
 
     document.getElementById("btnVerificar").addEventListener("click",verificarRespuestas);
 
+    document.getElementById("btnSiguiente").addEventListener("click",()=>{
+        detenerVoz();
+        iniciarLectura(false);
+        window.scrollTo({top:0,behavior:"smooth"});
+    });
+
     document.getElementById("btnVolver").addEventListener("click",()=>{
         detenerVoz();
         document.getElementById("pantallaJuego").classList.add("oculto");
@@ -900,7 +1010,7 @@ async function cargarBase(){
     }
 }
 
-function iniciarLectura(){
+function iniciarLectura(cambiarPantalla = true){
     const nombre = document.getElementById("nombreNino").value.trim();
 
     if(!nombre){
@@ -928,8 +1038,10 @@ function iniciarLectura(){
     respuestasUsuario = {};
     respuestasSeleccion = {};
 
-    document.getElementById("pantallaInicio").classList.add("oculto");
-    document.getElementById("pantallaJuego").classList.remove("oculto");
+    if(cambiarPantalla){
+        document.getElementById("pantallaInicio").classList.add("oculto");
+        document.getElementById("pantallaJuego").classList.remove("oculto");
+    }
 
     document.getElementById("infoNivel").textContent = `Nivel ${nivelSeleccionado}`;
     document.getElementById("infoModo").textContent = nombresModo[modoSeleccionado];
