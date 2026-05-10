@@ -58,6 +58,7 @@
   },
   
   
+  
   {
     "id": "L1_01",
     "level": 1,
@@ -116,6 +117,7 @@
     ]
   },
 
+  
   {
     "id": "L1_02",
     "level": 1,
@@ -174,6 +176,8 @@
     ]
   },
 
+  
+  
   {
     "id": "L1_03",
     "level": 1,
@@ -232,6 +236,8 @@
     ]
   },
 
+  
+  
   {
     "id": "L1_04",
     "level": 1,
@@ -290,6 +296,8 @@
     ]
   },
 
+  
+  
   {
     "id": "L1_05",
     "level": 1,
@@ -348,6 +356,8 @@
     ]
   },
 
+  
+  
   {
     "id": "L1_06",
     "level": 1,
@@ -406,6 +416,8 @@
     ]
   },
 
+  
+  
   {
     "id": "L1_07",
     "level": 1,
@@ -464,6 +476,8 @@
     ]
   },
 
+  
+  
   {
     "id": "L1_08",
     "level": 1,
@@ -522,6 +536,8 @@
     ]
   },
 
+  
+  
   {
     "id": "L1_09",
     "level": 1,
@@ -580,6 +596,8 @@
     ]
   },
 
+  
+  
   {
     "id": "L1_10",
     "level": 1,
@@ -644,9 +662,20 @@
   
   
   
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
   {
-    "id": "L2_01",
+    "id": "L2_001",
     "level": 2,
     "title": "La merienda de Mateo",
     "text": [
@@ -713,6 +742,373 @@
     ]
   },
 
+  
+  
+  
+  {
+    "id": "L2_01",
+    "level": 2,
+    "title": "Joaquín y el oso",
+    "text": [
+      "Joaquín tiene un oso de peluche café.",
+      "El oso se llama Hugo y duerme en su cama.",
+      "En la tarde, Joaquín juega con Hugo sobre la alfombra.",
+      "Después, guarda el oso junto a su almohada."
+    ],
+    "questions": [
+      {
+        "type": "seleccion3",
+        "question": "¿Qué tiene Joaquín?",
+        "options": ["un oso de peluche", "un carro rojo", "una pelota azul"],
+        "distractors": ["un carro rojo", "una pelota azul"],
+        "answer": "un oso de peluche",
+        "answerWords": ["un", "oso", "de", "peluche"],
+        "extraWords": ["carro", "pelota", "azul"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿De qué color es el oso?",
+        "options": ["café", "verde", "amarillo"],
+        "distractors": ["verde", "amarillo"],
+        "answer": "café",
+        "answerWords": ["café"],
+        "extraWords": ["verde", "amarillo"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Cómo se llama el oso?",
+        "options": ["Hugo", "Toby", "Milo"],
+        "distractors": ["Toby", "Milo"],
+        "answer": "Hugo",
+        "answerWords": ["Hugo"],
+        "extraWords": ["Toby", "Milo"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Dónde duerme Hugo?",
+        "options": ["en su cama", "en el patio", "en una caja"],
+        "distractors": ["en el patio", "en una caja"],
+        "answer": "en su cama",
+        "answerWords": ["en", "su", "cama"],
+        "extraWords": ["patio", "caja", "mesa"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Dónde juega Joaquín con Hugo?",
+        "options": ["sobre la alfombra", "debajo de la mesa", "junto a la puerta"],
+        "distractors": ["debajo de la mesa", "junto a la puerta"],
+        "answer": "sobre la alfombra",
+        "answerWords": ["sobre", "la", "alfombra"],
+        "extraWords": ["mesa", "puerta", "debajo"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Dónde guarda Joaquín el oso?",
+        "options": ["junto a su almohada", "dentro de la mochila", "cerca de la ventana"],
+        "distractors": ["dentro de la mochila", "cerca de la ventana"],
+        "answer": "junto a su almohada",
+        "answerWords": ["junto", "a", "su", "almohada"],
+        "extraWords": ["mochila", "ventana", "cerca"]
+      }
+    ]
+  },
+
+  {
+    "id": "L2_02",
+    "level": 2,
+    "title": "El ratón Juan",
+    "text": [
+      "Juan es un ratón pequeño y gris.",
+      "Le gusta comer queso y correr por la cocina.",
+      "Una mañana encontró un pedazo de queso amarillo.",
+      "Juan lo llevó feliz hasta su casita."
+    ],
+    "questions": [
+      {
+        "type": "seleccion3",
+        "question": "¿Qué animal es Juan?",
+        "options": ["un ratón", "un gato", "un perro"],
+        "distractors": ["un gato", "un perro"],
+        "answer": "un ratón",
+        "answerWords": ["un", "ratón"],
+        "extraWords": ["gato", "perro"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Cómo es Juan?",
+        "options": ["pequeño y gris", "grande y café", "blanco y alto"],
+        "distractors": ["grande y café", "blanco y alto"],
+        "answer": "pequeño y gris",
+        "answerWords": ["pequeño", "y", "gris"],
+        "extraWords": ["grande", "café", "blanco"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué le gusta comer a Juan?",
+        "options": ["queso", "pan", "lechuga"],
+        "distractors": ["pan", "lechuga"],
+        "answer": "queso",
+        "answerWords": ["queso"],
+        "extraWords": ["pan", "lechuga"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Por dónde corre Juan?",
+        "options": ["por la cocina", "por el jardín", "por la escuela"],
+        "distractors": ["por el jardín", "por la escuela"],
+        "answer": "por la cocina",
+        "answerWords": ["por", "la", "cocina"],
+        "extraWords": ["jardín", "escuela", "patio"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué encontró Juan una mañana?",
+        "options": ["un pedazo de queso", "una pelota roja", "una flor azul"],
+        "distractors": ["una pelota roja", "una flor azul"],
+        "answer": "un pedazo de queso",
+        "answerWords": ["un", "pedazo", "de", "queso"],
+        "extraWords": ["pelota", "flor", "roja"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿A dónde llevó Juan el queso?",
+        "options": ["hasta su casita", "hasta el parque", "hasta la mesa"],
+        "distractors": ["hasta el parque", "hasta la mesa"],
+        "answer": "hasta su casita",
+        "answerWords": ["hasta", "su", "casita"],
+        "extraWords": ["parque", "mesa", "cocina"]
+      }
+    ]
+  },
+
+  {
+    "id": "L2_03",
+    "level": 2,
+    "title": "Tomás el gato",
+    "text": [
+      "Tomás es un gato gordo y tranquilo.",
+      "Le gusta dormir junto a la ventana.",
+      "También juega con una bola de lana azul.",
+      "Cuando tiene hambre, maúlla cerca de su plato."
+    ],
+    "questions": [
+      {
+        "type": "seleccion3",
+        "question": "¿Qué animal es Tomás?",
+        "options": ["un gato", "un perro", "un conejo"],
+        "distractors": ["un perro", "un conejo"],
+        "answer": "un gato",
+        "answerWords": ["un", "gato"],
+        "extraWords": ["perro", "conejo"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Cómo es Tomás?",
+        "options": ["gordo y tranquilo", "pequeño y rápido", "alto y ruidoso"],
+        "distractors": ["pequeño y rápido", "alto y ruidoso"],
+        "answer": "gordo y tranquilo",
+        "answerWords": ["gordo", "y", "tranquilo"],
+        "extraWords": ["pequeño", "rápido", "alto"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Dónde le gusta dormir a Tomás?",
+        "options": ["junto a la ventana", "debajo de la cama", "en el jardín"],
+        "distractors": ["debajo de la cama", "en el jardín"],
+        "answer": "junto a la ventana",
+        "answerWords": ["junto", "a", "la", "ventana"],
+        "extraWords": ["cama", "jardín", "debajo"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Con qué juega Tomás?",
+        "options": ["con una bola de lana", "con una pelota de fútbol", "con una caja de colores"],
+        "distractors": ["con una pelota de fútbol", "con una caja de colores"],
+        "answer": "con una bola de lana",
+        "answerWords": ["con", "una", "bola", "de", "lana"],
+        "extraWords": ["pelota", "fútbol", "colores"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿De qué color es la bola de lana?",
+        "options": ["azul", "roja", "verde"],
+        "distractors": ["roja", "verde"],
+        "answer": "azul",
+        "answerWords": ["azul"],
+        "extraWords": ["roja", "verde"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué hace Tomás cuando tiene hambre?",
+        "options": ["maúlla cerca de su plato", "salta sobre la silla", "corre por el patio"],
+        "distractors": ["salta sobre la silla", "corre por el patio"],
+        "answer": "maúlla cerca de su plato",
+        "answerWords": ["maúlla", "cerca", "de", "su", "plato"],
+        "extraWords": ["salta", "silla", "patio"]
+      }
+    ]
+  },
+
+  {
+    "id": "L2_04",
+    "level": 2,
+    "title": "La pelota de Mariana",
+    "text": [
+      "Mariana tiene una pelota roja con puntos blancos.",
+      "La lleva al patio para jugar con su hermano.",
+      "Primero la lanza alto y luego la hace rodar.",
+      "Al terminar, guarda la pelota en una caja."
+    ],
+    "questions": [
+      {
+        "type": "seleccion3",
+        "question": "¿Qué tiene Mariana?",
+        "options": ["una pelota roja", "una muñeca azul", "una bicicleta verde"],
+        "distractors": ["una muñeca azul", "una bicicleta verde"],
+        "answer": "una pelota roja",
+        "answerWords": ["una", "pelota", "roja"],
+        "extraWords": ["muñeca", "bicicleta", "verde"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué tiene la pelota de Mariana?",
+        "options": ["puntos blancos", "rayas verdes", "flores amarillas"],
+        "distractors": ["rayas verdes", "flores amarillas"],
+        "answer": "puntos blancos",
+        "answerWords": ["puntos", "blancos"],
+        "extraWords": ["rayas", "flores", "verdes"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿A dónde lleva Mariana la pelota?",
+        "options": ["al patio", "a la cocina", "a la escuela"],
+        "distractors": ["a la cocina", "a la escuela"],
+        "answer": "al patio",
+        "answerWords": ["al", "patio"],
+        "extraWords": ["cocina", "escuela"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Con quién juega Mariana?",
+        "options": ["con su hermano", "con su abuela", "con su maestra"],
+        "distractors": ["con su abuela", "con su maestra"],
+        "answer": "con su hermano",
+        "answerWords": ["con", "su", "hermano"],
+        "extraWords": ["abuela", "maestra", "mamá"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué hace primero con la pelota?",
+        "options": ["la lanza alto", "la guarda en una caja", "la pone bajo la mesa"],
+        "distractors": ["la guarda en una caja", "la pone bajo la mesa"],
+        "answer": "la lanza alto",
+        "answerWords": ["la", "lanza", "alto"],
+        "extraWords": ["guarda", "caja", "mesa"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Dónde guarda Mariana la pelota?",
+        "options": ["en una caja", "en una mochila", "en una maceta"],
+        "distractors": ["en una mochila", "en una maceta"],
+        "answer": "en una caja",
+        "answerWords": ["en", "una", "caja"],
+        "extraWords": ["mochila", "maceta", "bolsa"]
+      }
+    ]
+  },
+
+  {
+    "id": "L2_05",
+    "level": 2,
+    "title": "El perro Lucas",
+    "text": [
+      "Lucas es un perro pequeño de color blanco.",
+      "Tiene una mancha negra en una oreja.",
+      "Le gusta correr detrás de una pelota verde.",
+      "Cuando se cansa, se acuesta debajo de la mesa."
+    ],
+    "questions": [
+      {
+        "type": "seleccion3",
+        "question": "¿Qué animal es Lucas?",
+        "options": ["un perro", "un gato", "un pato"],
+        "distractors": ["un gato", "un pato"],
+        "answer": "un perro",
+        "answerWords": ["un", "perro"],
+        "extraWords": ["gato", "pato"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿De qué color es Lucas?",
+        "options": ["blanco", "café", "gris"],
+        "distractors": ["café", "gris"],
+        "answer": "blanco",
+        "answerWords": ["blanco"],
+        "extraWords": ["café", "gris"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Dónde tiene Lucas una mancha negra?",
+        "options": ["en una oreja", "en una pata", "en la cola"],
+        "distractors": ["en una pata", "en la cola"],
+        "answer": "en una oreja",
+        "answerWords": ["en", "una", "oreja"],
+        "extraWords": ["pata", "cola", "hocico"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Detrás de qué corre Lucas?",
+        "options": ["de una pelota verde", "de una pelota roja", "de una cuerda azul"],
+        "distractors": ["de una pelota roja", "de una cuerda azul"],
+        "answer": "de una pelota verde",
+        "answerWords": ["de", "una", "pelota", "verde"],
+        "extraWords": ["roja", "cuerda", "azul"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿De qué color es la pelota?",
+        "options": ["verde", "amarilla", "morada"],
+        "distractors": ["amarilla", "morada"],
+        "answer": "verde",
+        "answerWords": ["verde"],
+        "extraWords": ["amarilla", "morada"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Dónde se acuesta Lucas cuando se cansa?",
+        "options": ["debajo de la mesa", "junto a la puerta", "sobre una cama"],
+        "distractors": ["junto a la puerta", "sobre una cama"],
+        "answer": "debajo de la mesa",
+        "answerWords": ["debajo", "de", "la", "mesa"],
+        "extraWords": ["puerta", "cama", "junto"]
+      }
+    ]
+  },
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   {
     "id": "L3_01",
     "level": 3,
@@ -788,87 +1184,963 @@
     ]
   },
 
+  
+  
+  
   {
-    "id": "L4_01",
-    "level": 4,
-    "title": "El vivero de la escuela",
+    "id": "L3_01",
+    "level": 3,
+    "title": "El perro Bruno",
     "text": [
-      "Valeria visitó el vivero de la escuela con su grupo un viernes por la mañana. El lugar era pequeño, pero estaba lleno de vida. Había macetas de diferentes tamaños, hojas verdes, tierra húmeda y un olor fresco que venía de las plantas recién regadas.",
-      "En una mesa larga, el encargado tenía tres plantas para mostrar: una de tomate, una de albahaca y una de chile dulce. La planta de tomate tenía tallos delgados y hojas un poco grandes. La albahaca era más pequeña y tenía un aroma suave. La planta de chile dulce todavía no tenía frutos, pero sus hojas se veían fuertes.",
-      "Valeria miró cada planta con atención y anotó sus nombres en el cuaderno. Después, regó la planta de tomate con poca agua para no encharcar la tierra. Antes de regresar al aula, el grupo conversó sobre cómo cuidar las plantas y dejarlas crecer sanas."
+      "El perro Bruno es muy juguetón y cariñoso. Tiene el pelo café, las orejas largas y una mancha blanca en el pecho. Le gusta correr por el patio cuando escucha a Gabriel llegar de la escuela.",
+      "Bruno juega con una pelota azul y mueve la cola cuando está contento. Come croquetas en su plato rojo y toma agua después de jugar. En la tarde se acuesta cerca de la puerta para cuidar la casa."
     ],
     "questions": [
       {
         "type": "seleccion3",
-        "question": "¿Qué lugar visitó Valeria con su grupo?",
-        "options": ["el vivero de la escuela", "la biblioteca", "el gimnasio"],
-        "distractors": ["la biblioteca", "el gimnasio"],
-        "answer": "el vivero de la escuela",
-        "answerWords": ["el", "vivero", "de", "la", "escuela"],
-        "extraWords": ["biblioteca", "gimnasio", "parque"]
+        "question": "¿Cómo se llama el perro?",
+        "options": ["Bruno", "Toby", "Milo"],
+        "distractors": ["Toby", "Milo"],
+        "answer": "Bruno",
+        "answerWords": ["Bruno"],
+        "extraWords": ["Toby", "Milo"]
       },
       {
         "type": "seleccion3",
-        "question": "¿Qué día visitaron el vivero?",
-        "options": ["un viernes", "un lunes", "un domingo"],
-        "distractors": ["un lunes", "un domingo"],
-        "answer": "un viernes",
-        "answerWords": ["un", "viernes"],
-        "extraWords": ["lunes", "domingo"]
+        "question": "¿De qué color es el pelo de Bruno?",
+        "options": ["café", "negro", "blanco"],
+        "distractors": ["negro", "blanco"],
+        "answer": "café",
+        "answerWords": ["café"],
+        "extraWords": ["negro", "blanco"]
       },
       {
         "type": "seleccion3",
-        "question": "¿Qué olor había en el vivero?",
-        "options": ["un olor fresco", "un olor a pintura", "un olor a comida"],
-        "distractors": ["un olor a pintura", "un olor a comida"],
-        "answer": "un olor fresco",
-        "answerWords": ["un", "olor", "fresco"],
-        "extraWords": ["pintura", "comida", "dulce"]
+        "question": "¿Qué tiene Bruno en el pecho?",
+        "options": ["una mancha blanca", "una cinta roja", "una estrella azul"],
+        "distractors": ["una cinta roja", "una estrella azul"],
+        "answer": "una mancha blanca",
+        "answerWords": ["una", "mancha", "blanca"],
+        "extraWords": ["cinta", "roja", "estrella"]
       },
       {
         "type": "seleccion3",
-        "question": "¿Qué tres plantas mostró el encargado?",
-        "options": ["tomate, albahaca y chile dulce", "rosa, girasol y cactus", "lechuga, arroz y frijol"],
-        "distractors": ["rosa, girasol y cactus", "lechuga, arroz y frijol"],
-        "answer": "tomate, albahaca y chile dulce",
-        "answerWords": ["tomate", "albahaca", "y", "chile", "dulce"],
-        "extraWords": ["rosa", "girasol", "cactus", "arroz"]
+        "question": "¿Con qué juega Bruno?",
+        "options": ["con una pelota azul", "con una cuerda verde", "con una caja amarilla"],
+        "distractors": ["con una cuerda verde", "con una caja amarilla"],
+        "answer": "con una pelota azul",
+        "answerWords": ["con", "una", "pelota", "azul"],
+        "extraWords": ["cuerda", "verde", "caja"]
       },
       {
         "type": "seleccion3",
-        "question": "¿Cómo era la planta de albahaca?",
-        "options": ["más pequeña y con aroma suave", "alta y con flores rojas", "seca y sin hojas"],
-        "distractors": ["alta y con flores rojas", "seca y sin hojas"],
-        "answer": "más pequeña y con aroma suave",
-        "answerWords": ["más", "pequeña", "y", "con", "aroma", "suave"],
-        "extraWords": ["alta", "flores", "rojas", "seca"]
+        "question": "¿Dónde se acuesta Bruno en la tarde?",
+        "options": ["cerca de la puerta", "debajo de la mesa", "junto a la ventana"],
+        "distractors": ["debajo de la mesa", "junto a la ventana"],
+        "answer": "cerca de la puerta",
+        "answerWords": ["cerca", "de", "la", "puerta"],
+        "extraWords": ["mesa", "ventana", "debajo"]
       },
       {
         "type": "seleccion3",
-        "question": "¿Dónde anotó Valeria los nombres de las plantas?",
-        "options": ["en el cuaderno", "en la pared", "en una maceta"],
-        "distractors": ["en la pared", "en una maceta"],
-        "answer": "en el cuaderno",
-        "answerWords": ["en", "el", "cuaderno"],
-        "extraWords": ["pared", "maceta", "mesa"]
+        "question": "¿Qué come Bruno?",
+        "options": ["croquetas", "pescado", "lechuga"],
+        "distractors": ["pescado", "lechuga"],
+        "answer": "croquetas",
+        "answerWords": ["croquetas"],
+        "extraWords": ["pescado", "lechuga"]
       },
       {
         "type": "seleccion3",
-        "question": "¿Qué planta regó Valeria?",
-        "options": ["la planta de tomate", "la planta de albahaca", "la planta de chile dulce"],
-        "distractors": ["la planta de albahaca", "la planta de chile dulce"],
-        "answer": "la planta de tomate",
-        "answerWords": ["la", "planta", "de", "tomate"],
-        "extraWords": ["albahaca", "chile", "dulce"]
+        "question": "¿Qué hace Bruno cuando está contento?",
+        "options": ["mueve la cola", "cierra los ojos", "esconde la pelota"],
+        "distractors": ["cierra los ojos", "esconde la pelota"],
+        "answer": "mueve la cola",
+        "answerWords": ["mueve", "la", "cola"],
+        "extraWords": ["ojos", "pelota", "esconde"]
+      }
+    ]
+  },
+  {
+    "id": "L3_02",
+    "level": 3,
+    "title": "La niña Valeria",
+    "text": [
+      "Valeria es una niña alegre y curiosa. Le gusta usar una gorra rosada cuando sale al parque con su mamá. Siempre lleva una botella de agua y una pequeña mochila verde.",
+      "En el parque, Valeria observa las flores, mira las mariposas y juega con su pelota amarilla. Cuando se cansa, se sienta bajo un árbol grande. Después vuelve a casa contenta y con muchas cosas para contar."
+    ],
+    "questions": [
+      {
+        "type": "seleccion3",
+        "question": "¿Cómo se llama la niña?",
+        "options": ["Valeria", "Ana", "Sofía"],
+        "distractors": ["Ana", "Sofía"],
+        "answer": "Valeria",
+        "answerWords": ["Valeria"],
+        "extraWords": ["Ana", "Sofía"]
       },
       {
         "type": "seleccion3",
-        "question": "¿Por qué Valeria usó poca agua?",
-        "options": ["para no encharcar la tierra", "para lavar la mesa", "para llenar una botella"],
-        "distractors": ["para lavar la mesa", "para llenar una botella"],
-        "answer": "para no encharcar la tierra",
-        "answerWords": ["para", "no", "encharcar", "la", "tierra"],
-        "extraWords": ["lavar", "mesa", "botella"]
+        "question": "¿De qué color es la gorra de Valeria?",
+        "options": ["rosada", "azul", "amarilla"],
+        "distractors": ["azul", "amarilla"],
+        "answer": "rosada",
+        "answerWords": ["rosada"],
+        "extraWords": ["azul", "amarilla"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Con quién sale Valeria al parque?",
+        "options": ["con su mamá", "con su abuelo", "con su maestra"],
+        "distractors": ["con su abuelo", "con su maestra"],
+        "answer": "con su mamá",
+        "answerWords": ["con", "su", "mamá"],
+        "extraWords": ["abuelo", "maestra", "papá"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué lleva Valeria en una botella?",
+        "options": ["agua", "leche", "jugo"],
+        "distractors": ["leche", "jugo"],
+        "answer": "agua",
+        "answerWords": ["agua"],
+        "extraWords": ["leche", "jugo"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿De qué color es la mochila de Valeria?",
+        "options": ["verde", "roja", "morada"],
+        "distractors": ["roja", "morada"],
+        "answer": "verde",
+        "answerWords": ["verde"],
+        "extraWords": ["roja", "morada"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Con qué juega Valeria en el parque?",
+        "options": ["con su pelota amarilla", "con su cometa roja", "con su bicicleta azul"],
+        "distractors": ["con su cometa roja", "con su bicicleta azul"],
+        "answer": "con su pelota amarilla",
+        "answerWords": ["con", "su", "pelota", "amarilla"],
+        "extraWords": ["cometa", "bicicleta", "roja"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Dónde se sienta Valeria cuando se cansa?",
+        "options": ["bajo un árbol grande", "junto a una fuente pequeña", "sobre una piedra gris"],
+        "distractors": ["junto a una fuente pequeña", "sobre una piedra gris"],
+        "answer": "bajo un árbol grande",
+        "answerWords": ["bajo", "un", "árbol", "grande"],
+        "extraWords": ["fuente", "piedra", "pequeña"]
+      }
+    ]
+  },
+  {
+    "id": "L3_03",
+    "level": 3,
+    "title": "El gato Tomás",
+    "text": [
+      "El gato Tomás es tranquilo y dormilón. Tiene el pelo gris, los ojos verdes y unas patitas muy suaves. Le gusta acostarse en el sillón cuando entra la luz del sol por la ventana.",
+      "Tomás come pescado y toma agua en un plato pequeño. A veces juega con una cuerda roja que su dueña Ana mueve despacio. Cuando termina de jugar, se acomoda en su manta azul y duerme feliz."
+    ],
+    "questions": [
+      {
+        "type": "seleccion3",
+        "question": "¿Cómo se llama el gato?",
+        "options": ["Tomás", "Milo", "Simón"],
+        "distractors": ["Milo", "Simón"],
+        "answer": "Tomás",
+        "answerWords": ["Tomás"],
+        "extraWords": ["Milo", "Simón"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿De qué color es el pelo de Tomás?",
+        "options": ["gris", "café", "negro"],
+        "distractors": ["café", "negro"],
+        "answer": "gris",
+        "answerWords": ["gris"],
+        "extraWords": ["café", "negro"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿De qué color son los ojos de Tomás?",
+        "options": ["verdes", "azules", "negros"],
+        "distractors": ["azules", "negros"],
+        "answer": "verdes",
+        "answerWords": ["verdes"],
+        "extraWords": ["azules", "negros"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Dónde le gusta acostarse a Tomás?",
+        "options": ["en el sillón", "en la cocina", "en el patio"],
+        "distractors": ["en la cocina", "en el patio"],
+        "answer": "en el sillón",
+        "answerWords": ["en", "el", "sillón"],
+        "extraWords": ["cocina", "patio"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué come Tomás?",
+        "options": ["pescado", "croquetas", "pan"],
+        "distractors": ["croquetas", "pan"],
+        "answer": "pescado",
+        "answerWords": ["pescado"],
+        "extraWords": ["croquetas", "pan"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Con qué juega Tomás?",
+        "options": ["con una cuerda roja", "con una pelota azul", "con una hoja seca"],
+        "distractors": ["con una pelota azul", "con una hoja seca"],
+        "answer": "con una cuerda roja",
+        "answerWords": ["con", "una", "cuerda", "roja"],
+        "extraWords": ["pelota", "azul", "hoja"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Dónde duerme Tomás al final?",
+        "options": ["en su manta azul", "en una caja verde", "en una silla roja"],
+        "distractors": ["en una caja verde", "en una silla roja"],
+        "answer": "en su manta azul",
+        "answerWords": ["en", "su", "manta", "azul"],
+        "extraWords": ["caja", "verde", "silla"]
+      }
+    ]
+  },
+  {
+    "id": "L3_04",
+    "level": 3,
+    "title": "La bicicleta de Leo",
+    "text": [
+      "Leo tiene una bicicleta roja con una campanita plateada. Cada tarde sale al parque con su papá para practicar. Antes de empezar, se pone un casco amarillo y revisa las llantas.",
+      "Leo pedalea despacio por el camino de cemento. Da vueltas cerca de la fuente y saluda a los niños que juegan en el zacate. Cuando termina, guarda la bicicleta junto a la pared de su casa."
+    ],
+    "questions": [
+      {
+        "type": "seleccion3",
+        "question": "¿Quién tiene una bicicleta roja?",
+        "options": ["Leo", "Mateo", "Carlos"],
+        "distractors": ["Mateo", "Carlos"],
+        "answer": "Leo",
+        "answerWords": ["Leo"],
+        "extraWords": ["Mateo", "Carlos"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿De qué color es la bicicleta de Leo?",
+        "options": ["roja", "azul", "verde"],
+        "distractors": ["azul", "verde"],
+        "answer": "roja",
+        "answerWords": ["roja"],
+        "extraWords": ["azul", "verde"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué tiene la bicicleta de Leo?",
+        "options": ["una campanita plateada", "una canasta verde", "una cinta morada"],
+        "distractors": ["una canasta verde", "una cinta morada"],
+        "answer": "una campanita plateada",
+        "answerWords": ["una", "campanita", "plateada"],
+        "extraWords": ["canasta", "verde", "cinta"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Con quién sale Leo al parque?",
+        "options": ["con su papá", "con su abuela", "con su maestra"],
+        "distractors": ["con su abuela", "con su maestra"],
+        "answer": "con su papá",
+        "answerWords": ["con", "su", "papá"],
+        "extraWords": ["abuela", "maestra"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿De qué color es el casco de Leo?",
+        "options": ["amarillo", "rojo", "negro"],
+        "distractors": ["rojo", "negro"],
+        "answer": "amarillo",
+        "answerWords": ["amarillo"],
+        "extraWords": ["rojo", "negro"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Por dónde pedalea Leo?",
+        "options": ["por el camino de cemento", "por la arena blanca", "por el pasillo de la casa"],
+        "distractors": ["por la arena blanca", "por el pasillo de la casa"],
+        "answer": "por el camino de cemento",
+        "answerWords": ["por", "el", "camino", "de", "cemento"],
+        "extraWords": ["arena", "pasillo", "casa"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Dónde guarda Leo la bicicleta?",
+        "options": ["junto a la pared de su casa", "debajo de una mesa", "cerca de la fuente"],
+        "distractors": ["debajo de una mesa", "cerca de la fuente"],
+        "answer": "junto a la pared de su casa",
+        "answerWords": ["junto", "a", "la", "pared", "de", "su", "casa"],
+        "extraWords": ["mesa", "fuente", "debajo"]
+      }
+    ]
+  },
+  {
+    "id": "L3_05",
+    "level": 3,
+    "title": "La mascota de Sofía",
+    "text": [
+      "Sofía tiene una tortuga pequeña llamada Lola. Lola vive en una caja grande con hojas verdes, piedras lisas y un poco de agua. Su caparazón es oscuro y sus patas se mueven muy despacio.",
+      "Cada mañana, Sofía le pone lechuga fresca y revisa que tenga agua limpia. Lola camina lentamente hasta su comida y luego descansa sobre una piedra. Sofía la cuida con cariño porque es su mascota favorita."
+    ],
+    "questions": [
+      {
+        "type": "seleccion3",
+        "question": "¿Cómo se llama la tortuga de Sofía?",
+        "options": ["Lola", "Luna", "Mila"],
+        "distractors": ["Luna", "Mila"],
+        "answer": "Lola",
+        "answerWords": ["Lola"],
+        "extraWords": ["Luna", "Mila"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Dónde vive Lola?",
+        "options": ["en una caja grande", "en una pecera azul", "en una cesta pequeña"],
+        "distractors": ["en una pecera azul", "en una cesta pequeña"],
+        "answer": "en una caja grande",
+        "answerWords": ["en", "una", "caja", "grande"],
+        "extraWords": ["pecera", "cesta", "azul"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué hay en la caja de Lola?",
+        "options": ["hojas verdes, piedras lisas y agua", "flores rojas, arena y juguetes", "pan, semillas y una pelota"],
+        "distractors": ["flores rojas, arena y juguetes", "pan, semillas y una pelota"],
+        "answer": "hojas verdes, piedras lisas y agua",
+        "answerWords": ["hojas", "verdes", "piedras", "lisas", "y", "agua"],
+        "extraWords": ["flores", "arena", "juguetes", "pan"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Cómo es el caparazón de Lola?",
+        "options": ["oscuro", "claro", "rojo"],
+        "distractors": ["claro", "rojo"],
+        "answer": "oscuro",
+        "answerWords": ["oscuro"],
+        "extraWords": ["claro", "rojo"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué le pone Sofía a Lola cada mañana?",
+        "options": ["lechuga fresca", "pan dulce", "arroz blanco"],
+        "distractors": ["pan dulce", "arroz blanco"],
+        "answer": "lechuga fresca",
+        "answerWords": ["lechuga", "fresca"],
+        "extraWords": ["pan", "arroz", "blanco"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Dónde descansa Lola después de comer?",
+        "options": ["sobre una piedra", "debajo de una silla", "junto a una flor"],
+        "distractors": ["debajo de una silla", "junto a una flor"],
+        "answer": "sobre una piedra",
+        "answerWords": ["sobre", "una", "piedra"],
+        "extraWords": ["silla", "flor", "debajo"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Cómo cuida Sofía a Lola?",
+        "options": ["con cariño", "con miedo", "con enojo"],
+        "distractors": ["con miedo", "con enojo"],
+        "answer": "con cariño",
+        "answerWords": ["con", "cariño"],
+        "extraWords": ["miedo", "enojo"]
+      }
+    ]
+  },
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  {
+    "id": "L4_002",
+    "level": 4,
+    "title": "El conejo y la tortuga",
+    "text": [
+      "Un conejo veloz se burlaba de una tortuga porque caminaba muy despacio. La tortuga, sin enojarse, le propuso hacer una carrera hasta el viejo árbol del campo. El conejo aceptó muy seguro de que ganaría fácilmente.",
+      "Al comenzar la carrera, el conejo corrió tan rápido que pronto dejó muy atrás a la tortuga. Como pensó que tenía mucho tiempo, se acostó bajo una sombra fresca y se quedó dormido. Mientras tanto, la tortuga siguió avanzando paso a paso, sin detenerse.",
+      "Cuando el conejo despertó, vio que la tortuga estaba muy cerca de la meta. Corrió con todas sus fuerzas, pero ya era tarde. La tortuga llegó primero al viejo árbol y enseñó que la constancia puede vencer al exceso de confianza."
+    ],
+    "questions": [
+      {
+        "type": "seleccion3",
+        "question": "¿De quién se burlaba el conejo?",
+        "options": ["de la tortuga", "del zorro", "del perro"],
+        "distractors": ["del zorro", "del perro"],
+        "answer": "de la tortuga",
+        "answerWords": ["de", "la", "tortuga"],
+        "extraWords": ["zorro", "perro", "gato"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Hasta dónde debían correr?",
+        "options": ["hasta el viejo árbol", "hasta el río", "hasta la casa"],
+        "distractors": ["hasta el río", "hasta la casa"],
+        "answer": "hasta el viejo árbol",
+        "answerWords": ["hasta", "el", "viejo", "árbol"],
+        "extraWords": ["río", "casa", "puente"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué hizo el conejo bajo una sombra fresca?",
+        "options": ["se quedó dormido", "buscó comida", "saltó una piedra"],
+        "distractors": ["buscó comida", "saltó una piedra"],
+        "answer": "se quedó dormido",
+        "answerWords": ["se", "quedó", "dormido"],
+        "extraWords": ["comida", "piedra", "saltó"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Cómo avanzó la tortuga?",
+        "options": ["paso a paso", "corriendo muy rápido", "volando sobre el campo"],
+        "distractors": ["corriendo muy rápido", "volando sobre el campo"],
+        "answer": "paso a paso",
+        "answerWords": ["paso", "a", "paso"],
+        "extraWords": ["rápido", "volando", "campo"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Quién llegó primero a la meta?",
+        "options": ["la tortuga", "el conejo", "el zorro"],
+        "distractors": ["el conejo", "el zorro"],
+        "answer": "la tortuga",
+        "answerWords": ["la", "tortuga"],
+        "extraWords": ["conejo", "zorro"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué enseña esta lectura?",
+        "options": ["la constancia puede vencer al exceso de confianza", "dormir siempre ayuda a ganar", "burlarse hace mejores amigos"],
+        "distractors": ["dormir siempre ayuda a ganar", "burlarse hace mejores amigos"],
+        "answer": "la constancia puede vencer al exceso de confianza",
+        "answerWords": ["la", "constancia", "puede", "vencer", "al", "exceso", "de", "confianza"],
+        "extraWords": ["dormir", "burlarse", "ganar", "amigos"]
+      }
+    ]
+  },
+
+  
+  
+  {
+    "id": "L4_003",
+    "level": 4,
+    "title": "El ratón y el león",
+    "text": [
+      "Un pequeño ratón corría por el bosque cuando, sin darse cuenta, pasó sobre la pata de un león dormido. El león despertó molesto y atrapó al ratón con su enorme garra. El ratón, temblando, le pidió que lo dejara libre y prometió ayudarlo algún día.",
+      "El león se rió al escuchar la promesa, porque pensó que un animal tan pequeño nunca podría ayudarlo. Aun así, decidió soltarlo. El ratón escapó muy agradecido y se escondió entre las raíces de un árbol.",
+      "Días después, el león quedó atrapado en una red de cazadores. Rugió con fuerza, pero no pudo liberarse. El ratón escuchó los rugidos, corrió hasta la red y mordió las cuerdas hasta romperlas. Así demostró que incluso los más pequeños pueden hacer grandes favores."
+    ],
+    "questions": [
+      {
+        "type": "seleccion3",
+        "question": "¿Sobre qué parte del león pasó el ratón?",
+        "options": ["sobre la pata", "sobre la cola", "sobre la oreja"],
+        "distractors": ["sobre la cola", "sobre la oreja"],
+        "answer": "sobre la pata",
+        "answerWords": ["sobre", "la", "pata"],
+        "extraWords": ["cola", "oreja", "cabeza"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Con qué atrapó el león al ratón?",
+        "options": ["con su enorme garra", "con una red", "con una rama"],
+        "distractors": ["con una red", "con una rama"],
+        "answer": "con su enorme garra",
+        "answerWords": ["con", "su", "enorme", "garra"],
+        "extraWords": ["red", "rama", "pequeña"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué prometió el ratón?",
+        "options": ["ayudar al león algún día", "llevarle comida al zorro", "dormir debajo del árbol"],
+        "distractors": ["llevarle comida al zorro", "dormir debajo del árbol"],
+        "answer": "ayudar al león algún día",
+        "answerWords": ["ayudar", "al", "león", "algún", "día"],
+        "extraWords": ["zorro", "árbol", "comida"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Dónde quedó atrapado el león días después?",
+        "options": ["en una red de cazadores", "en una cueva oscura", "en un río profundo"],
+        "distractors": ["en una cueva oscura", "en un río profundo"],
+        "answer": "en una red de cazadores",
+        "answerWords": ["en", "una", "red", "de", "cazadores"],
+        "extraWords": ["cueva", "río", "oscura"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Cómo ayudó el ratón al león?",
+        "options": ["mordió las cuerdas de la red", "empujó una piedra", "llamó a otros leones"],
+        "distractors": ["empujó una piedra", "llamó a otros leones"],
+        "answer": "mordió las cuerdas de la red",
+        "answerWords": ["mordió", "las", "cuerdas", "de", "la", "red"],
+        "extraWords": ["piedra", "llamó", "leones"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué enseña esta lectura?",
+        "options": ["los pequeños también pueden ayudar mucho", "los fuertes nunca necesitan ayuda", "las promesas no tienen valor"],
+        "distractors": ["los fuertes nunca necesitan ayuda", "las promesas no tienen valor"],
+        "answer": "los pequeños también pueden ayudar mucho",
+        "answerWords": ["los", "pequeños", "también", "pueden", "ayudar", "mucho"],
+        "extraWords": ["fuertes", "nunca", "promesas"]
+      }
+    ]
+  },
+  
+ 
+  
+  {
+    "id": "L4_01",
+    "level": 4,
+    "title": "El ratón y la campana",
+    "text": [
+      "Un pequeño ratón vivía en una casa grande donde siempre había migajas de pan cerca de la cocina. Cada noche salía en silencio para buscar comida, pero un gato gris dormía junto a la puerta y lo hacía temblar de miedo.",
+      "Un día, el ratón encontró una campana pequeña debajo de una silla. Pensó que, si lograba ponerla en el cuello del gato, podría escucharlo cada vez que se acercara. Muy contento, llamó a sus amigos y les contó su gran idea.",
+      "Todos los ratones aplaudieron porque el plan parecía perfecto. Sin embargo, cuando llegó el momento de poner la campana al gato, ninguno quiso acercarse."
+    ],
+    "questions": [
+      {
+        "type": "seleccion3",
+        "question": "¿Dónde vivía el pequeño ratón?",
+        "options": ["en una casa grande", "en una escuela pequeña", "en un jardín con flores"],
+        "distractors": ["en una escuela pequeña", "en un jardín con flores"],
+        "answer": "en una casa grande",
+        "answerWords": ["en", "una", "casa", "grande"],
+        "extraWords": ["escuela", "jardín", "flores"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Dónde había migajas de pan?",
+        "options": ["cerca de la cocina", "debajo de la cama", "sobre una ventana"],
+        "distractors": ["debajo de la cama", "sobre una ventana"],
+        "answer": "cerca de la cocina",
+        "answerWords": ["cerca", "de", "la", "cocina"],
+        "extraWords": ["cama", "ventana", "debajo"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué animal hacía temblar de miedo al ratón?",
+        "options": ["un gato gris", "un perro blanco", "un pájaro negro"],
+        "distractors": ["un perro blanco", "un pájaro negro"],
+        "answer": "un gato gris",
+        "answerWords": ["un", "gato", "gris"],
+        "extraWords": ["perro", "pájaro", "blanco"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué encontró el ratón debajo de una silla?",
+        "options": ["una campana pequeña", "una llave dorada", "una moneda brillante"],
+        "distractors": ["una llave dorada", "una moneda brillante"],
+        "answer": "una campana pequeña",
+        "answerWords": ["una", "campana", "pequeña"],
+        "extraWords": ["llave", "moneda", "brillante"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Dónde quería poner la campana el ratón?",
+        "options": ["en el cuello del gato", "en la puerta de la cocina", "en la pata de una silla"],
+        "distractors": ["en la puerta de la cocina", "en la pata de una silla"],
+        "answer": "en el cuello del gato",
+        "answerWords": ["en", "el", "cuello", "del", "gato"],
+        "extraWords": ["puerta", "cocina", "silla"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué hicieron los ratones cuando escucharon el plan?",
+        "options": ["aplaudieron", "se escondieron", "salieron corriendo"],
+        "distractors": ["se escondieron", "salieron corriendo"],
+        "answer": "aplaudieron",
+        "answerWords": ["aplaudieron"],
+        "extraWords": ["escondieron", "corriendo"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué ocurrió cuando había que poner la campana al gato?",
+        "options": ["ninguno quiso acercarse", "todos fueron juntos", "el gato salió corriendo"],
+        "distractors": ["todos fueron juntos", "el gato salió corriendo"],
+        "answer": "ninguno quiso acercarse",
+        "answerWords": ["ninguno", "quiso", "acercarse"],
+        "extraWords": ["todos", "gato", "corriendo"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Por qué parecía útil la campana?",
+        "options": ["porque permitiría escuchar al gato", "porque era un juguete bonito", "porque servía para guardar migajas"],
+        "distractors": ["porque era un juguete bonito", "porque servía para guardar migajas"],
+        "answer": "porque permitiría escuchar al gato",
+        "answerWords": ["porque", "permitiría", "escuchar", "al", "gato"],
+        "extraWords": ["juguete", "bonito", "migajas"]
+      }
+    ]
+  },
+
+  
+  
+  {
+    "id": "L4_02",
+    "level": 4,
+    "title": "La tortuga y la liebre del jardín",
+    "text": [
+      "En un jardín lleno de flores vivía una tortuga tranquila que caminaba despacio, pero nunca se detenía. Cerca de allí vivía una liebre veloz que siempre se burlaba de ella por caminar tan lento.",
+      "Una mañana, la liebre retó a la tortuga a llegar primero hasta el árbol de mango. La tortuga aceptó sin enojarse y comenzó a caminar con paciencia. La liebre corrió muy rápido al inicio, pero como iba tan segura de ganar, decidió descansar bajo una sombra.",
+      "La tortuga siguió avanzando paso a paso, sin mirar atrás. Cuando la liebre despertó, corrió todo lo que pudo, pero ya era tarde. La tortuga había llegado primero al árbol."
+    ],
+    "questions": [
+      {
+        "type": "seleccion3",
+        "question": "¿Dónde vivía la tortuga?",
+        "options": ["en un jardín lleno de flores", "en una playa con arena", "en una casa de madera"],
+        "distractors": ["en una playa con arena", "en una casa de madera"],
+        "answer": "en un jardín lleno de flores",
+        "answerWords": ["en", "un", "jardín", "lleno", "de", "flores"],
+        "extraWords": ["playa", "arena", "casa", "madera"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Cómo caminaba la tortuga?",
+        "options": ["despacio", "rápido", "saltando"],
+        "distractors": ["rápido", "saltando"],
+        "answer": "despacio",
+        "answerWords": ["despacio"],
+        "extraWords": ["rápido", "saltando"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Quién se burlaba de la tortuga?",
+        "options": ["una liebre veloz", "un perro pequeño", "un gato dormido"],
+        "distractors": ["un perro pequeño", "un gato dormido"],
+        "answer": "una liebre veloz",
+        "answerWords": ["una", "liebre", "veloz"],
+        "extraWords": ["perro", "gato", "dormido"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Hasta dónde debían llegar primero?",
+        "options": ["hasta el árbol de mango", "hasta la fuente azul", "hasta la puerta roja"],
+        "distractors": ["hasta la fuente azul", "hasta la puerta roja"],
+        "answer": "hasta el árbol de mango",
+        "answerWords": ["hasta", "el", "árbol", "de", "mango"],
+        "extraWords": ["fuente", "puerta", "azul"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Cómo aceptó la tortuga el reto?",
+        "options": ["sin enojarse", "con gritos", "con miedo"],
+        "distractors": ["con gritos", "con miedo"],
+        "answer": "sin enojarse",
+        "answerWords": ["sin", "enojarse"],
+        "extraWords": ["gritos", "miedo"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué hizo la liebre porque se sentía segura de ganar?",
+        "options": ["decidió descansar bajo una sombra", "regresó a su casa", "se puso a comer flores"],
+        "distractors": ["regresó a su casa", "se puso a comer flores"],
+        "answer": "decidió descansar bajo una sombra",
+        "answerWords": ["decidió", "descansar", "bajo", "una", "sombra"],
+        "extraWords": ["regresó", "casa", "comer", "flores"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Quién llegó primero al árbol?",
+        "options": ["la tortuga", "la liebre", "un pájaro"],
+        "distractors": ["la liebre", "un pájaro"],
+        "answer": "la tortuga",
+        "answerWords": ["la", "tortuga"],
+        "extraWords": ["liebre", "pájaro"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué hizo la liebre cuando despertó?",
+        "options": ["corrió todo lo que pudo", "se quedó dormida otra vez", "empezó a comer flores"],
+        "distractors": ["se quedó dormida otra vez", "empezó a comer flores"],
+        "answer": "corrió todo lo que pudo",
+        "answerWords": ["corrió", "todo", "lo", "que", "pudo"],
+        "extraWords": ["dormida", "flores", "comer"]
+      }
+    ]
+  },
+
+  
+  
+  {
+    "id": "L4_03",
+    "level": 4,
+    "title": "El colibrí y la flor roja",
+    "text": [
+      "Un colibrí de plumas brillantes visitaba cada mañana una flor roja que crecía cerca del camino. La flor le ofrecía néctar dulce, y el colibrí la saludaba moviendo sus alas con alegría.",
+      "Un día, el colibrí vio muchas flores nuevas en otro jardín. Eran grandes, coloridas y llamaban mucho la atención. Entonces dejó de visitar a la flor roja, pensando que ya no la necesitaba.",
+      "Pasaron los días y el colibrí descubrió que las flores nuevas no siempre tenían néctar. Cansado y con hambre, volvió al camino y encontró a la flor roja esperándolo."
+    ],
+    "questions": [
+      {
+        "type": "seleccion3",
+        "question": "¿Quién visitaba cada mañana a la flor roja?",
+        "options": ["un colibrí de plumas brillantes", "una abeja pequeña", "una mariposa azul"],
+        "distractors": ["una abeja pequeña", "una mariposa azul"],
+        "answer": "un colibrí de plumas brillantes",
+        "answerWords": ["un", "colibrí", "de", "plumas", "brillantes"],
+        "extraWords": ["abeja", "mariposa", "azul"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Dónde crecía la flor roja?",
+        "options": ["cerca del camino", "dentro de una casa", "junto a una ventana"],
+        "distractors": ["dentro de una casa", "junto a una ventana"],
+        "answer": "cerca del camino",
+        "answerWords": ["cerca", "del", "camino"],
+        "extraWords": ["casa", "ventana", "dentro"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué le ofrecía la flor roja al colibrí?",
+        "options": ["néctar dulce", "agua fría", "semillas pequeñas"],
+        "distractors": ["agua fría", "semillas pequeñas"],
+        "answer": "néctar dulce",
+        "answerWords": ["néctar", "dulce"],
+        "extraWords": ["agua", "semillas", "fría"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Cómo saludaba el colibrí a la flor roja?",
+        "options": ["moviendo sus alas con alegría", "cantando muy fuerte", "tocando sus hojas"],
+        "distractors": ["cantando muy fuerte", "tocando sus hojas"],
+        "answer": "moviendo sus alas con alegría",
+        "answerWords": ["moviendo", "sus", "alas", "con", "alegría"],
+        "extraWords": ["cantando", "fuerte", "hojas"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué vio el colibrí en otro jardín?",
+        "options": ["muchas flores nuevas", "un árbol seco", "una fuente de agua"],
+        "distractors": ["un árbol seco", "una fuente de agua"],
+        "answer": "muchas flores nuevas",
+        "answerWords": ["muchas", "flores", "nuevas"],
+        "extraWords": ["árbol", "fuente", "agua"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Cómo eran las flores nuevas?",
+        "options": ["grandes y coloridas", "pequeñas y secas", "blancas y sin hojas"],
+        "distractors": ["pequeñas y secas", "blancas y sin hojas"],
+        "answer": "grandes y coloridas",
+        "answerWords": ["grandes", "y", "coloridas"],
+        "extraWords": ["pequeñas", "secas", "blancas"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué descubrió el colibrí después de varios días?",
+        "options": ["que las flores nuevas no siempre tenían néctar", "que la flor roja se había ido", "que ya no podía volar"],
+        "distractors": ["que la flor roja se había ido", "que ya no podía volar"],
+        "answer": "que las flores nuevas no siempre tenían néctar",
+        "answerWords": ["que", "las", "flores", "nuevas", "no", "siempre", "tenían", "néctar"],
+        "extraWords": ["roja", "volar", "camino"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Cómo volvió el colibrí al camino?",
+        "options": ["cansado y con hambre", "contento y con flores", "enojado y con semillas"],
+        "distractors": ["contento y con flores", "enojado y con semillas"],
+        "answer": "cansado y con hambre",
+        "answerWords": ["cansado", "y", "con", "hambre"],
+        "extraWords": ["contento", "flores", "semillas"]
+      }
+    ]
+  },
+
+  
+  
+  
+  {
+    "id": "L4_04",
+    "level": 4,
+    "title": "El conejo y la zanahoria dorada",
+    "text": [
+      "En una huerta pequeña vivía un conejo blanco al que le gustaban mucho las zanahorias. Una tarde encontró una zanahoria dorada escondida entre las hojas verdes. Era tan brillante que el conejo pensó que debía guardarla solo para él.",
+      "El conejo la llevó a su madriguera y no quiso compartirla con nadie. Cuando sus amigos le preguntaron qué había encontrado, él dijo que no era nada importante. Pero la zanahoria era muy grande, y el conejo no podía comerla solo.",
+      "Después de varios días, la zanahoria comenzó a ponerse fea. El conejo se sintió triste por no haberla compartido a tiempo. Entonces llamó a sus amigos y les pidió disculpas."
+    ],
+    "questions": [
+      {
+        "type": "seleccion3",
+        "question": "¿Dónde vivía el conejo blanco?",
+        "options": ["en una huerta pequeña", "en una cueva oscura", "en una casa azul"],
+        "distractors": ["en una cueva oscura", "en una casa azul"],
+        "answer": "en una huerta pequeña",
+        "answerWords": ["en", "una", "huerta", "pequeña"],
+        "extraWords": ["cueva", "casa", "azul"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué le gustaba mucho al conejo?",
+        "options": ["las zanahorias", "las manzanas", "las flores"],
+        "distractors": ["las manzanas", "las flores"],
+        "answer": "las zanahorias",
+        "answerWords": ["las", "zanahorias"],
+        "extraWords": ["manzanas", "flores"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué encontró el conejo entre las hojas verdes?",
+        "options": ["una zanahoria dorada", "una piedra pequeña", "una flor blanca"],
+        "distractors": ["una piedra pequeña", "una flor blanca"],
+        "answer": "una zanahoria dorada",
+        "answerWords": ["una", "zanahoria", "dorada"],
+        "extraWords": ["piedra", "flor", "blanca"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Por qué llamó la atención la zanahoria?",
+        "options": ["porque era muy brillante", "porque estaba rota", "porque era muy pequeña"],
+        "distractors": ["porque estaba rota", "porque era muy pequeña"],
+        "answer": "porque era muy brillante",
+        "answerWords": ["porque", "era", "muy", "brillante"],
+        "extraWords": ["rota", "pequeña", "oscura"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Dónde llevó el conejo la zanahoria?",
+        "options": ["a su madriguera", "al río", "al árbol de mango"],
+        "distractors": ["al río", "al árbol de mango"],
+        "answer": "a su madriguera",
+        "answerWords": ["a", "su", "madriguera"],
+        "extraWords": ["río", "árbol", "mango"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué dijo el conejo cuando sus amigos preguntaron?",
+        "options": ["que no era nada importante", "que era para todos", "que la había perdido"],
+        "distractors": ["que era para todos", "que la había perdido"],
+        "answer": "que no era nada importante",
+        "answerWords": ["que", "no", "era", "nada", "importante"],
+        "extraWords": ["todos", "perdido", "zanahoria"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué pasó con la zanahoria después de varios días?",
+        "options": ["comenzó a ponerse fea", "se volvió más brillante", "desapareció de la huerta"],
+        "distractors": ["se volvió más brillante", "desapareció de la huerta"],
+        "answer": "comenzó a ponerse fea",
+        "answerWords": ["comenzó", "a", "ponerse", "fea"],
+        "extraWords": ["brillante", "desapareció", "huerta"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué hizo el conejo al final?",
+        "options": ["llamó a sus amigos y les pidió disculpas", "cerró la madriguera y se durmió", "tiró la zanahoria al río"],
+        "distractors": ["cerró la madriguera y se durmió", "tiró la zanahoria al río"],
+        "answer": "llamó a sus amigos y les pidió disculpas",
+        "answerWords": ["llamó", "a", "sus", "amigos", "y", "les", "pidió", "disculpas"],
+        "extraWords": ["cerró", "durmió", "río"]
+      }
+    ]
+  },
+
+  
+  
+  
+  {
+    "id": "L4_05",
+    "level": 4,
+    "title": "El mono y el espejo",
+    "text": [
+      "Un mono curioso encontró un espejo brillante junto a un río. Al mirarlo, vio su propia cara y pensó que otro mono lo estaba observando desde adentro. El mono hizo una mueca, y la imagen hizo lo mismo.",
+      "Molesto, el mono enseñó los dientes y golpeó el espejo con una rama. La imagen también parecía enojada. Entonces el mono gritó más fuerte, creyendo que el otro mono quería pelear.",
+      "Un búho que estaba en un árbol le dijo que aquel mono del espejo solo repetía lo que él hacía. El mono respiró profundo, sonrió, y la imagen sonrió también."
+    ],
+    "questions": [
+      {
+        "type": "seleccion3",
+        "question": "¿Qué encontró el mono junto al río?",
+        "options": ["un espejo brillante", "una piedra dorada", "una caja azul"],
+        "distractors": ["una piedra dorada", "una caja azul"],
+        "answer": "un espejo brillante",
+        "answerWords": ["un", "espejo", "brillante"],
+        "extraWords": ["piedra", "caja", "azul"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué vio el mono al mirar el espejo?",
+        "options": ["su propia cara", "un pez grande", "una flor roja"],
+        "distractors": ["un pez grande", "una flor roja"],
+        "answer": "su propia cara",
+        "answerWords": ["su", "propia", "cara"],
+        "extraWords": ["pez", "flor", "roja"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué pensó el mono al ver la imagen?",
+        "options": ["que otro mono lo observaba desde adentro", "que el río estaba seco", "que el espejo era comida"],
+        "distractors": ["que el río estaba seco", "que el espejo era comida"],
+        "answer": "que otro mono lo observaba desde adentro",
+        "answerWords": ["que", "otro", "mono", "lo", "observaba", "desde", "adentro"],
+        "extraWords": ["río", "seco", "comida"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué hizo primero el mono frente al espejo?",
+        "options": ["hizo una mueca", "cerró los ojos", "tiró una fruta"],
+        "distractors": ["cerró los ojos", "tiró una fruta"],
+        "answer": "hizo una mueca",
+        "answerWords": ["hizo", "una", "mueca"],
+        "extraWords": ["ojos", "fruta", "cerró"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Con qué golpeó el espejo?",
+        "options": ["con una rama", "con una piedra", "con una hoja"],
+        "distractors": ["con una piedra", "con una hoja"],
+        "answer": "con una rama",
+        "answerWords": ["con", "una", "rama"],
+        "extraWords": ["piedra", "hoja"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Quién le explicó al mono lo que pasaba?",
+        "options": ["un búho", "una tortuga", "un conejo"],
+        "distractors": ["una tortuga", "un conejo"],
+        "answer": "un búho",
+        "answerWords": ["un", "búho"],
+        "extraWords": ["tortuga", "conejo"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué le dijo el búho sobre el mono del espejo?",
+        "options": ["que solo repetía lo que él hacía", "que vivía dentro del río", "que estaba buscando comida"],
+        "distractors": ["que vivía dentro del río", "que estaba buscando comida"],
+        "answer": "que solo repetía lo que él hacía",
+        "answerWords": ["que", "solo", "repetía", "lo", "que", "él", "hacía"],
+        "extraWords": ["río", "comida", "vivía"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué hizo el mono después de escuchar al búho?",
+        "options": ["respiró profundo y sonrió", "corrió hacia el río", "rompió el espejo"],
+        "distractors": ["corrió hacia el río", "rompió el espejo"],
+        "answer": "respiró profundo y sonrió",
+        "answerWords": ["respiró", "profundo", "y", "sonrió"],
+        "extraWords": ["corrió", "río", "rompió"]
       }
     ]
   }
