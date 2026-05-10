@@ -1,1520 +1,220 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Comprensión Lectora</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Comprensión lectora</title>
 <style>
 :root{
-    --azul:#2563eb;
-    --azul-oscuro:#1e3a8a;
-    --celeste:#dbeafe;
-    --verde:#16a34a;
-    --rojo:#dc2626;
-    --amarillo:#facc15;
-    --fondo:#eef8ff;
-    --texto:#1f2937;
-    --morado:#7c3aed;
-    --naranja:#fb923c;
-    --fuente-lectura:"Atkinson Hyperlegible", "Nunito", Arial, sans-serif;
+  --azul:#2563eb;--texto:#102a43;--borde:#cfe3ff;--sombra:0 14px 32px rgba(37,99,235,.14);--radio:28px;
 }
-
-*{
-    box-sizing:border-box;
-}
-
+*{box-sizing:border-box}
 body{
-    margin:0;
-    font-family:"Nunito", Arial, Helvetica, sans-serif;
-    background:
-        radial-gradient(circle at top left,#fff7ad 0,#fff7ad 120px,transparent 121px),
-        radial-gradient(circle at top right,#b6f5d8 0,#b6f5d8 150px,transparent 151px),
-        linear-gradient(180deg,#dff4ff,#fffdf4);
-    min-height:100vh;
-    color:var(--texto);
+  margin:0;min-height:100vh;
+  font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif;
+  color:var(--texto);
+  background:radial-gradient(circle at top left,rgba(125,211,252,.75),transparent 28rem),
+             radial-gradient(circle at top right,rgba(253,186,116,.60),transparent 26rem),
+             linear-gradient(135deg,#e0f7ff,#fff7d6 55%,#ffe4f2);
+  overflow-x:hidden;
 }
-
+.app{width:min(1180px,calc(100% - 24px));margin:0 auto;padding:18px 0 28px}
 header{
-    text-align:center;
-    padding:24px 14px 12px;
-}
-
-h1{
-    margin:0;
-    color:var(--azul-oscuro);
-    font-size:clamp(2rem,5vw,3.5rem);
-    text-shadow:1px 2px 0 #ffffff;
-}
-
-.subtitulo{
-    max-width:800px;
-    margin:10px auto 0;
-    color:#374151;
-    font-size:1.15rem;
-    line-height:1.4;
-}
-
-main{
-    width:min(1180px,96%);
-    margin:0 auto;
-    padding:16px 0 30px;
-}
-
-.panel{
-    background:rgba(255,255,255,0.95);
-    border-radius:28px;
-    padding:22px;
-    margin-bottom:18px;
-    box-shadow:0 10px 24px rgba(30,58,138,0.16);
-    border:3px solid rgba(191,219,254,0.9);
-}
-
-.oculto{
-    display:none !important;
-}
-
-.grid-inicio{
-    display:grid;
-    grid-template-columns:1fr;
-    gap:18px;
-}
-
-.bloque-rutina{
-    display:grid;
-    grid-template-columns:1.15fr 0.85fr;
-    gap:18px;
-    align-items:stretch;
-}
-
-.tarjeta{
-    background:#f8fbff;
-    border:3px solid #dbeafe;
-    border-radius:24px;
-    padding:18px;
-}
-
-label{
-    display:block;
-    font-weight:800;
-    color:var(--azul-oscuro);
-    margin-bottom:8px;
-    font-size:1.05rem;
-}
-
-input[type="text"]{
-    width:100%;
-    border:3px solid #bfdbfe;
-    border-radius:18px;
-    padding:14px 16px;
-    font-size:1.1rem;
-    outline:none;
-}
-
-input[type="text"]:focus{
-    border-color:var(--azul);
-    box-shadow:0 0 0 4px #dbeafe;
-}
-
-.ayuda-verbal{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:14px;
-    background:#fff7dd;
-    border:3px solid #fde68a;
-    border-radius:22px;
-    padding:14px 16px;
-}
-
-.ayuda-verbal strong{
-    color:#92400e;
-}
-
-.switch{
-    position:relative;
-    width:78px;
-    height:42px;
-    flex:0 0 auto;
-}
-
-.switch input{
-    opacity:0;
-    width:0;
-    height:0;
-}
-
-.slider{
-    position:absolute;
-    cursor:pointer;
-    inset:0;
-    background:#cbd5e1;
-    transition:.25s;
-    border-radius:999px;
-    border:3px solid #94a3b8;
-}
-
-.slider:before{
-    content:"";
-    position:absolute;
-    height:28px;
-    width:28px;
-    left:4px;
-    top:4px;
-    background:white;
-    transition:.25s;
-    border-radius:50%;
-    box-shadow:0 2px 5px rgba(0,0,0,.25);
-}
-
-.switch input:checked + .slider{
-    background:#4ade80;
-    border-color:#16a34a;
-}
-
-.switch input:checked + .slider:before{
-    transform:translateX(35px);
-}
-
-.niveles{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:14px;
-}
-
-.botonNivel{
-    border:none;
-    border-radius:26px;
-    padding:18px 15px;
-    color:white;
-    cursor:pointer;
-    min-height:170px;
-    transition:.2s ease;
-    box-shadow:0 7px 0 rgba(0,0,0,.15);
-    text-align:left;
-}
-
-.botonNivel:hover{
-    transform:translateY(-3px) scale(1.01);
-}
-
-.botonNivel.seleccionado{
-    outline:6px solid #facc15;
-    transform:translateY(-3px);
-}
-
-.botonNivel h2{
-    margin:0 0 8px;
-    font-size:1.45rem;
-}
-
-.botonNivel p{
-    margin:0;
-    line-height:1.32;
-    font-size:.98rem;
-}
-
-.n1{background:linear-gradient(135deg,#38bdf8,#2563eb);}
-.n2{background:linear-gradient(135deg,#34d399,#059669);}
-.n3{background:linear-gradient(135deg,#a78bfa,#7c3aed);}
-.n4{background:linear-gradient(135deg,#fb923c,#ea580c);}
-
-.configuracion{
-    display:grid;
-    grid-template-columns:1.2fr .8fr;
-    gap:16px;
-    align-items:stretch;
-}
-
-.modos{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:12px;
-}
-
-.modo{
-    border:3px solid #dbeafe;
-    background:#f8fbff;
-    border-radius:22px;
-    padding:14px;
-    cursor:pointer;
-    transition:.2s;
-}
-
-.modo:hover{
-    transform:scale(1.02);
-}
-
-.modo.seleccionado{
-    border-color:var(--azul);
-    background:#dbeafe;
-}
-
-.modo h3{
-    margin:0 0 8px;
-    color:var(--azul-oscuro);
-    font-size:1.05rem;
-}
-
-.modo p{
-    margin:0;
-    font-size:.92rem;
-    line-height:1.35;
-}
-
-.checkline{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    background:#f8fbff;
-    border:3px solid #dbeafe;
-    border-radius:18px;
-    padding:14px;
-    margin-top:12px;
-}
-
-.checkline input{
-    width:24px;
-    height:24px;
-}
-
-.acciones-inicio{
-    display:flex;
-    justify-content:center;
-    margin-top:18px;
-}
-
-.btn-principal,
-.btn-secundario,
-.btn-verde{
-    border:none;
-    border-radius:22px;
-    padding:15px 24px;
-    font-weight:900;
-    font-size:1.08rem;
-    cursor:pointer;
-    box-shadow:0 5px 0 rgba(0,0,0,.15);
-    transition:.15s;
-}
-
-.btn-principal{
-    background:linear-gradient(135deg,#facc15,#f97316);
-    color:#78350f;
-}
-
-.btn-verde{
-    background:linear-gradient(135deg,#86efac,#22c55e);
-    color:#064e3b;
-}
-
-.btn-secundario{
-    background:#e0f2fe;
-    color:#075985;
-}
-
-.btn-principal:hover,
-.btn-secundario:hover,
-.btn-verde:hover{
-    transform:translateY(-2px);
-}
-
-.mensaje-error{
-    background:#fee2e2;
-    color:#7f1d1d;
-    border:3px solid #fca5a5;
-    border-radius:20px;
-    padding:15px;
-    font-weight:bold;
-    margin-top:14px;
-}
-
-.barra-juego{
-    display:flex;
-    justify-content:space-between;
-    gap:12px;
-    align-items:center;
-    flex-wrap:wrap;
-    background:#eff6ff;
-    border:3px solid #bfdbfe;
-    border-radius:24px;
-    padding:14px;
-    margin-bottom:16px;
-}
-
-.etiqueta{
-    background:white;
-    border:2px solid #bfdbfe;
-    border-radius:999px;
-    padding:8px 14px;
-    font-weight:800;
-    color:var(--azul-oscuro);
-}
-
-.lectura{
-    background:#fffdf7;
-    border:4px solid #fde68a;
-    border-radius:26px;
-    padding:clamp(18px,2.4vw,28px);
-    font-family:var(--fuente-lectura);
-    font-size:clamp(1.28rem,2.15vw,1.72rem);
-    line-height:1.78;
-    letter-spacing:0.01em;
-}
-
-.parrafo-linea{
-    display:flex;
-    gap:10px;
-    align-items:flex-start;
-    margin:0 0 12px;
-}
-
-.parrafo-linea p{
-    margin:0;
-    flex:1;
-    max-width:72ch;
-}
-
-.speaker{
-    border:none;
-    width:42px;
-    height:42px;
-    border-radius:50%;
-    background:#dbeafe;
-    color:#1d4ed8;
-    font-size:1.35rem;
-    cursor:pointer;
-    flex:0 0 auto;
-    box-shadow:0 3px 0 #93c5fd;
-}
-
-.contenedor-preguntas{
-    margin-top:18px;
-}
-
-.pregunta{
-    background:white;
-    border:3px solid #dbeafe;
-    border-radius:24px;
-    padding:18px;
-    margin-bottom:15px;
-}
-
-.pregunta h3{
-    margin:0;
-    color:#1e3a8a;
-    font-family:var(--fuente-lectura);
-    font-size:clamp(1.15rem,1.7vw,1.38rem);
-    line-height:1.42;
-    letter-spacing:0.01em;
-}
-
-.pregunta-header{
-    display:flex;
-    gap:10px;
-    align-items:center;
-    margin-bottom:14px;
-}
-
-.pregunta-header h3{
-    flex:1;
-}
-
-.opciones{
-    display:flex;
-    flex-wrap:wrap;
-    gap:12px;
-}
-
-.opcion{
-    background:#eff6ff;
-    border:3px solid #bfdbfe;
-    border-radius:18px;
-    padding:13px 18px;
-    cursor:pointer;
-    font-family:var(--fuente-lectura);
-    font-size:clamp(1.06rem,1.5vw,1.22rem);
-    font-weight:700;
-    color:#1e3a8a;
-    user-select:none;
-}
-
-.opcion:hover{
-    transform:scale(1.03);
-}
-
-.opcion.seleccionada{
-    background:#fef3c7;
-    border-color:#facc15;
-}
-
-.layout-arrastre{
-    display:grid;
-    grid-template-columns:2fr 1fr;
-    gap:18px;
-    align-items:start;
-}
-
-.col-preguntas{
-    min-width:0;
-}
-
-.banco{
-    background:#f0fdf4;
-    border:4px solid #bbf7d0;
-    border-radius:24px;
-    padding:15px;
-    min-height:220px;
-    position:sticky;
-    top:10px;
-}
-
-.banco h3{
-    margin:0 0 12px;
-    color:#166534;
-    font-size:1.1rem;
-}
-
-.banco-items{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-}
-
-.token{
-    background:#fff7cc;
-    border:3px solid #facc15;
-    color:#78350f;
-    border-radius:16px;
-    padding:11px 14px;
-    cursor:grab;
-    font-family:var(--fuente-lectura);
-    font-size:clamp(1rem,1.45vw,1.18rem);
-    font-weight:700;
-    user-select:none;
-    touch-action:none;
-}
-
-.token.usado{
-    opacity:.45;
-}
-
-.zona-respuesta{
-    min-height:58px;
-    border:3px dashed #93c5fd;
-    background:#f8fbff;
-    border-radius:17px;
-    padding:10px;
-    margin-top:12px;
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    align-items:center;
-}
-
-.zona-respuesta.sobre{
-    background:#dbeafe;
-}
-
-.chip-respuesta{
-    background:#dbeafe;
-    border:2px solid #60a5fa;
-    color:#1e3a8a;
-    border-radius:14px;
-    padding:9px 12px;
-    font-family:var(--fuente-lectura);
-    font-size:clamp(1rem,1.45vw,1.16rem);
-    font-weight:700;
-    cursor:pointer;
-}
-
-.correcta{
-    border-color:#16a34a !important;
-    background:#dcfce7 !important;
-}
-
-.incorrecta{
-    border-color:#dc2626 !important;
-    background:#fee2e2 !important;
-}
-
-.retro{
-    margin-top:10px;
-    font-weight:900;
-}
-
-.retro.ok{
-    color:#166534;
-}
-
-.retro.no{
-    color:#991b1b;
-}
-
-.botones-juego{
-    display:flex;
-    justify-content:center;
-    gap:12px;
-    flex-wrap:wrap;
-    margin-top:18px;
-}
-
-.celebracion{
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    overflow:hidden;
-    z-index:999;
-}
-
-.particula{
-    position:absolute;
-    font-weight:900;
-    animation:celebrar 8s ease-out forwards;
-}
-
-@keyframes celebrar{
-    0%{transform:translateY(0) scale(.8) rotate(0deg); opacity:0;}
-    12%{opacity:1;}
-    38%{transform:translateY(-170px) scale(1) rotate(180deg); opacity:1;}
-    72%{opacity:1;}
-    100%{transform:translateY(100vh) scale(.9) rotate(720deg); opacity:0;}
-}
-
-footer{
-    text-align:center;
-    color:#475569;
-    padding:18px;
-    font-size:.95rem;
-}
-
-@media (min-width:700px) and (max-width:1180px){
-    main{
-        width:min(100% - 24px,1100px);
-        padding-top:10px;
-    }
-
-    header{
-        padding:18px 12px 8px;
-    }
-
-    h1{
-        font-size:clamp(2rem,4.2vw,3rem);
-    }
-
-    .panel{
-        padding:clamp(16px,2vw,22px);
-        border-radius:24px;
-    }
-
-    .bloque-rutina,
-    .configuracion{
-        grid-template-columns:1fr 1fr;
-    }
-
-    .niveles{
-        grid-template-columns:repeat(4,minmax(0,1fr));
-        gap:10px;
-    }
-
-    .botonNivel{
-        min-height:145px;
-        padding:15px 12px;
-    }
-
-    .botonNivel h2{
-        font-size:1.22rem;
-    }
-
-    .botonNivel p{
-        font-size:.9rem;
-    }
-
-    .modos{
-        grid-template-columns:repeat(3,minmax(0,1fr));
-        gap:10px;
-    }
-
-    .lectura{
-        font-size:clamp(1.32rem,2.2vw,1.62rem);
-    }
-
-    .layout-arrastre{
-        grid-template-columns:minmax(0,1.65fr) minmax(230px,.75fr);
-        gap:14px;
-    }
-
-    .banco{
-        position:sticky;
-        top:8px;
-        max-height:72vh;
-        overflow:auto;
-    }
-}
-
-@media (orientation:landscape) and (min-width:700px) and (max-height:820px){
-    header{
-        padding:12px 10px 4px;
-    }
-
-    .subtitulo{
-        margin-top:6px;
-        font-size:1rem;
-    }
-
-    .panel{
-        margin-bottom:12px;
-    }
-
-    .barra-juego{
-        padding:10px;
-        margin-bottom:12px;
-    }
-
-    .lectura{
-        padding:16px 18px;
-        line-height:1.62;
-    }
-}
-
-@media(max-width:980px){
-    .niveles{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .configuracion,
-    .bloque-rutina,
-    .layout-arrastre{
-        grid-template-columns:1fr;
-    }
-
-    .banco{
-        position:static;
-    }
-}
-
-@media(max-width:650px){
-    .niveles,
-    .modos{
-        grid-template-columns:1fr;
-    }
-
-    .panel{
-        padding:15px;
-    }
-
-    .botonNivel{
-        min-height:auto;
-    }
-}
+  background:rgba(255,255,255,.86);border:3px solid rgba(255,255,255,.95);
+  border-radius:var(--radio);padding:clamp(18px,3vw,32px);box-shadow:var(--sombra);
+  display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:center;
+}
+h1{margin:0;color:var(--azul);font-size:clamp(2rem,5vw,4rem);line-height:1}
+.subtitulo{margin:10px 0 0;font-weight:800;color:#415a77;font-size:clamp(1rem,2vw,1.25rem);line-height:1.45}
+.panel-nombre{background:linear-gradient(160deg,#fff,#eff6ff);border:3px solid #bfdbfe;border-radius:24px;padding:16px;box-shadow:0 8px 22px rgba(37,99,235,.10)}
+.nombre-linea{font-size:1.15rem;font-weight:900;color:#1e3a8a;margin-bottom:8px}
+.nombre-mostrado{display:inline-block;background:#fff7ed;color:#9a3412;border:2px solid #fed7aa;border-radius:999px;padding:6px 12px;margin-left:4px}
+.ayuda{margin-top:10px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-weight:900;color:#334155}
+.switch{position:relative;width:66px;height:36px}.switch input{display:none}
+.slider{position:absolute;inset:0;cursor:pointer;background:#cbd5e1;border-radius:999px;transition:.2s;border:3px solid white;box-shadow:0 4px 10px rgba(0,0,0,.12)}
+.slider:before{content:"";position:absolute;width:24px;height:24px;left:3px;top:3px;background:white;border-radius:50%;transition:.2s}
+.switch input:checked+.slider{background:#22c55e}.switch input:checked+.slider:before{transform:translateX(30px)}
+.panel{margin-top:18px;background:rgba(255,255,255,.88);border:3px solid rgba(255,255,255,.96);border-radius:var(--radio);box-shadow:var(--sombra);padding:clamp(14px,2.5vw,24px)}
+.niveles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.boton-nivel{border:0;border-radius:26px;min-height:150px;padding:18px;color:white;font:inherit;text-align:left;cursor:pointer;box-shadow:0 12px 24px rgba(15,23,42,.16);transition:.18s;touch-action:manipulation}
+.boton-nivel:hover{transform:translateY(-4px) scale(1.01)}.boton-nivel h2{margin:0 0 8px;font-size:1.55rem}.boton-nivel p{margin:0;font-weight:800;line-height:1.35}
+.n1{background:linear-gradient(135deg,#2563eb,#38bdf8)}.n2{background:linear-gradient(135deg,#16a34a,#86efac)}.n3{background:linear-gradient(135deg,#f97316,#fbbf24)}.n4{background:linear-gradient(135deg,#7c3aed,#f472b6)}
+.oculto{display:none!important}
+.barra-juego{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.pill{background:#eff6ff;border:2px solid #bfdbfe;color:#1e3a8a;border-radius:999px;padding:8px 14px;font-weight:950}
+.lectura{background:#fff;border:4px solid var(--borde);border-radius:30px;padding:clamp(16px,3vw,28px);box-shadow:0 10px 20px rgba(37,99,235,.08)}
+.parrafo{display:flex;align-items:flex-start;gap:12px;margin:0 0 16px}.parrafo:last-child{margin-bottom:0}
+.parrafo-texto{flex:1;font-size:clamp(1.25rem,2.2vw,1.65rem);line-height:1.75;font-weight:850;color:#153e75}
+.parlante{flex:0 0 auto;width:46px;height:46px;border:0;border-radius:16px;background:#fff7ed;border:3px solid #fed7aa;color:#9a3412;font-size:1.35rem;cursor:pointer;box-shadow:0 6px 14px rgba(249,115,22,.16)}
+.preguntas{margin-top:16px;display:grid;gap:14px}
+.pregunta{background:#fff;border:3px solid #dbeafe;border-radius:24px;padding:clamp(14px,2.5vw,22px);box-shadow:0 8px 18px rgba(37,99,235,.08)}
+.pregunta-titulo{display:flex;gap:10px;align-items:flex-start;margin-bottom:12px}
+.pregunta h3{flex:1;margin:0;color:#102f86;font-size:clamp(1.15rem,2vw,1.45rem);line-height:1.35}
+.opciones,.bateria{display:flex;flex-wrap:wrap;gap:10px}
+.opcion,.palabra{border:3px solid #bfdbfe;background:#eff6ff;color:#153e75;border-radius:18px;padding:12px 16px;font-size:clamp(1rem,1.8vw,1.15rem);font-weight:900;cursor:pointer;user-select:none;touch-action:manipulation}
+.palabra{background:#fff7cc;border-color:#facc15;cursor:grab}
+.opcion.seleccionada{background:#dbeafe;border-color:#2563eb}
+.zona-respuesta{min-height:64px;border:3px dashed #93c5fd;background:#f8fbff;border-radius:18px;padding:10px;display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.zona-respuesta.activa{background:#eef6ff}.correcta{background:#dcfce7!important;border-color:#16a34a!important}.incorrecta{background:#fee2e2!important;border-color:#dc2626!important}
+.acciones{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:18px}
+.btn{border:0;border-radius:20px;min-height:52px;padding:12px 18px;font-size:1.05rem;font-weight:950;color:white;cursor:pointer;touch-action:manipulation;box-shadow:0 10px 20px rgba(15,23,42,.14)}
+.btn-verificar{background:linear-gradient(135deg,#16a34a,#22c55e)}.btn-siguiente{background:linear-gradient(135deg,#2563eb,#38bdf8)}.btn-niveles{background:linear-gradient(135deg,#7c3aed,#a855f7)}
+.mensaje-error{background:#fef2f2;border:3px solid #fecaca;color:#991b1b;border-radius:24px;padding:18px;font-weight:900;line-height:1.5}
+footer{text-align:center;padding:20px;color:#355166;font-weight:850}
+.confeti{position:fixed;top:-20px;pointer-events:none;z-index:9999;animation:caer 5s linear forwards}
+@keyframes caer{0%{transform:translateY(-20px) rotate(0deg);opacity:1}70%{opacity:1}100%{transform:translateY(105vh) rotate(720deg);opacity:0}}
+@media(max-width:1024px){header{grid-template-columns:1fr}.niveles{grid-template-columns:repeat(2,minmax(0,1fr))}.panel{padding:18px}}
+@media(max-width:720px){.app{width:min(100% - 14px,1180px);padding-top:8px}.niveles{grid-template-columns:1fr}.boton-nivel{min-height:118px}.parrafo{gap:8px}.parlante{width:42px;height:42px}}
+@media(orientation:landscape) and (max-height:760px){header{grid-template-columns:1.2fr .8fr;padding:16px}h1{font-size:clamp(1.8rem,4vw,3rem)}.boton-nivel{min-height:120px}.parrafo-texto{font-size:clamp(1.1rem,1.8vw,1.35rem);line-height:1.55}}
 </style>
 </head>
-
 <body>
-
+<main class="app">
 <header>
-    <h1>📚 Comprensión lectora</h1>
-    <div class="subtitulo">
-        Lee con calma, comprende la historia y responde de diferentes maneras.
-    </div>
+<section>
+<h1>📚 Comprensión lectora</h1>
+<p class="subtitulo">Lee con calma, responde preguntas concretas y practica paso a paso.</p>
+</section>
+<aside class="panel-nombre">
+<div class="nombre-linea">Niño: <span id="nombreMostrado" class="nombre-mostrado">Gabriel</span></div>
+<div class="ayuda"><span>🔊 Ayuda verbal</span><label class="switch" aria-label="Activar o desactivar ayuda verbal"><input type="checkbox" id="ayudaVerbal"><span class="slider"></span></label></div>
+</aside>
 </header>
 
-<main>
+<section id="errorBase" class="panel mensaje-error oculto"></section>
 
 <section id="pantallaInicio" class="panel">
-
-    <div class="grid-inicio">
-
-        <div class="bloque-rutina">
-
-            <div class="tarjeta">
-                <label for="nombreNino">Nombre del estudiante</label>
-                <input id="nombreNino" type="text" placeholder="Ejemplo: Gabriel">
-                <div style="margin-top:10px;color:#64748b;font-size:.95rem;">
-                    El nombre se guarda en este dispositivo para la próxima vez.
-                </div>
-            </div>
-
-            <div class="ayuda-verbal">
-                <div>
-                    <strong>🔊 Ayuda verbal</strong>
-                    <div style="font-size:.95rem;color:#78350f;margin-top:4px;">
-                        Al activarla, aparecen parlantes en los párrafos y preguntas.
-                    </div>
-                </div>
-
-                <label class="switch" title="Activar o desactivar ayuda verbal">
-                    <input id="ayudaVerbal" type="checkbox">
-                    <span class="slider"></span>
-                </label>
-            </div>
-
-        </div>
-
-        <div class="tarjeta">
-            <label>Escoge el nivel</label>
-
-            <div class="niveles">
-
-                <button class="botonNivel n1" data-nivel="1">
-                    <h2>Nivel 1</h2>
-                    <p>
-                        3 oraciones. 2 preguntas. Respuestas con palabras individuales.
-                    </p>
-                </button>
-
-                <button class="botonNivel n2" data-nivel="2">
-                    <h2>Nivel 2</h2>
-                    <p>
-                        4 oraciones. 3 preguntas. Respuestas con palabras o frases cortas.
-                    </p>
-                </button>
-
-                <button class="botonNivel n3" data-nivel="3">
-                    <h2>Nivel 3</h2>
-                    <p>
-                        2 párrafos. Más información para leer y 4 preguntas.
-                    </p>
-                </button>
-
-                <button class="botonNivel n4" data-nivel="4">
-                    <h2>Nivel 4</h2>
-                    <p>
-                        3 o 4 párrafos. Lecturas más largas con 5 preguntas.
-                    </p>
-                </button>
-
-            </div>
-        </div>
-
-        <div class="configuracion">
-
-            <div class="tarjeta">
-                <label>Forma de responder</label>
-
-                <div class="modos">
-
-                    <div class="modo seleccionado" data-modo="seleccion">
-                        <h3>Selección única</h3>
-                        <p>
-                            Se presentan 3 opciones y se marca la correcta.
-                        </p>
-                    </div>
-
-                    <div class="modo" data-modo="arrastrar-respuesta">
-                        <h3>Arrastrar respuesta</h3>
-                        <p>
-                            Las preguntas quedan a la izquierda y las respuestas disponibles a la derecha.
-                        </p>
-                    </div>
-
-                    <div class="modo" data-modo="armar-frase">
-                        <h3>Armar la respuesta</h3>
-                        <p>
-                            Se arrastran palabras para construir la frase de respuesta.
-                        </p>
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="tarjeta">
-                <label>Banco de respuestas</label>
-
-                <div class="checkline">
-                    <input id="usarSenuelos" type="checkbox" checked>
-                    <div>
-                        <strong>Incluir respuestas sobrantes o señuelos</strong>
-                        <div style="font-size:.92rem;color:#475569;">
-                            Si se desactiva, aparecen solo las respuestas necesarias.
-                        </div>
-                    </div>
-                </div>
-
-                <div class="checkline">
-                    <input id="mezclarBanco" type="checkbox" checked>
-                    <div>
-                        <strong>Mezclar opciones</strong>
-                        <div style="font-size:.92rem;color:#475569;">
-                            Reordena las opciones para variar cada intento.
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div id="mensajeError" class="mensaje-error oculto"></div>
-
-        <div class="acciones-inicio">
-            <button id="btnIniciar" class="btn-principal">
-                Empezar lectura 🌟
-            </button>
-        </div>
-
-    </div>
-
+<div class="niveles">
+<button class="boton-nivel n1" onclick="iniciarNivel(1)"><h2>Nivel 1</h2><p>3 oraciones y 2 preguntas.</p></button>
+<button class="boton-nivel n2" onclick="iniciarNivel(2)"><h2>Nivel 2</h2><p>4 oraciones y 3 preguntas.</p></button>
+<button class="boton-nivel n3" onclick="iniciarNivel(3)"><h2>Nivel 3</h2><p>2 párrafos y 4 preguntas.</p></button>
+<button class="boton-nivel n4" onclick="iniciarNivel(4)"><h2>Nivel 4</h2><p>3 párrafos y 5 preguntas.</p></button>
+</div>
 </section>
 
 <section id="pantallaJuego" class="panel oculto">
-
-    <div class="barra-juego">
-        <div class="etiqueta" id="infoNivel">Nivel</div>
-        <div class="etiqueta" id="infoModo">Modo</div>
-        <div class="etiqueta" id="infoNombre">Estudiante</div>
-    </div>
-
-    <article id="lectura" class="lectura"></article>
-
-    <section id="zonaPreguntas" class="contenedor-preguntas"></section>
-
-    <div class="botones-juego">
-        <button id="btnVerificar" class="btn-verde">Verificar respuestas ✅</button>
-        <button id="btnSiguiente" class="btn-principal">Siguiente lectura ➡️</button>
-        <button id="btnVolver" class="btn-secundario">Volver al inicio</button>
-    </div>
-
+<div class="barra-juego"><div class="pill" id="etiquetaNivel">Nivel</div><div class="pill" id="etiquetaLectura">Lectura</div></div>
+<article id="lectura" class="lectura"></article>
+<section id="preguntas" class="preguntas"></section>
+<div class="acciones">
+<button class="btn btn-verificar" onclick="verificar()">Verificar respuestas ✅</button>
+<button class="btn btn-siguiente" onclick="siguienteLectura()">Siguiente lectura ➡️</button>
+<button class="btn btn-niveles" onclick="volverNiveles()">Volver a niveles 🏠</button>
+</div>
 </section>
 
+<footer>Aplicación creada para Gabriel por parte de su familia, con ayuda de la IA.</footer>
 </main>
 
-<footer>
-    Aplicación creada para Gabriel por parte de su familia, con ayuda de la IA.
-</footer>
-
-<div id="celebracion" class="celebracion"></div>
-
 <script>
-const CONFIG_REGISTRO = {
-    urlAppsScript: "",
-    activarRegistro: true
-};
+const URL_GOOGLE_SCRIPT="https://script.google.com/macros/s/AKfycbyENiFqFkDqiesWvdNQuBVBAiAhMtyHc2QLXYOA-rB9uCb8P1Tb6LGKMxDKrXFa8Ow3DA/exec";
+const CLAVE_NOMBRE="nombreNinoGabrielApps";
+const CLAVE_AYUDA="comprensionLectoraAyudaVerbal";
+let baseLecturas=[],nivelActual=null,lecturaActual=null,preguntasActuales=[],ultimaLecturaId=null;
+const cantidadPreguntas={1:2,2:3,3:4,4:5};
+const nombreMostrado=document.getElementById("nombreMostrado");
+const ayudaVerbal=document.getElementById("ayudaVerbal");
+const pantallaInicio=document.getElementById("pantallaInicio");
+const pantallaJuego=document.getElementById("pantallaJuego");
+const errorBase=document.getElementById("errorBase");
+const lecturaDiv=document.getElementById("lectura");
+const preguntasDiv=document.getElementById("preguntas");
+const etiquetaNivel=document.getElementById("etiquetaNivel");
+const etiquetaLectura=document.getElementById("etiquetaLectura");
 
-const preguntasPorNivel = {
-    1: 2,
-    2: 3,
-    3: 4,
-    4: 5
-};
+function obtenerNombre(){return localStorage.getItem(CLAVE_NOMBRE)||"Gabriel";}
+function actualizarNombreDesdeIndex(){const nombre=(obtenerNombre()||"Gabriel").trim()||"Gabriel";nombreMostrado.textContent=nombre;return nombre;}
+window.addEventListener("storage",e=>{if(e.key===CLAVE_NOMBRE)actualizarNombreDesdeIndex();});
+window.addEventListener("focus",actualizarNombreDesdeIndex);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)actualizarNombreDesdeIndex();});
 
-const nombresModo = {
-    "seleccion":"Selección única",
-    "arrastrar-respuesta":"Arrastrar respuesta",
-    "armar-frase":"Armar frase"
-};
-
-let baseLecturas = [];
-let nivelSeleccionado = 1;
-let modoSeleccionado = "seleccion";
-let ayudaVerbalActiva = false;
-let lecturaActual = null;
-let preguntasActuales = [];
-let respuestasBanco = [];
-let respuestasUsuario = {};
-let respuestasSeleccion = {};
-
-document.addEventListener("DOMContentLoaded", iniciarAplicacion);
-
-function iniciarAplicacion(){
-    prepararRutina();
-    prepararEventos();
-    cargarBase();
+ayudaVerbal.checked=localStorage.getItem(CLAVE_AYUDA)==="1";
+ayudaVerbal.addEventListener("change",()=>{localStorage.setItem(CLAVE_AYUDA,ayudaVerbal.checked?"1":"0");if(nivelActual&&lecturaActual)renderizarLecturaYPreguntas();});
+function ayudaActiva(){return ayudaVerbal.checked;}
+function hablar(texto){if(!ayudaActiva())return;try{speechSynthesis.cancel();const voz=new SpeechSynthesisUtterance(texto);voz.lang="es-CR";voz.rate=.88;voz.pitch=1.05;speechSynthesis.speak(voz);}catch(e){}}
+function archivoActual(){const partes=window.location.pathname.split("/");return partes[partes.length-1]||"Comprension_Lectora.html";}
+function reportarVisita(accion){
+ const url=URL_GOOGLE_SCRIPT+"?fechaLocal="+encodeURIComponent(new Date().toLocaleString("es-CR"))+"&nombre="+encodeURIComponent(actualizarNombreDesdeIndex())+"&archivo="+encodeURIComponent(archivoActual())+"&accion="+encodeURIComponent(accion||"abrir");
+ try{fetch(url,{method:"GET",mode:"no-cors",keepalive:true}).catch(()=>{});}catch(e){}
 }
-
-function prepararRutina(){
-    const nombreGuardado = localStorage.getItem("nombre_estudiante_comprension") || "";
-    const ayudaGuardada = localStorage.getItem("ayuda_verbal_comprension") === "true";
-
-    document.getElementById("nombreNino").value = nombreGuardado;
-    document.getElementById("ayudaVerbal").checked = ayudaGuardada;
-    ayudaVerbalActiva = ayudaGuardada;
-}
-
-function prepararEventos(){
-    document.querySelectorAll(".botonNivel").forEach(btn=>{
-        btn.addEventListener("click",()=>{
-            nivelSeleccionado = Number(btn.dataset.nivel);
-
-            document.querySelectorAll(".botonNivel").forEach(b=>b.classList.remove("seleccionado"));
-            btn.classList.add("seleccionado");
-        });
-    });
-
-    document.querySelector('.botonNivel[data-nivel="1"]').classList.add("seleccionado");
-
-    document.querySelectorAll(".modo").forEach(modo=>{
-        modo.addEventListener("click",()=>{
-            modoSeleccionado = modo.dataset.modo;
-
-            document.querySelectorAll(".modo").forEach(m=>m.classList.remove("seleccionado"));
-            modo.classList.add("seleccionado");
-        });
-    });
-
-    document.getElementById("ayudaVerbal").addEventListener("change",e=>{
-        ayudaVerbalActiva = e.target.checked;
-        localStorage.setItem("ayuda_verbal_comprension", ayudaVerbalActiva ? "true":"false");
-    });
-
-    document.getElementById("nombreNino").addEventListener("input",e=>{
-        localStorage.setItem("nombre_estudiante_comprension", e.target.value.trim());
-    });
-
-    document.getElementById("btnIniciar").addEventListener("click",iniciarLectura);
-
-    document.getElementById("btnVerificar").addEventListener("click",verificarRespuestas);
-
-    document.getElementById("btnSiguiente").addEventListener("click",()=>{
-        detenerVoz();
-        iniciarLectura(false);
-        window.scrollTo({top:0,behavior:"smooth"});
-    });
-
-    document.getElementById("btnVolver").addEventListener("click",()=>{
-        detenerVoz();
-        document.getElementById("pantallaJuego").classList.add("oculto");
-        document.getElementById("pantallaInicio").classList.remove("oculto");
-    });
-}
-
 async function cargarBase(){
-    const error = document.getElementById("mensajeError");
-
-    try{
-        const resp = await fetch("Base_de_lecturas.json", {cache:"no-store"});
-
-        if(!resp.ok){
-            throw new Error("No se pudo abrir Base_de_lecturas.json.");
-        }
-
-        const data = await resp.json();
-
-        if(!Array.isArray(data)){
-            throw new Error("La base debe ser una lista de lecturas.");
-        }
-
-        baseLecturas = data;
-        error.classList.add("oculto");
-        error.textContent = "";
-
-    }catch(e){
-        baseLecturas = [];
-        error.classList.remove("oculto");
-        error.innerHTML = `
-            ⚠️ No se pudo cargar la base <strong>Base_de_lecturas.json</strong>.<br>
-            Revise que el archivo esté en la misma carpeta que este index y que el nombre sea exactamente:
-            <strong>Base_de_lecturas.json</strong>.
-        `;
-    }
+ try{
+  const r=await fetch("Base_de_lecturas.json",{cache:"no-store"});
+  if(!r.ok)throw new Error("HTTP "+r.status);
+  const data=await r.json();
+  if(!Array.isArray(data)||data.length===0)throw new Error("La base no tiene lecturas.");
+  baseLecturas=data;errorBase.classList.add("oculto");
+ }catch(e){
+  errorBase.classList.remove("oculto");
+  errorBase.innerHTML="<strong>⚠️ No se pudo cargar la base de lecturas.</strong><br>Revise que el archivo <b>Base_de_lecturas.json</b> esté en la misma carpeta que esta aplicación y que se esté abriendo desde <b>localhost</b> o desde GitHub Pages.";
+  pantallaInicio.classList.add("oculto");
+ }
 }
-
-function iniciarLectura(cambiarPantalla = true){
-    const nombre = document.getElementById("nombreNino").value.trim();
-
-    if(!nombre){
-        mostrarError("Escriba el nombre del estudiante antes de iniciar.");
-        return;
-    }
-
-    localStorage.setItem("nombre_estudiante_comprension", nombre);
-
-    if(!baseLecturas.length){
-        mostrarError("No se puede iniciar porque no se cargó Base_de_lecturas.json.");
-        return;
-    }
-
-    const candidatas = baseLecturas.filter(l=>Number(l.level)===nivelSeleccionado);
-
-    if(!candidatas.length){
-        mostrarError(`No hay lecturas disponibles para el nivel ${nivelSeleccionado}.`);
-        return;
-    }
-
-    lecturaActual = escogerAleatorio(candidatas);
-    preguntasActuales = escogerPreguntasNivel(lecturaActual, nivelSeleccionado);
-
-    respuestasUsuario = {};
-    respuestasSeleccion = {};
-
-    if(cambiarPantalla){
-        document.getElementById("pantallaInicio").classList.add("oculto");
-        document.getElementById("pantallaJuego").classList.remove("oculto");
-    }
-
-    document.getElementById("infoNivel").textContent = `Nivel ${nivelSeleccionado}`;
-    document.getElementById("infoModo").textContent = nombresModo[modoSeleccionado];
-    document.getElementById("infoNombre").textContent = nombre;
-
-    renderLectura();
-    renderPreguntas();
-
-    registrarUso(nombre);
+function mezclar(arr){return[...arr].sort(()=>Math.random()-.5);}
+function escogerLectura(nivel){
+ const lecturas=baseLecturas.filter(x=>Number(x.level)===Number(nivel));
+ if(lecturas.length===0)return null;
+ let candidatas=lecturas;
+ if(lecturas.length>1&&ultimaLecturaId)candidatas=lecturas.filter(x=>x.id!==ultimaLecturaId);
+ const escogida=candidatas[Math.floor(Math.random()*candidatas.length)];
+ ultimaLecturaId=escogida.id;return escogida;
 }
-
-function mostrarError(texto){
-    const error = document.getElementById("mensajeError");
-    error.classList.remove("oculto");
-    error.textContent = texto;
+function iniciarNivel(nivel){nivelActual=nivel;cargarLecturaNueva();pantallaInicio.classList.add("oculto");pantallaJuego.classList.remove("oculto");reportarVisita("nivel_"+nivel);}
+function cargarLecturaNueva(){
+ actualizarNombreDesdeIndex();lecturaActual=escogerLectura(nivelActual);
+ if(!lecturaActual){errorBase.classList.remove("oculto");errorBase.textContent="No hay lecturas disponibles para este nivel.";return;}
+ preguntasActuales=mezclar(lecturaActual.questions||[]).slice(0,cantidadPreguntas[nivelActual]||2);
+ renderizarLecturaYPreguntas();
 }
-
-function escogerPreguntasNivel(lectura,nivel){
-    const cantidad = preguntasPorNivel[nivel];
-    const preguntas = Array.isArray(lectura.questions) ? lectura.questions : [];
-    return mezclar(preguntas).slice(0,cantidad);
+function renderizarLecturaYPreguntas(){
+ etiquetaNivel.textContent="Nivel "+nivelActual;etiquetaLectura.textContent=lecturaActual.title||lecturaActual.id||"Lectura";
+ lecturaDiv.innerHTML="";
+ (lecturaActual.text||[]).forEach(parrafo=>{
+  const cont=document.createElement("div");cont.className="parrafo";
+  if(ayudaActiva()){const btn=document.createElement("button");btn.className="parlante";btn.type="button";btn.textContent="🔊";btn.onclick=()=>hablar(parrafo);cont.appendChild(btn);}
+  const txt=document.createElement("div");txt.className="parrafo-texto";txt.textContent=parrafo;cont.appendChild(txt);lecturaDiv.appendChild(cont);
+ });
+ preguntasDiv.innerHTML="";
+ preguntasActuales.forEach((p,i)=>{
+  const caja=document.createElement("div");caja.className="pregunta";caja.dataset.answer=p.answer;
+  const titulo=document.createElement("div");titulo.className="pregunta-titulo";
+  if(ayudaActiva()){const btn=document.createElement("button");btn.className="parlante";btn.type="button";btn.textContent="🔊";btn.onclick=()=>hablar(p.question);titulo.appendChild(btn);}
+  const h=document.createElement("h3");h.textContent=`${i+1}. ${p.question}`;titulo.appendChild(h);caja.appendChild(titulo);
+  if(p.type==="seleccion2"||p.type==="seleccion3"){
+   const opciones=document.createElement("div");opciones.className="opciones";
+   (p.options||[]).forEach(op=>{const b=document.createElement("button");b.className="opcion";b.type="button";b.textContent=op;b.onclick=()=>{opciones.querySelectorAll(".opcion").forEach(x=>x.classList.remove("seleccionada","correcta","incorrecta"));b.classList.add("seleccionada");caja.dataset.user=op;};opciones.appendChild(b);});
+   caja.appendChild(opciones);
+  }else{
+   const zona=document.createElement("div");zona.className="zona-respuesta";
+   zona.ondragover=ev=>{ev.preventDefault();zona.classList.add("activa");};
+   zona.ondragleave=()=>zona.classList.remove("activa");
+   zona.ondrop=ev=>{ev.preventDefault();zona.classList.remove("activa");const texto=ev.dataTransfer.getData("text/plain");ponerRespuesta(zona,caja,texto);};
+   caja.appendChild(zona);
+   const bateria=document.createElement("div");bateria.className="bateria";
+   (p.options||[]).forEach(op=>{const chip=document.createElement("div");chip.className="palabra";chip.textContent=op;chip.draggable=true;chip.ondragstart=ev=>ev.dataTransfer.setData("text/plain",op);chip.onclick=()=>ponerRespuesta(zona,caja,op);bateria.appendChild(chip);});
+   caja.appendChild(bateria);
+  }
+  preguntasDiv.appendChild(caja);
+ });
 }
-
-function renderLectura(){
-    const cont = document.getElementById("lectura");
-    const partes = Array.isArray(lecturaActual.text) ? lecturaActual.text : [];
-
-    cont.innerHTML = partes.map(parrafo=>{
-        return `
-        <div class="parrafo-linea">
-            ${ayudaVerbalActiva ? botonVoz(parrafo) : ""}
-            <p>${escapar(parrafo)}</p>
-        </div>
-        `;
-    }).join("");
+function ponerRespuesta(zona,caja,texto){zona.textContent="";const chip=document.createElement("span");chip.className="palabra";chip.textContent=texto;zona.appendChild(chip);caja.dataset.user=texto;}
+function normalizar(t){return(t||"").toString().trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");}
+function verificar(){
+ let buenas=0;const cajas=preguntasDiv.querySelectorAll(".pregunta");
+ cajas.forEach(caja=>{
+  const respuesta=normalizar(caja.dataset.answer),usuario=normalizar(caja.dataset.user),ok=respuesta===usuario;if(ok)buenas++;
+  caja.querySelectorAll(".opcion").forEach(op=>{op.classList.remove("correcta","incorrecta");if(normalizar(op.textContent)===respuesta)op.classList.add("correcta");if(op.classList.contains("seleccionada")&&!ok)op.classList.add("incorrecta");});
+  const zona=caja.querySelector(".zona-respuesta");if(zona){zona.classList.remove("correcta","incorrecta");zona.classList.add(ok?"correcta":"incorrecta");}
+ });
+ lanzarConfeti();const nombre=actualizarNombreDesdeIndex();setTimeout(()=>hablar(`${nombre}, obtuviste ${buenas} de ${cajas.length} respuestas correctas. Muy bien.`),300);reportarVisita(`verificar_${buenas}_de_${cajas.length}`);
 }
-
-function renderPreguntas(){
-    const zona = document.getElementById("zonaPreguntas");
-
-    if(modoSeleccionado === "seleccion"){
-        zona.innerHTML = preguntasActuales.map((p,i)=>renderPreguntaSeleccion(p,i)).join("");
-        activarSeleccion();
-        return;
-    }
-
-    prepararBancoRespuestas();
-
-    zona.innerHTML = `
-        <div class="layout-arrastre">
-            <div class="col-preguntas">
-                ${preguntasActuales.map((p,i)=>renderPreguntaArrastre(p,i)).join("")}
-            </div>
-            <aside class="banco">
-                <h3>Respuestas disponibles</h3>
-                <div class="banco-items">
-                    ${respuestasBanco.map((item,i)=>renderToken(item,i)).join("")}
-                </div>
-            </aside>
-        </div>
-    `;
-
-    activarArrastre();
+function siguienteLectura(){cargarLecturaNueva();window.scrollTo({top:0,behavior:"smooth"});reportarVisita("siguiente_lectura");}
+function volverNiveles(){pantallaJuego.classList.add("oculto");pantallaInicio.classList.remove("oculto");try{speechSynthesis.cancel();}catch(e){}}
+function lanzarConfeti(){
+ const formas=["●","■","▲","◆","✦","1","2","3","4","5"];
+ for(let i=0;i<90;i++){const c=document.createElement("div");c.className="confeti";c.textContent=formas[Math.floor(Math.random()*formas.length)];c.style.left=Math.random()*100+"vw";c.style.fontSize=(12+Math.random()*12)+"px";c.style.color=`hsl(${Math.random()*360},90%,48%)`;c.style.animationDuration=(3.5+Math.random()*2.5)+"s";document.body.appendChild(c);setTimeout(()=>c.remove(),6000);}
 }
-
-function renderPreguntaSeleccion(p,i){
-    const opciones = obtenerOpcionesSeleccion(p);
-
-    return `
-    <div class="pregunta" data-index="${i}">
-        <div class="pregunta-header">
-            ${ayudaVerbalActiva ? botonVoz(p.question) : ""}
-            <h3>${i+1}. ${escapar(p.question)}</h3>
-        </div>
-        <div class="opciones">
-            ${opciones.map(op=>`
-                <button class="opcion" data-index="${i}" data-respuesta="${escaparAttr(op)}">
-                    ${escapar(op)}
-                </button>
-            `).join("")}
-        </div>
-        <div class="retro" id="retro-${i}"></div>
-    </div>
-    `;
-}
-
-function renderPreguntaArrastre(p,i){
-    return `
-    <div class="pregunta" data-index="${i}">
-        <div class="pregunta-header">
-            ${ayudaVerbalActiva ? botonVoz(p.question) : ""}
-            <h3>${i+1}. ${escapar(p.question)}</h3>
-        </div>
-        <div class="zona-respuesta" data-index="${i}" aria-label="Campo de respuesta"></div>
-        <div class="retro" id="retro-${i}"></div>
-    </div>
-    `;
-}
-
-function obtenerOpcionesSeleccion(p){
-    let opciones = [];
-
-    if(Array.isArray(p.options) && p.options.length){
-        opciones = [...p.options];
-    }
-
-    if(!opciones.includes(p.answer)){
-        opciones.push(p.answer);
-    }
-
-    if(opciones.length < 3 && Array.isArray(p.distractors)){
-        p.distractors.forEach(d=>{
-            if(opciones.length < 3 && !opciones.includes(d)){
-                opciones.push(d);
-            }
-        });
-    }
-
-    opciones = opciones.slice(0,3);
-
-    if(document.getElementById("mezclarBanco").checked){
-        opciones = mezclar(opciones);
-    }
-
-    return opciones;
-}
-
-function prepararBancoRespuestas(){
-    const usarSenuelos = document.getElementById("usarSenuelos").checked;
-    const mezclarBanco = document.getElementById("mezclarBanco").checked;
-
-    respuestasBanco = [];
-
-    preguntasActuales.forEach((p,i)=>{
-        if(modoSeleccionado === "arrastrar-respuesta"){
-            respuestasBanco.push({
-                texto:p.answer,
-                tipo:"respuesta",
-                pregunta:i
-            });
-
-            if(usarSenuelos && Array.isArray(p.distractors)){
-                p.distractors.forEach(d=>{
-                    respuestasBanco.push({
-                        texto:d,
-                        tipo:"senuelo",
-                        pregunta:null
-                    });
-                });
-            }
-        }
-
-        if(modoSeleccionado === "armar-frase"){
-            const palabras = Array.isArray(p.answerWords)
-                ? p.answerWords
-                : String(p.answer).split(/\s+/);
-
-            palabras.forEach((palabra,orden)=>{
-                respuestasBanco.push({
-                    texto:palabra,
-                    tipo:"palabra",
-                    pregunta:i,
-                    orden
-                });
-            });
-
-            if(usarSenuelos && Array.isArray(p.extraWords)){
-                p.extraWords.forEach(extra=>{
-                    respuestasBanco.push({
-                        texto:extra,
-                        tipo:"senuelo",
-                        pregunta:null,
-                        orden:null
-                    });
-                });
-            }
-        }
-    });
-
-    if(mezclarBanco){
-        respuestasBanco = mezclar(respuestasBanco);
-    }
-}
-
-function renderToken(item,i){
-    return `
-    <div class="token"
-         draggable="true"
-         data-token="${i}"
-         data-texto="${escaparAttr(item.texto)}">
-         ${escapar(item.texto)}
-    </div>
-    `;
-}
-
-function activarSeleccion(){
-    document.querySelectorAll(".opcion").forEach(btn=>{
-        btn.addEventListener("click",()=>{
-            const index = Number(btn.dataset.index);
-            respuestasSeleccion[index] = btn.dataset.respuesta;
-
-            btn.closest(".opciones").querySelectorAll(".opcion").forEach(b=>{
-                b.classList.remove("seleccionada");
-            });
-
-            btn.classList.add("seleccionada");
-        });
-    });
-}
-
-function activarArrastre(){
-    document.querySelectorAll(".token").forEach(token=>{
-        token.addEventListener("dragstart",e=>{
-            e.dataTransfer.setData("text/plain", token.dataset.token);
-        });
-
-        token.addEventListener("click",()=>{
-            const primeraZonaVacia = [...document.querySelectorAll(".zona-respuesta")]
-                .find(z=>!z.dataset.bloqueada);
-            if(primeraZonaVacia){
-                agregarTokenAZona(token, primeraZonaVacia);
-            }
-        });
-    });
-
-    document.querySelectorAll(".zona-respuesta").forEach(zona=>{
-        zona.addEventListener("dragover",e=>{
-            e.preventDefault();
-            zona.classList.add("sobre");
-        });
-
-        zona.addEventListener("dragleave",()=>{
-            zona.classList.remove("sobre");
-        });
-
-        zona.addEventListener("drop",e=>{
-            e.preventDefault();
-            zona.classList.remove("sobre");
-
-            const tokenId = e.dataTransfer.getData("text/plain");
-            const token = document.querySelector(`.token[data-token="${tokenId}"]`);
-
-            if(token){
-                agregarTokenAZona(token,zona);
-            }
-        });
-    });
-}
-
-function agregarTokenAZona(token,zona){
-    const index = Number(zona.dataset.index);
-    const tokenId = Number(token.dataset.token);
-    const texto = token.dataset.texto;
-
-    if(modoSeleccionado === "arrastrar-respuesta"){
-        zona.innerHTML = "";
-        respuestasUsuario[index] = [tokenId];
-
-        const chip = crearChip(texto,()=>{
-            zona.innerHTML = "";
-            delete respuestasUsuario[index];
-        });
-
-        zona.appendChild(chip);
-        return;
-    }
-
-    if(modoSeleccionado === "armar-frase"){
-        if(!respuestasUsuario[index]){
-            respuestasUsuario[index] = [];
-        }
-
-        respuestasUsuario[index].push(tokenId);
-
-        const chip = crearChip(texto,()=>{
-            respuestasUsuario[index] = respuestasUsuario[index].filter(x=>x!==tokenId);
-            chip.remove();
-        });
-
-        zona.appendChild(chip);
-    }
-}
-
-function crearChip(texto,onRemove){
-    const chip = document.createElement("span");
-    chip.className = "chip-respuesta";
-    chip.textContent = texto;
-    chip.title = "Clic para quitar";
-    chip.addEventListener("click",onRemove);
-    return chip;
-}
-
-function verificarRespuestas(){
-    let correctas = 0;
-
-    preguntasActuales.forEach((p,i)=>{
-        const retro = document.getElementById(`retro-${i}`);
-        const tarjeta = document.querySelector(`.pregunta[data-index="${i}"]`);
-        tarjeta.classList.remove("correcta","incorrecta");
-
-        let ok = false;
-
-        if(modoSeleccionado === "seleccion"){
-            ok = normalizar(respuestasSeleccion[i] || "") === normalizar(p.answer);
-        }
-
-        if(modoSeleccionado === "arrastrar-respuesta"){
-            const ids = respuestasUsuario[i] || [];
-            const texto = ids.map(id=>respuestasBanco[id]?.texto || "").join(" ");
-            ok = normalizar(texto) === normalizar(p.answer);
-        }
-
-        if(modoSeleccionado === "armar-frase"){
-            const ids = respuestasUsuario[i] || [];
-            const texto = ids.map(id=>respuestasBanco[id]?.texto || "").join(" ");
-            ok = normalizar(texto) === normalizar(p.answer);
-        }
-
-        if(ok){
-            correctas++;
-            tarjeta.classList.add("correcta");
-            retro.className = "retro ok";
-            retro.textContent = "¡Correcto!";
-        }else{
-            tarjeta.classList.add("incorrecta");
-            retro.className = "retro no";
-            retro.textContent = "Revisa esta respuesta.";
-        }
-    });
-
-    if(correctas === preguntasActuales.length){
-        celebrar();
-        felicitar();
-    }else{
-        hablar(`Tienes ${correctas} de ${preguntasActuales.length} correctas. Puedes revisar y volver a intentar.`);
-    }
-}
-
-function felicitar(){
-    const nombre = document.getElementById("nombreNino").value.trim() || "campeón";
-
-    const frases = [
-        `Excelente trabajo, ${nombre}.`,
-        `Muy bien, ${nombre}. Leíste con mucha atención.`,
-        `Bravo, ${nombre}. Lo hiciste genial.`,
-        `Qué buen esfuerzo, ${nombre}.`,
-        `Fantástico, ${nombre}. Sigue así.`,
-        `Muy buen trabajo, ${nombre}. Comprendiste la lectura.`,
-        `Súper, ${nombre}. Respondiste con cuidado.`,
-        `Felicitaciones, ${nombre}.`,
-        `Lo lograste, ${nombre}.`,
-        `Qué alegría, ${nombre}. Todas están correctas.`
-    ];
-
-    setTimeout(()=>{
-        hablar(frases[Math.floor(Math.random()*frases.length)]);
-    },400);
-}
-
-function celebrar(){
-    const cont = document.getElementById("celebracion");
-    cont.innerHTML = "";
-
-    const figuras = ["●","■","▲","◆","★","1","2","3","4","5","✓"];
-    const animaciones = 12;
-
-    for(let i=0;i<90;i++){
-        const p = document.createElement("div");
-        p.className = "particula";
-        p.textContent = figuras[Math.floor(Math.random()*figuras.length)];
-        p.style.left = Math.random()*100 + "vw";
-        p.style.top = (50 + Math.random()*35) + "vh";
-        p.style.fontSize = (14 + Math.random()*14) + "px";
-        p.style.color = `hsl(${Math.random()*360},85%,45%)`;
-        p.style.animationDelay = (Math.random()*0.6) + "s";
-        p.style.animationDuration = (7.5 + Math.random()*1.2) + "s";
-        p.style.transform = `rotate(${Math.random()*360}deg)`;
-
-        if(i % animaciones === 0){
-            p.style.left = "50vw";
-        }
-
-        cont.appendChild(p);
-    }
-
-    setTimeout(()=>{
-        cont.innerHTML = "";
-    },8200);
-}
-
-function botonVoz(texto){
-    return `<button class="speaker" onclick="hablar('${escaparAttr(texto)}')" title="Escuchar">🔊</button>`;
-}
-
-function hablar(texto){
-    if(!("speechSynthesis" in window)) return;
-
-    detenerVoz();
-
-    const u = new SpeechSynthesisUtterance(texto);
-    u.lang = "es-CR";
-    u.rate = 0.9;
-    u.pitch = 1.05;
-
-    window.speechSynthesis.speak(u);
-}
-
-function detenerVoz(){
-    if("speechSynthesis" in window){
-        window.speechSynthesis.cancel();
-    }
-}
-
-function registrarUso(nombre){
-    if(!CONFIG_REGISTRO.activarRegistro) return;
-
-    const archivo = obtenerNombreArchivoIndex();
-
-    const datos = {
-        horaLocal: new Date().toLocaleString("es-CR"),
-        nombre,
-        archivo
-    };
-
-    if(CONFIG_REGISTRO.urlAppsScript){
-        fetch(CONFIG_REGISTRO.urlAppsScript,{
-            method:"POST",
-            mode:"no-cors",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify(datos)
-        }).catch(()=>{});
-    }
-}
-
-function obtenerNombreArchivoIndex(){
-    const path = window.location.pathname;
-    const archivo = path.substring(path.lastIndexOf("/") + 1);
-    return archivo || "index.html";
-}
-
-function escogerAleatorio(lista){
-    return lista[Math.floor(Math.random()*lista.length)];
-}
-
-function mezclar(lista){
-    return [...lista].sort(()=>Math.random()-0.5);
-}
-
-function normalizar(txt){
-    return String(txt)
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g,"")
-        .replace(/[¿?¡!.,;:]/g,"")
-        .replace(/\s+/g," ")
-        .trim();
-}
-
-function escapar(txt){
-    return String(txt)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-}
-
-function escaparAttr(txt){
-    return escapar(txt).replaceAll("\n"," ");
-}
+actualizarNombreDesdeIndex();cargarBase();reportarVisita("abrir");
 </script>
-
 </body>
 </html>
