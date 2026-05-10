@@ -1,0 +1,1080 @@
+[
+  {
+    "palabra": "bienvenida",
+    "categoria": "b_v",
+    "nivel": "cotidiana",
+    "regla": "Se escribe con b la sílaba inicial bien-.",
+    "explicacion": "La palabra inicia con bien-, por eso se escribe con b."
+  },
+  {
+    "palabra": "biblioteca",
+    "categoria": "b_v",
+    "nivel": "cotidiana",
+    "regla": "Las palabras que comienzan con bibl- se escriben con b.",
+    "explicacion": "Biblioteca inicia con bibl-, por eso lleva b."
+  },
+  {
+    "palabra": "buscar",
+    "categoria": "b_v",
+    "nivel": "cotidiana",
+    "regla": "Las palabras que empiezan con bus-, bur- y bu- suelen escribirse con b.",
+    "explicacion": "Buscar empieza con bus-, por eso se escribe con b."
+  },
+  {
+    "palabra": "burbuja",
+    "categoria": "b_v",
+    "nivel": "cotidiana",
+    "regla": "Las palabras que empiezan con bur- suelen escribirse con b.",
+    "explicacion": "Burbuja inicia con bur-, por eso lleva b."
+  },
+  {
+    "palabra": "amable",
+    "categoria": "b_v",
+    "nivel": "cotidiana",
+    "regla": "Las palabras terminadas en -ble se escriben con b.",
+    "explicacion": "Amable termina en -ble, por eso se escribe con b."
+  },
+  {
+    "palabra": "responsable",
+    "categoria": "b_v",
+    "nivel": "cotidiana",
+    "regla": "Las palabras terminadas en -ble se escriben con b.",
+    "explicacion": "Responsable termina en -ble, por eso lleva b."
+  },
+  {
+    "palabra": "posible",
+    "categoria": "b_v",
+    "nivel": "cotidiana",
+    "regla": "Las palabras terminadas en -ble se escriben con b.",
+    "explicacion": "Posible termina en -ble, por eso lleva b."
+  },
+  {
+    "palabra": "cambiar",
+    "categoria": "b_v",
+    "nivel": "cotidiana",
+    "regla": "Después de m se escribe b.",
+    "explicacion": "En cambiar aparece mb: cam-biar."
+  },
+  {
+    "palabra": "también",
+    "categoria": "b_v,tildes",
+    "nivel": "cotidiana",
+    "regla": "Después de m se escribe b. Además, las agudas terminadas en n llevan tilde.",
+    "explicacion": "También lleva mb y tilde en la e."
+  },
+  {
+    "palabra": "ambiente",
+    "categoria": "b_v",
+    "nivel": "cotidiana",
+    "regla": "Después de m se escribe b.",
+    "explicacion": "Ambiente lleva b después de m."
+  },
+  {
+    "palabra": "invierno",
+    "categoria": "b_v",
+    "nivel": "cotidiana",
+    "regla": "Después de n se escribe v.",
+    "explicacion": "Invierno lleva v después de n."
+  },
+  {
+    "palabra": "convivir",
+    "categoria": "b_v",
+    "nivel": "cotidiana",
+    "regla": "Después de n se escribe v.",
+    "explicacion": "Convivir lleva v después de n."
+  },
+  {
+    "palabra": "enviar",
+    "categoria": "b_v",
+    "nivel": "cotidiana",
+    "regla": "Después de n se escribe v.",
+    "explicacion": "Enviar lleva v después de n."
+  },
+  {
+    "palabra": "vida",
+    "categoria": "b_v",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con v por uso establecido.",
+    "explicacion": "Vida es una palabra frecuente con v."
+  },
+  {
+    "palabra": "vecino",
+    "categoria": "b_v",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con v por uso establecido.",
+    "explicacion": "Vecino lleva v inicial."
+  },
+  {
+    "palabra": "valiente",
+    "categoria": "b_v",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con v por uso establecido.",
+    "explicacion": "Valiente lleva v inicial."
+  },
+  {
+    "palabra": "viaje",
+    "categoria": "b_v",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con v por uso establecido.",
+    "explicacion": "Viaje lleva v inicial."
+  },
+  {
+    "palabra": "avión",
+    "categoria": "b_v,tildes",
+    "nivel": "cotidiana",
+    "regla": "Se escribe con v y lleva tilde por ser aguda terminada en n.",
+    "explicacion": "Avión lleva v y tilde en la o."
+  },
+  {
+    "palabra": "viento",
+    "categoria": "b_v",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con v por uso establecido.",
+    "explicacion": "Viento lleva v inicial."
+  },
+  {
+    "palabra": "navegar",
+    "categoria": "b_v",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con v por uso establecido.",
+    "explicacion": "Navegar lleva v."
+  },
+  {
+    "palabra": "lluvia",
+    "categoria": "b_v,ll_y",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con ll y v por uso establecido.",
+    "explicacion": "Lluvia lleva ll y v."
+  },
+  {
+    "palabra": "nuevo",
+    "categoria": "b_v",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con v por uso establecido.",
+    "explicacion": "Nuevo lleva v."
+  },
+  {
+    "palabra": "ciencia",
+    "categoria": "s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Muchas palabras terminadas en -ciencia se escriben con c.",
+    "explicacion": "Ciencia se escribe con c, no con s."
+  },
+  {
+    "palabra": "paciencia",
+    "categoria": "s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Las palabras terminadas en -ciencia se escriben con c.",
+    "explicacion": "Paciencia termina en -ciencia."
+  },
+  {
+    "palabra": "conciencia",
+    "categoria": "s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Las palabras terminadas en -ciencia se escriben con c.",
+    "explicacion": "Conciencia lleva c en -ciencia."
+  },
+  {
+    "palabra": "decisión",
+    "categoria": "s_c_x_z,tildes",
+    "nivel": "cotidiana",
+    "regla": "Las palabras terminadas en -sión suelen escribirse con s. Las agudas terminadas en n llevan tilde.",
+    "explicacion": "Decisión lleva s y tilde."
+  },
+  {
+    "palabra": "división",
+    "categoria": "s_c_x_z,tildes",
+    "nivel": "cotidiana",
+    "regla": "Las palabras terminadas en -sión suelen escribirse con s. Las agudas terminadas en n llevan tilde.",
+    "explicacion": "División lleva s y tilde."
+  },
+  {
+    "palabra": "televisión",
+    "categoria": "s_c_x_z,tildes",
+    "nivel": "cotidiana",
+    "regla": "Las palabras terminadas en -sión suelen escribirse con s. Las agudas terminadas en n llevan tilde.",
+    "explicacion": "Televisión lleva s y tilde."
+  },
+  {
+    "palabra": "expresión",
+    "categoria": "s_c_x_z,tildes",
+    "nivel": "cotidiana",
+    "regla": "Las palabras terminadas en -sión suelen escribirse con s. Las agudas terminadas en n llevan tilde.",
+    "explicacion": "Expresión lleva s y tilde."
+  },
+  {
+    "palabra": "corrección",
+    "categoria": "s_c_x_z,tildes",
+    "nivel": "cotidiana",
+    "regla": "Las palabras terminadas en -ción suelen escribirse con c. Las agudas terminadas en n llevan tilde.",
+    "explicacion": "Corrección lleva cc y tilde."
+  },
+  {
+    "palabra": "atención",
+    "categoria": "s_c_x_z,tildes",
+    "nivel": "cotidiana",
+    "regla": "Las palabras terminadas en -ción suelen escribirse con c. Las agudas terminadas en n llevan tilde.",
+    "explicacion": "Atención termina en -ción y lleva tilde."
+  },
+  {
+    "palabra": "educación",
+    "categoria": "s_c_x_z,tildes",
+    "nivel": "cotidiana",
+    "regla": "Las palabras terminadas en -ción suelen escribirse con c. Las agudas terminadas en n llevan tilde.",
+    "explicacion": "Educación termina en -ción y lleva tilde."
+  },
+  {
+    "palabra": "emoción",
+    "categoria": "s_c_x_z,tildes",
+    "nivel": "cotidiana",
+    "regla": "Las palabras terminadas en -ción suelen escribirse con c. Las agudas terminadas en n llevan tilde.",
+    "explicacion": "Emoción termina en -ción y lleva tilde."
+  },
+  {
+    "palabra": "canción",
+    "categoria": "s_c_x_z,tildes",
+    "nivel": "cotidiana",
+    "regla": "Las palabras terminadas en -ción suelen escribirse con c. Las agudas terminadas en n llevan tilde.",
+    "explicacion": "Canción termina en -ción y lleva tilde."
+  },
+  {
+    "palabra": "excelente",
+    "categoria": "s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Muchas palabras que comienzan con ex- se escriben con x.",
+    "explicacion": "Excelente inicia con ex-."
+  },
+  {
+    "palabra": "examen",
+    "categoria": "s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Muchas palabras que comienzan con ex- se escriben con x.",
+    "explicacion": "Examen se escribe con x."
+  },
+  {
+    "palabra": "éxito",
+    "categoria": "s_c_x_z,tildes",
+    "nivel": "cotidiana",
+    "regla": "Muchas palabras con sonido /ks/ se escriben con x. Todas las esdrújulas llevan tilde.",
+    "explicacion": "Éxito lleva x y tilde."
+  },
+  {
+    "palabra": "experimento",
+    "categoria": "s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Muchas palabras que comienzan con ex- se escriben con x.",
+    "explicacion": "Experimento inicia con ex-."
+  },
+  {
+    "palabra": "explicar",
+    "categoria": "s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Muchas palabras que comienzan con ex- se escriben con x.",
+    "explicacion": "Explicar inicia con ex-."
+  },
+  {
+    "palabra": "extraño",
+    "categoria": "s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Muchas palabras que comienzan con extra- se escriben con x.",
+    "explicacion": "Extraño inicia con extra-."
+  },
+  {
+    "palabra": "feliz",
+    "categoria": "s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Algunas palabras terminan en z en singular y cambian a c en plural.",
+    "explicacion": "Feliz termina en z; en plural: felices."
+  },
+  {
+    "palabra": "luz",
+    "categoria": "s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Algunas palabras terminan en z en singular y cambian a c en plural.",
+    "explicacion": "Luz termina en z; en plural: luces."
+  },
+  {
+    "palabra": "pez",
+    "categoria": "s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Algunas palabras terminan en z en singular y cambian a c en plural.",
+    "explicacion": "Pez termina en z; en plural: peces."
+  },
+  {
+    "palabra": "capaz",
+    "categoria": "s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Algunas palabras terminan en z en singular y cambian a c en plural.",
+    "explicacion": "Capaz termina en z; en plural: capaces."
+  },
+  {
+    "palabra": "rapidez",
+    "categoria": "s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Los sustantivos abstractos terminados en -ez suelen escribirse con z.",
+    "explicacion": "Rapidez termina en -ez."
+  },
+  {
+    "palabra": "sencillez",
+    "categoria": "s_c_x_z,ll_y",
+    "nivel": "cotidiana",
+    "regla": "Los sustantivos abstractos terminados en -ez suelen escribirse con z.",
+    "explicacion": "Sencillez termina en -ez."
+  },
+  {
+    "palabra": "belleza",
+    "categoria": "s_c_x_z,b_v,ll_y",
+    "nivel": "cotidiana",
+    "regla": "Los sustantivos abstractos terminados en -eza suelen escribirse con z.",
+    "explicacion": "Belleza termina en -eza."
+  },
+  {
+    "palabra": "tristeza",
+    "categoria": "s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Los sustantivos abstractos terminados en -eza suelen escribirse con z.",
+    "explicacion": "Tristeza termina en -eza."
+  },
+  {
+    "palabra": "árbol",
+    "categoria": "tildes",
+    "nivel": "cotidiana",
+    "regla": "Las palabras graves llevan tilde cuando no terminan en vocal, n o s.",
+    "explicacion": "Árbol es grave y termina en l."
+  },
+  {
+    "palabra": "fácil",
+    "categoria": "tildes",
+    "nivel": "cotidiana",
+    "regla": "Las palabras graves llevan tilde cuando no terminan en vocal, n o s.",
+    "explicacion": "Fácil es grave y termina en l."
+  },
+  {
+    "palabra": "difícil",
+    "categoria": "tildes",
+    "nivel": "cotidiana",
+    "regla": "Las palabras graves llevan tilde cuando no terminan en vocal, n o s.",
+    "explicacion": "Difícil es grave y termina en l."
+  },
+  {
+    "palabra": "lápiz",
+    "categoria": "tildes,s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Las palabras graves llevan tilde cuando no terminan en vocal, n o s.",
+    "explicacion": "Lápiz es grave y termina en z."
+  },
+  {
+    "palabra": "azúcar",
+    "categoria": "tildes,s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Las palabras graves llevan tilde cuando no terminan en vocal, n o s.",
+    "explicacion": "Azúcar es grave y termina en r."
+  },
+  {
+    "palabra": "césped",
+    "categoria": "tildes,s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Las palabras graves llevan tilde cuando no terminan en vocal, n o s.",
+    "explicacion": "Césped es grave y termina en d."
+  },
+  {
+    "palabra": "móvil",
+    "categoria": "tildes,b_v",
+    "nivel": "cotidiana",
+    "regla": "Las palabras graves llevan tilde cuando no terminan en vocal, n o s.",
+    "explicacion": "Móvil es grave y termina en l."
+  },
+  {
+    "palabra": "sábado",
+    "categoria": "tildes,b_v",
+    "nivel": "cotidiana",
+    "regla": "Todas las palabras esdrújulas llevan tilde.",
+    "explicacion": "Sábado es esdrújula."
+  },
+  {
+    "palabra": "miércoles",
+    "categoria": "tildes",
+    "nivel": "cotidiana",
+    "regla": "Todas las palabras esdrújulas llevan tilde.",
+    "explicacion": "Miércoles es esdrújula."
+  },
+  {
+    "palabra": "pájaro",
+    "categoria": "tildes,g_j",
+    "nivel": "cotidiana",
+    "regla": "Todas las palabras esdrújulas llevan tilde.",
+    "explicacion": "Pájaro es esdrújula."
+  },
+  {
+    "palabra": "música",
+    "categoria": "tildes,s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Todas las palabras esdrújulas llevan tilde.",
+    "explicacion": "Música es esdrújula."
+  },
+  {
+    "palabra": "número",
+    "categoria": "tildes",
+    "nivel": "cotidiana",
+    "regla": "Todas las palabras esdrújulas llevan tilde.",
+    "explicacion": "Número es esdrújula."
+  },
+  {
+    "palabra": "teléfono",
+    "categoria": "tildes",
+    "nivel": "cotidiana",
+    "regla": "Todas las palabras esdrújulas llevan tilde.",
+    "explicacion": "Teléfono es esdrújula."
+  },
+  {
+    "palabra": "cámara",
+    "categoria": "tildes",
+    "nivel": "cotidiana",
+    "regla": "Todas las palabras esdrújulas llevan tilde.",
+    "explicacion": "Cámara es esdrújula."
+  },
+  {
+    "palabra": "colibrí",
+    "categoria": "tildes",
+    "nivel": "cotidiana",
+    "regla": "Las palabras agudas llevan tilde cuando terminan en vocal, n o s.",
+    "explicacion": "Colibrí es aguda y termina en vocal."
+  },
+  {
+    "palabra": "café",
+    "categoria": "tildes",
+    "nivel": "cotidiana",
+    "regla": "Las palabras agudas llevan tilde cuando terminan en vocal, n o s.",
+    "explicacion": "Café es aguda y termina en vocal."
+  },
+  {
+    "palabra": "mamá",
+    "categoria": "tildes",
+    "nivel": "cotidiana",
+    "regla": "Las palabras agudas llevan tilde cuando terminan en vocal, n o s.",
+    "explicacion": "Mamá es aguda y termina en vocal."
+  },
+  {
+    "palabra": "papá",
+    "categoria": "tildes",
+    "nivel": "cotidiana",
+    "regla": "Las palabras agudas llevan tilde cuando terminan en vocal, n o s.",
+    "explicacion": "Papá es aguda y termina en vocal."
+  },
+  {
+    "palabra": "jardín",
+    "categoria": "tildes,g_j",
+    "nivel": "cotidiana",
+    "regla": "Las palabras agudas llevan tilde cuando terminan en vocal, n o s.",
+    "explicacion": "Jardín es aguda y termina en n."
+  },
+  {
+    "palabra": "compás",
+    "categoria": "tildes",
+    "nivel": "cotidiana",
+    "regla": "Las palabras agudas llevan tilde cuando terminan en vocal, n o s.",
+    "explicacion": "Compás es aguda y termina en s."
+  },
+  {
+    "palabra": "reloj",
+    "categoria": "tildes,g_j",
+    "nivel": "cotidiana",
+    "regla": "Las palabras agudas no llevan tilde si terminan en consonante distinta de n o s.",
+    "explicacion": "Reloj es aguda y termina en j."
+  },
+  {
+    "palabra": "animal",
+    "categoria": "tildes",
+    "nivel": "cotidiana",
+    "regla": "Las palabras agudas no llevan tilde si terminan en consonante distinta de n o s.",
+    "explicacion": "Animal es aguda y termina en l."
+  },
+  {
+    "palabra": "huevo",
+    "categoria": "h",
+    "nivel": "cotidiana",
+    "regla": "Las palabras que empiezan con hue- se escriben con h.",
+    "explicacion": "Huevo empieza con hue-."
+  },
+  {
+    "palabra": "hueso",
+    "categoria": "h,s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Las palabras que empiezan con hue- se escriben con h.",
+    "explicacion": "Hueso empieza con hue-."
+  },
+  {
+    "palabra": "huella",
+    "categoria": "h,ll_y",
+    "nivel": "cotidiana",
+    "regla": "Las palabras que empiezan con hue- se escriben con h.",
+    "explicacion": "Huella empieza con hue-."
+  },
+  {
+    "palabra": "hielo",
+    "categoria": "h",
+    "nivel": "cotidiana",
+    "regla": "Las palabras que empiezan con hie- se escriben con h.",
+    "explicacion": "Hielo empieza con hie-."
+  },
+  {
+    "palabra": "hierba",
+    "categoria": "h,b_v",
+    "nivel": "cotidiana",
+    "regla": "Las palabras que empiezan con hie- se escriben con h.",
+    "explicacion": "Hierba empieza con hie-."
+  },
+  {
+    "palabra": "historia",
+    "categoria": "h",
+    "nivel": "cotidiana",
+    "regla": "Muchas palabras que empiezan con hist- se escriben con h.",
+    "explicacion": "Historia empieza con hist-."
+  },
+  {
+    "palabra": "hermano",
+    "categoria": "h",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con h por uso establecido.",
+    "explicacion": "Hermano lleva h inicial, aunque no suene."
+  },
+  {
+    "palabra": "hermana",
+    "categoria": "h",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con h por uso establecido.",
+    "explicacion": "Hermana lleva h inicial, aunque no suene."
+  },
+  {
+    "palabra": "hablar",
+    "categoria": "h,b_v",
+    "nivel": "cotidiana",
+    "regla": "Las formas del verbo hablar se escriben con h y b.",
+    "explicacion": "Hablar lleva h inicial y b."
+  },
+  {
+    "palabra": "hacer",
+    "categoria": "h,s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Las formas del verbo hacer se escriben con h.",
+    "explicacion": "Hacer lleva h inicial."
+  },
+  {
+    "palabra": "hoy",
+    "categoria": "h,ll_y",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con h por uso establecido.",
+    "explicacion": "Hoy lleva h inicial, aunque no suene."
+  },
+  {
+    "palabra": "hora",
+    "categoria": "h",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con h por uso establecido.",
+    "explicacion": "Hora lleva h inicial, aunque no suene."
+  },
+  {
+    "palabra": "ahora",
+    "categoria": "h",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra contiene h intermedia por uso establecido.",
+    "explicacion": "Ahora lleva h después de la a."
+  },
+  {
+    "palabra": "ahorrar",
+    "categoria": "h",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra contiene h intermedia por uso establecido.",
+    "explicacion": "Ahorrar lleva h intermedia."
+  },
+  {
+    "palabra": "zanahoria",
+    "categoria": "h,s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra contiene h intermedia por uso establecido.",
+    "explicacion": "Zanahoria lleva z inicial y h intermedia."
+  },
+  {
+    "palabra": "gente",
+    "categoria": "g_j",
+    "nivel": "cotidiana",
+    "regla": "Algunas palabras con sonido fuerte antes de e o i se escriben con g por uso establecido.",
+    "explicacion": "Gente se escribe con g."
+  },
+  {
+    "palabra": "gigante",
+    "categoria": "g_j",
+    "nivel": "cotidiana",
+    "regla": "Algunas palabras con sonido fuerte antes de e o i se escriben con g por uso establecido.",
+    "explicacion": "Gigante lleva g inicial."
+  },
+  {
+    "palabra": "gimnasio",
+    "categoria": "g_j",
+    "nivel": "cotidiana",
+    "regla": "Algunas palabras con sonido fuerte antes de e o i se escriben con g por uso establecido.",
+    "explicacion": "Gimnasio se escribe con g."
+  },
+  {
+    "palabra": "geografía",
+    "categoria": "g_j,tildes",
+    "nivel": "cotidiana",
+    "regla": "Muchas palabras con geo- se escriben con g. Lleva tilde por hiato.",
+    "explicacion": "Geografía empieza con geo- y lleva tilde en í."
+  },
+  {
+    "palabra": "colegio",
+    "categoria": "g_j",
+    "nivel": "cotidiana",
+    "regla": "Las palabras terminadas en -gio suelen escribirse con g.",
+    "explicacion": "Colegio termina en -gio."
+  },
+  {
+    "palabra": "magia",
+    "categoria": "g_j",
+    "nivel": "cotidiana",
+    "regla": "Las palabras terminadas en -gia suelen escribirse con g.",
+    "explicacion": "Magia termina en -gia."
+  },
+  {
+    "palabra": "energía",
+    "categoria": "g_j,tildes",
+    "nivel": "cotidiana",
+    "regla": "Las palabras terminadas en -gía suelen escribirse con g y llevan tilde por hiato.",
+    "explicacion": "Energía lleva g y tilde."
+  },
+  {
+    "palabra": "proteger",
+    "categoria": "g_j",
+    "nivel": "cotidiana",
+    "regla": "Los verbos terminados en -ger y -gir suelen escribirse con g, excepto tejer y crujir.",
+    "explicacion": "Proteger termina en -ger."
+  },
+  {
+    "palabra": "elegir",
+    "categoria": "g_j",
+    "nivel": "cotidiana",
+    "regla": "Los verbos terminados en -ger y -gir suelen escribirse con g, excepto tejer y crujir.",
+    "explicacion": "Elegir termina en -gir."
+  },
+  {
+    "palabra": "recoger",
+    "categoria": "g_j",
+    "nivel": "cotidiana",
+    "regla": "Los verbos terminados en -ger y -gir suelen escribirse con g, excepto tejer y crujir.",
+    "explicacion": "Recoger termina en -ger."
+  },
+  {
+    "palabra": "tejer",
+    "categoria": "g_j",
+    "nivel": "cotidiana",
+    "regla": "Excepción: tejer se escribe con j.",
+    "explicacion": "Tejer es una excepción."
+  },
+  {
+    "palabra": "crujir",
+    "categoria": "g_j",
+    "nivel": "cotidiana",
+    "regla": "Excepción: crujir se escribe con j.",
+    "explicacion": "Crujir es una excepción."
+  },
+  {
+    "palabra": "jirafa",
+    "categoria": "g_j",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con j por uso establecido.",
+    "explicacion": "Jirafa lleva j inicial."
+  },
+  {
+    "palabra": "juguete",
+    "categoria": "g_j",
+    "nivel": "cotidiana",
+    "regla": "El sonido suave de g antes de e o i requiere u: gue, gui.",
+    "explicacion": "Juguete lleva gue."
+  },
+  {
+    "palabra": "guitarra",
+    "categoria": "g_j",
+    "nivel": "cotidiana",
+    "regla": "El sonido suave de g antes de e o i requiere u: gue, gui.",
+    "explicacion": "Guitarra lleva gui."
+  },
+  {
+    "palabra": "pingüino",
+    "categoria": "g_j,tildes",
+    "nivel": "cotidiana",
+    "regla": "La diéresis se usa en güe/güi cuando la u debe pronunciarse.",
+    "explicacion": "Pingüino lleva ü porque la u se pronuncia."
+  },
+  {
+    "palabra": "vergüenza",
+    "categoria": "g_j,tildes,b_v,s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "La diéresis se usa en güe/güi cuando la u debe pronunciarse.",
+    "explicacion": "Vergüenza lleva v, güe y z."
+  },
+  {
+    "palabra": "llave",
+    "categoria": "ll_y,b_v",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con ll y v por uso establecido.",
+    "explicacion": "Llave lleva ll y v."
+  },
+  {
+    "palabra": "llamar",
+    "categoria": "ll_y",
+    "nivel": "cotidiana",
+    "regla": "Las formas del verbo llamar se escriben con ll.",
+    "explicacion": "Llamar lleva ll inicial."
+  },
+  {
+    "palabra": "calle",
+    "categoria": "ll_y",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con ll por uso establecido.",
+    "explicacion": "Calle lleva ll."
+  },
+  {
+    "palabra": "silla",
+    "categoria": "ll_y,s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con ll por uso establecido.",
+    "explicacion": "Silla lleva ll."
+  },
+  {
+    "palabra": "pollo",
+    "categoria": "ll_y",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con ll por uso establecido.",
+    "explicacion": "Pollo lleva ll."
+  },
+  {
+    "palabra": "caballo",
+    "categoria": "ll_y,b_v",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con b y ll por uso establecido.",
+    "explicacion": "Caballo lleva b y ll."
+  },
+  {
+    "palabra": "ayer",
+    "categoria": "ll_y",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con y por uso establecido.",
+    "explicacion": "Ayer lleva y."
+  },
+  {
+    "palabra": "ayuda",
+    "categoria": "ll_y",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con y por uso establecido.",
+    "explicacion": "Ayuda lleva y."
+  },
+  {
+    "palabra": "desayuno",
+    "categoria": "ll_y",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con y por uso establecido.",
+    "explicacion": "Desayuno lleva y."
+  },
+  {
+    "palabra": "mayor",
+    "categoria": "ll_y",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con y por uso establecido.",
+    "explicacion": "Mayor lleva y."
+  },
+  {
+    "palabra": "playa",
+    "categoria": "ll_y",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con y por uso establecido.",
+    "explicacion": "Playa lleva y."
+  },
+  {
+    "palabra": "leyenda",
+    "categoria": "ll_y",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con y por uso establecido.",
+    "explicacion": "Leyenda lleva y."
+  },
+  {
+    "palabra": "carro",
+    "categoria": "r_rr",
+    "nivel": "cotidiana",
+    "regla": "Entre vocales, el sonido fuerte de r se escribe con rr.",
+    "explicacion": "Carro lleva rr."
+  },
+  {
+    "palabra": "perro",
+    "categoria": "r_rr",
+    "nivel": "cotidiana",
+    "regla": "Entre vocales, el sonido fuerte de r se escribe con rr.",
+    "explicacion": "Perro lleva rr."
+  },
+  {
+    "palabra": "tierra",
+    "categoria": "r_rr",
+    "nivel": "cotidiana",
+    "regla": "Entre vocales, el sonido fuerte de r se escribe con rr.",
+    "explicacion": "Tierra lleva rr."
+  },
+  {
+    "palabra": "arroz",
+    "categoria": "r_rr,s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Entre vocales, el sonido fuerte de r se escribe con rr.",
+    "explicacion": "Arroz lleva rr y z."
+  },
+  {
+    "palabra": "sonrisa",
+    "categoria": "r_rr,s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Después de n, l o s se escribe r, aunque suene fuerte.",
+    "explicacion": "Sonrisa lleva una sola r después de n."
+  },
+  {
+    "palabra": "alrededor",
+    "categoria": "r_rr",
+    "nivel": "cotidiana",
+    "regla": "Después de l se escribe r, aunque suene fuerte.",
+    "explicacion": "Alrededor lleva una sola r después de l."
+  },
+  {
+    "palabra": "enredo",
+    "categoria": "r_rr",
+    "nivel": "cotidiana",
+    "regla": "Después de n se escribe r, aunque suene fuerte.",
+    "explicacion": "Enredo lleva una sola r después de n."
+  },
+  {
+    "palabra": "ratón",
+    "categoria": "r_rr,tildes",
+    "nivel": "cotidiana",
+    "regla": "Al inicio de palabra se escribe r para el sonido fuerte. Las agudas terminadas en n llevan tilde.",
+    "explicacion": "Ratón lleva r inicial y tilde."
+  },
+  {
+    "palabra": "ropa",
+    "categoria": "r_rr",
+    "nivel": "cotidiana",
+    "regla": "Al inicio de palabra se escribe r para el sonido fuerte.",
+    "explicacion": "Ropa lleva r inicial."
+  },
+  {
+    "palabra": "rápido",
+    "categoria": "r_rr,tildes",
+    "nivel": "cotidiana",
+    "regla": "Al inicio de palabra se escribe r. Todas las esdrújulas llevan tilde.",
+    "explicacion": "Rápido lleva r y tilde."
+  },
+  {
+    "palabra": "queso",
+    "categoria": "c_q_k,s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Antes de e o i, el sonido /k/ se escribe que, qui.",
+    "explicacion": "Queso lleva que."
+  },
+  {
+    "palabra": "quince",
+    "categoria": "c_q_k,s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Antes de e o i, el sonido /k/ se escribe que, qui.",
+    "explicacion": "Quince lleva qui."
+  },
+  {
+    "palabra": "equipo",
+    "categoria": "c_q_k",
+    "nivel": "cotidiana",
+    "regla": "Antes de e o i, el sonido /k/ se escribe que, qui.",
+    "explicacion": "Equipo lleva qui."
+  },
+  {
+    "palabra": "paquete",
+    "categoria": "c_q_k",
+    "nivel": "cotidiana",
+    "regla": "Antes de e o i, el sonido /k/ se escribe que, qui.",
+    "explicacion": "Paquete lleva que."
+  },
+  {
+    "palabra": "kilómetro",
+    "categoria": "c_q_k,tildes",
+    "nivel": "cotidiana",
+    "regla": "Algunas palabras de origen extranjero usan k. Todas las esdrújulas llevan tilde.",
+    "explicacion": "Kilómetro lleva k y tilde."
+  },
+  {
+    "palabra": "kilo",
+    "categoria": "c_q_k",
+    "nivel": "cotidiana",
+    "regla": "Algunas palabras de origen extranjero usan k.",
+    "explicacion": "Kilo se escribe con k."
+  },
+  {
+    "palabra": "karate",
+    "categoria": "c_q_k",
+    "nivel": "cotidiana",
+    "regla": "Algunas palabras de origen extranjero usan k.",
+    "explicacion": "Karate se escribe con k."
+  },
+  {
+    "palabra": "casa",
+    "categoria": "c_q_k,s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Antes de a, o, u, el sonido /k/ suele escribirse con c.",
+    "explicacion": "Casa lleva c."
+  },
+  {
+    "palabra": "comida",
+    "categoria": "c_q_k",
+    "nivel": "cotidiana",
+    "regla": "Antes de a, o, u, el sonido /k/ suele escribirse con c.",
+    "explicacion": "Comida lleva c."
+  },
+  {
+    "palabra": "cuento",
+    "categoria": "c_q_k",
+    "nivel": "cotidiana",
+    "regla": "Antes de a, o, u, el sonido /k/ suele escribirse con c.",
+    "explicacion": "Cuento lleva c."
+  },
+  {
+    "palabra": "matemática",
+    "categoria": "tildes",
+    "nivel": "cotidiana",
+    "regla": "Todas las palabras esdrújulas llevan tilde.",
+    "explicacion": "Matemática es esdrújula."
+  },
+  {
+    "palabra": "información",
+    "categoria": "tildes,s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Las agudas terminadas en n llevan tilde; -ción se escribe con c.",
+    "explicacion": "Información termina en -ción y lleva tilde."
+  },
+  {
+    "palabra": "computadora",
+    "categoria": "c_q_k",
+    "nivel": "cotidiana",
+    "regla": "Antes de o, el sonido /k/ se escribe con c.",
+    "explicacion": "Computadora inicia con co-."
+  },
+  {
+    "palabra": "cuaderno",
+    "categoria": "c_q_k",
+    "nivel": "cotidiana",
+    "regla": "Antes de u, el sonido /k/ se escribe con c.",
+    "explicacion": "Cuaderno inicia con cu-."
+  },
+  {
+    "palabra": "familia",
+    "categoria": "tildes",
+    "nivel": "cotidiana",
+    "regla": "Palabra grave terminada en vocal, por eso no lleva tilde.",
+    "explicacion": "Familia no lleva tilde."
+  },
+  {
+    "palabra": "corazón",
+    "categoria": "tildes,s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Las agudas terminadas en n llevan tilde.",
+    "explicacion": "Corazón lleva tilde y z."
+  },
+  {
+    "palabra": "amistad",
+    "categoria": "tildes",
+    "nivel": "cotidiana",
+    "regla": "Las agudas terminadas en consonante distinta de n o s no llevan tilde.",
+    "explicacion": "Amistad no lleva tilde."
+  },
+  {
+    "palabra": "respeto",
+    "categoria": "s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con s por uso establecido.",
+    "explicacion": "Respeto lleva s."
+  },
+  {
+    "palabra": "valores",
+    "categoria": "b_v",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con v por uso establecido.",
+    "explicacion": "Valores lleva v inicial."
+  },
+  {
+    "palabra": "naturaleza",
+    "categoria": "s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Los sustantivos terminados en -eza suelen escribirse con z.",
+    "explicacion": "Naturaleza termina en -eza."
+  },
+  {
+    "palabra": "bosque",
+    "categoria": "b_v,c_q_k",
+    "nivel": "cotidiana",
+    "regla": "Antes de e, el sonido /k/ se escribe que.",
+    "explicacion": "Bosque lleva b y que."
+  },
+  {
+    "palabra": "montaña",
+    "categoria": "tildes",
+    "nivel": "cotidiana",
+    "regla": "Palabra grave terminada en vocal, por eso no lleva tilde.",
+    "explicacion": "Montaña no lleva tilde."
+  },
+  {
+    "palabra": "océano",
+    "categoria": "tildes,s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Todas las palabras esdrújulas llevan tilde.",
+    "explicacion": "Océano es esdrújula."
+  },
+  {
+    "palabra": "plástico",
+    "categoria": "tildes,s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Todas las palabras esdrújulas llevan tilde.",
+    "explicacion": "Plástico es esdrújula."
+  },
+  {
+    "palabra": "reciclar",
+    "categoria": "s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con c por uso establecido.",
+    "explicacion": "Reciclar lleva c."
+  },
+  {
+    "palabra": "contaminación",
+    "categoria": "tildes,s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Las agudas terminadas en n llevan tilde; -ción se escribe con c.",
+    "explicacion": "Contaminación termina en -ción y lleva tilde."
+  },
+  {
+    "palabra": "basura",
+    "categoria": "b_v,s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con b y s por uso establecido.",
+    "explicacion": "Basura lleva b inicial y s."
+  },
+  {
+    "palabra": "salud",
+    "categoria": "s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con s por uso establecido.",
+    "explicacion": "Salud lleva s inicial."
+  },
+  {
+    "palabra": "ejercicio",
+    "categoria": "g_j,s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Esta palabra se escribe con j inicial y c antes de i.",
+    "explicacion": "Ejercicio lleva j y c."
+  },
+  {
+    "palabra": "almuerzo",
+    "categoria": "s_c_x_z",
+    "nivel": "cotidiana",
+    "regla": "Muchas palabras terminadas en -zo se escriben con z.",
+    "explicacion": "Almuerzo lleva z."
+  }
+]
