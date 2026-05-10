@@ -631,7 +631,7 @@ footer{
                 <label for="nombreNino">Nombre del estudiante</label>
                 <input id="nombreNino" type="text" placeholder="Ejemplo: Gabriel">
                 <div style="margin-top:10px;color:#64748b;font-size:.95rem;">
-                    El nombre se guarda en este dispositivo para la próxima vez.
+                    El nombre se comparte con la página principal de aplicaciones.
                 </div>
             </div>
 
@@ -789,6 +789,14 @@ const CONFIG_REGISTRO = {
     activarRegistro: true
 };
 
+/*
+    Nombre compartido con la página principal index.html.
+    El index usa la clave "nombreNinoGabrielApps".
+    Esta aplicación lee y escribe en esa misma clave para que el cambio funcione en ambos sentidos.
+*/
+const CLAVE_NOMBRE_INDEX = "nombreNinoGabrielApps";
+const CLAVE_NOMBRE_ANTERIOR = "nombre_estudiante_comprension";
+
 const preguntasPorNivel = {
     1: 2,
     2: 3,
@@ -814,17 +822,78 @@ let respuestasSeleccion = {};
 
 document.addEventListener("DOMContentLoaded", iniciarAplicacion);
 
+window.addEventListener("storage", e=>{
+    if(e.key === CLAVE_NOMBRE_INDEX){
+        sincronizarNombreDesdeIndex();
+    }
+});
+
+window.addEventListener("focus", sincronizarNombreDesdeIndex);
+
+document.addEventListener("visibilitychange", ()=>{
+    if(!document.hidden){
+        sincronizarNombreDesdeIndex();
+    }
+});
+
+
 function iniciarAplicacion(){
     prepararRutina();
     prepararEventos();
     cargarBase();
 }
 
+function obtenerNombreCompartido(){
+    const nombreIndex = localStorage.getItem(CLAVE_NOMBRE_INDEX) || "";
+    const nombreAnterior = localStorage.getItem(CLAVE_NOMBRE_ANTERIOR) || "";
+
+    if(nombreIndex.trim()){
+        return nombreIndex.trim();
+    }
+
+    if(nombreAnterior.trim()){
+        localStorage.setItem(CLAVE_NOMBRE_INDEX, nombreAnterior.trim());
+        return nombreAnterior.trim();
+    }
+
+    return "";
+}
+
+function guardarNombreCompartido(nombre){
+    const nombreLimpio = (nombre || "").trim();
+
+    if(nombreLimpio){
+        localStorage.setItem(CLAVE_NOMBRE_INDEX, nombreLimpio);
+        localStorage.setItem(CLAVE_NOMBRE_ANTERIOR, nombreLimpio);
+    }else{
+        localStorage.removeItem(CLAVE_NOMBRE_INDEX);
+        localStorage.removeItem(CLAVE_NOMBRE_ANTERIOR);
+    }
+
+    return nombreLimpio;
+}
+
+function sincronizarNombreDesdeIndex(){
+    const nombre = obtenerNombreCompartido();
+    const campo = document.getElementById("nombreNino");
+
+    if(campo && campo.value !== nombre){
+        campo.value = nombre;
+    }
+
+    const infoNombre = document.getElementById("infoNombre");
+    if(infoNombre && nombre){
+        infoNombre.textContent = nombre;
+    }
+
+    return nombre;
+}
+
 function prepararRutina(){
-    const nombreGuardado = localStorage.getItem("nombre_estudiante_comprension") || "";
+    sincronizarNombreDesdeIndex();
+
     const ayudaGuardada = localStorage.getItem("ayuda_verbal_comprension") === "true";
 
-    document.getElementById("nombreNino").value = nombreGuardado;
     document.getElementById("ayudaVerbal").checked = ayudaGuardada;
     ayudaVerbalActiva = ayudaGuardada;
 }
@@ -856,7 +925,7 @@ function prepararEventos(){
     });
 
     document.getElementById("nombreNino").addEventListener("input",e=>{
-        localStorage.setItem("nombre_estudiante_comprension", e.target.value.trim());
+        guardarNombreCompartido(e.target.value.trim());
     });
 
     document.getElementById("btnIniciar").addEventListener("click",iniciarLectura);
@@ -902,6 +971,7 @@ async function cargarBase(){
 }
 
 function iniciarLectura(){
+    sincronizarNombreDesdeIndex();
     const nombre = document.getElementById("nombreNino").value.trim();
 
     if(!nombre){
@@ -909,7 +979,7 @@ function iniciarLectura(){
         return;
     }
 
-    localStorage.setItem("nombre_estudiante_comprension", nombre);
+    guardarNombreCompartido(nombre);
 
     if(!baseLecturas.length){
         mostrarError("No se puede iniciar porque no se cargó Base_de_lecturas.json.");
@@ -1270,7 +1340,7 @@ function verificarRespuestas(){
 }
 
 function felicitar(){
-    const nombre = document.getElementById("nombreNino").value.trim() || "campeón";
+    const nombre = obtenerNombreCompartido() || "campeón";
 
     const frases = [
         `Excelente trabajo, ${nombre}.`,
@@ -1346,6 +1416,8 @@ function detenerVoz(){
 
 function registrarUso(nombre){
     if(!CONFIG_REGISTRO.activarRegistro) return;
+
+    nombre = (nombre || obtenerNombreCompartido() || "").trim();
 
     const archivo = obtenerNombreArchivoIndex();
 
