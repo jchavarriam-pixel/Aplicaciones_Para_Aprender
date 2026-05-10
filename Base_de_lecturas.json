@@ -1085,7 +1085,348 @@
     ]
   },
 
+
   
+  
+  {
+    "id": "L2_06",
+    "level": 2,
+    "title": "La coneja Lola",
+    "text": [
+      "Lola es una coneja blanca y pequeña.",
+      "Tiene las orejas largas y una nariz rosada.",
+      "Le gusta comer zanahoria en su plato verde.",
+      "Después de comer, salta despacio por el jardín."
+    ],
+    "questions": [
+      {
+        "type": "seleccion3",
+        "question": "¿Qué animal es Lola?",
+        "options": ["una coneja", "una gata", "una tortuga"],
+        "distractors": ["una gata", "una tortuga"],
+        "answer": "una coneja",
+        "answerWords": ["una", "coneja"],
+        "extraWords": ["gata", "tortuga"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿De qué color es Lola?",
+        "options": ["blanca", "café", "gris"],
+        "distractors": ["café", "gris"],
+        "answer": "blanca",
+        "answerWords": ["blanca"],
+        "extraWords": ["café", "gris"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Cómo son las orejas de Lola?",
+        "options": ["largas", "cortas", "redondas"],
+        "distractors": ["cortas", "redondas"],
+        "answer": "largas",
+        "answerWords": ["largas"],
+        "extraWords": ["cortas", "redondas"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿De qué color es la nariz de Lola?",
+        "options": ["rosada", "azul", "verde"],
+        "distractors": ["azul", "verde"],
+        "answer": "rosada",
+        "answerWords": ["rosada"],
+        "extraWords": ["azul", "verde"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué le gusta comer a Lola?",
+        "options": ["zanahoria", "pescado", "pan"],
+        "distractors": ["pescado", "pan"],
+        "answer": "zanahoria",
+        "answerWords": ["zanahoria"],
+        "extraWords": ["pescado", "pan"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Dónde salta Lola después de comer?",
+        "options": ["por el jardín", "por la cocina", "por la sala"],
+        "distractors": ["por la cocina", "por la sala"],
+        "answer": "por el jardín",
+        "answerWords": ["por", "el", "jardín"],
+        "extraWords": ["cocina", "sala"]
+      }
+    ]
+  },
+
+  {
+    "id": "L2_07",
+    "level": 2,
+    "title": "El pato Tito",
+    "text": [
+      "Tito es un pato amarillo que vive cerca del lago.",
+      "Tiene las patas naranjas y un pico pequeño.",
+      "Le gusta nadar entre las hojas verdes del agua.",
+      "Cuando sale del lago, sacude sus alas mojadas."
+    ],
+    "questions": [
+      {
+        "type": "seleccion3",
+        "question": "¿Qué animal es Tito?",
+        "options": ["un pato", "un perro", "un gato"],
+        "distractors": ["un perro", "un gato"],
+        "answer": "un pato",
+        "answerWords": ["un", "pato"],
+        "extraWords": ["perro", "gato"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿De qué color es Tito?",
+        "options": ["amarillo", "blanco", "café"],
+        "distractors": ["blanco", "café"],
+        "answer": "amarillo",
+        "answerWords": ["amarillo"],
+        "extraWords": ["blanco", "café"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Dónde vive Tito?",
+        "options": ["cerca del lago", "cerca de la escuela", "cerca de la cocina"],
+        "distractors": ["cerca de la escuela", "cerca de la cocina"],
+        "answer": "cerca del lago",
+        "answerWords": ["cerca", "del", "lago"],
+        "extraWords": ["escuela", "cocina"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿De qué color son las patas de Tito?",
+        "options": ["naranjas", "negras", "verdes"],
+        "distractors": ["negras", "verdes"],
+        "answer": "naranjas",
+        "answerWords": ["naranjas"],
+        "extraWords": ["negras", "verdes"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Entre qué le gusta nadar a Tito?",
+        "options": ["entre las hojas verdes", "entre las piedras grises", "entre las flores rojas"],
+        "distractors": ["entre las piedras grises", "entre las flores rojas"],
+        "answer": "entre las hojas verdes",
+        "answerWords": ["entre", "las", "hojas", "verdes"],
+        "extraWords": ["piedras", "flores", "rojas"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué sacude Tito cuando sale del lago?",
+        "options": ["sus alas mojadas", "sus patas secas", "su pico pequeño"],
+        "distractors": ["sus patas secas", "su pico pequeño"],
+        "answer": "sus alas mojadas",
+        "answerWords": ["sus", "alas", "mojadas"],
+        "extraWords": ["patas", "pico", "secas"]
+      }
+    ]
+  },
+
+  {
+    "id": "L2_08",
+    "level": 2,
+    "title": "La muñeca de Emma",
+    "text": [
+      "Emma tiene una muñeca llamada Lili.",
+      "Lili usa un vestido morado y zapatos blancos.",
+      "Emma la sienta en una silla pequeña.",
+      "Después le peina el cabello con un cepillo rosado."
+    ],
+    "questions": [
+      {
+        "type": "seleccion3",
+        "question": "¿Cómo se llama la muñeca de Emma?",
+        "options": ["Lili", "Lola", "Mila"],
+        "distractors": ["Lola", "Mila"],
+        "answer": "Lili",
+        "answerWords": ["Lili"],
+        "extraWords": ["Lola", "Mila"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿De qué color es el vestido de Lili?",
+        "options": ["morado", "rojo", "verde"],
+        "distractors": ["rojo", "verde"],
+        "answer": "morado",
+        "answerWords": ["morado"],
+        "extraWords": ["rojo", "verde"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿De qué color son los zapatos de Lili?",
+        "options": ["blancos", "azules", "negros"],
+        "distractors": ["azules", "negros"],
+        "answer": "blancos",
+        "answerWords": ["blancos"],
+        "extraWords": ["azules", "negros"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Dónde sienta Emma a Lili?",
+        "options": ["en una silla pequeña", "en una cama grande", "en una mesa azul"],
+        "distractors": ["en una cama grande", "en una mesa azul"],
+        "answer": "en una silla pequeña",
+        "answerWords": ["en", "una", "silla", "pequeña"],
+        "extraWords": ["cama", "mesa", "grande"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué le peina Emma a Lili?",
+        "options": ["el cabello", "el vestido", "los zapatos"],
+        "distractors": ["el vestido", "los zapatos"],
+        "answer": "el cabello",
+        "answerWords": ["el", "cabello"],
+        "extraWords": ["vestido", "zapatos"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Con qué peina Emma a Lili?",
+        "options": ["con un cepillo rosado", "con una cinta azul", "con una flor amarilla"],
+        "distractors": ["con una cinta azul", "con una flor amarilla"],
+        "answer": "con un cepillo rosado",
+        "answerWords": ["con", "un", "cepillo", "rosado"],
+        "extraWords": ["cinta", "flor", "azul"]
+      }
+    ]
+  },
+
+  {
+    "id": "L2_09",
+    "level": 2,
+    "title": "El caballo Max",
+    "text": [
+      "Max es un caballo café y tranquilo.",
+      "Tiene una crin negra y una mancha blanca en la frente.",
+      "Le gusta caminar por el campo con su dueño.",
+      "Al final del paseo, toma agua en un balde azul."
+    ],
+    "questions": [
+      {
+        "type": "seleccion3",
+        "question": "¿Qué animal es Max?",
+        "options": ["un caballo", "un conejo", "un pato"],
+        "distractors": ["un conejo", "un pato"],
+        "answer": "un caballo",
+        "answerWords": ["un", "caballo"],
+        "extraWords": ["conejo", "pato"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿De qué color es Max?",
+        "options": ["café", "blanco", "gris"],
+        "distractors": ["blanco", "gris"],
+        "answer": "café",
+        "answerWords": ["café"],
+        "extraWords": ["blanco", "gris"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿De qué color es la crin de Max?",
+        "options": ["negra", "amarilla", "roja"],
+        "distractors": ["amarilla", "roja"],
+        "answer": "negra",
+        "answerWords": ["negra"],
+        "extraWords": ["amarilla", "roja"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Dónde tiene Max una mancha blanca?",
+        "options": ["en la frente", "en una pata", "en la cola"],
+        "distractors": ["en una pata", "en la cola"],
+        "answer": "en la frente",
+        "answerWords": ["en", "la", "frente"],
+        "extraWords": ["pata", "cola"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Por dónde le gusta caminar a Max?",
+        "options": ["por el campo", "por la cocina", "por la escuela"],
+        "distractors": ["por la cocina", "por la escuela"],
+        "answer": "por el campo",
+        "answerWords": ["por", "el", "campo"],
+        "extraWords": ["cocina", "escuela"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Dónde toma agua Max?",
+        "options": ["en un balde azul", "en un plato rojo", "en una taza blanca"],
+        "distractors": ["en un plato rojo", "en una taza blanca"],
+        "answer": "en un balde azul",
+        "answerWords": ["en", "un", "balde", "azul"],
+        "extraWords": ["plato", "taza", "rojo"]
+      }
+    ]
+  },
+
+  {
+    "id": "L2_10",
+    "level": 2,
+    "title": "La mochila de Sara",
+    "text": [
+      "Sara tiene una mochila verde con estrellas amarillas.",
+      "Dentro guarda un cuaderno, un lápiz y una merienda.",
+      "Antes de salir, revisa que la botella de agua esté cerrada.",
+      "Luego camina contenta hacia la escuela."
+    ],
+    "questions": [
+      {
+        "type": "seleccion3",
+        "question": "¿Quién tiene una mochila verde?",
+        "options": ["Sara", "Emma", "Valeria"],
+        "distractors": ["Emma", "Valeria"],
+        "answer": "Sara",
+        "answerWords": ["Sara"],
+        "extraWords": ["Emma", "Valeria"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿De qué color es la mochila de Sara?",
+        "options": ["verde", "rosada", "azul"],
+        "distractors": ["rosada", "azul"],
+        "answer": "verde",
+        "answerWords": ["verde"],
+        "extraWords": ["rosada", "azul"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué figuras tiene la mochila?",
+        "options": ["estrellas amarillas", "flores rojas", "rayas azules"],
+        "distractors": ["flores rojas", "rayas azules"],
+        "answer": "estrellas amarillas",
+        "answerWords": ["estrellas", "amarillas"],
+        "extraWords": ["flores", "rayas", "rojas"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué guarda Sara dentro de la mochila?",
+        "options": ["un cuaderno, un lápiz y una merienda", "un juguete, una pelota y una flor", "una taza, una cuchara y una caja"],
+        "distractors": ["un juguete, una pelota y una flor", "una taza, una cuchara y una caja"],
+        "answer": "un cuaderno, un lápiz y una merienda",
+        "answerWords": ["un", "cuaderno", "un", "lápiz", "y", "una", "merienda"],
+        "extraWords": ["juguete", "pelota", "flor", "taza"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Qué revisa Sara antes de salir?",
+        "options": ["que la botella de agua esté cerrada", "que la ventana esté abierta", "que la pelota esté limpia"],
+        "distractors": ["que la ventana esté abierta", "que la pelota esté limpia"],
+        "answer": "que la botella de agua esté cerrada",
+        "answerWords": ["que", "la", "botella", "de", "agua", "esté", "cerrada"],
+        "extraWords": ["ventana", "abierta", "pelota", "limpia"]
+      },
+      {
+        "type": "seleccion3",
+        "question": "¿Hacia dónde camina Sara?",
+        "options": ["hacia la escuela", "hacia el parque", "hacia la cocina"],
+        "distractors": ["hacia el parque", "hacia la cocina"],
+        "answer": "hacia la escuela",
+        "answerWords": ["hacia", "la", "escuela"],
+        "extraWords": ["parque", "cocina"]
+      }
+    ]
+  },
   
   
   
