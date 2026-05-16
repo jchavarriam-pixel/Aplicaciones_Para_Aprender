@@ -7,6 +7,8 @@
 <title>Comprensión Lectora</title>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Damion&family=Kalam:wght@400;700&family=Lexend:wght@400;600;700;800;900&family=Montserrat:wght@400;600;700;800;900&family=Pacifico&family=Playwrite+AR:wght@100..400&family=Playwrite+US+Trad:wght@100..400&family=Roboto:wght@400;500;700;900&family=Sofia&family=Sora:wght@400;600;700;800&family=Style+Script&family=Unbounded:wght@400;600;700;800&display=swap');
+
 :root{
     --azul:#2563eb;
     --azul-oscuro:#1e3a8a;
@@ -18,6 +20,11 @@
     --texto:#1f2937;
     --morado:#7c3aed;
     --naranja:#fb923c;
+    --fuente-lectura: Lexend, Arial, sans-serif;
+    --tamano-lectura: 1.35rem;
+    --tamano-pregunta: 1.15rem;
+    --peso-lectura: 700;
+    --estilo-lectura: normal;
 }
 
 *{
@@ -278,6 +285,71 @@ input[type="text"]:focus{
     height:24px;
 }
 
+
+.tarjeta-tipografia{
+    grid-column:1 / -1;
+}
+
+.controles-tipografia{
+    display:grid;
+    grid-template-columns:1.25fr repeat(2, minmax(150px,.65fr)) repeat(2, minmax(130px,.5fr));
+    gap:12px;
+    align-items:end;
+}
+
+.control-tipografia label{
+    font-size:.95rem;
+    margin-bottom:6px;
+}
+
+.control-tipografia select,
+.control-tipografia input[type="range"]{
+    width:100%;
+}
+
+.control-tipografia select{
+    border:3px solid #bfdbfe;
+    border-radius:16px;
+    padding:11px 12px;
+    font-size:1rem;
+    font-weight:800;
+    color:#1e3a8a;
+    background:#ffffff;
+}
+
+.valor-tamano{
+    display:inline-block;
+    margin-top:6px;
+    color:#475569;
+    font-weight:800;
+    font-size:.92rem;
+}
+
+.check-estilo{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    border:3px solid #dbeafe;
+    background:#f8fbff;
+    border-radius:16px;
+    padding:12px;
+    font-weight:900;
+    color:#1e3a8a;
+}
+
+.check-estilo input{
+    width:22px;
+    height:22px;
+}
+
+.btn-deshabilitado,
+button:disabled{
+    opacity:.45;
+    cursor:not-allowed !important;
+    transform:none !important;
+    filter:grayscale(.25);
+}
+
 .acciones-inicio{
     display:flex;
     justify-content:center;
@@ -355,8 +427,11 @@ input[type="text"]:focus{
     border:4px solid #fde68a;
     border-radius:26px;
     padding:20px;
-    font-size:clamp(1.1rem,2.2vw,1.35rem);
+    font-size:var(--tamano-lectura);
     line-height:1.85;
+    font-family:var(--fuente-lectura);
+    font-weight:var(--peso-lectura);
+    font-style:var(--estilo-lectura);
 }
 
 .parrafo-linea{
@@ -399,8 +474,11 @@ input[type="text"]:focus{
 .pregunta h3{
     margin:0;
     color:#1e3a8a;
-    font-size:1.15rem;
+    font-size:var(--tamano-pregunta);
     line-height:1.35;
+    font-family:var(--fuente-lectura);
+    font-weight:var(--peso-lectura);
+    font-style:var(--estilo-lectura);
 }
 
 .pregunta-header{
@@ -584,7 +662,8 @@ footer{
 
     .configuracion,
     .bloque-rutina,
-    .layout-arrastre{
+    .layout-arrastre,
+    .controles-tipografia{
         grid-template-columns:1fr;
     }
 
@@ -631,7 +710,7 @@ footer{
                 <label for="nombreNino">Nombre del estudiante</label>
                 <input id="nombreNino" type="text" placeholder="Ejemplo: Gabriel">
                 <div style="margin-top:10px;color:#64748b;font-size:.95rem;">
-                    El nombre se guarda en este dispositivo para la próxima vez.
+                    El nombre se comparte con la página principal de aplicaciones.
                 </div>
             </div>
 
@@ -742,6 +821,55 @@ footer{
                 </div>
             </div>
 
+            <div class="tarjeta tarjeta-tipografia">
+                <label>Personalizar letra de lecturas y preguntas</label>
+
+                <div class="controles-tipografia">
+                    <div class="control-tipografia">
+                        <label for="fuenteLectura">Tipo de letra</label>
+                        <select id="fuenteLectura">
+                            <option value="Lexend, Arial, sans-serif">Lexend</option>
+                            <option value="Calibri, Arial, sans-serif">Calibrí</option>
+                            <option value="'Comic Sans MS', 'Comic Sans', cursive">Comic Sans</option>
+                            <option value="Montserrat, Arial, sans-serif">Montserrat</option>
+                            <option value="Pacifico, cursive">Pacifico</option>
+                            <option value="Roboto, Arial, sans-serif">Roboto</option>
+                            <option value="Verdana, Arial, sans-serif">Verdana</option>
+                            <option value="'Playwrite US Trad', cursive">Playwrite US Trad</option>
+                            <option value="Unbounded, Arial, sans-serif">Unbounded</option>
+                            <option value="'Style Script', cursive">Style Script</option>
+                            <option value="Sofia, cursive">Sofía</option>
+                            <option value="Kalam, cursive">Kalam</option>
+                            <option value="Damion, cursive">Damion</option>
+                            <option value="'Playwrite AR', cursive">Playwrite AR Guide</option>
+                            <option value="Sora, Arial, sans-serif">Sora</option>
+                        </select>
+                    </div>
+
+                    <div class="control-tipografia">
+                        <label for="tamanoLectura">Tamaño de lectura</label>
+                        <input id="tamanoLectura" type="range" min="1.0" max="2.2" step="0.05" value="1.35">
+                        <span id="valorTamanoLectura" class="valor-tamano">1.35 rem</span>
+                    </div>
+
+                    <div class="control-tipografia">
+                        <label for="tamanoPreguntas">Tamaño de preguntas</label>
+                        <input id="tamanoPreguntas" type="range" min="1.0" max="2.0" step="0.05" value="1.15">
+                        <span id="valorTamanoPreguntas" class="valor-tamano">1.15 rem</span>
+                    </div>
+
+                    <label class="check-estilo" for="textoNegrita">
+                        <input id="textoNegrita" type="checkbox" checked>
+                        Negrita
+                    </label>
+
+                    <label class="check-estilo" for="textoCursiva">
+                        <input id="textoCursiva" type="checkbox">
+                        Cursiva
+                    </label>
+                </div>
+            </div>
+
         </div>
 
         <div id="mensajeError" class="mensaje-error oculto"></div>
@@ -770,6 +898,7 @@ footer{
 
     <div class="botones-juego">
         <button id="btnVerificar" class="btn-verde">Verificar respuestas ✅</button>
+        <button id="btnSiguiente" class="btn-principal" disabled>Siguiente lectura ➡️</button>
         <button id="btnVolver" class="btn-secundario">Volver al inicio</button>
     </div>
 
@@ -788,9 +917,6 @@ const CONFIG_REGISTRO = {
     urlAppsScript: "",
     activarRegistro: true
 };
-
-const CLAVE_NOMBRE = "nombreNinoGabrielApps";
-const CLAVE_NOMBRE_ANTERIOR = "nombre_estudiante_comprension";
 
 const preguntasPorNivel = {
     1: 2,
@@ -814,25 +940,13 @@ let preguntasActuales = [];
 let respuestasBanco = [];
 let respuestasUsuario = {};
 let respuestasSeleccion = {};
+let ultimaLecturaId = null;
 
 document.addEventListener("DOMContentLoaded", iniciarAplicacion);
 
-window.addEventListener("storage", e=>{
-    if(e.key === CLAVE_NOMBRE){
-        sincronizarNombreDesdeIndex();
-    }
-});
-
-window.addEventListener("focus", sincronizarNombreDesdeIndex);
-
-document.addEventListener("visibilitychange", ()=>{
-    if(!document.hidden){
-        sincronizarNombreDesdeIndex();
-    }
-});
-
 function iniciarAplicacion(){
     prepararRutina();
+    prepararTipografia();
     prepararEventos();
     cargarBase();
 }
@@ -844,6 +958,68 @@ function prepararRutina(){
     document.getElementById("nombreNino").value = nombreGuardado;
     document.getElementById("ayudaVerbal").checked = ayudaGuardada;
     ayudaVerbalActiva = ayudaGuardada;
+}
+
+
+function obtenerConfigTipografia(){
+    const defecto = {
+        fuente:"Lexend, Arial, sans-serif",
+        tamanoLectura:"1.35",
+        tamanoPreguntas:"1.15",
+        negrita:true,
+        cursiva:false
+    };
+
+    try{
+        return {...defecto, ...JSON.parse(localStorage.getItem(CLAVE_TIPOGRAFIA) || "{}")};
+    }catch(e){
+        return defecto;
+    }
+}
+
+function aplicarTipografia(config){
+    const root = document.documentElement;
+    root.style.setProperty("--fuente-lectura", config.fuente);
+    root.style.setProperty("--tamano-lectura", `${config.tamanoLectura}rem`);
+    root.style.setProperty("--tamano-pregunta", `${config.tamanoPreguntas}rem`);
+    root.style.setProperty("--peso-lectura", config.negrita ? "800" : "500");
+    root.style.setProperty("--estilo-lectura", config.cursiva ? "italic" : "normal");
+
+    const valorLectura = document.getElementById("valorTamanoLectura");
+    const valorPreguntas = document.getElementById("valorTamanoPreguntas");
+
+    if(valorLectura) valorLectura.textContent = `${Number(config.tamanoLectura).toFixed(2)} rem`;
+    if(valorPreguntas) valorPreguntas.textContent = `${Number(config.tamanoPreguntas).toFixed(2)} rem`;
+}
+
+function guardarConfigTipografia(){
+    const config = {
+        fuente:document.getElementById("fuenteLectura").value,
+        tamanoLectura:document.getElementById("tamanoLectura").value,
+        tamanoPreguntas:document.getElementById("tamanoPreguntas").value,
+        negrita:document.getElementById("textoNegrita").checked,
+        cursiva:document.getElementById("textoCursiva").checked
+    };
+
+    localStorage.setItem(CLAVE_TIPOGRAFIA, JSON.stringify(config));
+    aplicarTipografia(config);
+}
+
+function prepararTipografia(){
+    const config = obtenerConfigTipografia();
+
+    document.getElementById("fuenteLectura").value = config.fuente;
+    document.getElementById("tamanoLectura").value = config.tamanoLectura;
+    document.getElementById("tamanoPreguntas").value = config.tamanoPreguntas;
+    document.getElementById("textoNegrita").checked = !!config.negrita;
+    document.getElementById("textoCursiva").checked = !!config.cursiva;
+
+    aplicarTipografia(config);
+
+    ["fuenteLectura", "tamanoLectura", "tamanoPreguntas", "textoNegrita", "textoCursiva"].forEach(id=>{
+        document.getElementById(id).addEventListener("input", guardarConfigTipografia);
+        document.getElementById(id).addEventListener("change", guardarConfigTipografia);
+    });
 }
 
 function prepararEventos(){
@@ -873,12 +1049,18 @@ function prepararEventos(){
     });
 
     document.getElementById("nombreNino").addEventListener("input",e=>{
-        localStorage.setItem("nombre_estudiante_comprension", e.target.value.trim());
+        const nombreActualizado = guardarNombreCompartido(e.target.value.trim());
+        const infoNombre = document.getElementById("infoNombre");
+        if(infoNombre && nombreActualizado){
+            infoNombre.textContent = nombreActualizado;
+        }
     });
 
     document.getElementById("btnIniciar").addEventListener("click",iniciarLectura);
 
     document.getElementById("btnVerificar").addEventListener("click",verificarRespuestas);
+
+    document.getElementById("btnSiguiente").addEventListener("click",siguienteLectura);
 
     document.getElementById("btnVolver").addEventListener("click",()=>{
         detenerVoz();
@@ -919,47 +1101,94 @@ async function cargarBase(){
 }
 
 function iniciarLectura(){
-    const nombre = document.getElementById("nombreNino").value.trim();
+    const campoNombre = document.getElementById("nombreNino");
+    let nombre = (campoNombre.value || "").trim();
+
+    if(nombre){
+        guardarNombreCompartido(nombre);
+    }else{
+        nombre = sincronizarNombreDesdeIndex();
+    }
 
     if(!nombre){
         mostrarError("Escriba el nombre del estudiante antes de iniciar.");
         return;
     }
 
-    localStorage.setItem("nombre_estudiante_comprension", nombre);
+    campoNombre.value = nombre;
 
     if(!baseLecturas.length){
         mostrarError("No se puede iniciar porque no se cargó Base_de_lecturas.json.");
         return;
     }
 
-    const candidatas = baseLecturas.filter(l=>Number(l.level)===nivelSeleccionado);
-
-    if(!candidatas.length){
-        mostrarError(`No hay lecturas disponibles para el nivel ${nivelSeleccionado}.`);
+    if(!prepararLecturaDelNivel()){
         return;
     }
-
-    lecturaActual = escogerAleatorio(candidatas);
-    preguntasActuales = escogerPreguntasNivel(lecturaActual, nivelSeleccionado);
-
-    respuestasUsuario = {};
-    respuestasSeleccion = {};
 
     document.getElementById("pantallaInicio").classList.add("oculto");
     document.getElementById("pantallaJuego").classList.remove("oculto");
 
-    document.getElementById("infoNivel").textContent = `Nivel ${nivelSeleccionado}`;
-    document.getElementById("infoModo").textContent = nombresModo[modoSeleccionado];
-    document.getElementById("infoNombre").textContent = nombre;
-
+    actualizarEncabezadoJuego(nombre);
     renderLectura();
     renderPreguntas();
+    actualizarBotonSiguiente(false);
 
     registrarUso(nombre);
 }
 
-function mostrarError(texto){
+function prepararLecturaDelNivel(){
+    const candidatas = baseLecturas.filter(l=>Number(l.level)===nivelSeleccionado);
+
+    if(!candidatas.length){
+        mostrarError(`No hay lecturas disponibles para el nivel ${nivelSeleccionado}.`);
+        return false;
+    }
+
+    let disponibles = candidatas;
+    if(candidatas.length > 1 && ultimaLecturaId){
+        disponibles = candidatas.filter(l=>l.id !== ultimaLecturaId);
+    }
+
+    lecturaActual = escogerAleatorio(disponibles);
+    ultimaLecturaId = lecturaActual.id || null;
+    preguntasActuales = escogerPreguntasNivel(lecturaActual, nivelSeleccionado);
+    respuestasUsuario = {};
+    respuestasSeleccion = {};
+    return true;
+}
+
+function actualizarEncabezadoJuego(nombre){
+    document.getElementById("infoNivel").textContent = `Nivel ${nivelSeleccionado}`;
+    document.getElementById("infoModo").textContent = nombresModo[modoSeleccionado];
+    document.getElementById("infoNombre").textContent = nombre || obtenerNombreCompartido();
+}
+
+function actualizarBotonSiguiente(habilitar){
+    const btn = document.getElementById("btnSiguiente");
+    if(!btn) return;
+    btn.disabled = !habilitar;
+    btn.classList.toggle("btn-deshabilitado", !habilitar);
+}
+
+function siguienteLectura(){
+    if(document.getElementById("btnSiguiente").disabled){
+        return;
+    }
+
+    if(!prepararLecturaDelNivel()){
+        return;
+    }
+
+    actualizarEncabezadoJuego(obtenerNombreCompartido());
+    renderLectura();
+    renderPreguntas();
+    actualizarBotonSiguiente(false);
+    detenerVoz();
+    window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function mostrarErrorfunction mostrarError(texto){
     const error = document.getElementById("mensajeError");
     error.classList.remove("oculto");
     error.textContent = texto;
@@ -986,6 +1215,7 @@ function renderLectura(){
 }
 
 function renderPreguntas(){
+    actualizarBotonSiguiente(false);
     const zona = document.getElementById("zonaPreguntas");
 
     if(modoSeleccionado === "seleccion"){
@@ -1279,15 +1509,17 @@ function verificarRespuestas(){
     });
 
     if(correctas === preguntasActuales.length){
+        actualizarBotonSiguiente(true);
         celebrar();
         felicitar();
     }else{
+        actualizarBotonSiguiente(false);
         hablar(`Tienes ${correctas} de ${preguntasActuales.length} correctas. Puedes revisar y volver a intentar.`);
     }
 }
 
 function felicitar(){
-    const nombre = document.getElementById("nombreNino").value.trim() || "campeón";
+    const nombre = obtenerNombreCompartido() || document.getElementById("nombreNino").value.trim() || "campeón";
 
     const frases = [
         `Excelente trabajo, ${nombre}.`,
@@ -1363,6 +1595,8 @@ function detenerVoz(){
 
 function registrarUso(nombre){
     if(!CONFIG_REGISTRO.activarRegistro) return;
+
+    nombre = (nombre || obtenerNombreCompartido() || "").trim();
 
     const archivo = obtenerNombreArchivoIndex();
 
