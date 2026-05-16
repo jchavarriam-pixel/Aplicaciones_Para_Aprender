@@ -1,3 +1,4 @@
+@ -1,1408 +0,0 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -685,6 +686,32 @@ footer{
         min-height:auto;
     }
 }
+
+.vista-previa-letra{
+    margin-top:14px;
+    background:#fffdf7;
+    border:3px dashed #facc15;
+    border-radius:20px;
+    padding:14px;
+}
+
+.vista-previa-letra .titulo-previa{
+    font-weight:900;
+    color:#92400e;
+    margin-bottom:8px;
+}
+
+.texto-prueba-lectura{
+    margin:0 0 10px;
+    line-height:1.55;
+}
+
+.texto-prueba-pregunta{
+    margin:0;
+    color:#1e3a8a;
+    line-height:1.4;
+}
+
 </style>
 </head>
 
@@ -867,6 +894,16 @@ footer{
                         Cursiva
                     </label>
                 </div>
+                <div class="vista-previa-letra">
+                    <div class="titulo-previa">Vista previa</div>
+                    <p id="textoPruebaLectura" class="texto-prueba-lectura">
+                        Gabriel lee una historia corta sobre un perro que juega en el parque con una pelota azul.
+                    </p>
+                    <p id="textoPruebaPregunta" class="texto-prueba-pregunta">
+                        ¿De qué color era la pelota del perro?
+                    </p>
+                </div>
+
             </div>
 
         </div>
@@ -917,6 +954,10 @@ const CONFIG_REGISTRO = {
     activarRegistro: true
 };
 
+const CLAVE_NOMBRE = "nombreNinoGabrielApps";
+const CLAVE_NOMBRE_ANTERIOR = "nombre_estudiante_comprension";
+const CLAVE_TIPOGRAFIA = "comprension_tipografia";
+
 const preguntasPorNivel = {
     1: 2,
     2: 3,
@@ -943,6 +984,62 @@ let ultimaLecturaId = null;
 
 document.addEventListener("DOMContentLoaded", iniciarAplicacion);
 
+window.addEventListener("storage", e=>{
+    if(e.key === CLAVE_NOMBRE){
+        sincronizarNombreDesdeIndex();
+    }
+});
+
+window.addEventListener("focus", sincronizarNombreDesdeIndex);
+
+document.addEventListener("visibilitychange", ()=>{
+    if(!document.hidden){
+        sincronizarNombreDesdeIndex();
+    }
+});
+
+
+function actualizarVistaPreviaLetra(){
+    const lecturaPreview = document.getElementById("textoPruebaLectura");
+    const preguntaPreview = document.getElementById("textoPruebaPregunta");
+
+    if(!lecturaPreview || !preguntaPreview){
+        return;
+    }
+
+    const familia = document.getElementById("selectorFuente")?.value
+        || document.getElementById("tipoLetra")?.value
+        || document.getElementById("fuenteLectura")?.value
+        || localStorage.getItem("comprension_fuente")
+        || "Arial";
+
+    const tamLectura = document.getElementById("tamanoLectura")?.value
+        || document.getElementById("tamLectura")?.value
+        || localStorage.getItem("comprension_tamano_lectura")
+        || "22";
+
+    const tamPregunta = document.getElementById("tamanoPreguntas")?.value
+        || document.getElementById("tamanoPregunta")?.value
+        || document.getElementById("tamPreguntas")?.value
+        || localStorage.getItem("comprension_tamano_preguntas")
+        || "19";
+
+    const negritaControl = document.getElementById("letraNegrita") || document.getElementById("textoNegrita");
+    const cursivaControl = document.getElementById("letraCursiva") || document.getElementById("textoCursiva");
+
+    const negrita = negritaControl ? negritaControl.checked : localStorage.getItem("comprension_negrita") === "true";
+    const cursiva = cursivaControl ? cursivaControl.checked : localStorage.getItem("comprension_cursiva") === "true";
+
+    [lecturaPreview, preguntaPreview].forEach(el=>{
+        el.style.fontFamily = familia;
+        el.style.fontWeight = negrita ? "900" : "500";
+        el.style.fontStyle = cursiva ? "italic" : "normal";
+    });
+
+    lecturaPreview.style.fontSize = tamLectura + "rem";
+    preguntaPreview.style.fontSize = tamPregunta + "rem";
+}
+
 function iniciarAplicacion(){
     prepararRutina();
     prepararTipografia();
@@ -950,8 +1047,51 @@ function iniciarAplicacion(){
     cargarBase();
 }
 
+function obtenerNombreCompartido(){
+    const nombreIndex = (localStorage.getItem(CLAVE_NOMBRE) || "").trim();
+    const nombreAnterior = (localStorage.getItem(CLAVE_NOMBRE_ANTERIOR) || "").trim();
+
+    if(nombreIndex){
+        return nombreIndex;
+    }
+
+    if(nombreAnterior){
+        localStorage.setItem(CLAVE_NOMBRE, nombreAnterior);
+        return nombreAnterior;
+    }
+
+    return "";
+}
+
+function guardarNombreCompartido(nombre){
+    const nombreLimpio = (nombre || "").trim();
+
+    if(nombreLimpio){
+        localStorage.setItem(CLAVE_NOMBRE, nombreLimpio);
+        localStorage.setItem(CLAVE_NOMBRE_ANTERIOR, nombreLimpio);
+    }
+
+    return nombreLimpio;
+}
+
+function sincronizarNombreDesdeIndex(){
+    const nombre = obtenerNombreCompartido();
+    const campo = document.getElementById("nombreNino");
+
+    if(campo && document.activeElement !== campo){
+        campo.value = nombre;
+    }
+
+    const infoNombre = document.getElementById("infoNombre");
+    if(infoNombre && nombre){
+        infoNombre.textContent = nombre;
+    }
+
+    return nombre;
+}
+
 function prepararRutina(){
-    const nombreGuardado = localStorage.getItem("nombre_estudiante_comprension") || "";
+    const nombreGuardado = sincronizarNombreDesdeIndex();
     const ayudaGuardada = localStorage.getItem("ayuda_verbal_comprension") === "true";
 
     document.getElementById("nombreNino").value = nombreGuardado;
@@ -1002,6 +1142,7 @@ function guardarConfigTipografia(){
 
     localStorage.setItem(CLAVE_TIPOGRAFIA, JSON.stringify(config));
     aplicarTipografia(config);
+    actualizarVistaPreviaLetra();
 }
 
 function prepararTipografia(){
@@ -1019,9 +1160,20 @@ function prepararTipografia(){
         document.getElementById(id).addEventListener("input", guardarConfigTipografia);
         document.getElementById(id).addEventListener("change", guardarConfigTipografia);
     });
+
+    actualizarVistaPreviaLetra();
 }
 
 function prepararEventos(){
+
+    ["selectorFuente","tipoLetra","fuenteLectura","tamanoLectura","tamLectura","tamanoPreguntas","tamanoPregunta","tamPreguntas","letraNegrita","textoNegrita","letraCursiva","textoCursiva"].forEach(id=>{
+        const control = document.getElementById(id);
+        if(control){
+            control.addEventListener("input", actualizarVistaPreviaLetra);
+            control.addEventListener("change", actualizarVistaPreviaLetra);
+        }
+    });
+
     document.querySelectorAll(".botonNivel").forEach(btn=>{
         btn.addEventListener("click",()=>{
             nivelSeleccionado = Number(btn.dataset.nivel);
