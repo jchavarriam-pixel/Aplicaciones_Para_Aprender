@@ -617,6 +617,13 @@
         color: "azul"
       },
       {
+        nombre: "Situaciones problema: sumas y restas",
+        archivo: "Situaciones_Problema_Sumas_Restas.html",
+        icono: "🧩",
+        descripcion: "Situaciones problema animadas para plantear y resolver sumas y restas paso a paso.",
+        color: "verde"
+      },
+      {
         nombre: "Sonidos agradables y desagradables",
         archivo: "SonidosAgradablesYDesagradable.html",
         icono: "🎧",
@@ -816,6 +823,16 @@
     }
 
     buscar.addEventListener("input", () => renderizarApps(buscar.value));
+
+    window.addEventListener("pageshow", () => {
+      cargarNombreEnCampos();
+    });
+
+    window.addEventListener("storage", (evento) => {
+      if (evento.key === CLAVE_NOMBRE) {
+        cargarNombreEnCampos();
+      }
+    });
 
     mostrarModalSiHaceFalta();
     renderizarApps();
