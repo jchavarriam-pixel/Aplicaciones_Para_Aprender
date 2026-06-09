@@ -2705,8 +2705,13 @@
         answerQuestion: config.texts.es.answerQuestion,
         sceneTitle: config.texts.es.sceneTitle,
         hintData: config.hintData,
-        hintKeyword: config.hintKeyword,
-        hintOperation: config.hintOperation
+		hintKeyword: config.hintKeyword,
+		hintOperation: config.hintOperation,
+		
+		// Mensaje personalizado cuando la respuesta es correcta.
+		// Si una escena no lo define, se usa el mensaje general.
+		resultText: config.resultText,
+		resultSpeak: config.resultSpeak
       };
     }
 
@@ -3948,13 +3953,22 @@
       if (!state.animated) runAnimation();
 
       const name = getName();
-      const phraseList = isEnglish() ? encouragementsEn : encouragements;
-      const phrase = phraseList[randInt(0, phraseList.length - 1)].replace("{name}", name);
-      feedback.className = "feedback good";
-      feedback.textContent = `${state.total} ${operationWord(expectedSymbol)} ${state.change} es ${state.answer}. ${phrase}`;
-      speak(`${state.total} ${operationWord(expectedSymbol)} ${state.change} es ${state.answer}. ${phrase}`);
-      celebrate();
-    }
+		const phraseList = isEnglish() ? encouragementsEn : encouragements;
+		const phrase = phraseList[randInt(0, phraseList.length - 1)].replace("{name}", name);
+		
+		const resultText = state.currentProblem.resultText
+		  ? state.currentProblem.resultText(state.total, state.change, state.answer, expectedSymbol)
+		  : `${state.total} ${operationWord(expectedSymbol)} ${state.change} ${isEnglish() ? "is" : "es"} ${state.answer}.`;
+		
+		const resultSpeak = state.currentProblem.resultSpeak
+		  ? state.currentProblem.resultSpeak(state.total, state.change, state.answer, expectedSymbol)
+		  : resultText;
+		
+		feedback.className = "feedback good";
+		feedback.textContent = `${resultText} ${phrase}`;
+		speak(`${resultSpeak} ${phrase}`);
+		celebrate();
+    	}
 
     function celebrate() {
       celebrationLayer.innerHTML = "";
