@@ -517,7 +517,7 @@
       position: relative;
       width: 100%;
       aspect-ratio: 16 / 9;
-      min-height: 520px;
+      min-height: clamp(220px, 48vh, 520px);
       background: linear-gradient(#ffffff 0 62%, #f0fdf4 62% 100%);
       overflow: hidden;
       isolation: isolate;
@@ -1934,7 +1934,7 @@
       .app { width: min(100% - 18px, 1180px); }
       .hero, .layout { grid-template-columns: 1fr; }
       .nameBox { width: 100%; }
-      .scene { min-height: clamp(340px, 56vw, 470px); }
+      .scene { min-height: clamp(220px, min(56vw, 44vh), 470px); }
       .problemGrid { grid-template-columns: 1fr; }
       .numberGrid { grid-template-columns: repeat(6, 1fr); }
       .hintTools { grid-template-columns: repeat(3, 1fr); }
@@ -1958,7 +1958,7 @@
         grid-template-columns: 1fr 1fr;
       }
 
-      .scene { min-height: 470px; aspect-ratio: 4 / 3; }
+      .scene { min-height: clamp(200px, 42vh, 420px); aspect-ratio: 4 / 3; }
       .controlBoard { width: 100%; grid-template-columns: 1fr; gap: 6px; }
       .sideActionPanel { grid-template-columns: repeat(2, 1fr); }
       .keypadGrid { grid-template-columns: repeat(13, minmax(20px, 1fr)); }
@@ -1996,7 +1996,7 @@
       .hero, .card, .problemCard { border-radius: 22px; }
       .problemCard { grid-template-columns: 1fr; min-height: 0; }
       .miniScene { width: 100%; height: 150px; }
-      .scene { min-height: 430px; }
+      .scene { min-height: clamp(180px, 38vh, 380px); }
       .controlBoard { width: 100%; grid-template-columns: 1fr; gap: 6px; }
       .sideActionPanel { grid-template-columns: repeat(2, 1fr); }
       .keypadTwoLine { grid-template-columns: 1fr; }
@@ -2020,6 +2020,30 @@
       .sceneActionBtn { top: 8px; min-height: 34px; padding: 7px 9px; font-size: .82rem; }
       .sceneActionLeft { left: 8px; }
       .sceneActionRight { right: 8px; }
+    }
+
+    /* Tablet estándar de 10" en horizontal (ancha pero de poca altura, ~800-850px):
+       aquí NO se activan los breakpoints de ancho anteriores, así que sin este bloque
+       todo se ve desbordado. Se compactan cabeceras, paddings y la escena según el
+       alto real de pantalla, sin tocar la estructura ni la funcionalidad. */
+    @media (max-height: 860px) {
+      .app { padding: 10px 0 14px; }
+      .hero { padding: 10px 14px; margin-bottom: 8px; border-radius: 20px; }
+      .hero h1 { font-size: clamp(1.15rem, 2.4vw, 1.55rem); margin: 0 0 2px; }
+      .hero p { font-size: clamp(.92rem, 1.7vw, 1.02rem); }
+      .nameBox { padding: 6px 10px; }
+      .menuIntro { padding: 8px 12px; margin-bottom: 8px; font-size: .95rem; border-radius: 18px; }
+      .globalSettings { padding: 10px; margin-bottom: 8px; border-radius: 18px; }
+      .settingsHeader { margin-bottom: 6px; }
+      .settingsHeader h2 { font-size: 1rem; }
+      .problemCard { min-height: 0; padding: 10px; border-radius: 20px; }
+      .layout { gap: 8px; }
+      .sceneHeader, .panelHeader { padding: 8px 10px; }
+      .scene { min-height: clamp(180px, 40vh, 380px); }
+      .storyBox { padding: 10px; font-size: clamp(.98rem, 1.7vw, 1.12rem); margin-bottom: 8px; }
+      .controlBoard { gap: 5px; margin: 0 0 5px; }
+      .hintTools { margin-top: 5px; }
+      .mainBtn, .smallBtn, .backBtn, .hintBtn, .numBtn { min-height: 38px; }
     }
   </style>
 </head>
