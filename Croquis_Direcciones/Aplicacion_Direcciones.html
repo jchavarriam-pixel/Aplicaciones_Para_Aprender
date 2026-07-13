@@ -1,0 +1,3603 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Programa el Recorrido del Carro 🚗</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Quicksand:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sky-top:#d8f1ff;
+    --sky-bot:#bfe6ff;
+    --cream:#fffaf0;
+    --ink:#153252;
+    --ink-soft:#3a5878;
+    --road:#54606f;
+    --road-dark:#3d4753;
+    --line:#f8fafc;
+    --north:#2563eb;
+    --south:#ea580c;
+    --east:#16a34a;
+    --west:#9333ea;
+    --sun:#fbbf24;
+    --danger:#dc2626;
+    --danger-bg:#fee2e2;
+    --success-bg:#dcfce7;
+    --border:#153252;
+    --shadow: 0 10px 26px rgba(21,50,82,.16);
+    --radius-lg:26px;
+    --radius-md:18px;
+    --radius-sm:12px;
+    font-family:"Quicksand",system-ui,sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    min-height:100vh;
+    background:linear-gradient(180deg,var(--sky-top) 0%, var(--sky-bot) 55%, #eafdf0 100%);
+    color:var(--ink);
+    font-family:"Quicksand",system-ui,sans-serif;
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  h1,h2,h3,.display{
+    font-family:"Baloo 2",system-ui,sans-serif;
+    margin:0;
+  }
+
+  button{
+    font-family:inherit;
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  .app{
+    max-width:1240px;
+    margin:0 auto;
+    padding:16px 18px 26px;
+  }
+
+  .hidden{ display:none !important; }
+
+  /* ---------- Topbar ---------- */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    background:var(--cream);
+    border:3px solid var(--border);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow);
+    padding:12px 18px;
+    margin-bottom:14px;
+    flex-wrap:wrap;
+  }
+
+  .topbar h1{
+    font-size:clamp(1.15rem, 2.4vw, 1.55rem);
+    color:var(--ink);
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+
+  .topbarRight{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    font-weight:700;
+  }
+
+  .pill{
+    background:#eff6ff;
+    border:2px solid #bfdbfe;
+    border-radius:999px;
+    padding:6px 14px;
+    font-size:.92rem;
+    color:var(--ink-soft);
+    font-weight:700;
+  }
+
+  .ghostBtn{
+    background:white;
+    border:2px solid var(--border);
+    border-radius:999px;
+    padding:8px 16px;
+    font-weight:800;
+    font-size:.92rem;
+    color:var(--ink);
+    box-shadow:0 4px 0 rgba(21,50,82,.15);
+    transition:transform .12s ease;
+  }
+  .ghostBtn:active{ transform:translateY(2px); box-shadow:0 2px 0 rgba(21,50,82,.15); }
+
+  /* ---------- Home screen ---------- */
+  .heroCard{
+    background:var(--cream);
+    border:3px solid var(--border);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow);
+    padding:22px 24px;
+    margin-bottom:16px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .heroCard::before{
+    content:"";
+    position:absolute;
+    inset:auto 0 0 0;
+    height:10px;
+    background:repeating-linear-gradient(90deg, var(--sun) 0 18px, transparent 18px 36px);
+    opacity:.7;
+  }
+  .heroCard h1{
+    font-size:clamp(1.5rem, 4vw, 2.3rem);
+    color:var(--ink);
+  }
+  .heroCard p{
+    margin:8px 0 0;
+    color:var(--ink-soft);
+    font-size:clamp(.95rem, 1.8vw, 1.1rem);
+    font-weight:600;
+  }
+
+  .nameRow{
+    margin-top:16px;
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+  .nameRow label{
+    font-weight:800;
+    color:var(--ink);
+  }
+  .nameRow input{
+    font-family:inherit;
+    font-size:1rem;
+    font-weight:700;
+    padding:9px 14px;
+    border-radius:999px;
+    border:2px solid var(--border);
+    outline:none;
+    width:220px;
+    max-width:60vw;
+  }
+  .nameRow input:focus{ border-color:var(--north); box-shadow:0 0 0 3px #bfdbfe; }
+
+  .levelsCard{
+    background:var(--cream);
+    border:3px solid var(--border);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow);
+    padding:18px 20px 22px;
+  }
+  .levelsCard h2{
+    font-size:1.2rem;
+    color:var(--ink);
+    margin-bottom:12px;
+  }
+
+  .setupCard{
+    background:var(--cream);
+    border:3px solid var(--border);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow);
+    padding:18px 20px 22px;
+  }
+  .setupCard h2{
+    font-size:1.28rem;
+    color:var(--ink);
+    margin-bottom:6px;
+  }
+  .setupIntro{
+    margin:0 0 14px;
+    color:var(--ink-soft);
+    font-size:.98rem;
+    font-weight:700;
+  }
+  .setupGrid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+    margin-top:10px;
+  }
+  .setupField{
+    background:white;
+    border:2.5px solid var(--border);
+    border-radius:var(--radius-md);
+    padding:12px 12px 10px;
+    box-shadow:0 5px 0 rgba(21,50,82,.12);
+  }
+  .setupWide{ grid-column:1 / -1; }
+  .setupField label{
+    display:block;
+    font-weight:800;
+    color:var(--ink);
+    margin-bottom:7px;
+  }
+  .setupField input,
+  .setupField select{
+    width:100%;
+    border:2px solid var(--border);
+    border-radius:14px;
+    padding:9px 12px;
+    font-family:inherit;
+    font-weight:800;
+    font-size:1rem;
+    color:var(--ink);
+    background:#f8fafc;
+    outline:none;
+  }
+  .setupField input:focus,
+  .setupField select:focus{
+    border-color:var(--north);
+    box-shadow:0 0 0 3px #bfdbfe;
+  }
+  .setupField small{
+    display:block;
+    margin-top:6px;
+    color:var(--ink-soft);
+    font-weight:700;
+    line-height:1.25;
+  }
+  .setupSummary{
+    margin-top:14px;
+    background:#eff6ff;
+    border:2px solid #bfdbfe;
+    border-radius:16px;
+    padding:10px 12px;
+    color:var(--ink-soft);
+    font-weight:800;
+    text-align:center;
+  }
+  .startRow{
+    margin-top:14px;
+    display:flex;
+    gap:16px;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  .startCustomBtn,
+  .secondarySetupBtn{
+    border:2px solid var(--border);
+    border-radius:20px;
+    padding:14px 24px;
+    min-height:64px;
+    font-weight:800;
+    font-size:1.08rem;
+    box-shadow:0 7px 0 rgba(21,50,82,.24),0 12px 22px rgba(21,50,82,.14);
+    transition:transform .12s ease,box-shadow .12s ease;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:11px;
+  }
+  .startCustomBtn{
+    background:var(--east);
+    color:white;
+  }
+  .secondarySetupBtn{
+    background:linear-gradient(135deg,#fff,#fff4cc);
+    color:var(--ink);
+  }
+  .primaryActionIcon{ font-size:1.8rem; line-height:1; }
+  .startCustomBtn:active,
+  .secondarySetupBtn:active{
+    transform:translateY(3px);
+    box-shadow:0 3px 0 rgba(21,50,82,.28);
+  }
+
+  .setupCard{
+    position:relative;
+    overflow:hidden;
+  }
+  .setupCard::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background:
+      radial-gradient(circle at 8% 12%, rgba(251,191,36,.18) 0 70px, transparent 72px),
+      radial-gradient(circle at 94% 6%, rgba(37,99,235,.12) 0 90px, transparent 92px),
+      linear-gradient(135deg, rgba(255,255,255,.74), rgba(255,255,255,0));
+  }
+  .setupCard > *{ position:relative; z-index:1; }
+  .setupHeader{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-bottom:10px;
+  }
+  .setupMascot{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:#eff6ff;
+    border:2px solid #bfdbfe;
+    border-radius:999px;
+    padding:7px 12px;
+    font-weight:800;
+    color:var(--ink-soft);
+    white-space:nowrap;
+  }
+  .setupField{
+    position:relative;
+    background:linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  }
+  .setupField label{
+    display:flex;
+    align-items:center;
+    gap:7px;
+  }
+  .setupField label::before{
+    content:attr(data-icon);
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:28px;
+    height:28px;
+    border-radius:10px;
+    background:#fffbeb;
+    border:2px solid #fde68a;
+    font-size:1rem;
+  }
+  .setupWide{ grid-column:1 / -1; }
+  .setupSummary{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    background:linear-gradient(135deg,#eff6ff,#ecfeff);
+  }
+  .setupSummary::before{
+    content:"🧭";
+    font-size:1.35rem;
+  }
+  .setupTips{
+    margin-top:12px;
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:8px;
+  }
+  .setupTip{
+    background:white;
+    border:2px solid #dbeafe;
+    border-radius:16px;
+    padding:8px 10px;
+    font-weight:800;
+    color:var(--ink-soft);
+    text-align:center;
+    box-shadow:0 4px 0 rgba(37,99,235,.08);
+  }
+  .roadBlocked{
+    box-shadow:inset 0 0 0 2px rgba(220,38,38,.22);
+  }
+  .cityBlock{
+    border:2px solid rgba(21,50,82,.16);
+  }
+  .feedback.bad{
+    animation:shakeSoft .28s ease-in-out 1;
+  }
+  @keyframes shakeSoft{
+    0%,100%{ transform:translateX(0); }
+    35%{ transform:translateX(-4px); }
+    70%{ transform:translateX(4px); }
+  }
+
+  .levelGrid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(150px,1fr));
+    gap:12px;
+  }
+
+  .levelCard{
+    position:relative;
+    border:3px solid var(--border);
+    border-radius:var(--radius-md);
+    background:white;
+    padding:14px 12px 12px;
+    text-align:center;
+    box-shadow:0 6px 0 rgba(21,50,82,.14);
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .levelCard.unlocked{ cursor:pointer; }
+  .levelCard.unlocked:hover{ transform:translateY(-3px); }
+  .levelCard.unlocked:active{ transform:translateY(2px); box-shadow:0 3px 0 rgba(21,50,82,.14); }
+  .levelCard.locked{ opacity:.55; filter:grayscale(.35); }
+
+  .levelCard .num{
+    position:absolute;
+    top:-10px; left:-10px;
+    background:var(--sun);
+    border:3px solid var(--border);
+    color:var(--ink);
+    font-family:"Baloo 2",sans-serif;
+    font-weight:800;
+    width:32px; height:32px;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:1rem;
+  }
+  .levelCard .icon{ width:52px; height:52px; margin:0 auto 4px; }
+  .levelCard .name{ font-weight:800; font-size:.92rem; color:var(--ink); }
+  .levelCard .stars{ margin-top:4px; font-size:.85rem; letter-spacing:2px; }
+  .levelCard .lockIcon{ font-size:1.6rem; }
+  .levelCard.done{ border-color:var(--east); }
+  .levelCard.done .num{ background:var(--east); color:white; }
+
+  /* ---------- Game screen ---------- */
+  .layout{
+    display:grid;
+    grid-template-columns:minmax(0,1.32fr) minmax(300px,0.68fr);
+    gap:14px;
+    align-items:start;
+  }
+
+  .card{
+    background:var(--cream);
+    border:3px solid var(--border);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+
+  .cardHeader{
+    padding:12px 16px;
+    background:#eff6ff;
+    border-bottom:3px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .cardHeader strong{ color:var(--ink); font-size:1.02rem; }
+
+  .storyBox{
+    background:#fff7ed;
+    border-bottom:3px solid #fed7aa;
+    padding:12px 16px;
+    font-size:clamp(.92rem,1.7vw,1.05rem);
+    font-weight:700;
+    color:#7c2d12;
+  }
+  .storyRow{
+    display:grid;
+    grid-template-columns:1fr auto;
+    align-items:stretch;
+    background:#fff7ed;
+    border-bottom:3px solid #fed7aa;
+  }
+  .storyRow .storyBox{ border-bottom:0; }
+  .spokenDestination{
+    display:block;
+    margin-bottom:5px;
+    font-size:clamp(1.02rem,2vw,1.18rem);
+    color:#9a3412;
+    font-weight:900;
+  }
+  .routeDetails{ display:block; color:#7c2d12; }
+  .readStoryBtn{
+    margin:8px 10px 8px 0;
+    min-width:118px;
+    border:3px solid var(--border);
+    border-radius:14px;
+    background:#dbeafe;
+    color:var(--ink);
+    font-weight:800;
+    padding:8px 12px;
+    box-shadow:0 4px 0 rgba(21,50,82,.14);
+  }
+  .readStoryBtn:active{ transform:translateY(2px); box-shadow:0 2px 0 rgba(21,50,82,.14); }
+  .checkRow{ display:flex; align-items:center; gap:10px; font-weight:800; color:var(--ink); }
+  .checkRow input{ width:22px; height:22px; flex:0 0 auto; }
+  @media (max-width:620px){
+    .storyRow{ grid-template-columns:1fr; }
+    .readStoryBtn{ margin:0 12px 10px; }
+  }
+
+  /* --- Map --- */
+  .mapWrap{
+    padding:16px;
+    display:flex;
+    justify-content:center;
+  }
+  .mapGrid{
+    position:relative;
+    width:min(100%, 62vh);
+    aspect-ratio:1/1;
+    background:linear-gradient(#eafdf0,#d7f7df);
+    border:3px solid var(--road-dark);
+    border-radius:16px;
+    overflow:visible;
+    flex-shrink:0;
+  }
+  .cityBlock{
+    position:absolute;
+    transform:translate(-50%,-50%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:0 !important;
+    outline:0 !important;
+    box-shadow:none !important;
+    padding:0;
+    border-radius:0;
+    overflow:visible;
+    background:transparent !important;
+    z-index:10;
+    pointer-events:none;
+  }
+  .cityBlock .placeIcon{
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:0;
+    border:0;
+    outline:0;
+    box-shadow:none;
+    background:transparent !important;
+    overflow:visible;
+  }
+  .cityBlock .placeIcon img,
+  .cityBlock .placeIcon svg{
+    width:100%;
+    height:100%;
+    max-width:100%;
+    max-height:100%;
+    object-fit:contain;
+    display:block;
+    padding:0;
+    margin:0;
+    border:0 !important;
+    outline:0 !important;
+    box-shadow:none !important;
+    border-radius:0 !important;
+    background:transparent !important;
+  }
+  .cityBlock .placeNameTag{
+    position:absolute;
+    left:50%;
+    bottom:2%;
+    transform:translateX(-50%);
+    width:100%;
+    max-width:100%;
+    min-height:2.25em;
+    padding:2px 3px;
+    background:transparent;
+    color:#153252;
+    border:none;
+    outline:none;
+    font-family:"Baloo 2", system-ui, sans-serif;
+    font-weight:800;
+    /* renderMap asigna este valor segun el tamano real de la imagen/bloque. */
+    font-size:var(--place-name-size, 12px);
+    line-height:1.05;
+    text-align:center;
+    white-space:normal;
+    word-break:normal;
+    overflow-wrap:normal;
+    text-wrap:balance;
+    overflow:visible;
+    text-overflow:clip;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    text-shadow:
+      0 0 2px rgba(255,255,255,.98),
+      0 0 4px rgba(255,255,255,.96),
+      1px 1px 0 rgba(255,255,255,.94),
+      -1px 1px 0 rgba(255,255,255,.94),
+      1px -1px 0 rgba(255,255,255,.94),
+      -1px -1px 0 rgba(255,255,255,.94),
+      0 2px 4px rgba(255,255,255,.85);
+    filter:drop-shadow(0 1px 1px rgba(21,50,82,.18));
+  }
+
+  .compassRose{
+    position:absolute;
+    width:30%;
+    max-width:128px;
+    min-width:76px;
+    aspect-ratio:1/1;
+    z-index:15;
+    cursor:grab;
+    touch-action:none;
+    transform:translate(-50%,-50%);
+    background:transparent !important;
+    border:0 !important;
+    outline:0 !important;
+    box-shadow:none !important;
+  }
+  .compassRose:active{ cursor:grabbing; }
+  .compassRose img,
+  .compassRose svg{ width:100%; height:100%; object-fit:contain; display:block; pointer-events:none; background:transparent !important; border:0 !important; outline:0 !important; box-shadow:none !important; }
+  .roadH, .roadV{
+    position:absolute;
+    background:var(--road);
+    z-index:2;
+  }
+  .roadH{ transform:translateY(-50%); background-image:repeating-linear-gradient(90deg, var(--line) 0 10px, transparent 10px 20px); background-color:var(--road); background-size:auto 22%; background-repeat:repeat-x; background-position:center; }
+  .roadV{ transform:translateX(-50%); background-image:repeating-linear-gradient(180deg, var(--line) 0 10px, transparent 10px 20px); background-color:var(--road); background-size:22% auto; background-repeat:repeat-y; background-position:center; }
+  .roadBlocked{ background:repeating-linear-gradient(45deg, #fca5a5 0 8px, #fecaca 8px 16px) !important; }
+  .roadV.roadBlocked{ background:repeating-linear-gradient(135deg, #fca5a5 0 8px, #fecaca 8px 16px) !important; }
+  .node{
+    position:absolute;
+    background:var(--road-dark);
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+    z-index:3;
+  }
+  .barrier{
+    position:absolute;
+    transform:translate(-50%,-50%);
+    font-size:1.1rem;
+    z-index:6;
+    filter:drop-shadow(0 2px 2px rgba(0,0,0,.25));
+  }
+  .barrierVertical{
+    transform:translate(-50%,-50%) rotate(90deg);
+  }
+  .flagMark{
+    position:absolute;
+    transform:translate(-50%,-72%);
+    aspect-ratio:1/1;
+    z-index:120;
+    filter:drop-shadow(0 3px 3px rgba(0,0,0,.25));
+    pointer-events:none;
+    animation:goalFloat 1.4s ease-in-out infinite;
+  }
+
+  .startMark{
+    position:absolute;
+    transform:translate(-50%,-112%);
+    aspect-ratio:1/1;
+    z-index:121;
+    filter:drop-shadow(0 3px 3px rgba(0,0,0,.22));
+    pointer-events:none;
+    animation:startFloat 1.25s ease-in-out infinite;
+  }
+
+  .startMark::after,
+  .flagMark::after{
+    content:"";
+    position:absolute;
+    inset:-9%;
+    border-radius:50%;
+    border:4px solid transparent;
+    opacity:0;
+    pointer-events:none;
+  }
+  .startMark::after{
+    border-color:rgba(34,197,94,.78);
+    box-shadow:0 0 0 10px rgba(34,197,94,.15), 0 0 22px rgba(34,197,94,.42);
+    animation:pulseStartRing 1.45s ease-out infinite;
+  }
+  .flagMark::after{
+    border-color:rgba(125,211,252,.84);
+    box-shadow:0 0 0 10px rgba(125,211,252,.15), 0 0 22px rgba(125,211,252,.42);
+    animation:pulseGoalRing 1.55s ease-out infinite;
+  }
+
+  @keyframes startFloat{
+    0%,100%{ transform:translate(-50%,-112%); }
+    50%{ transform:translate(-50%,-118%); }
+  }
+  @keyframes goalFloat{
+    0%,100%{ transform:translate(-50%,-72%); }
+    50%{ transform:translate(-50%,-78%); }
+  }
+  @keyframes pulseStartRing{
+    0%{ transform:scale(.82); opacity:.92; }
+    70%{ transform:scale(1.18); opacity:.06; }
+    100%{ transform:scale(1.24); opacity:0; }
+  }
+  @keyframes pulseGoalRing{
+    0%{ transform:scale(.84); opacity:.9; }
+    70%{ transform:scale(1.16); opacity:.08; }
+    100%{ transform:scale(1.22); opacity:0; }
+  }
+
+  .attentionPair{
+    position:absolute;
+    transform:translate(-50%,-50%);
+    z-index:15;
+    pointer-events:none;
+  }
+  .attentionArrow{
+    position:absolute;
+    width:var(--arrowW, 6%);
+    height:var(--arrowH, 3.2%);
+    background:var(--arrowColor, #22c55e);
+    border-radius:999px;
+    box-shadow:0 0 0 2px rgba(255,255,255,.96), 0 0 14px color-mix(in srgb, var(--arrowColor, #22c55e) 70%, transparent), 0 0 28px color-mix(in srgb, var(--arrowColor, #22c55e) 35%, transparent);
+    clip-path:polygon(0 50%, 64% 50%, 64% 14%, 100% 50%, 64% 86%, 64% 50%, 0 50%);
+    opacity:.98;
+  }
+  .attentionPair.startPair{ --arrowColor:#22c55e; }
+  .attentionPair.goalPair{ --arrowColor:#7dd3fc; }
+  .attentionPair::before,
+  .attentionPair::after{
+    content:"";
+    position:absolute;
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    background:var(--arrowColor, #22c55e);
+    top:50%;
+    opacity:.85;
+    filter:blur(.3px);
+  }
+  .attentionPair::before{
+    left:calc(-1 * var(--arrowGap, 12%) - 12%);
+    animation:blinkDotLeft 1s ease-in-out infinite;
+  }
+  .attentionPair::after{
+    left:calc(var(--arrowGap, 12%) + 12%);
+    animation:blinkDotRight 1s ease-in-out infinite;
+  }
+  .attentionArrow.left{
+    left:calc(-1 * var(--arrowGap, 12%));
+    top:50%;
+    transform:translate(-100%, -50%);
+    animation:arrowNudgeRight .9s ease-in-out infinite;
+  }
+  .attentionArrow.right{
+    left:var(--arrowGap, 12%);
+    top:50%;
+    transform:translate(0, -50%) scaleX(-1);
+    animation:arrowNudgeLeft .9s ease-in-out infinite;
+  }
+  @keyframes arrowNudgeRight{
+    0%,100%{ transform:translate(-102%, -50%); opacity:.45; }
+    50%{ transform:translate(-72%, -50%); opacity:1; }
+  }
+  @keyframes arrowNudgeLeft{
+    0%,100%{ transform:translate(2%, -50%) scaleX(-1); opacity:.45; }
+    50%{ transform:translate(-28%, -50%) scaleX(-1); opacity:1; }
+  }
+  @keyframes blinkDotLeft{
+    0%,100%{ transform:translate(-18px,-50%) scale(.7); opacity:.18; }
+    50%{ transform:translate(-2px,-50%) scale(1.2); opacity:1; }
+  }
+  @keyframes blinkDotRight{
+    0%,100%{ transform:translate(18px,-50%) scale(.7); opacity:.18; }
+    50%{ transform:translate(2px,-50%) scale(1.2); opacity:1; }
+  }
+
+  .trailSeg{
+    position:absolute;
+    z-index:4;
+    border-radius:4px;
+    opacity:.85;
+  }
+  .previewTrailSeg{
+    position:absolute; z-index:5; border-radius:999px; opacity:.68;
+    pointer-events:none; box-shadow:0 0 0 2px rgba(255,255,255,.72),0 0 9px var(--previewColor);
+    animation:previewPulse 1.15s ease-in-out infinite alternate;
+  }
+  @keyframes previewPulse{ from{ opacity:.48; } to{ opacity:.9; } }
+  .car{
+    position:absolute;
+    aspect-ratio:1/1;
+    z-index:200;
+    pointer-events:none;
+    transform:translate(-50%,-50%) rotate(0deg);
+    transition:left .32s linear, top .32s linear, transform .22s ease;
+    filter:drop-shadow(0 3px 4px rgba(0,0,0,.3));
+  }
+  .car, .startMark, .flagMark,
+  .car .assetBox,
+  .startMark .assetBox,
+  .flagMark .assetBox{
+    background:transparent !important;
+    border:0 !important;
+    outline:0 !important;
+    box-shadow:none;
+  }
+  .car .assetBox,
+  .startMark .assetBox,
+  .flagMark .assetBox{ width:100%; height:100%; }
+  .car .assetBox img,
+  .startMark .assetBox img,
+  .flagMark .assetBox img,
+  .car .assetBox svg,
+  .startMark .assetBox svg,
+  .flagMark .assetBox svg{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    display:block;
+    padding:0;
+    margin:0;
+    border:0 !important;
+    outline:0 !important;
+    box-shadow:none !important;
+    border-radius:0 !important;
+    background:transparent !important;
+  }
+
+  /* --- Control panel --- */
+  .controlPanel{ padding:14px 16px 16px; display:flex; flex-direction:column; gap:12px; }
+  .sectionLabel{
+    font-weight:800;
+    font-size:.85rem;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+
+  .palette{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:8px;
+  }
+
+  .paletteBlock{
+    --dc: var(--north);
+    touch-action:none;
+    user-select:none;
+    background:white;
+    border:3px solid var(--border);
+    border-radius:14px;
+    padding:8px 8px 6px;
+    text-align:center;
+    box-shadow:0 5px 0 var(--dc);
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+    cursor:grab;
+  }
+  .paletteBlock:active{ cursor:grabbing; }
+  .paletteBlock .blockIcon{
+    font-size:1.5rem;
+    background:var(--dc);
+    color:white;
+    width:38px;height:38px;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    border:2px solid var(--border);
+  }
+  .paletteBlock .blockLabel{ font-weight:800; font-size:.88rem; color:var(--ink); }
+
+  .distStepper{
+    display:flex; align-items:center; gap:4px;
+    background:#f1f5f9; border-radius:999px; padding:2px 4px;
+  }
+  .stepBtn{
+    width:24px;height:24px;
+    border-radius:50%;
+    border:2px solid var(--border);
+    background:white;
+    font-weight:800;
+    font-size:.9rem;
+    line-height:1;
+    display:flex;align-items:center;justify-content:center;
+    touch-action:manipulation;
+  }
+  .stepBtn:active{ background:#e2e8f0; }
+  .distValue{ font-weight:800; font-size:.82rem; min-width:44px; text-align:center; }
+
+  .programZone{
+    background:#f8fafc;
+    border:3px dashed #94a3b8;
+    border-radius:16px;
+    padding:8px;
+    min-height:64px;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:6px;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .programZone.dragOver{ border-color:var(--sun); background:#fffbeb; }
+  .programZone.empty::before{
+    content:"Arrastra bloques aquí para armar el recorrido 👆";
+    font-size:.85rem;
+    font-weight:700;
+    color:#94a3b8;
+    text-align:center;
+    padding:14px 6px;
+    align-self:stretch;
+  }
+
+  .progBlock{
+    --dc: var(--north);
+    touch-action:none;
+    user-select:none;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:white;
+    border:2.5px solid var(--border);
+    border-left:9px solid var(--dc);
+    border-radius:12px;
+    padding:5px 6px 5px 8px;
+    font-weight:800;
+    font-size:.85rem;
+    cursor:grab;
+    max-width:100%;
+  }
+  .progBlock.dragging{ opacity:.35; }
+  .progBlock.current{ box-shadow:0 0 0 3px var(--sun); }
+  .progBlock.doneStep{ opacity:.5; }
+  .progBlock .progIcon{ font-size:1rem; flex-shrink:0; }
+  .progBlock .progText{ white-space:nowrap; }
+  .progStepper{
+    display:flex; align-items:center; gap:2px;
+    background:#f1f5f9; border-radius:999px; padding:1px 2px;
+    flex-shrink:0;
+  }
+  .miniStepBtn{
+    width:19px;height:19px;
+    border-radius:50%;
+    border:2px solid var(--border);
+    background:white;
+    font-weight:800;
+    font-size:.72rem;
+    line-height:1;
+    display:flex;align-items:center;justify-content:center;
+    touch-action:manipulation;
+    flex-shrink:0;
+  }
+  .miniStepBtn:active{ background:#e2e8f0; }
+  .progRemove{
+    background:#fee2e2;
+    color:var(--danger);
+    border:2px solid var(--danger);
+    border-radius:50%;
+    width:20px;height:20px;
+    font-size:.72rem;
+    font-weight:800;
+    display:flex; align-items:center; justify-content:center;
+    line-height:1;
+    flex-shrink:0;
+  }
+
+  .actionsRow{
+    display:grid;
+    grid-template-columns:1.2fr 1fr 1fr;
+    gap:8px;
+  }
+  .mainBtn{
+    border:3px solid var(--border);
+    border-radius:14px;
+    padding:10px 8px;
+    font-weight:800;
+    font-size:.95rem;
+    color:white;
+    box-shadow:0 5px 0 rgba(21,50,82,.35);
+    transition:transform .1s ease;
+  }
+  .mainBtn:active{ transform:translateY(3px); box-shadow:0 2px 0 rgba(21,50,82,.35); }
+  .mainBtn.run{ background:var(--east); }
+  .mainBtn.undo{ background:#64748b; }
+  .mainBtn.clear{ background:var(--danger); }
+  .mainBtn:disabled{ opacity:.5; cursor:not-allowed; transform:none; box-shadow:0 5px 0 rgba(21,50,82,.2); }
+
+  .feedback{
+    border-radius:14px;
+    padding:10px 12px;
+    font-weight:800;
+    font-size:.92rem;
+    text-align:center;
+    display:none;
+  }
+  .feedback.show{ display:block; }
+  .feedback.ok{ background:var(--success-bg); color:#166534; border:2px solid #86efac; }
+  .feedback.bad{ background:var(--danger-bg); color:#991b1b; border:2px solid #fca5a5; }
+
+  .dragGhost{
+    position:fixed;
+    top:0; left:0;
+    pointer-events:none;
+    z-index:999;
+    background:white;
+    border:3px solid var(--border);
+    border-radius:12px;
+    padding:6px 12px;
+    font-weight:800;
+    font-size:.9rem;
+    box-shadow:0 8px 16px rgba(0,0,0,.25);
+    transform:translate(-50%,-50%);
+  }
+
+  /* --- Result overlay --- */
+  .overlay{
+    position:fixed; inset:0;
+    background:rgba(21,50,82,.55);
+    display:flex; align-items:center; justify-content:center;
+    z-index:200;
+    padding:20px;
+  }
+  .overlayCard{
+    background:var(--cream);
+    border:4px solid var(--border);
+    border-radius:26px;
+    padding:26px 24px;
+    max-width:420px;
+    width:100%;
+    text-align:center;
+    box-shadow:0 20px 40px rgba(0,0,0,.3);
+  }
+  .overlayCard .bigIcon{ font-size:3.2rem; margin-bottom:6px; }
+  .overlayCard h2{ font-size:1.4rem; margin-bottom:6px; }
+  .overlayCard p{ color:var(--ink-soft); font-weight:700; margin:0 0 16px; }
+  .overlayBtns{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+
+  footer.note{
+    text-align:center;
+    font-size:.78rem;
+    color:var(--ink-soft);
+    margin-top:14px;
+    font-weight:600;
+  }
+  .familyNote{
+    text-align:center;
+    margin:5px 0 0;
+    color:var(--ink-soft);
+    font-size:.78rem;
+    font-weight:700;
+  }
+
+  /* ---------- Responsive: ancho ---------- */
+  @media (max-width:1024px){
+    .layout{ grid-template-columns:1fr; }
+    .mapGrid{ width:min(100%, 52vh); }
+    .palette{ grid-template-columns:repeat(4,1fr); }
+  }
+  @media (max-width:700px){
+    .palette{ grid-template-columns:repeat(2,1fr); }
+    .actionsRow{ grid-template-columns:1fr 1fr; }
+    .actionsRow .run{ grid-column:1 / -1; }
+    .mapGrid{ width:min(100%, 46vh); }
+    .setupGrid{ grid-template-columns:1fr; }
+    .setupTips{ grid-template-columns:1fr; }
+  }
+  @media (max-width:480px){
+    .app{ padding:10px 10px 20px; }
+    .levelGrid{ grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); }
+    .mapGrid{ width:100%; }
+  }
+
+  /* ---------- Responsive: alto (tablets en horizontal) ---------- */
+  @media (max-height:860px){
+    .app{ padding:10px 14px 16px; }
+    .topbar{ padding:9px 14px; margin-bottom:8px; }
+    .heroCard{ padding:14px 16px; margin-bottom:10px; }
+    .levelsCard{ padding:12px 14px 16px; }
+    .layout{ gap:8px; }
+    .mapWrap{ padding:8px; }
+    .mapGrid{ width:min(100%, 44vh); }
+    .cardHeader{ padding:8px 12px; }
+    .storyBox{ padding:8px 12px; }
+    .controlPanel{ padding:10px 12px 12px; gap:8px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .car{ transition:none; }
+    .levelCard, .ghostBtn, .mainBtn{ transition:none; }
+  }
+  /* Apariencia moderna y amigable para ninos */
+  :root{ --cream:#fff; --ink:#263a55; --ink-soft:#58708d; --border:#9bb5cc; --shadow:0 10px 28px rgba(60,91,123,.12); }
+  .topbar,.heroCard,.levelsCard,.card{ border:1.5px solid rgba(111,145,174,.42); box-shadow:var(--shadow); }
+  .topbar{ background:rgba(255,255,255,.92); }
+  .heroCard{ background:linear-gradient(135deg,#fff,#fffaf0); }
+  .heroCard::before{ height:7px; background:linear-gradient(90deg,#ffd666,#ff9eb5,#8edbf5,#9be2af); opacity:1; }
+  .pill{ background:#eef7ff; border:1.5px solid #c6ddf0; }
+  .ghostBtn,.readStoryBtn{ border:1.5px solid #b6ccdd; box-shadow:0 4px 10px rgba(70,100,130,.12); }
+  .cardHeader{ background:linear-gradient(90deg,#edf8ff,#f5f1ff); border-bottom:1.5px solid #cfdfeb; }
+  .storyRow,.storyBox{ background:#fff9df; border-color:#f4d778; }
+  .storyRow{ border-bottom-width:1.5px; }
+  .spokenDestination{ color:#73521d; font-size:clamp(1.08rem,2.1vw,1.28rem); margin:0; }
+  .routeDetails:empty{ display:none; }
+  .mapGrid{ border:2px solid #8ba2b3; border-radius:22px; box-shadow:inset 0 0 0 5px rgba(255,255,255,.5),0 8px 20px rgba(70,100,120,.13); }
+  .controlPanel{ background:#fff; }
+  .sectionLabel{ text-transform:none; letter-spacing:0; font-size:.94rem; color:#516a84; }
+  .paletteBlock{ border:1.5px solid #c3d3df; border-bottom:4px solid var(--dc); border-radius:18px; box-shadow:0 5px 13px rgba(55,80,105,.10); padding:10px 8px 8px; }
+  .paletteBlock .blockIcon{ border:0; }
+  .stepBtn,.miniStepBtn{ border:1.5px solid #a9bfd1; }
+  .programZone{ background:#f7fbff; border:2px dashed #a9bfd1; border-radius:18px; }
+  .progBlock{ border:1.5px solid #c1d0dc; border-left:8px solid var(--dc); box-shadow:0 3px 9px rgba(58,83,108,.10); }
+  .mainBtn{ border:0; border-radius:16px; box-shadow:0 5px 12px rgba(45,75,100,.2); min-height:44px; }
+  .mainBtn.run{ background:#35ad6d; }
+  .mainBtn.undo{ background:#71869b; }
+  .mainBtn.clear{ background:#e65d69; }
+  .nameRow input,.setupField input,.setupField select{ border:1.5px solid #afc5d6; }
+  .overlay{ background:rgba(38,58,85,.42); backdrop-filter:blur(3px); }
+  .overlayCard{ border:1.5px solid #b5c9d8; box-shadow:0 18px 45px rgba(38,58,85,.22); }
+
+  /* Bloques inspirados en Scratch: pieza, encaje y color visibles */
+  .paletteBlock,.progBlock,.dragGhost{
+    position:relative;
+    border:0;
+    border-radius:9px;
+    color:#fff;
+    background:var(--dc);
+    box-shadow:inset 0 -3px 0 rgba(0,0,0,.16),0 4px 9px rgba(38,58,85,.18);
+  }
+  .palette{ grid-template-columns:1fr; gap:10px; }
+  .paletteBlock::before,.progBlock::before,.dragGhost::before{
+    content:""; position:absolute; top:-1px; left:22px; width:34px; height:7px;
+    background:#fff; border-radius:0 0 7px 7px;
+  }
+  .paletteBlock::after,.progBlock::after,.dragGhost::after{
+    content:""; position:absolute; bottom:-5px; left:22px; width:34px; height:7px;
+    background:var(--dc); border-radius:0 0 7px 7px;
+  }
+  .paletteBlock{ min-height:48px; padding:10px 8px 9px 12px; flex-direction:row; justify-content:flex-start; gap:7px; }
+  .paletteBlock .blockIcon{ background:rgba(255,255,255,.22); color:#fff; width:38px; height:38px; flex:0 0 38px; }
+  .paletteBlock .blockLabel,.paletteBlock .distValue{ color:#fff; }
+  .paletteBlock .distStepper{ margin-left:auto; flex-shrink:0; }
+  .distStepper,.progStepper{ background:rgba(255,255,255,.22); }
+  .progBlock{ padding:10px 8px 10px 12px; min-height:48px; width:min(100%,300px); }
+  .directionArrow{ width:30px; height:30px; display:block; color:#fff; filter:drop-shadow(0 2px 1px rgba(0,0,0,.15)); }
+  .progBlock .progIcon{ width:32px; height:32px; display:flex; align-items:center; justify-content:center; flex:0 0 32px; }
+  .progBlock .progText{ color:#fff; }
+  .progBlock .progStepper{ margin-left:auto; flex-shrink:0; }
+  .progBlock .progRemove{ margin-left:2px; flex-shrink:0; }
+  .stepBtn{ width:34px; height:34px; font-size:1.25rem; }
+  .miniStepBtn{ width:30px; height:30px; font-size:1.1rem; }
+  .distValue{ min-width:52px; font-size:.9rem; }
+  .dragGhost{ position:fixed !important; display:flex !important; z-index:9999; width:260px; padding:10px 8px 10px 12px; opacity:1; visibility:visible; pointer-events:none; transform:translate(-18px,-50%) rotate(1deg); }
+  .dragGhost .stepBtn,.dragGhost .miniStepBtn,.dragGhost .progRemove{ pointer-events:none; }
+  .dropPlaceholder{
+    width:min(100%,300px); height:48px; flex:0 0 48px;
+    border:2px dashed #59a8e8; border-radius:10px;
+    background:rgba(89,168,232,.12);
+    animation:openDropSpace .16s ease-out;
+  }
+  .programZone.dropActive.empty::before{ display:none; }
+  @keyframes openDropSpace{ from{ height:8px; flex-basis:8px; opacity:.2; } to{ height:48px; flex-basis:48px; opacity:1; } }
+
+  /* Tabletas de 10 pulgadas: controles tactiles y uso eficiente del espacio */
+  @media (min-width:900px) and (max-width:1280px) and (orientation:landscape){
+    .app{ max-width:none; padding:8px 12px 12px; }
+    .topbar{ padding:8px 13px; margin-bottom:8px; }
+    .topbar h1{ font-size:1.2rem; }
+    .layout{ grid-template-columns:minmax(0,1fr) minmax(350px,390px); gap:10px; }
+    .mapWrap{ padding:8px; }
+    .mapGrid{ width:min(100%,calc(100vh - 250px)); }
+    .cardHeader{ padding:8px 12px; }
+    .storyBox{ padding:8px 12px; }
+    .readStoryBtn{ min-height:44px; margin:6px 8px 6px 0; }
+    .controlPanel{ max-height:calc(100vh - 118px); overflow-y:auto; overscroll-behavior:contain; padding:9px 10px 12px; }
+    .actionsRow{ position:sticky; bottom:-12px; z-index:20; background:#fff; padding:7px 0 12px; }
+    .programZone{ max-height:220px; overflow-y:auto; overscroll-behavior:contain; }
+    .palette{ gap:8px; }
+    .paletteBlock{ min-height:46px; }
+    .setupCard{ padding:12px 14px 14px; }
+    .setupHeader{ margin-bottom:5px; }
+    .setupIntro{ margin-bottom:8px; }
+    .setupGrid{ grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-top:6px; }
+    .setupField{ padding:8px; }
+    .setupField label{ margin-bottom:4px; }
+    .setupField small{ font-size:.76rem; margin-top:3px; }
+    .setupTips{ margin-top:8px; }
+    .setupSummary,.startRow{ margin-top:8px; }
+    footer.note{ margin-top:7px; font-size:.72rem; }
+  }
+
+  @media (min-width:700px) and (max-width:899px) and (orientation:portrait){
+    .app{ padding:10px 12px 18px; }
+    .layout{ grid-template-columns:1fr; gap:12px; }
+    .mapGrid{ width:min(100%,72vw); }
+    .palette{ grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    .programZone{ max-height:320px; overflow-y:auto; overscroll-behavior:contain; }
+    .controlPanel{ padding:12px; }
+  }
+
+  @media (min-width:700px) and (max-width:1280px){
+    button{ touch-action:manipulation; }
+    .stepBtn{ width:40px; height:40px; font-size:1.35rem; }
+    .miniStepBtn{ width:36px; height:36px; font-size:1.2rem; }
+    .progRemove{ width:32px; height:32px; font-size:1rem; }
+    .mainBtn,.ghostBtn,.readStoryBtn,.startCustomBtn,.secondarySetupBtn{ min-height:44px; }
+    .setupField input,.setupField select{ min-height:44px; }
+    .programZone,.controlPanel{ scrollbar-width:thin; scrollbar-color:#9bb5cc transparent; }
+  }
+
+  .fireworksLayer{ position:fixed; inset:0; z-index:350; overflow:hidden; pointer-events:none; }
+  .fireworkRocket{
+    position:absolute; width:7px; height:22px; border-radius:999px;
+    background:linear-gradient(#fff,#ffd84d,#ff6b6b);
+    box-shadow:0 0 12px #fff,0 0 20px #ffd84d;
+    animation:rocketRise .68s cubic-bezier(.2,.75,.35,1) forwards;
+  }
+  .fireworkSymbol{
+    position:absolute; font-family:"Baloo 2",sans-serif; font-weight:800;
+    font-size:clamp(22px,3.1vw,46px); line-height:1;
+    text-shadow:0 2px 2px rgba(0,0,0,.18),0 0 8px currentColor;
+    animation:symbolBurst 2.8s cubic-bezier(.12,.65,.3,1) forwards;
+  }
+  .fireworkFlash{
+    position:absolute; width:20px; height:20px; border:5px solid currentColor;
+    border-radius:50%; transform:translate(-50%,-50%);
+    box-shadow:0 0 18px currentColor,inset 0 0 18px currentColor;
+    animation:fireworkFlash 1.15s ease-out forwards;
+  }
+  @keyframes rocketRise{ from{ transform:translateY(0); opacity:1; } to{ transform:translateY(var(--rise)); opacity:.2; } }
+  @keyframes symbolBurst{
+    0%{ transform:translate(-50%,-50%) scale(.2); opacity:0; }
+    10%{ opacity:1; }
+    68%{ opacity:1; }
+    100%{ transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) rotate(var(--rot)) scale(.9); opacity:0; }
+  }
+  @keyframes fireworkFlash{ from{ transform:translate(-50%,-50%) scale(.15); opacity:1; } to{ transform:translate(-50%,-50%) scale(14); opacity:0; } }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <div class="topbar">
+    <h1 id="appTitle">🚗 Programa el Recorrido del Carro</h1>
+    <div class="topbarRight" id="topbarRight"></div>
+  </div>
+
+  <!-- HOME SCREEN -->
+  <div id="homeScreen">
+    <div class="heroCard">
+      <h1 id="heroTitle">¡Ayuda al carrito a llegar a su destino!</h1>
+      <p id="heroText">Arma un programa con bloques de Norte, Sur, Este y Oeste, ¡y guía al carro por las calles del croquis!</p>
+      <div class="nameRow">
+        <label for="playerNameInput" id="playerNameLabel">Tu nombre:</label>
+        <input id="playerNameInput" type="text" maxlength="20" placeholder="Escribe aquí...">
+      </div>
+    </div>
+
+    <div class="setupCard">
+      <div class="setupHeader">
+        <div>
+          <h2 id="setupTitle">Configura el recorrido</h2>
+          <p class="setupIntro" id="setupIntro">Escoge desde el inicio el tamaño del croquis, la distancia de cada calle y la dificultad. La última configuración queda guardada automáticamente.</p>
+        </div>
+        <div class="setupMascot" id="setupMascot">🚦 Reto personalizado</div>
+      </div>
+
+      <div class="setupGrid">
+        <div class="setupField">
+          <label for="colsInput" id="colsLabel" data-icon="↔️">Columnas de intersecciones</label>
+          <input id="colsInput" type="number" min="3" max="8" value="5">
+          <small id="colsHelp">Más columnas = croquis más ancho.</small>
+        </div>
+
+        <div class="setupField">
+          <label for="rowsInput" id="rowsLabel" data-icon="↕️">Filas de intersecciones</label>
+          <input id="rowsInput" type="number" min="3" max="8" value="5">
+          <small id="rowsHelp">Más filas = croquis más alto.</small>
+        </div>
+
+        <div class="setupField">
+          <label for="streetLengthSelect" id="streetLabel" data-icon="📏">Distancia de cada calle</label>
+          <select id="streetLengthSelect">
+            <option value="100">Calles de 100 m</option>
+            <option value="50">Calles de 50 m</option>
+          </select>
+          <small id="streetHelp">En calles de 50 m, un bloque de 50 m avanza hasta la siguiente intersección.</small>
+        </div>
+
+        <div class="setupField">
+          <label for="blockedInput" id="blockedLabel" data-icon="🚧">Calles cerradas</label>
+          <input id="blockedInput" type="number" min="0" max="12" value="1">
+          <small id="blockedHelp">Se ven con vallas y no se puede pasar.</small>
+        </div>
+
+        <div class="setupField">
+          <label for="missingInput" id="missingLabel" data-icon="🌱">Calles inexistentes</label>
+          <input id="missingInput" type="number" min="0" max="12" value="1">
+          <small id="missingHelp">No se dibujan. Si el carro intenta avanzar por ahí, choca con el lugar cercano.</small>
+        </div>
+
+        <div class="setupField">
+          <label for="travelModeSelect" id="travelLabel" data-icon="🚙">Forma de desplazarse</label>
+          <select id="travelModeSelect">
+            <option value="carro">En carro</option>
+            <option value="persona">Caminando</option>
+          </select>
+          <small id="travelHelp">Usa <strong>carro.png</strong> para el carro o <strong>persona.png</strong> para caminar.</small>
+        </div>
+
+        <div class="setupField">
+          <label for="languageSelect" id="languageLabel" data-icon="🌐">Idioma</label>
+          <select id="languageSelect">
+            <option value="es">Español</option>
+            <option value="en">English</option>
+          </select>
+          <small id="languageHelp">Cambia todos los textos y las indicaciones verbales.</small>
+        </div>
+
+        <div class="setupField">
+          <label for="voiceSelect" id="voiceLabel" data-icon="🔊">Voz de lectura</label>
+          <select id="voiceSelect"><option value="">Voz predeterminada del navegador</option></select>
+          <small id="voiceHelp">Las voces disponibles dependen del dispositivo y del navegador.</small>
+        </div>
+
+        <div class="setupField setupWide">
+          <label class="checkRow"><input id="autoSpeakCheckbox" type="checkbox" checked><span id="autoSpeakLabel">Leer automáticamente cada nuevo destino</span></label>
+        </div>
+
+        <div class="setupField setupWide">
+          <label class="checkRow"><input id="specialHelpCheckbox" type="checkbox"><span id="specialHelpLabel">Mostrar la ruta mientras se agregan bloques</span></label>
+          <small id="specialHelpHelp">Dibuja una guía sobre las calles para aprender cómo se construye el programa.</small>
+        </div>
+
+        <div class="setupField setupWide">
+          <label class="checkRow"><input id="movementVoiceCheckbox" type="checkbox"><span id="movementVoiceLabel">Leer cada movimiento durante el recorrido</span></label>
+          <small id="movementVoiceHelp">Por ejemplo: «Al norte, 200 metros».</small>
+        </div>
+
+        <div class="setupField setupWide">
+          <label for="goalPlacementSelect" id="goalPlacementLabel" data-icon="📍">Ubicación de la meta</label>
+          <select id="goalPlacementSelect">
+            <option value="random">Variar automáticamente</option>
+            <option value="intersection">En una intersección</option>
+            <option value="front">Frente al lugar, a 50 m de la última intersección</option>
+          </select>
+          <small id="goalPlacementHelp">Los destinos cambian automáticamente. En el modo “frente al lugar”, la bandera se coloca un poco dentro del establecimiento, en el costado norte, sur, este u oeste que se indique; el recorrido termina a 50 m de la última intersección.</small>
+        </div>
+      </div>
+
+      <div class="setupTips">
+        <div class="setupTip" id="tipNS">🟦 Norte y Sur</div>
+        <div class="setupTip" id="tipEW">🟩 Este y Oeste</div>
+        <div class="setupTip" id="tipProgram">🚗 Programa antes de ejecutar</div>
+      </div>
+
+      <div class="setupSummary" id="setupSummary"></div>
+      <div class="startRow">
+        <button class="startCustomBtn" id="startCustomBtn" type="button">🚗 Crear y empezar recorrido</button>
+        <button class="secondarySetupBtn" id="randomizeBtn" type="button">🎲 Crear reto nuevo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div id="gameScreen" class="hidden">
+    <div class="layout">
+      <div class="card">
+        <div class="cardHeader">
+          <strong id="levelTitle">Nivel</strong>
+          <span class="pill" id="levelGoalPill">Meta</span>
+        </div>
+        <div class="storyRow"><div class="storyBox" id="storyBox"></div><button class="readStoryBtn" id="readInstructionBtn" type="button">🔊 Leer indicación</button></div>
+        <div class="mapWrap">
+          <div class="mapGrid" id="mapGrid"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="cardHeader">
+          <strong id="blocksProgramTitle">Bloques y programa</strong>
+        </div>
+        <div class="controlPanel">
+          <div>
+            <div class="sectionLabel" id="availableBlocksLabel">Bloques disponibles (arrástralos)</div>
+            <div class="palette" id="palette"></div>
+          </div>
+
+          <div>
+            <div class="sectionLabel" id="yourProgramLabel">Tu programa</div>
+            <div class="programZone empty" id="programZone"></div>
+          </div>
+
+          <div class="actionsRow">
+            <button class="mainBtn run" id="runBtn">▶ Ejecutar</button>
+            <button class="mainBtn undo" id="undoBtn">↩ Quitar</button>
+            <button class="mainBtn clear" id="clearBtn">🗑 Borrar</button>
+          </div>
+
+          <div class="feedback" id="feedback"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="note" id="footerNote">Hecho para practicar orientación, programación de rutas y distancias de 50 m o 100 m 🧭</footer>
+  <div class="familyNote" id="familyNote">Aplicación creada para Gabriel por su familia, con la ayuda de la IA.</div>
+</div>
+
+<div class="overlay hidden" id="overlay">
+  <div class="overlayCard">
+    <div class="bigIcon" id="overlayIcon">🎉</div>
+    <h2 id="overlayTitle">¡Lo lograste!</h2>
+    <p id="overlayText">Mensaje</p>
+    <div class="overlayBtns" id="overlayBtns"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* =========================================================
+     CONFIGURACIÓN DE NIVELES
+     cols/rows = número de intersecciones (nodos) del croquis.
+     start/goal = coordenadas de nodo {x,y}. x crece hacia el Este,
+     y crece hacia el Sur. goal puede tener .5 (media cuadra, 50 m).
+     blocked = calles cerradas por obras (se dibujan con vallas 🚧).
+     missing = calles que sencillamente no existen en el croquis
+               (no se dibujan, solo césped: hay que rodear igual).
+  ========================================================= */
+  const LEVELS = [
+    {
+      name:"La panadería",
+      place:"panaderia",
+      stars:1,
+      cols:4, rows:4,
+      start:{x:0,y:1}, goal:{x:3,y:1},
+      blocked:[], missing:[],
+      story:"Carlos quiere comprar pan. Programa el camino recto hacia el Este para llegar a la panadería."
+    },
+    {
+      name:"La escuela",
+      place:"escuela",
+      stars:1,
+      cols:4, rows:4,
+      start:{x:0,y:3}, goal:{x:2,y:0},
+      blocked:[], missing:[],
+      story:"¡Se hace tarde para entrar a clases! Combina Este y Norte para llegar a la escuela."
+    },
+    {
+      name:"El parque",
+      place:"parque",
+      stars:2,
+      cols:5, rows:5,
+      start:{x:0,y:4}, goal:{x:4,y:0},
+      blocked:[], missing:[],
+      story:"Vamos a jugar al parque. Este croquis es más grande: piensa bien tus giros antes de ejecutar."
+    },
+    {
+      name:"El supermercado",
+      place:"supermercado",
+      stars:2,
+      cols:5, rows:5,
+      start:{x:0,y:0}, goal:{x:4,y:4},
+      blocked:[],
+      missing:[[[1,0],[2,0]],[[1,1],[2,1]],[[1,2],[2,2]],[[1,3],[2,3]]],
+      story:"Ojo: en este croquis hay calles que ni siquiera existen. Busca otro camino para llegar al supermercado."
+    },
+    {
+      name:"El hospital",
+      place:"hospital",
+      stars:3,
+      cols:7, rows:5,
+      start:{x:0,y:0}, goal:{x:6,y:4},
+      blocked:[[[2,0],[3,0]],[[2,1],[3,1]],[[2,2],[3,2]]],
+      missing:[],
+      story:"Este croquis es rectangular y hay una calle cerrada por obras. Rodéala con cuidado para llegar a tiempo al hospital."
+    },
+    {
+      name:"El zoológico",
+      place:"zoologico",
+      stars:3,
+      cols:7, rows:6,
+      start:{x:6,y:0}, goal:{x:0.5,y:5},
+      blocked:[[[4,1],[4,2]],[[5,1],[5,2]],[[6,1],[6,2]]],
+      missing:[[[2,0],[3,0]],[[2,1],[3,1]],[[2,2],[3,2]],[[2,3],[3,3]]],
+      story:"¡El reto final! Croquis rectangular, calles que no existen, una cerrada por obras, y el zoológico queda a media cuadra: prueba con un bloque de 50 m."
+    }
+  ];
+
+  const DIR_INFO = {
+    N:{label:"Norte", icon:"⬆️", dx:0, dy:-1, color:"var(--north)", angle:0},
+    S:{label:"Sur",   icon:"⬇️", dx:0, dy:1,  color:"var(--south)", angle:180},
+    E:{label:"Este",  icon:"➡️", dx:1, dy:0,  color:"var(--east)",  angle:90},
+    W:{label:"Oeste", icon:"⬅️", dx:-1,dy:0,  color:"var(--west)",  angle:270}
+  };
+  const DIR_ORDER = ["N","S","E","W"];
+
+  function directionArrowSvg(dir){
+    const rotation={N:0,E:90,S:180,W:270}[dir] || 0;
+    return `<svg class="directionArrow" viewBox="0 0 48 48" aria-hidden="true">
+      <g transform="rotate(${rotation} 24 24)">
+        <path d="M24 5 40 22H30v20H18V22H8Z" fill="currentColor" stroke="rgba(0,0,0,.18)" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M24 9 35 20h-7" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2" stroke-linecap="round"/>
+      </g>
+    </svg>`;
+  }
+
+  /* =========================================================
+     LUGARES: ícono SVG dibujado a mano + nombre para cada
+     construcción del croquis (sin depender de imágenes externas
+     ni de emoji, para que se vea nítido en cualquier tamaño).
+  ========================================================= */
+  function starPoints(){
+    return "0,-8 2.2,-2.6 8,-2.4 3.4,1.2 5,7 0,3.6 -5,7 -3.4,1.2 -8,-2.4 -2.2,-2.6";
+  }
+  const GLYPHS = {
+    cross: c => `<rect x="-1.7" y="-7.5" width="3.4" height="15" rx="1" fill="${c}"/><rect x="-7.5" y="-1.7" width="15" height="3.4" rx="1" fill="${c}"/>`,
+    bell: c => `<path d="M0,-7 a6,6 0 0 1 6,6 v2.5 l2.4,3.3 h-16.8 l2.4,-3.3 v-2.5 a6,6 0 0 1 6,-6 z" fill="${c}"/><rect x="-1.6" y="5.2" width="3.2" height="3" rx="1.3" fill="${c}"/>`,
+    bread: c => `<ellipse cx="0" cy="0" rx="8" ry="5" fill="${c}"/><path d="M-4.5,-1 q1.3,-3.6 2.6,0 M-0.3,-1.4 q1.3,-3.8 2.6,0 M4.2,-1 q1.3,-3.6 2.6,0" stroke="white" stroke-width="1.1" fill="none" stroke-linecap="round"/>`,
+    cart: c => `<path d="M-8,-6 h2.4 l1.6,10.4 h9.4 l1.8,-7.2 h-11.4" stroke="${c}" stroke-width="1.8" fill="none" stroke-linejoin="round" stroke-linecap="round"/><circle cx="-2.4" cy="7" r="1.7" fill="${c}"/><circle cx="4.8" cy="7" r="1.7" fill="${c}"/>`,
+    tree: c => `<circle cx="0" cy="-2.5" r="6.5" fill="${c}"/><rect x="-1.4" y="3" width="2.8" height="5.5" rx="1" fill="${c}"/>`,
+    ball: c => `<circle cx="0" cy="0" r="7.6" fill="none" stroke="${c}" stroke-width="1.6"/><path d="M0,-7.6 L0,-2.6 L-4.4,0.6 M0,-2.6 L4.4,0.6 M-4.4,0.6 L-2.6,5.6 M4.4,0.6 L2.6,5.6 M-2.6,5.6 L2.6,5.6" stroke="${c}" stroke-width="1.2" fill="none" stroke-linejoin="round"/>`,
+    paw: c => `<ellipse cx="0" cy="3.4" rx="5.6" ry="4.4" fill="${c}"/><circle cx="-5.6" cy="-3" r="2.3" fill="${c}"/><circle cx="-2" cy="-6.4" r="2.3" fill="${c}"/><circle cx="2" cy="-6.4" r="2.3" fill="${c}"/><circle cx="5.6" cy="-3" r="2.3" fill="${c}"/>`,
+    pump: c => `<rect x="-5" y="-7" width="8.5" height="14" rx="1.5" fill="${c}"/><path d="M3.5,-3 h3.3 v8 a1.8,1.8 0 0 1 -3.6,0 z" fill="${c}"/><rect x="-3.2" y="-4.6" width="5" height="3.4" rx=".6" fill="white"/>`,
+    blocks: c => `<rect x="-7" y="-1" width="6.4" height="6.4" rx="1.2" fill="${c}"/><rect x="0.6" y="-6" width="6.4" height="6.4" rx="1.2" fill="${c}"/>`,
+    columns: c => `<polygon points="-8,-4 0,-8.4 8,-4" fill="${c}"/><rect x="-7.2" y="-3.2" width="14.4" height="1.6" fill="${c}"/><rect x="-6" y="-1.2" width="1.8" height="8.6" fill="${c}"/><rect x="-0.9" y="-1.2" width="1.8" height="8.6" fill="${c}"/><rect x="4.2" y="-1.2" width="1.8" height="8.6" fill="${c}"/><rect x="-7.2" y="7.4" width="14.4" height="1.6" fill="${c}"/>`,
+    flower: c => `<circle cx="0" cy="-5" r="2.6" fill="${c}"/><circle cx="0" cy="5" r="2.6" fill="${c}"/><circle cx="-5" cy="0" r="2.6" fill="${c}"/><circle cx="5" cy="0" r="2.6" fill="${c}"/><circle cx="-3.5" cy="-3.5" r="2.6" fill="${c}"/><circle cx="3.5" cy="3.5" r="2.6" fill="${c}"/><circle cx="0" cy="0" r="2.8" fill="white"/>`,
+    home: c => `<polygon points="0,-7.4 7.6,-1 7.6,7.4 -7.6,7.4 -7.6,-1" fill="${c}"/><rect x="-2.2" y="0.6" width="4.4" height="6.8" fill="white"/>`,
+    animal: c => `<circle cx="0" cy="0.6" r="6.6" fill="${c}"/><circle cx="-5.4" cy="-5" r="2.8" fill="${c}"/><circle cx="5.4" cy="-5" r="2.8" fill="${c}"/><circle cx="-2.2" cy="0" r="1" fill="white"/><circle cx="2.2" cy="0" r="1" fill="white"/><ellipse cx="0" cy="3.4" rx="1.6" ry="1" fill="white"/>`,
+    star: c => `<polygon points="${starPoints()}" fill="${c}"/>`,
+    bag: c => `<path d="M-6.4,-3 h12.8 l-1.4,11 h-10 z" fill="${c}"/><path d="M-3.4,-3 a3.4,4 0 0 1 6.8,0" fill="none" stroke="${c}" stroke-width="1.6"/>`
+  };
+  const PLACES = {
+    acuario:{ label:"Acuario", color:"#bae6fd", roof:"#0369a1", glyph:"animal" },
+    banco:{ label:"Banco", color:"#e5e7eb", roof:"#374151", glyph:"columns" },
+    biblioteca:{ label:"Biblioteca", color:"#bbf7d0", roof:"#15803d", glyph:"columns" },
+    cafeteria:{ label:"Cafetería", color:"#fed7aa", roof:"#92400e", glyph:"bread" },
+    canchaDeFutbol:{ label:"Cancha de fútbol", color:"#bbf7d0", roof:"#16a34a", glyph:"ball" },
+    casa:{ label:"Casa", color:"#fecaca", roof:"#dc2626", glyph:"home" },
+    centroComercial:{ label:"Centro comercial", color:"#bae6fd", roof:"#0369a1", glyph:"bag" },
+    cine:{ label:"Cine", color:"#e9d5ff", roof:"#7e22ce", glyph:"star" },
+    clinica:{ label:"Clínica", color:"#fecaca", roof:"#dc2626", glyph:"cross" },
+    colegio:{ label:"Colegio", color:"#bfdbfe", roof:"#2563eb", glyph:"bell" },
+    correo:{ label:"Correo", color:"#bfdbfe", roof:"#2563eb", glyph:"bag" },
+    escuela:{ label:"Escuela", color:"#bfdbfe", roof:"#2563eb", glyph:"bell" },
+    estacionBomberos:{ label:"Estación de bomberos", color:"#fed7aa", roof:"#dc2626", glyph:"star" },
+    estacionPolicia:{ label:"Estación de policía", color:"#bfdbfe", roof:"#1d4ed8", glyph:"star" },
+    estacionTren:{ label:"Estación de tren", color:"#bae6fd", roof:"#0369a1", glyph:"cart" },
+    farmacia:{ label:"Farmacia", color:"#bbf7d0", roof:"#16a34a", glyph:"cross" },
+    floristeria:{ label:"Floristería", color:"#fbcfe8", roof:"#db2777", glyph:"flower" },
+    gasolinera:{ label:"Gasolinera", color:"#fed7aa", roof:"#c2410c", glyph:"pump" },
+    gimnasio:{ label:"Gimnasio", color:"#bae6fd", roof:"#0369a1", glyph:"ball" },
+    heladeria:{ label:"Heladería", color:"#fbcfe8", roof:"#db2777", glyph:"bread" },
+    hospital:{ label:"Hospital", color:"#fecaca", roof:"#dc2626", glyph:"cross" },
+    iglesia:{ label:"Iglesia", color:"#c7d2fe", roof:"#4f46e5", glyph:"cross", steeple:true },
+    jugueteria:{ label:"Juguetería", color:"#ddd6fe", roof:"#7c3aed", glyph:"blocks" },
+    libreria:{ label:"Librería", color:"#bbf7d0", roof:"#15803d", glyph:"columns" },
+    mercado:{ label:"Mercado", color:"#bbf7d0", roof:"#16a34a", glyph:"cart" },
+    municipalidad:{ label:"Municipalidad", color:"#bbf7d0", roof:"#15803d", glyph:"columns" },
+    museo:{ label:"Museo", color:"#e9d5ff", roof:"#7e22ce", glyph:"columns" },
+    panaderia:{ label:"Panadería", color:"#fde68a", roof:"#d97706", glyph:"bread" },
+    paradaBus:{ label:"Parada de autobús", color:"#bae6fd", roof:"#0369a1", glyph:"cart" },
+    parque:{ label:"Parque", color:"#bbf7d0", roof:"#15803d", glyph:"tree" },
+    piscina:{ label:"Piscina", color:"#bae6fd", roof:"#0369a1", glyph:"ball" },
+    restaurante:{ label:"Restaurante", color:"#fed7aa", roof:"#c2410c", glyph:"bread" },
+    supermercado:{ label:"Supermercado", color:"#bbf7d0", roof:"#16a34a", glyph:"cart" },
+    tallerMecanico:{ label:"Taller mecánico", color:"#fed7aa", roof:"#c2410c", glyph:"star" },
+    teatro:{ label:"Teatro", color:"#e9d5ff", roof:"#7e22ce", glyph:"star" },
+    terminalAutoBus:{ label:"Terminal de autobuses", color:"#bae6fd", roof:"#0369a1", glyph:"cart" },
+    tiendaMascotas:{ label:"Tienda de mascotas", color:"#fbcfe8", roof:"#db2777", glyph:"paw" },
+    veterinaria:{ label:"Veterinaria", color:"#fbcfe8", roof:"#db2777", glyph:"paw" },
+    zapateria:{ label:"Zapatería", color:"#fed7aa", roof:"#d97706", glyph:"bag" },
+    zoologico:{ label:"Zoológico", color:"#fef08a", roof:"#a16207", glyph:"animal" }
+  };
+  const PLACE_ORDER = Object.keys(PLACES).filter(k => k!=="casa");
+
+  // Nombre exacto del archivo .png que se buscará junto al HTML para cada lugar.
+  // Se aceptan varios nombres alternativos cuando puede haber tildes o variantes.
+  // Si el archivo no existe (o falla al cargar), se usa el dibujo de respaldo.
+  const PLACE_FILE = {
+    acuario:["Acuario.png"],
+    banco:["Banco.png"],
+    biblioteca:["Biblioteca.png"],
+    cafeteria:["Cafeteria.png", "Cafetería.png"],
+    canchaDeFutbol:["CanchaDeFutbol.png", "Cancha.png"],
+    casa:["Casa.png"],
+    centroComercial:["CentroComercial.png", "Mall.png"],
+    cine:["Cine.png"],
+    clinica:["Clinica.png", "Clínica.png"],
+    colegio:["Colegio.png"],
+    correo:["Correo.png", "Correos.png"],
+    escuela:["Escuela.png"],
+    estacionBomberos:["EstacionBomberos.png", "EstaciónBomberos.png"],
+    estacionPolicia:["EstacionPolicia.png", "EstaciónPolicia.png", "Policia.png"],
+    estacionTren:["EstacionTren.png", "EstaciónTren.png"],
+    farmacia:["Farmacia.png"],
+    floristeria:["Floristeria.png", "Floristería.png"],
+    gasolinera:["Gasolinera.png"],
+    gimnasio:["Gimnasio.png"],
+    heladeria:["Heladeria.png", "Heladería.png", "Heraderia.png"],
+    hospital:["Hospital.png"],
+    iglesia:["Iglesia.png"],
+    jugueteria:["Jugueteria.png", "Juguetería.png", "Jugeteria.png"],
+    libreria:["Libreria.png", "Librería.png"],
+    mercado:["Mercado.png"],
+    municipalidad:["Municipalidad.png"],
+    museo:["Museo.png"],
+    panaderia:["Panaderia.png", "Panadería.png"],
+    paradaBus:["ParadaBus.png"],
+    parque:["Parque.png"],
+    piscina:["Piscina.png"],
+    restaurante:["Restaurante.png"],
+    supermercado:["Supermercado.png"],
+    tallerMecanico:["TallerMecanico.png", "TallerMecánico.png"],
+    teatro:["Teatro.png"],
+    terminalAutoBus:["TerminalAutoBus.png", "TerminalAutobus.png", "TerminalBus.png"],
+    tiendaMascotas:["TiendaMascotas.png", "TiendaMascota.png"],
+    veterinaria:["Veterinaria.png"],
+    zapateria:["Zapatería.png", "Zapateria.png"],
+    zoologico:["Zoologico.png", "Zoológico.png", "Zoo.png"]
+  };
+
+  function placeIconSvg(key){
+    const p = PLACES[key];
+    const roofTop = p.steeple ? `<polygon points="-2.4,-30 2.4,-30 2.4,-24 -2.4,-24" fill="${p.roof}"/>` : "";
+    return `<svg viewBox="0 0 60 66" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
+      ${roofTop}
+      <polygon points="4,26 30,6 56,26" fill="${p.roof}" stroke="#153252" stroke-width="2.4" stroke-linejoin="round"/>
+      <rect x="7" y="25" width="46" height="35" rx="7" fill="${p.color}" stroke="#153252" stroke-width="2.4"/>
+      <rect x="23" y="43" width="14" height="17" rx="2" fill="#ffffff" stroke="#153252" stroke-width="1.8"/>
+      <circle cx="30" cy="33" r="11" fill="#ffffff" stroke="#153252" stroke-width="1.8"/>
+      <g transform="translate(30,33)">${GLYPHS[p.glyph](p.roof)}</g>
+    </svg>`;
+  }
+
+  // Crea el <img> real apuntando al PNG del lugar. Si no existe, cae
+  // automáticamente al dibujo SVG de respaldo (la "construcción" que ya
+  // conocemos). container debe ser el elemento con clase .placeIcon.
+  function renderPlaceVisual(container, key){
+    const img = document.createElement("img");
+    const files = PLACE_FILE[key] || [];
+    const candidates = (Array.isArray(files) ? files : [files]).filter(Boolean);
+    let index = 0;
+    img.alt = placeLabel(key);
+    img.draggable = false;
+
+    function tryNext(){
+      if (index < candidates.length){
+        img.src = candidates[index++];
+      } else {
+        container.innerHTML = placeIconSvg(key);
+      }
+    }
+
+    img.onerror = tryNext;
+    container.appendChild(img);
+    tryNext();
+  }
+
+  function shuffledPlaces(seed){
+    const arr = PLACE_ORDER.slice();
+    let s = seed;
+    for (let i=arr.length-1;i>0;i--){
+      s = (s*9301+49297) % 233280;
+      const j = Math.floor((s/233280)*(i+1));
+      [arr[i],arr[j]] = [arr[j],arr[i]];
+    }
+    return arr;
+  }
+
+  /* =========================================================
+     ROSA DE LOS VIENTOS (N, S, E, O) — usa los mismos colores
+     que los bloques de dirección, para reforzar la asociación.
+  ========================================================= */
+  function compassRoseSvg(lang=getLanguage()){
+    return `<svg viewBox="0 0 100 100" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="46" fill="none" stroke="#153252" stroke-width="3"/>
+      <polygon points="50,8 58,40 50,32 42,40" fill="#2563eb" stroke="#153252" stroke-width="2" stroke-linejoin="round"/>
+      <polygon points="50,92 58,60 50,68 42,60" fill="#ea580c" stroke="#153252" stroke-width="2" stroke-linejoin="round"/>
+      <polygon points="92,50 60,58 68,50 60,42" fill="#16a34a" stroke="#153252" stroke-width="2" stroke-linejoin="round"/>
+      <polygon points="8,50 40,58 32,50 40,42" fill="#9333ea" stroke="#153252" stroke-width="2" stroke-linejoin="round"/>
+      <circle cx="50" cy="50" r="6" fill="#153252"/>
+      <text x="50" y="21" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="13" fill="#153252">N</text>
+      <text x="50" y="86" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="13" fill="#153252">S</text>
+      <text x="82" y="54" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="13" fill="#153252">E</text>
+      <text x="18" y="54" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="13" fill="#153252">${lang === "en" ? "W" : "O"}</text>
+    </svg>`;
+  }
+
+  const COMPASS_FILES = [
+    "Rosa.png",
+    "rosa.png",
+    "Rosa_transparente.png",
+    "rosa_de_los_vientos_brillante.png",
+    "rosa_de_los_vientos_colorida.png",
+    "brújula_ilustrada_en_colores_vibrantes.png",
+    "brújula_colorida_y_moderna.png"
+  ];
+
+  const COMPASS_FILES_EN = [
+    "CompassRose.png",
+    "Compass_Rose.png",
+    "compassRose.png",
+    "compass_rose.png"
+  ];
+
+  // Igual que renderPlaceVisual pero para la rosa de los vientos.
+  // Prueba varios nombres de archivo y, si no encuentra ninguno, usa un SVG sin fondo blanco.
+  function renderCompassVisual(container){
+    if (getLanguage() === "en"){
+      renderImageCandidates(container, COMPASS_FILES_EN, "Compass rose", compassRoseSvg("en"));
+      return;
+    }
+    renderImageCandidates(container, COMPASS_FILES, "Rosa de los vientos", compassRoseSvg("es"));
+  }
+
+  const SPECIAL_ASSET_FILES = {
+    inicio:["Inicio.png", "inicio.png"],
+    meta:["bandera.png", "Bandera.png"],
+    carro:["carro.png", "Carro.png"],
+    persona:["persona.png", "Persona.png"]
+  };
+
+  function renderImageCandidates(container, candidates, alt, fallbackHtml){
+    const img = document.createElement("img");
+    const files = (Array.isArray(candidates) ? candidates : [candidates]).filter(Boolean);
+    let index = 0;
+    img.alt = alt || "Imagen";
+    img.draggable = false;
+    function tryNext(){
+      if (index < files.length){
+        img.src = files[index++];
+      } else {
+        container.innerHTML = fallbackHtml;
+      }
+    }
+    img.onerror = tryNext;
+    container.appendChild(img);
+    tryNext();
+  }
+
+  function startPointSvg(){
+    return `<svg viewBox="0 0 100 100" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50 8 C33 8 20 21 20 38 c0 22 24 45 30 54 c6-9 30-32 30-54 C80 21 67 8 50 8z" fill="#22c55e" stroke="#153252" stroke-width="4"/>
+      <circle cx="50" cy="38" r="14" fill="#ffffff" stroke="#153252" stroke-width="3"/>
+      <circle cx="50" cy="38" r="7" fill="#22c55e"/>
+    </svg>`;
+  }
+
+  function goalFlagSvg(){
+    return `<svg viewBox="0 0 100 100" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <line x1="25" y1="14" x2="25" y2="86" stroke="#153252" stroke-width="6" stroke-linecap="round"/>
+      <path d="M28 18 H77 L62 34 L77 50 H28 Z" fill="#ef4444" stroke="#153252" stroke-width="3" stroke-linejoin="round"/>
+      <rect x="12" y="84" width="28" height="8" rx="4" fill="#153252"/>
+    </svg>`;
+  }
+
+  function travelerFallbackSvg(mode){
+    if (mode === "persona") {
+      return `<svg viewBox="0 0 100 100" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="18" r="11" fill="#fbbf24" stroke="#153252" stroke-width="4"/>
+        <path d="M50 32 L50 62" stroke="#153252" stroke-width="6" stroke-linecap="round"/>
+        <path d="M34 44 L50 36 L66 48" stroke="#153252" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M50 62 L35 88" stroke="#153252" stroke-width="6" stroke-linecap="round"/>
+        <path d="M50 62 L68 86" stroke="#153252" stroke-width="6" stroke-linecap="round"/>
+      </svg>`;
+    }
+    return carSvg();
+  }
+
+  function renderTravelerVisual(container, mode){
+    const key = mode === "persona" ? "persona" : "carro";
+    renderImageCandidates(container, SPECIAL_ASSET_FILES[key], key === "persona" ? (getLanguage()==="en" ? "Person" : "Persona") : (getLanguage()==="en" ? "Car" : "Carro"), travelerFallbackSvg(key));
+  }
+
+  function renderStartVisual(container){
+    renderImageCandidates(container, SPECIAL_ASSET_FILES.inicio, getLanguage()==="en" ? "Start" : "Inicio", startPointSvg());
+  }
+
+  function renderGoalVisual(container){
+    renderImageCandidates(container, SPECIAL_ASSET_FILES.meta, getLanguage()==="en" ? "Destination" : "Meta", goalFlagSvg());
+  }
+
+  /* =========================================================
+     ESTADO
+  ========================================================= */
+  const STORAGE_KEY = "recorridoCarro.config.v4";
+  const CLAVE_NOMBRE = "nombreNinoGabrielApps";
+  const DEFAULT_SETTINGS = {cols:5, rows:5, streetLength:100, blocked:1, missing:1, playerName:"", travelMode:"carro", goalPlacement:"random", language:"es", voiceURI:"", autoSpeak:true, specialHelp:false, movementVoice:false};
+
+  const state = {
+    playerName:"",
+    currentLevelData:null,
+    currentSettings:{...DEFAULT_SETTINGS},
+    program:[],           // {id, dir, dist}
+    paletteDist:{N:100,S:100,E:100,W:100},
+    running:false,
+    idSeq:1,
+    compassPos:{left:88, top:14}, // % dentro del mapa; se recuerda al arrastrarla
+    routeCount:0,
+    feedbackCycle:0
+  };
+
+  let dragInfo = null; // {mode:'new'|'reorder', dir?, dist?, id?, ghost}
+
+  const $ = (sel, root) => (root||document).querySelector(sel);
+  const $$ = (sel, root) => Array.from((root||document).querySelectorAll(sel));
+
+  const I18N = {
+    es:{
+      appTitle:"🚗 Programa el Recorrido del Carro", appTitleWalking:"🚶 Programa el Recorrido de la Persona", heroTitle:"¡Ayuda al carrito a llegar a su destino!", heroTitleWalking:"¡Ayuda a la persona a llegar caminando a su destino!",
+      heroText:"Arma un programa con bloques de Norte, Sur, Este y Oeste, ¡y guía al carro por las calles del croquis!",
+      yourName:"Tu nombre:", namePlaceholder:"Escribe aquí...", setupTitle:"Configura el recorrido",
+      setupIntro:"Escoge desde el inicio el tamaño del croquis, la distancia de cada calle y la dificultad. La última configuración queda guardada automáticamente.",
+      setupMascot:"🚦 Reto personalizado", cols:"Columnas de intersecciones", colsHelp:"Más columnas = croquis más ancho.",
+      rows:"Filas de intersecciones", rowsHelp:"Más filas = croquis más alto.", street:"Distancia de cada calle",
+      street100:"Calles de 100 m", street50:"Calles de 50 m", streetHelp:"En calles de 50 m, un bloque de 50 m avanza hasta la siguiente intersección.",
+      blocked:"Calles cerradas", blockedHelp:"Se ven con vallas y no se puede pasar.", missing:"Calles inexistentes",
+      missingHelp:"No se dibujan. Si se intenta avanzar por ahí, se choca con el lugar cercano.", travel:"Forma de desplazarse",
+      byCar:"En carro", walking:"Caminando", travelHelp:"Usa <strong>carro.png</strong> para el carro o <strong>persona.png</strong> para caminar.",
+      language:"Idioma", languageHelp:"Cambia todos los textos y las indicaciones verbales.", voice:"Voz de lectura",
+      voiceDefault:"Voz predeterminada del navegador", voiceHelp:"Las voces disponibles dependen del dispositivo y del navegador.",
+      autoSpeak:"Leer automáticamente cada nuevo destino", specialHelp:"Mostrar la ruta mientras se agregan bloques", specialHelpHelp:"Dibuja una guía sobre las calles para aprender cómo se construye el programa.", movementVoice:"Leer cada movimiento durante el recorrido", movementVoiceHelp:"Por ejemplo: «Al norte, 200 metros».", goalPlacement:"Ubicación de la meta", goalRandom:"Variar automáticamente",
+      goalIntersection:"En una intersección", goalFront:"Frente al lugar, a 50 m de la última intersección",
+      goalHelp:"Los destinos cambian automáticamente. En el modo «frente al lugar», la bandera se coloca un poco dentro del establecimiento, en el costado indicado; el recorrido termina a 50 m de la última intersección.",
+      tipNS:"🟦 Norte y Sur", tipEW:"🟩 Este y Oeste", tipProgram:"🚗 Programa antes de ejecutar",
+      start:"Crear y empezar recorrido", startWalking:"Crear y empezar caminando", newChallenge:"Crear reto nuevo", blocksProgram:"Bloques y programa",
+      availableBlocks:"Bloques disponibles (arrástralos)", yourProgram:"Tu programa", run:"▶ Ejecutar", undo:"↩ Quitar", clear:"🗑 Borrar",
+      footer:"Hecho para practicar orientación, programación de rutas y distancias de 50 m o 100 m 🧭", familyFooter:"Aplicación creada para Gabriel por su familia, con la ayuda de la IA.", read:"🔊 Leer indicación",
+      customMode:"🧭 Modo personalizado", player:"Jugador", settings:"🏠 Configuración", route:"Ruta", destination:"Destino",
+      sideOfPlace:"Costado del lugar", cornerOfPlace:"Esquina del lugar", streets:"Calles", nextDestination:"➡️ Siguiente destino",
+      repeatRoute:"🔁 Repetir esta ruta", config:"⚙️ Configuración", completed:"¡Recorrido completado!",
+      noVoice:"La lectura de voz no está disponible en este navegador.", exactDestination:"La bandera señala el punto exacto de llegada.",
+      north:"norte", south:"sur", east:"este", west:"oeste", northwest:"noroeste", northeast:"noreste", southwest:"suroeste", southeast:"sureste",
+      N:"Norte", S:"Sur", E:"Este", W:"Oeste"
+    },
+    en:{
+      appTitle:"🚗 Program the Car's Route", appTitleWalking:"🚶 Program the Person's Route", heroTitle:"Help the car reach its destination!", heroTitleWalking:"Help the person walk to their destination!",
+      heroText:"Build a program with North, South, East, and West blocks, and guide the traveler through the map streets!",
+      yourName:"Your name:", namePlaceholder:"Type here...", setupTitle:"Set up the route",
+      setupIntro:"Choose the map size, street length, and difficulty. Your latest settings are saved automatically.",
+      setupMascot:"🚦 Custom challenge", cols:"Intersection columns", colsHelp:"More columns make a wider map.",
+      rows:"Intersection rows", rowsHelp:"More rows make a taller map.", street:"Length of each street",
+      street100:"100 m streets", street50:"50 m streets", streetHelp:"On 50 m streets, a 50 m block moves to the next intersection.",
+      blocked:"Closed streets", blockedHelp:"They are marked with barriers and cannot be used.", missing:"Missing streets",
+      missingHelp:"They are not drawn. Trying to move there causes a collision with the nearby place.", travel:"Travel mode",
+      byCar:"By car", walking:"Walking", travelHelp:"Use <strong>carro.png</strong> for the car or <strong>persona.png</strong> for walking.",
+      language:"Language", languageHelp:"Changes all text and spoken directions.", voice:"Reading voice",
+      voiceDefault:"Browser default voice", voiceHelp:"Available voices depend on the device and browser.",
+      autoSpeak:"Read each new destination automatically", specialHelp:"Show the route while adding blocks", specialHelpHelp:"Draws a guide over the streets to learn how the program is built.", movementVoice:"Read each movement during the route", movementVoiceHelp:"For example: “North, 200 meters”.", goalPlacement:"Destination position", goalRandom:"Change automatically",
+      goalIntersection:"At an intersection", goalFront:"In front of the place, 50 m from the last intersection",
+      goalHelp:"Destinations change automatically. In front-of-place mode, the flag is placed slightly inside the building on the indicated side; the route ends 50 m from the last intersection.",
+      tipNS:"🟦 North and South", tipEW:"🟩 East and West", tipProgram:"🚗 Build the program before running it",
+      start:"Create and start route", startWalking:"Create and start walking", newChallenge:"Create new challenge", blocksProgram:"Blocks and program",
+      availableBlocks:"Available blocks (drag them)", yourProgram:"Your program", run:"▶ Run", undo:"↩ Remove", clear:"🗑 Clear",
+      footer:"Made to practice orientation, route programming, and distances of 50 m or 100 m 🧭", familyFooter:"Made to support Gabriel by his family with the help of AI", read:"🔊 Read direction",
+      customMode:"🧭 Custom mode", player:"Player", settings:"🏠 Settings", route:"Route", destination:"Destination",
+      sideOfPlace:"Side of the place", cornerOfPlace:"Corner of the place", streets:"Streets", nextDestination:"➡️ Next destination",
+      repeatRoute:"🔁 Repeat this route", config:"⚙️ Settings", completed:"Route completed!",
+      noVoice:"Speech is not available in this browser.", exactDestination:"The flag marks the exact destination point.",
+      north:"north", south:"south", east:"east", west:"west", northwest:"northwest", northeast:"northeast", southwest:"southwest", southeast:"southeast",
+      N:"North", S:"South", E:"East", W:"West"
+    }
+  };
+
+  const PLACE_LABELS_EN = {
+    acuario:"Aquarium", banco:"Bank", biblioteca:"Library", cafeteria:"Café", canchaDeFutbol:"Soccer field", casa:"House",
+    centroComercial:"Shopping center", cine:"Movie theater", clinica:"Clinic", colegio:"High school", correo:"Post office",
+    escuela:"School", estacionBomberos:"Fire station", estacionPolicia:"Police station", estacionTren:"Train station",
+    farmacia:"Pharmacy", floristeria:"Flower shop", gasolinera:"Gas station", gimnasio:"Gym", heladeria:"Ice cream shop",
+    hospital:"Hospital", iglesia:"Church", jugueteria:"Toy store", libreria:"Bookstore", mercado:"Market",
+    municipalidad:"City hall", museo:"Museum", panaderia:"Bakery", paradaBus:"Bus stop", parque:"Park", piscina:"Swimming pool",
+    restaurante:"Restaurant", supermercado:"Supermarket", tallerMecanico:"Auto repair shop", teatro:"Theater",
+    terminalAutoBus:"Bus terminal", tiendaMascotas:"Pet store", veterinaria:"Veterinary clinic", zapateria:"Shoe store", zoologico:"Zoo"
+  };
+
+  function getLanguage(){ return state.currentSettings?.language === "en" ? "en" : "es"; }
+  function tr(key){ return I18N[getLanguage()]?.[key] ?? I18N.es[key] ?? key; }
+  function setText(id, value){ const el=$("#"+id); if(el) el.textContent=value; }
+  function setHtml(id, value){ const el=$("#"+id); if(el) el.innerHTML=value; }
+  function placeLabel(placeKey){ return getLanguage()==="en" ? (PLACE_LABELS_EN[placeKey] || PLACES[placeKey]?.label || "Destination") : (PLACES[placeKey]?.label || "Destino"); }
+  function directionLabel(dir){ return tr(dir); }
+  function sideName(side){ const key={top:"north",bottom:"south",left:"west",right:"east"}[side] || ""; return tr(key); }
+
+  function updatePrimaryActionButtons(walking=state.currentSettings.travelMode==="persona"){
+    const startButton=$("#startCustomBtn");
+    const randomButton=$("#randomizeBtn");
+    if (startButton) startButton.innerHTML=`<span class="primaryActionIcon">${walking ? "🚶" : "🚗"}</span><span>${walking ? tr("startWalking") : tr("start")}</span>`;
+    if (randomButton) randomButton.innerHTML=`<span class="primaryActionIcon">🎲</span><span>${tr("newChallenge")}</span>`;
+  }
+
+  function applyLanguage(){
+    const lang=getLanguage();
+    const walking=state.currentSettings.travelMode==="persona";
+    document.documentElement.lang=lang;
+    document.title=(walking ? tr("appTitleWalking") : tr("appTitle")).replace(/^[🚗🚶]\s*/,"");
+    setText("appTitle",walking ? tr("appTitleWalking") : tr("appTitle")); setText("heroTitle",walking ? tr("heroTitleWalking") : tr("heroTitle")); setText("heroText",tr("heroText"));
+    setText("playerNameLabel",tr("yourName")); $("#playerNameInput").placeholder=tr("namePlaceholder");
+    setText("setupTitle",tr("setupTitle")); setText("setupIntro",tr("setupIntro")); setText("setupMascot",tr("setupMascot"));
+    setText("colsLabel",tr("cols")); setText("colsHelp",tr("colsHelp")); setText("rowsLabel",tr("rows")); setText("rowsHelp",tr("rowsHelp"));
+    setText("streetLabel",tr("street")); setText("streetHelp",tr("streetHelp"));
+    $("#streetLengthSelect option[value='100']").textContent=tr("street100"); $("#streetLengthSelect option[value='50']").textContent=tr("street50");
+    setText("blockedLabel",tr("blocked")); setText("blockedHelp",tr("blockedHelp")); setText("missingLabel",tr("missing")); setText("missingHelp",tr("missingHelp"));
+    setText("travelLabel",tr("travel")); setHtml("travelHelp",tr("travelHelp"));
+    $("#travelModeSelect option[value='carro']").textContent=tr("byCar"); $("#travelModeSelect option[value='persona']").textContent=tr("walking");
+    setText("languageLabel",tr("language")); setText("languageHelp",tr("languageHelp")); setText("voiceLabel",tr("voice")); setText("voiceHelp",tr("voiceHelp")); setText("autoSpeakLabel",tr("autoSpeak"));
+    setText("specialHelpLabel",tr("specialHelp")); setText("specialHelpHelp",tr("specialHelpHelp"));
+    setText("movementVoiceLabel",tr("movementVoice")); setText("movementVoiceHelp",tr("movementVoiceHelp"));
+    setText("goalPlacementLabel",tr("goalPlacement")); setText("goalPlacementHelp",tr("goalHelp"));
+    $("#goalPlacementSelect option[value='random']").textContent=tr("goalRandom"); $("#goalPlacementSelect option[value='intersection']").textContent=tr("goalIntersection"); $("#goalPlacementSelect option[value='front']").textContent=tr("goalFront");
+    setText("tipNS",tr("tipNS")); setText("tipEW",tr("tipEW")); setText("tipProgram",tr("tipProgram"));
+    updatePrimaryActionButtons(walking); setText("blocksProgramTitle",tr("blocksProgram"));
+    setText("availableBlocksLabel",tr("availableBlocks")); setText("yourProgramLabel",tr("yourProgram")); setText("runBtn",tr("run")); setText("undoBtn",tr("undo")); setText("clearBtn",tr("clear"));
+    setText("footerNote",tr("footer")); setText("familyNote",tr("familyFooter")); setText("readInstructionBtn",tr("read"));
+    ["N","S","E","W"].forEach(dir=>{ DIR_INFO[dir].label=directionLabel(dir); });
+    populateVoiceOptions(); renderTopbar();
+    if (state.currentLevelData && !isHome()){
+      refreshCurrentRouteTexts();
+      renderMap(state.currentLevelData);
+    }
+  }
+
+  function populateVoiceOptions(){
+    const select=$("#voiceSelect");
+    if (!select) return;
+    const previous=state.currentSettings.voiceURI || select.value || "";
+    const voices=(window.speechSynthesis?.getVoices?.() || []);
+    const langPrefix=getLanguage()==="en" ? "en" : "es";
+    const preferred=voices.filter(v=>(v.lang||"").toLowerCase().startsWith(langPrefix));
+    const list=preferred.length ? preferred : voices;
+    select.innerHTML=`<option value="">${tr("voiceDefault")}</option>` + list.map(v=>`<option value="${escapeHtml(v.voiceURI)}">${escapeHtml(v.name)} — ${escapeHtml(v.lang||"")}</option>`).join("");
+    if ([...select.options].some(o=>o.value===previous)) select.value=previous;
+    else select.value="";
+  }
+
+  function speakCurrentInstruction(){
+    if (!state.currentLevelData) return;
+    if (!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)){
+      showFeedback(tr("noVoice"),false); return;
+    }
+    const text=buildSpokenInstruction(state.currentLevelData);
+    window.speechSynthesis.cancel();
+    const utterance=new SpeechSynthesisUtterance(text);
+    utterance.lang=getLanguage()==="en" ? "en-US" : "es-CR";
+    const voices=window.speechSynthesis.getVoices();
+    const selected=voices.find(v=>v.voiceURI===state.currentSettings.voiceURI);
+    if (selected) utterance.voice=selected;
+    utterance.rate=.9; utterance.pitch=1.02; utterance.volume=1;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function speakFeedback(text){
+    return new Promise(resolve=>{
+      if (!state.currentSettings.autoSpeak) { resolve(); return; }
+      if (!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) { resolve(); return; }
+      window.speechSynthesis.cancel();
+      const utterance=new SpeechSynthesisUtterance(text.replace(/[🎉🧱🚧🤔]/gu,""));
+      utterance.lang=getLanguage()==="en" ? "en-US" : "es-CR";
+      const voices=window.speechSynthesis.getVoices();
+      const selected=voices.find(v=>v.voiceURI===state.currentSettings.voiceURI);
+      if (selected) utterance.voice=selected;
+      utterance.rate=.9; utterance.pitch=1.04; utterance.volume=1;
+      utterance.onend=resolve;
+      utterance.onerror=resolve;
+      window.speechSynthesis.speak(utterance);
+    });
+  }
+
+  function speakMovementStep(dir,dist){
+    if (!state.currentSettings.movementVoice) return null;
+    if (!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) return null;
+    const text=getLanguage()==="en"
+      ? `${directionLabel(dir)}, ${dist} meters.`
+      : `Al ${tr({N:"north",S:"south",E:"east",W:"west"}[dir])}, ${dist} metros.`;
+    const utterance=new SpeechSynthesisUtterance(text);
+    utterance.lang=getLanguage()==="en" ? "en-US" : "es-CR";
+    const voices=window.speechSynthesis.getVoices();
+    const selected=voices.find(v=>v.voiceURI===state.currentSettings.voiceURI);
+    if (selected) utterance.voice=selected;
+    utterance.rate=.92; utterance.pitch=1.02; utterance.volume=1;
+    let finished=false;
+    let finishSpeech;
+    const promise=new Promise(resolve=>{ finishSpeech=resolve; });
+    const safetyTimer=setTimeout(()=>{
+      if (!finished){ finished=true; finishSpeech(); }
+    },12000);
+    const finish=()=>{
+      if (finished) return;
+      finished=true;
+      clearTimeout(safetyTimer);
+      finishSpeech();
+    };
+    utterance.onend=finish;
+    utterance.onerror=finish;
+    window.speechSynthesis.speak(utterance);
+    return {promise,isFinished:()=>finished};
+  }
+
+  function edgeKey(a,b){
+    const p1 = a.x*100+a.y, p2 = b.x*100+b.y;
+    return p1<p2 ? `${a.x},${a.y}-${b.x},${b.y}` : `${b.x},${b.y}-${a.x},${a.y}`;
+  }
+
+  function levelBlockedSet(level){
+    const s = new Set();
+    level.blocked.forEach(([a,b])=>{
+      s.add(edgeKey({x:a[0],y:a[1]},{x:b[0],y:b[1]}));
+    });
+    (level.missing||[]).forEach(([a,b])=>{
+      s.add(edgeKey({x:a[0],y:a[1]},{x:b[0],y:b[1]}));
+    });
+    return s;
+  }
+
+  function levelMissingSet(level){
+    const s = new Set();
+    (level.missing||[]).forEach(([a,b])=>{
+      s.add(edgeKey({x:a[0],y:a[1]},{x:b[0],y:b[1]}));
+    });
+    return s;
+  }
+
+  function levelClosedSet(level){
+    const s = new Set();
+    (level.blocked||[]).forEach(([a,b])=>{
+      s.add(edgeKey({x:a[0],y:a[1]},{x:b[0],y:b[1]}));
+    });
+    return s;
+  }
+
+  function blockCellKey(x,y){ return `${x},${y}`; }
+
+  function assignBlockPlaces(level){
+    const clampCell = (v, max) => Math.min(Math.max(Math.round(v), 0), max);
+    const fallbackGoalCell = {
+      x: clampCell(level.goal.x < (level.cols-1)/2 ? 0 : level.cols-2, level.cols-2),
+      y: clampCell(level.goal.y < (level.rows-1)/2 ? 0 : level.rows-2, level.rows-2)
+    };
+    const goalCell = level.goalCell || fallbackGoalCell;
+    const placeList = shuffledPlaces(level.placeSeed || (level.cols*13 + level.rows*7)).filter(k => k !== level.place);
+    const blockPlaces = {};
+    let pi = 0;
+    for (let x=0; x<level.cols-1; x++){
+      for (let y=0; y<level.rows-1; y++){
+        const placeKey = (x===goalCell.x && y===goalCell.y)
+          ? level.place
+          : placeList[pi++ % placeList.length];
+        blockPlaces[blockCellKey(x,y)] = placeKey;
+      }
+    }
+    return blockPlaces;
+  }
+
+  function placeLabelForBlock(level, cell){
+    const fallback=getLanguage()==="en" ? "a place on the map" : "un lugar del croquis";
+    if (!cell) return fallback;
+    const map = level.blockPlaces || assignBlockPlaces(level);
+    const key = map[blockCellKey(cell.x, cell.y)];
+    return key ? placeLabel(key) : fallback;
+  }
+
+  function validBlockCell(level, cell){
+    return cell && cell.x>=0 && cell.x<level.cols-1 && cell.y>=0 && cell.y<level.rows-1;
+  }
+
+  function nearbyBlockCellsForEdge(level, edgeFrom, edgeTo){
+    const cells = [];
+    if (edgeFrom.y === edgeTo.y){
+      const x = Math.min(edgeFrom.x, edgeTo.x);
+      const y = edgeFrom.y;
+      cells.push({x, y});
+      cells.push({x, y:y-1});
+    } else {
+      const x = edgeFrom.x;
+      const y = Math.min(edgeFrom.y, edgeTo.y);
+      cells.push({x, y});
+      cells.push({x:x-1, y});
+    }
+    return cells.filter(c => validBlockCell(level, c));
+  }
+
+  function collisionPlaceForEdge(level, edgeFrom, edgeTo){
+    const cell = nearbyBlockCellsForEdge(level, edgeFrom, edgeTo)[0];
+    return placeLabelForBlock(level, cell);
+  }
+
+  function collisionPlaceForBoundary(level, pos, info){
+    const px = Math.max(0, Math.min(level.cols-2, Math.floor(pos.x + (info.dx>0 ? 0 : -0.001))));
+    const py = Math.max(0, Math.min(level.rows-2, Math.floor(pos.y + (info.dy>0 ? 0 : -0.001))));
+    return placeLabelForBlock(level, {x:px, y:py});
+  }
+
+  /* =========================================================
+     TOPBAR
+  ========================================================= */
+  function renderTopbar(){
+    const right = $("#topbarRight");
+    if (!right) return;
+    if (isHome()){
+      right.innerHTML = `<span class="pill">${tr("customMode")}</span>`;
+    } else {
+      right.innerHTML = `
+        <span class="pill">${state.playerName ? "👦 "+escapeHtml(state.playerName) : tr("player")}</span>
+        <button class="ghostBtn" id="menuBtn">${tr("settings")}</button>
+      `;
+      $("#menuBtn").addEventListener("click", goHome);
+    }
+  }
+
+  function isHome(){ return !$("#homeScreen").classList.contains("hidden"); }
+
+  function escapeHtml(s){
+    return s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  }
+
+  /* =========================================================
+     HOME SCREEN
+  ========================================================= */
+  function goHome(){
+    $("#gameScreen").classList.add("hidden");
+    $("#homeScreen").classList.remove("hidden");
+    applyLanguage();
+    renderTopbar();
+    updateSetupSummary();
+  }
+
+  $("#playerNameInput").addEventListener("input", e => {
+  const nombre = guardarNombreCompartido(e.target.value);
+
+  state.playerName = nombre;
+  state.currentSettings.playerName = nombre;
+
+  saveSettings({
+    ...state.currentSettings,
+    playerName: nombre
+  });
+
+  renderTopbar();
+  });
+
+  /* =========================================================
+     GAME SCREEN
+  ========================================================= */
+  function clampNumber(value, min, max, fallback){
+    const n = parseInt(value, 10);
+    if (!Number.isFinite(n)) return fallback;
+    return Math.min(max, Math.max(min, n));
+  }
+
+  function loadSavedSettings(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return {...DEFAULT_SETTINGS};
+      const saved = JSON.parse(raw);
+      return {...DEFAULT_SETTINGS, ...saved};
+    } catch(err){
+      return {...DEFAULT_SETTINGS};
+    }
+  }
+
+  function saveSettings(settings){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+    } catch(err){
+      // Si el navegador bloquea localStorage, la aplicación sigue funcionando.
+    }
+  }
+  
+  function obtenerNombreDesdeIndex() {
+  try {
+    return (localStorage.getItem(CLAVE_NOMBRE) || "").trim();
+  } catch (error) {
+    return "";
+  }
+}
+
+function guardarNombreCompartido(nombre) {
+  const nombreLimpio = (nombre || "").trim();
+
+  if (nombreLimpio) {
+    try {
+      localStorage.setItem(CLAVE_NOMBRE, nombreLimpio);
+    } catch (error) {
+      // La aplicación sigue funcionando aunque localStorage esté bloqueado.
+    }
+  }
+
+  return nombreLimpio;
+}
+
+function cargarNombreDesdeIndex() {
+  const input = document.getElementById("playerNameInput");
+  const nombreGuardado = obtenerNombreDesdeIndex();
+
+  if (nombreGuardado) {
+    state.playerName = nombreGuardado;
+    state.currentSettings.playerName = nombreGuardado;
+
+    if (input) {
+      input.value = nombreGuardado;
+    }
+
+    saveSettings({
+      ...state.currentSettings,
+      playerName: nombreGuardado
+    });
+  }
+}
+
+  function applySettingsToForm(settings){
+    $("#colsInput").value = settings.cols;
+    $("#rowsInput").value = settings.rows;
+    $("#streetLengthSelect").value = settings.streetLength;
+    $("#blockedInput").value = settings.blocked;
+    $("#missingInput").value = settings.missing;
+    const modeSelect = $("#travelModeSelect");
+    modeSelect.value = settings.travelMode === "persona" ? "persona" : "carro";
+    const placementSelect = $("#goalPlacementSelect");
+    placementSelect.value = ["intersection","front","random"].includes(settings.goalPlacement) ? settings.goalPlacement : DEFAULT_SETTINGS.goalPlacement;
+    $("#languageSelect").value = settings.language === "en" ? "en" : "es";
+    $("#voiceSelect").value = settings.voiceURI || "";
+    $("#autoSpeakCheckbox").checked = settings.autoSpeak !== false;
+    $("#specialHelpCheckbox").checked = settings.specialHelp === true;
+    $("#movementVoiceCheckbox").checked = settings.movementVoice === true;
+    $("#playerNameInput").value = settings.playerName || "";
+    state.playerName = (settings.playerName || "").trim();
+    state.currentSettings = {...DEFAULT_SETTINGS, ...settings, language:settings.language === "en" ? "en" : "es"};
+  }
+
+  function readSettings(){
+    const cols = clampNumber($("#colsInput").value, 3, 8, 5);
+    const rows = clampNumber($("#rowsInput").value, 3, 8, 5);
+    let streetLength = clampNumber($("#streetLengthSelect").value, 50, 100, 100) === 50 ? 50 : 100;
+    const edgeCount = countEdges(cols, rows);
+    const safeMax = Math.max(0, Math.floor(edgeCount * 0.42));
+    let blocked = clampNumber($("#blockedInput").value, 0, safeMax, 1);
+    let missing = clampNumber($("#missingInput").value, 0, safeMax, 1);
+    if (blocked + missing > safeMax){
+      const overflow = blocked + missing - safeMax;
+      if (missing >= overflow) missing -= overflow;
+      else { blocked = Math.max(0, blocked - (overflow - missing)); missing = 0; }
+    }
+    const travelMode = $("#travelModeSelect").value === "persona" ? "persona" : "carro";
+    const selectedPlacement = $("#goalPlacementSelect").value || DEFAULT_SETTINGS.goalPlacement;
+    const goalPlacement = ["intersection","front","random"].includes(selectedPlacement) ? selectedPlacement : DEFAULT_SETTINGS.goalPlacement;
+    if (goalPlacement === "front" && streetLength !== 100){
+      streetLength = 100;
+    }
+    const playerName = $("#playerNameInput").value.trim();
+    const language = $("#languageSelect").value === "en" ? "en" : "es";
+    const voiceURI = $("#voiceSelect").value || "";
+    const autoSpeak = $("#autoSpeakCheckbox").checked;
+    const specialHelp = $("#specialHelpCheckbox").checked;
+    const movementVoice = $("#movementVoiceCheckbox").checked;
+    $("#colsInput").value = cols;
+    $("#rowsInput").value = rows;
+    $("#streetLengthSelect").value = streetLength;
+    $("#blockedInput").max = safeMax;
+    $("#missingInput").max = safeMax;
+    $("#blockedInput").value = blocked;
+    $("#missingInput").value = missing;
+    $("#travelModeSelect").value = travelMode;
+    $("#goalPlacementSelect").value = goalPlacement;
+    state.playerName = playerName;
+    state.currentSettings = {cols, rows, streetLength, blocked, missing, playerName, travelMode, goalPlacement, language, voiceURI, autoSpeak, specialHelp, movementVoice};
+    return state.currentSettings;
+  }
+
+  function updateSetupSummary(){
+    const s = readSettings();
+    updatePrimaryActionButtons(s.travelMode==="persona");
+    setText("appTitle",s.travelMode==="persona" ? tr("appTitleWalking") : tr("appTitle"));
+    document.title=(s.travelMode==="persona" ? tr("appTitleWalking") : tr("appTitle")).replace(/^[🚗🚶]\s*/,"");
+    setText("heroTitle",s.travelMode==="persona" ? tr("heroTitleWalking") : tr("heroTitle"));
+    const total = countEdges(s.cols, s.rows);
+    let summary;
+    if (getLanguage()==="en"){
+      const travelText=s.travelMode==="persona" ? "walking" : "by car";
+      const placementText=s.goalPlacement==="front" ? "destination in front of a place" : s.goalPlacement==="intersection" ? "destination at an intersection" : "variable destination position";
+      const stepHint=s.streetLength===50 ? "Each street is 50 m: a 50 m block reaches the next intersection." : "Each street is 100 m: a 50 m block reaches the middle of a block.";
+      summary=`${s.cols} × ${s.rows} map, travel ${travelText}, ${placementText}, ${s.streetLength} m streets, ${s.blocked} closed street${s.blocked===1?"":"s"}, and ${s.missing} missing street${s.missing===1?"":"s"}. The starting point and each destination are selected automatically. After completing a route, you can continue from the same point toward another place. ${stepHint} Possible street segments: ${total}.`;
+    } else {
+      const travelText = s.travelMode === "persona" ? "caminando" : "en carro";
+      const placementText = s.goalPlacement === "front" ? "meta frente al lugar" : s.goalPlacement === "intersection" ? "meta en una intersección" : "ubicación de la meta variable";
+      const stepHint = s.streetLength === 50 ? "Cada calle mide 50 m: un bloque de 50 m llega a la siguiente intersección." : "Cada calle mide 100 m: un bloque de 50 m llega a media cuadra.";
+      summary=`Croquis de ${s.cols} × ${s.rows}, recorrido ${travelText}, ${placementText}, calles de ${s.streetLength} m, ${s.blocked} ${s.blocked===1?"calle cerrada":"calles cerradas"} y ${s.missing} ${s.missing===1?"calle inexistente":"calles inexistentes"}. El punto de partida y cada destino se eligen automáticamente. Al completar una ruta, podrás continuar desde ese mismo punto hacia otro lugar. ${stepHint} Total de tramos posibles: ${total}.`;
+    }
+    $("#setupSummary").textContent=summary;
+    saveSettings(s);
+  }
+
+  function initSetupControls(){
+    applySettingsToForm(loadSavedSettings());
+    applyLanguage();
+    populateVoiceOptions();
+    ["#colsInput", "#rowsInput", "#streetLengthSelect", "#blockedInput", "#missingInput", "#travelModeSelect", "#goalPlacementSelect", "#voiceSelect", "#autoSpeakCheckbox", "#specialHelpCheckbox", "#movementVoiceCheckbox"].forEach(sel => {
+      const el = $(sel); if (!el) return;
+      el.addEventListener("input", updateSetupSummary);
+      el.addEventListener("change", updateSetupSummary);
+    });
+    $("#languageSelect").addEventListener("change", () => {
+      state.currentSettings.language=$("#languageSelect").value === "en" ? "en" : "es";
+      state.currentSettings.voiceURI="";
+      applyLanguage(); updateSetupSummary();
+    });
+    $("#voiceSelect").addEventListener("change", () => { state.currentSettings.voiceURI=$("#voiceSelect").value || ""; updateSetupSummary(); });
+    $("#readInstructionBtn").addEventListener("click", speakCurrentInstruction);
+    $("#startCustomBtn").addEventListener("click", () => startCustomLevel(false));
+    $("#randomizeBtn").addEventListener("click", () => startCustomLevel(true));
+    if ("speechSynthesis" in window) window.speechSynthesis.addEventListener?.("voiceschanged", populateVoiceOptions);
+    updateSetupSummary();
+  }
+
+  function countEdges(cols, rows){
+    return (cols-1)*rows + cols*(rows-1);
+  }
+
+  function allEdges(cols, rows){
+    const edges = [];
+    for (let y=0; y<rows; y++){
+      for (let x=0; x<cols-1; x++) edges.push([[x,y],[x+1,y]]);
+    }
+    for (let x=0; x<cols; x++){
+      for (let y=0; y<rows-1; y++) edges.push([[x,y],[x,y+1]]);
+    }
+    return edges;
+  }
+
+  function shuffleCopy(arr){
+    const a = arr.slice();
+    for (let i=a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]] = [a[j],a[i]];
+    }
+    return a;
+  }
+
+  function cornerPair(cols, rows){
+    const pairs = [
+      [{x:0,y:0},{x:cols-1,y:rows-1}],
+      [{x:cols-1,y:0},{x:0,y:rows-1}],
+      [{x:0,y:rows-1},{x:cols-1,y:0}],
+      [{x:cols-1,y:rows-1},{x:0,y:0}]
+    ];
+    return pairs[Math.floor(Math.random()*pairs.length)];
+  }
+
+  function adjacentBlockCellsForNode(node, cols, rows){
+    return [
+      {x:node.x-1,y:node.y-1}, {x:node.x,y:node.y-1},
+      {x:node.x-1,y:node.y},   {x:node.x,y:node.y}
+    ].filter(c => c.x>=0 && c.x<cols-1 && c.y>=0 && c.y<rows-1);
+  }
+
+  function edgeKeyFromArray(edge){
+    return edgeKey({x:edge[0][0],y:edge[0][1]},{x:edge[1][0],y:edge[1][1]});
+  }
+
+  function chooseIntersectionPlan(cols, rows){
+    const [start, goal] = cornerPair(cols, rows);
+    const cells = adjacentBlockCellsForNode(goal, cols, rows);
+    const goalCell = cells[Math.floor(Math.random()*cells.length)];
+    return {start, goal, pathGoal:goal, goalCell, reservedEdge:null, placement:"intersection"};
+  }
+
+  function chooseFrontPlan(cols, rows){
+    const cells = [];
+    for (let x=0; x<cols-1; x++){
+      for (let y=0; y<rows-1; y++) cells.push({x,y});
+    }
+    const goalCell = cells[Math.floor(Math.random()*cells.length)];
+    const sides = [
+      {name:"top", edge:[[goalCell.x,goalCell.y],[goalCell.x+1,goalCell.y]]},
+      {name:"bottom", edge:[[goalCell.x,goalCell.y+1],[goalCell.x+1,goalCell.y+1]]},
+      {name:"left", edge:[[goalCell.x,goalCell.y],[goalCell.x,goalCell.y+1]]},
+      {name:"right", edge:[[goalCell.x+1,goalCell.y],[goalCell.x+1,goalCell.y+1]]}
+    ];
+    const side = sides[Math.floor(Math.random()*sides.length)];
+    const a = {x:side.edge[0][0],y:side.edge[0][1]};
+    const b = {x:side.edge[1][0],y:side.edge[1][1]};
+    const pathGoal = Math.random()<.5 ? a : b;
+    const goal = {x:(a.x+b.x)/2, y:(a.y+b.y)/2};
+    const corners = [{x:0,y:0},{x:cols-1,y:0},{x:0,y:rows-1},{x:cols-1,y:rows-1}];
+    corners.sort((p,q) => (Math.abs(q.x-pathGoal.x)+Math.abs(q.y-pathGoal.y)) - (Math.abs(p.x-pathGoal.x)+Math.abs(p.y-pathGoal.y)));
+    const farthest = corners.filter(c => (Math.abs(c.x-pathGoal.x)+Math.abs(c.y-pathGoal.y)) === (Math.abs(corners[0].x-pathGoal.x)+Math.abs(corners[0].y-pathGoal.y)));
+    const start = farthest[Math.floor(Math.random()*farthest.length)];
+    return {start, goal, pathGoal, goalCell, reservedEdge:side.edge, placement:"front", frontSide:side.name};
+  }
+
+  function pathExists(cols, rows, start, goal, blockedLikeSet){
+    const q = [start];
+    const seen = new Set([`${start.x},${start.y}`]);
+    const dirs = [{x:1,y:0},{x:-1,y:0},{x:0,y:1},{x:0,y:-1}];
+    while(q.length){
+      const p = q.shift();
+      if (p.x===goal.x && p.y===goal.y) return true;
+      for (const d of dirs){
+        const n = {x:p.x+d.x, y:p.y+d.y};
+        if (n.x<0 || n.x>=cols || n.y<0 || n.y>=rows) continue;
+        const ek = edgeKey(p,n);
+        if (blockedLikeSet.has(ek)) continue;
+        const key = `${n.x},${n.y}`;
+        if (!seen.has(key)){ seen.add(key); q.push(n); }
+      }
+    }
+    return false;
+  }
+
+  function tryAddEdge(edge, targetList, blockedLikeSet, cols, rows, start, goal, reservedEdgeKey){
+    const a = {x:edge[0][0], y:edge[0][1]};
+    const b = {x:edge[1][0], y:edge[1][1]};
+    const ek = edgeKey(a,b);
+    if (ek === reservedEdgeKey || blockedLikeSet.has(ek)) return false;
+    blockedLikeSet.add(ek);
+    if (pathExists(cols, rows, start, goal, blockedLikeSet)){
+      targetList.push(edge);
+      return true;
+    }
+    blockedLikeSet.delete(ek);
+    return false;
+  }
+
+  const FEMININE_PLACES = new Set([
+    "biblioteca","cafeteria","canchaDeFutbol","clinica","escuela","estacionBomberos",
+    "estacionPolicia","estacionTren","farmacia","floristeria","gasolinera","heladeria",
+    "iglesia","jugueteria","libreria","municipalidad","panaderia","paradaBus","piscina",
+    "tiendaMascotas","terminalAutoBus","veterinaria","zapateria"
+  ]);
+
+  function placeWithArticle(placeKey){
+    const name=placeLabel(placeKey).toLowerCase();
+    if (getLanguage()==="en") return `the ${name}`;
+    return `${FEMININE_PLACES.has(placeKey) ? "la" : "el"} ${name}`;
+  }
+
+  function placeAfterDe(placeKey){
+    const name=placeLabel(placeKey).toLowerCase();
+    if (getLanguage()==="en") return `the ${name}`;
+    return FEMININE_PLACES.has(placeKey) ? `de la ${name}` : `del ${name}`;
+  }
+
+  function countText(n, singular, plural){ return `${n} ${n===1 ? singular : plural}`; }
+
+  function randomPlaceKey(excludeKey){
+    const keys = PLACE_ORDER.filter(key => key !== excludeKey);
+    return keys[Math.floor(Math.random()*keys.length)] || "panaderia";
+  }
+
+  const SIDE_NAMES = {top:"norte", bottom:"sur", left:"oeste", right:"este"};
+
+  function cornerNameForLevel(level){
+    const westEast=Math.abs(level.goal.x-level.goalCell.x)<.01 ? "west" : "east";
+    const northSouth=Math.abs(level.goal.y-level.goalCell.y)<.01 ? "north" : "south";
+    return tr(northSouth+westEast);
+  }
+
+  function sideInstruction(level){
+    if (level.goalPlacement === "front" && level.frontSide){
+      return getLanguage()==="en" ? `on the ${sideName(level.frontSide)} side of ${placeWithArticle(level.place)}` : `en el costado ${sideName(level.frontSide)} ${placeAfterDe(level.place)}`;
+    }
+    if (level.goalCell){
+      return getLanguage()==="en" ? `at the ${cornerNameForLevel(level)} corner of ${placeWithArticle(level.place)}` : `en la esquina ${cornerNameForLevel(level)} de ${placeWithArticle(level.place)}`;
+    }
+    return getLanguage()==="en" ? `next to ${placeWithArticle(level.place)}` : `junto a ${placeWithArticle(level.place)}`;
+  }
+
+  function buildSpokenInstruction(level){
+    const place=placeWithArticle(level.place);
+    if (getLanguage()==="en"){
+      const verb=level.travelMode==="persona" ? "Walk" : "Drive";
+      if (level.goalPlacement==="front" && level.frontSide) return `${verb} to the ${sideName(level.frontSide)} side of ${place}.`;
+      if (level.goalCell) return `${verb} to the ${cornerNameForLevel(level)} corner of ${place}.`;
+      return `${verb} to ${place}.`;
+    }
+    const verb=level.travelMode==="persona" ? "Camina" : "Conduce";
+    if (level.goalPlacement==="front" && level.frontSide) return `${verb} al costado ${sideName(level.frontSide)} ${placeAfterDe(level.place)}.`;
+    if (level.goalCell) return `${verb} a la esquina ${cornerNameForLevel(level)} de ${place}.`;
+    return `${verb} hasta ${place}.`;
+  }
+
+  function buildRouteStory(level){
+    return buildSpokenInstruction(level);
+    /* La configuracion se conserva internamente, pero ya no se muestra en la leyenda.
+    const instruction=buildSpokenInstruction(level);
+    const startName=level.startPlace ? placeWithArticle(level.startPlace) : (getLanguage()==="en" ? "a place on the map" : "un lugar del croquis");
+    let extra;
+    if (getLanguage()==="en"){
+      const intro=level.routeNumber>1 ? `You are now at ${startName}.` : `The route begins next to ${startName}.`;
+      const position=level.goalPlacement==="front" ? `${tr("exactDestination")} From the last intersection, travel 50 m to stop in front of the place.` : `${tr("exactDestination")}`;
+      const distance=level.unitLength===50 ? "Each street is 50 m." : "Each street is 100 m; use 50 m to travel half a block.";
+      const counts=`The map has ${level.cols} intersection columns and ${level.rows} intersection rows, ${level.blocked.length} closed street${level.blocked.length===1?"":"s"}, and ${level.missing.length} missing street${level.missing.length===1?"":"s"}.`;
+      const adjusted=level.adjusted ? ` The quantities were adjusted automatically to keep at least one possible route.` : "";
+      extra=`${intro} ${position} ${distance} ${counts}${adjusted}`;
+    } else {
+      const intro=level.routeNumber>1 ? `Ahora estás en ${startName}.` : `El recorrido comienza junto a ${startName}.`;
+      const position=level.goalPlacement==="front" ? `${tr("exactDestination")} Desde la última intersección, avanza 50 m para quedar frente al lugar.` : `${tr("exactDestination")}`;
+      const distance=level.unitLength===50 ? "Cada calle mide 50 m." : "Cada calle mide 100 m; puedes usar 50 m para avanzar media cuadra.";
+      const counts=`El croquis tiene ${level.cols} columnas y ${level.rows} filas de intersecciones, ${countText(level.blocked.length,"calle cerrada","calles cerradas")} y ${countText(level.missing.length,"calle inexistente","calles inexistentes")}.`;
+      const adjusted=level.adjusted ? ` Las cantidades se ajustaron automáticamente para conservar al menos un camino posible.` : "";
+      extra=`${intro} ${position} ${distance} ${counts}${adjusted}`;
+    }
+    return `${instruction} ${extra}`; */
+  }
+
+  function gridPointKey(p){ return `${Math.round(p.x*2)},${Math.round(p.y*2)}`; }
+
+  function isIntegerCoord(v){ return Math.abs(v-Math.round(v)) < .001; }
+
+  function routeStepAllowed(level, from, to){
+    if (to.x < -0.001 || to.x > level.cols-1+0.001 || to.y < -0.001 || to.y > level.rows-1+0.001) return false;
+    const dx = to.x-from.x, dy = to.y-from.y;
+    const maxStep = level.unitLength === 100 ? .501 : 1.001;
+    if (Math.abs(dx) > maxStep || Math.abs(dy) > maxStep || (Math.abs(dx)>.001 && Math.abs(dy)>.001)) return false;
+    // En la mitad de una calle solo se puede continuar por esa misma calle.
+    if (!isIntegerCoord(from.x) && Math.abs(dy)>.001) return false;
+    if (!isIntegerCoord(from.y) && Math.abs(dx)>.001) return false;
+    if (!isIntegerCoord(to.x) && Math.abs(dy)>.001) return false;
+    if (!isIntegerCoord(to.y) && Math.abs(dx)>.001) return false;
+    let a,b;
+    if (Math.abs(dx)>.001){
+      const ex = Math.floor(Math.min(from.x,to.x)+.001);
+      a={x:ex,y:Math.round(from.y)}; b={x:ex+1,y:Math.round(from.y)};
+    } else {
+      const ey = Math.floor(Math.min(from.y,to.y)+.001);
+      a={x:Math.round(from.x),y:ey}; b={x:Math.round(from.x),y:ey+1};
+    }
+    const unavailable = new Set([
+      ...(level.blocked||[]).map(edgeKeyFromArray),
+      ...(level.missing||[]).map(edgeKeyFromArray)
+    ]);
+    return !unavailable.has(edgeKey(a,b));
+  }
+
+  function routePathExists(level, start, goal){
+    const step = level.unitLength === 100 ? .5 : 1;
+    const q=[{x:start.x,y:start.y}];
+    const seen=new Set([gridPointKey(start)]);
+    const dirs=[[step,0],[-step,0],[0,step],[0,-step]];
+    while(q.length){
+      const p=q.shift();
+      if (Math.abs(p.x-goal.x)<.001 && Math.abs(p.y-goal.y)<.001) return true;
+      for (const [dx,dy] of dirs){
+        const n={x:Math.round((p.x+dx)*2)/2,y:Math.round((p.y+dy)*2)/2};
+        if (!routeStepAllowed(level,p,n)) continue;
+        const key=gridPointKey(n);
+        if (!seen.has(key)){ seen.add(key); q.push(n); }
+      }
+    }
+    return false;
+  }
+
+  function frontPlansForCell(cell){
+    return [
+      {frontSide:"top", goal:{x:cell.x+.5,y:cell.y}, reservedEdge:[[cell.x,cell.y],[cell.x+1,cell.y]]},
+      {frontSide:"bottom", goal:{x:cell.x+.5,y:cell.y+1}, reservedEdge:[[cell.x,cell.y+1],[cell.x+1,cell.y+1]]},
+      {frontSide:"left", goal:{x:cell.x,y:cell.y+.5}, reservedEdge:[[cell.x,cell.y],[cell.x,cell.y+1]]},
+      {frontSide:"right", goal:{x:cell.x+1,y:cell.y+.5}, reservedEdge:[[cell.x+1,cell.y],[cell.x+1,cell.y+1]]}
+    ];
+  }
+
+  function intersectionPlansForCell(cell){
+    return [
+      {goal:{x:cell.x,y:cell.y}}, {goal:{x:cell.x+1,y:cell.y}},
+      {goal:{x:cell.x,y:cell.y+1}}, {goal:{x:cell.x+1,y:cell.y+1}}
+    ];
+  }
+
+  function chooseNextDestinationPlan(level, placement){
+    const cells=[];
+    for (let x=0;x<level.cols-1;x++) for (let y=0;y<level.rows-1;y++) cells.push({x,y});
+    const candidates=shuffleCopy(cells).filter(cell => {
+      const key=level.blockPlaces?.[blockCellKey(cell.x,cell.y)];
+      return !(cell.x===level.goalCell?.x && cell.y===level.goalCell?.y) && key !== level.place;
+    });
+    for (const cell of candidates){
+      const plans = placement === "front" ? shuffleCopy(frontPlansForCell(cell)) : shuffleCopy(intersectionPlansForCell(cell));
+      for (const plan of plans){
+        if (Math.abs(plan.goal.x-level.goal.x)<.001 && Math.abs(plan.goal.y-level.goal.y)<.001) continue;
+        if (routePathExists(level, level.goal, plan.goal)){
+          return {...plan, goalCell:cell, placement};
+        }
+      }
+    }
+    return null;
+  }
+
+  function generateNextDestinationLevel(previous){
+    let placement = resolveGoalPlacement(state.currentSettings);
+    if (previous.unitLength !== 100) placement="intersection";
+    let plan=chooseNextDestinationPlan(previous,placement);
+    if (!plan && placement==="front"){
+      placement="intersection";
+      plan=chooseNextDestinationPlan(previous,placement);
+    }
+    if (!plan) return null;
+    const place=previous.blockPlaces[blockCellKey(plan.goalCell.x,plan.goalCell.y)] || randomPlaceKey(previous.place);
+    const next={
+      ...previous,
+      name:`Ruta ${previous.routeNumber+1} · nuevo destino`,
+      routeNumber:previous.routeNumber+1,
+      start:{x:previous.goal.x,y:previous.goal.y},
+      startPlace:previous.place,
+      place,
+      goal:{x:plan.goal.x,y:plan.goal.y},
+      pathGoal:{x:plan.goal.x,y:plan.goal.y},
+      goalCell:plan.goalCell,
+      goalPlacement:placement,
+      frontSide:plan.frontSide || null,
+      reservedEdge:plan.reservedEdge || null,
+      adjusted:false
+    };
+    next.story=buildRouteStory(next);
+    return next;
+  }
+
+  function resolveGoalPlacement(settings){
+    if (settings.goalPlacement === "front") return "front";
+    if (settings.goalPlacement === "intersection") return "intersection";
+    if (settings.streetLength !== 100) return "intersection";
+    return Math.random() < .5 ? "front" : "intersection";
+  }
+
+  function generateCustomLevel(settings){
+    const {cols, rows, blocked, missing, travelMode} = settings;
+    const place = randomPlaceKey();
+    let streetLength = settings.streetLength;
+    const resolvedPlacement = resolveGoalPlacement(settings);
+    if (resolvedPlacement === "front") streetLength = 100;
+    let best = null;
+
+    for (let attempt=0; attempt<140; attempt++){
+      const plan = resolvedPlacement === "front" ? chooseFrontPlan(cols, rows) : chooseIntersectionPlan(cols, rows);
+      const blockedLikeSet = new Set();
+      const missingList = [];
+      const blockedList = [];
+      const reservedEdgeKey = plan.reservedEdge ? edgeKeyFromArray(plan.reservedEdge) : null;
+      const edges = shuffleCopy(allEdges(cols, rows)).filter(edge => edgeKeyFromArray(edge) !== reservedEdgeKey);
+
+      for (const edge of edges){
+        if (missingList.length >= missing) break;
+        tryAddEdge(edge, missingList, blockedLikeSet, cols, rows, plan.start, plan.pathGoal, reservedEdgeKey);
+      }
+      for (const edge of shuffleCopy(edges)){
+        if (blockedList.length >= blocked) break;
+        tryAddEdge(edge, blockedList, blockedLikeSet, cols, rows, plan.start, plan.pathGoal, reservedEdgeKey);
+      }
+
+      const score = missingList.length + blockedList.length;
+      if (!best || score > best.score){
+        best = {...plan, missingList, blockedList, score};
+      }
+      if (missingList.length===missing && blockedList.length===blocked) break;
+    }
+
+    const fallbackPlan = resolvedPlacement === "front" ? chooseFrontPlan(cols, rows) : chooseIntersectionPlan(cols, rows);
+    const plan = best || {...fallbackPlan, missingList:[], blockedList:[], score:0};
+    const usedBlocked = plan.blockedList || [];
+    const usedMissing = plan.missingList || [];
+    const wasAdjusted = (usedBlocked.length !== blocked || usedMissing.length !== missing);
+
+    const level = {
+      name:`Ruta 1 · ${resolvedPlacement === "front" ? "meta frente al lugar" : "meta en intersección"}`,
+      routeNumber:1,
+      place,
+      travelMode,
+      goalPlacement:resolvedPlacement,
+      stars:1,
+      cols,
+      rows,
+      unitLength:streetLength,
+      start:plan.start,
+      goal:plan.goal,
+      pathGoal:plan.pathGoal,
+      goalCell:plan.goalCell,
+      frontSide:plan.frontSide || null,
+      reservedEdge:plan.reservedEdge || null,
+      placeSeed: Math.floor(Math.random()*1000000),
+      blocked:usedBlocked,
+      missing:usedMissing,
+      adjusted:wasAdjusted
+    };
+    level.blockPlaces = assignBlockPlaces(level);
+    const possibleStartCells = adjacentBlockCellsForNode(level.start, cols, rows)
+      .filter(cell => !(cell.x===level.goalCell.x && cell.y===level.goalCell.y));
+    level.startCell = possibleStartCells[Math.floor(Math.random()*possibleStartCells.length)] || adjacentBlockCellsForNode(level.start,cols,rows)[0];
+    level.startPlace = level.blockPlaces[blockCellKey(level.startCell.x,level.startCell.y)] || randomPlaceKey(level.place);
+    level.story = buildRouteStory(level);
+    return level;
+  }
+
+  function startCustomLevel(forceNew){
+    const settings = readSettings();
+    saveSettings(settings);
+    const level = generateCustomLevel(settings);
+    state.routeCount = 1;
+    startLevelFromConfig(level);
+  }
+
+  function refreshCurrentRouteTexts(){
+    const level=state.currentLevelData; if (!level) return;
+    level.story=buildRouteStory(level);
+    level.spokenInstruction=buildSpokenInstruction(level);
+    $("#levelTitle").textContent=`${tr("route")} ${level.routeNumber || 1}`;
+    const goalModeText=level.goalPlacement==="front" ? `${getLanguage()==="en" ? tr("sideOfPlace") : "Costado "+sideName(level.frontSide)}` : tr("cornerOfPlace");
+    $("#levelGoalPill").textContent=`${tr("route")} ${level.routeNumber || 1} · ${placeLabel(level.place)} · ${goalModeText} · ${tr("streets")}: ${level.unitLength} m`;
+    const spoken=level.spokenInstruction;
+    const details=level.story.startsWith(spoken) ? level.story.slice(spoken.length).trim() : level.story;
+    $("#storyBox").innerHTML=`<span class="spokenDestination">${escapeHtml(spoken)}</span><span class="routeDetails">${escapeHtml(details)}</span>`;
+    renderPalette(); renderProgram();
+  }
+
+  function startLevelFromConfig(level){
+    state.currentLevelData = level;
+    state.program = [];
+    const defaultDist = level.unitLength === 50 ? 50 : 100;
+    state.paletteDist = {N:defaultDist,S:defaultDist,E:defaultDist,W:defaultDist};
+    state.running = false;
+
+    $("#homeScreen").classList.add("hidden");
+    $("#gameScreen").classList.remove("hidden");
+    renderTopbar();
+    refreshCurrentRouteTexts();
+    renderMap(level);
+    hideFeedback();
+    setRunningUI(false);
+    if (state.currentSettings.autoSpeak) setTimeout(speakCurrentInstruction,420);
+  }
+
+  /* ---------- Mapa ---------- */
+  // Permite arrastrar la rosa de los vientos a cualquier parte del mapa
+  // (con el dedo o el mouse) y recuerda su última posición.
+  function makeCompassDraggable(compass, map){
+    compass.addEventListener("pointerdown", e => {
+      e.preventDefault();
+      e.stopPropagation();
+      function onMove(ev){
+        const rect = map.getBoundingClientRect();
+        let left = ((ev.clientX - rect.left) / rect.width) * 100;
+        let top  = ((ev.clientY - rect.top) / rect.height) * 100;
+        left = Math.min(97, Math.max(3, left));
+        top  = Math.min(97, Math.max(3, top));
+        compass.style.left = left+"%";
+        compass.style.top = top+"%";
+        state.compassPos.left = left;
+        state.compassPos.top = top;
+      }
+      function onUp(){
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerup", onUp);
+      }
+      window.addEventListener("pointermove", onMove);
+      window.addEventListener("pointerup", onUp, {once:true});
+    });
+  }
+
+  const MAP_MARGIN = 9; // % de espacio entre las calles perimetrales y el borde del croquis
+
+  function nodePct(level, x, y){
+    const span = 100 - MAP_MARGIN*2;
+    return {
+      left: MAP_MARGIN + (x/(level.cols-1))*span,
+      top:  MAP_MARGIN + (y/(level.rows-1))*span
+    };
+  }
+
+  function goalVisualGridPoint(level){
+    return {x:level.goal.x, y:level.goal.y};
+  }
+
+  // El nombre debe guardar proporcion con la imagen del lugar, no con la
+  // ventana completa. En croquis de pocas calles cada bloque es mayor y el
+  // texto crece; en croquis densos se reduce sin dejar de ser legible.
+  function placeNameFontSize(blockWidthPx, blockHeightPx){
+    const imageSize = Math.min(blockWidthPx, blockHeightPx);
+    return Math.max(10, Math.min(36, imageSize * 0.145));
+  }
+
+  function updatePlaceNameSizes(map=$("#mapGrid")){
+    if (!map) return;
+    map.querySelectorAll(".cityBlock").forEach(block => {
+      const rect = block.getBoundingClientRect();
+      block.style.setProperty("--place-name-size", placeNameFontSize(rect.width, rect.height).toFixed(1)+"px");
+    });
+  }
+
+  function renderMap(level){
+    const map = $("#mapGrid");
+    map.innerHTML = "";
+    map.style.aspectRatio = level.cols + " / " + level.rows; // permite cuadras rectangulares
+    const blockedSet = levelBlockedSet(level);
+    const missingSet = levelMissingSet(level);
+    const span = 100 - MAP_MARGIN*2;
+    const cellSpanX = span / (level.cols-1); // % (del ancho) que ocupa una cuadra
+    const cellSpanY = span / (level.rows-1); // % (del alto) que ocupa una cuadra
+    const roadWX = cellSpanX * 0.20, roadWY = cellSpanY * 0.20;
+    const nodeSizeX = cellSpanX * 0.16, nodeSizeY = cellSpanY * 0.16;
+    const actorBase = Math.min(cellSpanX, cellSpanY);
+    const actorSize = Math.max(4.2, actorBase * 0.24);
+    const markerSize = Math.max(4.0, actorBase * 0.20);
+    const isCarMode = (level.travelMode || state.currentSettings.travelMode || "carro") === "carro";
+    const travelerScale = isCarMode ? (1.5 * 1.2) : 2;
+    const travelerSize = actorSize * travelerScale;
+    const startMarkerSize = markerSize * 2 * 1.76;
+    const goalMarkerSize = markerSize * 1.06 * 2 * 1.4;
+    const startLiftY = cellSpanY * 0.06;
+    const goalShiftX = goalMarkerSize * 0.22;
+    const goalLiftY = goalMarkerSize * 0.20;
+    const attentionArrowSize = Math.max(3.6, actorBase * 0.16);
+    const startAttentionGap = Math.max(7.5, travelerSize * 0.9);
+    const goalAttentionGap = Math.max(8.5, goalMarkerSize * 0.65);
+    const mapRect = map.getBoundingClientRect();
+    const mapPxW = mapRect.width || 400, mapPxH = mapRect.height || 400;
+
+    // Bloques decorativos de ciudad (relleno visual entre calles), usando solo la imagen.
+    // Se guardan en level.blockPlaces para poder decir con qué lugar chocó el carro.
+    level.blockPlaces = level.blockPlaces || assignBlockPlaces(level);
+    for (let x=0; x<level.cols-1; x++){
+      for (let y=0; y<level.rows-1; y++){
+        const p1 = nodePct(level, x+0.5, y+0.5);
+        const el = document.createElement("div");
+        el.className = "cityBlock";
+        el.style.left = p1.left+"%";
+        el.style.top = p1.top+"%";
+        el.style.width = cellSpanX*0.76+"%";
+        el.style.height = cellSpanY*0.76+"%";
+
+        const placeKey = level.blockPlaces[blockCellKey(x,y)] || "parque";
+        const iconBox = document.createElement("div");
+        iconBox.className = "placeIcon";
+        renderPlaceVisual(iconBox, placeKey);
+        el.appendChild(iconBox);
+        const nameTag = document.createElement("div");
+        nameTag.className = "placeNameTag";
+        nameTag.textContent = placeLabel(placeKey);
+        el.appendChild(nameTag);
+        map.appendChild(el);
+      }
+    }
+    updatePlaceNameSizes(map);
+
+    // Calles horizontales (si el tramo está en "missing" no se dibuja: es
+    // una calle que sencillamente no existe en el croquis)
+    for (let y=0; y<level.rows; y++){
+      for (let x=0; x<level.cols-1; x++){
+        const a={x,y}, b={x:x+1,y};
+        const ek = edgeKey(a,b);
+        if (missingSet.has(ek)) continue;
+        const blocked = blockedSet.has(ek);
+        const p1 = nodePct(level,x,y), p2 = nodePct(level,x+1,y);
+        const el = document.createElement("div");
+        el.className = "roadH" + (blocked ? " roadBlocked":"");
+        el.style.left = p1.left+"%";
+        el.style.top = p1.top+"%";
+        el.style.width = (p2.left-p1.left)+"%";
+        el.style.height = roadWY+"%";
+        map.appendChild(el);
+        if (blocked){
+          const mid = nodePct(level, x+0.5, y);
+          const bmark = document.createElement("div");
+          bmark.className = "barrier";
+          bmark.style.left = mid.left+"%";
+          bmark.style.top = mid.top+"%";
+          bmark.style.fontSize = Math.max(mapPxW*cellSpanX/100*0.42, 12)+"px";
+          bmark.textContent = "🚧";
+          map.appendChild(bmark);
+        }
+      }
+    }
+    // Calles verticales
+    for (let x=0; x<level.cols; x++){
+      for (let y=0; y<level.rows-1; y++){
+        const a={x,y}, b={x,y:y+1};
+        const ek = edgeKey(a,b);
+        if (missingSet.has(ek)) continue;
+        const blocked = blockedSet.has(ek);
+        const p1 = nodePct(level,x,y), p2 = nodePct(level,x,y+1);
+        const el = document.createElement("div");
+        el.className = "roadV" + (blocked ? " roadBlocked":"");
+        el.style.left = p1.left+"%";
+        el.style.width = roadWX+"%";
+        if (blocked){
+          const verticalInset=roadWY*.62;
+          el.style.top=(p1.top+verticalInset)+"%";
+          el.style.height=Math.max(0,(p2.top-p1.top)-verticalInset*2)+"%";
+        } else {
+          el.style.top = p1.top+"%";
+          el.style.height = (p2.top-p1.top)+"%";
+        }
+        map.appendChild(el);
+        if (blocked){
+          const mid = nodePct(level, x, y+0.5);
+          const bmark = document.createElement("div");
+          bmark.className = "barrier barrierVertical";
+          bmark.style.left = mid.left+"%";
+          bmark.style.top = mid.top+"%";
+          bmark.style.fontSize = Math.max(mapPxH*cellSpanY/100*0.42, 12)+"px";
+          bmark.textContent = "🚧";
+          map.appendChild(bmark);
+        }
+      }
+    }
+    // Nodos (intersecciones)
+    for (let x=0; x<level.cols; x++){
+      for (let y=0; y<level.rows; y++){
+        const p = nodePct(level,x,y);
+        const el = document.createElement("div");
+        el.className = "node";
+        el.style.left = p.left+"%";
+        el.style.top = p.top+"%";
+        el.style.width = nodeSizeX+"%";
+        el.style.height = nodeSizeY+"%";
+        map.appendChild(el);
+      }
+    }
+
+    // Inicio (casa) y meta (bandera, puede estar a media cuadra)
+    const ps = nodePct(level, level.start.x, level.start.y);
+    const startEl = document.createElement("div");
+    startEl.className = "startMark";
+    startEl.style.left = ps.left+"%";
+    startEl.style.top = (ps.top - startLiftY)+"%";
+    startEl.style.width = startMarkerSize+"%";
+    startEl.style.height = startMarkerSize+"%";
+    const startIconBox = document.createElement("div");
+    startIconBox.className = "assetBox";
+    renderStartVisual(startIconBox);
+    startEl.appendChild(startIconBox);
+    map.appendChild(startEl);
+    addAttentionPair(map, ps.left, ps.top, "start", attentionArrowSize, startAttentionGap);
+
+    const pg = nodePct(level, level.goal.x, level.goal.y);
+    const goalVisualPoint = goalVisualGridPoint(level);
+    const pgv = nodePct(level, goalVisualPoint.x, goalVisualPoint.y);
+    const goalEl = document.createElement("div");
+    goalEl.className = "flagMark";
+    goalEl.style.left = (pgv.left + goalShiftX)+"%";
+    goalEl.style.top = (pgv.top - goalLiftY)+"%";
+    goalEl.style.width = goalMarkerSize+"%";
+    goalEl.style.height = goalMarkerSize+"%";
+    const goalIconBox = document.createElement("div");
+    goalIconBox.className = "assetBox";
+    renderGoalVisual(goalIconBox);
+    goalEl.appendChild(goalIconBox);
+    map.appendChild(goalEl);
+    addAttentionPair(map, pgv.left, pgv.top, "goal", attentionArrowSize, goalAttentionGap);
+
+    // Rosa de los vientos: imagen flotante y arrastrable por todo el mapa
+    const compass = document.createElement("div");
+    compass.className = "compassRose";
+    compass.style.left = state.compassPos.left+"%";
+    compass.style.top = state.compassPos.top+"%";
+    renderCompassVisual(compass);
+    map.appendChild(compass);
+    makeCompassDraggable(compass, map);
+
+    // Vehículo o persona
+    const car = document.createElement("div");
+    car.className = "car";
+    car.id = "carEl";
+    const travelerBox = document.createElement("div");
+    travelerBox.className = "assetBox";
+    renderTravelerVisual(travelerBox, level.travelMode || state.currentSettings.travelMode || "carro");
+    car.appendChild(travelerBox);
+    car.style.width = travelerSize+"%";
+    car.style.height = travelerSize+"%";
+    car.style.left = ps.left+"%";
+    car.style.top = ps.top+"%";
+    car.dataset.angle = "0";
+    map.appendChild(car);
+    updateProgramPreview();
+  }
+
+  function addAttentionPair(map, leftPct, topPct, kind, sizePct, gapPct){
+    const wrap = document.createElement("div");
+    wrap.className = `attentionPair ${kind === "goal" ? "goalPair" : "startPair"}`;
+    wrap.style.left = leftPct + "%";
+    wrap.style.top = topPct + "%";
+    wrap.style.setProperty("--arrowW", sizePct + "%");
+    wrap.style.setProperty("--arrowH", (sizePct * 0.5) + "%");
+    wrap.style.setProperty("--arrowGap", gapPct + "%");
+    const left = document.createElement("div");
+    left.className = "attentionArrow left";
+    const right = document.createElement("div");
+    right.className = "attentionArrow right";
+    wrap.appendChild(left);
+    wrap.appendChild(right);
+    map.appendChild(wrap);
+  }
+
+  function carSvg(){
+    return `<svg viewBox="0 0 100 100" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <g>
+        <rect x="30" y="8" width="40" height="84" rx="16" fill="#ef4444" stroke="#153252" stroke-width="4"/>
+        <rect x="36" y="20" width="28" height="20" rx="6" fill="#bfe6ff" stroke="#153252" stroke-width="3"/>
+        <rect x="36" y="62" width="28" height="18" rx="6" fill="#bfe6ff" stroke="#153252" stroke-width="3"/>
+        <circle cx="30" cy="26" r="8" fill="#1f2937" stroke="#153252" stroke-width="3"/>
+        <circle cx="70" cy="26" r="8" fill="#1f2937" stroke="#153252" stroke-width="3"/>
+        <circle cx="30" cy="74" r="8" fill="#1f2937" stroke="#153252" stroke-width="3"/>
+        <circle cx="70" cy="74" r="8" fill="#1f2937" stroke="#153252" stroke-width="3"/>
+
+      </g>
+    </svg>`;
+  }
+
+  /* ---------- Paleta de bloques ---------- */
+  function maxBlockDistance(dir, level=state.currentLevelData){
+    if (!level) return 500;
+    const streetCount = (dir === "E" || dir === "W") ? level.cols-1 : level.rows-1;
+    return Math.max(50, streetCount * (level.unitLength || 100));
+  }
+
+  function renderPalette(){
+    const pal = $("#palette");
+    pal.innerHTML = DIR_ORDER.map(dir => {
+      const info = DIR_INFO[dir];
+      return `
+        <div class="paletteBlock scratchBlock" data-dir="${dir}" style="--dc:${info.color}">
+          <div class="blockIcon">${directionArrowSvg(dir)}</div>
+          <div class="blockLabel">${directionLabel(dir)}</div>
+          <div class="distStepper">
+            <button class="stepBtn" data-action="dec" data-dir="${dir}" type="button">−</button>
+            <span class="distValue" data-distfor="${dir}">${state.paletteDist[dir]} m</span>
+            <button class="stepBtn" data-action="inc" data-dir="${dir}" type="button" title="Máximo: ${maxBlockDistance(dir)} m">+</button>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    $$(".stepBtn", pal).forEach(btn => {
+      btn.addEventListener("pointerdown", e => e.stopPropagation());
+      btn.addEventListener("click", e => {
+        e.stopPropagation();
+        const dir = btn.dataset.dir;
+        const delta = btn.dataset.action === "inc" ? 50 : -50;
+        state.paletteDist[dir] = Math.min(maxBlockDistance(dir), Math.max(50, state.paletteDist[dir]+delta));
+        $(`[data-distfor="${dir}"]`, pal).textContent = state.paletteDist[dir]+" m";
+      });
+    });
+
+    $$(".paletteBlock", pal).forEach(block => {
+      block.addEventListener("pointerdown", e => {
+        if (state.running) return;
+        const dir = block.dataset.dir;
+        startDrag(e, {mode:"new", dir, dist: state.paletteDist[dir]});
+      });
+    });
+  }
+
+  /* ---------- Zona de programa ---------- */
+  function renderProgram(){
+    const zone = $("#programZone");
+    zone.classList.toggle("empty", state.program.length === 0);
+    zone.innerHTML = state.program.map(b => {
+      const info = DIR_INFO[b.dir];
+      return `
+        <div class="progBlock scratchBlock" data-id="${b.id}" style="--dc:${info.color}">
+          <span class="progIcon">${directionArrowSvg(b.dir)}</span>
+          <span class="progText">${directionLabel(b.dir)}</span>
+          <div class="progStepper">
+            <button class="miniStepBtn" data-action="dec" data-id="${b.id}" type="button">−</button>
+            <span class="progText" data-distfor="${b.id}">${b.dist} m</span>
+            <button class="miniStepBtn" data-action="inc" data-id="${b.id}" type="button" title="Máximo: ${maxBlockDistance(b.dir)} m">+</button>
+          </div>
+          <button class="progRemove" data-id="${b.id}" type="button">✕</button>
+        </div>
+      `;
+    }).join("");
+
+    $("#runBtn").disabled = state.running || state.program.length === 0;
+    $("#undoBtn").disabled = state.running || state.program.length === 0;
+
+    $$(".miniStepBtn", zone).forEach(btn => {
+      btn.addEventListener("pointerdown", e => e.stopPropagation());
+      btn.addEventListener("click", e => {
+        e.stopPropagation();
+        if (state.running) return;
+        const id = parseInt(btn.dataset.id,10);
+        const block = state.program.find(b => b.id === id);
+        if (!block) return;
+        const delta = btn.dataset.action === "inc" ? 50 : -50;
+        block.dist = Math.min(maxBlockDistance(block.dir), Math.max(50, block.dist+delta));
+        $(`[data-distfor="${id}"]`, zone).textContent = block.dist+" m";
+        updateProgramPreview();
+      });
+    });
+
+    $$(".progRemove", zone).forEach(btn => {
+      btn.addEventListener("pointerdown", e => e.stopPropagation());
+      btn.addEventListener("click", e => {
+        e.stopPropagation();
+        if (state.running) return;
+        const id = parseInt(btn.dataset.id,10);
+        state.program = state.program.filter(b => b.id !== id);
+        renderProgram();
+      });
+    });
+
+    $$(".progBlock", zone).forEach(block => {
+      block.addEventListener("pointerdown", e => {
+        if (state.running) return;
+        if (e.target.closest(".progStepper") || e.target.closest(".progRemove")) return;
+        const id = parseInt(block.dataset.id,10);
+        startDrag(e, {mode:"reorder", id});
+      });
+    });
+    updateProgramPreview();
+  }
+
+  /* =========================================================
+     ARRASTRAR Y SOLTAR (Pointer Events, funciona con touch)
+  ========================================================= */
+  function startDrag(e, info){
+    e.preventDefault();
+    const ghost = document.createElement("div");
+    const dir = info.dir || (state.program.find(b=>b.id===info.id)||{}).dir;
+    const dist = info.dist || (state.program.find(b=>b.id===info.id)||{}).dist;
+    const di = DIR_INFO[dir];
+    const source = info.mode === "new" ? $(`.paletteBlock[data-dir="${dir}"]`) : $(`.progBlock[data-id="${info.id}"]`);
+    ghost.className = `dragGhost scratchBlock ${info.mode === "new" ? "paletteBlock" : "progBlock"}`;
+    ghost.style.setProperty("--dc", di.color);
+    ghost.innerHTML = source ? source.innerHTML : `<span class="progIcon">${di.icon}</span><span class="progText">${directionLabel(dir)} · ${dist} m</span>`;
+    if (source) ghost.style.width = Math.min(300, source.getBoundingClientRect().width)+"px";
+    document.body.appendChild(ghost);
+    positionGhost(ghost, e.clientX, e.clientY);
+
+    const placeholder = document.createElement("div");
+    placeholder.className = "dropPlaceholder";
+    dragInfo = {...info, ghost, placeholder, insertIndex:null};
+
+    if (info.mode === "reorder"){
+      const el = $(`.progBlock[data-id="${info.id}"]`);
+      if (el) el.classList.add("dragging");
+    }
+
+    function onMove(ev){
+      positionGhost(ghost, ev.clientX, ev.clientY);
+      const zone = $("#programZone");
+      const rect = zone.getBoundingClientRect();
+      const over = ev.clientX>=rect.left && ev.clientX<=rect.right && ev.clientY>=rect.top && ev.clientY<=rect.bottom;
+      zone.classList.toggle("dragOver", over);
+      if (over) updateDropPlaceholder(zone, ev.clientY);
+      else clearDropPlaceholder(zone);
+    }
+    function onUp(ev){
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      finishDrag(ev.clientX, ev.clientY);
+      ghost.remove();
+      const zone = $("#programZone");
+      if (zone) clearDropPlaceholder(zone);
+      if (info.mode === "reorder"){
+        const el = $(`.progBlock[data-id="${info.id}"]`);
+        if (el) el.classList.remove("dragging");
+      }
+      dragInfo = null;
+    }
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
+  }
+
+  function positionGhost(ghost, x, y){
+    ghost.style.left = x+"px";
+    ghost.style.top = y+"px";
+  }
+
+  function updateDropPlaceholder(zone, clientY){
+    if (!dragInfo) return;
+    const items = $$(".progBlock", zone).filter(el => !el.classList.contains("dragging"));
+    let index = items.length;
+    for (let i=0;i<items.length;i++){
+      const rect = items[i].getBoundingClientRect();
+      if (clientY < rect.top + rect.height/2){ index=i; break; }
+    }
+    const marker = dragInfo.placeholder;
+    if (index < items.length) zone.insertBefore(marker, items[index]);
+    else zone.appendChild(marker);
+    dragInfo.insertIndex = index;
+    zone.classList.add("dropActive");
+  }
+
+  function clearDropPlaceholder(zone){
+    if (dragInfo?.placeholder?.isConnected) dragInfo.placeholder.remove();
+    if (zone) zone.classList.remove("dragOver","dropActive");
+  }
+
+  function finishDrag(clientX, clientY){
+    const zone = $("#programZone");
+    const rect = zone.getBoundingClientRect();
+    const overZone = clientX>=rect.left && clientX<=rect.right && clientY>=rect.top && clientY<=rect.bottom;
+    if (!overZone) return;
+
+    const items = $$(".progBlock", zone).filter(el => !el.classList.contains("dragging"));
+    const insertIndex = dragInfo.insertIndex === null ? items.length : dragInfo.insertIndex;
+
+    if (dragInfo.mode === "new"){
+      const block = { id: state.idSeq++, dir: dragInfo.dir, dist: dragInfo.dist };
+      state.program.splice(insertIndex, 0, block);
+    } else if (dragInfo.mode === "reorder"){
+      const fromIdx = state.program.findIndex(b => b.id === dragInfo.id);
+      if (fromIdx === -1) return;
+      const [moved] = state.program.splice(fromIdx,1);
+      state.program.splice(insertIndex,0,moved);
+    }
+    renderProgram();
+  }
+
+  /* =========================================================
+     BOTONES DE ACCIÓN
+  ========================================================= */
+  $("#undoBtn").addEventListener("click", () => {
+    if (state.running) return;
+    state.program.pop();
+    renderProgram();
+  });
+  $("#clearBtn").addEventListener("click", () => {
+    if (state.running) return;
+    state.program = [];
+    renderProgram();
+    hideFeedback();
+  });
+  $("#runBtn").addEventListener("click", runProgram);
+
+  function setRunningUI(running){
+    state.running = running;
+    $("#runBtn").disabled = running || state.program.length===0;
+    $("#undoBtn").disabled = running;
+    $("#clearBtn").disabled = running;
+  }
+
+  function hideFeedback(){
+    const fb = $("#feedback");
+    fb.className = "feedback";
+    fb.textContent = "";
+  }
+  function showFeedback(msg, ok){
+    const fb = $("#feedback");
+    fb.className = "feedback show " + (ok ? "ok":"bad");
+    fb.textContent = msg;
+  }
+
+  /* =========================================================
+     EJECUTAR EL PROGRAMA
+  ========================================================= */
+  function wait(ms){ return new Promise(res => setTimeout(res, ms)); }
+
+  async function runProgram(){
+    if (state.running || state.program.length===0) return;
+    state.feedbackCycle++;
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    setRunningUI(true);
+    hideFeedback();
+    clearTrail();
+    clearProgramPreview();
+    $$(".progBlock").forEach(b => b.classList.remove("doneStep","current"));
+
+    const level = state.currentLevelData;
+    const closedSet = levelClosedSet(level);
+    const missingSet = levelMissingSet(level);
+    const car = $("#carEl");
+    const unitLength = level.unitLength || 100;
+    const stepSize = 50 / unitLength; // 100 m: 0.5 cuadra; 50 m: 1 cuadra
+    resetTravelerToStart();
+    await wait(60);
+    let pos = {x:level.start.x, y:level.start.y};
+    let angle = 0;
+    car.dataset.angle = "0";
+
+    for (const block of state.program){
+      const el = $(`.progBlock[data-id="${block.id}"]`);
+      if (el) el.classList.add("current");
+
+      const info = DIR_INFO[block.dir];
+      const movementSpeech=speakMovementStep(block.dir,block.dist);
+      angle = shortestAngle(angle, info.angle);
+      car.style.transform = `translate(-50%,-50%) rotate(${angle}deg)`;
+      await wait(120);
+
+      const steps = Math.round(block.dist/50); // la unidad mínima de avance sigue siendo 50 m
+      const movementSpeedFactor=.85;
+      const blockMoveMs=Math.round(Math.max(320,steps*140)/movementSpeedFactor);
+      car.style.transitionDuration=blockMoveMs+"ms";
+      for (let i=0;i<steps;i++){
+        const next = {x:pos.x+info.dx*stepSize, y:pos.y+info.dy*stepSize};
+        if (next.x<0 || next.x>level.cols-1 || next.y<0 || next.y>level.rows-1){
+          if (el) el.classList.remove("current");
+          const placeName = collisionPlaceForBoundary(level, pos, info);
+          finishRun(false, getLanguage()==="en" ? `🧱 You cannot move there. There is no street next to ${placeName}.` : `🧱 No puedes avanzar por ahí. No hay calle junto a ${placeName}.`);
+          return;
+        }
+        const leavesStreetMidway =
+          (!isIntegerCoord(pos.x) && Math.abs(info.dy) > .001) ||
+          (!isIntegerCoord(pos.y) && Math.abs(info.dx) > .001);
+        if (leavesStreetMidway){
+          if (el) el.classList.remove("current");
+          finishRun(false, getLanguage()==="en"
+            ? "🧱 You cannot turn in the middle of a block. Continue to an intersection first."
+            : "🧱 No puedes girar a mitad de una cuadra. Primero debes llegar a una intersección.");
+          return;
+        }
+        const edgeFrom = { x: Math.floor(Math.min(pos.x,next.x) + 0.001), y: Math.floor(Math.min(pos.y,next.y) + 0.001) };
+        const edgeTo = { x: info.dx!==0 ? edgeFrom.x+1 : edgeFrom.x, y: info.dy!==0 ? edgeFrom.y+1 : edgeFrom.y };
+        const ek = edgeKey(edgeFrom,edgeTo);
+        if (missingSet.has(ek)){
+          if (el) el.classList.remove("current");
+          const placeName = collisionPlaceForEdge(level, edgeFrom, edgeTo);
+          finishRun(false, getLanguage()==="en" ? `🧱 You cannot move there. There is no street next to ${placeName}.` : `🧱 No puedes avanzar por ahí. No hay calle junto a ${placeName}.`);
+          return;
+        }
+        if (closedSet.has(ek)){
+          if (el) el.classList.remove("current");
+          finishRun(false, getLanguage()==="en" ? "🚧 That street is closed." : "🚧 Esa calle está cerrada por obras.");
+          return;
+        }
+        const prevPos = pos;
+        pos = next;
+        moveCarTo(level, car, pos);
+        drawTrailSeg(level, prevPos, pos, info.color);
+      }
+      await wait(blockMoveMs+20);
+      car.style.transitionDuration="";
+      // Completa primero toda la distancia del bloque. Si la indicación verbal
+      // sigue sonando, espera únicamente en el punto final antes del siguiente bloque.
+      if (movementSpeech && !movementSpeech.isFinished()) await movementSpeech.promise;
+      if (el){ el.classList.remove("current"); el.classList.add("doneStep"); }
+    }
+
+    if (Math.abs(pos.x-level.goal.x)<0.001 && Math.abs(pos.y-level.goal.y)<0.001){
+      finishRun(true, "");
+    } else {
+      if (getLanguage()==="en") finishRun(false, `🤔 Almost... The traveler did not reach the exact destination.`);
+      else { const subject = level.travelMode === "persona" ? "la persona" : "el carro"; finishRun(false, `🤔 Casi... ${subject} no llegó exactamente a la meta.`); }
+    }
+  }
+
+  function shortestAngle(current, target){
+    let delta = ((target-current+540)%360)-180;
+    return current+delta;
+  }
+
+  function moveCarTo(level, car, pos){
+    const p = nodePct(level,pos.x,pos.y);
+    car.style.left = p.left+"%";
+    car.style.top = p.top+"%";
+  }
+
+  function resetTravelerToStart(){
+    const level=state.currentLevelData;
+    const car=$("#carEl");
+    if (!level || !car) return;
+    car.style.transition="none";
+    car.style.transitionDuration="";
+    moveCarTo(level,car,{x:level.start.x,y:level.start.y});
+    car.style.transform="translate(-50%,-50%) rotate(0deg)";
+    car.dataset.angle="0";
+    void car.offsetWidth;
+    car.style.transition="";
+    clearTrail();
+    $$(".progBlock").forEach(block=>block.classList.remove("doneStep","current"));
+  }
+
+  function drawTrailSeg(level, fromPos, toPos, color){
+    const map = $("#mapGrid");
+    const p1 = nodePct(level, fromPos.x, fromPos.y);
+    const p2 = nodePct(level, toPos.x, toPos.y);
+    const seg = document.createElement("div");
+    seg.className = "trailSeg";
+    seg.style.background = color;
+    if (fromPos.x !== toPos.x){
+      seg.style.left = Math.min(p1.left,p2.left)+"%";
+      seg.style.top = "calc("+p1.top+"% - 4px)";
+      seg.style.width = Math.abs(p2.left-p1.left)+"%";
+      seg.style.height = "8px";
+    } else {
+      seg.style.top = Math.min(p1.top,p2.top)+"%";
+      seg.style.left = "calc("+p1.left+"% - 4px)";
+      seg.style.height = Math.abs(p2.top-p1.top)+"%";
+      seg.style.width = "8px";
+    }
+    map.appendChild(seg);
+  }
+
+  function clearTrail(){
+    $$(".trailSeg").forEach(el => el.remove());
+  }
+
+  function clearProgramPreview(){
+    $$(".previewTrailSeg").forEach(el=>el.remove());
+  }
+
+  function drawPreviewSeg(level,fromPos,toPos,color){
+    const map=$("#mapGrid");
+    if (!map) return;
+    const p1=nodePct(level,fromPos.x,fromPos.y);
+    const p2=nodePct(level,toPos.x,toPos.y);
+    const seg=document.createElement("div");
+    seg.className="previewTrailSeg";
+    seg.style.setProperty("--previewColor",color);
+    seg.style.background=color;
+    if (Math.abs(fromPos.x-toPos.x)>.001){
+      seg.style.left=Math.min(p1.left,p2.left)+"%";
+      seg.style.top="calc("+p1.top+"% - 3px)";
+      seg.style.width=Math.abs(p2.left-p1.left)+"%";
+      seg.style.height="6px";
+    } else {
+      seg.style.top=Math.min(p1.top,p2.top)+"%";
+      seg.style.left="calc("+p1.left+"% - 3px)";
+      seg.style.height=Math.abs(p2.top-p1.top)+"%";
+      seg.style.width="6px";
+    }
+    map.appendChild(seg);
+  }
+
+  function updateProgramPreview(){
+    clearProgramPreview();
+    const level=state.currentLevelData;
+    if (!level || !state.currentSettings.specialHelp || state.running) return;
+    const stepSize=50/(level.unitLength||100);
+    let pos={x:level.start.x,y:level.start.y};
+    for (const block of state.program){
+      const info=DIR_INFO[block.dir];
+      const steps=Math.round(block.dist/50);
+      for (let i=0;i<steps;i++){
+        const next={x:pos.x+info.dx*stepSize,y:pos.y+info.dy*stepSize};
+        if (!routeStepAllowed(level,pos,next)) return;
+        drawPreviewSeg(level,pos,next,info.color);
+        pos=next;
+      }
+    }
+  }
+
+  function successMessage(){
+    const name=state.playerName || (getLanguage()==="en" ? "explorer" : "explorador");
+    const destination=placeLabel(state.currentLevelData.place);
+    const es=[
+      `¡Excelente, ${name}! Llegaste a ${destination}.`,
+      `¡Muy bien, ${name}! Tu programa funcionó perfectamente.`,
+      `¡Lo lograste, ${name}! Encontraste la ruta correcta.`,
+      `¡Fantástico, ${name}! Guiaste el recorrido hasta ${destination}.`,
+      `¡Gran trabajo, ${name}! Pensaste como una persona programadora.`,
+      `¡Increíble, ${name}! Cada bloque te llevó al destino.`,
+      `¡Bravo, ${name}! Resolviste el recorrido con éxito.`,
+      `¡Sigue así, ${name}! Tu estrategia fue excelente.`,
+      `¡Misión cumplida, ${name}! Llegaste al lugar indicado.`,
+      `¡Qué buen programa, ${name}! Alcanzaste ${destination}.`,
+      `¡Eres genial, ${name}! La ruta quedó resuelta.`,
+      `¡Magnífico, ${name}! Tus instrucciones fueron correctas.`
+    ];
+    const en=[
+      `Excellent, ${name}! You reached ${destination}.`,
+      `Great job, ${name}! Your program worked perfectly.`,
+      `You did it, ${name}! You found the correct route.`,
+      `Fantastic, ${name}! You guided the trip to ${destination}.`,
+      `Wonderful work, ${name}! You thought like a programmer.`,
+      `Amazing, ${name}! Every block took you to the destination.`,
+      `Bravo, ${name}! You solved the route successfully.`,
+      `Keep it up, ${name}! Your strategy was excellent.`,
+      `Mission accomplished, ${name}! You reached the right place.`,
+      `What a great program, ${name}! You reached ${destination}.`,
+      `You are doing great, ${name}! The route is solved.`,
+      `Magnificent, ${name}! Your instructions were correct.`
+    ];
+    const messages=getLanguage()==="en" ? en : es;
+    return `🎉 ${messages[Math.floor(Math.random()*messages.length)]}`;
+  }
+
+  function failureMessage(reason){
+    const name=state.playerName ? `${state.playerName}, ` : "";
+    const retry=getLanguage()==="en"
+      ? `${name}adjust your blocks and try again.`
+      : `${name}ajusta tus bloques y vuelve a intentarlo.`;
+    return `${reason} ${retry}`;
+  }
+
+  function launchCelebration(){
+    $(".fireworksLayer")?.remove();
+    const layer=document.createElement("div");
+    layer.className="fireworksLayer";
+    document.body.appendChild(layer);
+    const symbols=["A","B","C","1","2","3","★","●","■","▲","◆","✦"];
+    const colors=["#ff477e","#ffd23f","#35c46a","#3b82f6","#9b5de5","#ff7b29","#20c9c3"];
+    const launches=12+Math.floor(Math.random()*7);
+    for (let n=0;n<launches;n++){
+      setTimeout(()=>{
+        const x=window.innerWidth*(.16+Math.random()*.68);
+        const y=window.innerHeight*(.16+Math.random()*.38);
+        const rocket=document.createElement("div");
+        rocket.className="fireworkRocket";
+        rocket.style.left=x+"px";
+        rocket.style.top=window.innerHeight+"px";
+        rocket.style.filter=`hue-rotate(${Math.floor(Math.random()*360)}deg)`;
+        rocket.style.setProperty("--rise",(y-window.innerHeight)+"px");
+        layer.appendChild(rocket);
+        setTimeout(()=>{
+          rocket.remove();
+          const flash=document.createElement("div");
+          flash.className="fireworkFlash";
+          flash.style.left=x+"px"; flash.style.top=y+"px";
+          flash.style.color=colors[Math.floor(Math.random()*colors.length)];
+          layer.appendChild(flash);
+          setTimeout(()=>flash.remove(),1200);
+          const amount=42+Math.floor(Math.random()*25);
+          for (let i=0;i<amount;i++){
+            const angle=(Math.PI*2*i/amount)+(Math.random()*.22);
+            const distance=140+Math.random()*180;
+            const symbol=document.createElement("span");
+            symbol.className="fireworkSymbol";
+            symbol.textContent=symbols[Math.floor(Math.random()*symbols.length)];
+            symbol.style.left=x+"px"; symbol.style.top=y+"px";
+            symbol.style.color=colors[Math.floor(Math.random()*colors.length)];
+            symbol.style.setProperty("--dx",Math.cos(angle)*distance+"px");
+            symbol.style.setProperty("--dy",Math.sin(angle)*distance+70+"px");
+            symbol.style.setProperty("--rot",Math.round(Math.random()*300-150)+"deg");
+            layer.appendChild(symbol);
+          }
+        },650);
+      },n*220);
+    }
+    setTimeout(()=>layer.remove(),10000);
+  }
+
+  async function finishRun(success, failMsg){
+    if (success){
+      setRunningUI(false);
+      const message=successMessage();
+      showFeedback(message,true);
+      speakFeedback(message);
+      launchCelebration();
+      onLevelComplete(message);
+    } else {
+      const feedbackCycle=state.feedbackCycle;
+      const message=failureMessage(failMsg);
+      showFeedback(message,false);
+      setRunningUI(false);
+      if (feedbackCycle!==state.feedbackCycle) return;
+      await speakFeedback(message);
+      if (feedbackCycle!==state.feedbackCycle) return;
+      resetTravelerToStart();
+      updateProgramPreview();
+    }
+  }
+
+  function onLevelComplete(successText){
+    const level=state.currentLevelData;
+    const nextHint=getLanguage()==="en"
+      ? "The next route will begin at this exact point with a new destination."
+      : "El siguiente recorrido comenzará en este punto y tendrá un destino nuevo.";
+    const text=`${successText.replace(/^🎉\s*/,"")} ${nextHint}`;
+    showOverlay({
+      icon:"🎉", title:tr("completed"), text,
+      buttons:[
+        {label:tr("nextDestination"), action:()=>{
+          const next=generateNextDestinationLevel(state.currentLevelData);
+          if (!next){
+            hideOverlay();
+            showFeedback(getLanguage()==="en" ? "No other accessible destination was found on this map. Create a new challenge from Settings." : "No se encontró otro destino accesible en este croquis. Crea un reto nuevo desde la configuración.", false);
+            return;
+          }
+          state.routeCount=next.routeNumber; hideOverlay(); startLevelFromConfig(next);
+        }, primary:true},
+        {label:tr("repeatRoute"), action:()=>{ hideOverlay(); startLevelFromConfig(state.currentLevelData); }},
+        {label:tr("config"), action:()=>{ hideOverlay(); goHome(); }}
+      ]
+    });
+  }
+
+  function showOverlay({icon, title, text, buttons}){
+    $("#overlayIcon").textContent = icon;
+    $("#overlayTitle").textContent = title;
+    $("#overlayText").textContent = text;
+    $("#overlayBtns").innerHTML = buttons.map((b,i) =>
+      `<button class="mainBtn ${b.primary ? "run":"undo"}" data-i="${i}">${b.label}</button>`
+    ).join("");
+    $$("#overlayBtns button").forEach((btn,i) => btn.addEventListener("click", buttons[i].action));
+    $("#overlay").classList.remove("hidden");
+  }
+  function hideOverlay(){ $("#overlay").classList.add("hidden"); }
+
+  /* =========================================================
+     INICIO
+  ========================================================= */
+  window.addEventListener("resize", () => updatePlaceNameSizes());
+
+  window.addEventListener("pageshow", () => {
+    cargarNombreDesdeIndex();
+    renderTopbar();
+  });
+
+  window.addEventListener("storage", evento => {
+    if (evento.key === CLAVE_NOMBRE) {
+      cargarNombreDesdeIndex();
+      renderTopbar();
+    }
+  });
+
+  initSetupControls();
+  cargarNombreDesdeIndex();
+  goHome();
+})();
+</script>
+</body>
+</html>
