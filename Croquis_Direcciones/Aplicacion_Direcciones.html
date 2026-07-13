@@ -1139,18 +1139,19 @@
   .paletteBlock{ min-height:48px; padding:10px 8px 9px 12px; flex-direction:row; justify-content:flex-start; gap:7px; }
   .paletteBlock .blockIcon{ background:rgba(255,255,255,.22); color:#fff; width:38px; height:38px; flex:0 0 38px; }
   .paletteBlock .blockLabel,.paletteBlock .distValue{ color:#fff; }
-  .paletteBlock .distStepper{ margin-left:auto; flex-shrink:0; }
+  .paletteBlock .distStepper{ margin-left:6px; flex-shrink:0; }
   .distStepper,.progStepper{ background:rgba(255,255,255,.22); }
   .progBlock{ padding:10px 8px 10px 12px; min-height:48px; width:min(100%,300px); }
   .directionArrow{ width:30px; height:30px; display:block; color:#fff; filter:drop-shadow(0 2px 1px rgba(0,0,0,.15)); }
   .progBlock .progIcon{ width:32px; height:32px; display:flex; align-items:center; justify-content:center; flex:0 0 32px; }
   .progBlock .progText{ color:#fff; }
-  .progBlock .progStepper{ margin-left:auto; flex-shrink:0; }
+  .progBlock .progStepper{ margin-left:6px; flex-shrink:0; }
   .progBlock .progRemove{ margin-left:2px; flex-shrink:0; }
   .stepBtn{ width:34px; height:34px; font-size:1.25rem; }
   .miniStepBtn{ width:30px; height:30px; font-size:1.1rem; }
   .distValue{ min-width:52px; font-size:.9rem; }
-  .dragGhost{ position:fixed !important; display:flex !important; z-index:9999; width:260px; padding:10px 8px 10px 12px; opacity:1; visibility:visible; pointer-events:none; transform:translate(-18px,-50%) rotate(1deg); }
+  .dragGhost{ position:fixed !important; display:flex !important; z-index:9999; width:260px; padding:10px 8px 10px 12px; opacity:1; visibility:visible; pointer-events:none; transform:translate(-50%,-50%) rotate(1deg); }
+  .dragGhost.touchDrag{ transform:translate(-50%,calc(-100% - 16px)) rotate(1deg); }
   .dragGhost .stepBtn,.dragGhost .miniStepBtn,.dragGhost .progRemove{ pointer-events:none; }
   .dropPlaceholder{
     width:min(100%,300px); height:48px; flex:0 0 48px;
@@ -1206,6 +1207,40 @@
     .mainBtn,.ghostBtn,.readStoryBtn,.startCustomBtn,.secondarySetupBtn{ min-height:44px; }
     .setupField input,.setupField select{ min-height:44px; }
     .programZone,.controlPanel{ scrollbar-width:thin; scrollbar-color:#9bb5cc transparent; }
+  }
+
+  /* Distribucion tactil: programa y bloques siempre en columnas vecinas */
+  @media (min-width:700px) and (max-width:1280px){
+    #gameScreen .layout > .card:last-child .controlPanel{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+      grid-template-areas:"blocks program" "actions actions" "feedback feedback";
+      align-items:start;
+      column-gap:10px;
+      row-gap:10px;
+    }
+    .controlPanel > div:nth-child(1){ grid-area:blocks; min-width:0; }
+    .controlPanel > div:nth-child(2){ grid-area:program; min-width:0; }
+    .controlPanel > div:nth-child(3){ grid-area:actions; }
+    .controlPanel > div:nth-child(4){ grid-area:feedback; }
+    .palette{ grid-template-columns:1fr; gap:9px; }
+    .paletteBlock,.progBlock{ width:100%; max-width:none; gap:4px; padding-left:8px; padding-right:6px; }
+    .paletteBlock .blockIcon{ width:32px; height:32px; flex-basis:32px; }
+    .paletteBlock .blockLabel{ font-size:.82rem; }
+    .progBlock .progIcon{ width:28px; height:28px; flex-basis:28px; }
+    .progBlock > .progText,.progStepper .progText{ font-size:.78rem; }
+    .progBlock .progRemove{ width:30px; height:30px; }
+    .paletteBlock .distStepper,.progBlock .progStepper{ margin-left:4px; }
+    .distValue{ min-width:44px; }
+    .programZone{ min-height:250px; max-height:390px; overflow-y:auto; }
+    .dropPlaceholder{ width:100%; }
+  }
+
+  @media (min-width:900px) and (max-width:1280px) and (orientation:landscape){
+    .layout{ grid-template-columns:minmax(0,1fr) minmax(480px,50%); }
+    #gameScreen .layout > .card:last-child .controlPanel{ grid-template-areas:"program blocks" "actions actions" "feedback feedback"; }
+    .controlPanel{ max-height:calc(100vh - 118px); }
+    .programZone{ max-height:calc(100vh - 260px); }
   }
 
   .fireworksLayer{ position:fixed; inset:0; z-index:350; overflow:hidden; pointer-events:none; }
@@ -1268,13 +1303,13 @@
       <div class="setupGrid">
         <div class="setupField">
           <label for="colsInput" id="colsLabel" data-icon="↔️">Columnas de intersecciones</label>
-          <input id="colsInput" type="number" min="3" max="8" value="5">
+          <select id="colsInput"><option value="3">3</option><option value="4">4</option><option value="5" selected>5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option></select>
           <small id="colsHelp">Más columnas = croquis más ancho.</small>
         </div>
 
         <div class="setupField">
           <label for="rowsInput" id="rowsLabel" data-icon="↕️">Filas de intersecciones</label>
-          <input id="rowsInput" type="number" min="3" max="8" value="5">
+          <select id="rowsInput"><option value="3">3</option><option value="4">4</option><option value="5" selected>5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option></select>
           <small id="rowsHelp">Más filas = croquis más alto.</small>
         </div>
 
@@ -1289,13 +1324,13 @@
 
         <div class="setupField">
           <label for="blockedInput" id="blockedLabel" data-icon="🚧">Calles cerradas</label>
-          <input id="blockedInput" type="number" min="0" max="12" value="1">
+          <select id="blockedInput"><option value="0">0</option><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option></select>
           <small id="blockedHelp">Se ven con vallas y no se puede pasar.</small>
         </div>
 
         <div class="setupField">
           <label for="missingInput" id="missingLabel" data-icon="🌱">Calles inexistentes</label>
-          <input id="missingInput" type="number" min="0" max="12" value="1">
+          <select id="missingInput"><option value="0">0</option><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option></select>
           <small id="missingHelp">No se dibujan. Si el carro intenta avanzar por ahí, choca con el lugar cercano.</small>
         </div>
 
@@ -3119,6 +3154,7 @@ function cargarNombreDesdeIndex() {
     const di = DIR_INFO[dir];
     const source = info.mode === "new" ? $(`.paletteBlock[data-dir="${dir}"]`) : $(`.progBlock[data-id="${info.id}"]`);
     ghost.className = `dragGhost scratchBlock ${info.mode === "new" ? "paletteBlock" : "progBlock"}`;
+    if (e.pointerType === "touch") ghost.classList.add("touchDrag");
     ghost.style.setProperty("--dc", di.color);
     ghost.innerHTML = source ? source.innerHTML : `<span class="progIcon">${di.icon}</span><span class="progText">${directionLabel(dir)} · ${dist} m</span>`;
     if (source) ghost.style.width = Math.min(300, source.getBoundingClientRect().width)+"px";
@@ -3133,14 +3169,21 @@ function cargarNombreDesdeIndex() {
       const el = $(`.progBlock[data-id="${info.id}"]`);
       if (el) el.classList.add("dragging");
     }
+    const initialZone=$("#programZone");
+    if (info.mode === "new") showEndDropPlaceholder(initialZone);
+    else updateDropPlaceholder(initialZone,e.clientY);
 
     function onMove(ev){
       positionGhost(ghost, ev.clientX, ev.clientY);
       const zone = $("#programZone");
       const rect = zone.getBoundingClientRect();
-      const over = ev.clientX>=rect.left && ev.clientX<=rect.right && ev.clientY>=rect.top && ev.clientY<=rect.bottom;
+      const over = ev.clientX>=rect.left-28 && ev.clientX<=rect.right+28 && ev.clientY>=rect.top-28 && ev.clientY<=rect.bottom+28;
       zone.classList.toggle("dragOver", over);
-      if (over) updateDropPlaceholder(zone, ev.clientY);
+      if (over){
+        updateDropPlaceholder(zone, ev.clientY);
+        if (ev.clientY < rect.top+42) zone.scrollTop-=12;
+        else if (ev.clientY > rect.bottom-42) zone.scrollTop+=12;
+      } else if (info.mode === "new") showEndDropPlaceholder(zone);
       else clearDropPlaceholder(zone);
     }
     function onUp(ev){
@@ -3174,9 +3217,21 @@ function cargarNombreDesdeIndex() {
       if (clientY < rect.top + rect.height/2){ index=i; break; }
     }
     const marker = dragInfo.placeholder;
+    const changed=dragInfo.insertIndex!==index;
     if (index < items.length) zone.insertBefore(marker, items[index]);
     else zone.appendChild(marker);
     dragInfo.insertIndex = index;
+    zone.classList.add("dropActive");
+    if (changed && marker.animate){
+      marker.animate([{height:"8px",opacity:.25},{height:"48px",opacity:1}],{duration:170,easing:"ease-out"});
+    }
+  }
+
+  function showEndDropPlaceholder(zone){
+    if (!dragInfo || !zone) return;
+    const items=$$(".progBlock",zone).filter(el=>!el.classList.contains("dragging"));
+    zone.appendChild(dragInfo.placeholder);
+    dragInfo.insertIndex=items.length;
     zone.classList.add("dropActive");
   }
 
@@ -3188,7 +3243,7 @@ function cargarNombreDesdeIndex() {
   function finishDrag(clientX, clientY){
     const zone = $("#programZone");
     const rect = zone.getBoundingClientRect();
-    const overZone = clientX>=rect.left && clientX<=rect.right && clientY>=rect.top && clientY<=rect.bottom;
+    const overZone = clientX>=rect.left-28 && clientX<=rect.right+28 && clientY>=rect.top-28 && clientY<=rect.bottom+28;
     if (!overZone) return;
 
     const items = $$(".progBlock", zone).filter(el => !el.classList.contains("dragging"));
