@@ -970,6 +970,7 @@
     grid-template-columns:1.2fr 1fr 1fr;
     gap:8px;
   }
+  .nextRouteBtn{grid-column:1 / -1;background:linear-gradient(135deg,#20a96b,#54d98f)!important;font-size:1.02rem;}
   .mainBtn{
     border:3px solid var(--border);
     border-radius:14px;
@@ -1270,6 +1271,18 @@
     100%{ transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) rotate(var(--rot)) scale(.9); opacity:0; }
   }
   @keyframes fireworkFlash{ from{ transform:translate(-50%,-50%) scale(.15); opacity:1; } to{ transform:translate(-50%,-50%) scale(14); opacity:0; } }
+  .explorerCelebration{position:absolute;inset:0;z-index:380;overflow:hidden;pointer-events:none;border-radius:inherit;}
+  .explorerCelebrationTitle{position:absolute;left:50%;top:clamp(64px,11vh,105px);transform:translateX(-50%);width:min(92vw,720px);padding:8px 16px;border-radius:999px;background:rgba(255,255,255,.9);color:#26415f;text-align:center;font-size:clamp(1rem,2.4vw,1.35rem);font-weight:900;box-shadow:0 5px 16px rgba(38,65,95,.2);animation:explorerTitleIn .45s ease both;}
+  .explorerToken{position:absolute;width:clamp(62px,9vw,92px);aspect-ratio:1;border:0;display:grid;place-items:center;background:transparent;filter:drop-shadow(0 5px 3px rgba(20,35,45,.3));font-size:clamp(43px,6.5vw,70px);line-height:1;cursor:pointer;pointer-events:auto;touch-action:manipulation;animation:insectRoam var(--roam-time) ease-in-out infinite alternate;}
+  .explorerToken:nth-of-type(even){animation-delay:-1.2s;}
+  .explorerToken:active{transform:scale(.9)}
+  .explorerToken.burst{pointer-events:none;animation:explorerTokenBurst .38s ease-out forwards;}
+  .explorerMini{position:absolute;left:0;top:0;font-size:clamp(19px,3vw,31px);line-height:1;will-change:transform;filter:none;animation:explorerMarch var(--time) linear forwards;}
+  @keyframes explorerTitleIn{from{opacity:0;transform:translate(-50%,-18px) scale(.9)}to{opacity:1;transform:translateX(-50%) scale(1)}}
+  @keyframes insectRoam{0%{transform:translate(0,0) rotate(-12deg)}32%{transform:translate(var(--rx1),var(--ry1)) rotate(18deg)}66%{transform:translate(var(--rx2),var(--ry2)) rotate(-16deg)}100%{transform:translate(var(--rx3),var(--ry3)) rotate(14deg)}}
+  @keyframes explorerTokenBurst{0%{transform:scale(1);opacity:1}55%{transform:scale(1.35) rotate(12deg);opacity:1}100%{transform:scale(.1) rotate(-25deg);opacity:0}}
+  @keyframes explorerMarch{0%{transform:translate(var(--sx),var(--sy)) rotate(0deg)}14%{transform:translate(var(--x14),var(--y14)) rotate(-28deg)}29%{transform:translate(var(--x29),var(--y29)) rotate(24deg)}44%{transform:translate(var(--x44),var(--y44)) rotate(-20deg)}59%{transform:translate(var(--x59),var(--y59)) rotate(31deg)}74%{transform:translate(var(--x74),var(--y74)) rotate(-25deg)}89%{transform:translate(var(--x89),var(--y89)) rotate(18deg)}100%{transform:translate(var(--ex),var(--ey)) rotate(var(--turn))}}
+  @media (pointer:coarse){.explorerToken{filter:drop-shadow(0 3px 2px rgba(20,35,45,.24))}.explorerMini{font-size:clamp(18px,3vw,27px)}}
 </style>
 </head>
 <body>
@@ -1430,6 +1443,7 @@
             <button class="mainBtn run" id="runBtn">▶ Ejecutar</button>
             <button class="mainBtn undo" id="undoBtn">↩ Quitar</button>
             <button class="mainBtn clear" id="clearBtn">🗑 Borrar</button>
+            <button class="mainBtn nextRouteBtn hidden" id="nextDestinationBtn" type="button">➡️ Siguiente destino</button>
           </div>
 
           <div class="feedback" id="feedback"></div>
@@ -1947,7 +1961,7 @@
     $("#goalPlacementSelect option[value='random']").textContent=tr("goalRandom"); $("#goalPlacementSelect option[value='intersection']").textContent=tr("goalIntersection"); $("#goalPlacementSelect option[value='front']").textContent=tr("goalFront");
     setText("tipNS",tr("tipNS")); setText("tipEW",tr("tipEW")); setText("tipProgram",tr("tipProgram"));
     updatePrimaryActionButtons(walking); setText("blocksProgramTitle",tr("blocksProgram"));
-    setText("availableBlocksLabel",tr("availableBlocks")); setText("yourProgramLabel",tr("yourProgram")); setText("runBtn",tr("run")); setText("undoBtn",tr("undo")); setText("clearBtn",tr("clear"));
+    setText("availableBlocksLabel",tr("availableBlocks")); setText("yourProgramLabel",tr("yourProgram")); setText("runBtn",tr("run")); setText("undoBtn",tr("undo")); setText("clearBtn",tr("clear")); setText("nextDestinationBtn",tr("nextDestination"));
     setText("footerNote",tr("footer")); setText("familyNote",tr("familyFooter")); setText("readInstructionBtn",tr("read"));
     ["N","S","E","W"].forEach(dir=>{ DIR_INFO[dir].label=directionLabel(dir); });
     populateVoiceOptions(); renderTopbar();
@@ -2752,6 +2766,8 @@ function cargarNombreDesdeIndex() {
     const defaultDist = level.unitLength === 50 ? 50 : 100;
     state.paletteDist = {N:defaultDist,S:defaultDist,E:defaultDist,W:defaultDist};
     state.running = false;
+    $("#nextDestinationBtn")?.classList.add("hidden");
+    $(".explorerCelebration")?.remove();
 
     $("#homeScreen").classList.add("hidden");
     $("#gameScreen").classList.remove("hidden");
@@ -3276,6 +3292,7 @@ function cargarNombreDesdeIndex() {
     hideFeedback();
   });
   $("#runBtn").addEventListener("click", runProgram);
+  $("#nextDestinationBtn").addEventListener("click", goToNextDestination);
 
   function setRunningUI(running){
     state.running = running;
@@ -3528,7 +3545,7 @@ function cargarNombreDesdeIndex() {
     return `${reason} ${retry}`;
   }
 
-  function launchCelebration(){
+  function launchFireworksLegacy(){
     $(".fireworksLayer")?.remove();
     const layer=document.createElement("div");
     layer.className="fireworksLayer";
@@ -3575,6 +3592,57 @@ function cargarNombreDesdeIndex() {
     setTimeout(()=>layer.remove(),10000);
   }
 
+  function launchCelebration(){
+    $(".fireworksLayer")?.remove();
+    $(".explorerCelebration")?.remove();
+    const mapHost=$("#mapGrid"),layer=document.createElement("div");
+    if(!mapHost)return;
+    layer.className="explorerCelebration";
+    mapHost.appendChild(layer);
+    const choices=["🐞","🐜","🐝","🪲","🦋"],count=2+Math.floor(Math.random()*4),touch=matchMedia("(pointer: coarse)").matches;
+    const selected=[...choices].sort(()=>Math.random()-.5).slice(0,count);
+    let remaining=count,cleanupTimer;
+    const finishLater=()=>{clearTimeout(cleanupTimer);cleanupTimer=setTimeout(()=>layer.remove(),6500)};
+    selected.forEach((icon,i)=>{
+      const button=document.createElement("button"),cols=count<=3?count:Math.ceil(count/2),row=Math.floor(i/cols),col=i%cols;
+      button.className="explorerToken";
+      button.type="button";
+      button.textContent=icon;
+      button.setAttribute("aria-label",getLanguage()==="en"?`Start ${icon} parade`:`Iniciar desfile de ${icon}`);
+      const x=(col+1)*100/(Math.min(cols,count)+1),y=count<=3?42:30+row*38;
+      button.style.left=`calc(${x}% - 45px)`;
+      button.style.top=`calc(${y}% - 45px)`;
+      button.style.setProperty("--roam-time",(4.5+Math.random()*2.5)+"s");
+      button.style.setProperty("--rx1",Math.round((Math.random()-.5)*90)+"px");button.style.setProperty("--ry1",Math.round((Math.random()-.5)*70)+"px");
+      button.style.setProperty("--rx2",Math.round((Math.random()-.5)*110)+"px");button.style.setProperty("--ry2",Math.round((Math.random()-.5)*80)+"px");
+      button.style.setProperty("--rx3",Math.round((Math.random()-.5)*80)+"px");button.style.setProperty("--ry3",Math.round((Math.random()-.5)*65)+"px");
+      button.onclick=()=>{
+        if(button.dataset.used)return;
+        button.dataset.used="1";
+        const rect=button.getBoundingClientRect(),hostRect=layer.getBoundingClientRect(),sx=rect.left+rect.width/2-hostRect.left,sy=rect.top+rect.height/2-hostRect.top,amount=touch?9+Math.floor(Math.random()*4):13+Math.floor(Math.random()*5);
+        button.classList.add("burst");
+        for(let n=0;n<amount;n++){
+          const mini=document.createElement("span"),side=n%2===0?1:-1,ex=side>0?hostRect.width+45:-45,ey=Math.max(15,Math.min(hostRect.height-20,sy+(Math.random()-.5)*hostRect.height*.86)),dx=ex-sx,dy=ey-sy;
+          mini.className="explorerMini";
+          mini.textContent=icon;
+          mini.style.setProperty("--sx",sx+"px");mini.style.setProperty("--sy",sy+"px");
+          [14,29,44,59,74,89].forEach(percent=>{const t=percent/100,jitterX=(Math.random()-.5)*Math.min(110,hostRect.width*.24),jitterY=(Math.random()-.5)*Math.min(100,hostRect.height*.28),px=Math.max(4,Math.min(hostRect.width-34,sx+dx*t+jitterX)),py=Math.max(4,Math.min(hostRect.height-34,sy+dy*t+jitterY));mini.style.setProperty(`--x${percent}`,px+"px");mini.style.setProperty(`--y${percent}`,py+"px")});
+          mini.style.setProperty("--ex",ex+"px");mini.style.setProperty("--ey",ey+"px");
+          mini.style.setProperty("--turn",Math.round((Math.random()-.5)*100)+"deg");
+          mini.style.setProperty("--time",(4.4+Math.random()*2.1)+"s");
+          mini.style.animationDelay=(n*.055)+"s";
+          layer.appendChild(mini);
+          mini.addEventListener("animationend",()=>mini.remove(),{once:true});
+        }
+        setTimeout(()=>button.remove(),400);
+        remaining--;
+        if(remaining===0)finishLater();
+      };
+      layer.appendChild(button);
+    });
+    cleanupTimer=setTimeout(()=>layer.remove(),18000);
+  }
+
   async function finishRun(success, failMsg){
     if (success){
       setRunningUI(false);
@@ -3597,27 +3665,17 @@ function cargarNombreDesdeIndex() {
   }
 
   function onLevelComplete(successText){
-    const level=state.currentLevelData;
-    const nextHint=getLanguage()==="en"
-      ? "The next route will begin at this exact point with a new destination."
-      : "El siguiente recorrido comenzará en este punto y tendrá un destino nuevo.";
-    const text=`${successText.replace(/^🎉\s*/,"")} ${nextHint}`;
-    showOverlay({
-      icon:"🎉", title:tr("completed"), text,
-      buttons:[
-        {label:tr("nextDestination"), action:()=>{
-          const next=generateNextDestinationLevel(state.currentLevelData);
-          if (!next){
-            hideOverlay();
-            showFeedback(getLanguage()==="en" ? "No other accessible destination was found on this map. Create a new challenge from Settings." : "No se encontró otro destino accesible en este croquis. Crea un reto nuevo desde la configuración.", false);
-            return;
-          }
-          state.routeCount=next.routeNumber; hideOverlay(); startLevelFromConfig(next);
-        }, primary:true},
-        {label:tr("repeatRoute"), action:()=>{ hideOverlay(); startLevelFromConfig(state.currentLevelData); }},
-        {label:tr("config"), action:()=>{ hideOverlay(); goHome(); }}
-      ]
-    });
+    $("#nextDestinationBtn").classList.remove("hidden");
+  }
+
+  function goToNextDestination(){
+    const next=generateNextDestinationLevel(state.currentLevelData);
+    if(!next){
+      showFeedback(getLanguage()==="en" ? "No other accessible destination was found on this map." : "No se encontró otro destino accesible en este croquis.",false);
+      return;
+    }
+    state.routeCount=next.routeNumber;
+    startLevelFromConfig(next);
   }
 
   function showOverlay({icon, title, text, buttons}){
