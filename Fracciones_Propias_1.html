@@ -1,0 +1,1452 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f7fbff">
+<title>Fracciones Propias 1</title>
+<style>
+  :root{
+    --bg:#f4f9ff;
+    --panel:#ffffff;
+    --ink:#203047;
+    --muted:#64748b;
+    --line:#dbe7f4;
+    --primary:#3b82f6;
+    --primary-soft:#eaf3ff;
+    --success:#22a06b;
+    --warning:#f59e0b;
+    --danger:#e85d75;
+    --shadow:0 12px 34px rgba(42,72,105,.12);
+    --radius:24px;
+    --font:"Trebuchet MS", Arial, sans-serif;
+  }
+
+  *{box-sizing:border-box}
+  html,body{
+    margin:0;min-height:100%;color:var(--ink);font-family:var(--font);
+    background:
+      radial-gradient(circle at 8% 12%,rgba(255,213,106,.24) 0 7px,transparent 8px),
+      radial-gradient(circle at 92% 18%,rgba(154,120,208,.18) 0 9px,transparent 10px),
+      radial-gradient(circle at 85% 82%,rgba(69,184,189,.16) 0 8px,transparent 9px),
+      linear-gradient(145deg,#f8fcff 0%,#eef7ff 52%,#fff8ed 100%);
+    background-size:150px 150px,190px 190px,175px 175px,auto;
+  }
+  body{min-height:100dvh;overflow-x:hidden}
+  button,input,select{font:inherit}
+  button{cursor:pointer}
+  button:focus-visible,.num-chip:focus-visible,.paint-swatch:focus-visible,.connector:focus-visible{
+    outline:4px solid rgba(59,130,246,.28); outline-offset:3px;
+  }
+
+  #app{min-height:100dvh;display:flex;flex-direction:column}
+  .topbar{
+    min-height:76px;display:flex;align-items:center;gap:12px;padding:12px clamp(14px,2vw,28px);
+    background:rgba(255,255,255,.94);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:40;
+    backdrop-filter:blur(10px)
+  }
+  .brand{font-weight:900;font-size:clamp(21px,2.5vw,32px);letter-spacing:.2px;flex:1;color:#265f9f}
+  .top-actions{display:flex;gap:10px}
+  .icon-btn,.back-btn{
+    min-width:54px;min-height:54px;border:0;border-radius:18px;background:var(--primary-soft);
+    color:var(--ink);font-size:24px;display:grid;place-items:center;box-shadow:0 3px 10px rgba(0,0,0,.04)
+  }
+  .back-btn{display:none}
+  body.in-activity .back-btn{display:grid}
+
+  main{width:min(1180px,100%);margin:0 auto;padding:clamp(14px,2.2vw,28px);flex:1}
+  .screen{display:none;animation:fadeIn .22s ease}
+  .screen.active{display:block}
+  @keyframes fadeIn{from{opacity:.3;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+  .welcome{
+    min-height:calc(100dvh - 130px);display:grid;align-content:center;gap:24px
+  }
+  .hero{text-align:center}
+  .hero h1{font-size:clamp(34px,5vw,58px);margin:0 0 8px;font-weight:950;color:#285f9f;text-shadow:0 3px 0 #d9eaff}
+  .hero p{font-size:clamp(18px,2.2vw,24px);margin:0;color:var(--muted);font-weight:650}
+  .activity-grid{
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(14px,2vw,22px)
+  }
+  .activity-card{
+    border:2px solid var(--line);background:var(--panel);border-radius:28px;min-height:190px;padding:22px;
+    display:grid;grid-template-columns:auto 1fr;align-items:center;gap:20px;text-align:left;
+    box-shadow:var(--shadow);transition:transform .15s ease,border-color .15s ease,box-shadow .15s ease
+  }
+  .activity-card:hover,.activity-card:focus-visible{transform:translateY(-5px) rotate(-.25deg);border-color:#9fc6ff;box-shadow:0 18px 38px rgba(42,72,105,.17)}
+  .card-icon{
+    width:86px;height:86px;border-radius:24px;background:var(--primary-soft);display:grid;place-items:center;
+    font-size:46px;font-weight:900
+  }
+  .activity-card h2{font-size:clamp(22px,2.5vw,30px);margin:0 0 7px}
+  .activity-card p{font-size:clamp(16px,1.7vw,20px);line-height:1.35;margin:0;color:var(--muted)}
+  .activity-card:nth-child(1){border-color:#b9d7ff;background:linear-gradient(145deg,#fff,#f1f7ff)}
+  .activity-card:nth-child(2){border-color:#ffd2d8;background:linear-gradient(145deg,#fff,#fff3f5)}
+  .activity-card:nth-child(3){border-color:#d8c9f5;background:linear-gradient(145deg,#fff,#f7f2ff)}
+  .activity-card:nth-child(4){border-color:#bce7d6;background:linear-gradient(145deg,#fff,#effbf6)}
+  .activity-card:nth-child(1) .card-icon{background:#dfedff;color:#397ac8}
+  .activity-card:nth-child(2) .card-icon{background:#ffe5e9}
+  .activity-card:nth-child(3) .card-icon{background:#eee5ff}
+  .activity-card:nth-child(4) .card-icon{background:#dcf7ec}
+
+  .activity-shell{display:grid;gap:16px}
+  .instruction{
+    background:var(--panel);border:2px solid var(--line);border-radius:22px;padding:14px 18px;
+    font-size:clamp(18px,2vw,24px);font-weight:750;display:flex;align-items:center;gap:12px;box-shadow:0 5px 18px rgba(42,72,105,.07)
+  }
+  .instruction .speaker{border:0;background:var(--primary-soft);border-radius:14px;width:48px;height:48px;font-size:22px;flex:0 0 auto}
+  .instruction>span{flex:1}
+  .activity-settings-btn{
+    flex:0 0 auto;min-height:44px;padding:0 14px;border:2px solid #cdbcf3;border-radius:14px;
+    background:#f5efff;color:#61449a;font-size:15px;font-weight:900
+  }
+  .activity-work{
+    background:var(--panel);border:2px solid var(--line);border-radius:var(--radius);padding:clamp(14px,2vw,24px);
+    box-shadow:var(--shadow);min-height:520px;position:relative;overflow:hidden;
+    background:linear-gradient(160deg,#ffffff 0%,#fbfdff 72%,#f5faff 100%)
+  }
+  .two-pane{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr);gap:28px;align-items:center;min-height:430px}
+  .figure-zone{display:grid;place-items:center;min-width:0}
+  .figure-box{width:min(100%,560px);height:clamp(280px,42vh,430px);display:grid;place-items:center}
+  .figure-box svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 8px 9px rgba(42,72,105,.10))}
+  .answer-zone{display:grid;justify-items:center;gap:18px}
+  .arrow{font-size:52px;color:#7aaee9;font-weight:900}
+  .fraction-build{
+    width:190px;display:grid;grid-template-rows:96px 8px 96px;align-items:center;justify-items:center;position:relative
+  }
+  .drop-cell{
+    width:112px;height:84px;border:3px dashed #9cb7d4;border-radius:18px;background:#fbfdff;
+    display:grid;place-items:center;font-size:48px;font-weight:950;transition:.15s
+  }
+  .drop-cell.drag-over{border-color:var(--primary);background:var(--primary-soft);transform:scale(1.05)}
+  .drop-cell.filled{border-style:solid;border-color:#aac4df;background:white}
+  .fraction-line{width:150px;height:6px;border-radius:999px;background:var(--ink)}
+  .fraction-build.big{width:220px;grid-template-rows:100px 8px 100px}
+  .fraction-build.big .drop-cell{width:128px;height:88px;font-size:52px}
+  .given-frac{display:grid;grid-template-rows:auto 7px auto;justify-items:center;align-items:center;min-width:125px;font-size:58px;font-weight:950;line-height:1}
+  .given-frac .bar{width:110px;height:6px;background:var(--ink);border-radius:99px;margin:5px 0}
+  .given-frac.attention .top,.given-frac.attention .bottom{animation:pulseNum .65s ease 2}
+  .fraction-name{
+    min-height:34px;padding:6px 14px;border-radius:14px;background:#eef6ff;color:#285f9f;
+    font-size:clamp(18px,2vw,23px);font-weight:900;text-align:center
+  }
+  @keyframes pulseNum{50%{transform:scale(1.3);color:var(--primary)}}
+
+  .inventory-wrap{
+    margin-top:14px;border-top:2px solid var(--line);padding-top:16px
+  }
+  .inventory-title{text-align:center;font-size:17px;font-weight:850;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.08em}
+  .number-inventory{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+  .num-chip{
+    width:58px;height:58px;border-radius:16px;border:2px solid #bfd2e7;background:#fff;
+    display:grid;place-items:center;font-size:28px;font-weight:950;touch-action:none;user-select:none;
+    box-shadow:0 4px 10px rgba(42,72,105,.08)
+  }
+  .num-chip:active{transform:scale(.96)}
+  .drag-ghost{
+    position:fixed;z-index:1000;width:64px;height:64px;border-radius:18px;background:white;border:3px solid var(--primary);
+    display:grid;place-items:center;font-size:30px;font-weight:950;pointer-events:none;box-shadow:0 12px 25px rgba(42,72,105,.2);
+    transform:translate(-50%,-50%)
+  }
+
+  .feedback{
+    min-height:62px;border-radius:18px;padding:12px 16px;display:flex;align-items:center;justify-content:center;
+    text-align:center;font-size:clamp(17px,1.8vw,21px);font-weight:800;color:var(--muted)
+  }
+  .feedback.good{background:linear-gradient(135deg,#e1faee,#f1fff8);color:#13714e;border:2px solid #9de0c2;animation:goodPop .42s ease}
+  .feedback.hint{background:#fff6df;color:#8b5a00}
+  .feedback.error{background:#fff0f2;color:#a33b51}
+  .actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+  .primary-btn,.secondary-btn,.celebrate-btn{
+    min-height:58px;padding:0 24px;border-radius:18px;border:0;font-weight:900;font-size:19px
+  }
+  .primary-btn{background:linear-gradient(135deg,#4b91f7,#3677df);color:white;box-shadow:0 7px 16px rgba(59,130,246,.25)}
+  .secondary-btn{background:#edf3f8;color:var(--ink)}
+  .celebrate-btn{background:linear-gradient(135deg,#fff3bd,#ffe083);color:#724800;border:2px solid #ffd05a}
+  .primary-btn:hover,.celebrate-btn:hover,.secondary-btn:hover{transform:translateY(-2px)}
+  @keyframes goodPop{50%{transform:scale(1.025)}}
+  .hidden{display:none!important}
+
+  /* actividad 2 */
+  .a2-layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:26px;align-items:center;min-height:420px}
+  .a2-left{display:grid;justify-items:center;gap:20px}
+  .color-callout{font-size:20px;font-weight:900;text-align:center}
+  .paint-palette{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+  .paint-swatch{
+    width:58px;height:58px;border:4px solid white;border-radius:18px;box-shadow:0 0 0 2px #c8d5e3,0 5px 12px rgba(0,0,0,.08);
+    touch-action:manipulation
+  }
+  .paint-swatch.selected{box-shadow:0 0 0 5px var(--primary),0 6px 15px rgba(0,0,0,.12);transform:scale(1.06)}
+  .paint-swatch.target-pulse{animation:swatchPulse .65s ease 2}
+  @keyframes swatchPulse{50%{transform:scale(1.18);box-shadow:0 0 0 7px #ffe38a}}
+  .paint-figure{width:min(100%,650px);height:420px;margin:auto;display:grid;place-items:center}
+  .paint-figure svg{width:100%;height:100%;filter:drop-shadow(0 8px 9px rgba(42,72,105,.10))}
+  .fraction-segment{transition:fill .15s ease,opacity .15s ease,transform .15s ease;transform-box:fill-box;transform-origin:center}
+  .fraction-segment.paintable{cursor:pointer}
+  .fraction-segment.count-pulse{animation:segPulse .5s ease}
+  @keyframes segPulse{50%{opacity:.45;transform:scale(.94)}}
+
+  /* actividad 3 */
+  .match-board{position:relative;min-height:500px;padding:12px 28px}
+  .match-columns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(110px,18vw,230px);position:relative;z-index:2}
+  .match-col{display:grid;align-content:start;gap:14px;min-width:0}
+  .match-col-title{text-align:center;font-size:18px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;min-width:0}
+  .match-item{
+    min-height:92px;border:2px solid #d5e3f1;border-radius:20px;background:#fff;display:grid;align-items:center;position:relative;
+    box-shadow:0 4px 12px rgba(42,72,105,.06);min-width:0
+  }
+  .match-item.figure-item{grid-template-columns:1fr}
+  .match-item.name-item{padding:14px 22px;text-align:center;background:linear-gradient(145deg,#fff,#fff8df)}
+  .match-name{font-size:clamp(20px,2vw,27px);font-weight:950;color:#765315;line-height:1.15}
+  .mini-figure{height:105px;width:100%;display:grid;place-items:center;padding:4px 18px}
+  .mini-figure svg{width:100%;height:100%}
+  .mini-frac{font-size:34px;min-width:80px;justify-self:center}
+  .mini-frac .bar{width:58px;height:4px}
+  .connector{
+    width:28px;height:28px;border-radius:50%;border:4px solid white;background:var(--primary);box-shadow:0 0 0 3px #a5c8f2;
+    position:absolute;top:50%;transform:translateY(-50%);z-index:8;touch-action:none
+  }
+  .connector.left{right:-16px}
+  .connector.right{left:-16px}
+  .connector.hover-target{transform:translateY(-50%) scale(1.25);box-shadow:0 0 0 6px rgba(59,130,246,.2)}
+  #matchSvg{position:absolute;inset:0;width:100%;height:100%;z-index:5;pointer-events:none;overflow:visible}
+  #matchSvg path{fill:none;stroke:#5f8fc7;stroke-width:7;stroke-linecap:round}
+  #matchSvg path.temp{stroke:#8db6e4;stroke-dasharray:10 10}
+  .match-item.problem{animation:problemPulse .65s ease 2;border-color:#efb3bf}
+  @keyframes problemPulse{50%{transform:scale(1.025);background:#fff5f6}}
+  .match-help{display:flex;justify-content:center;margin-top:12px}
+  .match-customize{
+    display:flex;align-items:center;gap:14px;padding:13px 16px;margin-bottom:14px;border:2px solid #cdbcf3;
+    border-radius:19px;background:linear-gradient(135deg,#f5efff,#eef6ff);box-shadow:0 5px 15px rgba(93,68,151,.09)
+  }
+  .match-customize-copy{flex:1;min-width:0}
+  .match-customize-title{font-size:18px;font-weight:950;color:#61449a;margin-bottom:3px}
+  .match-customize-summary{font-size:15px;font-weight:750;color:#5e6f85;line-height:1.3}
+  .match-customize-btn{min-height:48px;padding:0 17px;border:0;border-radius:15px;background:#7658bd;color:white;font-weight:900;box-shadow:0 6px 13px rgba(118,88,189,.23)}
+  .setting-group.settings-attention{animation:settingsAttention .8s ease 2;border-color:#8d70d1;box-shadow:0 0 0 5px rgba(141,112,209,.12)}
+  @keyframes settingsAttention{50%{transform:scale(1.012);background:#faf7ff}}
+
+  /* actividad 4 */
+  .a4-grid{display:grid;grid-template-columns:240px minmax(0,1fr);gap:24px;align-items:center}
+  .step-card{background:#f8fbff;border:2px solid var(--line);border-radius:20px;padding:16px}
+  .step-label{font-size:16px;color:var(--muted);font-weight:850;text-transform:uppercase;letter-spacing:.06em}
+  .step-title{font-size:22px;font-weight:950;margin:5px 0 12px}
+  .slider-wrap{display:grid;gap:10px}
+  .slider-wrap input[type=range]{width:100%;height:46px;accent-color:var(--primary)}
+  .slider-value{text-align:center;font-size:28px;font-weight:950}
+  .parts-choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+  .parts-choice{
+    min-height:54px;border:2px solid #c8d9ea;border-radius:15px;background:white;color:#334b67;
+    font-size:18px;font-weight:950;box-shadow:0 3px 8px rgba(42,72,105,.06)
+  }
+  .parts-choice.selected{background:linear-gradient(135deg,#4b91f7,#3677df);border-color:#3677df;color:white;transform:translateY(-2px);box-shadow:0 7px 14px rgba(59,130,246,.24)}
+  .step-dots{display:flex;justify-content:center;gap:9px;margin-top:10px}
+  .step-dot{width:13px;height:13px;border-radius:50%;background:#d3e0ed}
+  .step-dot.active{background:var(--primary)}
+  .a4-figure{height:430px;display:grid;place-items:center}
+  .a4-figure svg{width:100%;height:100%;filter:drop-shadow(0 8px 9px rgba(42,72,105,.10))}
+
+  /* celebraciones */
+  .celebration-layer{position:fixed;inset:0;pointer-events:none;z-index:2000;overflow:hidden}
+  .number-pop{
+    position:fixed;font-size:clamp(26px,4vw,48px);font-weight:950;animation:numberBurst 1.25s ease-out forwards
+  }
+  @keyframes numberBurst{
+    0%{transform:translate(-50%,-50%) scale(.3);opacity:0}
+    15%{opacity:1}
+    100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) rotate(var(--rot)) scale(1.15);opacity:0}
+  }
+  .spark{
+    position:fixed;width:11px;height:11px;border-radius:50%;animation:sparkFly 1.25s ease-out forwards
+  }
+  .success-sticker{
+    position:fixed;z-index:2100;pointer-events:none;font-size:clamp(34px,6vw,68px);
+    animation:stickerPop 1.15s ease-out forwards;transform:translate(-50%,-50%)
+  }
+  @keyframes stickerPop{
+    0%{opacity:0;transform:translate(-50%,-50%) scale(.2) rotate(-18deg)}
+    28%{opacity:1;transform:translate(-50%,-65%) scale(1.25) rotate(8deg)}
+    100%{opacity:0;transform:translate(-50%,-125%) scale(.85) rotate(-4deg)}
+  }
+  @keyframes sparkFly{
+    from{transform:translate(-50%,-50%) scale(.4);opacity:1}
+    to{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.1);opacity:0}
+  }
+
+  /* configuración */
+  dialog{
+    width:min(760px,calc(100% - 24px));max-height:90dvh;border:0;border-radius:28px;padding:0;box-shadow:0 30px 80px rgba(20,45,70,.3)
+  }
+  dialog::backdrop{background:rgba(23,39,58,.42);backdrop-filter:blur(3px)}
+  .settings-head{display:flex;align-items:center;padding:18px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:white;z-index:2}
+  .settings-head h2{margin:0;font-size:26px;flex:1}
+  .close-btn{width:48px;height:48px;border:0;border-radius:15px;background:#eef3f7;font-size:23px}
+  .settings-body{padding:20px 22px;display:grid;gap:18px;max-height:calc(90dvh - 150px);overflow:auto}
+  .setting-group{border:2px solid var(--line);border-radius:20px;padding:16px}
+  .setting-group h3{margin:0 0 14px;font-size:20px}
+  .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  label.setting{display:grid;gap:7px;font-weight:800;color:#42546b}
+  select,input[type=number]{
+    width:100%;min-height:48px;border:2px solid #cbd9e7;border-radius:14px;background:white;padding:8px 12px;color:var(--ink)
+  }
+  .denom-list{display:flex;flex-wrap:wrap;gap:8px}
+  .denom-option{position:relative}
+  .denom-option input{position:absolute;opacity:0}
+  .denom-option span{
+    width:48px;height:48px;border-radius:14px;border:2px solid #cbd9e7;background:white;display:grid;place-items:center;font-size:20px;font-weight:900
+  }
+  .denom-option input:checked + span{background:var(--primary);color:white;border-color:var(--primary)}
+  .toggle-line{display:flex;align-items:center;gap:10px;font-weight:800;margin:8px 0}
+  .toggle-line input{width:24px;height:24px}
+  .settings-footer{display:flex;justify-content:flex-end;gap:10px;padding:14px 22px;border-top:1px solid var(--line);background:white}
+  .small-note{font-size:14px;color:var(--muted);line-height:1.4}
+  .settings-scope-note{margin:0;padding:11px 14px;border-radius:14px;background:#eef6ff;color:#355b84;font-weight:800;line-height:1.35}
+  .setting-group.scope-hidden{display:none}
+
+  @media (max-width:850px){
+    .activity-grid{grid-template-columns:1fr}
+    .activity-card{min-height:150px}
+    .two-pane{grid-template-columns:1fr;gap:10px}
+    .arrow{transform:rotate(90deg);font-size:42px}
+    .figure-box{height:300px}
+    .activity-work{min-height:auto}
+    .a2-layout,.a4-grid{grid-template-columns:1fr}
+    .a2-left{grid-template-columns:auto 1fr;align-items:center}
+    .paint-figure,.a4-figure{height:360px}
+    .match-board{padding:8px 14px}
+    .match-columns{gap:70px}
+    .match-item{min-height:84px}
+    .mini-figure{height:90px;padding:3px 10px}
+    .form-grid{grid-template-columns:1fr}
+  }
+
+  @media (orientation:portrait) and (max-width:1000px){
+    main{padding:12px}
+    .topbar{min-height:68px}
+    .activity-work{padding:14px}
+    .match-columns{gap:64px}
+    .connector{width:30px;height:30px}
+    .a2-left{grid-template-columns:1fr;gap:10px}
+  }
+
+  @media (max-width:560px){
+    .brand{font-size:20px}
+    .icon-btn,.back-btn{min-width:48px;min-height:48px;border-radius:15px}
+    .activity-card{grid-template-columns:70px 1fr;padding:16px}
+    .card-icon{width:68px;height:68px;font-size:36px}
+    .match-board{padding:6px 2px}
+    .match-columns{gap:46px}
+    .match-col-title{font-size:11px;letter-spacing:.025em;overflow-wrap:anywhere}
+    .match-item.name-item{padding:10px 6px}
+    .match-name{font-size:16px;overflow-wrap:anywhere}
+    .mini-frac{font-size:26px;min-width:72px}
+    .match-customize{align-items:stretch;flex-direction:column}
+    .match-customize-btn{width:100%}
+    .instruction{flex-wrap:wrap}
+    .activity-settings-btn{width:100%}
+    .connector.left{right:-15px}.connector.right{left:-15px}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <button class="back-btn" id="backBtn" aria-label="Volver al menú">←</button>
+    <div class="brand">Fracciones Propias 1</div>
+    <div class="top-actions">
+      <button class="icon-btn" id="repeatBtn" aria-label="Repetir instrucción" title="Repetir instrucción">🔊</button>
+      <button class="icon-btn" id="settingsBtn" aria-label="Configuración" title="Configuración">⚙️</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="screen active" id="homeScreen">
+      <div class="welcome">
+        <div class="hero">
+          <h1>Fracciones Propias 1</h1>
+          <p>Observa, representa, relaciona y construye fracciones.</p>
+        </div>
+        <div class="activity-grid">
+          <button class="activity-card" data-open="a1">
+            <div class="card-icon">¾</div>
+            <div><h2>1. ¿Qué fracción es?</h2><p>Observa la figura y arma la fracción arrastrando los números.</p></div>
+          </button>
+          <button class="activity-card" data-open="a2">
+            <div class="card-icon">🎨</div>
+            <div><h2>2. Representa la fracción</h2><p>Lee la fracción y colorea la cantidad de partes indicada.</p></div>
+          </button>
+          <button class="activity-card" data-open="a3">
+            <div class="card-icon">〰️</div>
+            <div><h2>3. Encuentra las parejas</h2><p>Une cada figura con su fracción usando líneas curvas.</p></div>
+          </button>
+          <button class="activity-card" data-open="a4">
+            <div class="card-icon">✂️</div>
+            <div><h2>4. Construye la fracción</h2><p>Parte el entero y después colorea las partes necesarias.</p></div>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="a1Screen">
+      <div class="activity-shell">
+        <div class="instruction"><button class="speaker" data-speak aria-label="Leer instrucción">🔊</button><span id="a1Instruction">Observa la figura. Forma la fracción que representa la parte coloreada.</span><button class="activity-settings-btn" data-settings-scope="a1">⚙️ Ajustar actividad</button></div>
+        <div class="activity-work">
+          <div class="two-pane">
+            <div class="figure-zone"><div class="figure-box" id="a1Figure"></div></div>
+            <div class="answer-zone">
+              <div class="arrow">➜</div>
+              <div class="fraction-build" id="a1Fraction">
+                <div class="drop-cell" data-slot="num" aria-label="Numerador"></div>
+                <div class="fraction-line"></div>
+                <div class="drop-cell" data-slot="den" aria-label="Denominador"></div>
+              </div>
+              <div class="fraction-name hidden" id="a1FractionName" aria-live="polite"></div>
+            </div>
+          </div>
+          <div class="inventory-wrap">
+            <div class="inventory-title">Arrastra los números</div>
+            <div class="number-inventory" id="a1Inventory"></div>
+          </div>
+          <div class="feedback" id="a1Feedback">Arrastra un número arriba y otro abajo.</div>
+          <div class="actions"><button class="primary-btn hidden" id="a1Next">Otro ejercicio ➜</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="a2Screen">
+      <div class="activity-shell">
+        <div class="instruction"><button class="speaker" data-speak aria-label="Leer instrucción">🔊</button><span id="a2Instruction">Colorea la figura para representar la fracción.</span><button class="activity-settings-btn" data-settings-scope="a2">⚙️ Ajustar actividad</button></div>
+        <div class="activity-work">
+          <div class="a2-layout">
+            <div class="a2-left">
+              <div class="given-frac" id="a2Fraction"><span class="top"></span><span class="bar"></span><span class="bottom"></span></div>
+              <div class="fraction-name" id="a2FractionName"></div>
+              <div>
+                <div class="color-callout" id="a2ColorText"></div>
+                <div class="paint-palette" id="a2Palette"></div>
+              </div>
+            </div>
+            <div class="paint-figure" id="a2Figure"></div>
+          </div>
+          <div class="feedback" id="a2Feedback">Selecciona el color indicado y toca las partes que deseas colorear.</div>
+          <div class="actions">
+            <button class="primary-btn" id="a2Check">✓ Revisar</button>
+            <button class="celebrate-btn hidden" id="a2Celebrate">🎆 ¡Celebrar!</button>
+            <button class="primary-btn hidden" id="a2Next">Siguiente ➜</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="a3Screen">
+      <div class="activity-shell">
+        <div class="instruction"><button class="speaker" data-speak aria-label="Leer instrucción">🔊</button><span id="a3Instruction">Une cada figura con su fracción.</span><button class="activity-settings-btn" data-settings-scope="a3">⚙️ Ajustar actividad</button></div>
+        <div class="activity-work">
+          <div class="match-customize">
+            <div class="match-customize-copy">
+              <div class="match-customize-title">🎛️ Tú eliges cómo jugar</div>
+              <div class="match-customize-summary" id="matchCustomizeSummary">Puedes cambiar el tipo de pareo, las parejas y los sobrantes.</div>
+            </div>
+            <button class="match-customize-btn" id="customizeMatch">⚙️ Personalizar pareo</button>
+          </div>
+          <div class="match-board" id="matchBoard">
+            <svg id="matchSvg" aria-hidden="true"></svg>
+            <div class="match-columns">
+              <div class="match-col" id="leftMatchCol"><div class="match-col-title">Figuras</div></div>
+              <div class="match-col" id="rightMatchCol"><div class="match-col-title">Fracciones</div></div>
+            </div>
+          </div>
+          <div class="feedback" id="a3Feedback">Hala una línea desde un punto azul de la izquierda hasta un punto de la derecha.</div>
+          <div class="actions">
+            <button class="primary-btn" id="a3Check">✓ Revisar</button>
+            <button class="secondary-btn" id="a3Clear">Borrar líneas</button>
+            <button class="celebrate-btn hidden" id="a3Celebrate">🎆 ¡Celebrar!</button>
+            <button class="primary-btn hidden" id="a3Next">Nuevo pareo ➜</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="a4Screen">
+      <div class="activity-shell">
+        <div class="instruction"><button class="speaker" data-speak aria-label="Leer instrucción">🔊</button><span id="a4Instruction">Construye la fracción.</span><button class="activity-settings-btn" data-settings-scope="a4">⚙️ Ajustar actividad</button></div>
+        <div class="activity-work">
+          <div class="a4-grid">
+            <div>
+              <div class="given-frac big" id="a4Fraction"><span class="top"></span><span class="bar"></span><span class="bottom"></span></div>
+              <div class="fraction-name" id="a4FractionName"></div>
+              <div class="step-card">
+                <div class="step-label" id="a4StepLabel">Paso 1 de 2</div>
+                <div class="step-title" id="a4StepTitle">Divide el entero</div>
+                <div class="slider-wrap" id="a4SliderWrap">
+                  <div class="parts-choices" id="a4PartsChoices" aria-label="Elige el número de partes"></div>
+                  <div class="slider-value"><span id="a4SliderValue">2</span> partes</div>
+                </div>
+                <div class="paint-palette hidden" id="a4Palette"></div>
+                <div class="step-dots"><span class="step-dot active"></span><span class="step-dot"></span></div>
+              </div>
+            </div>
+            <div class="a4-figure" id="a4Figure"></div>
+          </div>
+          <div class="feedback" id="a4Feedback">Mueve el deslizador para decidir en cuántas partes iguales dividir el entero.</div>
+          <div class="actions">
+            <button class="primary-btn" id="a4ConfirmParts">Ya dividí</button>
+            <button class="primary-btn hidden" id="a4Check">✓ Revisar</button>
+            <button class="celebrate-btn hidden" id="a4Celebrate">🎆 ¡Celebrar!</button>
+            <button class="primary-btn hidden" id="a4Next">Otra fracción ➜</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="celebration-layer" id="celebrationLayer"></div>
+
+<dialog id="settingsDialog">
+  <div class="settings-head"><h2 id="settingsTitle">⚙️ Configuración</h2><button class="close-btn" id="closeSettings" aria-label="Cerrar">✕</button></div>
+  <div class="settings-body">
+    <p class="settings-scope-note hidden" id="settingsScopeNote"></p>
+    <section class="setting-group" id="fractionSettingsGroup">
+      <h3>Fracciones</h3>
+      <div class="small-note" id="fractionSettingsNote">Selecciona los denominadores que podrán aparecer. La aplicación genera únicamente fracciones propias.</div>
+      <div class="denom-list" id="denomList"></div>
+    </section>
+
+    <section class="setting-group" id="matchSettingsGroup">
+      <h3>Pareo</h3>
+      <div class="small-note">Aquí puedes elegir qué se relaciona, cuántas parejas aparecen y si habrá opciones sin pareja.</div>
+      <div class="form-grid">
+        <label class="setting">Número de parejas
+          <select id="pairCount">
+            <option value="2">2 parejas</option><option value="3">3 parejas</option>
+            <option value="4">4 parejas</option><option value="5">5 parejas</option><option value="6">6 parejas</option>
+          </select>
+        </label>
+        <label class="setting">Tipo de pareo
+          <select id="matchMode">
+            <option value="figure-fraction">Figura con fracción</option>
+            <option value="fraction-name">Fracción con nombre</option>
+            <option value="name-figure">Nombre con figura</option>
+            <option value="mixed">Mixto</option>
+          </select>
+        </label>
+        <label class="setting">Sobrantes
+          <select id="leftoverSide">
+            <option value="none">Sin sobrantes</option>
+            <option value="left">Sobrantes en figuras</option>
+            <option value="right">Sobrantes en fracciones</option>
+            <option value="both">Sobrantes en ambos lados</option>
+          </select>
+        </label>
+        <label class="setting">Cantidad de sobrantes
+          <select id="leftoverCount"><option value="1">1</option><option value="2">2</option></select>
+        </label>
+      </div>
+    </section>
+
+    <section class="setting-group" id="appearanceSettingsGroup">
+      <h3>Lectura y apariencia</h3>
+      <div class="form-grid">
+        <label class="setting">Tipo de letra
+          <select id="fontSelect">
+            <option value="Arial, Helvetica, sans-serif">Arial</option>
+            <option value="'Trebuchet MS', Arial, sans-serif">Trebuchet</option>
+            <option value="'Comic Sans MS', 'Comic Sans', cursive">Comic Sans</option>
+            <option value="'Segoe Print', 'Bradley Hand', cursive">Segoe Print</option>
+          </select>
+        </label>
+        <label class="setting">Voz
+          <select id="voiceSelect"><option value="">Voz predeterminada</option></select>
+        </label>
+      </div>
+      <label class="toggle-line"><input id="autoRead" type="checkbox"> Leer automáticamente las instrucciones</label>
+      <label class="toggle-line"><input id="soundsOn" type="checkbox"> Sonidos de respuesta y celebración</label>
+    </section>
+  </div>
+  <div class="settings-footer">
+    <button class="secondary-btn" id="resetSettings">Valores iniciales</button>
+    <button class="primary-btn" id="saveSettings">Guardar</button>
+  </div>
+</dialog>
+
+<script>
+(()=>{
+'use strict';
+
+const $ = (s, root=document) => root.querySelector(s);
+const $$ = (s, root=document) => [...root.querySelectorAll(s)];
+const rand = arr => arr[Math.floor(Math.random()*arr.length)];
+const shuffle = arr => {
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
+  return a;
+};
+const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+const ns='http://www.w3.org/2000/svg';
+
+const COLORS = [
+  {name:'azul', hex:'#4f8fe8'},
+  {name:'amarillo', hex:'#f5c84b'},
+  {name:'rojo', hex:'#e96a73'},
+  {name:'verde', hex:'#56b98a'},
+  {name:'naranja', hex:'#f49b45'},
+  {name:'morado', hex:'#9a78d0'},
+  {name:'turquesa', hex:'#45b8bd'}
+];
+
+const defaults = {
+  denominators:[2,3,4,5,6,7,8],
+  activityDenominators:{},
+  pairCount:4,
+  matchMode:'figure-fraction',
+  leftoverSide:'none',
+  leftoverCount:1,
+  font:"Arial, Helvetica, sans-serif",
+  voice:'',
+  autoRead:true,
+  soundsOn:true
+};
+let settings = loadSettings();
+let currentActivity=null;
+let currentInstruction='';
+
+const states = {
+  a1:{num:null,den:null,attempts:0,fraction:null},
+  a2:{fraction:null,color:null,painted:new Set(),attempts:0,done:false},
+  a3:{pairs:[],leftItems:[],rightItems:[],connections:new Map(),attempts:0,drag:null,done:false},
+  a4:{fraction:null,color:null,parts:2,step:1,painted:new Set(),attempts:0,shape:'circle',done:false}
+};
+
+function loadSettings(){
+  try{return {...defaults,...JSON.parse(localStorage.getItem('fraccionesPropias1Settings')||'{}')}}catch(e){return {...defaults}}
+}
+function saveSettings(){
+  localStorage.setItem('fraccionesPropias1Settings',JSON.stringify(settings));
+}
+function applySettings(){
+  document.documentElement.style.setProperty('--font',settings.font);
+}
+applySettings();
+
+function setScreen(id){
+  $$('.screen').forEach(s=>s.classList.remove('active'));
+  $('#'+id+'Screen').classList.add('active');
+  currentActivity=id==='home'?null:id;
+  document.body.classList.toggle('in-activity',!!currentActivity);
+  if(id==='home'){currentInstruction=''; speechSynthesis.cancel()}
+}
+function setInstruction(text, elId){
+  currentInstruction=text;
+  if(elId) $('#'+elId).textContent=text;
+  if(settings.autoRead) setTimeout(()=>speak(text),250);
+}
+function speak(text){
+  if(!('speechSynthesis' in window)||!text)return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='es-ES';
+  u.rate=.9;
+  const voices=speechSynthesis.getVoices();
+  if(settings.voice){
+    const v=voices.find(x=>x.name===settings.voice);
+    if(v)u.voice=v;
+  } else {
+    const v=voices.find(x=>x.lang&&x.lang.toLowerCase().startsWith('es'));
+    if(v)u.voice=v;
+  }
+  speechSynthesis.speak(u);
+}
+function feedback(id,text,type=''){
+  const el=$('#'+id); el.textContent=text; el.className='feedback'+(type?' '+type:'');
+}
+function gcd(a,b){while(b){[a,b]=[b,a%b]}return a}
+function fractionText(n,d){
+  const nums=['cero','un','dos','tres','cuatro','cinco','seis','siete','ocho','nueve','diez'];
+  const dens={2:'medios',3:'tercios',4:'cuartos',5:'quintos',6:'sextos',7:'séptimos',8:'octavos',9:'novenos',10:'décimos'};
+  if(n===1){
+    const singular={2:'medio',3:'tercio',4:'cuarto',5:'quinto',6:'sexto',7:'séptimo',8:'octavo',9:'noveno',10:'décimo'};
+    return `un ${singular[d]||('sobre '+d)}`;
+  }
+  return `${nums[n]||n} ${dens[d]||('sobre '+d)}`;
+}
+function denominatorsFor(activity=currentActivity){
+  const custom=settings.activityDenominators&&settings.activityDenominators[activity];
+  return custom&&custom.length?custom:settings.denominators;
+}
+function randomFraction(excludeKeys=[]){
+  const selected=denominatorsFor(),dens=selected.length?selected:defaults.denominators;
+  for(let k=0;k<100;k++){
+    const d=rand(dens), n=1+Math.floor(Math.random()*(d-1));
+    const key=`${n}/${d}`;
+    if(!excludeKeys.includes(key)) return {n,d,key};
+  }
+  const d=dens[0]||4; return {n:1,d,key:`1/${d}`};
+}
+function randomUniqueFraction(existing, compareEquivalent=false){
+  for(let k=0;k<200;k++){
+    const f=randomFraction();
+    const equivalentKey=(()=>{const g=gcd(f.n,f.d);return `${f.n/g}/${f.d/g}`})();
+    const ok=existing.every(e=>{
+      if(e.key===f.key)return false;
+      if(compareEquivalent){
+        const g=gcd(e.n,e.d); return `${e.n/g}/${e.d/g}`!==equivalentKey;
+      }
+      return true;
+    });
+    if(ok)return f;
+  }
+  return randomFraction(existing.map(x=>x.key));
+}
+function availableEquivalentFractions(denominators){
+  const unique=new Set();
+  denominators.forEach(d=>{
+    for(let n=1;n<d;n++){
+      const g=gcd(n,d);unique.add(`${n/g}/${d/g}`);
+    }
+  });
+  return unique.size;
+}
+
+/* SVG */
+function svgEl(name,attrs={}){
+  const el=document.createElementNS(ns,name);
+  Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));
+  return el;
+}
+function polar(cx,cy,r,ang){const a=(ang-90)*Math.PI/180;return {x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)}}
+function sectorPath(cx,cy,r,a1,a2){
+  const p1=polar(cx,cy,r,a1),p2=polar(cx,cy,r,a2),large=(a2-a1)>180?1:0;
+  return `M ${cx} ${cy} L ${p1.x} ${p1.y} A ${r} ${r} 0 ${large} 1 ${p2.x} ${p2.y} Z`;
+}
+function regularPoint(cx,cy,r,i,n){
+  const a=(-90+i*360/n)*Math.PI/180; return [cx+r*Math.cos(a),cy+r*Math.sin(a)];
+}
+function chooseShape(d,forConstruction=false){
+  if(forConstruction)return rand(['circle','barH']);
+  const opts=['circle','barH'];
+  if(d>=3)opts.push('polygon');
+  if([4,6,8,9,10].includes(d))opts.push('grid');
+  return rand(opts);
+}
+function renderFractionFigure(container,d,n,color,opts={}){
+  container.innerHTML='';
+  const svg=svgEl('svg',{viewBox:'0 0 360 250','aria-label':`Figura dividida en ${d} partes`});
+  let shape=opts.shape||chooseShape(d,false);
+  if(shape==='polygon'&&d<3)shape='circle';
+  const white='#ffffff', stroke='#263645';
+  let segments=[];
+
+  if(shape==='circle'){
+    const cx=180,cy=125,r=102;
+    for(let i=0;i<d;i++){
+      const seg=svgEl('path',{d:sectorPath(cx,cy,r,i*360/d,(i+1)*360/d),stroke,'stroke-width':'3','stroke-linejoin':'round'});
+      segments.push(seg);svg.appendChild(seg);
+    }
+  } else if(shape==='polygon'){
+    const cx=180,cy=125,r=105;
+    for(let i=0;i<d;i++){
+      const p1=regularPoint(cx,cy,r,i,d),p2=regularPoint(cx,cy,r,i+1,d);
+      const seg=svgEl('polygon',{points:`${cx},${cy} ${p1[0]},${p1[1]} ${p2[0]},${p2[1]}`,stroke,'stroke-width':'3','stroke-linejoin':'round'});
+      segments.push(seg);svg.appendChild(seg);
+    }
+  } else if(shape==='barH'){
+    const x=24,y=35,w=312,h=180;
+    for(let i=0;i<d;i++){
+      const seg=svgEl('rect',{x,y:y+i*h/d,width:w,height:h/d,stroke,'stroke-width':'3'});
+      segments.push(seg);svg.appendChild(seg);
+    }
+  } else if(shape==='grid'){
+    let rows=2, cols=d/2;
+    if(d===9){rows=3;cols=3}
+    if(!Number.isInteger(cols)){rows=1;cols=d}
+    const x=62,y=38,w=236,h=174;
+    for(let i=0;i<d;i++){
+      const c=i%cols,r=Math.floor(i/cols);
+      const seg=svgEl('rect',{x:x+c*w/cols,y:y+r*h/rows,width:w/cols,height:h/rows,stroke,'stroke-width':'3'});
+      segments.push(seg);svg.appendChild(seg);
+    }
+  } else {
+    const x=24,y=58,w=312,h=134;
+    for(let i=0;i<d;i++){
+      const seg=svgEl('rect',{x:x+i*w/d,y,width:w/d,height:h,stroke,'stroke-width':'3'});
+      segments.push(seg);svg.appendChild(seg);
+    }
+  }
+
+  const coloredSet=opts.coloredIndices ? new Set(opts.coloredIndices) : new Set([...Array(n).keys()]);
+  segments.forEach((seg,i)=>{
+    seg.classList.add('fraction-segment');
+    seg.dataset.index=i;
+    const colored=coloredSet.has(i);
+    seg.dataset.colored=colored?'1':'0';
+    seg.dataset.painted=colored?'1':'0';
+    seg.setAttribute('fill',colored?color:white);
+    if(opts.paintable){
+      seg.classList.add('paintable');
+      seg.setAttribute('role','button');
+      seg.setAttribute('tabindex','0');
+    }
+  });
+  container.appendChild(svg);
+  return {svg,segments,shape};
+}
+function setPainted(seg,on,color){
+  seg.dataset.painted=on?'1':'0';
+  seg.setAttribute('fill',on?color:'#ffffff');
+}
+async function animateCount(container, selector='.fraction-segment'){
+  const segs=$$(selector,container);
+  for(const s of segs){
+    s.classList.add('count-pulse');
+    await new Promise(r=>setTimeout(r,250));
+    s.classList.remove('count-pulse');
+  }
+}
+
+/* audio */
+let audioCtx=null;
+function tone(freq=520,dur=.09,type='sine',vol=.06){
+  if(!settings.soundsOn)return;
+  try{
+    audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
+    const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+    o.type=type;o.frequency.value=freq;g.gain.value=vol;
+    o.connect(g);g.connect(audioCtx.destination);o.start();
+    g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+dur);
+    o.stop(audioCtx.currentTime+dur);
+  }catch(e){}
+}
+function successSound(){
+  tone(523,.12,'triangle',.055);
+  setTimeout(()=>tone(659,.12,'triangle',.055),105);
+  setTimeout(()=>tone(784,.13,'triangle',.06),210);
+  setTimeout(()=>tone(1047,.22,'sine',.045),325);
+}
+function softError(){tone(250,.12,'sine',.035)}
+
+/* celebrations */
+function numberExplosion(anchor){
+  const layer=$('#celebrationLayer'),r=anchor.getBoundingClientRect();
+  const x=r.left+r.width/2,y=r.top+r.height/2;
+  const colors=['#e85d75','#3b82f6','#22a06b','#f59e0b','#9a78d0','#45b8bd'];
+  for(let i=0;i<38;i++){
+    const el=document.createElement('div');el.className='number-pop';el.textContent=Math.floor(Math.random()*10);
+    el.style.left=x+'px';el.style.top=y+'px';el.style.color=rand(colors);
+    const a=Math.random()*Math.PI*2,dist=120+Math.random()*260;
+    el.style.setProperty('--dx',Math.cos(a)*dist+'px');el.style.setProperty('--dy',Math.sin(a)*dist+'px');
+    el.style.setProperty('--rot',(-180+Math.random()*360)+'deg');
+    layer.appendChild(el);setTimeout(()=>el.remove(),1400);
+  }
+}
+function fireworks(){
+  const layer=$('#celebrationLayer'),colors=['#e85d75','#3b82f6','#22a06b','#f59e0b','#9a78d0','#45b8bd','#ffd54a'];
+  for(let b=0;b<6;b++){
+    setTimeout(()=>{
+      const x=innerWidth*(.14+Math.random()*.72),y=innerHeight*(.14+Math.random()*.55);
+      for(let i=0;i<24;i++){
+        const el=document.createElement('div');el.className='spark';el.style.left=x+'px';el.style.top=y+'px';el.style.background=rand(colors);
+        const a=i/24*Math.PI*2+Math.random()*.1,dist=70+Math.random()*140;
+        el.style.setProperty('--dx',Math.cos(a)*dist+'px');el.style.setProperty('--dy',Math.sin(a)*dist+'px');
+        layer.appendChild(el);setTimeout(()=>el.remove(),1400);
+      }
+      tone(360+Math.random()*240,.12,'triangle',.04);
+    },b*170);
+  }
+}
+function celebrateCorrect(anchor){
+  successSound();
+  const layer=$('#celebrationLayer'),r=anchor.getBoundingClientRect();
+  const x=r.left+r.width/2,y=Math.max(95,r.top+r.height/2);
+  const sticker=document.createElement('div');sticker.className='success-sticker';sticker.textContent=rand(['⭐','🌟','🎉','🏆']);
+  sticker.style.left=x+'px';sticker.style.top=y+'px';layer.appendChild(sticker);setTimeout(()=>sticker.remove(),1250);
+  const colors=['#e85d75','#3b82f6','#22a06b','#f59e0b','#9a78d0','#45b8bd','#ffd54a'];
+  for(let i=0;i<20;i++){
+    const el=document.createElement('div');el.className='spark';el.style.left=x+'px';el.style.top=y+'px';el.style.background=rand(colors);
+    const a=i/20*Math.PI*2,dist=55+Math.random()*90;
+    el.style.setProperty('--dx',Math.cos(a)*dist+'px');el.style.setProperty('--dy',Math.sin(a)*dist+'px');
+    layer.appendChild(el);setTimeout(()=>el.remove(),1400);
+  }
+}
+
+/* Navegación */
+$$('[data-open]').forEach(btn=>btn.addEventListener('click',()=>{
+  const id=btn.dataset.open;setScreen(id);startActivity(id);
+}));
+$('#backBtn').addEventListener('click',()=>setScreen('home'));
+$('#repeatBtn').addEventListener('click',()=>currentInstruction?speak(currentInstruction):speak('Fracciones Propias uno.'));
+$$('[data-speak]').forEach(b=>b.addEventListener('click',()=>speak(currentInstruction)));
+
+/* Actividad 1 */
+function startA1(){
+  const s=states.a1; s.num=null;s.den=null;s.attempts=0;s.fraction=randomFraction();
+  const color=rand(COLORS).hex;
+  const indices=shuffle([...Array(s.fraction.d).keys()]).slice(0,s.fraction.n);
+  renderFractionFigure($('#a1Figure'),s.fraction.d,s.fraction.n,color,{coloredIndices:indices});
+  $$('.drop-cell',$('#a1Fraction')).forEach(c=>{c.textContent='';c.classList.remove('filled')});
+  $('#a1FractionName').textContent='';$('#a1FractionName').classList.add('hidden');
+  $('#a1Next').classList.add('hidden');
+  feedback('a1Feedback','Arrastra un número arriba y otro abajo.');
+  setInstruction('Observa la figura. Forma la fracción que representa la parte coloreada.','a1Instruction');
+  buildNumberInventory();
+}
+function buildNumberInventory(){
+  const max=Math.max(10,...denominatorsFor('a1'));
+  const inv=$('#a1Inventory');inv.innerHTML='';
+  for(let i=1;i<=max;i++){
+    const chip=document.createElement('button');chip.className='num-chip';chip.textContent=i;chip.dataset.value=i;
+    chip.setAttribute('aria-label',`Número ${i}`);
+    chip.addEventListener('pointerdown',startNumberDrag);
+    inv.appendChild(chip);
+  }
+}
+let numDrag=null;
+function startNumberDrag(e){
+  if(e.pointerType==='mouse'&&e.button!==0)return;
+  e.preventDefault();
+  const value=Number(e.currentTarget.dataset.value);
+  const ghost=document.createElement('div');ghost.className='drag-ghost';ghost.textContent=value;document.body.appendChild(ghost);
+  numDrag={value,ghost};moveNumberDrag(e);
+  window.addEventListener('pointermove',moveNumberDrag,{passive:false});
+  window.addEventListener('pointerup',endNumberDrag,{once:true});
+}
+function moveNumberDrag(e){
+  if(!numDrag)return;e.preventDefault();
+  numDrag.ghost.style.left=e.clientX+'px';numDrag.ghost.style.top=e.clientY+'px';
+  $$('.drop-cell').forEach(c=>c.classList.remove('drag-over'));
+  const el=document.elementFromPoint(e.clientX,e.clientY);
+  const cell=el&&el.closest('.drop-cell');
+  if(cell)cell.classList.add('drag-over');
+}
+function endNumberDrag(e){
+  if(!numDrag)return;
+  window.removeEventListener('pointermove',moveNumberDrag);
+  $$('.drop-cell').forEach(c=>c.classList.remove('drag-over'));
+  const el=document.elementFromPoint(e.clientX,e.clientY),cell=el&&el.closest('.drop-cell');
+  if(cell)placeNumber(cell,numDrag.value);
+  numDrag.ghost.remove();numDrag=null;
+}
+function placeNumber(cell,value){
+  if(!cell||currentActivity!=='a1')return;
+  cell.textContent=value;cell.classList.add('filled');
+  states.a1[cell.dataset.slot]=value;
+  tone(500,.05);
+  if(states.a1.num!==null&&states.a1.den!==null)setTimeout(checkA1,220);
+}
+async function checkA1(){
+  const s=states.a1,f=s.fraction;
+  if(s.num===f.n&&s.den===f.d){
+    const name=fractionText(f.n,f.d);
+    $('#a1FractionName').textContent=name;$('#a1FractionName').classList.remove('hidden');
+    feedback('a1Feedback',`¡Excelente! La fracción es ${f.n}/${f.d}: ${name}.`,'good');
+    speak(`¡Excelente! ${f.n} de las ${f.d} partes están coloreadas. La fracción se llama ${name}.`);
+    celebrateCorrect($('#a1Fraction'));numberExplosion($('#a1Fraction'));$('#a1Next').classList.remove('hidden');
+    return;
+  }
+  s.attempts++;softError();
+  const numWrong=s.num!==f.n,denWrong=s.den!==f.d;
+  if(s.attempts===1){
+    if(numWrong&&!denWrong){
+      feedback('a1Feedback','Miremos de nuevo: ¿cuántas partes están coloreadas?','hint');
+      speak('Miremos de nuevo. ¿Cuántas partes están coloreadas?');
+      const segs=$$('.fraction-segment[data-colored="1"]',$('#a1Figure'));
+      for(const seg of segs){seg.classList.add('count-pulse');setTimeout(()=>seg.classList.remove('count-pulse'),650)}
+      clearA1Slot('num');
+    } else if(!numWrong&&denWrong){
+      feedback('a1Feedback','Mira toda la figura: ¿en cuántas partes iguales está dividida?','hint');
+      speak('Mira toda la figura. ¿En cuántas partes iguales está dividida?');
+      await animateCount($('#a1Figure')); clearA1Slot('den');
+    } else {
+      feedback('a1Feedback','Primero cuenta las partes coloreadas y después cuenta todas las partes.','hint');
+      speak('Primero cuenta las partes coloreadas y después cuenta todas las partes.');
+      clearA1Slot('num');clearA1Slot('den');
+    }
+  } else if(s.attempts===2){
+    if(numWrong){
+      feedback('a1Feedback','Pista: el número de arriba cuenta solo las partes coloreadas. Vamos a contarlas.','hint');
+      speak('El número de arriba indica cuántas partes están coloreadas. Vamos a contarlas.');
+      await animateCount($('#a1Figure'),'.fraction-segment[data-colored="1"]'); clearA1Slot('num');
+    }
+    if(denWrong){
+      feedback('a1Feedback','Pista: el número de abajo cuenta todas las partes iguales. Vamos a contarlas.','hint');
+      speak('El número de abajo indica en cuántas partes iguales está dividido el entero. Vamos a contarlas.');
+      await animateCount($('#a1Figure')); clearA1Slot('den');
+    }
+  } else {
+    feedback('a1Feedback','Vamos juntos: observa el conteo y vuelve a formar la fracción.','hint');
+    speak('Vamos juntos. Cuenta las partes coloreadas. Después cuenta todas las partes.');
+    clearA1Slot('num');clearA1Slot('den');
+    await animateCount($('#a1Figure'),'.fraction-segment[data-colored="1"]');
+    await new Promise(r=>setTimeout(r,250));
+    await animateCount($('#a1Figure'));
+    s.attempts=1; // vuelve a un nivel con pistas, evitando tanteo ilimitado
+  }
+}
+function clearA1Slot(slot){
+  states.a1[slot]=null;
+  const c=$(`.drop-cell[data-slot="${slot}"]`,$('#a1Fraction'));c.textContent='';c.classList.remove('filled');
+}
+$$('.drop-cell',$('#a1Fraction')).forEach(c=>c.addEventListener('click',()=>clearA1Slot(c.dataset.slot)));
+$('#a1Next').addEventListener('click',startA1);
+
+/* Actividad 2 */
+function startA2(){
+  const s=states.a2;s.fraction=randomFraction();s.color=rand(COLORS);s.painted=new Set();s.attempts=0;s.done=false;
+  $('.top',$('#a2Fraction')).textContent=s.fraction.n;$('.bottom',$('#a2Fraction')).textContent=s.fraction.d;
+  $('#a2FractionName').textContent=fractionText(s.fraction.n,s.fraction.d);
+  $('#a2ColorText').textContent=`Color indicado: ${s.color.name}`;
+  buildPalette($('#a2Palette'),s.color,'a2');
+  const fig=renderFractionFigure($('#a2Figure'),s.fraction.d,0,s.color.hex,{paintable:true});
+  fig.segments.forEach(seg=>{
+    seg.addEventListener('click',()=>toggleA2Segment(seg));
+    seg.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleA2Segment(seg)}});
+  });
+  $('#a2Check').classList.remove('hidden');$('#a2Celebrate').classList.add('hidden');$('#a2Next').classList.add('hidden');
+  feedback('a2Feedback','Selecciona el color indicado y toca las partes que deseas colorear.');
+  setInstruction(`Colorea de ${s.color.name} ${s.fraction.n} de las ${s.fraction.d} partes para representar la fracción ${fractionText(s.fraction.n,s.fraction.d)}.`,'a2Instruction');
+}
+function buildPalette(container,target,activity){
+  container.innerHTML='';
+  delete container.dataset.selected;
+  COLORS.forEach(c=>{
+    const b=document.createElement('button');b.className='paint-swatch';b.style.background=c.hex;b.dataset.name=c.name;b.dataset.hex=c.hex;
+    b.setAttribute('aria-label',c.name);
+    b.addEventListener('click',()=>{
+      if(c.name!==target.name){
+        softError();b.classList.remove('selected');
+        feedback(activity==='a2'?'a2Feedback':'a4Feedback',`Busca el color ${target.name}.`,'hint');
+        speak(`Busca el color ${target.name}.`);
+        const correct=$(`.paint-swatch[data-name="${target.name}"]`,container);
+        correct.classList.add('target-pulse');setTimeout(()=>correct.classList.remove('target-pulse'),1400);
+        return;
+      }
+      $$('.paint-swatch',container).forEach(x=>x.classList.remove('selected'));b.classList.add('selected');tone(520,.06);
+      container.dataset.selected=c.name;
+    });
+    container.appendChild(b);
+  });
+}
+function toggleA2Segment(seg){
+  const s=states.a2;if(s.done)return;
+  if($('#a2Palette').dataset.selected!==s.color.name){
+    feedback('a2Feedback',`Primero selecciona el color ${s.color.name}.`,'hint');speak(`Primero selecciona el color ${s.color.name}.`);return;
+  }
+  const i=Number(seg.dataset.index);
+  if(s.painted.has(i)){s.painted.delete(i);setPainted(seg,false,s.color.hex)}else{s.painted.add(i);setPainted(seg,true,s.color.hex)}
+  tone(600,.04);
+}
+$('#a2Check').addEventListener('click',()=>{
+  const s=states.a2;
+  if(s.painted.size===s.fraction.n){
+    s.done=true;feedback('a2Feedback',`¡Excelente! Coloreaste ${s.fraction.n} de ${s.fraction.d} partes.`,'good');
+    speak(`¡Excelente! Coloreaste ${s.fraction.n} de ${s.fraction.d} partes. Representaste ${fractionText(s.fraction.n,s.fraction.d)}.`);
+    celebrateCorrect($('#a2Figure'));$('#a2Check').classList.add('hidden');$('#a2Celebrate').classList.remove('hidden');$('#a2Next').classList.remove('hidden');
+  }else{
+    s.attempts++;softError();
+    if(s.painted.size<s.fraction.n){
+      feedback('a2Feedback','Faltan partes por colorear. Mira el número de arriba: indica cuántas partes coloreamos.','hint');
+      speak('Faltan partes por colorear. Mira el número de arriba. Indica cuántas partes coloreamos.');
+    }else{
+      feedback('a2Feedback','Hay partes de más. Mira el número de arriba y cuenta otra vez.','hint');
+      speak('Hay partes de más. Mira el número de arriba y cuenta otra vez.');
+    }
+    $('#a2Fraction').classList.add('attention');setTimeout(()=>$('#a2Fraction').classList.remove('attention'),1400);
+  }
+});
+$('#a2Celebrate').addEventListener('click',fireworks);
+$('#a2Next').addEventListener('click',startA2);
+
+/* Actividad 3 */
+function matchLayouts(mode,count){
+  const fixed={
+    'figure-fraction':['figure','fraction'],
+    'fraction-name':['fraction','name'],
+    'name-figure':['name','figure']
+  };
+  if(fixed[mode])return Array.from({length:count},()=>fixed[mode]);
+  const combinations=[
+    ['figure','fraction'],['fraction','name'],['name','figure'],
+    ['fraction','figure'],['name','fraction'],['figure','name']
+  ];
+  return Array.from({length:count},(_,i)=>combinations[i%combinations.length]).sort(()=>Math.random()-.5);
+}
+function matchColumnTitles(mode){
+  const titles={
+    'figure-fraction':['Figuras','Fracciones'],
+    'fraction-name':['Fracciones','Nombres'],
+    'name-figure':['Nombres','Figuras'],
+    mixed:['Grupo A','Grupo B']
+  };
+  return titles[mode]||titles['figure-fraction'];
+}
+function startA3(){
+  const s=states.a3;s.connections=new Map();s.attempts=0;s.done=false;s.drag=null;
+  updateMatchCustomizeSummary();
+  const pairs=[],used=[];
+  for(let i=0;i<settings.pairCount;i++){
+    const f=randomUniqueFraction(used,true);used.push(f);pairs.push({...f,pairId:'p'+i,color:rand(COLORS).hex});
+  }
+  const mode=settings.matchMode||'figure-fraction',layouts=matchLayouts(mode,pairs.length);
+  const left=[...pairs.map((p,i)=>({type:'pair',side:'left',displayType:layouts[i][0],...p,id:'L'+p.pairId}))];
+  const right=[...pairs.map((p,i)=>({type:'pair',side:'right',displayType:layouts[i][1],...p,id:'R'+p.pairId}))];
+  const addLeft=settings.leftoverSide==='left'||settings.leftoverSide==='both';
+  const addRight=settings.leftoverSide==='right'||settings.leftoverSide==='both';
+  if(addLeft){
+    for(let i=0;i<settings.leftoverCount;i++){
+      const f=randomUniqueFraction(used,true);used.push(f);
+      const displayType=mode==='mixed'?rand(['figure','fraction','name']):layouts[0][0];
+      left.push({...f,type:'extra',side:'left',displayType,id:'LX'+i,pairId:null,color:rand(COLORS).hex});
+    }
+  }
+  if(addRight){
+    for(let i=0;i<settings.leftoverCount;i++){
+      const f=randomUniqueFraction(used,true);used.push(f);
+      const displayType=mode==='mixed'?rand(['figure','fraction','name']):layouts[0][1];
+      right.push({...f,type:'extra',side:'right',displayType,id:'RX'+i,pairId:null,color:rand(COLORS).hex});
+    }
+  }
+  s.pairs=pairs;s.leftItems=shuffle(left);s.rightItems=shuffle(right);
+  renderMatchItems();
+  $('#a3Check').classList.remove('hidden');$('#a3Clear').classList.remove('hidden');$('#a3Celebrate').classList.add('hidden');$('#a3Next').classList.add('hidden');
+  const hasExtras=addLeft||addRight;
+  const modeText={
+    'figure-fraction':'Une cada figura con su fracción.',
+    'fraction-name':'Une cada fracción con su nombre.',
+    'name-figure':'Une cada nombre con la figura que representa esa fracción.',
+    mixed:'Une las representaciones que corresponden a la misma fracción.'
+  }[mode];
+  const text=hasExtras?modeText+' Recuerda: puede haber opciones sin pareja.':modeText;
+  feedback('a3Feedback','Hala una línea desde un punto azul de la izquierda hasta un punto de la derecha.');
+  setInstruction(text,'a3Instruction');
+}
+function renderMatchItems(){
+  const s=states.a3,left=$('#leftMatchCol'),right=$('#rightMatchCol');
+  const titles=matchColumnTitles(settings.matchMode||'figure-fraction');
+  left.innerHTML=`<div class="match-col-title">${titles[0]}</div>`;right.innerHTML=`<div class="match-col-title">${titles[1]}</div>`;
+  s.leftItems.forEach(item=>{
+    const card=document.createElement('div');card.className='match-item';card.dataset.itemId=item.id;
+    appendMatchContent(card,item);
+    const dot=document.createElement('button');dot.className='connector left';dot.dataset.leftId=item.id;dot.setAttribute('aria-label','Iniciar línea');
+    dot.addEventListener('pointerdown',startMatchDrag);
+    card.appendChild(dot);left.appendChild(card);
+  });
+  s.rightItems.forEach(item=>{
+    const card=document.createElement('div');card.className='match-item';card.dataset.itemId=item.id;
+    appendMatchContent(card,item);
+    const dot=document.createElement('button');dot.className='connector right';dot.dataset.rightId=item.id;dot.setAttribute('aria-label','Punto de llegada');
+    card.prepend(dot);right.appendChild(card);
+  });
+  requestAnimationFrame(redrawConnections);
+}
+function appendMatchContent(card,item){
+  const name=fractionText(item.n,item.d);
+  if(item.displayType==='figure'){
+    card.classList.add('figure-item');
+    const fig=document.createElement('div');fig.className='mini-figure';
+    const inds=shuffle([...Array(item.d).keys()]).slice(0,item.n);
+    renderFractionFigure(fig,item.d,item.n,item.color,{coloredIndices:inds,shape:chooseShape(item.d,false)});
+    fig.setAttribute('aria-label',`Figura que representa ${name}`);card.appendChild(fig);
+  }else if(item.displayType==='name'){
+    card.classList.add('name-item');
+    const label=document.createElement('div');label.className='match-name';label.textContent=name;card.appendChild(label);
+  }else{
+    const frac=document.createElement('div');frac.className='given-frac mini-frac';frac.setAttribute('aria-label',`${item.n} sobre ${item.d}, ${name}`);
+    frac.innerHTML=`<span>${item.n}</span><span class="bar"></span><span>${item.d}</span>`;card.appendChild(frac);
+  }
+}
+function startMatchDrag(e){
+  if(e.pointerType==='mouse'&&e.button!==0)return;
+  e.preventDefault();
+  const s=states.a3,leftId=e.currentTarget.dataset.leftId;
+  // una llegada solo puede tener una línea; al rehacer una línea, se desconecta primero
+  s.connections.delete(leftId);
+  s.drag={leftId,x:e.clientX,y:e.clientY};
+  redrawConnections(e.clientX,e.clientY);
+  window.addEventListener('pointermove',moveMatchDrag,{passive:false});
+  window.addEventListener('pointerup',endMatchDrag,{once:true});
+}
+function moveMatchDrag(e){
+  if(!states.a3.drag)return;e.preventDefault();
+  states.a3.drag.x=e.clientX;states.a3.drag.y=e.clientY;
+  highlightNearestRight(e.clientX,e.clientY);redrawConnections(e.clientX,e.clientY);
+}
+function endMatchDrag(e){
+  window.removeEventListener('pointermove',moveMatchDrag);
+  const s=states.a3;if(!s.drag)return;
+  const target=nearestRight(e.clientX,e.clientY,58);
+  $$('.connector.right').forEach(d=>d.classList.remove('hover-target'));
+  if(target){
+    // si ese destino estaba ocupado, libera la línea anterior
+    for(const [l,r] of s.connections.entries())if(r===target.dataset.rightId)s.connections.delete(l);
+    s.connections.set(s.drag.leftId,target.dataset.rightId);tone(510,.06);
+  }
+  s.drag=null;redrawConnections();
+}
+function nearestRight(x,y,maxDist=9999){
+  let best=null,dist=maxDist;
+  $$('.connector.right',$('#matchBoard')).forEach(d=>{
+    const r=d.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dd=Math.hypot(cx-x,cy-y);
+    if(dd<dist){dist=dd;best=d}
+  });return best;
+}
+function highlightNearestRight(x,y){
+  $$('.connector.right').forEach(d=>d.classList.remove('hover-target'));
+  const d=nearestRight(x,y,65);if(d)d.classList.add('hover-target');
+}
+function dotCenter(dot,boardRect){
+  const r=dot.getBoundingClientRect();return {x:r.left+r.width/2-boardRect.left,y:r.top+r.height/2-boardRect.top};
+}
+function curveD(a,b){
+  const bend=Math.max(55,Math.abs(b.x-a.x)*.48);
+  return `M ${a.x} ${a.y} C ${a.x+bend} ${a.y}, ${b.x-bend} ${b.y}, ${b.x} ${b.y}`;
+}
+function redrawConnections(pointerX=null,pointerY=null){
+  const svg=$('#matchSvg'),board=$('#matchBoard'),br=board.getBoundingClientRect();svg.innerHTML='';
+  svg.setAttribute('viewBox',`0 0 ${br.width} ${br.height}`);
+  for(const [leftId,rightId] of states.a3.connections.entries()){
+    const ld=$(`.connector.left[data-left-id="${leftId}"]`,board),rd=$(`.connector.right[data-right-id="${rightId}"]`,board);
+    if(!ld||!rd)continue;
+    const p=svgEl('path',{d:curveD(dotCenter(ld,br),dotCenter(rd,br))});svg.appendChild(p);
+  }
+  if(states.a3.drag&&pointerX!==null){
+    const ld=$(`.connector.left[data-left-id="${states.a3.drag.leftId}"]`,board);
+    if(ld){
+      const a=dotCenter(ld,br),b={x:pointerX-br.left,y:pointerY-br.top};
+      const p=svgEl('path',{d:curveD(a,b),class:'temp'});svg.appendChild(p);
+    }
+  }
+}
+window.addEventListener('resize',()=>{if(currentActivity==='a3')requestAnimationFrame(redrawConnections)});
+window.addEventListener('orientationchange',()=>{if(currentActivity==='a3')setTimeout(redrawConnections,200)});
+
+function evaluateMatch(){
+  const s=states.a3;
+  const byLeft=new Map(s.leftItems.map(x=>[x.id,x])),byRight=new Map(s.rightItems.map(x=>[x.id,x]));
+  let wrong=[];
+  for(const item of s.leftItems){
+    const rId=s.connections.get(item.id);
+    if(item.type==='extra'){
+      if(rId)wrong.push(item);
+    }else{
+      const r=byRight.get(rId);
+      if(!r||r.pairId!==item.pairId)wrong.push(item);
+    }
+  }
+  return wrong;
+}
+$('#a3Check').addEventListener('click',async()=>{
+  const s=states.a3,wrong=evaluateMatch();
+  $$('.match-item.problem').forEach(x=>x.classList.remove('problem'));
+  if(wrong.length===0){
+    s.done=true;feedback('a3Feedback','¡Excelente! Encontraste todas las parejas.','good');
+    const names=s.pairs.map(p=>fractionText(p.n,p.d));
+    speak(`¡Excelente! Encontraste todas las parejas. Las fracciones son ${names.join(', ')}.`);
+    celebrateCorrect($('#matchBoard'));$('#a3Check').classList.add('hidden');$('#a3Clear').classList.add('hidden');$('#a3Celebrate').classList.remove('hidden');$('#a3Next').classList.remove('hidden');
+  }else{
+    s.attempts++;softError();
+    const problem=wrong[0],card=$(`.match-item[data-item-id="${problem.id}"]`);
+    if(card)card.classList.add('problem');
+    if(problem.type==='extra'){
+      feedback('a3Feedback','Revisa esta figura. Recuerda que una opción puede quedar sin pareja.','hint');
+      speak('Revisa esta figura. Recuerda que una opción puede quedar sin pareja.');
+    }else if(s.attempts===1){
+      feedback('a3Feedback','Hay una pareja que debemos revisar. Mira la figura que se está marcando.','hint');
+      speak('Hay una pareja que debemos revisar. Mira la figura que se está marcando.');
+    }else{
+      feedback('a3Feedback','Cuenta primero todas las partes de esta figura y luego las partes coloreadas.','hint');
+      speak('Cuenta primero todas las partes de esta figura y luego las partes coloreadas.');
+      const fig=$('.mini-figure',card);if(fig)await animateCount(fig);
+      s.attempts=1;
+    }
+  }
+});
+$('#a3Clear').addEventListener('click',()=>{states.a3.connections.clear();redrawConnections();feedback('a3Feedback','Las líneas se borraron. Puedes empezar de nuevo.');tone(380,.06)});
+$('#a3Celebrate').addEventListener('click',fireworks);
+$('#a3Next').addEventListener('click',startA3);
+
+/* Actividad 4 */
+function startA4(){
+  const s=states.a4;s.fraction=randomFraction();s.color=rand(COLORS);s.parts=2;s.step=1;s.painted=new Set();s.attempts=0;s.shape=rand(['circle','barH']);s.done=false;
+  $('.top',$('#a4Fraction')).textContent=s.fraction.n;$('.bottom',$('#a4Fraction')).textContent=s.fraction.d;
+  $('#a4FractionName').textContent=fractionText(s.fraction.n,s.fraction.d);
+  buildPartsChoices();$('#a4SliderValue').textContent=2;
+  $('#a4SliderWrap').classList.remove('hidden');$('#a4Palette').classList.add('hidden');
+  $('#a4StepLabel').textContent='Paso 1 de 2';$('#a4StepTitle').textContent='Divide el entero';
+  $$('.step-dot').forEach((d,i)=>d.classList.toggle('active',i===0));
+  $('#a4ConfirmParts').classList.remove('hidden');$('#a4Check').classList.add('hidden');$('#a4Celebrate').classList.add('hidden');$('#a4Next').classList.add('hidden');
+  renderA4Figure();
+  feedback('a4Feedback','Mueve el deslizador para decidir en cuántas partes iguales dividir el entero.');
+  setInstruction(`Construye la fracción ${fractionText(s.fraction.n,s.fraction.d)}. Primero divide el entero en partes iguales.`,'a4Instruction');
+}
+function buildPartsChoices(){
+  const box=$('#a4PartsChoices'),max=Math.max(10,...denominatorsFor('a4'));box.innerHTML='';
+  for(let value=2;value<=max;value++){
+    const button=document.createElement('button');button.className='parts-choice'+(value===states.a4.parts?' selected':'');
+    button.textContent=value;button.setAttribute('aria-label',`${value} partes`);button.setAttribute('aria-pressed',value===states.a4.parts?'true':'false');
+    button.addEventListener('click',()=>{
+      states.a4.parts=value;$('#a4SliderValue').textContent=value;
+      $$('.parts-choice',box).forEach(b=>{const selected=Number(b.textContent)===value;b.classList.toggle('selected',selected);b.setAttribute('aria-pressed',selected?'true':'false')});
+      renderA4Figure();tone(280+value*22,.05,'sine',.025);
+    });
+    box.appendChild(button);
+  }
+}
+function renderA4Figure(){
+  const s=states.a4;
+  const fig=renderFractionFigure($('#a4Figure'),s.parts,0,s.color.hex,{shape:s.shape,paintable:s.step===2});
+  if(s.step===2){
+    fig.segments.forEach(seg=>{
+      seg.addEventListener('click',()=>toggleA4Segment(seg));
+      seg.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleA4Segment(seg)}});
+    });
+  }
+}
+$('#a4ConfirmParts').addEventListener('click',async()=>{
+  const s=states.a4;
+  if(s.parts===s.fraction.d){
+    s.step=2;s.painted=new Set();
+    $('#a4SliderWrap').classList.add('hidden');$('#a4Palette').classList.remove('hidden');
+    buildPalette($('#a4Palette'),s.color,'a4');
+    $('#a4StepLabel').textContent='Paso 2 de 2';$('#a4StepTitle').textContent=`Colorea ${s.fraction.n} partes de ${s.color.name}`;
+    $$('.step-dot').forEach((d,i)=>d.classList.toggle('active',i===1));
+    $('#a4ConfirmParts').classList.add('hidden');$('#a4Check').classList.remove('hidden');
+    renderA4Figure();
+    feedback('a4Feedback',`Muy bien. Dividiste el entero en ${s.fraction.d} partes iguales. Ahora colorea ${s.fraction.n}.`,'good');
+    speak(`Muy bien. Dividiste el entero en ${s.fraction.d} partes iguales. Ahora selecciona el color ${s.color.name} y colorea ${s.fraction.n} partes.`);
+    celebrateCorrect($('#a4Figure'));
+  }else{
+    s.attempts++;softError();
+    feedback('a4Feedback','Mira el número de abajo. Indica en cuántas partes iguales debemos dividir el entero.','hint');
+    speak('Mira el número de abajo. Indica en cuántas partes iguales debemos dividir el entero.');
+    $('#a4Fraction').classList.add('attention');setTimeout(()=>$('#a4Fraction').classList.remove('attention'),1400);
+    if(s.attempts>=2){await animateCount($('#a4Figure'));s.attempts=0}
+  }
+});
+function toggleA4Segment(seg){
+  const s=states.a4;if(s.done)return;
+  if($('#a4Palette').dataset.selected!==s.color.name){
+    feedback('a4Feedback',`Primero selecciona el color ${s.color.name}.`,'hint');speak(`Primero selecciona el color ${s.color.name}.`);return;
+  }
+  const i=Number(seg.dataset.index);
+  if(s.painted.has(i)){s.painted.delete(i);setPainted(seg,false,s.color.hex)}else{s.painted.add(i);setPainted(seg,true,s.color.hex)}
+  tone(600,.04);
+}
+$('#a4Check').addEventListener('click',()=>{
+  const s=states.a4;
+  if(s.painted.size===s.fraction.n){
+    s.done=true;feedback('a4Feedback',`¡Lo lograste! Construiste ${s.fraction.n}/${s.fraction.d}.`,'good');
+    speak(`¡Lo lograste! Construiste ${fractionText(s.fraction.n,s.fraction.d)}.`);
+    celebrateCorrect($('#a4Figure'));$('#a4Check').classList.add('hidden');$('#a4Celebrate').classList.remove('hidden');$('#a4Next').classList.remove('hidden');
+  }else{
+    softError();
+    const msg=s.painted.size<s.fraction.n?'Faltan partes por colorear. Mira el número de arriba.':'Hay partes de más. Mira el número de arriba y cuenta de nuevo.';
+    feedback('a4Feedback',msg,'hint');speak(msg);$('#a4Fraction').classList.add('attention');setTimeout(()=>$('#a4Fraction').classList.remove('attention'),1400);
+  }
+});
+$('#a4Celebrate').addEventListener('click',fireworks);
+$('#a4Next').addEventListener('click',startA4);
+
+function startActivity(id){
+  if(id==='a1')startA1();
+  if(id==='a2')startA2();
+  if(id==='a3')startA3();
+  if(id==='a4')startA4();
+}
+
+/* Settings */
+const dialog=$('#settingsDialog');
+let settingsDialogScope='all';
+$('#settingsBtn').addEventListener('click',()=>openSettings('all',false));
+$('#customizeMatch').addEventListener('click',()=>openSettings('a3',true));
+$$('[data-settings-scope]').forEach(button=>button.addEventListener('click',()=>openSettings(button.dataset.settingsScope,false)));
+$('#closeSettings').addEventListener('click',()=>dialog.close());
+$('#settingsDialog').addEventListener('click',e=>{if(e.target===dialog)dialog.close()});
+function populateDenoms(){
+  const box=$('#denomList');box.innerHTML='';
+  for(let d=2;d<=10;d++){
+    const lab=document.createElement('label');lab.className='denom-option';
+    lab.innerHTML=`<input type="checkbox" value="${d}"><span>${d}</span>`;
+    box.appendChild(lab);
+  }
+}
+populateDenoms();
+function populateVoices(){
+  const select=$('#voiceSelect'),current=select.value;
+  select.innerHTML='<option value="">Voz predeterminada</option>';
+  speechSynthesis.getVoices().filter(v=>v.lang&&v.lang.toLowerCase().startsWith('es')).forEach(v=>{
+    const o=document.createElement('option');o.value=v.name;o.textContent=`${v.name} (${v.lang})`;select.appendChild(o);
+  });
+  select.value=settings.voice||current||'';
+}
+if('speechSynthesis' in window){populateVoices();speechSynthesis.onvoiceschanged=populateVoices}
+function updateMatchCustomizeSummary(){
+  const modeLabels={
+    'figure-fraction':'figuras con fracciones',
+    'fraction-name':'fracciones con nombres',
+    'name-figure':'nombres con figuras',
+    mixed:'contenido mixto'
+  };
+  const sideLabels={none:'sin sobrantes',left:'sobrantes en figuras',right:'sobrantes en fracciones',both:'sobrantes en ambos lados'};
+  $('#matchCustomizeSummary').textContent=`Ahora: ${modeLabels[settings.matchMode||'figure-fraction']}, ${settings.pairCount} parejas y ${sideLabels[settings.leftoverSide]||'sin sobrantes'}. Puedes cambiar estas opciones.`;
+}
+function openSettings(scope='all',focusMatch=false){
+  settingsDialogScope=scope;
+  const visibleDenominators=scope==='all'?settings.denominators:denominatorsFor(scope);
+  $$('#denomList input').forEach(c=>c.checked=visibleDenominators.includes(Number(c.value)));
+  $('#pairCount').value=settings.pairCount;$('#matchMode').value=settings.matchMode||'figure-fraction';$('#leftoverSide').value=settings.leftoverSide;$('#leftoverCount').value=settings.leftoverCount;
+  $('#fontSelect').value=settings.font;$('#autoRead').checked=settings.autoRead;$('#soundsOn').checked=settings.soundsOn;populateVoices();$('#voiceSelect').value=settings.voice||'';
+  const isFull=scope==='all',titles={a1:'Actividad 1: identificar',a2:'Actividad 2: representar',a3:'Actividad 3: pareo',a4:'Actividad 4: construir'};
+  $('#settingsTitle').textContent=isFull?'⚙️ Configuración completa':`⚙️ ${titles[scope]}`;
+  $('#settingsScopeNote').textContent=isFull?'':scope==='a3'?'Estos ajustes controlan las fracciones y las opciones del pareo.':'Aquí puedes elegir qué denominadores aparecerán en esta actividad.';
+  $('#fractionSettingsNote').textContent=isFull?'Los denominadores elegidos aquí se aplicarán a todas las actividades. La aplicación genera únicamente fracciones propias.':'Estos denominadores se aplicarán solamente a esta actividad.';
+  $('#settingsScopeNote').classList.toggle('hidden',isFull);
+  $('#fractionSettingsGroup').classList.toggle('scope-hidden',false);
+  $('#matchSettingsGroup').classList.toggle('scope-hidden',!isFull&&scope!=='a3');
+  $('#appearanceSettingsGroup').classList.toggle('scope-hidden',!isFull);
+  $('#resetSettings').classList.toggle('hidden',!isFull);
+  dialog.showModal();
+  if(focusMatch){
+    const group=$('#matchSettingsGroup');group.classList.remove('settings-attention');
+    requestAnimationFrame(()=>{group.classList.add('settings-attention');group.scrollIntoView({behavior:'smooth',block:'center'})});
+    setTimeout(()=>group.classList.remove('settings-attention'),1800);
+  }
+}
+$('#saveSettings').addEventListener('click',()=>{
+  const dens=$$('#denomList input:checked').map(c=>Number(c.value));
+  if(!dens.length){alert('Selecciona al menos un denominador.');return}
+  const pairCount=Number($('#pairCount').value),leftoverSide=$('#leftoverSide').value,leftoverCount=Number($('#leftoverCount').value);
+  const extraGroups=(leftoverSide==='both'?2:leftoverSide==='none'?0:1)*leftoverCount;
+  const requiredFractions=pairCount+extraGroups,availableFractions=availableEquivalentFractions(dens);
+  if((settingsDialogScope==='all'||settingsDialogScope==='a3')&&availableFractions<requiredFractions){
+    alert(`Esta configuración necesita ${requiredFractions} fracciones distintas, pero los denominadores elegidos solo permiten ${availableFractions}. Selecciona más denominadores o reduce las parejas y sobrantes.`);
+    return;
+  }
+  if(settingsDialogScope==='all'){
+    settings.denominators=dens;
+    settings.activityDenominators={a1:[...dens],a2:[...dens],a3:[...dens],a4:[...dens]};
+  }else{
+    settings.activityDenominators={...(settings.activityDenominators||{}),[settingsDialogScope]:dens};
+  }
+  if(settingsDialogScope==='all'||settingsDialogScope==='a3'){
+    settings.pairCount=pairCount;settings.matchMode=$('#matchMode').value;settings.leftoverSide=leftoverSide;settings.leftoverCount=leftoverCount;
+  }
+  if(settingsDialogScope==='all'){
+    settings.font=$('#fontSelect').value;settings.voice=$('#voiceSelect').value;settings.autoRead=$('#autoRead').checked;settings.soundsOn=$('#soundsOn').checked;
+  }
+  saveSettings();applySettings();dialog.close();
+  if(currentActivity)startActivity(currentActivity);
+});
+$('#resetSettings').addEventListener('click',()=>{
+  settings={...defaults};saveSettings();applySettings();openSettings();
+});
+
+/* inicio */
+setScreen('home');
+})();
+</script>
+</body>
+</html>
