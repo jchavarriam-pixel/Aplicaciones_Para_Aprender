@@ -47,6 +47,14 @@
   }
   .brand{font-weight:900;font-size:clamp(21px,2.5vw,32px);letter-spacing:.2px;flex:1;color:#265f9f}
   .top-actions{display:flex;gap:10px}
+  .student-control{
+    display:flex;align-items:center;gap:8px;padding:7px 10px;border:2px solid #cfe0f2;border-radius:16px;
+    background:#f8fbff;color:#42617f;font-size:14px;font-weight:900
+  }
+  .student-control input{
+    width:150px;min-height:38px;padding:6px 10px;border:2px solid #bdd2e8;border-radius:11px;background:white;
+    color:var(--ink);font-weight:850
+  }
   .icon-btn,.back-btn{
     min-width:54px;min-height:54px;border:0;border-radius:18px;background:var(--primary-soft);
     color:var(--ink);font-size:24px;display:grid;place-items:center;box-shadow:0 3px 10px rgba(0,0,0,.04)
@@ -345,6 +353,9 @@
     .instruction{flex-wrap:wrap}
     .activity-settings-btn{width:100%}
     .connector.left{right:-15px}.connector.right{left:-15px}
+    .topbar{flex-wrap:wrap}
+    .student-control{order:3;width:100%}
+    .student-control input{flex:1;width:auto}
   }
 
   @media (prefers-reduced-motion:reduce){
@@ -357,6 +368,9 @@
   <header class="topbar">
     <button class="back-btn" id="backBtn" aria-label="Volver al menú">←</button>
     <div class="brand">Fracciones Propias 1</div>
+    <label class="student-control" for="studentNameInput">👤 Nombre
+      <input id="studentNameInput" type="text" maxlength="40" autocomplete="name" placeholder="Escribe tu nombre">
+    </label>
     <div class="top-actions">
       <button class="icon-btn" id="repeatBtn" aria-label="Repetir instrucción" title="Repetir instrucción">🔊</button>
       <button class="icon-btn" id="settingsBtn" aria-label="Configuración" title="Configuración">⚙️</button>
@@ -368,7 +382,7 @@
       <div class="welcome">
         <div class="hero">
           <h1>Fracciones Propias 1</h1>
-          <p>Observa, representa, relaciona y construye fracciones.</p>
+          <p id="welcomeText">Observa, representa, relaciona y construye fracciones.</p>
         </div>
         <div class="activity-grid">
           <button class="activity-card" data-open="a1">
@@ -588,6 +602,33 @@ const shuffle = arr => {
 };
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 const ns='http://www.w3.org/2000/svg';
+const STUDENT_NAME_KEY='nombreNinoGabrielApps';
+let studentName='';
+
+function readStudentName(){
+  try{return (localStorage.getItem(STUDENT_NAME_KEY)||'').trim()}catch(e){return ''}
+}
+function addressToStudent(text){
+  return studentName?`${studentName}, ${text}`:text;
+}
+function updateStudentNameUI(){
+  const input=$('#studentNameInput');
+  if(input&&input.value!==studentName)input.value=studentName;
+  const welcome=$('#welcomeText');
+  if(welcome)welcome.textContent=studentName
+    ? `¡Hola, ${studentName}! Observa, representa, relaciona y construye fracciones.`
+    : 'Observa, representa, relaciona y construye fracciones.';
+}
+function setStudentName(value,persist=true){
+  studentName=(value||'').trim();
+  if(persist){
+    try{
+      if(studentName)localStorage.setItem(STUDENT_NAME_KEY,studentName);
+      else localStorage.removeItem(STUDENT_NAME_KEY);
+    }catch(e){}
+  }
+  updateStudentNameUI();
+}
 
 const COLORS = [
   {name:'azul', hex:'#4f8fe8'},
@@ -648,7 +689,7 @@ function setInstruction(text, elId){
 function speak(text){
   if(!('speechSynthesis' in window)||!text)return;
   speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(text);
+  const u=new SpeechSynthesisUtterance(addressToStudent(text));
   u.lang='es-ES';
   u.rate=.9;
   const voices=speechSynthesis.getVoices();
@@ -662,7 +703,7 @@ function speak(text){
   speechSynthesis.speak(u);
 }
 function feedback(id,text,type=''){
-  const el=$('#'+id); el.textContent=text; el.className='feedback'+(type?' '+type:'');
+  const el=$('#'+id); el.textContent=addressToStudent(text); el.className='feedback'+(type?' '+type:'');
 }
 function gcd(a,b){while(b){[a,b]=[b,a%b]}return a}
 function fractionText(n,d){
@@ -874,6 +915,11 @@ function celebrateCorrect(anchor){
 }
 
 /* Navegación */
+$('#studentNameInput').addEventListener('input',e=>setStudentName(e.target.value,true));
+$('#studentNameInput').addEventListener('change',e=>setStudentName(e.target.value,true));
+window.addEventListener('storage',e=>{
+  if(e.key===STUDENT_NAME_KEY)setStudentName(e.newValue||'',false);
+});
 $$('[data-open]').forEach(btn=>btn.addEventListener('click',()=>{
   const id=btn.dataset.open;setScreen(id);startActivity(id);
 }));
@@ -1445,6 +1491,7 @@ $('#resetSettings').addEventListener('click',()=>{
 });
 
 /* inicio */
+setStudentName(readStudentName(),false);
 setScreen('home');
 })();
 </script>
