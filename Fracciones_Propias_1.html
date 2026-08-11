@@ -114,7 +114,7 @@
     background:linear-gradient(160deg,#ffffff 0%,#fbfdff 72%,#f5faff 100%)
   }
   .two-pane{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr);gap:28px;align-items:center;min-height:430px}
-  .figure-zone{display:grid;place-items:center;min-width:0}
+  .figure-zone{display:grid;place-items:center;align-content:center;gap:10px;min-width:0}
   .figure-box{width:min(100%,560px);height:clamp(280px,42vh,430px);display:grid;place-items:center}
   .figure-box svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 8px 9px rgba(42,72,105,.10))}
   .answer-zone{display:grid;justify-items:center;gap:18px}
@@ -193,6 +193,16 @@
   .fraction-segment.paintable{cursor:pointer}
   .fraction-segment.count-pulse{animation:segPulse .5s ease}
   @keyframes segPulse{50%{opacity:.45;transform:scale(.94)}}
+  .region-count-circle{fill:#fff;stroke:#397ed1;stroke-width:2.5;filter:drop-shadow(0 2px 3px rgba(29,67,108,.2))}
+  .region-count-circle.painted{fill:#fff4bd;stroke:#d68c00}
+  .region-count-text{font-size:16px;font-weight:950;fill:#24486f;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+  .count-help-btn{background:linear-gradient(135deg,#8b6bd1,#6848b1);color:white}
+  .count-summary{
+    width:min(100%,500px);display:grid;gap:7px;padding:12px 16px;border:2px solid #cdbcf3;border-radius:17px;
+    background:linear-gradient(135deg,#f8f4ff,#eef6ff);color:#435775;font-size:17px;font-weight:850
+  }
+  .count-summary-row{display:flex;align-items:center;justify-content:space-between;gap:14px}
+  .count-summary-value{min-width:42px;padding:4px 10px;border-radius:11px;background:white;color:#6545aa;text-align:center;font-size:21px;font-weight:950}
 
   /* actividad 3 */
   .match-board{position:relative;min-height:500px;padding:12px 28px}
@@ -265,11 +275,55 @@
     100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) rotate(var(--rot)) scale(1.15);opacity:0}
   }
   .spark{
-    position:fixed;width:11px;height:11px;border-radius:50%;animation:sparkFly 1.25s ease-out forwards
+    position:fixed;width:11px;height:11px;border-radius:50%;animation:sparkFly 1.35s cubic-bezier(.16,.75,.3,1) forwards;
+    box-shadow:0 0 12px currentColor;will-change:transform,opacity;contain:layout paint
+  }
+  .explosion-flash{
+    position:fixed;z-index:2170;width:190px;height:190px;border-radius:50%;pointer-events:none;
+    background:radial-gradient(circle,#fff 0 8%,#fff2a8 18%,rgba(255,139,35,.82) 38%,rgba(232,70,89,.28) 58%,transparent 72%);
+    animation:explosionFlash .62s ease-out forwards;transform:translate(-50%,-50%);will-change:transform,opacity
+  }
+  .shockwave{
+    position:fixed;z-index:2165;width:70px;height:70px;border:8px solid #ffe77a;border-radius:50%;pointer-events:none;
+    box-shadow:0 0 18px #ff9f3f,inset 0 0 14px #fff;animation:shockwave 1s ease-out forwards;
+    transform:translate(-50%,-50%);will-change:transform,opacity
+  }
+  .shockwave.second{border-color:#83dfff;animation-delay:.12s;animation-duration:1.15s}
+  @keyframes explosionFlash{
+    0%{opacity:0;transform:translate(-50%,-50%) scale(.12)}
+    18%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}
+    100%{opacity:0;transform:translate(-50%,-50%) scale(1.8)}
+  }
+  @keyframes shockwave{
+    from{opacity:1;transform:translate(-50%,-50%) scale(.2)}
+    to{opacity:0;transform:translate(-50%,-50%) scale(4.8)}
   }
   .success-sticker{
     position:fixed;z-index:2100;pointer-events:none;font-size:clamp(34px,6vw,68px);
     animation:stickerPop 1.15s ease-out forwards;transform:translate(-50%,-50%)
+  }
+  .celebration-object{
+    position:fixed;z-index:2200;width:118px;height:118px;border:4px solid rgba(255,255,255,.92);border-radius:50%;
+    background:radial-gradient(circle,#fff 0%,#e9f4ff 62%,#cfe5ff 100%);font-size:70px;line-height:1;
+    display:grid;place-items:center;pointer-events:auto;cursor:pointer;box-shadow:0 16px 38px rgba(38,77,121,.28);
+    animation:objectRoam var(--roam-duration,5s) ease-in-out infinite;will-change:transform
+  }
+  .celebration-object::after{content:'¡Tócame!';position:absolute;top:105px;white-space:nowrap;padding:5px 10px;border-radius:10px;background:#6044aa;color:white;font-size:14px;font-weight:950}
+  @keyframes objectRoam{
+    0%,100%{transform:translate(0,0) rotate(-5deg) scale(1)}
+    25%{transform:translate(var(--roam-x1),var(--roam-y1)) rotate(8deg) scale(1.07)}
+    50%{transform:translate(var(--roam-x2),var(--roam-y2)) rotate(-8deg) scale(.98)}
+    75%{transform:translate(var(--roam-x3),var(--roam-y3)) rotate(6deg) scale(1.05)}
+  }
+  .flying-object{
+    position:fixed;z-index:2180;font-size:54px;line-height:1;pointer-events:none;
+    animation:flyAround var(--duration) cubic-bezier(.32,.05,.58,1) forwards
+  }
+  @keyframes flyAround{
+    0%{transform:translate(-50%,-50%) rotate(0deg) scale(.65);opacity:0}
+    10%{opacity:1;transform:translate(-50%,-50%) rotate(90deg) scale(1)}
+    55%{transform:translate(calc(-50% + var(--dx-mid)),calc(-50% + var(--dy-mid))) rotate(540deg) scale(1.15)}
+    100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) rotate(1080deg) scale(.75);opacity:1}
   }
   @keyframes stickerPop{
     0%{opacity:0;transform:translate(-50%,-50%) scale(.2) rotate(-18deg)}
@@ -277,8 +331,9 @@
     100%{opacity:0;transform:translate(-50%,-125%) scale(.85) rotate(-4deg)}
   }
   @keyframes sparkFly{
-    from{transform:translate(-50%,-50%) scale(.4);opacity:1}
-    to{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.1);opacity:0}
+    0%{transform:translate(-50%,-50%) rotate(0deg) scale(.35);opacity:1}
+    22%{opacity:1;transform:translate(calc(-50% + var(--dx-quarter)),calc(-50% + var(--dy-quarter))) rotate(calc(var(--spark-rot) * .25)) scale(1.2)}
+    100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) rotate(var(--spark-rot)) scale(.08);opacity:0}
   }
 
   /* configuración */
@@ -306,10 +361,91 @@
   .denom-option input:checked + span{background:var(--primary);color:white;border-color:var(--primary)}
   .toggle-line{display:flex;align-items:center;gap:10px;font-weight:800;margin:8px 0}
   .toggle-line input{width:24px;height:24px}
+  .volume-setting{display:grid;grid-template-columns:1fr auto;gap:7px 14px;align-items:center;margin-top:14px;font-weight:850;color:#42546b}
+  .volume-setting input{grid-column:1/-1;width:100%;height:34px;accent-color:#7658bd}
+  .volume-value{min-width:54px;padding:4px 9px;border-radius:10px;background:#f1ebff;color:#6044aa;text-align:center;font-weight:950}
   .settings-footer{display:flex;justify-content:flex-end;gap:10px;padding:14px 22px;border-top:1px solid var(--line);background:white}
   .small-note{font-size:14px;color:var(--muted);line-height:1.4}
   .settings-scope-note{margin:0;padding:11px 14px;border-radius:14px;background:#eef6ff;color:#355b84;font-weight:800;line-height:1.35}
   .setting-group.scope-hidden{display:none}
+
+  /* Identidad visual infantil: alegre, clara y táctil */
+  :root{
+    --bg:#eef8ff;--ink:#253451;--muted:#5c6f89;--line:#cfe2f4;--primary:#397de9;
+    --shadow:0 11px 0 rgba(69,103,145,.08),0 20px 38px rgba(42,72,105,.12)
+  }
+  html,body{
+    background:
+      radial-gradient(ellipse at -8% 18%,rgba(117,207,255,.22) 0 15%,transparent 15.5%),
+      radial-gradient(ellipse at 108% 28%,rgba(255,178,195,.18) 0 17%,transparent 17.5%),
+      radial-gradient(ellipse at 76% 108%,rgba(255,220,103,.16) 0 19%,transparent 19.5%),
+      linear-gradient(145deg,#f9fdff 0%,#eef8ff 58%,#fffaf0 100%);
+    background-size:auto;background-repeat:no-repeat;background-attachment:fixed
+  }
+  .topbar{border-bottom:3px solid #d7eaff;box-shadow:0 5px 18px rgba(56,104,155,.09)}
+  .brand{color:#2368b3;text-shadow:0 2px 0 #d9edff}
+  .student-control{background:#fff8dc;border-color:#f3d879;color:#6d5310;box-shadow:0 4px 0 #ead79a}
+  .student-control input{border-color:#e8d28b}
+  .icon-btn,.back-btn{
+    border:2px solid #d5e7fa;background:linear-gradient(180deg,#fff,#eaf4ff);
+    box-shadow:0 5px 0 #cbdff3;transition:transform .12s ease,box-shadow .12s ease
+  }
+  .icon-btn:active,.back-btn:active{transform:translateY(4px);box-shadow:0 1px 0 #cbdff3}
+  .welcome{position:relative}
+  .hero{position:relative}
+  .hero-badge{
+    width:max-content;max-width:100%;margin:0 auto 9px;padding:7px 16px;border:2px solid #f1cc52;border-radius:999px;
+    background:linear-gradient(180deg,#fffbea,#fff0a8);color:#765400;font-size:clamp(14px,1.6vw,18px);font-weight:950;
+    box-shadow:0 4px 0 #ebd271;transform:rotate(-1deg)
+  }
+  .hero h1{
+    color:#246ab7;background:linear-gradient(90deg,#2675c9 10%,#7c4dcc 45%,#ec6378 72%,#e58c22 100%);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    text-shadow:none;letter-spacing:.01em;filter:drop-shadow(0 4px 0 rgba(166,202,237,.6))
+  }
+  .hero p{color:#526985;font-weight:800}
+  .activity-grid{perspective:900px}
+  .activity-card{
+    position:relative;overflow:hidden;border-width:3px;min-height:196px;padding:24px 25px 43px;
+    box-shadow:0 9px 0 var(--card-shadow,#c8dcf1),0 17px 30px rgba(42,72,105,.11)
+  }
+  .activity-card::before{
+    content:'';position:absolute;width:120px;height:120px;border-radius:50%;right:-42px;top:-52px;
+    background:var(--card-bubble,#dbeeff);opacity:.62
+  }
+  .activity-card::after{
+    content:'¡JUGAR!  ➜';position:absolute;right:19px;bottom:13px;padding:5px 12px;border-radius:999px;
+    background:var(--card-accent,#397de9);color:#fff;font-size:14px;font-weight:950;letter-spacing:.045em;
+    box-shadow:0 3px 0 rgba(34,50,75,.14)
+  }
+  .activity-card:hover,.activity-card:focus-visible{transform:translateY(-5px) rotate(-.35deg);box-shadow:0 13px 0 var(--card-shadow,#c8dcf1),0 23px 38px rgba(42,72,105,.16)}
+  .activity-card:active{transform:translateY(5px);box-shadow:0 3px 0 var(--card-shadow,#c8dcf1)}
+  .card-icon{
+    border:3px solid rgba(255,255,255,.9);box-shadow:0 7px 0 rgba(54,75,105,.11),0 10px 20px rgba(54,75,105,.10);
+    transform:rotate(-3deg);transition:transform .18s ease
+  }
+  .activity-card:hover .card-icon{transform:rotate(4deg) scale(1.08)}
+  .activity-card h2{color:#243858;font-weight:950;line-height:1.12}
+  .activity-card p{font-weight:750}
+  .activity-card:nth-child(1){--card-shadow:#b6d6f7;--card-accent:#397dd1;--card-bubble:#bcdcff}
+  .activity-card:nth-child(2){--card-shadow:#f3bdc6;--card-accent:#e85d75;--card-bubble:#ffc4cf}
+  .activity-card:nth-child(3){--card-shadow:#cbb9ed;--card-accent:#8058bd;--card-bubble:#d6c4f7}
+  .activity-card:nth-child(4){--card-shadow:#a9ddc8;--card-accent:#23966b;--card-bubble:#b8ead7}
+  .instruction{
+    border-width:3px;border-color:#c9ddf2;border-left:9px solid #7c59c5;background:linear-gradient(90deg,#faf7ff,#fff);
+    box-shadow:0 7px 0 rgba(92,76,144,.09),0 12px 22px rgba(42,72,105,.07)
+  }
+  .instruction .speaker{border:2px solid #bad9f8;background:#e6f3ff;box-shadow:0 4px 0 #c6def4}
+  .activity-settings-btn{box-shadow:0 4px 0 #d8c9ef}
+  .activity-work{border-width:3px;box-shadow:0 10px 0 rgba(126,164,201,.10),0 20px 38px rgba(42,72,105,.10)}
+  .primary-btn,.secondary-btn,.celebrate-btn{border:2px solid rgba(255,255,255,.75);transition:transform .12s ease,box-shadow .12s ease}
+  .primary-btn{box-shadow:0 7px 0 #2862ba,0 10px 16px rgba(59,130,246,.22)}
+  .secondary-btn{box-shadow:0 6px 0 #d2dee8}
+  .celebrate-btn{box-shadow:0 7px 0 #e6b83d}
+  .primary-btn:active,.secondary-btn:active,.celebrate-btn:active{transform:translateY(5px);box-shadow:0 2px 0 rgba(46,76,110,.25)}
+  .feedback.good{box-shadow:0 5px 0 #b5e8d0}.feedback.hint{border:2px solid #f4d78f}.feedback.error{border:2px solid #efb9c3}
+  .num-chip,.parts-choice,.paint-swatch{transition:transform .12s ease,box-shadow .12s ease}
+  .num-chip:hover,.parts-choice:hover{transform:translateY(-3px)}
 
   @media (max-width:850px){
     .activity-grid{grid-template-columns:1fr}
@@ -356,6 +492,9 @@
     .topbar{flex-wrap:wrap}
     .student-control{order:3;width:100%}
     .student-control input{flex:1;width:auto}
+    .hero-badge{font-size:13px}
+    .activity-card{padding-bottom:42px}
+    .activity-card::after{font-size:12px}
   }
 
   @media (prefers-reduced-motion:reduce){
@@ -381,6 +520,7 @@
     <section class="screen active" id="homeScreen">
       <div class="welcome">
         <div class="hero">
+          <div class="hero-badge">⭐ Aprende jugando ⭐</div>
           <h1>Fracciones Propias 1</h1>
           <p id="welcomeText">Observa, representa, relaciona y construye fracciones.</p>
         </div>
@@ -410,7 +550,13 @@
         <div class="instruction"><button class="speaker" data-speak aria-label="Leer instrucción">🔊</button><span id="a1Instruction">Observa la figura. Forma la fracción que representa la parte coloreada.</span><button class="activity-settings-btn" data-settings-scope="a1">⚙️ Ajustar actividad</button></div>
         <div class="activity-work">
           <div class="two-pane">
-            <div class="figure-zone"><div class="figure-box" id="a1Figure"></div></div>
+            <div class="figure-zone">
+              <div class="figure-box" id="a1Figure"></div>
+              <div class="count-summary hidden" id="a1CountSummary" aria-live="polite">
+                <div class="count-summary-row"><span>Cantidad total de regiones:</span><strong class="count-summary-value" id="a1TotalCount">—</strong></div>
+                <div class="count-summary-row"><span>Cantidad de regiones pintadas:</span><strong class="count-summary-value" id="a1PaintedCount">—</strong></div>
+              </div>
+            </div>
             <div class="answer-zone">
               <div class="arrow">➜</div>
               <div class="fraction-build" id="a1Fraction">
@@ -426,7 +572,10 @@
             <div class="number-inventory" id="a1Inventory"></div>
           </div>
           <div class="feedback" id="a1Feedback">Arrastra un número arriba y otro abajo.</div>
-          <div class="actions"><button class="primary-btn hidden" id="a1Next">Otro ejercicio ➜</button></div>
+          <div class="actions">
+            <button class="secondary-btn count-help-btn" id="a1CountHelp">🔢 Ver conteo</button>
+            <button class="primary-btn hidden" id="a1Next">Otro ejercicio ➜</button>
+          </div>
         </div>
       </div>
     </section>
@@ -498,7 +647,7 @@
                 <div class="step-title" id="a4StepTitle">Divide el entero</div>
                 <div class="slider-wrap" id="a4SliderWrap">
                   <div class="parts-choices" id="a4PartsChoices" aria-label="Elige el número de partes"></div>
-                  <div class="slider-value"><span id="a4SliderValue">2</span> partes</div>
+                  <div class="slider-value"><span id="a4SliderValue">1</span> <span id="a4PartsUnit">parte</span></div>
                 </div>
                 <div class="paint-palette hidden" id="a4Palette"></div>
                 <div class="step-dots"><span class="step-dot active"></span><span class="step-dot"></span></div>
@@ -506,7 +655,7 @@
             </div>
             <div class="a4-figure" id="a4Figure"></div>
           </div>
-          <div class="feedback" id="a4Feedback">Mueve el deslizador para decidir en cuántas partes iguales dividir el entero.</div>
+          <div class="feedback" id="a4Feedback">Comienza con un entero y elige en cuántas partes iguales dividirlo.</div>
           <div class="actions">
             <button class="primary-btn" id="a4ConfirmParts">Ya dividí</button>
             <button class="primary-btn hidden" id="a4Check">✓ Revisar</button>
@@ -529,6 +678,12 @@
       <h3>Fracciones</h3>
       <div class="small-note" id="fractionSettingsNote">Selecciona los denominadores que podrán aparecer. La aplicación genera únicamente fracciones propias.</div>
       <div class="denom-list" id="denomList"></div>
+    </section>
+
+    <section class="setting-group" id="a1HelpSettingsGroup">
+      <h3>Ayuda de conteo · Actividad 1</h3>
+      <label class="toggle-line"><input id="a1CountHelpEnabled" type="checkbox"> Mostrar el botón “Ver conteo”</label>
+      <div class="small-note">La ayuda numera primero todas las regiones, hace una pausa y luego numera solamente las regiones pintadas.</div>
     </section>
 
     <section class="setting-group" id="matchSettingsGroup">
@@ -580,6 +735,9 @@
       </div>
       <label class="toggle-line"><input id="autoRead" type="checkbox"> Leer automáticamente las instrucciones</label>
       <label class="toggle-line"><input id="soundsOn" type="checkbox"> Sonidos de respuesta y celebración</label>
+      <label class="volume-setting">Volumen de sonidos <output class="volume-value" id="soundVolumeValue">70%</output>
+        <input id="soundVolume" type="range" min="0" max="100" step="5" value="70" aria-label="Volumen de sonidos">
+      </label>
     </section>
   </div>
   <div class="settings-footer">
@@ -608,16 +766,24 @@ let studentName='';
 function readStudentName(){
   try{return (localStorage.getItem(STUDENT_NAME_KEY)||'').trim()}catch(e){return ''}
 }
-function addressToStudent(text){
-  return studentName?`${studentName}, ${text}`:text;
+function successReview(detail=''){
+  const openings=studentName
+    ? [`¡Genial, ${studentName}!`,`¡Excelente trabajo, ${studentName}!`,`¡Muy bien, ${studentName}!`,`¡Lo lograste, ${studentName}!`]
+    : ['¡Genial!','¡Excelente trabajo!','¡Muy bien!','¡Lo lograste!'];
+  const endings=['¡Buen trabajo!','Sigue así.','Lo hiciste excelente.','Estás aprendiendo muy bien.'];
+  return `${rand(openings)} ${detail} ${rand(endings)}`.trim();
+}
+function retryReview(explanation){
+  const openings=studentName
+    ? [`¡Buen intento, ${studentName}!`,`Casi lo tienes, ${studentName}.`,`Sigue intentándolo, ${studentName}.`,`Vas por buen camino, ${studentName}.`]
+    : ['¡Buen intento!','Casi lo tienes.','Sigue intentándolo.','Vas por buen camino.'];
+  return `${rand(openings)} ${explanation}`;
 }
 function updateStudentNameUI(){
   const input=$('#studentNameInput');
   if(input&&input.value!==studentName)input.value=studentName;
   const welcome=$('#welcomeText');
-  if(welcome)welcome.textContent=studentName
-    ? `¡Hola, ${studentName}! Observa, representa, relaciona y construye fracciones.`
-    : 'Observa, representa, relaciona y construye fracciones.';
+  if(welcome)welcome.textContent='Observa, representa, relaciona y construye fracciones.';
 }
 function setStudentName(value,persist=true){
   studentName=(value||'').trim();
@@ -650,17 +816,20 @@ const defaults = {
   font:"Arial, Helvetica, sans-serif",
   voice:'',
   autoRead:true,
-  soundsOn:true
+  soundsOn:true,
+  soundVolume:.7,
+  a1CountHelp:true
 };
 let settings = loadSettings();
 let currentActivity=null;
 let currentInstruction='';
+let instructionSpeakTimer=null;
 
 const states = {
   a1:{num:null,den:null,attempts:0,fraction:null},
   a2:{fraction:null,color:null,painted:new Set(),attempts:0,done:false},
   a3:{pairs:[],leftItems:[],rightItems:[],connections:new Map(),attempts:0,drag:null,done:false},
-  a4:{fraction:null,color:null,parts:2,step:1,painted:new Set(),attempts:0,shape:'circle',done:false}
+  a4:{fraction:null,color:null,parts:1,step:1,painted:new Set(),attempts:0,shape:'circle',done:false}
 };
 
 function loadSettings(){
@@ -675,6 +844,7 @@ function applySettings(){
 applySettings();
 
 function setScreen(id){
+  clearTimeout(instructionSpeakTimer);instructionSpeakTimer=null;
   $$('.screen').forEach(s=>s.classList.remove('active'));
   $('#'+id+'Screen').classList.add('active');
   currentActivity=id==='home'?null:id;
@@ -682,14 +852,18 @@ function setScreen(id){
   if(id==='home'){currentInstruction=''; speechSynthesis.cancel()}
 }
 function setInstruction(text, elId){
+  clearTimeout(instructionSpeakTimer);instructionSpeakTimer=null;
   currentInstruction=text;
   if(elId) $('#'+elId).textContent=text;
-  if(settings.autoRead) setTimeout(()=>speak(text),250);
+  if(settings.autoRead)instructionSpeakTimer=setTimeout(()=>{instructionSpeakTimer=null;speak(text)},250);
 }
 function speak(text){
   if(!('speechSynthesis' in window)||!text)return;
   speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(addressToStudent(text));
+  speechSynthesis.speak(createUtterance(text));
+}
+function createUtterance(text){
+  const u=new SpeechSynthesisUtterance(text);
   u.lang='es-ES';
   u.rate=.9;
   const voices=speechSynthesis.getVoices();
@@ -700,10 +874,27 @@ function speak(text){
     const v=voices.find(x=>x.lang&&x.lang.toLowerCase().startsWith('es'));
     if(v)u.voice=v;
   }
-  speechSynthesis.speak(u);
+  return u;
+}
+function speakAndWait(text){
+  if(!('speechSynthesis' in window)||!text)return Promise.resolve();
+  speechSynthesis.cancel();
+  return new Promise(resolve=>{
+    const utterance=createUtterance(text);let finished=false;
+    const finish=()=>{if(finished)return;finished=true;clearTimeout(safetyTimer);resolve()};
+    const wordCount=text.trim().split(/\s+/).length;
+    const estimatedDuration=Math.min(12000,Math.max(1600,wordCount*430));
+    const safetyTimer=setTimeout(finish,estimatedDuration);
+    utterance.onend=finish;utterance.onerror=finish;
+    speechSynthesis.speak(utterance);
+  });
 }
 function feedback(id,text,type=''){
-  const el=$('#'+id); el.textContent=addressToStudent(text); el.className='feedback'+(type?' '+type:'');
+  const el=$('#'+id); el.textContent=text; el.className='feedback'+(type?' '+type:'');
+}
+function giveReviewFeedback(id,explanation,correct=false){
+  const message=correct?successReview(explanation):retryReview(explanation);
+  feedback(id,message,correct?'good':'hint');speak(message);return message;
 }
 function gcd(a,b){while(b){[a,b]=[b,a%b]}return a}
 function fractionText(n,d){
@@ -780,12 +971,14 @@ function renderFractionFigure(container,d,n,color,opts={}){
   let shape=opts.shape||chooseShape(d,false);
   if(shape==='polygon'&&d<3)shape='circle';
   const white='#ffffff', stroke='#263645';
-  let segments=[];
+  let segments=[],labelPositions=[];
 
   if(shape==='circle'){
     const cx=180,cy=125,r=102;
+    const theta=2*Math.PI/d,centroidRadius=4*r*Math.sin(theta/2)/(3*theta);
     for(let i=0;i<d;i++){
       const seg=svgEl('path',{d:sectorPath(cx,cy,r,i*360/d,(i+1)*360/d),stroke,'stroke-width':'3','stroke-linejoin':'round'});
+      labelPositions.push(polar(cx,cy,centroidRadius,(i+.5)*360/d));
       segments.push(seg);svg.appendChild(seg);
     }
   } else if(shape==='polygon'){
@@ -793,12 +986,14 @@ function renderFractionFigure(container,d,n,color,opts={}){
     for(let i=0;i<d;i++){
       const p1=regularPoint(cx,cy,r,i,d),p2=regularPoint(cx,cy,r,i+1,d);
       const seg=svgEl('polygon',{points:`${cx},${cy} ${p1[0]},${p1[1]} ${p2[0]},${p2[1]}`,stroke,'stroke-width':'3','stroke-linejoin':'round'});
+      labelPositions.push({x:(cx+p1[0]+p2[0])/3,y:(cy+p1[1]+p2[1])/3});
       segments.push(seg);svg.appendChild(seg);
     }
   } else if(shape==='barH'){
     const x=24,y=35,w=312,h=180;
     for(let i=0;i<d;i++){
       const seg=svgEl('rect',{x,y:y+i*h/d,width:w,height:h/d,stroke,'stroke-width':'3'});
+      labelPositions.push({x:x+w/2,y:y+(i+.5)*h/d});
       segments.push(seg);svg.appendChild(seg);
     }
   } else if(shape==='grid'){
@@ -809,12 +1004,14 @@ function renderFractionFigure(container,d,n,color,opts={}){
     for(let i=0;i<d;i++){
       const c=i%cols,r=Math.floor(i/cols);
       const seg=svgEl('rect',{x:x+c*w/cols,y:y+r*h/rows,width:w/cols,height:h/rows,stroke,'stroke-width':'3'});
+      labelPositions.push({x:x+(c+.5)*w/cols,y:y+(r+.5)*h/rows});
       segments.push(seg);svg.appendChild(seg);
     }
   } else {
     const x=24,y=58,w=312,h=134;
     for(let i=0;i<d;i++){
       const seg=svgEl('rect',{x:x+i*w/d,y,width:w/d,height:h,stroke,'stroke-width':'3'});
+      labelPositions.push({x:x+(i+.5)*w/d,y:y+h/2});
       segments.push(seg);svg.appendChild(seg);
     }
   }
@@ -823,6 +1020,8 @@ function renderFractionFigure(container,d,n,color,opts={}){
   segments.forEach((seg,i)=>{
     seg.classList.add('fraction-segment');
     seg.dataset.index=i;
+    seg.dataset.labelX=labelPositions[i].x;
+    seg.dataset.labelY=labelPositions[i].y;
     const colored=coloredSet.has(i);
     seg.dataset.colored=colored?'1':'0';
     seg.dataset.painted=colored?'1':'0';
@@ -848,6 +1047,59 @@ async function animateCount(container, selector='.fraction-segment'){
     s.classList.remove('count-pulse');
   }
 }
+let a1CountHelpRun=0;
+const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+function clearRegionCountLabels(){
+  $$('.region-count-label',$('#a1Figure')).forEach(label=>label.remove());
+  $$('.fraction-segment.count-pulse',$('#a1Figure')).forEach(seg=>seg.classList.remove('count-pulse'));
+}
+function resetA1CountSummary(){
+  $('#a1TotalCount').textContent='—';$('#a1PaintedCount').textContent='—';
+  $('#a1CountSummary').classList.add('hidden');
+}
+async function numberRegions(segments,painted,run){
+  for(let index=0;index<segments.length;index++){
+    if(run!==a1CountHelpRun||currentActivity!=='a1')return false;
+    const segment=segments[index],svg=segment.ownerSVGElement;
+    const x=Number(segment.dataset.labelX),y=Number(segment.dataset.labelY);
+    const group=svgEl('g',{class:'region-count-label','aria-hidden':'true'});
+    const circle=svgEl('circle',{cx:x,cy:y,r:14,class:'region-count-circle'+(painted?' painted':'')});
+    const text=svgEl('text',{x,y,class:'region-count-text'});text.textContent=index+1;
+    group.append(circle,text);svg.appendChild(group);
+    segment.classList.add('count-pulse');tone(410+(index+1)*32,.075,'triangle',.07);
+    await wait(470);segment.classList.remove('count-pulse');
+  }
+  return true;
+}
+async function showA1CountHelp(){
+  if(!settings.a1CountHelp)return;
+  clearTimeout(instructionSpeakTimer);instructionSpeakTimer=null;
+  const run=++a1CountHelpRun,button=$('#a1CountHelp'),all=$$('.fraction-segment',$('#a1Figure'));
+  const painted=$$('.fraction-segment[data-colored="1"]',$('#a1Figure'));
+  button.disabled=true;clearRegionCountLabels();resetA1CountSummary();
+  feedback('a1Feedback','Primero contamos todas las regiones de la figura.','hint');
+  await speakAndWait('Primero contamos todas las regiones de la figura.');
+  if(run!==a1CountHelpRun||currentActivity!=='a1')return;
+  if(!await numberRegions(all,false,run))return;
+  $('#a1TotalCount').textContent=all.length;$('#a1CountSummary').classList.remove('hidden');
+  feedback('a1Feedback',`Contamos ${all.length} regiones en total.`,'hint');
+  await speakAndWait(`Contamos ${all.length} regiones en total.`);
+  if(run!==a1CountHelpRun||currentActivity!=='a1')return;
+  await wait(1000);
+  if(run!==a1CountHelpRun||currentActivity!=='a1')return;
+  clearRegionCountLabels();
+  feedback('a1Feedback','Ahora contamos solamente las regiones pintadas.','hint');
+  await speakAndWait('Ahora contamos solamente las regiones pintadas.');
+  if(run!==a1CountHelpRun||currentActivity!=='a1')return;
+  if(!await numberRegions(painted,true,run))return;
+  $('#a1PaintedCount').textContent=painted.length;
+  await wait(850);
+  if(run!==a1CountHelpRun||currentActivity!=='a1')return;
+  const paintedText=painted.length===1?'1 región pintada':`${painted.length} regiones pintadas`;
+  feedback('a1Feedback',`La figura tiene ${all.length} regiones en total y ${paintedText}.`,'hint');
+  await speakAndWait(`La figura tiene ${all.length} regiones en total y ${paintedText}.`);
+  button.disabled=false;
+}
 
 /* audio */
 let audioCtx=null;
@@ -856,7 +1108,10 @@ function tone(freq=520,dur=.09,type='sine',vol=.06){
   try{
     audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
     const o=audioCtx.createOscillator(),g=audioCtx.createGain();
-    o.type=type;o.frequency.value=freq;g.gain.value=vol;
+    if(audioCtx.state==='suspended')audioCtx.resume();
+    const volumeScale=(settings.soundVolume??.7)*1.8;
+    if(volumeScale<=0)return;
+    o.type=type;o.frequency.value=freq;g.gain.value=Math.min(.22,Math.max(.001,vol*volumeScale));
     o.connect(g);g.connect(audioCtx.destination);o.start();
     g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+dur);
     o.stop(audioCtx.currentTime+dur);
@@ -899,20 +1154,110 @@ function fireworks(){
     },b*170);
   }
 }
-function celebrateCorrect(anchor){
-  successSound();
-  const layer=$('#celebrationLayer'),r=anchor.getBoundingClientRect();
-  const x=r.left+r.width/2,y=Math.max(95,r.top+r.height/2);
-  const sticker=document.createElement('div');sticker.className='success-sticker';sticker.textContent=rand(['⭐','🌟','🎉','🏆']);
-  sticker.style.left=x+'px';sticker.style.top=y+'px';layer.appendChild(sticker);setTimeout(()=>sticker.remove(),1250);
-  const colors=['#e85d75','#3b82f6','#22a06b','#f59e0b','#9a78d0','#45b8bd','#ffd54a'];
-  for(let i=0;i<20;i++){
-    const el=document.createElement('div');el.className='spark';el.style.left=x+'px';el.style.top=y+'px';el.style.background=rand(colors);
-    const a=i/20*Math.PI*2,dist=55+Math.random()*90;
-    el.style.setProperty('--dx',Math.cos(a)*dist+'px');el.style.setProperty('--dy',Math.sin(a)*dist+'px');
-    layer.appendChild(el);setTimeout(()=>el.remove(),1400);
-  }
+const CELEBRATION_OBJECTS=['🚀','✈️','🎈','🛸','🚁','🪁','🦋','🌟'];
+const EXPLOSION_THEMES=[
+  {name:'solar',colors:['#ff3b30','#ff9500','#ffd60a','#fff4ad'],flash:['#fff','#ffe56b','#ff6b22'],waves:['#ffe66d','#ff5d3a'],pattern:'burst',sound:'boom'},
+  {name:'galaxia',colors:['#7c3aed','#c026d3','#38bdf8','#f0abfc'],flash:['#fff','#d8b4fe','#2563eb'],waves:['#d8b4fe','#38bdf8'],pattern:'spiral',sound:'space'},
+  {name:'confeti',colors:['#ef476f','#ffd166','#06d6a0','#118ab2','#ffffff'],flash:['#fff','#a7f3d0','#06b6d4'],waves:['#34d399','#f472b6'],pattern:'confetti',sound:'pop'},
+  {name:'eléctrica',colors:['#ffffff','#67e8f9','#3b82f6','#a5f3fc'],flash:['#fff','#67e8f9','#2563eb'],waves:['#e0f2fe','#60a5fa'],pattern:'ring',sound:'electric'},
+  {name:'mágica',colors:['#f9a8d4','#c4b5fd','#fde68a','#ffffff'],flash:['#fff','#f5d0fe','#ec4899'],waves:['#f0abfc','#fde047'],pattern:'flower',sound:'magic'},
+  {name:'aurora',colors:['#2dd4bf','#818cf8','#e879f9','#ecfeff'],flash:['#fff','#99f6e4','#8b5cf6'],waves:['#5eead4','#c084fc'],pattern:'curtain',sound:'aurora'},
+  {name:'cascada',colors:['#38bdf8','#22d3ee','#fef08a','#ffffff'],flash:['#fff','#bae6fd','#0284c7'],waves:['#7dd3fc','#fde047'],pattern:'fountain',sound:'water'},
+  {name:'estelar',colors:['#fef3c7','#facc15','#fb7185','#ffffff'],flash:['#fff','#fef08a','#e11d48'],waves:['#facc15','#fb7185'],pattern:'star',sound:'star'},
+  {name:'selva',colors:['#4ade80','#facc15','#fb923c','#14b8a6'],flash:['#fff','#bbf7d0','#16a34a'],waves:['#86efac','#fb923c'],pattern:'double',sound:'jungle'}
+];
+let lastExplosionTheme=-1;
+function nextExplosionTheme(){
+  const choices=EXPLOSION_THEMES.map((_,i)=>i).filter(i=>i!==lastExplosionTheme);
+  lastExplosionTheme=rand(choices);return EXPLOSION_THEMES[lastExplosionTheme];
 }
+function explosionSound(theme){
+  const sequences={
+    boom:[[145,.22,'sawtooth',.11,0],[88,.32,'triangle',.095,65],[820,.13,'square',.065,155],[1160,.06,'triangle',.045,245]],
+    space:[[260,.28,'sine',.08,0],[520,.2,'triangle',.07,80],[1040,.18,'sine',.055,180],[1560,.09,'sine',.04,330]],
+    pop:[[420,.08,'square',.075,0],[690,.07,'triangle',.065,90],[920,.06,'square',.055,175],[1250,.07,'triangle',.045,260]],
+    electric:[[180,.12,'sawtooth',.08,0],[1380,.055,'square',.06,65],[1050,.06,'square',.055,135],[1680,.05,'triangle',.045,215]],
+    magic:[[520,.16,'sine',.065,0],[780,.14,'sine',.06,90],[1040,.13,'triangle',.055,180],[1390,.16,'sine',.045,285]],
+    aurora:[[310,.2,'sine',.06,0],[620,.22,'sine',.055,75],[930,.2,'triangle',.05,170],[1240,.18,'sine',.04,285]],
+    water:[[220,.1,'sine',.07,0],[740,.07,'sine',.05,85],[560,.08,'triangle',.05,155],[980,.09,'sine',.04,245]],
+    star:[[740,.1,'triangle',.065,0],[1110,.08,'sine',.055,80],[1480,.07,'triangle',.05,155],[1850,.07,'sine',.04,235]],
+    jungle:[[170,.16,'triangle',.085,0],[350,.1,'square',.06,95],[260,.11,'triangle',.065,185],[620,.08,'sine',.045,280]]
+  };
+  sequences[theme.sound].forEach(([frequency,duration,type,volume,delay])=>setTimeout(()=>tone(frequency,duration,type,volume),delay));
+}
+function explodeAt(x,y,emoji,theme){
+  const layer=$('#celebrationLayer'),compact=innerWidth<700;
+  const particleCount=compact?26:34,fragmentCount=compact?4:5,batch=document.createDocumentFragment(),effects=[];
+  const addEffect=el=>{effects.push(el);batch.appendChild(el)};
+  const flash=document.createElement('div');flash.className='explosion-flash';flash.style.left=x+'px';flash.style.top=y+'px';
+  flash.style.background=`radial-gradient(circle,${theme.flash[0]} 0 8%,${theme.flash[1]} 18%,${theme.flash[2]}cc 40%,transparent 72%)`;addEffect(flash);
+  for(let i=0;i<2;i++){
+    const wave=document.createElement('div');wave.className='shockwave'+(i?' second':'');wave.style.left=x+'px';wave.style.top=y+'px';wave.style.borderColor=theme.waves[i];wave.style.boxShadow=`0 0 20px ${theme.waves[i]},inset 0 0 14px #fff`;addEffect(wave);
+  }
+  for(let i=0;i<particleCount;i++){
+    const spark=document.createElement('div'),color=rand(theme.colors),size=7+Math.random()*8;
+    spark.className='spark';spark.style.left=x+'px';spark.style.top=y+'px';spark.style.background=color;spark.style.color=color;
+    spark.style.width=((theme.pattern==='confetti'||i%5===0)?size*1.8:size)+'px';spark.style.height=size+'px';spark.style.borderRadius=theme.pattern==='confetti'?'2px':'50%';
+    let angle=i/particleCount*Math.PI*2+Math.random()*.18,distance=90+Math.random()*(compact?150:210);
+    if(theme.pattern==='spiral')angle+=i*.19;
+    if(theme.pattern==='ring')distance=(compact?155:205)+Math.random()*35;
+    if(theme.pattern==='flower'){angle=Math.floor(i/5)*(Math.PI*2/Math.ceil(particleCount/5))+(i%5)*.055;distance=75+(i%5)*32+Math.random()*22}
+    if(theme.pattern==='confetti')distance=70+Math.random()*(compact?135:185);
+    if(theme.pattern==='curtain'){angle=Math.PI*.15+Math.random()*Math.PI*.7;distance=95+Math.random()*(compact?140:190)}
+    if(theme.pattern==='fountain'){angle=-Math.PI*.85+Math.random()*Math.PI*.7;distance=90+Math.random()*(compact?150:205)}
+    if(theme.pattern==='star'){angle=(i%5)*Math.PI*2/5-Math.PI/2+(Math.random()-.5)*.09;distance=75+Math.random()*(compact?165:220)}
+    if(theme.pattern==='double')distance=(i%2?95:compact?190:245)+Math.random()*28;
+    const dx=Math.cos(angle)*distance,dy=Math.sin(angle)*distance+(theme.pattern==='fountain'?70:0);
+    spark.style.setProperty('--dx',dx+'px');spark.style.setProperty('--dy',dy+'px');
+    spark.style.setProperty('--dx-quarter',dx*.23+'px');spark.style.setProperty('--dy-quarter',dy*.23+'px');
+    spark.style.setProperty('--spark-rot',(360+Math.random()*720)+'deg');addEffect(spark);
+  }
+  for(let i=0;i<fragmentCount;i++){
+    const fragment=document.createElement('div');fragment.className='number-pop';fragment.textContent=emoji;fragment.style.left=x+'px';fragment.style.top=y+'px';fragment.style.fontSize=(32+Math.random()*9)+'px';
+    const angle=Math.random()*Math.PI*2,distance=70+Math.random()*(compact?105:145);
+    fragment.style.setProperty('--dx',Math.cos(angle)*distance+'px');fragment.style.setProperty('--dy',Math.sin(angle)*distance+'px');fragment.style.setProperty('--rot',(-300+Math.random()*600)+'deg');addEffect(fragment);
+  }
+  layer.appendChild(batch);
+  setTimeout(()=>effects.forEach(el=>el.remove()),1500);
+  explosionSound(theme);
+}
+function launchObjectCopies(emoji,x,y,theme){
+  const layer=$('#celebrationLayer'),count=3+Math.floor(Math.random()*2);
+  for(let i=0;i<count;i++){
+    const flyer=document.createElement('div');flyer.className='flying-object';flyer.textContent=emoji;flyer.style.left=x+'px';flyer.style.top=y+'px';
+    const targetX=innerWidth*(.1+Math.random()*.8),targetY=innerHeight*(.15+Math.random()*.68);
+    const dx=targetX-x,dy=targetY-y,duration=2550+i*170+Math.random()*350;
+    flyer.style.setProperty('--dx',dx+'px');flyer.style.setProperty('--dy',dy+'px');
+    flyer.style.setProperty('--dx-mid',(dx*.45+(Math.random()-.5)*innerWidth*.42)+'px');
+    flyer.style.setProperty('--dy-mid',(dy*.45+(Math.random()-.5)*innerHeight*.42)+'px');
+    flyer.style.setProperty('--duration',duration+'ms');layer.appendChild(flyer);
+    setTimeout(()=>{flyer.remove();explodeAt(targetX,targetY,emoji,theme)},duration);
+  }
+  const flightBase={boom:330,space:460,pop:520,electric:610,magic:570,aurora:500,water:430,star:680,jungle:290}[theme.sound];
+  [0,430,860,1290,1720,2150].forEach((delay,index)=>setTimeout(()=>tone(flightBase+index*72,.09,index%2?'sine':'triangle',.045),delay));
+}
+function spawnCelebrationObjects(){
+  const layer=$('#celebrationLayer');
+  $$('.celebration-object,.flying-object',layer).forEach(element=>element.remove());
+  const objects=shuffle(CELEBRATION_OBJECTS).slice(0,2),theme=nextExplosionTheme();
+  objects.forEach((emoji,index)=>{
+    const button=document.createElement('button');button.className='celebration-object';button.textContent=emoji;button.setAttribute('aria-label',`Tocar ${emoji} para celebrar`);
+    button.style.left=`calc(${index===0?24:76}% - 59px)`;button.style.top=`calc(${index===0?38:48}% - 59px)`;
+    const direction=index===0?1:-1,roamX=Math.min(innerWidth*.14,145),roamY=Math.min(innerHeight*.12,95);
+    button.style.setProperty('--roam-x1',direction*roamX+'px');button.style.setProperty('--roam-y1',-roamY*.55+'px');
+    button.style.setProperty('--roam-x2',direction*roamX*.35+'px');button.style.setProperty('--roam-y2',roamY+'px');
+    button.style.setProperty('--roam-x3',-direction*roamX*.55+'px');button.style.setProperty('--roam-y3',roamY*.18+'px');
+    button.style.setProperty('--roam-duration',(4.6+Math.random()*1.8)+'s');
+    button.addEventListener('click',()=>{const r=button.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2;button.remove();launchObjectCopies(emoji,x,y,theme)},{once:true});
+    layer.appendChild(button);setTimeout(()=>button.remove(),12000);
+  });
+}
+function celebrateStep(anchor){
+  successSound();const layer=$('#celebrationLayer'),r=anchor.getBoundingClientRect();
+  const sticker=document.createElement('div');sticker.className='success-sticker';sticker.textContent='⭐';sticker.style.left=(r.left+r.width/2)+'px';sticker.style.top=Math.max(95,r.top+r.height/2)+'px';
+  layer.appendChild(sticker);setTimeout(()=>sticker.remove(),1250);
+}
+function celebrateCorrect(){successSound();spawnCelebrationObjects()}
 
 /* Navegación */
 $('#studentNameInput').addEventListener('input',e=>setStudentName(e.target.value,true));
@@ -929,6 +1274,7 @@ $$('[data-speak]').forEach(b=>b.addEventListener('click',()=>speak(currentInstru
 
 /* Actividad 1 */
 function startA1(){
+  a1CountHelpRun++;clearRegionCountLabels();resetA1CountSummary();
   const s=states.a1; s.num=null;s.den=null;s.attempts=0;s.fraction=randomFraction();
   const color=rand(COLORS).hex;
   const indices=shuffle([...Array(s.fraction.d).keys()]).slice(0,s.fraction.n);
@@ -936,6 +1282,7 @@ function startA1(){
   $$('.drop-cell',$('#a1Fraction')).forEach(c=>{c.textContent='';c.classList.remove('filled')});
   $('#a1FractionName').textContent='';$('#a1FractionName').classList.add('hidden');
   $('#a1Next').classList.add('hidden');
+  $('#a1CountHelp').classList.toggle('hidden',!settings.a1CountHelp);$('#a1CountHelp').disabled=false;
   feedback('a1Feedback','Arrastra un número arriba y otro abajo.');
   setInstruction('Observa la figura. Forma la fracción que representa la parte coloreada.','a1Instruction');
   buildNumberInventory();
@@ -988,43 +1335,37 @@ async function checkA1(){
   if(s.num===f.n&&s.den===f.d){
     const name=fractionText(f.n,f.d);
     $('#a1FractionName').textContent=name;$('#a1FractionName').classList.remove('hidden');
-    feedback('a1Feedback',`¡Excelente! La fracción es ${f.n}/${f.d}: ${name}.`,'good');
-    speak(`¡Excelente! ${f.n} de las ${f.d} partes están coloreadas. La fracción se llama ${name}.`);
-    celebrateCorrect($('#a1Fraction'));numberExplosion($('#a1Fraction'));$('#a1Next').classList.remove('hidden');
+    giveReviewFeedback('a1Feedback',`${f.n} de las ${f.d} regiones están pintadas. La fracción es ${name}.`,true);
+    a1CountHelpRun++;clearRegionCountLabels();$('#a1CountHelp').classList.add('hidden');
+    celebrateCorrect();$('#a1Next').classList.remove('hidden');
     return;
   }
   s.attempts++;softError();
   const numWrong=s.num!==f.n,denWrong=s.den!==f.d;
   if(s.attempts===1){
     if(numWrong&&!denWrong){
-      feedback('a1Feedback','Miremos de nuevo: ¿cuántas partes están coloreadas?','hint');
-      speak('Miremos de nuevo. ¿Cuántas partes están coloreadas?');
+      giveReviewFeedback('a1Feedback','Cuenta nuevamente solamente las regiones pintadas. Ese resultado va en el numerador.');
       const segs=$$('.fraction-segment[data-colored="1"]',$('#a1Figure'));
       for(const seg of segs){seg.classList.add('count-pulse');setTimeout(()=>seg.classList.remove('count-pulse'),650)}
       clearA1Slot('num');
     } else if(!numWrong&&denWrong){
-      feedback('a1Feedback','Mira toda la figura: ¿en cuántas partes iguales está dividida?','hint');
-      speak('Mira toda la figura. ¿En cuántas partes iguales está dividida?');
+      giveReviewFeedback('a1Feedback','Cuenta todas las regiones iguales de la figura. Ese resultado va en el denominador.');
       await animateCount($('#a1Figure')); clearA1Slot('den');
     } else {
-      feedback('a1Feedback','Primero cuenta las partes coloreadas y después cuenta todas las partes.','hint');
-      speak('Primero cuenta las partes coloreadas y después cuenta todas las partes.');
+      giveReviewFeedback('a1Feedback','Cuenta primero las regiones pintadas para el numerador y después todas las regiones para el denominador.');
       clearA1Slot('num');clearA1Slot('den');
     }
   } else if(s.attempts===2){
     if(numWrong){
-      feedback('a1Feedback','Pista: el número de arriba cuenta solo las partes coloreadas. Vamos a contarlas.','hint');
-      speak('El número de arriba indica cuántas partes están coloreadas. Vamos a contarlas.');
+      giveReviewFeedback('a1Feedback','El número de arriba debe indicar cuántas regiones están pintadas. Vamos a contarlas otra vez.');
       await animateCount($('#a1Figure'),'.fraction-segment[data-colored="1"]'); clearA1Slot('num');
     }
     if(denWrong){
-      feedback('a1Feedback','Pista: el número de abajo cuenta todas las partes iguales. Vamos a contarlas.','hint');
-      speak('El número de abajo indica en cuántas partes iguales está dividido el entero. Vamos a contarlas.');
+      giveReviewFeedback('a1Feedback','El número de abajo debe indicar cuántas regiones iguales tiene toda la figura. Vamos a contarlas otra vez.');
       await animateCount($('#a1Figure')); clearA1Slot('den');
     }
   } else {
-    feedback('a1Feedback','Vamos juntos: observa el conteo y vuelve a formar la fracción.','hint');
-    speak('Vamos juntos. Cuenta las partes coloreadas. Después cuenta todas las partes.');
+    giveReviewFeedback('a1Feedback','Observa el conteo: primero las regiones pintadas y después todas las regiones. Luego vuelve a formar la fracción.');
     clearA1Slot('num');clearA1Slot('den');
     await animateCount($('#a1Figure'),'.fraction-segment[data-colored="1"]');
     await new Promise(r=>setTimeout(r,250));
@@ -1037,6 +1378,7 @@ function clearA1Slot(slot){
   const c=$(`.drop-cell[data-slot="${slot}"]`,$('#a1Fraction'));c.textContent='';c.classList.remove('filled');
 }
 $$('.drop-cell',$('#a1Fraction')).forEach(c=>c.addEventListener('click',()=>clearA1Slot(c.dataset.slot)));
+$('#a1CountHelp').addEventListener('click',showA1CountHelp);
 $('#a1Next').addEventListener('click',startA1);
 
 /* Actividad 2 */
@@ -1088,17 +1430,14 @@ function toggleA2Segment(seg){
 $('#a2Check').addEventListener('click',()=>{
   const s=states.a2;
   if(s.painted.size===s.fraction.n){
-    s.done=true;feedback('a2Feedback',`¡Excelente! Coloreaste ${s.fraction.n} de ${s.fraction.d} partes.`,'good');
-    speak(`¡Excelente! Coloreaste ${s.fraction.n} de ${s.fraction.d} partes. Representaste ${fractionText(s.fraction.n,s.fraction.d)}.`);
-    celebrateCorrect($('#a2Figure'));$('#a2Check').classList.add('hidden');$('#a2Celebrate').classList.remove('hidden');$('#a2Next').classList.remove('hidden');
+    s.done=true;giveReviewFeedback('a2Feedback',`Coloreaste ${s.fraction.n} de ${s.fraction.d} regiones y representaste ${fractionText(s.fraction.n,s.fraction.d)}.`,true);
+    celebrateCorrect();$('#a2Check').classList.add('hidden');$('#a2Celebrate').classList.remove('hidden');$('#a2Next').classList.remove('hidden');
   }else{
     s.attempts++;softError();
     if(s.painted.size<s.fraction.n){
-      feedback('a2Feedback','Faltan partes por colorear. Mira el número de arriba: indica cuántas partes coloreamos.','hint');
-      speak('Faltan partes por colorear. Mira el número de arriba. Indica cuántas partes coloreamos.');
+      giveReviewFeedback('a2Feedback','Faltan regiones por colorear. El numerador indica exactamente cuántas deben quedar pintadas.');
     }else{
-      feedback('a2Feedback','Hay partes de más. Mira el número de arriba y cuenta otra vez.','hint');
-      speak('Hay partes de más. Mira el número de arriba y cuenta otra vez.');
+      giveReviewFeedback('a2Feedback','Hay regiones pintadas de más. Compara la cantidad pintada con el numerador y cuenta nuevamente.');
     }
     $('#a2Fraction').classList.add('attention');setTimeout(()=>$('#a2Fraction').classList.remove('attention'),1400);
   }
@@ -1288,23 +1627,20 @@ $('#a3Check').addEventListener('click',async()=>{
   const s=states.a3,wrong=evaluateMatch();
   $$('.match-item.problem').forEach(x=>x.classList.remove('problem'));
   if(wrong.length===0){
-    s.done=true;feedback('a3Feedback','¡Excelente! Encontraste todas las parejas.','good');
+    s.done=true;
     const names=s.pairs.map(p=>fractionText(p.n,p.d));
-    speak(`¡Excelente! Encontraste todas las parejas. Las fracciones son ${names.join(', ')}.`);
-    celebrateCorrect($('#matchBoard'));$('#a3Check').classList.add('hidden');$('#a3Clear').classList.add('hidden');$('#a3Celebrate').classList.remove('hidden');$('#a3Next').classList.remove('hidden');
+    giveReviewFeedback('a3Feedback',`Relacionaste correctamente todas las parejas. Las fracciones son ${names.join(', ')}.`,true);
+    celebrateCorrect();$('#a3Check').classList.add('hidden');$('#a3Clear').classList.add('hidden');$('#a3Celebrate').classList.remove('hidden');$('#a3Next').classList.remove('hidden');
   }else{
     s.attempts++;softError();
     const problem=wrong[0],card=$(`.match-item[data-item-id="${problem.id}"]`);
     if(card)card.classList.add('problem');
     if(problem.type==='extra'){
-      feedback('a3Feedback','Revisa esta figura. Recuerda que una opción puede quedar sin pareja.','hint');
-      speak('Revisa esta figura. Recuerda que una opción puede quedar sin pareja.');
+      giveReviewFeedback('a3Feedback','Revisa la opción marcada. Cuando hay sobrantes, algunas opciones deben quedar sin pareja.');
     }else if(s.attempts===1){
-      feedback('a3Feedback','Hay una pareja que debemos revisar. Mira la figura que se está marcando.','hint');
-      speak('Hay una pareja que debemos revisar. Mira la figura que se está marcando.');
+      giveReviewFeedback('a3Feedback','Hay una pareja que no representa la misma fracción. Revisa la opción marcada y compara ambas representaciones.');
     }else{
-      feedback('a3Feedback','Cuenta primero todas las partes de esta figura y luego las partes coloreadas.','hint');
-      speak('Cuenta primero todas las partes de esta figura y luego las partes coloreadas.');
+      giveReviewFeedback('a3Feedback','Cuenta todas las regiones para encontrar el denominador y luego las regiones pintadas para encontrar el numerador.');
       const fig=$('.mini-figure',card);if(fig)await animateCount(fig);
       s.attempts=1;
     }
@@ -1316,30 +1652,33 @@ $('#a3Next').addEventListener('click',startA3);
 
 /* Actividad 4 */
 function startA4(){
-  const s=states.a4;s.fraction=randomFraction();s.color=rand(COLORS);s.parts=2;s.step=1;s.painted=new Set();s.attempts=0;s.shape=rand(['circle','barH']);s.done=false;
+  const s=states.a4;s.fraction=randomFraction();s.color=rand(COLORS);s.parts=1;s.step=1;s.painted=new Set();s.attempts=0;s.shape=rand(['circle','barH']);s.done=false;
   $('.top',$('#a4Fraction')).textContent=s.fraction.n;$('.bottom',$('#a4Fraction')).textContent=s.fraction.d;
   $('#a4FractionName').textContent=fractionText(s.fraction.n,s.fraction.d);
-  buildPartsChoices();$('#a4SliderValue').textContent=2;
+  buildPartsChoices();updateA4PartsLabel();
   $('#a4SliderWrap').classList.remove('hidden');$('#a4Palette').classList.add('hidden');
   $('#a4StepLabel').textContent='Paso 1 de 2';$('#a4StepTitle').textContent='Divide el entero';
   $$('.step-dot').forEach((d,i)=>d.classList.toggle('active',i===0));
   $('#a4ConfirmParts').classList.remove('hidden');$('#a4Check').classList.add('hidden');$('#a4Celebrate').classList.add('hidden');$('#a4Next').classList.add('hidden');
   renderA4Figure();
-  feedback('a4Feedback','Mueve el deslizador para decidir en cuántas partes iguales dividir el entero.');
+  feedback('a4Feedback','Elige en cuántas partes iguales quieres dividir el entero.');
   setInstruction(`Construye la fracción ${fractionText(s.fraction.n,s.fraction.d)}. Primero divide el entero en partes iguales.`,'a4Instruction');
 }
 function buildPartsChoices(){
   const box=$('#a4PartsChoices'),max=Math.max(10,...denominatorsFor('a4'));box.innerHTML='';
-  for(let value=2;value<=max;value++){
+  for(let value=1;value<=max;value++){
     const button=document.createElement('button');button.className='parts-choice'+(value===states.a4.parts?' selected':'');
     button.textContent=value;button.setAttribute('aria-label',`${value} partes`);button.setAttribute('aria-pressed',value===states.a4.parts?'true':'false');
     button.addEventListener('click',()=>{
-      states.a4.parts=value;$('#a4SliderValue').textContent=value;
+      states.a4.parts=value;updateA4PartsLabel();
       $$('.parts-choice',box).forEach(b=>{const selected=Number(b.textContent)===value;b.classList.toggle('selected',selected);b.setAttribute('aria-pressed',selected?'true':'false')});
       renderA4Figure();tone(280+value*22,.05,'sine',.025);
     });
     box.appendChild(button);
   }
+}
+function updateA4PartsLabel(){
+  const value=states.a4.parts;$('#a4SliderValue').textContent=value;$('#a4PartsUnit').textContent=value===1?'parte':'partes';
 }
 function renderA4Figure(){
   const s=states.a4;
@@ -1361,13 +1700,11 @@ $('#a4ConfirmParts').addEventListener('click',async()=>{
     $$('.step-dot').forEach((d,i)=>d.classList.toggle('active',i===1));
     $('#a4ConfirmParts').classList.add('hidden');$('#a4Check').classList.remove('hidden');
     renderA4Figure();
-    feedback('a4Feedback',`Muy bien. Dividiste el entero en ${s.fraction.d} partes iguales. Ahora colorea ${s.fraction.n}.`,'good');
-    speak(`Muy bien. Dividiste el entero en ${s.fraction.d} partes iguales. Ahora selecciona el color ${s.color.name} y colorea ${s.fraction.n} partes.`);
-    celebrateCorrect($('#a4Figure'));
+    giveReviewFeedback('a4Feedback',`Dividiste el entero en ${s.fraction.d} regiones iguales. Ahora selecciona el color ${s.color.name} y colorea ${s.fraction.n}.`,true);
+    celebrateStep($('#a4Figure'));
   }else{
     s.attempts++;softError();
-    feedback('a4Feedback','Mira el número de abajo. Indica en cuántas partes iguales debemos dividir el entero.','hint');
-    speak('Mira el número de abajo. Indica en cuántas partes iguales debemos dividir el entero.');
+    giveReviewFeedback('a4Feedback','La cantidad elegida no coincide con el denominador. El número de abajo indica en cuántas regiones iguales debes dividir el entero.');
     $('#a4Fraction').classList.add('attention');setTimeout(()=>$('#a4Fraction').classList.remove('attention'),1400);
     if(s.attempts>=2){await animateCount($('#a4Figure'));s.attempts=0}
   }
@@ -1384,13 +1721,12 @@ function toggleA4Segment(seg){
 $('#a4Check').addEventListener('click',()=>{
   const s=states.a4;
   if(s.painted.size===s.fraction.n){
-    s.done=true;feedback('a4Feedback',`¡Lo lograste! Construiste ${s.fraction.n}/${s.fraction.d}.`,'good');
-    speak(`¡Lo lograste! Construiste ${fractionText(s.fraction.n,s.fraction.d)}.`);
-    celebrateCorrect($('#a4Figure'));$('#a4Check').classList.add('hidden');$('#a4Celebrate').classList.remove('hidden');$('#a4Next').classList.remove('hidden');
+    s.done=true;giveReviewFeedback('a4Feedback',`Construiste correctamente la fracción que se llama ${fractionText(s.fraction.n,s.fraction.d)}.`,true);
+    celebrateCorrect();$('#a4Check').classList.add('hidden');$('#a4Celebrate').classList.remove('hidden');$('#a4Next').classList.remove('hidden');
   }else{
     softError();
     const msg=s.painted.size<s.fraction.n?'Faltan partes por colorear. Mira el número de arriba.':'Hay partes de más. Mira el número de arriba y cuenta de nuevo.';
-    feedback('a4Feedback',msg,'hint');speak(msg);$('#a4Fraction').classList.add('attention');setTimeout(()=>$('#a4Fraction').classList.remove('attention'),1400);
+    giveReviewFeedback('a4Feedback',msg);$('#a4Fraction').classList.add('attention');setTimeout(()=>$('#a4Fraction').classList.remove('attention'),1400);
   }
 });
 $('#a4Celebrate').addEventListener('click',fireworks);
@@ -1411,6 +1747,10 @@ $('#customizeMatch').addEventListener('click',()=>openSettings('a3',true));
 $$('[data-settings-scope]').forEach(button=>button.addEventListener('click',()=>openSettings(button.dataset.settingsScope,false)));
 $('#closeSettings').addEventListener('click',()=>dialog.close());
 $('#settingsDialog').addEventListener('click',e=>{if(e.target===dialog)dialog.close()});
+$('#soundVolume').addEventListener('input',e=>{$('#soundVolumeValue').textContent=e.target.value+'%'});
+$('#soundVolume').addEventListener('change',e=>{
+  const previous=settings.soundVolume;settings.soundVolume=Number(e.target.value)/100;tone(620,.13,'triangle',.065);settings.soundVolume=previous;
+});
 function populateDenoms(){
   const box=$('#denomList');box.innerHTML='';
   for(let d=2;d<=10;d++){
@@ -1443,14 +1783,17 @@ function openSettings(scope='all',focusMatch=false){
   settingsDialogScope=scope;
   const visibleDenominators=scope==='all'?settings.denominators:denominatorsFor(scope);
   $$('#denomList input').forEach(c=>c.checked=visibleDenominators.includes(Number(c.value)));
+  $('#a1CountHelpEnabled').checked=settings.a1CountHelp!==false;
   $('#pairCount').value=settings.pairCount;$('#matchMode').value=settings.matchMode||'figure-fraction';$('#leftoverSide').value=settings.leftoverSide;$('#leftoverCount').value=settings.leftoverCount;
   $('#fontSelect').value=settings.font;$('#autoRead').checked=settings.autoRead;$('#soundsOn').checked=settings.soundsOn;populateVoices();$('#voiceSelect').value=settings.voice||'';
+  $('#soundVolume').value=Math.round((settings.soundVolume??.7)*100);$('#soundVolumeValue').textContent=$('#soundVolume').value+'%';
   const isFull=scope==='all',titles={a1:'Actividad 1: identificar',a2:'Actividad 2: representar',a3:'Actividad 3: pareo',a4:'Actividad 4: construir'};
   $('#settingsTitle').textContent=isFull?'⚙️ Configuración completa':`⚙️ ${titles[scope]}`;
-  $('#settingsScopeNote').textContent=isFull?'':scope==='a3'?'Estos ajustes controlan las fracciones y las opciones del pareo.':'Aquí puedes elegir qué denominadores aparecerán en esta actividad.';
+  $('#settingsScopeNote').textContent=isFull?'':scope==='a3'?'Estos ajustes controlan las fracciones y las opciones del pareo.':scope==='a1'?'Aquí puedes elegir los denominadores y activar o desactivar la ayuda de conteo.':'Aquí puedes elegir qué denominadores aparecerán en esta actividad.';
   $('#fractionSettingsNote').textContent=isFull?'Los denominadores elegidos aquí se aplicarán a todas las actividades. La aplicación genera únicamente fracciones propias.':'Estos denominadores se aplicarán solamente a esta actividad.';
   $('#settingsScopeNote').classList.toggle('hidden',isFull);
   $('#fractionSettingsGroup').classList.toggle('scope-hidden',false);
+  $('#a1HelpSettingsGroup').classList.toggle('scope-hidden',!isFull&&scope!=='a1');
   $('#matchSettingsGroup').classList.toggle('scope-hidden',!isFull&&scope!=='a3');
   $('#appearanceSettingsGroup').classList.toggle('scope-hidden',!isFull);
   $('#resetSettings').classList.toggle('hidden',!isFull);
@@ -1480,8 +1823,9 @@ $('#saveSettings').addEventListener('click',()=>{
   if(settingsDialogScope==='all'||settingsDialogScope==='a3'){
     settings.pairCount=pairCount;settings.matchMode=$('#matchMode').value;settings.leftoverSide=leftoverSide;settings.leftoverCount=leftoverCount;
   }
+  if(settingsDialogScope==='all'||settingsDialogScope==='a1')settings.a1CountHelp=$('#a1CountHelpEnabled').checked;
   if(settingsDialogScope==='all'){
-    settings.font=$('#fontSelect').value;settings.voice=$('#voiceSelect').value;settings.autoRead=$('#autoRead').checked;settings.soundsOn=$('#soundsOn').checked;
+    settings.font=$('#fontSelect').value;settings.voice=$('#voiceSelect').value;settings.autoRead=$('#autoRead').checked;settings.soundsOn=$('#soundsOn').checked;settings.soundVolume=Number($('#soundVolume').value)/100;
   }
   saveSettings();applySettings();dialog.close();
   if(currentActivity)startActivity(currentActivity);
