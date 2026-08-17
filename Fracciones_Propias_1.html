@@ -859,7 +859,7 @@ const states = {
   a1:{num:null,den:null,attempts:0,fraction:null},
   a2:{fraction:null,color:null,painted:new Set(),attempts:0,done:false},
   a3:{pairs:[],leftItems:[],rightItems:[],connections:new Map(),attempts:0,drag:null,done:false},
-  a4:{fraction:null,color:null,parts:1,step:1,painted:new Set(),attempts:0,shape:'circle',done:false}
+  a4:{fraction:null,color:null,parts:1,step:1,painted:new Set(),attempts:0,shape:'circle',rectSpec:null,done:false}
 };
 
 function loadSettings(){
@@ -996,11 +996,18 @@ function regularPoint(cx,cy,r,i,n){
   const a=(-90+i*360/n)*Math.PI/180; return [cx+r*Math.cos(a),cy+r*Math.sin(a)];
 }
 function chooseShape(d,forConstruction=false){
-  if(forConstruction)return rand(['circle','barH']);
-  const opts=['circle','barH'];
+  if(forConstruction)return rand(['circle','rectangle']);
+  const opts=['circle','rectangle'];
   if(d>=3)opts.push('polygon');
   if([4,6,8,9,10].includes(d))opts.push('grid');
   return rand(opts);
+}
+function randomRectangleSpec(){
+  const wide=Math.random()<.5;
+  const longSide=rand(wide?[250,280,312]:[190,210,224]);
+  const shortSide=rand([105,125,145,160]);
+  const w=wide?longSide:shortSide,h=wide?shortSide:longSide;
+  return {x:(360-w)/2,y:(250-h)/2,w,h};
 }
 function renderFractionFigure(container,d,n,color,opts={}){
   container.innerHTML='';
@@ -1031,11 +1038,15 @@ function renderFractionFigure(container,d,n,color,opts={}){
       labelPositions.push({x:(cx+p1[0]+p2[0])/3,y:(cy+p1[1]+p2[1])/3});
       segments.push(seg);svg.appendChild(seg);
     }
-  } else if(shape==='barH'){
-    const x=24,y=35,w=312,h=180;
+  } else if(shape==='rectangle'||shape==='barH'||shape==='barV'){
+    const {x,y,w,h}=opts.rectSpec||randomRectangleSpec(),divideAlongWidth=w>=h;
     for(let i=0;i<d;i++){
-      const seg=svgEl('rect',{x,y:y+i*h/d,width:w,height:h/d,stroke,'stroke-width':'3'});
-      labelPositions.push({x:x+w/2,y:y+(i+.5)*h/d});
+      const seg=divideAlongWidth
+        ?svgEl('rect',{x:x+i*w/d,y,width:w/d,height:h,stroke,'stroke-width':'3'})
+        :svgEl('rect',{x,y:y+i*h/d,width:w,height:h/d,stroke,'stroke-width':'3'});
+      labelPositions.push(divideAlongWidth
+        ?{x:x+(i+.5)*w/d,y:y+h/2}
+        :{x:x+w/2,y:y+(i+.5)*h/d});
       segments.push(seg);svg.appendChild(seg);
     }
   } else if(shape==='grid'){
@@ -1699,7 +1710,7 @@ $('#a3Next').addEventListener('click',startA3);
 
 /* Actividad 4 */
 function startA4(){
-  const s=states.a4;s.fraction=randomFraction();s.color=rand(COLORS);s.parts=1;s.step=1;s.painted=new Set();s.attempts=0;s.shape=rand(['circle','barH']);s.done=false;
+  const s=states.a4;s.fraction=randomFraction();s.color=rand(COLORS);s.parts=1;s.step=1;s.painted=new Set();s.attempts=0;s.shape=rand(['circle','rectangle']);s.rectSpec=randomRectangleSpec();s.done=false;
   $('.top',$('#a4Fraction')).textContent=s.fraction.n;$('.bottom',$('#a4Fraction')).textContent=s.fraction.d;
   $('#a4FractionName').textContent=fractionText(s.fraction.n,s.fraction.d);
   buildPartsChoices();updateA4PartsLabel();
@@ -1729,7 +1740,7 @@ function updateA4PartsLabel(){
 }
 function renderA4Figure(){
   const s=states.a4;
-  const fig=renderFractionFigure($('#a4Figure'),s.parts,0,s.color.hex,{shape:s.shape,paintable:s.step===2});
+  const fig=renderFractionFigure($('#a4Figure'),s.parts,0,s.color.hex,{shape:s.shape,rectSpec:s.rectSpec,paintable:s.step===2});
   if(s.step===2){
     fig.segments.forEach(seg=>{
       seg.addEventListener('click',()=>toggleA4Segment(seg));
@@ -1743,7 +1754,11 @@ $('#a4ConfirmParts').addEventListener('click',async()=>{
     s.step=2;s.painted=new Set();
     $('#a4SliderWrap').classList.add('hidden');$('#a4Palette').classList.remove('hidden');
     buildPalette($('#a4Palette'),s.color,'a4');
-    $('#a4StepLabel').textContent='Paso 2 de 2';$('#a4StepTitle').textContent=`Colorea ${s.fraction.n} partes de ${s.color.name}`;
+    const regionWord=s.fraction.n===1?'parte':'partes';
+    const paintPrompt=guidanceIsEnabled()
+      ?`Colorea ${s.fraction.n} ${regionWord} de color ${s.color.name}.`
+      :`Colorea las partes necesarias en ${s.color.name}.`;
+    $('#a4StepLabel').textContent='Paso 2 de 2';$('#a4StepTitle').textContent=paintPrompt;
     $$('.step-dot').forEach((d,i)=>d.classList.toggle('active',i===1));
     $('#a4ConfirmParts').classList.add('hidden');$('#a4Check').classList.remove('hidden');
     renderA4Figure();
