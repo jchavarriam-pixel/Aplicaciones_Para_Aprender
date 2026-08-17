@@ -391,6 +391,22 @@
     box-shadow:0 5px 0 #cbdff3;transition:transform .12s ease,box-shadow .12s ease
   }
   .icon-btn:active,.back-btn:active{transform:translateY(4px);box-shadow:0 1px 0 #cbdff3}
+  .mode-btn{
+    min-height:54px;padding:0 15px;border:2px solid #b9dfcf;border-radius:18px;background:linear-gradient(180deg,#f4fff9,#dff7eb);
+    color:#227354;font-size:15px;font-weight:950;box-shadow:0 5px 0 #bddfce;white-space:nowrap
+  }
+  .mode-btn.exam{border-color:#efc26d;background:linear-gradient(180deg,#fffaf0,#ffebbd);color:#79520a;box-shadow:0 5px 0 #e2c47f}
+  .exam-mode-box{border:3px solid #efc66e;background:linear-gradient(145deg,#fffaf0,#fff1c9)}
+  .exam-mode-box h3{color:#704d0c}
+  .exam-status{margin-top:10px;padding:10px 13px;border-radius:13px;background:rgba(255,255,255,.72);color:#614b23;font-weight:800;line-height:1.35}
+  body.voice-off #repeatBtn,body.voice-off .instruction .speaker{display:none}
+  body.guidance-off .instruction>span{display:none}
+  body.guidance-off .instruction{justify-content:flex-end;min-height:64px}
+  body.guidance-off .feedback:not(.good){display:none}
+  body.guidance-off .count-help-btn,body.guidance-off .count-summary{display:none!important}
+  body.guidance-off .given-frac.attention .top,body.guidance-off .given-frac.attention .bottom,
+  body.guidance-off .paint-swatch.target-pulse,body.guidance-off .fraction-segment.count-pulse{animation:none!important}
+  body.guidance-off .match-item.problem{animation:none;border-color:#d5e3f1;background:#fff}
   .welcome{position:relative}
   .hero{position:relative}
   .hero-badge{
@@ -492,6 +508,7 @@
     .topbar{flex-wrap:wrap}
     .student-control{order:3;width:100%}
     .student-control input{flex:1;width:auto}
+    .mode-btn{min-height:48px;padding:0 11px;font-size:13px}
     .hero-badge{font-size:13px}
     .activity-card{padding-bottom:42px}
     .activity-card::after{font-size:12px}
@@ -511,6 +528,7 @@
       <input id="studentNameInput" type="text" maxlength="40" autocomplete="name" placeholder="Escribe tu nombre">
     </label>
     <div class="top-actions">
+      <button class="mode-btn" id="modeBtn" aria-label="Configurar modo de uso" title="Configurar práctica o examen">🎓 Práctica</button>
       <button class="icon-btn" id="repeatBtn" aria-label="Repetir instrucción" title="Repetir instrucción">🔊</button>
       <button class="icon-btn" id="settingsBtn" aria-label="Configuración" title="Configuración">⚙️</button>
     </div>
@@ -718,6 +736,15 @@
       </div>
     </section>
 
+    <section class="setting-group exam-mode-box" id="assessmentSettingsGroup">
+      <h3>📝 Práctica o evaluación</h3>
+      <label class="toggle-line"><input id="examMode" type="checkbox"> Activar modo examen</label>
+      <div class="small-note">El modo examen desactiva la voz, las instrucciones, las ayudas de conteo y las pistas para corregir respuestas.</div>
+      <div class="exam-status" id="examModeStatus">Modo práctica: las ayudas están disponibles.</div>
+      <label class="toggle-line"><input id="voiceEnabled" type="checkbox"> Permitir narración y retroalimentación verbal</label>
+      <label class="toggle-line"><input id="guidanceText" type="checkbox"> Mostrar instrucciones y ayudas escritas</label>
+    </section>
+
     <section class="setting-group" id="appearanceSettingsGroup">
       <h3>Lectura y apariencia</h3>
       <div class="form-grid">
@@ -815,6 +842,9 @@ const defaults = {
   leftoverCount:1,
   font:"Arial, Helvetica, sans-serif",
   voice:'',
+  voiceEnabled:true,
+  guidanceText:true,
+  examMode:false,
   autoRead:true,
   soundsOn:true,
   soundVolume:.7,
@@ -838,8 +868,15 @@ function loadSettings(){
 function saveSettings(){
   localStorage.setItem('fraccionesPropias1Settings',JSON.stringify(settings));
 }
+function voiceIsEnabled(){return settings.voiceEnabled!==false&&!settings.examMode}
+function guidanceIsEnabled(){return settings.guidanceText!==false&&!settings.examMode}
 function applySettings(){
   document.documentElement.style.setProperty('--font',settings.font);
+  document.body.classList.toggle('voice-off',!voiceIsEnabled());
+  document.body.classList.toggle('guidance-off',!guidanceIsEnabled());
+  const modeButton=$('#modeBtn');
+  if(modeButton){modeButton.textContent=settings.examMode?'🔒 Examen':'🎓 Práctica';modeButton.classList.toggle('exam',!!settings.examMode)}
+  if(!voiceIsEnabled()&&'speechSynthesis' in window)speechSynthesis.cancel();
 }
 applySettings();
 
@@ -855,10 +892,10 @@ function setInstruction(text, elId){
   clearTimeout(instructionSpeakTimer);instructionSpeakTimer=null;
   currentInstruction=text;
   if(elId) $('#'+elId).textContent=text;
-  if(settings.autoRead)instructionSpeakTimer=setTimeout(()=>{instructionSpeakTimer=null;speak(text)},250);
+  if(settings.autoRead&&voiceIsEnabled())instructionSpeakTimer=setTimeout(()=>{instructionSpeakTimer=null;speak(text)},250);
 }
 function speak(text){
-  if(!('speechSynthesis' in window)||!text)return;
+  if(!voiceIsEnabled()||!('speechSynthesis' in window)||!text)return;
   speechSynthesis.cancel();
   speechSynthesis.speak(createUtterance(text));
 }
@@ -877,7 +914,7 @@ function createUtterance(text){
   return u;
 }
 function speakAndWait(text){
-  if(!('speechSynthesis' in window)||!text)return Promise.resolve();
+  if(!voiceIsEnabled()||!('speechSynthesis' in window)||!text)return Promise.resolve();
   speechSynthesis.cancel();
   return new Promise(resolve=>{
     const utterance=createUtterance(text);let finished=false;
@@ -893,7 +930,7 @@ function feedback(id,text,type=''){
   const el=$('#'+id); el.textContent=text; el.className='feedback'+(type?' '+type:'');
 }
 function giveReviewFeedback(id,explanation,correct=false){
-  const message=correct?successReview(explanation):retryReview(explanation);
+  const message=guidanceIsEnabled()?(correct?successReview(explanation):retryReview(explanation)):(correct?successReview('Respuesta correcta.'):'Respuesta registrada.');
   feedback(id,message,correct?'good':'hint');speak(message);return message;
 }
 function gcd(a,b){while(b){[a,b]=[b,a%b]}return a}
@@ -1040,6 +1077,7 @@ function setPainted(seg,on,color){
   seg.setAttribute('fill',on?color:'#ffffff');
 }
 async function animateCount(container, selector='.fraction-segment'){
+  if(!guidanceIsEnabled())return;
   const segs=$$(selector,container);
   for(const s of segs){
     s.classList.add('count-pulse');
@@ -1072,7 +1110,7 @@ async function numberRegions(segments,painted,run){
   return true;
 }
 async function showA1CountHelp(){
-  if(!settings.a1CountHelp)return;
+  if(!settings.a1CountHelp||!guidanceIsEnabled())return;
   clearTimeout(instructionSpeakTimer);instructionSpeakTimer=null;
   const run=++a1CountHelpRun,button=$('#a1CountHelp'),all=$$('.fraction-segment',$('#a1Figure'));
   const painted=$$('.fraction-segment[data-colored="1"]',$('#a1Figure'));
@@ -1282,7 +1320,7 @@ function startA1(){
   $$('.drop-cell',$('#a1Fraction')).forEach(c=>{c.textContent='';c.classList.remove('filled')});
   $('#a1FractionName').textContent='';$('#a1FractionName').classList.add('hidden');
   $('#a1Next').classList.add('hidden');
-  $('#a1CountHelp').classList.toggle('hidden',!settings.a1CountHelp);$('#a1CountHelp').disabled=false;
+  $('#a1CountHelp').classList.toggle('hidden',!settings.a1CountHelp||!guidanceIsEnabled());$('#a1CountHelp').disabled=false;
   feedback('a1Feedback','Arrastra un número arriba y otro abajo.');
   setInstruction('Observa la figura. Forma la fracción que representa la parte coloreada.','a1Instruction');
   buildNumberInventory();
@@ -1342,6 +1380,10 @@ async function checkA1(){
   }
   s.attempts++;softError();
   const numWrong=s.num!==f.n,denWrong=s.den!==f.d;
+  if(!guidanceIsEnabled()){
+    giveReviewFeedback('a1Feedback','');
+    return;
+  }
   if(s.attempts===1){
     if(numWrong&&!denWrong){
       giveReviewFeedback('a1Feedback','Cuenta nuevamente solamente las regiones pintadas. Ese resultado va en el numerador.');
@@ -1743,6 +1785,11 @@ function startActivity(id){
 const dialog=$('#settingsDialog');
 let settingsDialogScope='all';
 $('#settingsBtn').addEventListener('click',()=>openSettings('all',false));
+$('#modeBtn').addEventListener('click',()=>{
+  openSettings('all',false);
+  const group=$('#assessmentSettingsGroup');
+  requestAnimationFrame(()=>group.scrollIntoView({behavior:'smooth',block:'center'}));
+});
 $('#customizeMatch').addEventListener('click',()=>openSettings('a3',true));
 $$('[data-settings-scope]').forEach(button=>button.addEventListener('click',()=>openSettings(button.dataset.settingsScope,false)));
 $('#closeSettings').addEventListener('click',()=>dialog.close());
@@ -1751,6 +1798,15 @@ $('#soundVolume').addEventListener('input',e=>{$('#soundVolumeValue').textConten
 $('#soundVolume').addEventListener('change',e=>{
   const previous=settings.soundVolume;settings.soundVolume=Number(e.target.value)/100;tone(620,.13,'triangle',.065);settings.soundVolume=previous;
 });
+function syncExamControls(){
+  const exam=$('#examMode').checked;
+  $('#voiceEnabled').disabled=exam;$('#guidanceText').disabled=exam;
+  $('#autoRead').disabled=exam;$('#voiceSelect').disabled=exam;$('#a1CountHelpEnabled').disabled=exam;
+  $('#examModeStatus').textContent=exam
+    ?'Modo examen: no habrá voz, instrucciones, conteos ni explicaciones para corregir.'
+    :'Modo práctica: puedes configurar cada tipo de ayuda por separado.';
+}
+$('#examMode').addEventListener('change',syncExamControls);
 function populateDenoms(){
   const box=$('#denomList');box.innerHTML='';
   for(let d=2;d<=10;d++){
@@ -1784,6 +1840,7 @@ function openSettings(scope='all',focusMatch=false){
   const visibleDenominators=scope==='all'?settings.denominators:denominatorsFor(scope);
   $$('#denomList input').forEach(c=>c.checked=visibleDenominators.includes(Number(c.value)));
   $('#a1CountHelpEnabled').checked=settings.a1CountHelp!==false;
+  $('#examMode').checked=!!settings.examMode;$('#voiceEnabled').checked=settings.voiceEnabled!==false;$('#guidanceText').checked=settings.guidanceText!==false;syncExamControls();
   $('#pairCount').value=settings.pairCount;$('#matchMode').value=settings.matchMode||'figure-fraction';$('#leftoverSide').value=settings.leftoverSide;$('#leftoverCount').value=settings.leftoverCount;
   $('#fontSelect').value=settings.font;$('#autoRead').checked=settings.autoRead;$('#soundsOn').checked=settings.soundsOn;populateVoices();$('#voiceSelect').value=settings.voice||'';
   $('#soundVolume').value=Math.round((settings.soundVolume??.7)*100);$('#soundVolumeValue').textContent=$('#soundVolume').value+'%';
@@ -1795,6 +1852,7 @@ function openSettings(scope='all',focusMatch=false){
   $('#fractionSettingsGroup').classList.toggle('scope-hidden',false);
   $('#a1HelpSettingsGroup').classList.toggle('scope-hidden',!isFull&&scope!=='a1');
   $('#matchSettingsGroup').classList.toggle('scope-hidden',!isFull&&scope!=='a3');
+  $('#assessmentSettingsGroup').classList.toggle('scope-hidden',false);
   $('#appearanceSettingsGroup').classList.toggle('scope-hidden',!isFull);
   $('#resetSettings').classList.toggle('hidden',!isFull);
   dialog.showModal();
@@ -1824,6 +1882,7 @@ $('#saveSettings').addEventListener('click',()=>{
     settings.pairCount=pairCount;settings.matchMode=$('#matchMode').value;settings.leftoverSide=leftoverSide;settings.leftoverCount=leftoverCount;
   }
   if(settingsDialogScope==='all'||settingsDialogScope==='a1')settings.a1CountHelp=$('#a1CountHelpEnabled').checked;
+  settings.examMode=$('#examMode').checked;settings.voiceEnabled=$('#voiceEnabled').checked;settings.guidanceText=$('#guidanceText').checked;
   if(settingsDialogScope==='all'){
     settings.font=$('#fontSelect').value;settings.voice=$('#voiceSelect').value;settings.autoRead=$('#autoRead').checked;settings.soundsOn=$('#soundsOn').checked;settings.soundVolume=Number($('#soundVolume').value)/100;
   }
