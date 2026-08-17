@@ -1012,11 +1012,16 @@ function renderFractionFigure(container,d,n,color,opts={}){
 
   if(shape==='circle'){
     const cx=180,cy=125,r=102;
-    const theta=2*Math.PI/d,centroidRadius=4*r*Math.sin(theta/2)/(3*theta);
-    for(let i=0;i<d;i++){
-      const seg=svgEl('path',{d:sectorPath(cx,cy,r,i*360/d,(i+1)*360/d),stroke,'stroke-width':'3','stroke-linejoin':'round'});
-      labelPositions.push(polar(cx,cy,centroidRadius,(i+.5)*360/d));
-      segments.push(seg);svg.appendChild(seg);
+    if(d===1){
+      const seg=svgEl('circle',{cx,cy,r,stroke,'stroke-width':'3'});
+      labelPositions.push({x:cx,y:cy});segments.push(seg);svg.appendChild(seg);
+    }else{
+      const theta=2*Math.PI/d,centroidRadius=4*r*Math.sin(theta/2)/(3*theta);
+      for(let i=0;i<d;i++){
+        const seg=svgEl('path',{d:sectorPath(cx,cy,r,i*360/d,(i+1)*360/d),stroke,'stroke-width':'3','stroke-linejoin':'round'});
+        labelPositions.push(polar(cx,cy,centroidRadius,(i+.5)*360/d));
+        segments.push(seg);svg.appendChild(seg);
+      }
     }
   } else if(shape==='polygon'){
     const cx=180,cy=125,r=105;
