@@ -165,13 +165,32 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 /* Las columnas laterales comparten una altura desplazable y el tablero queda fijo a la vista. */
 .workspace{align-items:stretch}
 .toolbox,.program-panel{height:calc(100vh - 150px);max-height:calc(100vh - 150px);overflow-y:auto;overscroll-behavior:contain}
-.board-panel{position:sticky;top:76px;align-self:start;max-height:calc(100vh - 88px);overflow:auto;z-index:2}
+.board-panel{height:calc(100vh - 150px);position:sticky;top:76px;align-self:start;max-height:calc(100vh - 88px);overflow:auto;z-index:2}
 @media(max-width:760px){.toolbox,.program-panel{height:calc(100vh - 132px);max-height:calc(100vh - 132px)}.board-panel{max-height:none;overflow:visible}}
+[data-tool-panel="movement"]:not(.compact-tools) .tool{width:70%;justify-self:center;min-height:0}
+[data-tool-panel="actions"]:not(.compact-tools) [data-action-panel="lights"] .tool,
+[data-tool-panel="actions"]:not(.compact-tools) [data-action-panel="sounds"] .tool{width:70%;justify-self:center;min-height:0}
+[data-tool-panel="actions"]:not(.compact-tools) [data-action-panel="lights"] .light-icon{width:41.31px;height:41.31px}
+[data-tool-panel="actions"]:not(.compact-tools) [data-action-panel="sounds"] .sound-icon{width:71.6px;height:71.6px}
+[data-tool-panel="functions"]:not(.compact-tools) .activity-panel .tool{width:52.5%;justify-self:center;box-sizing:border-box}
+.toolbox,.program-panel,.board-panel{touch-action:pan-y;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain}
+/* Cintillo compacto: al tocarlo se despliega durante unos segundos. */
+.topbar.topbar-compact{min-height:44px;padding:6px 12px;gap:0;cursor:pointer;transition:min-height .2s ease,padding .2s ease}
+.topbar.topbar-compact:not(.topbar-expanded) .brandmark,
+.topbar.topbar-compact:not(.topbar-expanded) .brandtext small,
+.topbar.topbar-compact:not(.topbar-expanded) .top-actions{display:none}
+.topbar.topbar-compact:not(.topbar-expanded) .brand{width:100%;justify-content:center}
+.topbar.topbar-compact:not(.topbar-expanded) .brandtext h1{font-size:1.08rem}
+.topbar.topbar-compact.topbar-expanded{min-height:66px;padding:10px 14px;gap:12px;cursor:default}
+.topbar.topbar-compact.topbar-expanded .brandmark{display:grid}
+.topbar.topbar-compact.topbar-expanded .brandtext small{display:block}
+.topbar.topbar-compact.topbar-expanded .top-actions{display:flex}
+.topbar.topbar-compact.topbar-expanded .brand{width:auto;justify-content:initial}
 </style>
 </head>
 <body>
 <div class="app">
-  <header class="topbar">
+  <header class="topbar topbar-compact" id="topbar" aria-expanded="false">
     <div class="brand">
       <div class="brandmark" aria-hidden="true">
         <svg viewBox="0 0 64 64"><rect x="13" y="17" width="38" height="33" rx="12" fill="#fff" stroke="#3978d4" stroke-width="3"/><path d="M32 9v8" stroke="#3978d4" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="7" r="3" fill="#2f9c67"/><circle cx="25" cy="31" r="4" fill="#22344d"/><circle cx="39" cy="31" r="4" fill="#22344d"/><path d="M24 41c5 4 11 4 16 0" fill="none" stroke="#2f9c67" stroke-width="3" stroke-linecap="round"/></svg>
@@ -694,6 +713,7 @@ $('#settingsBtn').onclick=()=>{$('#settingsModal').classList.add('show');applySe
 $('#applySettings').onclick=()=>{settings.student=saveSharedStudentName($('#studentName').value.trim()||'Gabriel');settings.help=+$('#helpLevel').value;settings.grid=$('#gridSize').value;settings.cellCm=+$('#cellCm').value;settings.voice=$('#voiceSelect').value;settings.autoSpeak=+$('#autoSpeak').value;settings.reduceMotion=+$('#reduceMotion').value;settings.robotImage=$('#robotImage').value;settings.obstacleImage=$('#obstacleImage').value;settings.preview=$('#previewRoute').checked;settings.speed=+$('#speedRange').value;saveSettings();$('#settingsModal').classList.remove('show');applySettingsToUI();toast('Configuración guardada')};
 $('#resetSettings').onclick=()=>{settings={...DEFAULTS};saveSettings();applySettingsToUI();toast('Configuración restablecida')};
 const infoPanel=$('#infoPanel'),infoToggle=$('#infoToggle');function setInfoPanelVisible(visible){infoPanel?.classList.toggle('info-collapsed',!visible);infoToggle?.setAttribute('aria-expanded',String(visible));if(infoToggle){infoToggle.classList.toggle('info-toggle-active',visible);infoToggle.title=visible?'Ocultar información':'Mostrar información'}}infoToggle?.addEventListener('click',()=>setInfoPanelVisible(infoPanel?.classList.contains('info-collapsed')));setInfoPanelVisible(false);
+let topbarCollapseTimer=null;function expandTopbarTemporarily(){const bar=$('#topbar');if(!bar)return;bar.classList.add('topbar-expanded');bar.setAttribute('aria-expanded','true');clearTimeout(topbarCollapseTimer);topbarCollapseTimer=setTimeout(()=>{bar.classList.remove('topbar-expanded');bar.setAttribute('aria-expanded','false')},2800)}$('#topbar')?.addEventListener('pointerup',expandTopbarTemporarily);$('#topbar')?.addEventListener('focusin',expandTopbarTemporarily);
 $$('.modebtn').forEach(b=>b.onclick=()=>{setMode(b.dataset.mode)});function setMode(m){$$('.modebtn').forEach(b=>b.classList.toggle('active',b.dataset.mode===m));state.mode='normal';state.activityPlacement=null;clearToolActive();syncActivityEditorVisibility();if(m==='free'){hideGeneric();state.challenge=null;setChallengePrompt('');state.goal=null;state.obstacles=[];state.activityTargets=[];state.start={c:state.robot.c,r:state.robot.r,heading:state.robot.heading};renderAll();$('#boardHint').textContent='Exploración libre: coloca obstáculos y metas desde Personalizar actividad.'}else if(m==='challenges')showChallenges();else if(m==='lab')showLab();else if(m==='projects')showProjects()}
 function startFromHome(mode){const input=$('#homeStudentName'),raw=(input?.value||'').trim();if(!raw){toast('Escribe el nombre del niño para comenzar.');input?.focus();return}const name=saveSharedStudentName(raw);settings.student=name;saveSettings();applyIdentity();$('#homeModal').classList.remove('show');if(mode)setMode(mode)}
 $$('[data-start]').forEach(b=>b.onclick=()=>startFromHome(b.dataset.start));$('#skipHome').onclick=()=>startFromHome(null);$('#homeStudentName').onkeydown=e=>{if(e.key==='Enter')startFromHome(null)};
