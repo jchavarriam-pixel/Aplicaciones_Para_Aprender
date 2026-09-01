@@ -162,6 +162,11 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 [data-tool-panel="actions"]:not(.compact-tools) [data-action-panel="lights"] .light-icon{width:41.31px;height:41.31px}
 [data-tool-panel="actions"]:not(.compact-tools) [data-action-panel="sounds"] .sound-icon{width:71.6px;height:71.6px}
 [data-tool-panel="functions"]:not(.compact-tools) .activity-panel .tool{width:52.5%;justify-self:center;box-sizing:border-box}
+/* Las columnas laterales comparten una altura desplazable y el tablero queda fijo a la vista. */
+.workspace{align-items:stretch}
+.toolbox,.program-panel{height:calc(100vh - 150px);max-height:calc(100vh - 150px);overflow-y:auto;overscroll-behavior:contain}
+.board-panel{position:sticky;top:76px;align-self:start;max-height:calc(100vh - 88px);overflow:auto;z-index:2}
+@media(max-width:760px){.toolbox,.program-panel{height:calc(100vh - 132px);max-height:calc(100vh - 132px)}.board-panel{max-height:none;overflow:visible}}
 </style>
 </head>
 <body>
