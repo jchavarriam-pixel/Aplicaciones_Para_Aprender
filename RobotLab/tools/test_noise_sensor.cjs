@@ -193,7 +193,8 @@ let browser;
     const results=[];
     for(let level=1;level<=8;level++)for(let repeat=0;repeat<8;repeat++){
       __lab.settings.challengeActionTypes=['noise'];__lab.generateLeveledChallenge(level,false);
-      results.push(__lab.state.challenge.targets.some(t=>t.requiredActions.some(a=>a.type==='waitNoise')));
+      const expectedActions=[0,1,0,1,2,0,1,3][level-1],actions=__lab.state.challenge.targets.flatMap(t=>t.requiredActions);
+      results.push(actions.length===expectedActions&&actions.every(a=>a.type==='waitNoise'));
       __lab.settings.challengeActionTypes=['lights','jump','emotions','sounds'];__lab.generateLeveledChallenge(level,false);
       results.push(!__lab.state.challenge.targets.some(t=>t.requiredActions.some(a=>a.type==='waitNoise')));
     }
@@ -203,7 +204,7 @@ let browser;
     return results.every(Boolean);
   });
   assert.equal(configChecks,true);
-  console.log('PASS all 8 challenge levels respect action selection; applause guaranteed when selected');
+  console.log('PASS all 8 levels respect action selection and counts; visit-only levels never force applause');
 
   await page.evaluate(() => {__lab.state.program=[{...__lab.BLOCKS.waitNoise}];__lab.renderAll();});
   await page.locator('#runBtn').click(); await page.waitForFunction(() => __lab.listener?.quietSince!=null);
