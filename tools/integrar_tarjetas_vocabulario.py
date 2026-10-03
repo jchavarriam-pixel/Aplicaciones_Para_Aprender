@@ -14,17 +14,23 @@ for key, label, emoji in [('generales', 'Día y noche', '🌙'), ('bebidas', 'Be
         category = dict(id=key, label=label, emoji=emoji, palabras=[])
         db['categorias'].append(category)
         definitions[key] = category
+for definition in manifest.get('additional_categories', []):
+    if definition['id'] not in definitions:
+        category = dict(definition, palabras=[])
+        db['categorias'].append(category)
+        definitions[category['id']] = category
+
 definitions['colores']['label'] = 'Colores, tamaños y formas'
 added = []
 for card in manifest['cards']:
     if card['status'] not in ('generated', 'existing'):
         continue
     word = card['word']
-    path = root / 'ImagenesGeneradorOraciones' / card['file']
+    path = root / 'ImagenesGeneradorOraciones' / card.get('relative_path', card['file'])
     assert path.is_file(), path
     if word not in db['imagenes']:
         added.append(word)
-    db['imagenes'][word] = dict(label=word, img='ImagenesGeneradorOraciones/' + card['file'])
+    db['imagenes'][word] = dict(label=word, img='ImagenesGeneradorOraciones/' + card.get('relative_path', card['file']))
     for category_id in card['categories']:
         category = definitions[category_id]
         if word not in category['palabras']:

@@ -414,463 +414,619 @@
     },
     "día": {
       "label": "día",
-      "img": "ImagenesGeneradorOraciones/dia.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/dia.png"
     },
     "noche": {
       "label": "noche",
-      "img": "ImagenesGeneradorOraciones/noche.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/noche.png"
     },
     "soleado": {
       "label": "soleado",
-      "img": "ImagenesGeneradorOraciones/soleado.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/soleado.png"
     },
     "nevado": {
       "label": "nevado",
-      "img": "ImagenesGeneradorOraciones/nevado.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/nevado.png"
     },
     "nublado": {
       "label": "nublado",
-      "img": "ImagenesGeneradorOraciones/nublado.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/nublado.png"
     },
     "al frente": {
       "label": "al frente",
-      "img": "ImagenesGeneradorOraciones/al_frente.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/al_frente.png"
     },
     "detrás": {
       "label": "detrás",
-      "img": "ImagenesGeneradorOraciones/detras.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/detras.png"
     },
     "dentro": {
       "label": "dentro",
-      "img": "ImagenesGeneradorOraciones/dentro.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/dentro.png"
     },
     "sembrar": {
       "label": "sembrar",
-      "img": "ImagenesGeneradorOraciones/sembrar.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/sembrar.png"
     },
     "recoger": {
       "label": "recoger",
-      "img": "ImagenesGeneradorOraciones/recoger.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/recoger.png"
     },
     "estudiar": {
       "label": "estudiar",
-      "img": "ImagenesGeneradorOraciones/estudiar.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/estudiar.png"
     },
     "cierra": {
       "label": "cierra",
-      "img": "ImagenesGeneradorOraciones/cierra.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/cierra.png"
     },
     "sentarse": {
       "label": "sentarse",
-      "img": "ImagenesGeneradorOraciones/sentarse.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/sentarse.png"
     },
     "pararse": {
       "label": "pararse",
-      "img": "ImagenesGeneradorOraciones/pararse.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/pararse.png"
     },
     "subir": {
       "label": "subir",
-      "img": "ImagenesGeneradorOraciones/subir.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/subir.png"
     },
     "bajar": {
       "label": "bajar",
-      "img": "ImagenesGeneradorOraciones/bajar.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/bajar.png"
     },
     "responder": {
       "label": "responder",
-      "img": "ImagenesGeneradorOraciones/responder.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/responder.png"
     },
     "pensar": {
       "label": "pensar",
-      "img": "ImagenesGeneradorOraciones/pensar.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/pensar.png"
     },
     "tomar": {
       "label": "tomar",
-      "img": "ImagenesGeneradorOraciones/tomar.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/tomar.png"
     },
     "fresco": {
       "label": "fresco",
-      "img": "ImagenesGeneradorOraciones/fresco.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/fresco.png"
     },
     "cereal": {
       "label": "cereal",
-      "img": "ImagenesGeneradorOraciones/cereal.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/cereal.png"
     },
     "galletas": {
       "label": "galletas",
-      "img": "ImagenesGeneradorOraciones/galletas.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/galletas.png"
     },
     "pan": {
       "label": "pan",
-      "img": "ImagenesGeneradorOraciones/pan.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/pan.png"
     },
     "Marcos": {
       "label": "Marcos",
-      "img": "ImagenesGeneradorOraciones/marcos.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/marcos.png"
     },
     "niños": {
       "label": "niños",
-      "img": "ImagenesGeneradorOraciones/ninos.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/ninos.png"
     },
     "niñas": {
       "label": "niñas",
-      "img": "ImagenesGeneradorOraciones/ninas.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/ninas.png"
     },
     "reciclar": {
       "label": "reciclar",
-      "img": "ImagenesGeneradorOraciones/reciclar.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/reciclar.png"
     },
     "reutilizar": {
       "label": "reutilizar",
-      "img": "ImagenesGeneradorOraciones/reutilizar.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/reutilizar.png"
     },
     "meseta": {
       "label": "meseta",
-      "img": "ImagenesGeneradorOraciones/meseta.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/meseta.png"
     },
     "cima": {
       "label": "cima",
-      "img": "ImagenesGeneradorOraciones/cima.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/cima.png"
     },
     "acantilados": {
       "label": "acantilados",
-      "img": "ImagenesGeneradorOraciones/acantilados.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/acantilados.png"
     },
     "arroz": {
       "label": "arroz",
-      "img": "ImagenesGeneradorOraciones/arroz.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/arroz.png"
     },
     "frijoles": {
       "label": "frijoles",
-      "img": "ImagenesGeneradorOraciones/frijoles.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/frijoles.png"
     },
     "carne": {
       "label": "carne",
-      "img": "ImagenesGeneradorOraciones/carne.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/carne.png"
     },
     "huevos": {
       "label": "huevos",
-      "img": "ImagenesGeneradorOraciones/huevos.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/huevos.png"
     },
     "señora": {
       "label": "señora",
-      "img": "ImagenesGeneradorOraciones/senora.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/senora.png"
     },
     "señor": {
       "label": "señor",
-      "img": "ImagenesGeneradorOraciones/senor.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/senor.png"
     },
     "golfo": {
       "label": "golfo",
-      "img": "ImagenesGeneradorOraciones/golfo.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/golfo.png"
     },
     "península": {
       "label": "península",
-      "img": "ImagenesGeneradorOraciones/peninsula.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/peninsula.png"
     },
     "pendientes fuertes": {
       "label": "pendientes fuertes",
-      "img": "ImagenesGeneradorOraciones/pendientes_fuertes.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/pendientes_fuertes.png"
     },
     "plano": {
       "label": "plano",
-      "img": "ImagenesGeneradorOraciones/plano.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/plano.png"
     },
     "ondulado": {
       "label": "ondulado",
-      "img": "ImagenesGeneradorOraciones/ondulado.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/ondulado.png"
     },
     "colina": {
       "label": "colina",
-      "img": "ImagenesGeneradorOraciones/colina.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/colina.png"
     },
     "cueva": {
       "label": "cueva",
-      "img": "ImagenesGeneradorOraciones/cueva.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/cueva.png"
     },
     "león": {
       "label": "león",
-      "img": "ImagenesGeneradorOraciones/leon.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/leon.png"
     },
     "pájaro": {
       "label": "pájaro",
-      "img": "ImagenesGeneradorOraciones/pajaro.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/pajaro.png"
     },
     "jirafa": {
       "label": "jirafa",
-      "img": "ImagenesGeneradorOraciones/jirafa.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/jirafa.png"
     },
     "elefante": {
       "label": "elefante",
-      "img": "ImagenesGeneradorOraciones/elefante.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/elefante.png"
     },
     "cebra": {
       "label": "cebra",
-      "img": "ImagenesGeneradorOraciones/cebra.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/cebra.png"
     },
     "koala": {
       "label": "koala",
-      "img": "ImagenesGeneradorOraciones/koala.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/koala.png"
     },
     "panda": {
       "label": "panda",
-      "img": "ImagenesGeneradorOraciones/panda.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/panda.png"
     },
     "serpiente": {
       "label": "serpiente",
-      "img": "ImagenesGeneradorOraciones/serpiente.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/serpiente.png"
     },
     "cocodrilo": {
       "label": "cocodrilo",
-      "img": "ImagenesGeneradorOraciones/cocodrilo.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/cocodrilo.png"
     },
     "tortuga": {
       "label": "tortuga",
-      "img": "ImagenesGeneradorOraciones/tortuga.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/tortuga.png"
     },
     "pez": {
       "label": "pez",
-      "img": "ImagenesGeneradorOraciones/pez.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/pez.png"
     },
     "pingüino": {
       "label": "pingüino",
-      "img": "ImagenesGeneradorOraciones/pinguino.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/pinguino.png"
     },
     "rana": {
       "label": "rana",
-      "img": "ImagenesGeneradorOraciones/rana.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/rana.png"
     },
     "mariquita": {
       "label": "mariquita",
-      "img": "ImagenesGeneradorOraciones/mariquita.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/mariquita.png"
     },
     "mosca": {
       "label": "mosca",
-      "img": "ImagenesGeneradorOraciones/mosca.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/mosca.png"
     },
     "saltamontes": {
       "label": "saltamontes",
-      "img": "ImagenesGeneradorOraciones/saltamontes.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/saltamontes.png"
     },
     "refrigeradora": {
       "label": "refrigeradora",
-      "img": "ImagenesGeneradorOraciones/refrigeradora.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/refrigeradora.png"
     },
     "lavadora": {
       "label": "lavadora",
-      "img": "ImagenesGeneradorOraciones/lavadora.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/lavadora.png"
     },
     "estufa": {
       "label": "estufa",
-      "img": "ImagenesGeneradorOraciones/estufa.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/estufa.png"
     },
     "servicio sanitario": {
       "label": "servicio sanitario",
-      "img": "ImagenesGeneradorOraciones/servicio_sanitario.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/servicio_sanitario.png"
     },
     "lavamanos": {
       "label": "lavamanos",
-      "img": "ImagenesGeneradorOraciones/lavamanos.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/lavamanos.png"
     },
     "ducha": {
       "label": "ducha",
-      "img": "ImagenesGeneradorOraciones/ducha.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/ducha.png"
     },
     "puerta": {
       "label": "puerta",
-      "img": "ImagenesGeneradorOraciones/puerta.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/puerta.png"
     },
     "cochera": {
       "label": "cochera",
-      "img": "ImagenesGeneradorOraciones/cochera.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/cochera.png"
     },
     "patio": {
       "label": "patio",
-      "img": "ImagenesGeneradorOraciones/patio.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/patio.png"
     },
     "gimnasio": {
       "label": "gimnasio",
-      "img": "ImagenesGeneradorOraciones/gimnasio.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/gimnasio.png"
     },
     "dormitorio": {
       "label": "dormitorio",
-      "img": "ImagenesGeneradorOraciones/dormitorio.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/dormitorio.png"
     },
     "sala": {
       "label": "sala",
-      "img": "ImagenesGeneradorOraciones/sala.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/sala.png"
     },
     "escaleras": {
       "label": "escaleras",
-      "img": "ImagenesGeneradorOraciones/escaleras.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/escaleras.png"
     },
     "balcón": {
       "label": "balcón",
-      "img": "ImagenesGeneradorOraciones/balcon.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/balcon.png"
     },
     "portón": {
       "label": "portón",
-      "img": "ImagenesGeneradorOraciones/porton.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/porton.png"
     },
     "primer piso": {
       "label": "primer piso",
-      "img": "ImagenesGeneradorOraciones/primer_piso.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/primer_piso.png"
     },
     "segundo piso": {
       "label": "segundo piso",
-      "img": "ImagenesGeneradorOraciones/segundo_piso.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/segundo_piso.png"
     },
     "gris": {
       "label": "gris",
-      "img": "ImagenesGeneradorOraciones/gris.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/gris.png"
     },
     "blanco": {
       "label": "blanco",
-      "img": "ImagenesGeneradorOraciones/blanco.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/blanco.png"
     },
     "marrón": {
       "label": "marrón",
-      "img": "ImagenesGeneradorOraciones/marron.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/marron.png"
     },
     "rosado": {
       "label": "rosado",
-      "img": "ImagenesGeneradorOraciones/rosado.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/rosado.png"
     },
     "mediano": {
       "label": "mediano",
-      "img": "ImagenesGeneradorOraciones/mediano.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/mediano.png"
     },
     "corto": {
       "label": "corto",
-      "img": "ImagenesGeneradorOraciones/corto.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/corto.png"
     },
     "largo": {
       "label": "largo",
-      "img": "ImagenesGeneradorOraciones/largo.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/largo.png"
     },
     "bajo": {
       "label": "bajo",
-      "img": "ImagenesGeneradorOraciones/bajo.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/bajo.png"
     },
     "gordo": {
       "label": "gordo",
-      "img": "ImagenesGeneradorOraciones/gordo.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/gordo.png"
     },
     "delgado": {
       "label": "delgado",
-      "img": "ImagenesGeneradorOraciones/delgado.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/delgado.png"
     },
     "circular": {
       "label": "circular",
-      "img": "ImagenesGeneradorOraciones/circular.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/circular.png"
     },
     "cuadrado": {
       "label": "cuadrado",
-      "img": "ImagenesGeneradorOraciones/cuadrado.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/cuadrado.png"
     },
     "rectangular": {
       "label": "rectangular",
-      "img": "ImagenesGeneradorOraciones/rectangular.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/rectangular.png"
     },
     "triangular": {
       "label": "triangular",
-      "img": "ImagenesGeneradorOraciones/triangular.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/triangular.png"
     },
     "bloques": {
       "label": "bloques",
-      "img": "ImagenesGeneradorOraciones/bloques.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/bloques.png"
     },
     "trampolín": {
       "label": "trampolín",
-      "img": "ImagenesGeneradorOraciones/trampolin.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/trampolin.png"
     },
     "rompecabezas": {
       "label": "rompecabezas",
-      "img": "ImagenesGeneradorOraciones/rompecabezas.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/rompecabezas.png"
     },
     "camión": {
       "label": "camión",
-      "img": "ImagenesGeneradorOraciones/camion.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/camion.png"
     },
     "patineta": {
       "label": "patineta",
-      "img": "ImagenesGeneradorOraciones/patineta.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/patineta.png"
     },
     "monopatín": {
       "label": "monopatín",
-      "img": "ImagenesGeneradorOraciones/monopatin.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/monopatin.png"
     },
     "caminar": {
       "label": "caminar",
-      "img": "ImagenesGeneradorOraciones/caminar.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/caminar.png"
     },
     "tren": {
       "label": "tren",
-      "img": "ImagenesGeneradorOraciones/tren.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/tren.png"
     },
     "taxi": {
       "label": "taxi",
-      "img": "ImagenesGeneradorOraciones/taxi.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/taxi.png"
     },
     "pepino": {
       "label": "pepino",
-      "img": "ImagenesGeneradorOraciones/pepino.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/pepino.png"
     },
     "naranja": {
       "label": "naranja",
-      "img": "ImagenesGeneradorOraciones/naranja.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/naranja.png"
     },
     "manzana": {
       "label": "manzana",
-      "img": "ImagenesGeneradorOraciones/manzana.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/manzana.png"
     },
     "sandía": {
       "label": "sandía",
-      "img": "ImagenesGeneradorOraciones/sandia.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/sandia.png"
     },
     "banana": {
       "label": "banana",
-      "img": "ImagenesGeneradorOraciones/banana.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/banana.png"
     },
     "uvas": {
       "label": "uvas",
-      "img": "ImagenesGeneradorOraciones/uvas.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/uvas.png"
     },
     "fresas": {
       "label": "fresas",
-      "img": "ImagenesGeneradorOraciones/fresas.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/fresas.png"
     },
     "peras": {
       "label": "peras",
-      "img": "ImagenesGeneradorOraciones/peras.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/peras.png"
     },
     "melocotón": {
       "label": "melocotón",
-      "img": "ImagenesGeneradorOraciones/melocoton.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/melocoton.png"
     },
     "lechuga": {
       "label": "lechuga",
-      "img": "ImagenesGeneradorOraciones/lechuga.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/lechuga.png"
     },
     "chocolate": {
       "label": "chocolate",
-      "img": "ImagenesGeneradorOraciones/chocolate.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/chocolate.png"
     },
     "confite": {
       "label": "confite",
-      "img": "ImagenesGeneradorOraciones/confite.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/confite.png"
     },
     "espagueti": {
       "label": "espagueti",
-      "img": "ImagenesGeneradorOraciones/espagueti.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/espagueti.png"
     },
     "pizza": {
       "label": "pizza",
-      "img": "ImagenesGeneradorOraciones/pizza.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/pizza.png"
     },
     "barra": {
       "label": "barra",
-      "img": "ImagenesGeneradorOraciones/barra.png"
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/barra.png"
+    },
+    "ventana": {
+      "label": "ventana",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/ventana.png"
+    },
+    "suave": {
+      "label": "suave",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/suave.png"
+    },
+    "duro": {
+      "label": "duro",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/duro.png"
+    },
+    "pato": {
+      "label": "pato",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/pato.png"
+    },
+    "robot": {
+      "label": "robot",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/robot.png"
+    },
+    "tableta": {
+      "label": "tableta",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/tableta.png"
+    },
+    "computadora": {
+      "label": "computadora",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/computadora.png"
+    },
+    "tarea": {
+      "label": "tarea",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/tarea.png"
+    },
+    "pupitre": {
+      "label": "pupitre",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/pupitre.png"
+    },
+    "maestra": {
+      "label": "maestra",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/maestra.png"
+    },
+    "pizarra": {
+      "label": "pizarra",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/pizarra.png"
+    },
+    "lápiz": {
+      "label": "lápiz",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/lapiz.png"
+    },
+    "borrador": {
+      "label": "borrador",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/borrador.png"
+    },
+    "cuchara": {
+      "label": "cuchara",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/cuchara.png"
+    },
+    "tenedor": {
+      "label": "tenedor",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/tenedor.png"
+    },
+    "cuchillo": {
+      "label": "cuchillo",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/cuchillo.png"
+    },
+    "plato": {
+      "label": "plato",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/plato.png"
+    },
+    "vaso": {
+      "label": "vaso",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/vaso.png"
+    },
+    "camisa": {
+      "label": "camisa",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/camisa.png"
+    },
+    "pantalón": {
+      "label": "pantalón",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/pantalon.png"
+    },
+    "blusa": {
+      "label": "blusa",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/blusa.png"
+    },
+    "enagua": {
+      "label": "enagua",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/enagua.png"
+    },
+    "zapatos": {
+      "label": "zapatos",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/zapatos.png"
+    },
+    "calcetines": {
+      "label": "calcetines",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/calcetines.png"
+    },
+    "peinar": {
+      "label": "peinar",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/peinar.png"
+    },
+    "peine": {
+      "label": "peine",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/peine.png"
+    },
+    "gel": {
+      "label": "gel",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/gel.png"
+    },
+    "cepillo de dientes": {
+      "label": "cepillo de dientes",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/cepillo_de_dientes.png"
+    },
+    "lavarse": {
+      "label": "lavarse",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/lavarse.png"
+    },
+    "dientes": {
+      "label": "dientes",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/dientes.png"
+    },
+    "manos": {
+      "label": "manos",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/manos.png"
+    },
+    "pies": {
+      "label": "pies",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/pies.png"
+    },
+    "televisor": {
+      "label": "televisor",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/televisor.png"
+    },
+    "YouTube": {
+      "label": "YouTube",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/youtube.png"
+    },
+    "Pocoyó": {
+      "label": "Pocoyó",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/pocoyo.png"
+    },
+    "matemática": {
+      "label": "matemática",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/matematica.png"
+    },
+    "sumas": {
+      "label": "sumas",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/sumas.png"
+    },
+    "restas": {
+      "label": "restas",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/restas.png"
+    },
+    "multiplicación": {
+      "label": "multiplicación",
+      "img": "ImagenesGeneradorOraciones/Nuevas_para_revisar/multiplicacion.png"
     }
   },
   "oraciones": [
@@ -234202,7 +234358,8 @@
         "rana",
         "mariquita",
         "mosca",
-        "saltamontes"
+        "saltamontes",
+        "pato"
       ]
     },
     {
@@ -234240,7 +234397,9 @@
         "niños",
         "niñas",
         "señora",
-        "señor"
+        "señor",
+        "maestra",
+        "Pocoyó"
       ]
     },
     {
@@ -234324,7 +234483,18 @@
         "balcón",
         "portón",
         "primer piso",
-        "segundo piso"
+        "segundo piso",
+        "ventana",
+        "robot",
+        "tableta",
+        "computadora",
+        "pupitre",
+        "cuchara",
+        "tenedor",
+        "cuchillo",
+        "plato",
+        "vaso",
+        "televisor"
       ]
     },
     {
@@ -234339,7 +234509,10 @@
         "globos",
         "bloques",
         "trampolín",
-        "rompecabezas"
+        "rompecabezas",
+        "robot",
+        "YouTube",
+        "Pocoyó"
       ]
     },
     {
@@ -234352,7 +234525,10 @@
         "lee",
         "escribe",
         "estudiar",
-        "responder"
+        "responder",
+        "tarea",
+        "lápiz",
+        "borrador"
       ]
     },
     {
@@ -234421,7 +234597,9 @@
         "tomar",
         "reciclar",
         "reutilizar",
-        "caminar"
+        "caminar",
+        "peinar",
+        "lavarse"
       ]
     },
     {
@@ -234467,6 +234645,61 @@
       "palabras": [
         "agua",
         "fresco"
+      ]
+    },
+    {
+      "id": "texturas",
+      "label": "Texturas y cualidades",
+      "emoji": "🧸",
+      "palabras": [
+        "suave",
+        "duro"
+      ]
+    },
+    {
+      "id": "escolar",
+      "label": "Escuela y estudio",
+      "emoji": "🏫",
+      "palabras": [
+        "computadora",
+        "tarea",
+        "pupitre",
+        "maestra",
+        "pizarra",
+        "lápiz",
+        "borrador",
+        "matemática",
+        "sumas",
+        "restas",
+        "multiplicación"
+      ]
+    },
+    {
+      "id": "ropa",
+      "label": "Ropa",
+      "emoji": "👕",
+      "palabras": [
+        "camisa",
+        "pantalón",
+        "blusa",
+        "enagua",
+        "zapatos",
+        "calcetines"
+      ]
+    },
+    {
+      "id": "higiene",
+      "label": "Higiene y cuerpo",
+      "emoji": "🧼",
+      "palabras": [
+        "peinar",
+        "peine",
+        "gel",
+        "cepillo de dientes",
+        "lavarse",
+        "dientes",
+        "manos",
+        "pies"
       ]
     }
   ]

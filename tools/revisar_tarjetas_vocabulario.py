@@ -14,7 +14,7 @@ for start in range(0, len(cards), 16):
     sheet = Image.new('RGB', (1200, 1320), 'white')
     draw = ImageDraw.Draw(sheet)
     for i, card in enumerate(group):
-        image = Image.open(root / 'ImagenesGeneradorOraciones' / card['file']).convert('RGB')
+        image = Image.open(root / 'ImagenesGeneradorOraciones' / card.get('relative_path', card['file'])).convert('RGB')
         assert image.size == (1254, 1254), card['file']
         image.thumbnail((290, 290))
         x, y = (i % 4) * 300, (i // 4) * 330
