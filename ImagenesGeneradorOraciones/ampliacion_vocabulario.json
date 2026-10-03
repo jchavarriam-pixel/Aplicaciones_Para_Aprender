@@ -1,0 +1,1691 @@
+{
+  "format": "1254x1254 PNG, marco morado, ilustración infantil grande, fondo blanco",
+  "tool": "image_gen integrado",
+  "cards": [
+    {
+      "word": "día",
+      "categories": [
+        "generales",
+        "clima"
+      ],
+      "subject": "Daytime symbol: a large bright sun above a short simple horizon arc, on a small light-blue sky disc. No tree, houses, mountains, ground scenery or night elements.",
+      "article": "el",
+      "gender": "m",
+      "file": "dia.png",
+      "status": "generated",
+      "previous_source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-63ade620-4f73-4bc5-a5f7-2d4140a5fa79.png",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-d0ad1a33-56be-4451-9c61-4592ca2acb3d.png",
+      "prompt": "Concept-first minimal square card. Daytime symbol: a large bright sun above a short simple horizon arc, on a small light-blue sky disc. No tree, houses, mountains, ground scenery or night elements.",
+      "reviewed": true
+    },
+    {
+      "word": "noche",
+      "categories": [
+        "generales"
+      ],
+      "subject": "Nighttime symbol: one LARGE crescent moon and THREE small stars on a simple dark-blue circular sky patch. No landscape, trees, buildings or people.",
+      "article": "la",
+      "gender": "f",
+      "file": "noche.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-a3867c6c-7574-4530-801d-2162286c0a97.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: Nighttime symbol: one LARGE crescent moon and THREE small stars on a simple dark-blue circular sky patch. No landscape, trees, buildings or people. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "soleado",
+      "categories": [
+        "clima"
+      ],
+      "subject": "ONE very large radiant golden-yellow sun with clearly visible rays, isolated on WHITE. No sky scenery, clouds, trees, mountains, ground, people or other objects.",
+      "article": "",
+      "gender": "",
+      "file": "soleado.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-cf66e90c-25cc-4af3-9f6b-f4ad0c91629f.png",
+      "prompt": "Create ONE square 1254x1254 PNG children's Spanish vocabulary card for SOLEADO. A single very large golden-yellow sun with clear orange-yellow rays is the ONLY subject, centered and taking 85% of the white inner panel. Clean friendly cartoon, saturated colors, crisp dark outlines and soft minimal shading. Thick violet-purple rounded-square border about 35 pixels wide exactly around the canvas perimeter, slim pure white inner margin. PURE WHITE background inside the card. Absolutely NO trees, mountains, grass, landscape, blue sky backdrop, clouds, people, faces, text, labels or decorative extra objects. The sun alone must unmistakably communicate sunny weather. Same square format as the existing children's word cards.",
+      "reviewed": true
+    },
+    {
+      "word": "nevado",
+      "categories": [
+        "clima"
+      ],
+      "subject": "ONE large soft gray cloud with a few large white-blue snowflakes falling beneath it; unmistakable SNOW, not raindrops. No landscape, mountain, tree, person or other objects.",
+      "article": "",
+      "gender": "",
+      "file": "nevado.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-c7a486b9-b59c-48d2-b9ce-46a243b2b08e.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: ONE large soft gray cloud with a few large white-blue snowflakes falling beneath it; unmistakable SNOW, not raindrops. No landscape, mountain, tree, person or other objects. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "nublado",
+      "categories": [
+        "clima"
+      ],
+      "subject": "A LARGE cluster of three overlapping gray clouds dominating the white card. No sun, rain, snow, landscape, trees, people or mountains.",
+      "article": "",
+      "gender": "",
+      "file": "nublado.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-dcc54479-0ebb-43f9-89d2-2392c539b48d.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A LARGE cluster of three overlapping gray clouds dominating the white card. No sun, rain, snow, landscape, trees, people or mountains. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "al frente",
+      "categories": [
+        "ubicacion"
+      ],
+      "subject": "A blue cube clearly IN FRONT OF a taller green block, front view with visible occlusion; purple arrow pointing to front cube.",
+      "article": "",
+      "gender": "",
+      "file": "al_frente.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-c81fb0fc-0178-4cc3-aa5b-fe79f5d3d4e1.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A blue cube clearly IN FRONT OF a taller green block, front view with visible occlusion; purple arrow pointing to front cube. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "detrás",
+      "categories": [
+        "ubicacion"
+      ],
+      "subject": "A blue cube partly hidden BEHIND a taller green block, with a purple arrow pointing to the hidden cube.",
+      "article": "",
+      "gender": "",
+      "file": "detras.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-09bf85bd-3f16-4a8b-9028-f1d05d9b253d.png",
+      "prompt": "Concept-first minimal square card. A blue cube partly hidden BEHIND a taller green block, with a purple arrow pointing to the hidden cube.",
+      "reviewed": true
+    },
+    {
+      "word": "dentro",
+      "categories": [
+        "ubicacion"
+      ],
+      "subject": "A blue ball INSIDE an open brown box; cutaway side makes the interior and ball clear; purple arrow points to ball.",
+      "article": "",
+      "gender": "",
+      "file": "dentro.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-b34c9303-2800-4dde-8d78-40295ec15856.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A blue ball INSIDE an open brown box; cutaway side makes the interior and ball clear; purple arrow points to ball. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "sembrar",
+      "categories": [
+        "acciones",
+        "ambiente"
+      ],
+      "subject": "A child kneeling and planting a small green seedling in soil using a hand shovel; hands visibly planting.",
+      "article": "",
+      "gender": "",
+      "file": "sembrar.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-b2e0050d-7a83-4972-8af8-ffa13030f0bb.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A child kneeling and planting a small green seedling in soil using a hand shovel; hands visibly planting. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "recoger",
+      "categories": [
+        "acciones"
+      ],
+      "subject": "A child picking scattered toy blocks up from the floor and putting them in a basket; clear picking-up motion.",
+      "article": "",
+      "gender": "",
+      "file": "recoger.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-b827d9fb-1981-40a6-a75d-5a177fbf6056.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A child picking scattered toy blocks up from the floor and putting them in a basket; clear picking-up motion. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "estudiar",
+      "categories": [
+        "acciones",
+        "lectura"
+      ],
+      "subject": "A focused child seated at a desk studying an open schoolbook and notebook, pencil in hand.",
+      "article": "",
+      "gender": "",
+      "file": "estudiar.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-7299d037-f6a1-4a42-bbb6-0b80a52ca7e1.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A focused child seated at a desk studying an open schoolbook and notebook, pencil in hand. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "cierra",
+      "categories": [
+        "acciones"
+      ],
+      "subject": "A child PUSHING a door closed with hand on handle, purple curved arrow indicates closing; not opening.",
+      "article": "",
+      "gender": "",
+      "file": "cierra.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-eca7fe1d-7a9c-4c5e-afcd-09206deec7d2.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A child PUSHING a door closed with hand on handle, purple curved arrow indicates closing; not opening. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "sentarse",
+      "categories": [
+        "acciones"
+      ],
+      "subject": "A child in the act of sitting down onto a chair, bent knees and purple downward arrow.",
+      "article": "",
+      "gender": "",
+      "file": "sentarse.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-c1f2a26c-d1e2-4196-86d1-0855cb4b20b4.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A child in the act of sitting down onto a chair, bent knees and purple downward arrow. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "pararse",
+      "categories": [
+        "acciones"
+      ],
+      "subject": "A child rising to stand upright from a chair, purple upward arrow emphasizes standing up.",
+      "article": "",
+      "gender": "",
+      "file": "pararse.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-1cc22a6a-7e18-4900-8c3f-c539fd5210c6.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A child rising to stand upright from a chair, purple upward arrow emphasizes standing up. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "subir",
+      "categories": [
+        "acciones"
+      ],
+      "subject": "A child walking UP stairs, purple arrow points upward along the stairway.",
+      "article": "",
+      "gender": "",
+      "file": "subir.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-8aed3edf-e945-4881-adaa-9dcd9405e63f.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A child walking UP stairs, purple arrow points upward along the stairway. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "bajar",
+      "categories": [
+        "acciones"
+      ],
+      "subject": "A child walking DOWN stairs, purple arrow points downward along the stairway.",
+      "article": "",
+      "gender": "",
+      "file": "bajar.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-62dce476-c721-4afd-b0fe-50b49c5fd0ef.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A child walking DOWN stairs, purple arrow points downward along the stairway. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "responder",
+      "categories": [
+        "acciones",
+        "lectura"
+      ],
+      "subject": "A child answering another person's question: small adult question bubble with question mark and large child's response bubble with a lightbulb; no written words.",
+      "article": "",
+      "gender": "",
+      "file": "responder.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-0e9bf96c-10fd-4ddd-9d8d-7610e817536f.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A child answering another person's question: small adult question bubble with question mark and large child's response bubble with a lightbulb; no written words. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "pensar",
+      "categories": [
+        "acciones"
+      ],
+      "subject": "A thoughtful child with hand at chin and a thought bubble containing a glowing lightbulb.",
+      "article": "",
+      "gender": "",
+      "file": "pensar.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-8fe9964c-f903-4bec-a486-f35893259ad7.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A thoughtful child with hand at chin and a thought bubble containing a glowing lightbulb. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "tomar",
+      "categories": [
+        "acciones"
+      ],
+      "subject": "A child lifting a transparent glass of orange fruit drink to the mouth and drinking; clear drinking action.",
+      "article": "",
+      "gender": "",
+      "file": "tomar.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-f84dca60-3058-47d9-af58-008700a15b3a.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A child lifting a transparent glass of orange fruit drink to the mouth and drinking; clear drinking action. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "fresco",
+      "categories": [
+        "bebidas",
+        "alimentos"
+      ],
+      "subject": "A transparent glass filled with orange-red fruit juice, ice and a straw, small fruit pieces beside glass; no bottles or text.",
+      "article": "el",
+      "gender": "m",
+      "file": "fresco.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-289bb0e3-86fc-4f53-b86c-461d9f3e0402.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A transparent glass filled with orange-red fruit juice, ice and a straw, small fruit pieces beside glass; no bottles or text. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "cereal",
+      "categories": [
+        "alimentos"
+      ],
+      "subject": "A bowl of breakfast cereal with milk and a spoon; colorful cereal rings clearly visible.",
+      "article": "el",
+      "gender": "m",
+      "file": "cereal.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-ce33c534-7bf5-414a-b3dd-e265cb8cacbe.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A bowl of breakfast cereal with milk and a spoon; colorful cereal rings clearly visible. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "galletas",
+      "categories": [
+        "alimentos"
+      ],
+      "subject": "Three recognizable golden round cookies with chocolate chips on a small plate.",
+      "article": "las",
+      "gender": "fp",
+      "file": "galletas.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-b150b970-a2ef-4efc-9cf1-d5073f6471c8.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: Three recognizable golden round cookies with chocolate chips on a small plate. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "pan",
+      "categories": [
+        "alimentos"
+      ],
+      "subject": "A golden loaf of bread with one cut slice showing soft pale interior.",
+      "article": "el",
+      "gender": "m",
+      "file": "pan.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-c0ef891a-c91f-4d84-a9c4-c6ae8edf6087.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A golden loaf of bread with one cut slice showing soft pale interior. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "arroz",
+      "categories": [
+        "alimentos"
+      ],
+      "subject": "A plate or bowl of cooked white rice, individual rice grains clear.",
+      "article": "el",
+      "gender": "m",
+      "file": "arroz.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-28daef8d-1030-4cfb-a5f9-d1cf062f8bb7.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A simple large bowl of cooked WHITE RICE. Clearly distinct individual rice grains form the heap. Rice is the sole protagonist; no vegetables, meat, drinks, spoons, scenery or other foods. Identical purple frame.",
+      "reviewed": true
+    },
+    {
+      "word": "frijoles",
+      "categories": [
+        "alimentos"
+      ],
+      "subject": "A bowl of cooked reddish beans with individual beans visible; no rice or other foods.",
+      "article": "los",
+      "gender": "mp",
+      "file": "frijoles.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-f9969d89-60e9-4c44-ab02-b1cfd0728ee1.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A bowl of cooked reddish beans with individual beans visible; no rice or other foods. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "carne",
+      "categories": [
+        "alimentos"
+      ],
+      "subject": "One cooked beef steak on a simple plate; clear meat texture, not raw or graphic.",
+      "article": "la",
+      "gender": "f",
+      "file": "carne.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-50e4f596-3d25-4406-b057-32fad075be16.png",
+      "prompt": "Edit this educational picture card of CARNE. Preserve square 1254x1254, exact rounded purple perimeter frame, white panel and single large cooked steak on plain plate. Change ONLY the food rendering: SIMPLE CHILDREN'S CARTOON, saturated warm brown, crisp bold dark outline, 5 simple dark grill stripes, flat clean interior with minimal soft shading. Remove fine speckles, dense realistic muscle fibers, marbling, wet highlights and photographic microtexture. No garnish, vegetables, utensils, text or other objects. Clear recognizable meat as sole protagonist, matching clean cartoon vocabulary cards.",
+      "reviewed": true
+    },
+    {
+      "word": "huevos",
+      "categories": [
+        "alimentos"
+      ],
+      "subject": "Two whole hen eggs plus one cracked egg with yolk in a small bowl; clearly eggs.",
+      "article": "los",
+      "gender": "mp",
+      "file": "huevos.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-0a011b0e-46e2-46bc-a327-d90a3230fbe5.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: Two whole hen eggs plus one cracked egg with yolk in a small bowl; clearly eggs. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "señora",
+      "categories": [
+        "personas"
+      ],
+      "subject": "Friendly adult woman standing full body, simple teal blouse and trousers, smiling and waving; no text.",
+      "article": "la",
+      "gender": "f",
+      "file": "senora.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-17ce079c-44c7-40c0-95e1-3e819ab2e624.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: Friendly adult woman standing full body, simple teal blouse and trousers, smiling and waving; no text. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "señor",
+      "categories": [
+        "personas"
+      ],
+      "subject": "Friendly adult man standing full body, simple blue shirt and trousers, smiling and waving; no text.",
+      "article": "el",
+      "gender": "m",
+      "file": "senor.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-4596a965-07c1-4ff7-80ef-c4a507ac2dc7.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: Friendly adult man standing full body, simple blue shirt and trousers, smiling and waving; no text. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "Marcos",
+      "categories": [
+        "personas"
+      ],
+      "subject": "A distinct smiling school-age boy standing full body, wavy dark hair, orange T-shirt and blue shorts, waving; the ONLY text is MARCOS in large bold purple capitals below him.",
+      "article": "",
+      "gender": "m",
+      "file": "marcos.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-692dc6af-be79-4767-8e64-b1db2cae0ef0.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A distinct smiling school-age boy standing full body, wavy dark hair, orange T-shirt and blue shorts, waving; the ONLY text is MARCOS in large bold purple capitals below him. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "niños",
+      "categories": [
+        "personas"
+      ],
+      "subject": "A cheerful group of FOUR school-age boys, diverse skin tones and different bright clothes, standing full body together; no text.",
+      "article": "los",
+      "gender": "mp",
+      "file": "ninos.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-dc712208-25b1-4bae-ba7a-d3716cea3bd2.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A cheerful group of FOUR school-age boys, diverse skin tones and different bright clothes, standing full body together; no text. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "niñas",
+      "categories": [
+        "personas"
+      ],
+      "subject": "A cheerful group of FOUR school-age girls, diverse skin tones and different bright clothes, standing full body together; no text.",
+      "article": "las",
+      "gender": "fp",
+      "file": "ninas.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-1bce5e62-b08c-4a82-ace1-70f064f3224f.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A cheerful group of FOUR school-age girls, diverse skin tones and different bright clothes, standing full body together; no text. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "reciclar",
+      "categories": [
+        "acciones",
+        "ambiente"
+      ],
+      "subject": "A child placing plastic bottles into a recycling bin marked with the recognizable recycling triangle symbol; no words.",
+      "article": "",
+      "gender": "",
+      "file": "reciclar.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-51cdc0e3-8112-49d3-a309-84c54da7f101.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A child placing plastic bottles into a recycling bin marked with the recognizable recycling triangle symbol; no words. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "reutilizar",
+      "categories": [
+        "acciones",
+        "ambiente"
+      ],
+      "subject": "A used plastic bottle transformed into a flower pot with a small plant; a child's hands decorating the reused pot; reuse is unmistakable.",
+      "article": "",
+      "gender": "",
+      "file": "reutilizar.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-1d169b41-3679-47b4-abf4-7e682abfd0df.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A used plastic bottle transformed into a flower pot with a small plant; a child's hands decorating the reused pot; reuse is unmistakable. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "meseta",
+      "categories": [
+        "relieve",
+        "lugares"
+      ],
+      "subject": "A broad elevated plateau with a large FLAT horizontal top and steep sides, green top and brown rocky cliffs, surrounding lower ground. Not a pointed mountain.",
+      "article": "la",
+      "gender": "f",
+      "file": "meseta.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-604caf9a-9ffa-4a16-9445-576e6dee1eeb.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A broad elevated plateau with a large FLAT horizontal top and steep sides, green top and brown rocky cliffs, surrounding lower ground. Not a pointed mountain. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "cima",
+      "categories": [
+        "relieve"
+      ],
+      "subject": "A large mountain with its top summit highlighted by a purple circle and arrow pointing exactly at the summit; no words.",
+      "article": "la",
+      "gender": "f",
+      "file": "cima.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-db65a45e-9203-41ec-bceb-7e4acd878f62.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A large mountain with its top summit highlighted by a purple circle and arrow pointing exactly at the summit; no words. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "acantilados",
+      "categories": [
+        "relieve",
+        "lugares"
+      ],
+      "subject": "Tall steep rocky sea cliffs meeting blue ocean below, clear vertical cliff face and waves; green grass on top.",
+      "article": "los",
+      "gender": "mp",
+      "file": "acantilados.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-04917c0b-21e0-4940-ba60-136ec5334c84.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: Tall steep rocky sea cliffs meeting blue ocean below, clear vertical cliff face and waves; green grass on top. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "golfo",
+      "categories": [
+        "relieve",
+        "lugares"
+      ],
+      "subject": "Bird's-eye cartoon geographic view of a large broad bay of blue sea penetrating into land, land encloses it on three sides and a clear wide opening connects to ocean; no arrows or labels.",
+      "article": "el",
+      "gender": "m",
+      "file": "golfo.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-b334f5c6-56ac-4e85-a71a-81b144dfddd9.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: Bird's-eye cartoon geographic view of a large broad bay of blue sea penetrating into land, land encloses it on three sides and a clear wide opening connects to ocean; no arrows or labels. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "península",
+      "categories": [
+        "relieve",
+        "lugares"
+      ],
+      "subject": "Bird's-eye cartoon geographic view of a long peninsula: a LAND projection connected to mainland by a visible neck, surrounded by blue sea on three sides; no labels.",
+      "article": "la",
+      "gender": "f",
+      "file": "peninsula.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-6f6dcc47-acfa-481b-8890-3e2182959f50.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: Bird's-eye cartoon geographic view of a long peninsula: a LAND projection connected to mainland by a visible neck, surrounded by blue sea on three sides; no labels. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "pendientes fuertes",
+      "categories": [
+        "relieve"
+      ],
+      "subject": "A mountain side with a visibly STEEP slope, purple arrow follows the steep incline; no climbers or text.",
+      "article": "las",
+      "gender": "fp",
+      "file": "pendientes_fuertes.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-1b6329c9-3b5a-483d-964d-a5c3279e4c05.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A mountain side with a visibly STEEP slope, purple arrow follows the steep incline; no climbers or text. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "plano",
+      "categories": [
+        "relieve",
+        "colores"
+      ],
+      "subject": "A clearly FLAT horizontal green terrain profile, purple horizontal double-headed arrow follows flat surface; no hills.",
+      "article": "",
+      "gender": "",
+      "file": "plano.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-27dd9076-bbd4-4911-983f-afacade7aaeb.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A clearly FLAT horizontal green terrain profile, purple horizontal double-headed arrow follows flat surface; no hills. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "ondulado",
+      "categories": [
+        "relieve",
+        "colores"
+      ],
+      "subject": "A rolling green terrain profile with gentle repeated waves and undulating hills, purple arrow follows the wave shape.",
+      "article": "",
+      "gender": "",
+      "file": "ondulado.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-8c66bac7-a14f-4d3e-88f9-03e9f0e3240c.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A rolling green terrain profile with gentle repeated waves and undulating hills, purple arrow follows the wave shape. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "colina",
+      "categories": [
+        "relieve",
+        "lugares"
+      ],
+      "subject": "A low rounded grassy hill with a gentle slope, smaller hills behind; no high mountain or snow.",
+      "article": "la",
+      "gender": "f",
+      "file": "colina.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-7c9e1e8f-11b9-4a78-9aa8-53ff2c12cdab.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A low rounded grassy hill with a gentle slope, smaller hills behind; no high mountain or snow. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "cueva",
+      "categories": [
+        "relieve",
+        "lugares"
+      ],
+      "subject": "A recognizable large dark cave entrance in a rocky hillside, ground path leading inside, no frightening animals.",
+      "article": "la",
+      "gender": "f",
+      "file": "cueva.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-465fb123-4cee-4ceb-81f5-af8ec54d07b0.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A recognizable large dark cave entrance in a rocky hillside, ground path leading inside, no frightening animals. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "león",
+      "categories": [
+        "animales"
+      ],
+      "subject": "One friendly full-body male lion with golden fur, brown mane and visible tail, facing three-quarter view.",
+      "article": "el",
+      "gender": "m",
+      "file": "leon.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-b6283cdd-741a-49c0-a7ab-b6aded4a0162.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One friendly full-body male lion with golden fur, brown mane and visible tail, facing three-quarter view. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "pájaro",
+      "categories": [
+        "animales"
+      ],
+      "subject": "One small cheerful full-body songbird perched on a short twig; simple red and yellow feathers, not a toucan.",
+      "article": "el",
+      "gender": "m",
+      "file": "pajaro.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-252644bb-8cbb-4349-90bc-1c55eb40dafb.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One small cheerful full-body songbird perched on a short twig; simple red and yellow feathers, not a toucan. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "jirafa",
+      "categories": [
+        "animales"
+      ],
+      "subject": "One friendly full-body giraffe, very long neck, brown spots and all four legs visible.",
+      "article": "la",
+      "gender": "f",
+      "file": "jirafa.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-7bf93b10-4120-42d5-960a-3fa20ff05656.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One friendly full-body giraffe, very long neck, brown spots and all four legs visible. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "elefante",
+      "categories": [
+        "animales"
+      ],
+      "subject": "One friendly full-body gray elephant, large ears and curved trunk, all legs visible.",
+      "article": "el",
+      "gender": "m",
+      "file": "elefante.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-6b166d78-8c57-4555-be66-71bc6663773f.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One friendly full-body gray elephant, large ears and curved trunk, all legs visible. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "cebra",
+      "categories": [
+        "animales"
+      ],
+      "subject": "One friendly full-body zebra with clear black and white stripes, all four legs and tail visible.",
+      "article": "la",
+      "gender": "f",
+      "file": "cebra.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-c588b642-491c-4e34-b281-c9b6a803cc86.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One friendly full-body zebra with clear black and white stripes, all four legs and tail visible. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "koala",
+      "categories": [
+        "animales"
+      ],
+      "subject": "One friendly full-body gray koala with fluffy round ears and large dark nose, hugging a short eucalyptus branch.",
+      "article": "el",
+      "gender": "m",
+      "file": "koala.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-6a986f07-3146-45d1-8133-44efe0912565.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One friendly full-body gray koala with fluffy round ears and large dark nose, hugging a short eucalyptus branch. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "panda",
+      "categories": [
+        "animales"
+      ],
+      "subject": "One friendly full-body giant panda, black ears, eye patches and legs, white body, seated with small bamboo twig.",
+      "article": "el",
+      "gender": "m",
+      "file": "panda.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-5e16fefc-86c7-45f7-bb40-ff48f6aeb884.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One friendly full-body giant panda, black ears, eye patches and legs, white body, seated with small bamboo twig. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "serpiente",
+      "categories": [
+        "animales"
+      ],
+      "subject": "One friendly green snake coiled with head raised, recognizable long limbless body; no scary fangs.",
+      "article": "la",
+      "gender": "f",
+      "file": "serpiente.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-4a86bdd2-3472-4a79-8d09-e857cc410e72.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One friendly green snake coiled with head raised, recognizable long limbless body; no scary fangs. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "cocodrilo",
+      "categories": [
+        "animales"
+      ],
+      "subject": "One friendly full-body green crocodile with long snout, scaly back, four short legs and tail.",
+      "article": "el",
+      "gender": "m",
+      "file": "cocodrilo.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-58328b89-6de0-49de-8d3c-a9a56dca45a8.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One friendly full-body green crocodile with long snout, scaly back, four short legs and tail. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "tortuga",
+      "categories": [
+        "animales"
+      ],
+      "subject": "One friendly full-body land tortoise with domed patterned shell, four legs and head visible.",
+      "article": "la",
+      "gender": "f",
+      "file": "tortuga.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-eaf66465-ca62-4452-ad32-f43f7ee4fb71.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One friendly full-body land tortoise with domed patterned shell, four legs and head visible. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "pez",
+      "categories": [
+        "animales"
+      ],
+      "subject": "One large friendly orange fish in side view with clearly visible fins, gills and tail, tiny blue bubbles.",
+      "article": "el",
+      "gender": "m",
+      "file": "pez.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-e983a9dc-42b0-421f-b24a-874e54efd0b5.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One large friendly orange fish in side view with clearly visible fins, gills and tail, tiny blue bubbles. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "pingüino",
+      "categories": [
+        "animales"
+      ],
+      "subject": "One friendly full-body black and white penguin standing upright with orange beak and feet.",
+      "article": "el",
+      "gender": "m",
+      "file": "pinguino.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-f847b879-fe94-4d1b-87e0-67da45e231a5.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One friendly full-body black and white penguin standing upright with orange beak and feet. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "rana",
+      "categories": [
+        "animales"
+      ],
+      "subject": "One friendly bright-green frog seated with bent hind legs, big eyes and four limbs visible.",
+      "article": "la",
+      "gender": "f",
+      "file": "rana.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-e85dbe16-1b78-450a-9e91-049c0de0f9f0.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One friendly bright-green frog seated with bent hind legs, big eyes and four limbs visible. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "mariquita",
+      "categories": [
+        "animales"
+      ],
+      "subject": "One large red ladybug with black spots, six legs and short antennae, clearly an insect.",
+      "article": "la",
+      "gender": "f",
+      "file": "mariquita.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-6a84d76c-45ef-4318-9aef-4c729a688ec9.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One large red ladybug with black spots, six legs and short antennae, clearly an insect. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "mosca",
+      "categories": [
+        "animales"
+      ],
+      "subject": "One recognizable friendly fly with two clear transparent wings, large red eyes, six legs, gray body; no dirt or food.",
+      "article": "la",
+      "gender": "f",
+      "file": "mosca.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-7f987566-d7ee-4f61-91b3-39299acba1da.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One recognizable friendly fly with two clear transparent wings, large red eyes, six legs, gray body; no dirt or food. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "saltamontes",
+      "categories": [
+        "animales"
+      ],
+      "subject": "One green grasshopper in side view with long antennae and distinctive large bent hind jumping legs.",
+      "article": "el",
+      "gender": "m",
+      "file": "saltamontes.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-12174c37-17d0-45b5-b9e4-55bd5d5f0198.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One green grasshopper in side view with long antennae and distinctive large bent hind jumping legs. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "refrigeradora",
+      "categories": [
+        "hogar"
+      ],
+      "subject": "One upright white kitchen refrigerator with freezer top, door handles and one door slightly open revealing shelves; no logo.",
+      "article": "la",
+      "gender": "f",
+      "file": "refrigeradora.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-806155fc-7418-45b6-a1de-ea49a4b13a44.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One upright white kitchen refrigerator with freezer top, door handles and one door slightly open revealing shelves; no logo. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "lavadora",
+      "categories": [
+        "hogar"
+      ],
+      "subject": "One modern white FRONT-LOADING washing machine with large round front glass door and a few visible colorful clothes inside.",
+      "article": "la",
+      "gender": "f",
+      "file": "lavadora.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-4499a4fb-3ab3-4cd0-9cf9-241febfcd5f7.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One modern white FRONT-LOADING washing machine with large round front glass door and a few visible colorful clothes inside. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "estufa",
+      "categories": [
+        "hogar"
+      ],
+      "subject": "One kitchen stove with four clear cooktop burners and front oven door, clean white appliance; no flames.",
+      "article": "la",
+      "gender": "f",
+      "file": "estufa.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-870dd0fe-a32e-41c1-a20f-5ec587033ba0.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One kitchen stove with four clear cooktop burners and front oven door, clean white appliance; no flames. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "servicio sanitario",
+      "categories": [
+        "hogar"
+      ],
+      "subject": "One clean white toilet with tank, bowl and open seat, clearly visible in three-quarter view.",
+      "article": "el",
+      "gender": "m",
+      "file": "servicio_sanitario.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-40744d98-f03a-498d-b067-134218484ed3.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One clean white toilet with tank, bowl and open seat, clearly visible in three-quarter view. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "lavamanos",
+      "categories": [
+        "hogar"
+      ],
+      "subject": "One white bathroom hand-washing sink with faucet, drain and pedestal; no other fixtures.",
+      "article": "el",
+      "gender": "m",
+      "file": "lavamanos.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-9db092dc-31a3-449c-b450-27d51a7bfc58.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One white bathroom hand-washing sink with faucet, drain and pedestal; no other fixtures. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "ducha",
+      "categories": [
+        "hogar"
+      ],
+      "subject": "One recognizable shower stall with shower head spraying water, glass side panel and floor drain; no person.",
+      "article": "la",
+      "gender": "f",
+      "file": "ducha.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-bdf8a5f1-1052-40b5-8f40-14960142d711.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One recognizable shower stall with shower head spraying water, glass side panel and floor drain; no person. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "puerta",
+      "categories": [
+        "hogar"
+      ],
+      "subject": "One closed wooden door with frame and visible handle, no person.",
+      "article": "la",
+      "gender": "f",
+      "file": "puerta.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-851d3c75-02af-4697-bd6a-0983205162eb.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One closed wooden door with frame and visible handle, no person. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "cochera",
+      "categories": [
+        "hogar",
+        "lugares"
+      ],
+      "subject": "A simple house garage with a car parked inside and wide open garage entrance, focused on garage area.",
+      "article": "la",
+      "gender": "f",
+      "file": "cochera.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-abd8884c-f6d4-44ee-a043-ac670e9d47b2.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A simple house garage with a car parked inside and wide open garage entrance, focused on garage area. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "patio",
+      "categories": [
+        "hogar",
+        "lugares"
+      ],
+      "subject": "A sunny enclosed residential backyard with grass, paved area and a small plant; house wall visible.",
+      "article": "el",
+      "gender": "m",
+      "file": "patio.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-a32c6986-a8e6-4f5d-b705-38dc50378d05.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A sunny enclosed residential backyard with grass, paved area and a small plant; house wall visible. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "gimnasio",
+      "categories": [
+        "hogar",
+        "lugares"
+      ],
+      "subject": "A simple indoor gym with treadmill, exercise bike and dumbbells, no people or logos.",
+      "article": "el",
+      "gender": "m",
+      "file": "gimnasio.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-4e1bebb8-626f-45c5-bfe2-a00755ecc487.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A simple indoor gym with treadmill, exercise bike and dumbbells, no people or logos. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "dormitorio",
+      "categories": [
+        "hogar",
+        "lugares"
+      ],
+      "subject": "A tidy bedroom with bed, pillow, bedside table and window; clearly a whole room.",
+      "article": "el",
+      "gender": "m",
+      "file": "dormitorio.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-82a7c45d-e1bd-4cb7-8ab9-f4a52662b24b.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A tidy bedroom with bed, pillow, bedside table and window; clearly a whole room. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "sala",
+      "categories": [
+        "hogar",
+        "lugares"
+      ],
+      "subject": "A cozy living room with sofa, coffee table, armchair and rug; clearly a whole room.",
+      "article": "la",
+      "gender": "f",
+      "file": "sala.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-b5f36012-ae94-4e59-99b4-32d61663c67d.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A cozy living room with sofa, coffee table, armchair and rug; clearly a whole room. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "escaleras",
+      "categories": [
+        "hogar",
+        "lugares"
+      ],
+      "subject": "A clear staircase with several steps and a handrail, three-quarter view, no people or arrows.",
+      "article": "las",
+      "gender": "fp",
+      "file": "escaleras.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-1919230c-1056-4b7e-ab26-80b1d13309d0.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A clear staircase with several steps and a handrail, three-quarter view, no people or arrows. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "balcón",
+      "categories": [
+        "hogar",
+        "lugares"
+      ],
+      "subject": "A house balcony projecting from the upper floor with railing and potted plant, visible from outside.",
+      "article": "el",
+      "gender": "m",
+      "file": "balcon.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-c48f7096-c9d3-4d5d-b51d-cb5cb53bf139.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A house balcony projecting from the upper floor with railing and potted plant, visible from outside. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "portón",
+      "categories": [
+        "hogar"
+      ],
+      "subject": "A large double-leaf residential metal gate with two gate doors and side posts, not a small house door.",
+      "article": "el",
+      "gender": "m",
+      "file": "porton.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-4e2bf6ed-3390-43cd-9f22-fb6e7db79d76.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A large double-leaf residential metal gate with two gate doors and side posts, not a small house door. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "primer piso",
+      "categories": [
+        "hogar",
+        "lugares"
+      ],
+      "subject": "A simple two-story house, GROUND FLOOR prominently highlighted yellow and marked by purple arrow; upper floor faint but visible; no text or digits.",
+      "article": "el",
+      "gender": "m",
+      "file": "primer_piso.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-f58793c0-02c4-4dbd-b97b-b91391605854.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A simple two-story house, GROUND FLOOR prominently highlighted yellow and marked by purple arrow; upper floor faint but visible; no text or digits. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "segundo piso",
+      "categories": [
+        "hogar",
+        "lugares"
+      ],
+      "subject": "A simple two-story house, UPPER FLOOR prominently highlighted yellow and marked by purple arrow; ground floor faint but visible; no text or digits.",
+      "article": "el",
+      "gender": "m",
+      "file": "segundo_piso.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-f3fda945-ba6e-4367-8745-9f328bc4927e.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A simple two-story house, UPPER FLOOR prominently highlighted yellow and marked by purple arrow; ground floor faint but visible; no text or digits. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "gris",
+      "categories": [
+        "colores"
+      ],
+      "subject": "A large clean gray paint splash, neutral medium gray, identical simple paint-splash convention as color cards.",
+      "article": "",
+      "gender": "",
+      "file": "gris.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-2550df5a-2255-44bc-99a7-04f7cc5e52c3.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A large clean gray paint splash, neutral medium gray, identical simple paint-splash convention as color cards. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "blanco",
+      "categories": [
+        "colores"
+      ],
+      "subject": "A large white paint splash with clear light-gray outline and soft pale-gray shadow so white is legible against white panel.",
+      "article": "",
+      "gender": "",
+      "file": "blanco.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-a7928100-51c4-4d1a-874a-e184b10312ac.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A large white paint splash with clear light-gray outline and soft pale-gray shadow so white is legible against white panel. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "marrón",
+      "categories": [
+        "colores"
+      ],
+      "subject": "A large clean brown paint splash, warm medium brown, identical paint-splash convention as color cards.",
+      "article": "",
+      "gender": "",
+      "file": "marron.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-5a4d74dd-2da0-4665-bcac-60f0eaa171b7.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A large clean brown paint splash, warm medium brown, identical paint-splash convention as color cards. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "rosado",
+      "categories": [
+        "colores"
+      ],
+      "subject": "A large clean pink paint splash, clear saturated pink, identical paint-splash convention as color cards.",
+      "article": "",
+      "gender": "",
+      "file": "rosado.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-fd1bff4c-1193-4a79-b6b9-d91a6c039f20.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A large clean pink paint splash, clear saturated pink, identical paint-splash convention as color cards. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "mediano",
+      "categories": [
+        "colores"
+      ],
+      "subject": "Three blue cubes in a row: small, medium, large; MEDIUM middle cube saturated blue and purple arrow pointing to it, other two cubes faint.",
+      "article": "",
+      "gender": "",
+      "file": "mediano.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-290e4a8d-fb21-4aed-b8eb-93b0436d7cf4.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: Three blue cubes in a row: small, medium, large; MEDIUM middle cube saturated blue and purple arrow pointing to it, other two cubes faint. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "corto",
+      "categories": [
+        "colores"
+      ],
+      "subject": "Two horizontal pencils aligned at left: SHORT upper pencil saturated yellow, long lower pencil pale gray, purple arrow points to short pencil.",
+      "article": "",
+      "gender": "",
+      "file": "corto.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-56b7ab0e-ed89-4d07-a4b5-6155321219e7.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: Two horizontal pencils aligned at left: SHORT upper pencil saturated yellow, long lower pencil pale gray, purple arrow points to short pencil. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "largo",
+      "categories": [
+        "colores"
+      ],
+      "subject": "Two horizontal pencils aligned at left: LONG lower pencil saturated yellow, short upper pencil pale gray, purple arrow points to long pencil.",
+      "article": "",
+      "gender": "",
+      "file": "largo.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-148547b6-48bb-4a3b-9f21-155afbecbcc3.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: Two horizontal pencils aligned at left: LONG lower pencil saturated yellow, short upper pencil pale gray, purple arrow points to long pencil. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "bajo",
+      "categories": [
+        "colores"
+      ],
+      "subject": "Two vertical blue blocks aligned at bottom: LOW SHORT block saturated blue and purple height arrow, tall block faint gray.",
+      "article": "",
+      "gender": "",
+      "file": "bajo.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-962bf03b-cd5a-472a-aa9e-d2bf5a599793.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: Two vertical blue blocks aligned at bottom: LOW SHORT block saturated blue and purple height arrow, tall block faint gray. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "gordo",
+      "categories": [
+        "colores"
+      ],
+      "subject": "Two tree trunks side by side: thick stout trunk saturated brown and green crown, thin trunk pale; purple arrow highlights THICK trunk. No people.",
+      "article": "",
+      "gender": "",
+      "file": "gordo.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-27d71d46-ed14-4dff-88ae-c11f032909b8.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: Two tree trunks side by side: thick stout trunk saturated brown and green crown, thin trunk pale; purple arrow highlights THICK trunk. No people. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "delgado",
+      "categories": [
+        "colores"
+      ],
+      "subject": "Two tree trunks side by side: thin slender trunk saturated brown and green crown, thick trunk pale; purple arrow highlights THIN trunk. No people.",
+      "article": "",
+      "gender": "",
+      "file": "delgado.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-a058b29f-ad99-4283-8d6c-45d1565feb8b.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: Two tree trunks side by side: thin slender trunk saturated brown and green crown, thick trunk pale; purple arrow highlights THIN trunk. No people. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "circular",
+      "categories": [
+        "colores"
+      ],
+      "subject": "One large solid blue circle, precise round shape, simple clean outline and soft shadow.",
+      "article": "",
+      "gender": "",
+      "file": "circular.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-ed6ed9dc-0945-4015-866f-67b5a3af6821.png",
+      "prompt": "Edit this educational vocabulary card for CIRCULAR. Preserve the existing square 1254x1254 canvas, purple rounded perimeter frame, pure white panel, centered blue circular silhouette and black outline. Change ONLY the blue subject: make it a PERFECT FLAT TWO-DIMENSIONAL SOLID BLUE CIRCLE. Uniform blue fill, no gradients, no specular highlights, no shadow anywhere, no volume. It must look like a geometric circle, not a sphere or ball. No text or additional objects.",
+      "reviewed": true
+    },
+    {
+      "word": "cuadrado",
+      "categories": [
+        "colores"
+      ],
+      "subject": "One large solid blue square with exactly four equal sides and right angles, front view not cube.",
+      "article": "",
+      "gender": "",
+      "file": "cuadrado.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-665fe539-b8aa-45e1-bc92-71672202e86d.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One large solid blue square with exactly four equal sides and right angles, front view not cube. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "rectangular",
+      "categories": [
+        "colores"
+      ],
+      "subject": "One large solid blue horizontal rectangle, clearly longer than tall with four right angles.",
+      "article": "",
+      "gender": "",
+      "file": "rectangular.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-1e143279-242a-4176-b54a-fd01f26774c4.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One large solid blue horizontal rectangle, clearly longer than tall with four right angles. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "triangular",
+      "categories": [
+        "colores"
+      ],
+      "subject": "One large solid blue equilateral triangle, clear three sides and three corners.",
+      "article": "",
+      "gender": "",
+      "file": "triangular.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-11beb064-009c-4478-8cfa-00f03eeb1c50.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One large solid blue equilateral triangle, clear three sides and three corners. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "bloques",
+      "categories": [
+        "juegos"
+      ],
+      "subject": "A small stack and group of colorful children's building blocks: cubes, rectangular blocks and one triangular roof block.",
+      "article": "los",
+      "gender": "mp",
+      "file": "bloques.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-456de3ad-1b4d-407f-ae97-641e37d9edc0.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A small stack and group of colorful children's building blocks: cubes, rectangular blocks and one triangular roof block. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "trampolín",
+      "categories": [
+        "juegos"
+      ],
+      "subject": "One round recreational trampoline with visible legs and black jumping mat, safety enclosure net, no person.",
+      "article": "el",
+      "gender": "m",
+      "file": "trampolin.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-8c25568b-ecb6-46c2-9d4a-9ff697b4fda3.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One round recreational trampoline with visible legs and black jumping mat, safety enclosure net, no person. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "rompecabezas",
+      "categories": [
+        "juegos"
+      ],
+      "subject": "A partly assembled colorful jigsaw puzzle showing a simple flower, two loose interlocking puzzle pieces beside it.",
+      "article": "el",
+      "gender": "m",
+      "file": "rompecabezas.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-25e589dc-83ce-421b-b95a-6f56873b566d.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A partly assembled colorful jigsaw puzzle showing a simple flower, two loose interlocking puzzle pieces beside it. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "camión",
+      "categories": [
+        "transportes"
+      ],
+      "subject": "One full-size blue cargo truck with cab and cargo box, clear large wheels, three-quarter view, no logos.",
+      "article": "el",
+      "gender": "m",
+      "file": "camion.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-31f9cc8d-7116-4970-b3b1-ec5c59334577.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One full-size blue cargo truck with cab and cargo box, clear large wheels, three-quarter view, no logos. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "patineta",
+      "categories": [
+        "transportes"
+      ],
+      "subject": "One skateboard with a wooden deck and FOUR small wheels, no handlebar.",
+      "article": "la",
+      "gender": "f",
+      "file": "patineta.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-f2c84f3b-bbaf-4c93-8eaf-a1948b452204.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One skateboard with a wooden deck and FOUR small wheels, no handlebar. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "monopatín",
+      "categories": [
+        "transportes"
+      ],
+      "subject": "One kick scooter with upright T-shaped handlebar, foot deck and TWO wheels; no motor.",
+      "article": "el",
+      "gender": "m",
+      "file": "monopatin.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-1e0f10d8-e14d-4048-823b-6028130a0885.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One kick scooter with upright T-shaped handlebar, foot deck and TWO wheels; no motor. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "caminar",
+      "categories": [
+        "transportes",
+        "acciones"
+      ],
+      "subject": "One child WALKING at a relaxed pace, one foot advancing and arms natural, purple motion arrow; not running.",
+      "article": "",
+      "gender": "",
+      "file": "caminar.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-33cdcb1b-8bde-46b6-be1c-acd8f2a80e86.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One child WALKING at a relaxed pace, one foot advancing and arms natural, purple motion arrow; not running. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "tren",
+      "categories": [
+        "transportes"
+      ],
+      "subject": "One cheerful locomotive followed by two visible train carriages on short rail tracks, not a toy.",
+      "article": "el",
+      "gender": "m",
+      "file": "tren.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-e5971b47-4fec-44ef-97cc-2b57987b0648.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One cheerful locomotive followed by two visible train carriages on short rail tracks, not a toy. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "taxi",
+      "categories": [
+        "transportes"
+      ],
+      "subject": "One yellow taxi car with small roof taxi sign shape but NO letters, full car three-quarter view.",
+      "article": "el",
+      "gender": "m",
+      "file": "taxi.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-6ed9df04-908d-4335-887c-2ba750f0c0cd.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One yellow taxi car with small roof taxi sign shape but NO letters, full car three-quarter view. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "pepino",
+      "categories": [
+        "alimentos"
+      ],
+      "subject": "One whole green cucumber and three round cucumber slices showing pale interior and seeds.",
+      "article": "el",
+      "gender": "m",
+      "file": "pepino.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-b3c9365d-588b-47d8-8c61-ff7b4e3013c7.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One whole green cucumber and three round cucumber slices showing pale interior and seeds. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "naranja",
+      "categories": [
+        "alimentos"
+      ],
+      "subject": "One whole orange fruit and one half showing recognizable orange citrus segments.",
+      "article": "la",
+      "gender": "f",
+      "file": "naranja.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-318dc18a-8e43-4c9d-91b9-323adc4032ca.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One whole orange fruit and one half showing recognizable orange citrus segments. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "manzana",
+      "categories": [
+        "alimentos"
+      ],
+      "subject": "One large red apple with stem and small green leaf.",
+      "article": "la",
+      "gender": "f",
+      "file": "manzana.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-2771ced8-100a-4d8c-924f-d70d429d3043.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One large red apple with stem and small green leaf. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "sandía",
+      "categories": [
+        "alimentos"
+      ],
+      "subject": "One whole green-striped watermelon and one red slice with black seeds.",
+      "article": "la",
+      "gender": "f",
+      "file": "sandia.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-e754d661-0d5f-4b25-bbc0-42377b6f4356.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One whole green-striped watermelon and one red slice with black seeds. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "banana",
+      "categories": [
+        "alimentos"
+      ],
+      "subject": "One yellow banana with a partly peeled companion exposing pale fruit.",
+      "article": "la",
+      "gender": "f",
+      "file": "banana.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-698fdf67-55ce-43a4-bdea-8d128718c3fb.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One yellow banana with a partly peeled companion exposing pale fruit. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "uvas",
+      "categories": [
+        "alimentos"
+      ],
+      "subject": "One bunch of purple grapes with green leaf and stem.",
+      "article": "las",
+      "gender": "fp",
+      "file": "uvas.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-ed15b200-dc53-441d-b7db-10126d52f963.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One bunch of purple grapes with green leaf and stem. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "fresas",
+      "categories": [
+        "alimentos"
+      ],
+      "subject": "Three recognizable red strawberries with green tops and tiny seeds.",
+      "article": "las",
+      "gender": "fp",
+      "file": "fresas.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-5f2558be-88ef-49d6-9ba5-4a2fbaea731e.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: Three recognizable red strawberries with green tops and tiny seeds. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "peras",
+      "categories": [
+        "alimentos"
+      ],
+      "subject": "Two green-yellow pear fruits with characteristic pear shape and stems.",
+      "article": "las",
+      "gender": "fp",
+      "file": "peras.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-ddb3bff4-1c3b-4779-af21-571a85de72ef.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: Two green-yellow pear fruits with characteristic pear shape and stems. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "melocotón",
+      "categories": [
+        "alimentos"
+      ],
+      "subject": "One peach fruit with red-yellow skin and one half showing large brown pit.",
+      "article": "el",
+      "gender": "m",
+      "file": "melocoton.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-80a6764d-b296-4a28-ba55-571a8ddd2f1b.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One peach fruit with red-yellow skin and one half showing large brown pit. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "lechuga",
+      "categories": [
+        "alimentos"
+      ],
+      "subject": "One leafy green head of lettuce, clearly food vegetable with crisp curled leaves.",
+      "article": "la",
+      "gender": "f",
+      "file": "lechuga.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-edaebb9e-0529-45c9-a6a4-aebede22b37d.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One leafy green head of lettuce, clearly food vegetable with crisp curled leaves. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "chocolate",
+      "categories": [
+        "alimentos"
+      ],
+      "subject": "One brown segmented chocolate bar with two broken squares, no wrapper or logo.",
+      "article": "el",
+      "gender": "m",
+      "file": "chocolate.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-3d3f7398-738a-4176-8353-99f8329ffb3a.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One brown segmented chocolate bar with two broken squares, no wrapper or logo. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "confite",
+      "categories": [
+        "alimentos"
+      ],
+      "subject": "One colorful hard candy in a twisted wrapper, no brand or text.",
+      "article": "el",
+      "gender": "m",
+      "file": "confite.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-3fd2e435-269d-4d38-bac6-8c689d34b60e.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One colorful hard candy in a twisted wrapper, no brand or text. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "espagueti",
+      "categories": [
+        "alimentos"
+      ],
+      "subject": "A plate of long cooked spaghetti strands with tomato sauce and a fork; no other dish.",
+      "article": "el",
+      "gender": "m",
+      "file": "espagueti.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-3f698054-b544-472f-a362-21a0f56a8940.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: A plate of long cooked spaghetti strands with tomato sauce and a fork; no other dish. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "pizza",
+      "categories": [
+        "alimentos"
+      ],
+      "subject": "One round pizza with cheese and tomato, one triangular slice separated to show shape.",
+      "article": "la",
+      "gender": "f",
+      "file": "pizza.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-c36820de-d166-4950-8877-85052c4082a3.png",
+      "prompt": "Create ONE square 1254x1254 PNG educational Spanish vocabulary picture card. Every card follows the same format: thick violet-purple rounded-square perimeter frame about 35 px wide, pure white inner panel with rounded corners and a slim white margin. Cheerful clean children's cartoon, saturated colors, crisp dark outlines, soft minimal shading. CONCEPT-FIRST MINIMAL COMPOSITION: one clearly recognizable protagonist, occupying most of the inner panel. PURE WHITE background. NO decorative landscape, trees, mountains, extra animals, objects, scenery or people unless essential to express the specified concept. For an action, ONLY the person and the essential object involved. For a spatial relation, ONLY the two objects needed to demonstrate it. For a landform, simplify the diagram to the essential land/sea geometry, no unrelated buildings/trees/people. Ensure legibility on a tablet at small card size. No photographic textures, logos, labels, watermarks, multiple cards or text unless explicitly requested. Essential subject: One round pizza with cheese and tomato, one triangular slice separated to show shape. Only essential elements; no secondary decoration. Output the identical square purple-frame format.",
+      "reviewed": true
+    },
+    {
+      "word": "agua",
+      "categories": [
+        "bebidas",
+        "naturaleza",
+        "alimentos"
+      ],
+      "file": "agua.png",
+      "status": "existing",
+      "reviewed": true
+    },
+    {
+      "word": "playa",
+      "categories": [
+        "relieve",
+        "lugares",
+        "naturaleza"
+      ],
+      "file": "playa.png",
+      "status": "existing",
+      "reviewed": true
+    },
+    {
+      "word": "mariposa",
+      "categories": [
+        "animales"
+      ],
+      "file": "mariposa.png",
+      "status": "existing",
+      "reviewed": true
+    },
+    {
+      "word": "barra",
+      "categories": [
+        "alimentos"
+      ],
+      "subject": "ONE cereal snack bar, clearly made of toasted cereal flakes and oats bound together. No chocolate coating, package, text, plate, other food or decorative objects. Isolated large cereal bar on white.",
+      "article": "la",
+      "gender": "f",
+      "file": "barra.png",
+      "status": "generated",
+      "source": "C:\\Users\\jeffz\\.codex\\generated_images\\01a0ff87-28f8-72f3-8194-d4b9c63bd0f5\\exec-5ce15fd2-7500-4c6f-9934-494ea6f82db3.png",
+      "prompt": "Edit the cereal bar educational card. Preserve square 1254x1254 canvas, exact purple rounded perimeter frame, white panel and single large cereal bar diagonally centered. Change ONLY rendering of the cereal bar to SIMPLE CHILDREN'S CARTOON: clean bold dark brown/black perimeter outline, a limited number of large clearly drawn oatmeal flakes, simplified flat golden fill and minimal soft shading. Remove dense realistic microtexture and photographic shine. The cereal bar must still clearly be made of oats/cereal. No chocolate, wrapper, labels, text, other foods, plate or objects.",
+      "reviewed": true
+    }
+  ],
+  "design_principles": [
+    "Un solo concepto protagonista",
+    "Eliminar elementos secundarios salvo los indispensables para expresar la acción o relación",
+    "Sujeto grande sobre blanco; sin paisajes decorativos",
+    "Lugares y relieve: únicamente geometría y elementos esenciales para identificar el concepto"
+  ],
+  "interpretaciones": {
+    "barra": "barra de cereal",
+    "aguar": "agua (imagen existente)",
+    "nublado": "cielo nublado; no equivale a frío"
+  },
+  "revision_visual_completa": true,
+  "resumen": {
+    "nuevas": 115,
+    "reutilizadas": 3,
+    "pendientes": 0,
+    "integracion": "Galería y catálogo de imágenes; conserva las 7632 oraciones existentes"
+  }
+}

@@ -1,84 +1,44 @@
-const assert=require('node:assert/strict');
-const path=require('node:path');
-const fs=require('node:fs');
-const {pathToFileURL}=require('node:url');
-const {chromium}=require('playwright');
-(async()=>{
- const browser=await chromium.launch({channel:'chrome',headless:true});
- try{
-  const page=await browser.newPage({viewport:{width:1280,height:900}}),errors=[];
-  page.on('pageerror',e=>errors.push(e.message));
-  await page.route('https://fonts.googleapis.com/**',r=>r.abort());
-  const url=pathToFileURL(path.resolve(__dirname,'../generador-oraciones.html')).href;
-  await page.goto(url);await page.waitForFunction(()=>baseLista);
-  await page.locator('#nameInput').fill('Marta');
-  await page.locator('#celebrationSoundInput').uncheck();
-  await page.locator('#startBtn').click();
-  await page.evaluate(()=>{siguienteCelebracion=0;studentName='Marta';});
-  const ids=await page.evaluate(()=>CELEBRACIONES.map(c=>c.id));
-  const qa=process.env.ORACIONES_QA_DIR;if(qa)fs.mkdirSync(qa,{recursive:true});
-  for(const id of ids){
-   assert.equal(await page.evaluate(()=>triggerCelebration()),id);
-   assert.equal(await page.locator('.celebration-stage').count(),1);
-   assert.equal(await page.locator('.celebration-stage').getAttribute('data-celebration'),id);
-   assert.ok(await page.locator('.celebration-stage > *').count()>0);
-   assert.ok(await page.locator('.celebration-stage *').count()<220);
-   assert.equal(await page.locator('.celebration-stage').evaluate(e=>getComputedStyle(e).pointerEvents),'none');
-   assert.equal(await page.evaluate(()=>celebrationAudio),null);
-   if(qa){await page.waitForTimeout(1050);await page.screenshot({path:path.join(qa,id+'.png')});}
+const assert=require('node:assert/strict'),path=require('node:path'),fs=require('node:fs');
+const {pathToFileURL}=require('node:url');const {chromium}=require('playwright');
+(async()=>{const browser=await chromium.launch({channel:'chrome',headless:true});try{
+const qa=process.env.ORACIONES_QA_DIR;if(qa)fs.mkdirSync(qa,{recursive:true});
+for(const viewport of [{width:768,height:1024},{width:1024,height:768},{width:390,height:844}]){
+ const context=await browser.newContext({viewport,hasTouch:true});const page=await context.newPage(),errors=[];
+ page.on('pageerror',e=>errors.push(e.message));await page.route('https://fonts.googleapis.com/**',r=>r.abort());
+ const url=pathToFileURL(path.resolve(__dirname,'../generador-oraciones.html')).href;await page.goto(url);await page.waitForFunction(()=>baseLista);
+ await page.locator('#celebrationSoundInput').uncheck();await page.locator('#nameInput').fill('Marta');await page.locator('#startBtn').click();
+ await page.evaluate(()=>{siguienteCelebracion=0;});
+ for(const id of ['cohete','globos','estrellas']){
+  assert.equal(await page.evaluate(()=>triggerCelebration()),id);
+  assert.equal(await page.locator('.interactive-object').count(),3);
+  await page.waitForTimeout(3000);
+  const targets=page.locator('.interactive-object');
+  for(let i=0;i<3;i++){
+   const rect=await targets.nth(i).boundingBox();assert.ok(rect.width>=90&&rect.height>=100);
+   assert.ok(rect.y>130&&rect.y+rect.height<viewport.height);
+   await page.touchscreen.tap(rect.x+rect.width/2,rect.y+rect.height/2);
+   assert.equal(await page.locator('.interactive-object:disabled').count(),i+1);
+   assert.equal(await page.locator('.interactive-reaction').count(),i+1);
+   await targets.nth(i).dispatchEvent('click');assert.equal(await page.locator('.interactive-object:disabled').count(),i+1);
   }
-  assert.equal(await page.evaluate(()=>siguienteCelebracion),0);
-  assert.equal(await page.evaluate(()=>triggerCelebration()),'fuegos');
-  await page.reload();await page.waitForFunction(()=>baseLista);
-  assert.equal(await page.evaluate(()=>siguienteCelebracion),1);
-  assert.equal(await page.locator('#celebrationSoundInput').isChecked(),false);
-  assert.equal(await page.evaluate(()=>triggerCelebration()),'globos');
-  await page.evaluate(()=>clearCelebration());assert.equal(await page.locator('.celebration-stage').count(),0);
-  await page.locator('#reducedCelebrationInput').check();
-  await page.locator('#celebrationSoundInput').check();
-  await page.reload();await page.waitForFunction(()=>baseLista);
-  assert.equal(await page.locator('#reducedCelebrationInput').isChecked(),true);
-  await page.evaluate(()=>triggerCelebration());
-  assert.equal(await page.locator('.celebration-stage.is-reduced').count(),1);
-  assert.equal(await page.locator('.celebration-piece').count(),0);
-  assert.equal(await page.evaluate(()=>!!celebrationAudio),true);
-  await page.evaluate(()=>clearCelebration());assert.equal(await page.evaluate(()=>celebrationAudio),null);
-  await page.locator('#reducedCelebrationInput').uncheck();
-  await page.locator('#celebrationSoundInput').uncheck();
-  await page.locator('#startBtn').click();
-  const result=await page.evaluate(()=>{
-   const before=siguienteCelebracion;
-   sentenceItems=current.words.map((base,i)=>({base,text:i===0?capWord(base):base}));
-   speak=()=>{};checkAnswer();
-   if(!isSolved||siguienteCelebracion!==(before+1)%8)throw Error('Rotación tras respuesta correcta');
-   checkAnswer();if(siguienteCelebracion!==(before+1)%8)throw Error('Celebración repetida por doble revisión');
-   newExercise();if(celebrationStage||document.getElementById('reviewOverlay').classList.contains('show'))throw Error('Celebración pendiente al cambiar de ejercicio');
-   return true;
-  });assert.ok(result);
-  await page.setViewportSize({width:390,height:844});
-  await page.evaluate(()=>{siguienteCelebracion=5;triggerCelebration();});
-  assert.equal(await page.locator('.celebration-caption').textContent(),'¡Bravo, Marta!');
-  if(qa){await page.waitForTimeout(1000);await page.screenshot({path:path.join(qa,'medalla-telefono.png')});}
-  await page.waitForFunction(()=>!document.querySelector('.celebration-stage'),{},{timeout:5000});
-  for(const viewport of [{width:768,height:1024},{width:1024,height:768}]){
-   await page.setViewportSize(viewport);
-   await page.evaluate(()=>{siguienteCelebracion=0;});
-   for(const id of ids){
-    assert.equal(await page.evaluate(()=>triggerCelebration()),id);
-    assert.equal(await page.locator('.celebration-stage.is-lite').count(),1);
-    assert.equal(await page.locator('.celebration-scenery svg').count(),1);
-    assert.ok(await page.locator('.celebration-piece').count()<=110);
-    if(['fuegos','confeti'].includes(id))assert.ok(await page.locator('.celebration-grand-title').evaluate(el=>el.scrollWidth<window.innerWidth*.95));
-    if(qa&&['cohete','jardin'].includes(id)){await page.waitForTimeout(1300);await page.screenshot({path:path.join(qa,`${id}-tableta-${viewport.width}.png`)});}
-    await page.evaluate(()=>clearCelebration());
-   }
-  }
-  const blocked=await browser.newPage({reducedMotion:'reduce'});
-  await blocked.addInitScript(()=>{Storage.prototype.getItem=()=>{throw Error('Bloqueado');};Storage.prototype.setItem=()=>{throw Error('Bloqueado');};});
-  await blocked.route('https://fonts.googleapis.com/**',r=>r.abort());
-  await blocked.goto(url);await blocked.waitForFunction(()=>baseLista);
-  assert.equal(await blocked.locator('#reducedCelebrationInput').isChecked(),true);
-  assert.equal(await blocked.evaluate(()=>{celebrationSound=false;return triggerCelebration();}),'fuegos');
-  assert.deepEqual(errors,[]);console.log(JSON.stringify({celebrations:ids,rotation:'OK',cleanup:'OK',preferences:'OK',correctAnswer:'OK'}));
- }finally{await browser.close();}
-})().catch(e=>{console.error(e);process.exitCode=1;});
+  assert.match(await page.locator('.interactive-progress').textContent(),/todos/);
+  if(id==='estrellas')assert.equal(await page.locator('.interactive-constellation').count(),3);
+  else assert.ok(await page.locator('.interactive-letter').count()>20);
+  assert.ok(await page.locator('.interactive-stage *').count()<130);
+  if(qa&&viewport.width===768)await page.screenshot({path:path.join(qa,id+'-reaccion.png')});
+  await page.waitForFunction(()=>!document.querySelector('.interactive-stage'),{},{timeout:3500});
+ }
+ assert.equal(await page.evaluate(()=>siguienteCelebracion),0);
+ await page.evaluate(()=>triggerCelebration());await page.locator('.interactive-continue').click();assert.equal(await page.locator('.interactive-stage').count(),0);
+ await page.reload();await page.waitForFunction(()=>baseLista);assert.equal(await page.evaluate(()=>siguienteCelebracion),1);
+ await page.locator('#reducedCelebrationInput').check();await page.locator('#startBtn').click();await page.evaluate(()=>triggerCelebration());
+ assert.equal(await page.locator('.interactive-stage.is-reduced').count(),1);
+ assert.equal(await page.locator('.interactive-object').first().evaluate(el=>getComputedStyle(el).animationName),'none');
+ await page.locator('.interactive-object').first().click();assert.equal(await page.locator('.interactive-reaction').count(),1);
+ await page.keyboard.press('Escape');assert.equal(await page.locator('.interactive-stage').count(),0);
+ await page.evaluate(()=>{siguienteCelebracion=2;triggerCelebration();newExercise();});
+ assert.equal(await page.locator('.interactive-stage').count(),0);assert.equal(await page.evaluate(()=>interactiveTimers.size),0);
+ assert.deepEqual(errors,[]);await context.close();
+}
+console.log(JSON.stringify({scenes:3,viewports:3,touch:'OK',repeatTap:'OK',rotation:'OK',cleanup:'OK',reducedMotion:'OK'}));
+}finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

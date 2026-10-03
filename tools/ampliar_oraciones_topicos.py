@@ -97,6 +97,16 @@ def main():
         db['imagenes'][word] = {'label': word, 'img': path}
     categories = [{'id': key, 'label': label, 'emoji': emoji, 'palabras': words.split('|')}
                   for key, label, emoji, words in CATEGORIES]
+    # Conserva las categorías y palabras incorporadas en ampliaciones posteriores.
+    by_id = {category['id']: category for category in categories}
+    for existing in db.get('categorias', []):
+        if existing['id'] not in by_id:
+            categories.append(existing)
+            by_id[existing['id']] = existing
+        else:
+            category = by_id[existing['id']]
+            category['label'] = existing['label']
+            category['palabras'] = list(dict.fromkeys(category['palabras'] + existing['palabras']))
     assert set(db['imagenes']) <= {w for c in categories for w in c['palabras']}
     db['categorias'] = categories
     connectors = set(db['conectores_reutilizables'])

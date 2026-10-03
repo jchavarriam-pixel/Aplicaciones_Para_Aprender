@@ -44,7 +44,7 @@ async function run() {
     const localURL = pathToFileURL(path.join(root, 'generador-oraciones.html')).href;
     await page.goto(localURL);
     await page.waitForFunction(() => baseLista);
-    assert.equal(await page.locator('#categoryOptions input').count(), 16);
+    assert.equal(await page.locator('#categoryOptions input').count(), db.categorias.length + 1);
     assert.equal(await page.locator('#startBtn').isEnabled(), true);
 
     // Un tema, unión de varios temas, ninguna selección y Todas.

@@ -411,6 +411,466 @@
     "cortar árboles": {
       "label": "cortar árboles",
       "img": "ImagenesGeneradorOraciones/cortar_arboles.png"
+    },
+    "día": {
+      "label": "día",
+      "img": "ImagenesGeneradorOraciones/dia.png"
+    },
+    "noche": {
+      "label": "noche",
+      "img": "ImagenesGeneradorOraciones/noche.png"
+    },
+    "soleado": {
+      "label": "soleado",
+      "img": "ImagenesGeneradorOraciones/soleado.png"
+    },
+    "nevado": {
+      "label": "nevado",
+      "img": "ImagenesGeneradorOraciones/nevado.png"
+    },
+    "nublado": {
+      "label": "nublado",
+      "img": "ImagenesGeneradorOraciones/nublado.png"
+    },
+    "al frente": {
+      "label": "al frente",
+      "img": "ImagenesGeneradorOraciones/al_frente.png"
+    },
+    "detrás": {
+      "label": "detrás",
+      "img": "ImagenesGeneradorOraciones/detras.png"
+    },
+    "dentro": {
+      "label": "dentro",
+      "img": "ImagenesGeneradorOraciones/dentro.png"
+    },
+    "sembrar": {
+      "label": "sembrar",
+      "img": "ImagenesGeneradorOraciones/sembrar.png"
+    },
+    "recoger": {
+      "label": "recoger",
+      "img": "ImagenesGeneradorOraciones/recoger.png"
+    },
+    "estudiar": {
+      "label": "estudiar",
+      "img": "ImagenesGeneradorOraciones/estudiar.png"
+    },
+    "cierra": {
+      "label": "cierra",
+      "img": "ImagenesGeneradorOraciones/cierra.png"
+    },
+    "sentarse": {
+      "label": "sentarse",
+      "img": "ImagenesGeneradorOraciones/sentarse.png"
+    },
+    "pararse": {
+      "label": "pararse",
+      "img": "ImagenesGeneradorOraciones/pararse.png"
+    },
+    "subir": {
+      "label": "subir",
+      "img": "ImagenesGeneradorOraciones/subir.png"
+    },
+    "bajar": {
+      "label": "bajar",
+      "img": "ImagenesGeneradorOraciones/bajar.png"
+    },
+    "responder": {
+      "label": "responder",
+      "img": "ImagenesGeneradorOraciones/responder.png"
+    },
+    "pensar": {
+      "label": "pensar",
+      "img": "ImagenesGeneradorOraciones/pensar.png"
+    },
+    "tomar": {
+      "label": "tomar",
+      "img": "ImagenesGeneradorOraciones/tomar.png"
+    },
+    "fresco": {
+      "label": "fresco",
+      "img": "ImagenesGeneradorOraciones/fresco.png"
+    },
+    "cereal": {
+      "label": "cereal",
+      "img": "ImagenesGeneradorOraciones/cereal.png"
+    },
+    "galletas": {
+      "label": "galletas",
+      "img": "ImagenesGeneradorOraciones/galletas.png"
+    },
+    "pan": {
+      "label": "pan",
+      "img": "ImagenesGeneradorOraciones/pan.png"
+    },
+    "Marcos": {
+      "label": "Marcos",
+      "img": "ImagenesGeneradorOraciones/marcos.png"
+    },
+    "niños": {
+      "label": "niños",
+      "img": "ImagenesGeneradorOraciones/ninos.png"
+    },
+    "niñas": {
+      "label": "niñas",
+      "img": "ImagenesGeneradorOraciones/ninas.png"
+    },
+    "reciclar": {
+      "label": "reciclar",
+      "img": "ImagenesGeneradorOraciones/reciclar.png"
+    },
+    "reutilizar": {
+      "label": "reutilizar",
+      "img": "ImagenesGeneradorOraciones/reutilizar.png"
+    },
+    "meseta": {
+      "label": "meseta",
+      "img": "ImagenesGeneradorOraciones/meseta.png"
+    },
+    "cima": {
+      "label": "cima",
+      "img": "ImagenesGeneradorOraciones/cima.png"
+    },
+    "acantilados": {
+      "label": "acantilados",
+      "img": "ImagenesGeneradorOraciones/acantilados.png"
+    },
+    "arroz": {
+      "label": "arroz",
+      "img": "ImagenesGeneradorOraciones/arroz.png"
+    },
+    "frijoles": {
+      "label": "frijoles",
+      "img": "ImagenesGeneradorOraciones/frijoles.png"
+    },
+    "carne": {
+      "label": "carne",
+      "img": "ImagenesGeneradorOraciones/carne.png"
+    },
+    "huevos": {
+      "label": "huevos",
+      "img": "ImagenesGeneradorOraciones/huevos.png"
+    },
+    "señora": {
+      "label": "señora",
+      "img": "ImagenesGeneradorOraciones/senora.png"
+    },
+    "señor": {
+      "label": "señor",
+      "img": "ImagenesGeneradorOraciones/senor.png"
+    },
+    "golfo": {
+      "label": "golfo",
+      "img": "ImagenesGeneradorOraciones/golfo.png"
+    },
+    "península": {
+      "label": "península",
+      "img": "ImagenesGeneradorOraciones/peninsula.png"
+    },
+    "pendientes fuertes": {
+      "label": "pendientes fuertes",
+      "img": "ImagenesGeneradorOraciones/pendientes_fuertes.png"
+    },
+    "plano": {
+      "label": "plano",
+      "img": "ImagenesGeneradorOraciones/plano.png"
+    },
+    "ondulado": {
+      "label": "ondulado",
+      "img": "ImagenesGeneradorOraciones/ondulado.png"
+    },
+    "colina": {
+      "label": "colina",
+      "img": "ImagenesGeneradorOraciones/colina.png"
+    },
+    "cueva": {
+      "label": "cueva",
+      "img": "ImagenesGeneradorOraciones/cueva.png"
+    },
+    "león": {
+      "label": "león",
+      "img": "ImagenesGeneradorOraciones/leon.png"
+    },
+    "pájaro": {
+      "label": "pájaro",
+      "img": "ImagenesGeneradorOraciones/pajaro.png"
+    },
+    "jirafa": {
+      "label": "jirafa",
+      "img": "ImagenesGeneradorOraciones/jirafa.png"
+    },
+    "elefante": {
+      "label": "elefante",
+      "img": "ImagenesGeneradorOraciones/elefante.png"
+    },
+    "cebra": {
+      "label": "cebra",
+      "img": "ImagenesGeneradorOraciones/cebra.png"
+    },
+    "koala": {
+      "label": "koala",
+      "img": "ImagenesGeneradorOraciones/koala.png"
+    },
+    "panda": {
+      "label": "panda",
+      "img": "ImagenesGeneradorOraciones/panda.png"
+    },
+    "serpiente": {
+      "label": "serpiente",
+      "img": "ImagenesGeneradorOraciones/serpiente.png"
+    },
+    "cocodrilo": {
+      "label": "cocodrilo",
+      "img": "ImagenesGeneradorOraciones/cocodrilo.png"
+    },
+    "tortuga": {
+      "label": "tortuga",
+      "img": "ImagenesGeneradorOraciones/tortuga.png"
+    },
+    "pez": {
+      "label": "pez",
+      "img": "ImagenesGeneradorOraciones/pez.png"
+    },
+    "pingüino": {
+      "label": "pingüino",
+      "img": "ImagenesGeneradorOraciones/pinguino.png"
+    },
+    "rana": {
+      "label": "rana",
+      "img": "ImagenesGeneradorOraciones/rana.png"
+    },
+    "mariquita": {
+      "label": "mariquita",
+      "img": "ImagenesGeneradorOraciones/mariquita.png"
+    },
+    "mosca": {
+      "label": "mosca",
+      "img": "ImagenesGeneradorOraciones/mosca.png"
+    },
+    "saltamontes": {
+      "label": "saltamontes",
+      "img": "ImagenesGeneradorOraciones/saltamontes.png"
+    },
+    "refrigeradora": {
+      "label": "refrigeradora",
+      "img": "ImagenesGeneradorOraciones/refrigeradora.png"
+    },
+    "lavadora": {
+      "label": "lavadora",
+      "img": "ImagenesGeneradorOraciones/lavadora.png"
+    },
+    "estufa": {
+      "label": "estufa",
+      "img": "ImagenesGeneradorOraciones/estufa.png"
+    },
+    "servicio sanitario": {
+      "label": "servicio sanitario",
+      "img": "ImagenesGeneradorOraciones/servicio_sanitario.png"
+    },
+    "lavamanos": {
+      "label": "lavamanos",
+      "img": "ImagenesGeneradorOraciones/lavamanos.png"
+    },
+    "ducha": {
+      "label": "ducha",
+      "img": "ImagenesGeneradorOraciones/ducha.png"
+    },
+    "puerta": {
+      "label": "puerta",
+      "img": "ImagenesGeneradorOraciones/puerta.png"
+    },
+    "cochera": {
+      "label": "cochera",
+      "img": "ImagenesGeneradorOraciones/cochera.png"
+    },
+    "patio": {
+      "label": "patio",
+      "img": "ImagenesGeneradorOraciones/patio.png"
+    },
+    "gimnasio": {
+      "label": "gimnasio",
+      "img": "ImagenesGeneradorOraciones/gimnasio.png"
+    },
+    "dormitorio": {
+      "label": "dormitorio",
+      "img": "ImagenesGeneradorOraciones/dormitorio.png"
+    },
+    "sala": {
+      "label": "sala",
+      "img": "ImagenesGeneradorOraciones/sala.png"
+    },
+    "escaleras": {
+      "label": "escaleras",
+      "img": "ImagenesGeneradorOraciones/escaleras.png"
+    },
+    "balcón": {
+      "label": "balcón",
+      "img": "ImagenesGeneradorOraciones/balcon.png"
+    },
+    "portón": {
+      "label": "portón",
+      "img": "ImagenesGeneradorOraciones/porton.png"
+    },
+    "primer piso": {
+      "label": "primer piso",
+      "img": "ImagenesGeneradorOraciones/primer_piso.png"
+    },
+    "segundo piso": {
+      "label": "segundo piso",
+      "img": "ImagenesGeneradorOraciones/segundo_piso.png"
+    },
+    "gris": {
+      "label": "gris",
+      "img": "ImagenesGeneradorOraciones/gris.png"
+    },
+    "blanco": {
+      "label": "blanco",
+      "img": "ImagenesGeneradorOraciones/blanco.png"
+    },
+    "marrón": {
+      "label": "marrón",
+      "img": "ImagenesGeneradorOraciones/marron.png"
+    },
+    "rosado": {
+      "label": "rosado",
+      "img": "ImagenesGeneradorOraciones/rosado.png"
+    },
+    "mediano": {
+      "label": "mediano",
+      "img": "ImagenesGeneradorOraciones/mediano.png"
+    },
+    "corto": {
+      "label": "corto",
+      "img": "ImagenesGeneradorOraciones/corto.png"
+    },
+    "largo": {
+      "label": "largo",
+      "img": "ImagenesGeneradorOraciones/largo.png"
+    },
+    "bajo": {
+      "label": "bajo",
+      "img": "ImagenesGeneradorOraciones/bajo.png"
+    },
+    "gordo": {
+      "label": "gordo",
+      "img": "ImagenesGeneradorOraciones/gordo.png"
+    },
+    "delgado": {
+      "label": "delgado",
+      "img": "ImagenesGeneradorOraciones/delgado.png"
+    },
+    "circular": {
+      "label": "circular",
+      "img": "ImagenesGeneradorOraciones/circular.png"
+    },
+    "cuadrado": {
+      "label": "cuadrado",
+      "img": "ImagenesGeneradorOraciones/cuadrado.png"
+    },
+    "rectangular": {
+      "label": "rectangular",
+      "img": "ImagenesGeneradorOraciones/rectangular.png"
+    },
+    "triangular": {
+      "label": "triangular",
+      "img": "ImagenesGeneradorOraciones/triangular.png"
+    },
+    "bloques": {
+      "label": "bloques",
+      "img": "ImagenesGeneradorOraciones/bloques.png"
+    },
+    "trampolín": {
+      "label": "trampolín",
+      "img": "ImagenesGeneradorOraciones/trampolin.png"
+    },
+    "rompecabezas": {
+      "label": "rompecabezas",
+      "img": "ImagenesGeneradorOraciones/rompecabezas.png"
+    },
+    "camión": {
+      "label": "camión",
+      "img": "ImagenesGeneradorOraciones/camion.png"
+    },
+    "patineta": {
+      "label": "patineta",
+      "img": "ImagenesGeneradorOraciones/patineta.png"
+    },
+    "monopatín": {
+      "label": "monopatín",
+      "img": "ImagenesGeneradorOraciones/monopatin.png"
+    },
+    "caminar": {
+      "label": "caminar",
+      "img": "ImagenesGeneradorOraciones/caminar.png"
+    },
+    "tren": {
+      "label": "tren",
+      "img": "ImagenesGeneradorOraciones/tren.png"
+    },
+    "taxi": {
+      "label": "taxi",
+      "img": "ImagenesGeneradorOraciones/taxi.png"
+    },
+    "pepino": {
+      "label": "pepino",
+      "img": "ImagenesGeneradorOraciones/pepino.png"
+    },
+    "naranja": {
+      "label": "naranja",
+      "img": "ImagenesGeneradorOraciones/naranja.png"
+    },
+    "manzana": {
+      "label": "manzana",
+      "img": "ImagenesGeneradorOraciones/manzana.png"
+    },
+    "sandía": {
+      "label": "sandía",
+      "img": "ImagenesGeneradorOraciones/sandia.png"
+    },
+    "banana": {
+      "label": "banana",
+      "img": "ImagenesGeneradorOraciones/banana.png"
+    },
+    "uvas": {
+      "label": "uvas",
+      "img": "ImagenesGeneradorOraciones/uvas.png"
+    },
+    "fresas": {
+      "label": "fresas",
+      "img": "ImagenesGeneradorOraciones/fresas.png"
+    },
+    "peras": {
+      "label": "peras",
+      "img": "ImagenesGeneradorOraciones/peras.png"
+    },
+    "melocotón": {
+      "label": "melocotón",
+      "img": "ImagenesGeneradorOraciones/melocoton.png"
+    },
+    "lechuga": {
+      "label": "lechuga",
+      "img": "ImagenesGeneradorOraciones/lechuga.png"
+    },
+    "chocolate": {
+      "label": "chocolate",
+      "img": "ImagenesGeneradorOraciones/chocolate.png"
+    },
+    "confite": {
+      "label": "confite",
+      "img": "ImagenesGeneradorOraciones/confite.png"
+    },
+    "espagueti": {
+      "label": "espagueti",
+      "img": "ImagenesGeneradorOraciones/espagueti.png"
+    },
+    "pizza": {
+      "label": "pizza",
+      "img": "ImagenesGeneradorOraciones/pizza.png"
+    },
+    "barra": {
+      "label": "barra",
+      "img": "ImagenesGeneradorOraciones/barra.png"
     }
   },
   "oraciones": [
@@ -1057,6 +1517,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "hogar",
@@ -1084,6 +1545,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "transportes",
@@ -3088,6 +3550,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "hogar",
@@ -3247,6 +3710,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -3358,6 +3822,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -3469,6 +3934,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "animales",
@@ -3580,6 +4046,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "animales",
@@ -3691,6 +4158,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "animales",
@@ -4902,6 +5370,7 @@
         "zanahoria"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "hogar",
@@ -5096,6 +5565,7 @@
         "barco"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -5232,6 +5702,7 @@
         "cancha"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -5368,6 +5839,7 @@
         "columpio"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "animales",
@@ -5504,6 +5976,7 @@
         "Daniel"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "animales",
@@ -5640,6 +6113,7 @@
         "escuela"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "animales",
@@ -6760,6 +7234,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -7353,6 +7828,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -7927,6 +8403,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -8537,6 +9014,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -9207,6 +9685,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -9838,6 +10317,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -10428,6 +10908,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -11053,6 +11534,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -11718,6 +12200,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -12144,6 +12627,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "animales",
@@ -12353,6 +12837,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "animales",
@@ -12562,6 +13047,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "animales",
@@ -12791,6 +13277,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "animales",
@@ -16155,6 +16642,7 @@
         "juega"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "hogar",
@@ -16191,6 +16679,7 @@
       ],
       "extras": [],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "hogar",
@@ -16231,6 +16720,7 @@
         "lee"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "hogar",
@@ -16263,6 +16753,7 @@
         "lluvioso"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "transportes",
@@ -16299,6 +16790,7 @@
       ],
       "extras": [],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "transportes",
@@ -16339,6 +16831,7 @@
         "Marta"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "transportes",
@@ -20954,6 +21447,7 @@
         "multicolor"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -20994,6 +21488,7 @@
       ],
       "extras": [],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -21038,6 +21533,7 @@
         "niña"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -22348,6 +22844,7 @@
         "come"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -22388,6 +22885,7 @@
       ],
       "extras": [],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -22432,6 +22930,7 @@
         "corre"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -23717,6 +24216,7 @@
         "río"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -23757,6 +24257,7 @@
       ],
       "extras": [],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -23801,6 +24302,7 @@
         "salta"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -25117,6 +25619,7 @@
         "escribe"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -25157,6 +25660,7 @@
       ],
       "extras": [],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -25201,6 +25705,7 @@
         "flores"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -26681,6 +27186,7 @@
         "árbol"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -26721,6 +27227,7 @@
       ],
       "extras": [],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -26765,6 +27272,7 @@
         "azul"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -28101,6 +28609,7 @@
         "mesa"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -28141,6 +28650,7 @@
       ],
       "extras": [],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -28185,6 +28695,7 @@
         "negro"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -29476,6 +29987,7 @@
         "casa"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -29516,6 +30028,7 @@
       ],
       "extras": [],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -29560,6 +30073,7 @@
         "columpio"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -30922,6 +31436,7 @@
         "púrpura"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -30963,6 +31478,7 @@
       ],
       "extras": [],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -31008,6 +31524,7 @@
         "rojo"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -32519,6 +33036,7 @@
         "flores"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -32560,6 +33078,7 @@
       ],
       "extras": [],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -32605,6 +33124,7 @@
         "gato"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -32689,6 +33209,7 @@
         "amarillo"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "animales",
@@ -33076,6 +33597,7 @@
         "cancha"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "animales",
@@ -33463,6 +33985,7 @@
         "encima"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "animales",
@@ -33875,6 +34398,7 @@
         "lee"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "animales",
@@ -38252,7 +38776,9 @@
       ],
       "categorias": [
         "naturaleza",
-        "colores"
+        "alimentos",
+        "colores",
+        "bebidas"
       ]
     },
     {
@@ -42251,7 +42777,9 @@
       "categorias": [
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -42275,7 +42803,9 @@
       "categorias": [
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -42297,8 +42827,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -42324,8 +42856,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -42356,8 +42890,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -42391,8 +42927,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -49277,7 +49815,9 @@
       "categorias": [
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -49301,7 +49841,9 @@
       "categorias": [
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -49323,8 +49865,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -49350,8 +49894,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -49382,8 +49928,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -49417,8 +49965,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -56303,7 +56853,9 @@
       "categorias": [
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -56327,7 +56879,9 @@
       "categorias": [
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -56349,8 +56903,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -56376,8 +56932,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -56408,8 +56966,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -56443,8 +57003,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -63329,7 +63891,9 @@
       "categorias": [
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -63353,7 +63917,9 @@
       "categorias": [
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -63375,8 +63941,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -63402,8 +63970,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -63434,8 +64004,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -63469,8 +64041,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -70355,7 +70929,9 @@
       "categorias": [
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -70379,7 +70955,9 @@
       "categorias": [
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -70401,8 +70979,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -70428,8 +71008,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -70460,8 +71042,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -70495,8 +71079,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -77381,7 +77967,9 @@
       "categorias": [
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -77405,7 +77993,9 @@
       "categorias": [
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -77427,8 +78017,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -77454,8 +78046,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -77486,8 +78080,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -77521,8 +78117,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -84407,7 +85005,9 @@
       "categorias": [
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -84431,7 +85031,9 @@
       "categorias": [
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -84453,8 +85055,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -84480,8 +85084,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -84512,8 +85118,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -84547,8 +85155,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -91556,7 +92166,9 @@
       "categorias": [
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -91581,7 +92193,9 @@
       "categorias": [
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -91604,8 +92218,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -91632,8 +92248,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -91665,8 +92283,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -91701,8 +92321,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -98830,7 +99452,9 @@
       "categorias": [
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -98855,7 +99479,9 @@
       "categorias": [
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -98878,8 +99504,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -98906,8 +99534,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -98939,8 +99569,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -98975,8 +99607,10 @@
       "categorias": [
         "naturaleza",
         "personas",
+        "alimentos",
         "colores",
-        "acciones"
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -168279,7 +168913,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -168308,7 +168944,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -168342,7 +168980,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -168379,7 +169019,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -168404,7 +169046,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -168433,7 +169077,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -168467,7 +169113,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -168504,7 +169152,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -168529,7 +169179,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -168558,7 +169210,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -168592,7 +169246,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -168629,7 +169285,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -168654,7 +169312,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -168683,7 +169343,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -168717,7 +169379,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -168754,7 +169418,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -168779,7 +169445,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -168808,7 +169476,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -168842,7 +169512,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -168879,7 +169551,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -168904,7 +169578,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -168933,7 +169609,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -168967,7 +169645,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169004,7 +169684,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169029,7 +169711,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169058,7 +169742,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169092,7 +169778,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169129,7 +169817,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169155,7 +169845,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169185,7 +169877,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169220,7 +169914,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169258,7 +169954,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169284,7 +169982,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169314,7 +170014,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169349,7 +170051,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169387,7 +170091,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169412,7 +170118,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169441,7 +170149,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169475,7 +170185,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169512,7 +170224,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169537,7 +170251,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169566,7 +170282,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169600,7 +170318,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169637,7 +170357,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169662,7 +170384,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169691,7 +170415,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169725,7 +170451,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169762,7 +170490,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169787,7 +170517,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169816,7 +170548,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169850,7 +170584,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169887,7 +170623,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169912,7 +170650,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169941,7 +170681,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -169975,7 +170717,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -170012,7 +170756,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -170037,7 +170783,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -170066,7 +170814,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -170100,7 +170850,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -170137,7 +170889,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -170162,7 +170916,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -170191,7 +170947,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -170225,7 +170983,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -170262,7 +171022,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -170288,7 +171050,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -170318,7 +171082,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -170353,7 +171119,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -170391,7 +171159,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -170417,7 +171187,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -170447,7 +171219,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -170482,7 +171256,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -170520,7 +171296,9 @@
         "lugares",
         "naturaleza",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -170541,6 +171319,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "colores"
@@ -170568,6 +171347,7 @@
         "alto"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "colores"
@@ -170591,6 +171371,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "colores"
@@ -170618,6 +171399,7 @@
         "alto"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "colores"
@@ -170642,6 +171424,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -170671,6 +171454,7 @@
         "alto"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -170705,6 +171489,7 @@
       ],
       "extras": [],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -170742,6 +171527,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -170767,6 +171553,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -170796,6 +171583,7 @@
         "alto"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -170830,6 +171618,7 @@
       ],
       "extras": [],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -170867,6 +171656,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -170892,6 +171682,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -170921,6 +171712,7 @@
         "alto"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -170955,6 +171747,7 @@
       ],
       "extras": [],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -170992,6 +171785,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -171017,6 +171811,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -171046,6 +171841,7 @@
         "alto"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -171080,6 +171876,7 @@
       ],
       "extras": [],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -171117,6 +171914,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -171142,6 +171940,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -171171,6 +171970,7 @@
         "alto"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -171205,6 +172005,7 @@
       ],
       "extras": [],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -171242,6 +172043,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -171267,6 +172069,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -171296,6 +172099,7 @@
         "alto"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -171330,6 +172134,7 @@
       ],
       "extras": [],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -171367,6 +172172,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -171392,6 +172198,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -171421,6 +172228,7 @@
         "alto"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -171455,6 +172263,7 @@
       ],
       "extras": [],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -171492,6 +172301,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -171518,6 +172328,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -171548,6 +172359,7 @@
         "alto"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -171583,6 +172395,7 @@
       ],
       "extras": [],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -171621,6 +172434,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -171647,6 +172461,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -171677,6 +172492,7 @@
         "alto"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -171712,6 +172528,7 @@
       ],
       "extras": [],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -171750,6 +172567,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "personas",
@@ -179112,6 +179930,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "clima"
@@ -179139,6 +179958,7 @@
         "alto"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "clima"
@@ -179164,6 +179984,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "colores",
@@ -179194,6 +180015,7 @@
         "alto"
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "colores",
@@ -179229,6 +180051,7 @@
       ],
       "extras": [],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "colores",
@@ -179267,6 +180090,7 @@
         "."
       ],
       "categorias": [
+        "relieve",
         "lugares",
         "naturaleza",
         "colores",
@@ -213989,7 +214813,9 @@
       "categorias": [
         "naturaleza",
         "ambiente",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214010,7 +214836,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214035,7 +214863,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214061,7 +214891,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214091,7 +214923,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214126,7 +214960,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214164,7 +215000,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214190,7 +215028,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214220,7 +215060,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214255,7 +215097,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214293,7 +215137,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214314,7 +215160,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214339,7 +215187,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214365,7 +215215,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214395,7 +215247,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214430,7 +215284,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214468,7 +215324,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214494,7 +215352,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214524,7 +215384,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214559,7 +215421,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214597,7 +215461,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214618,7 +215484,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214643,7 +215511,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214669,7 +215539,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214699,7 +215571,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214734,7 +215608,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214772,7 +215648,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214798,7 +215676,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214828,7 +215708,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214863,7 +215745,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214901,7 +215785,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214922,7 +215808,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214947,7 +215835,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -214973,7 +215863,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215003,7 +215895,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215038,7 +215932,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215076,7 +215972,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215102,7 +216000,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215132,7 +216032,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215167,7 +216069,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215205,7 +216109,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215226,7 +216132,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215251,7 +216159,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215277,7 +216187,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215307,7 +216219,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215342,7 +216256,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215380,7 +216296,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215406,7 +216324,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215436,7 +216356,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215471,7 +216393,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215509,7 +216433,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215530,7 +216456,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215555,7 +216483,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215581,7 +216511,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215611,7 +216543,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215646,7 +216580,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215684,7 +216620,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215710,7 +216648,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215740,7 +216680,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215775,7 +216717,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215813,7 +216757,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215834,7 +216780,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215859,7 +216807,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215885,7 +216835,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215915,7 +216867,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215950,7 +216904,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -215988,7 +216944,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -216014,7 +216972,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -216044,7 +217004,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -216079,7 +217041,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -216117,7 +217081,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -216139,7 +217105,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -216165,7 +217133,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -216192,7 +217162,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -216223,7 +217195,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -216259,7 +217233,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -216298,7 +217274,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -216325,7 +217303,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -216356,7 +217336,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -216392,7 +217374,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -216431,7 +217415,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -216453,7 +217439,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -216479,7 +217467,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -216506,7 +217496,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -216537,7 +217529,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -216573,7 +217567,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -216612,7 +217608,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -216639,7 +217637,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -216670,7 +217670,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -216706,7 +217708,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -216745,7 +217749,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -225835,7 +226841,9 @@
       "categorias": [
         "naturaleza",
         "ambiente",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -225857,7 +226865,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -225883,7 +226893,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -225910,7 +226922,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -225941,7 +226955,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -225978,7 +226994,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226018,7 +227036,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226045,7 +227065,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226076,7 +227098,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226113,7 +227137,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226153,7 +227179,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226175,7 +227203,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226201,7 +227231,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226228,7 +227260,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226259,7 +227293,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226296,7 +227332,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226336,7 +227374,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226363,7 +227403,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226394,7 +227436,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226431,7 +227475,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226471,7 +227517,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226493,7 +227541,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226519,7 +227569,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226546,7 +227598,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226577,7 +227631,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226614,7 +227670,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226654,7 +227712,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226681,7 +227741,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226712,7 +227774,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226749,7 +227813,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226789,7 +227855,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226811,7 +227879,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226837,7 +227907,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226864,7 +227936,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226895,7 +227969,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226932,7 +228008,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226972,7 +228050,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -226999,7 +228079,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227030,7 +228112,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227067,7 +228151,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227107,7 +228193,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227129,7 +228217,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227155,7 +228245,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227182,7 +228274,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227213,7 +228307,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227250,7 +228346,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227290,7 +228388,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227317,7 +228417,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227348,7 +228450,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227385,7 +228489,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227425,7 +228531,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227447,7 +228555,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227473,7 +228583,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227500,7 +228612,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227531,7 +228645,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227568,7 +228684,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227608,7 +228726,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227635,7 +228755,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227666,7 +228788,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227703,7 +228827,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227743,7 +228869,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227765,7 +228893,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227791,7 +228921,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227818,7 +228950,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227849,7 +228983,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227886,7 +229022,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227926,7 +229064,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227953,7 +229093,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -227984,7 +229126,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -228021,7 +229165,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -228061,7 +229207,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -228084,7 +229232,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -228111,7 +229261,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -228139,7 +229291,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -228171,7 +229325,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -228209,7 +229365,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -228250,7 +229408,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -228278,7 +229438,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -228310,7 +229472,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -228348,7 +229512,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -228389,7 +229555,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -228412,7 +229580,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -228439,7 +229609,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -228467,7 +229639,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -228499,7 +229673,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -228537,7 +229713,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -228578,7 +229756,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -228606,7 +229786,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -228638,7 +229820,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -228676,7 +229860,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -228717,7 +229903,9 @@
         "naturaleza",
         "ambiente",
         "personas",
-        "acciones"
+        "alimentos",
+        "acciones",
+        "bebidas"
       ]
     },
     {
@@ -232909,7 +234097,18 @@
         "volcán",
         "costa",
         "valle",
-        "llanura"
+        "llanura",
+        "playa",
+        "meseta",
+        "cima",
+        "acantilados",
+        "golfo",
+        "península",
+        "pendientes fuertes",
+        "plano",
+        "ondulado",
+        "colina",
+        "cueva"
       ]
     },
     {
@@ -232936,7 +234135,22 @@
         "volcán",
         "costa",
         "valle",
-        "llanura"
+        "llanura",
+        "meseta",
+        "acantilados",
+        "golfo",
+        "península",
+        "colina",
+        "cueva",
+        "cochera",
+        "patio",
+        "gimnasio",
+        "dormitorio",
+        "sala",
+        "escaleras",
+        "balcón",
+        "primer piso",
+        "segundo piso"
       ]
     },
     {
@@ -232972,7 +234186,23 @@
         "jaguar",
         "venado",
         "vaca",
-        "mariposa"
+        "mariposa",
+        "león",
+        "pájaro",
+        "jirafa",
+        "elefante",
+        "cebra",
+        "koala",
+        "panda",
+        "serpiente",
+        "cocodrilo",
+        "tortuga",
+        "pez",
+        "pingüino",
+        "rana",
+        "mariquita",
+        "mosca",
+        "saltamontes"
       ]
     },
     {
@@ -232986,7 +234216,10 @@
         "recoger basura",
         "botar basura",
         "contaminar el agua",
-        "cortar árboles"
+        "cortar árboles",
+        "sembrar",
+        "reciclar",
+        "reutilizar"
       ]
     },
     {
@@ -233002,7 +234235,12 @@
         "Manuel",
         "Marta",
         "niño",
-        "niña"
+        "niña",
+        "Marcos",
+        "niños",
+        "niñas",
+        "señora",
+        "señor"
       ]
     },
     {
@@ -233014,7 +234252,31 @@
         "frutas",
         "verduras",
         "zanahoria",
-        "sopa"
+        "sopa",
+        "agua",
+        "fresco",
+        "cereal",
+        "galletas",
+        "pan",
+        "arroz",
+        "frijoles",
+        "carne",
+        "huevos",
+        "pepino",
+        "naranja",
+        "manzana",
+        "sandía",
+        "banana",
+        "uvas",
+        "fresas",
+        "peras",
+        "melocotón",
+        "lechuga",
+        "chocolate",
+        "confite",
+        "espagueti",
+        "pizza",
+        "barra"
       ]
     },
     {
@@ -233027,7 +234289,13 @@
         "barco",
         "avión",
         "autobús",
-        "cohete"
+        "cohete",
+        "camión",
+        "patineta",
+        "monopatín",
+        "caminar",
+        "tren",
+        "taxi"
       ]
     },
     {
@@ -233039,7 +234307,24 @@
         "mesa",
         "silla",
         "sofá",
-        "sombrilla"
+        "sombrilla",
+        "refrigeradora",
+        "lavadora",
+        "estufa",
+        "servicio sanitario",
+        "lavamanos",
+        "ducha",
+        "puerta",
+        "cochera",
+        "patio",
+        "gimnasio",
+        "dormitorio",
+        "sala",
+        "escaleras",
+        "balcón",
+        "portón",
+        "primer piso",
+        "segundo piso"
       ]
     },
     {
@@ -233051,7 +234336,10 @@
         "juguetes",
         "columpio",
         "tobogán",
-        "globos"
+        "globos",
+        "bloques",
+        "trampolín",
+        "rompecabezas"
       ]
     },
     {
@@ -233062,12 +234350,14 @@
         "libro",
         "cuaderno",
         "lee",
-        "escribe"
+        "escribe",
+        "estudiar",
+        "responder"
       ]
     },
     {
       "id": "colores",
-      "label": "Colores y tamaños",
+      "label": "Colores, tamaños y formas",
       "emoji": "🎨",
       "palabras": [
         "amarillo",
@@ -233079,7 +234369,23 @@
         "multicolor",
         "alto",
         "grande",
-        "pequeño"
+        "pequeño",
+        "plano",
+        "ondulado",
+        "gris",
+        "blanco",
+        "marrón",
+        "rosado",
+        "mediano",
+        "corto",
+        "largo",
+        "bajo",
+        "gordo",
+        "delgado",
+        "circular",
+        "cuadrado",
+        "rectangular",
+        "triangular"
       ]
     },
     {
@@ -233101,7 +234407,21 @@
         "recoger basura",
         "botar basura",
         "contaminar el agua",
-        "cortar árboles"
+        "cortar árboles",
+        "sembrar",
+        "recoger",
+        "estudiar",
+        "cierra",
+        "sentarse",
+        "pararse",
+        "subir",
+        "bajar",
+        "responder",
+        "pensar",
+        "tomar",
+        "reciclar",
+        "reutilizar",
+        "caminar"
       ]
     },
     {
@@ -233111,7 +234431,10 @@
       "palabras": [
         "al lado",
         "encima",
-        "debajo"
+        "debajo",
+        "al frente",
+        "detrás",
+        "dentro"
       ]
     },
     {
@@ -233121,7 +234444,29 @@
       "palabras": [
         "caluroso",
         "lluvioso",
-        "día lluvioso"
+        "día lluvioso",
+        "día",
+        "soleado",
+        "nevado",
+        "nublado"
+      ]
+    },
+    {
+      "id": "generales",
+      "label": "Día y noche",
+      "emoji": "🌙",
+      "palabras": [
+        "día",
+        "noche"
+      ]
+    },
+    {
+      "id": "bebidas",
+      "label": "Bebidas",
+      "emoji": "🥤",
+      "palabras": [
+        "agua",
+        "fresco"
       ]
     }
   ]

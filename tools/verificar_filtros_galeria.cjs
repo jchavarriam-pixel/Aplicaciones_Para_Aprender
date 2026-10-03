@@ -1,13 +1,14 @@
 const assert=require('node:assert/strict'),path=require('node:path'),fs=require('node:fs');
 const {pathToFileURL}=require('node:url');const {chromium}=require('playwright');
+const db=JSON.parse(fs.readFileSync(path.resolve(__dirname,'../base_oraciones.json'),'utf8'));
 (async()=>{const browser=await chromium.launch({channel:'chrome',headless:true});try{
  const page=await browser.newPage({viewport:{width:1280,height:900}}),errors=[];
  page.on('pageerror',e=>errors.push(e.message));await page.route('https://fonts.googleapis.com/**',r=>r.abort());
  const url=pathToFileURL(path.resolve(__dirname,'../generador-oraciones.html')).href;
  await page.goto(url);await page.waitForFunction(()=>baseLista);
  await page.locator('#categoryOptions input[value="animales"]').check();
- await page.locator('#galleryBtn').click();assert.equal(await page.locator('#galleryCategoryOptions input').count(),16);
- assert.equal(await page.locator('.gallery-card').count(),103);
+ await page.locator('#galleryBtn').click();assert.equal(await page.locator('#galleryCategoryOptions input').count(),db.categorias.length+1);
+ assert.equal(await page.locator('.gallery-card').count(),Object.keys(db.imagenes).length);
  const tested=await page.evaluate(()=>{
   let tested=0;
   for(const c of CATEGORIES){galleryCategories=new Set([c.id]);renderImageGallery();
@@ -30,7 +31,7 @@ const {pathToFileURL}=require('node:url');const {chromium}=require('playwright')
  for(const id of ['relieve','lugares'])assert.equal(await page.locator(`#galleryCategoryOptions input[value="${id}"]`).isChecked(),true);
  await page.locator('#galleryCategoryOptions input[value="relieve"]').uncheck();await page.locator('#galleryCategoryOptions input[value="lugares"]').uncheck();
  assert.equal(await page.locator('.gallery-card').count(),0);assert.match(await page.locator('#galleryCount').textContent(),/Selecciona/);
- await page.locator('#galleryCategoryOptions input[value="*"]').check();assert.equal(await page.locator('.gallery-card').count(),103);
+ await page.locator('#galleryCategoryOptions input[value="*"]').check();assert.equal(await page.locator('.gallery-card').count(),Object.keys(db.imagenes).length);
  await page.setViewportSize({width:390,height:844});await page.locator('#galleryCategoryOptions input[value="relieve"]').check();
  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth));
  if(qa)await page.screenshot({path:path.join(qa,'galeria-telefono.png'),fullPage:true});
