@@ -60,6 +60,19 @@ const {chromium}=require('playwright');
   assert.equal(await page.locator('.celebration-caption').textContent(),'¡Bravo, Marta!');
   if(qa){await page.waitForTimeout(1000);await page.screenshot({path:path.join(qa,'medalla-telefono.png')});}
   await page.waitForFunction(()=>!document.querySelector('.celebration-stage'),{},{timeout:5000});
+  for(const viewport of [{width:768,height:1024},{width:1024,height:768}]){
+   await page.setViewportSize(viewport);
+   await page.evaluate(()=>{siguienteCelebracion=0;});
+   for(const id of ids){
+    assert.equal(await page.evaluate(()=>triggerCelebration()),id);
+    assert.equal(await page.locator('.celebration-stage.is-lite').count(),1);
+    assert.equal(await page.locator('.celebration-scenery svg').count(),1);
+    assert.ok(await page.locator('.celebration-piece').count()<=110);
+    if(['fuegos','confeti'].includes(id))assert.ok(await page.locator('.celebration-grand-title').evaluate(el=>el.scrollWidth<window.innerWidth*.95));
+    if(qa&&['cohete','jardin'].includes(id)){await page.waitForTimeout(1300);await page.screenshot({path:path.join(qa,`${id}-tableta-${viewport.width}.png`)});}
+    await page.evaluate(()=>clearCelebration());
+   }
+  }
   const blocked=await browser.newPage({reducedMotion:'reduce'});
   await blocked.addInitScript(()=>{Storage.prototype.getItem=()=>{throw Error('Bloqueado');};Storage.prototype.setItem=()=>{throw Error('Bloqueado');};});
   await blocked.route('https://fonts.googleapis.com/**',r=>r.abort());

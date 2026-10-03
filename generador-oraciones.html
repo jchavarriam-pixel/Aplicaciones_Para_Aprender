@@ -359,6 +359,42 @@ body.device-phone.orient-portrait .actions{grid-template-columns:repeat(2,minmax
 @keyframes celebrationMedal{0%{opacity:0;transform:translate(-50%,-50%) scale(.2) rotateY(180deg)}25%{opacity:1;transform:translate(-50%,-50%) scale(1.12) rotateY(0)}45%,85%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(-5deg)}100%{opacity:0;transform:translate(-50%,-50%) scale(.9) rotate(5deg)}}
 @keyframes celebrationRays{to{transform:rotate(360deg)}}
 
+
+/* Gran final: estelas de luz, cañones de confeti y emblemas con profundidad. */
+.celebration-spark{width:38px;height:6px;border-radius:999px;background:linear-gradient(90deg,transparent,var(--color) 40%,#fff);box-shadow:0 0 16px var(--color),0 0 28px var(--color);transform-origin:center}
+.celebration-spark:nth-child(3n){background:var(--color);filter:drop-shadow(0 0 8px var(--color));width:26px;height:26px}
+.celebration-cannon{width:17px;height:24px;border-radius:3px;background:var(--color);animation-name:celebrationCannon;animation-timing-function:cubic-bezier(.2,.65,.3,1)}
+.celebration-cannon:nth-child(3n){border-radius:50%;width:20px;height:20px}
+.celebration-cannon:nth-child(5n){clip-path:polygon(50% 0,61% 35%,98% 35%,68% 58%,79% 94%,50% 72%,21% 94%,32% 58%,2% 35%,39% 35%);width:29px;height:29px}
+.celebration-grand-title{font-family:'Nunito',sans-serif;font-size:clamp(66px,13vw,160px);font-weight:900;color:#fff;white-space:nowrap;text-shadow:0 5px 0 #7c3aed,0 10px 0 #4c1d95,0 0 45px #e9d5ff;letter-spacing:.015em;animation:celebrationGrand 3.9s both;z-index:2}
+.celebration-stage[data-celebration="confeti"]{background:radial-gradient(ellipse at 50% 35%,#fdf4fff5,#f9a8d4e8,#a78bfaee)}
+.celebration-medal{filter:drop-shadow(0 20px 18px #92400e44)}
+.celebration-medal::after{content:'✦';position:absolute;right:-15%;top:-10%;font-size:clamp(50px,10vw,90px);color:#fff;filter:drop-shadow(0 0 16px #fef08a);animation:celebrationShine 3.9s both}
+.celebration-stage.is-reduced .celebration-medal::after{animation:none}
+@keyframes celebrationBurst{0%{transform:translate(0,0) rotate(var(--angle)) scale(.15);opacity:0}10%{opacity:1}65%{opacity:1;transform:translate(calc(var(--dx)*.8),calc(var(--dy)*.8)) rotate(var(--angle)) scale(1)}100%{transform:translate(var(--dx),var(--dy)) rotate(var(--angle)) scale(.2);opacity:0}}
+@keyframes celebrationCannon{0%{opacity:0;transform:translate(0,0) rotate(0)}8%{opacity:1}40%{opacity:1;transform:translate(calc(var(--dx)*.55),var(--dy)) rotate(240deg)}85%{opacity:1}100%{opacity:0;transform:translate(var(--dx),calc(var(--dy) + 85vh)) rotate(var(--spin))}}
+@keyframes celebrationGrand{0%{opacity:0;transform:translate(-50%,-50%) scale(.1) rotate(-15deg)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.15) rotate(3deg)}35%{transform:translate(-50%,-50%) scale(.95) rotate(-2deg)}50%,85%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.1)}}
+@keyframes celebrationShine{0%,15%{opacity:0;transform:scale(.2) rotate(0)}35%,65%{opacity:1;transform:scale(1.1) rotate(90deg)}100%{opacity:0;transform:scale(.3) rotate(180deg)}}
+
+
+/* Escenarios vectoriales ligeros: un fondo estático y protagonistas animados. */
+.celebration-scenery{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.celebration-scenery svg{display:block;width:100%;height:100%}
+.celebration-stage[data-celebration="globos"]{background:linear-gradient(#7dd3fc,#e0f2fe 65%,#bbf7d0)}
+.celebration-stage[data-celebration="confeti"]{background:radial-gradient(ellipse at 50% 30%,#fce7f3,#a78bfa)}
+.celebration-stage[data-celebration="burbujas"]{background:linear-gradient(#38bdf8,#0369a1 65%,#172554)}
+.celebration-stage[data-celebration="globos"] .celebration-balloon{z-index:1}
+.celebration-stage[data-celebration="arcoiris"] .celebration-rainbow{top:34%}
+.celebration-stage[data-celebration="jardin"] .celebration-flower{bottom:7%}
+.celebration-stage[data-celebration="medalla"] .celebration-medal{top:31%}
+.celebration-stage .celebration-caption{z-index:3;top:62%;max-width:88vw;font-size:clamp(28px,4.5vw,56px)}
+.celebration-stage.is-lite .celebration-piece{filter:none;will-change:auto}
+.celebration-stage.is-lite .celebration-spark{box-shadow:0 0 8px var(--color)}
+.celebration-stage.is-lite .celebration-bubble{box-shadow:inset -4px -4px 12px #fff5}
+.celebration-stage.is-lite .celebration-medal{box-shadow:0 0 0 8px #fbbf2444,0 0 30px #fffbeb}
+.celebration-stage.is-lite[data-celebration="medalla"]::before{animation:none}
+@media(max-width:1100px){.celebration-stage .celebration-grand-title{font-size:clamp(46px,11vw,112px)}.celebration-hero{font-size:clamp(110px,20vw,190px)}.celebration-rocket{font-size:clamp(135px,25vw,230px)}}
+
 </style>
 <style>
 .topic-help{color:#6b21a8;font-weight:700;line-height:1.5;margin-bottom:14px}
@@ -421,7 +457,9 @@ body.device-phone.orient-portrait .actions{grid-template-columns:repeat(2,minmax
 </div>
 <div class="card">
   <div class="section-title">Imágenes registradas en la base</div>
-  <div class="gallery-count" id="galleryCount">Carga la base para revisar las imágenes.</div>
+  <p class="topic-help" id="galleryTopicsHelp">Elige una o varias categorías para ver sus imágenes. Una imagen puede pertenecer a varios temas. Estos filtros son independientes de los temas de los ejercicios.</p>
+  <div class="topic-grid" id="galleryCategoryOptions" role="group" aria-label="Filtrar imágenes por categoría" aria-describedby="galleryTopicsHelp"></div>
+  <div class="gallery-count" id="galleryCount" role="status" aria-live="polite" style="margin-top:16px">Carga la base para revisar las imágenes.</div>
   <div class="gallery-grid" id="galleryGrid"></div>
 </div>
 </section>
@@ -656,10 +694,34 @@ cargarPreferencias();cargarNombreDesdeIndex(); cargarBaseDeDatos();
 document.querySelectorAll('.level-btn').forEach(btn=>btn.addEventListener('click',()=>{currentLevel=Number(btn.dataset.level);document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b===btn));guardarPreferencias();actualizarDisponibilidad();}));
 if(galleryBtn){galleryBtn.onclick=()=>{renderImageGallery();menu.style.display='none';game.style.display='none';gallery.style.display='block';};}
 document.getElementById('galleryBackBtn').onclick=()=>{gallery.style.display='none';game.style.display='none';menu.style.display='block';};
-function renderImageGallery(){
-  const entries=Object.entries(WORDS||{}).sort((a,b)=>a[0].localeCompare(b[0],'es'));
+let galleryCategories=null;
+const CLAVE_FILTROS_GALERIA='generadorOracionesFiltrosGaleria';
+try{const stored=JSON.parse(localStorage.getItem(CLAVE_FILTROS_GALERIA)||'null');if(Array.isArray(stored)&&stored.every(id=>typeof id==='string'))galleryCategories=new Set(stored);}catch{}
+function categoriasImagen(key){return CATEGORIES.filter(c=>c.palabras.includes(key));}
+function renderGalleryFilters(){
+ if(galleryCategories!==null)galleryCategories=new Set([...galleryCategories].filter(id=>CATEGORIES.some(c=>c.id===id)));
+ const container=document.getElementById('galleryCategoryOptions');container.replaceChildren();
+ [{id:'*',label:'Todas',emoji:'✨'},...CATEGORIES].forEach(c=>{
+  const label=document.createElement('label');label.className='topic-option';
+  const input=document.createElement('input');input.type='checkbox';input.value=c.id;
+  input.checked=c.id==='*'?galleryCategories===null:galleryCategories?.has(c.id)||false;
+  const name=document.createElement('span');name.className='topic-label';name.textContent=(c.emoji||'📌')+' '+c.label;
+  const count=document.createElement('span');count.className='topic-count';count.textContent=Object.keys(WORDS).filter(key=>c.id==='*'||c.palabras.includes(key)).length.toLocaleString('es-CR');
+  input.addEventListener('change',()=>{
+   if(c.id==='*')galleryCategories=input.checked?null:new Set();
+   else{if(galleryCategories===null)galleryCategories=new Set();if(input.checked)galleryCategories.add(c.id);else galleryCategories.delete(c.id);}
+   try{localStorage.setItem(CLAVE_FILTROS_GALERIA,JSON.stringify(galleryCategories===null?null:[...galleryCategories]));}catch{}
+   renderImageGallery(false);
+  });
+  label.append(input,name,count);container.appendChild(label);
+ });
+}
+function renderImageGallery(rebuildFilters=true){
+  if(rebuildFilters)renderGalleryFilters();
+  document.querySelectorAll('#galleryCategoryOptions input').forEach(input=>input.checked=input.value==='*'?galleryCategories===null:galleryCategories?.has(input.value)||false);
+  const entries=Object.entries(WORDS||{}).filter(([key])=>galleryCategories===null||categoriasImagen(key).some(c=>galleryCategories.has(c.id))).sort((a,b)=>a[0].localeCompare(b[0],'es'));
   galleryGrid.innerHTML='';
-  galleryCount.textContent=`Se muestran ${entries.length} imágenes registradas en la base. Si alguna ruta falla, aparecerá marcada como no disponible.`;
+  galleryCount.textContent=entries.length?`Se muestran ${entries.length} de ${Object.keys(WORDS).length} tarjetas. Cada tarjeta indica las categorías a las que pertenece.`:'No hay imágenes para esta selección. Selecciona una categoría o marca Todas.';
   galleryStatus.textContent=entries.length+' imágenes';
   entries.forEach(([key,info])=>{
     const card=document.createElement('div');
@@ -674,6 +736,8 @@ function renderImageGallery(){
     label.textContent=info.label||key;
     card.appendChild(img);
     card.appendChild(label);
+    const categories=document.createElement('div');categories.className='gallery-categories';categories.textContent=categoriasImagen(key).map(c=>c.label).join(' · ');
+    categories.style.cssText='font-size:.78rem;color:#6b21a8;text-align:center;line-height:1.4;margin-top:6px';card.appendChild(categories);
     galleryGrid.appendChild(card);
   });
 }
@@ -834,6 +898,26 @@ function clearCelebration(){
  if(celebrationStage){celebrationStage.remove();celebrationStage=null;}
  if(celebrationAudio){const ctx=celebrationAudio;celebrationAudio=null;ctx.close().catch(()=>{});}
 }
+
+let celebrationLite=false;
+function celebrationCount(count){return celebrationLite?Math.max(1,Math.round(count*.55)):count;}
+function celebrationScenery(type){
+ const cloud='<g fill="#fff" opacity=".88"><ellipse cx="170" cy="145" rx="95" ry="32"/><circle cx="130" cy="125" r="35"/><circle cx="180" cy="112" r="48"/><ellipse cx="820" cy="180" rx="95" ry="32"/><circle cx="785" cy="163" r="34"/><circle cx="832" cy="150" r="43"/></g>';
+ const hills='<path fill="#86d77b" d="M0 630 Q180 450 420 630 Q730 420 1000 610 V800 H0Z"/><path fill="#4eaf75" d="M0 690 Q250 540 520 690 Q780 555 1000 675 V800 H0Z"/>';
+ const scenes={
+  fuegos:'<path fill="#131337" d="M0 680H60V575H120V645H165V535H225V675H270V600H350V540H405V655H465V585H520V675H585V565H635V625H710V515H775V635H830V585H900V660H950V560H1000V800H0Z"/><g fill="#fef08a" opacity=".85">'+Array.from({length:18},(_,i)=>'<rect x="'+(75+i*49)+'" y="'+(680-i%3*34)+'" width="8" height="13" rx="2"/>').join('')+'</g><path fill="#37305c" d="M0 730H1000V800H0Z"/>',
+  globos:cloud+hills+'<g transform="translate(770 500)"><path fill="#fff7ed" d="M0 130L70 0L140 130Z"/><path fill="#f472b6" d="M20 130L70 0L90 130Z"/><path fill="#fbbf24" d="M-5 135H145V150H-5Z"/><rect x="12" y="150" width="116" height="60" rx="8" fill="#fff7ed"/></g>',
+  arcoiris:cloud+hills+'<path fill="#38bdf8" d="M500 640Q420 700 510 735L660 800H370L425 735Q355 700 450 640Z"/>',
+  cohete:'<g transform="translate(825 165) rotate(-20)"><ellipse rx="125" ry="32" fill="none" stroke="#c4b5fd" stroke-width="15"/><circle r="65" fill="#a78bfa"/><path d="M-55-28Q5 0 60 18" fill="none" stroke="#ddd6fe" stroke-width="18" opacity=".5"/><ellipse rx="125" ry="32" fill="none" stroke="#ddd6fe" stroke-width="8" stroke-dasharray="180 400"/></g><circle cx="150" cy="240" r="44" fill="#fb923c"/><circle cx="135" cy="230" r="10" fill="#fdba74"/><path fill="#a5b4fc" d="M0 760Q500 520 1000 760V800H0Z"/><g fill="#818cf8"><ellipse cx="230" cy="746" rx="55" ry="13"/><ellipse cx="780" cy="750" rx="65" ry="16"/></g>',
+  jardin:cloud+hills+'<path fill="#398558" d="M0 750Q250 710 500 750Q750 710 1000 750V800H0Z"/><g fill="#f472b6"><circle cx="95" cy="730" r="12"/><circle cx="660" cy="730" r="10"/><circle cx="890" cy="750" r="15"/></g>',
+  medalla:'<g stroke="#fef3c7" stroke-width="5"><rect x="355" y="610" width="290" height="125" rx="14" fill="#fbbf24"/><rect x="150" y="660" width="205" height="75" rx="12" fill="#fde68a"/><rect x="645" y="680" width="205" height="55" rx="12" fill="#fcd34d"/></g><path fill="#fff7ed" opacity=".5" d="M0 745H1000V800H0Z"/>',
+  burbujas:'<path fill="#0e7490" opacity=".6" d="M0 0L200 0L480 680L350 680Z M550 0L710 0L940 680L850 680Z"/><path fill="#f9d89c" d="M0 740Q270 680 500 740Q800 680 1000 740V800H0Z"/><g fill="none" stroke-linecap="round"><path stroke="#f472b6" stroke-width="16" d="M130 740V635M130 695L90 665M130 680L170 645M840 740V650M840 690L880 655"/><path stroke="#4ade80" stroke-width="12" d="M55 740Q95 695 60 635M930 740Q900 680 945 620"/></g><g fill="#fbbf24"><path d="M690 290Q725 255 770 290Q725 325 690 290L675 270V310Z"/><circle cx="750" cy="285" r="4" fill="#172554"/></g>',
+  confeti:'<path fill="#7c3aed" d="M0 0H180Q105 285 0 550Z M1000 0H820Q895 285 1000 550Z"/><path fill="#a855f7" d="M0 0H110Q65 240 0 380Z M1000 0H890Q935 240 1000 380Z"/><path fill="#fbbf24" d="M0 0H1000V35H0Z"/><path fill="#5b21b6" d="M0 760H1000V800H0Z"/><g fill="#fff" opacity=".25"><path d="M200 35L410 35L650 735L350 735Z"/><path d="M650 35L800 35L670 735L460 735Z"/></g>'
+ };
+ if(window.innerHeight>window.innerWidth)scenes.cohete=scenes.cohete.replace('translate(825 165)','translate(650 165)').replace('cx="150"','cx="350"').replace('cx="135"','cx="335"');
+ const layer=document.createElement('div');layer.className='celebration-scenery';layer.innerHTML='<svg viewBox="0 0 1000 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">'+scenes[type]+'</svg>';if(type==='confeti')layer.querySelector('svg').setAttribute('preserveAspectRatio','none');celebrationStage.appendChild(layer);
+}
+
 function celebrationPiece(className,text,x,y,duration=3.8,delay=0,vars={}){
  const el=document.createElement('div');el.className='celebration-piece '+className;el.textContent=text;
  el.style.left=x+'%';el.style.top=y+'%';el.style.animationDuration=duration+'s';el.style.animationDelay=delay+'s';
@@ -845,28 +929,36 @@ function celebrationHero(symbol,className=''){
 }
 function celebrationCaption(text){const el=document.createElement('div');el.className='celebration-caption';el.textContent=text;celebrationStage.appendChild(el);}
 function celebrationBurst(x,y,count=18,delay=0){
- for(let i=0;i<count;i++){const a=i/count*Math.PI*2,r=rand(100,Math.min(280,window.innerWidth*.45));celebrationPiece('celebration-spark','',x,y,2,delay,{'--color':COLORES_CELEBRACION[i%6],'--dx':Math.cos(a)*r+'px','--dy':Math.sin(a)*r+'px'});}
+ count=celebrationCount(count);for(let i=0;i<count;i++){const a=i/count*Math.PI*2,r=rand(100,Math.min(280,window.innerWidth*.45));celebrationPiece('celebration-spark','',x,y,2,delay,{'--color':COLORES_CELEBRACION[i%6],'--dx':Math.cos(a)*r+'px','--dy':Math.sin(a)*r+'px','--angle':a*180/Math.PI+'deg'});}
 }
 function celebrationConfetti(count=50){
- for(let i=0;i<count;i++)celebrationPiece('celebration-confetti','',rand(0,100),-5,rand(2.7,3.4),rand(0,.5),{'--color':COLORES_CELEBRACION[i%6],'--dx':rand(-100,100)+'px','--spin':rand(-700,700)+'deg'});
+ for(let i=0;i<celebrationCount(count);i++)celebrationPiece('celebration-confetti','',rand(0,100),-5,rand(2.7,3.4),rand(0,.5),{'--color':COLORES_CELEBRACION[i%6],'--dx':rand(-100,100)+'px','--spin':rand(-700,700)+'deg'});
 }
 
 function celebrationFragments(parent,count){
- for(let i=0;i<count;i++){const a=i/count*Math.PI*2,el=document.createElement('b');el.className='celebration-pop-fragment';el.style.setProperty('--color',COLORES_CELEBRACION[i%6]);el.style.setProperty('--px',Math.cos(a)*rand(50,115)+'px');el.style.setProperty('--py',Math.sin(a)*rand(50,115)+'px');parent.appendChild(el);}
+ count=celebrationCount(count);for(let i=0;i<count;i++){const a=i/count*Math.PI*2,el=document.createElement('b');el.className='celebration-pop-fragment';el.style.setProperty('--color',COLORES_CELEBRACION[i%6]);el.style.setProperty('--px',Math.cos(a)*rand(50,115)+'px');el.style.setProperty('--py',Math.sin(a)*rand(50,115)+'px');parent.appendChild(el);}
+}
+
+
+function celebrationCannons(){
+ for(const side of [0,100])for(let i=0;i<celebrationCount(32);i++){
+  const direction=side===0?1:-1;
+  celebrationPiece('celebration-cannon','',side,85,rand(3,3.5),rand(0,.3),{'--color':COLORES_CELEBRACION[i%6],'--dx':direction*rand(window.innerWidth*.25,window.innerWidth*.95)+'px','--dy':-rand(window.innerHeight*.5,window.innerHeight*.85)+'px','--spin':rand(-900,900)+'deg'});
+ }
 }
 
 function triggerCelebration(){
  clearCelebration();
  const type=CELEBRACIONES[siguienteCelebracion];siguienteCelebracion=(siguienteCelebracion+1)%CELEBRACIONES.length;
  try{localStorage.setItem(CLAVE_CELEBRACION,String(siguienteCelebracion));}catch{}
- celebrationStage=document.createElement('div');celebrationStage.className='celebration-stage';celebrationStage.dataset.celebration=type.id;celebrationStage.setAttribute('aria-hidden','true');document.body.appendChild(celebrationStage);
+ celebrationStage=document.createElement('div');celebrationStage.className='celebration-stage';celebrationStage.dataset.celebration=type.id;celebrationStage.setAttribute('aria-hidden','true');document.body.appendChild(celebrationStage);celebrationLite=window.innerWidth<=1100||window.matchMedia('(pointer: coarse)').matches;celebrationStage.classList.toggle('is-lite',celebrationLite);celebrationScenery(type.id);
  if(reducedCelebration){celebrationStage.classList.add('is-reduced');celebrationHero(type.symbol);celebrationCaption(type.id==='medalla'?'¡Bravo, '+(studentName||'campeón')+'!':'¡Lo lograste!');}
  else switch(type.id){
   case 'fuegos':
-   for(let i=0;i<5;i++){const x=rand(20,80),y=rand(15,50);celebrationBurst(x,y,32,i*.35);celebrationPiece('celebration-ring','',x,y,2,i*.35,{'--color':COLORES_CELEBRACION[i%6]});}celebrationCaption('¡Extraordinario!');
+   for(let i=0;i<5;i++){const x=rand(20,80),y=rand(15,50);celebrationBurst(x,y,32,i*.35);celebrationPiece('celebration-ring','',x,y,2,i*.35,{'--color':COLORES_CELEBRACION[i%6]});}celebrationHero('¡GENIAL!','celebration-grand-title');celebrationCaption('¡Extraordinario!');
    break;
   case 'globos':
-   for(let i=0;i<10;i++){const balloon=celebrationPiece('celebration-balloon','',rand(3,90),0,3.3,i*.045,{'--dx':rand(-35,35)+'px'});const body=document.createElement('span');body.textContent='🎈';body.style.filter='hue-rotate('+(i*47)+'deg)';const pop=document.createElement('i');pop.textContent='✨';balloon.append(body,pop);celebrationFragments(balloon,7);}celebrationCaption('¡Muy bien!');
+   for(let i=0;i<(celebrationLite?7:10);i++){const balloon=celebrationPiece('celebration-balloon','',rand(3,90),0,3.3,i*.045,{'--dx':rand(-35,35)+'px'});const body=document.createElement('span');body.textContent='🎈';body.style.filter='hue-rotate('+(i*47)+'deg)';const pop=document.createElement('i');pop.textContent='✨';balloon.append(body,pop);celebrationFragments(balloon,7);}celebrationCaption('¡Muy bien!');
    break;
   case 'arcoiris':{
    const rainbow=celebrationHero('','celebration-rainbow');
@@ -882,9 +974,9 @@ function triggerCelebration(){
   case 'medalla':
    celebrationHero('🏅','celebration-medal');celebrationCaption('¡Bravo, '+(studentName||'campeón')+'!');celebrationConfetti(65);break;
   case 'burbujas':
-   for(let i=0;i<18;i++){const bubble=celebrationPiece('celebration-bubble','',rand(2,90),0,3.4,i*.02,{'--size':rand(55,110)+'px','--color':COLORES_CELEBRACION[i%6]+'55','--dx':rand(-30,30)+'px'});const star=document.createElement('span');star.textContent='⭐';bubble.appendChild(star);celebrationFragments(bubble,6);}celebrationCaption('¡Fantástico!');break;
+   for(let i=0;i<(celebrationLite?12:18);i++){const bubble=celebrationPiece('celebration-bubble','',rand(2,90),0,3.4,i*.02,{'--size':rand(55,110)+'px','--color':COLORES_CELEBRACION[i%6]+'55','--dx':rand(-30,30)+'px'});const star=document.createElement('span');star.textContent='⭐';bubble.appendChild(star);celebrationFragments(bubble,6);}celebrationCaption('¡Fantástico!');break;
   case 'confeti':
-   celebrationConfetti(120);celebrationHero('🎉');celebrationCaption('¡Lo lograste!');break;
+   celebrationConfetti(120);celebrationCannons();celebrationHero('¡BRAVO!','celebration-grand-title');celebrationCaption('¡Lo lograste!');break;
  }
  if(celebrationSound)playCelebrationSound();
  celebrationTimer=setTimeout(clearCelebration,4100);
