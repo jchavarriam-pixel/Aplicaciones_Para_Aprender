@@ -14,7 +14,7 @@ async function main(){const b=await chromium.launch({channel:'chrome',headless:t
   const opposite=text.replace('de '+time+' .','de '+(time==='día'?'noche':'día')+' .');if(respuestaValida(opposite.split(' '),row,true))throw Error('Cambio de día a noche');rejected++;
  }
  }
- currentLevel=6;current=SENTENCES.find(r=>r.words.join(' ')==='la niña observa la montaña con el niño desde el parque cerca del árbol de día .');
+ currentLevel=6;current=SENTENCES.find(r=>r.words.join(' ')==='la niña observa la montaña con el niño desde el árbol cerca del parque de día .');
  if(!current)throw Error('Falta ejercicio de la captura');leerRespuestaYCelebrar=()=>{};loadCurrent();
  const answer='la niña observa la montaña con el niño desde el árbol cerca del parque en el día .';
  for(const w of answer.split(' ')){const i=bankItems.findIndex(it=>it.base===w);if(i>=0)moveItem('bank',i,'sentence',sentenceItems.length);else{const f=functionItems.findIndex(it=>it.base===w);if(f<0)throw Error('Falta '+w);moveItem('function',f,'sentence',sentenceItems.length);}}

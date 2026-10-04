@@ -2,6 +2,7 @@
 import json,re,time
 from collections import Counter
 from pathlib import Path
+from revisar_orden_imagenes_pistas import alinear_fila
 from reglas_naturalidad import motivo_descarte,HUMANOS
 from ampliar_oraciones_topicos import NOUNS,canonical
 root=Path(__file__).resolve().parents[1]
@@ -38,7 +39,7 @@ for row in b['oraciones']:
   row['words']=new.split();row.pop('validAnswers',None);updated+=1
  kept.append(row)
 b['oraciones']=kept
-con=set(b['conectores_reutilizables']);seen={(r['level'],canonical(r['words'])) for r in kept};added=[]
+con=set(b['conectores_reutilizables']);seen={(r['level'],canonical(words)) for r in kept for words in [r['words'],*r.get('validAnswers',[])]};added=[]
 def add(level,pics,text):
  pics=list(dict.fromkeys(pics))
  if level==6 and len(text.split())<15:
@@ -90,7 +91,7 @@ for p,s in people:
  for place in ['montaña','volcán','costa','valle','llanura','playa','meseta','acantilados','golfo','península','colina','cueva','lago','catarata','río','bosque']:
   series([p,'ver',place],f'{s} observa {ph(place)}')
   series([p,'ver',place,'día'],f'{s} observa {ph(place)} durante el día')
-  add(6,[p,'ver',place,'niño' if p!='niño' else 'niña','árbol','parque','día'],f'{s} observa {ph(place)} con {"el niño" if p!="niño" else "la niña"} desde el parque cerca del árbol de día')
+  add(6,[p,'ver',place,'niño' if p!='niño' else 'niña','árbol','parque','día'],f'{s} observa {ph(place)} con {"el niño" if p!="niño" else "la niña"} desde el árbol cerca del parque de día')
  for item in ['camisa','pantalón','blusa','enagua','zapatos','calcetines','gorra','sombrero','bufanda']:
   series([p,item,'casa'],f'{s} usa {ph(item)} en la casa')
   add(6,[p,item,'caminar','parque','niño' if p!='niño' else 'niña','día'],f'{s} usa {ph(item)} y camina por el parque con {"el niño" if p!="niño" else "la niña"} durante el día')
@@ -162,6 +163,7 @@ series(['casa','al frente'],'la casa está al frente')
 # Mantener las respuestas principales, metadatos y banco integrado sincronizados.
 unique={}
 for r in b['oraciones']:
+ alinear_fila(r)
  key=(r['level'],canonical(r['words']))
  if key in unique:
   for ans in r.get('validAnswers',[]):

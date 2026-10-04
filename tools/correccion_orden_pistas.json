@@ -1,0 +1,834 @@
+[
+  {
+    "before": "Ana observa la montaña con el niño desde el parque cerca del árbol de día .",
+    "after": "Ana observa la montaña con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Ana",
+      "ver",
+      "montaña",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Ana observa el volcán con el niño desde el parque cerca del árbol de día .",
+    "after": "Ana observa el volcán con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Ana",
+      "ver",
+      "volcán",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Ana observa la costa con el niño desde el parque cerca del árbol de día .",
+    "after": "Ana observa la costa con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Ana",
+      "ver",
+      "costa",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Ana observa el valle con el niño desde el parque cerca del árbol de día .",
+    "after": "Ana observa el valle con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Ana",
+      "ver",
+      "valle",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Ana observa la llanura con el niño desde el parque cerca del árbol de día .",
+    "after": "Ana observa la llanura con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Ana",
+      "ver",
+      "llanura",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Ana observa la playa con el niño desde el parque cerca del árbol de día .",
+    "after": "Ana observa la playa con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Ana",
+      "ver",
+      "playa",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Ana observa la meseta con el niño desde el parque cerca del árbol de día .",
+    "after": "Ana observa la meseta con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Ana",
+      "ver",
+      "meseta",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Ana observa los acantilados con el niño desde el parque cerca del árbol de día .",
+    "after": "Ana observa los acantilados con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Ana",
+      "ver",
+      "acantilados",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Ana observa el golfo con el niño desde el parque cerca del árbol de día .",
+    "after": "Ana observa el golfo con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Ana",
+      "ver",
+      "golfo",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Ana observa la península con el niño desde el parque cerca del árbol de día .",
+    "after": "Ana observa la península con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Ana",
+      "ver",
+      "península",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Ana observa la colina con el niño desde el parque cerca del árbol de día .",
+    "after": "Ana observa la colina con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Ana",
+      "ver",
+      "colina",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Ana observa la cueva con el niño desde el parque cerca del árbol de día .",
+    "after": "Ana observa la cueva con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Ana",
+      "ver",
+      "cueva",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Ana observa el lago con el niño desde el parque cerca del árbol de día .",
+    "after": "Ana observa el lago con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Ana",
+      "ver",
+      "lago",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Ana observa la catarata con el niño desde el parque cerca del árbol de día .",
+    "after": "Ana observa la catarata con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Ana",
+      "ver",
+      "catarata",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Ana observa el río con el niño desde el parque cerca del árbol de día .",
+    "after": "Ana observa el río con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Ana",
+      "ver",
+      "río",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Ana observa el bosque con el niño desde el parque cerca del árbol de día .",
+    "after": "Ana observa el bosque con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Ana",
+      "ver",
+      "bosque",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Marcos observa la montaña con el niño desde el parque cerca del árbol de día .",
+    "after": "Marcos observa la montaña con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Marcos",
+      "ver",
+      "montaña",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Marcos observa el volcán con el niño desde el parque cerca del árbol de día .",
+    "after": "Marcos observa el volcán con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Marcos",
+      "ver",
+      "volcán",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Marcos observa la costa con el niño desde el parque cerca del árbol de día .",
+    "after": "Marcos observa la costa con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Marcos",
+      "ver",
+      "costa",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Marcos observa el valle con el niño desde el parque cerca del árbol de día .",
+    "after": "Marcos observa el valle con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Marcos",
+      "ver",
+      "valle",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Marcos observa la llanura con el niño desde el parque cerca del árbol de día .",
+    "after": "Marcos observa la llanura con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Marcos",
+      "ver",
+      "llanura",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Marcos observa la playa con el niño desde el parque cerca del árbol de día .",
+    "after": "Marcos observa la playa con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Marcos",
+      "ver",
+      "playa",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Marcos observa la meseta con el niño desde el parque cerca del árbol de día .",
+    "after": "Marcos observa la meseta con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Marcos",
+      "ver",
+      "meseta",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Marcos observa los acantilados con el niño desde el parque cerca del árbol de día .",
+    "after": "Marcos observa los acantilados con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Marcos",
+      "ver",
+      "acantilados",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Marcos observa el golfo con el niño desde el parque cerca del árbol de día .",
+    "after": "Marcos observa el golfo con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Marcos",
+      "ver",
+      "golfo",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Marcos observa la península con el niño desde el parque cerca del árbol de día .",
+    "after": "Marcos observa la península con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Marcos",
+      "ver",
+      "península",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Marcos observa la colina con el niño desde el parque cerca del árbol de día .",
+    "after": "Marcos observa la colina con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Marcos",
+      "ver",
+      "colina",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Marcos observa la cueva con el niño desde el parque cerca del árbol de día .",
+    "after": "Marcos observa la cueva con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Marcos",
+      "ver",
+      "cueva",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Marcos observa el lago con el niño desde el parque cerca del árbol de día .",
+    "after": "Marcos observa el lago con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Marcos",
+      "ver",
+      "lago",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Marcos observa la catarata con el niño desde el parque cerca del árbol de día .",
+    "after": "Marcos observa la catarata con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Marcos",
+      "ver",
+      "catarata",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Marcos observa el río con el niño desde el parque cerca del árbol de día .",
+    "after": "Marcos observa el río con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Marcos",
+      "ver",
+      "río",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "Marcos observa el bosque con el niño desde el parque cerca del árbol de día .",
+    "after": "Marcos observa el bosque con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "Marcos",
+      "ver",
+      "bosque",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "el niño observa la montaña con la niña desde el parque cerca del árbol de día .",
+    "after": "el niño observa la montaña con la niña desde el árbol cerca del parque de día .",
+    "pics": [
+      "niño",
+      "ver",
+      "montaña",
+      "niña",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "el niño observa el volcán con la niña desde el parque cerca del árbol de día .",
+    "after": "el niño observa el volcán con la niña desde el árbol cerca del parque de día .",
+    "pics": [
+      "niño",
+      "ver",
+      "volcán",
+      "niña",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "el niño observa la costa con la niña desde el parque cerca del árbol de día .",
+    "after": "el niño observa la costa con la niña desde el árbol cerca del parque de día .",
+    "pics": [
+      "niño",
+      "ver",
+      "costa",
+      "niña",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "el niño observa el valle con la niña desde el parque cerca del árbol de día .",
+    "after": "el niño observa el valle con la niña desde el árbol cerca del parque de día .",
+    "pics": [
+      "niño",
+      "ver",
+      "valle",
+      "niña",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "el niño observa la llanura con la niña desde el parque cerca del árbol de día .",
+    "after": "el niño observa la llanura con la niña desde el árbol cerca del parque de día .",
+    "pics": [
+      "niño",
+      "ver",
+      "llanura",
+      "niña",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "el niño observa la playa con la niña desde el parque cerca del árbol de día .",
+    "after": "el niño observa la playa con la niña desde el árbol cerca del parque de día .",
+    "pics": [
+      "niño",
+      "ver",
+      "playa",
+      "niña",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "el niño observa la meseta con la niña desde el parque cerca del árbol de día .",
+    "after": "el niño observa la meseta con la niña desde el árbol cerca del parque de día .",
+    "pics": [
+      "niño",
+      "ver",
+      "meseta",
+      "niña",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "el niño observa los acantilados con la niña desde el parque cerca del árbol de día .",
+    "after": "el niño observa los acantilados con la niña desde el árbol cerca del parque de día .",
+    "pics": [
+      "niño",
+      "ver",
+      "acantilados",
+      "niña",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "el niño observa el golfo con la niña desde el parque cerca del árbol de día .",
+    "after": "el niño observa el golfo con la niña desde el árbol cerca del parque de día .",
+    "pics": [
+      "niño",
+      "ver",
+      "golfo",
+      "niña",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "el niño observa la península con la niña desde el parque cerca del árbol de día .",
+    "after": "el niño observa la península con la niña desde el árbol cerca del parque de día .",
+    "pics": [
+      "niño",
+      "ver",
+      "península",
+      "niña",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "el niño observa la colina con la niña desde el parque cerca del árbol de día .",
+    "after": "el niño observa la colina con la niña desde el árbol cerca del parque de día .",
+    "pics": [
+      "niño",
+      "ver",
+      "colina",
+      "niña",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "el niño observa la cueva con la niña desde el parque cerca del árbol de día .",
+    "after": "el niño observa la cueva con la niña desde el árbol cerca del parque de día .",
+    "pics": [
+      "niño",
+      "ver",
+      "cueva",
+      "niña",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "el niño observa el lago con la niña desde el parque cerca del árbol de día .",
+    "after": "el niño observa el lago con la niña desde el árbol cerca del parque de día .",
+    "pics": [
+      "niño",
+      "ver",
+      "lago",
+      "niña",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "el niño observa la catarata con la niña desde el parque cerca del árbol de día .",
+    "after": "el niño observa la catarata con la niña desde el árbol cerca del parque de día .",
+    "pics": [
+      "niño",
+      "ver",
+      "catarata",
+      "niña",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "el niño observa el río con la niña desde el parque cerca del árbol de día .",
+    "after": "el niño observa el río con la niña desde el árbol cerca del parque de día .",
+    "pics": [
+      "niño",
+      "ver",
+      "río",
+      "niña",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "el niño observa el bosque con la niña desde el parque cerca del árbol de día .",
+    "after": "el niño observa el bosque con la niña desde el árbol cerca del parque de día .",
+    "pics": [
+      "niño",
+      "ver",
+      "bosque",
+      "niña",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "la niña observa la montaña con el niño desde el parque cerca del árbol de día .",
+    "after": "la niña observa la montaña con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "niña",
+      "ver",
+      "montaña",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "la niña observa el volcán con el niño desde el parque cerca del árbol de día .",
+    "after": "la niña observa el volcán con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "niña",
+      "ver",
+      "volcán",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "la niña observa la costa con el niño desde el parque cerca del árbol de día .",
+    "after": "la niña observa la costa con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "niña",
+      "ver",
+      "costa",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "la niña observa el valle con el niño desde el parque cerca del árbol de día .",
+    "after": "la niña observa el valle con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "niña",
+      "ver",
+      "valle",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "la niña observa la llanura con el niño desde el parque cerca del árbol de día .",
+    "after": "la niña observa la llanura con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "niña",
+      "ver",
+      "llanura",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "la niña observa la playa con el niño desde el parque cerca del árbol de día .",
+    "after": "la niña observa la playa con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "niña",
+      "ver",
+      "playa",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "la niña observa la meseta con el niño desde el parque cerca del árbol de día .",
+    "after": "la niña observa la meseta con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "niña",
+      "ver",
+      "meseta",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "la niña observa los acantilados con el niño desde el parque cerca del árbol de día .",
+    "after": "la niña observa los acantilados con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "niña",
+      "ver",
+      "acantilados",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "la niña observa el golfo con el niño desde el parque cerca del árbol de día .",
+    "after": "la niña observa el golfo con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "niña",
+      "ver",
+      "golfo",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "la niña observa la península con el niño desde el parque cerca del árbol de día .",
+    "after": "la niña observa la península con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "niña",
+      "ver",
+      "península",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "la niña observa la colina con el niño desde el parque cerca del árbol de día .",
+    "after": "la niña observa la colina con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "niña",
+      "ver",
+      "colina",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "la niña observa la cueva con el niño desde el parque cerca del árbol de día .",
+    "after": "la niña observa la cueva con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "niña",
+      "ver",
+      "cueva",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "la niña observa el lago con el niño desde el parque cerca del árbol de día .",
+    "after": "la niña observa el lago con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "niña",
+      "ver",
+      "lago",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "la niña observa la catarata con el niño desde el parque cerca del árbol de día .",
+    "after": "la niña observa la catarata con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "niña",
+      "ver",
+      "catarata",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "la niña observa el río con el niño desde el parque cerca del árbol de día .",
+    "after": "la niña observa el río con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "niña",
+      "ver",
+      "río",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  },
+  {
+    "before": "la niña observa el bosque con el niño desde el parque cerca del árbol de día .",
+    "after": "la niña observa el bosque con el niño desde el árbol cerca del parque de día .",
+    "pics": [
+      "niña",
+      "ver",
+      "bosque",
+      "niño",
+      "árbol",
+      "parque",
+      "día"
+    ]
+  }
+]

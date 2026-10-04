@@ -3,6 +3,7 @@ import json
 import re
 import time
 from pathlib import Path
+from revisar_orden_imagenes_pistas import alinear_fila
 
 root=Path(__file__).resolve().parents[1]
 base=root/'base_oraciones.json'
@@ -51,6 +52,9 @@ def save(path,text):
             if attempt==2:raise
             time.sleep(.5)
 
+for row in db['oraciones']:
+    alinear_fila(row)
+    if row['level']>=5:row['contentWords']=[w for w in row['words'] if w not in connectors]
 save(base,json.dumps(db,ensure_ascii=False,indent=2)+'\n')
 html=app.read_text(encoding='utf-8')
 html=html.replace("'son','en','con'];", "'son','en','con','por'];",1)

@@ -7,6 +7,7 @@ import json
 import re
 from collections import Counter
 from pathlib import Path
+from revisar_orden_imagenes_pistas import alinear_fila
 from ampliar_oraciones_topicos import NOUNS, canonical
 from reglas_naturalidad import motivo_descarte
 
@@ -59,7 +60,7 @@ def main():
     }.items():
         by_id[key]['palabras'] = list(dict.fromkeys(by_id[key]['palabras'] + words))
     connectors = set(db['conectores_reutilizables'])
-    seen = {(r['level'], canonical(r['words'])) for r in db['oraciones']}
+    seen = {(r['level'], canonical(words)) for r in db['oraciones'] for words in [r['words'],*r.get('validAnswers',[])]}
     generated = []
 
     def phrase(n):
@@ -75,7 +76,7 @@ def main():
         f = kind.startswith('f')
         plural = kind.endswith('p')
         if a in ['grande', 'verde', 'suave', 'marrón', 'gris', 'azul', 'multicolor']:
-            return a + ('es' if a in ['marrón', 'gris', 'azul', 'multicolor'] else 's') if plural else a
+            return ('marrones' if a=='marrón' else a + ('es' if a in ['gris', 'azul', 'multicolor'] else 's')) if plural else a
         if a in ['circular', 'rectangular', 'triangular']:
             return a + ('es' if plural else '')
         stem = a[:-1] if a.endswith('o') else a
@@ -301,6 +302,8 @@ def main():
         sentence([person, 'salta', 'trampolín', 'patio'], f'{subject} {"saltan" if plural else "salta"} en el trampolín en el patio')
 
     for row in db['oraciones']:
+        alinear_fila(row)
+        if row['level']>=5:row['contentWords']=[w for w in row['words'] if w not in connectors]
         row['categorias'] = [c['id'] for c in db['categorias'] if set(c['palabras']) & set(row['pics'])]
     used = {p for row in db['oraciones'] for p in row['pics']}
     assert set(db['imagenes']) <= used, 'Imágenes sin ejercicios: ' + ', '.join(set(db['imagenes']) - used)

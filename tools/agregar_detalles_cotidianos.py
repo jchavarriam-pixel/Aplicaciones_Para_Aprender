@@ -1,6 +1,7 @@
 """Detalles útiles y concordancia: acciones, colores, tamaños y lugares cotidianos."""
 import json,re,time
 from pathlib import Path
+from revisar_orden_imagenes_pistas import alinear_fila
 from collections import Counter
 from ampliar_oraciones_topicos import canonical
 root=Path(__file__).resolve().parents[1];base=root/'base_oraciones.json';app=root/'generador-oraciones.html'
@@ -25,7 +26,7 @@ for row in b['oraciones']:
  chains=row['level']==6 and len(set(row['pics'])&places)>=3 and not set(row['pics'])&colors
  if unsafe or chains:removed.append({'level':row['level'],'text':text,'reason':'Acción sobre un mueble' if unsafe else 'Cadena de lugares sin un atributo útil'});continue
  kept.append(row)
-b['oraciones']=kept;seen={(r['level'],canonical(r['words'])) for r in kept};added=[]
+b['oraciones']=kept;seen={(r['level'],canonical(words)) for r in kept for words in [r['words'],*r.get('validAnswers',[])]};added=[]
 def add(level,pics,text,alternatives=()):
  pics=list(dict.fromkeys(pics));words=(text.strip().rstrip('.')+' .').split();key=(level,canonical(words))
  if key in seen:return
@@ -109,6 +110,9 @@ report=dict(removed=len(removed),new=len(added),total=len(b['oraciones']),newByL
 reportpath=root/'tools/revision_detalles_cotidianos.json'
 if not removed and not added and reportpath.exists():report=json.loads(reportpath.read_text(encoding='utf-8'))
 else:reportpath.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+for row in b['oraciones']:
+ alinear_fila(row)
+ if row['level']>=5:row['contentWords']=[w for w in row['words'] if w not in con]
 html=app.read_text(encoding='utf-8');payload=json.dumps(b,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
 html,n=re.subn(r'(<script type="application/json" id="baseOracionesIntegrada">).*?(</script>)',lambda x:x[1]+payload+x[2],html,flags=re.S);assert n==1
 mfile=root/'ImagenesGeneradorOraciones/ampliacion_vocabulario.json';m=json.loads(mfile.read_text(encoding='utf-8'));m['resumen']['integracion']=f"{len(b['imagenes'])} imágenes; {len(b['oraciones'])} ejercicios de seis niveles y {len(b['categorias'])} categorías."

@@ -2,9 +2,10 @@
 import json,re,time
 from collections import Counter
 from pathlib import Path
+from revisar_orden_imagenes_pistas import alinear_fila
 from ampliar_oraciones_topicos import canonical
 root=Path(__file__).resolve().parents[1];base=root/'base_oraciones.json';app=root/'generador-oraciones.html'
-b=json.loads(base.read_text(encoding='utf-8'));con=set(b['conectores_reutilizables']);seen={(r['level'],canonical(r['words'])) for r in b['oraciones']};added=[]
+b=json.loads(base.read_text(encoding='utf-8'));con=set(b['conectores_reutilizables']);seen={(r['level'],canonical(words)) for r in b['oraciones'] for words in [r['words'],*r.get('validAnswers',[])]};added=[]
 def adj(w,f=False,pl=False):
  if w in ['azul','gris']:return w+('es' if pl else '')
  if w in ['circular','rectangular']:return w+('es' if pl else '')
@@ -54,6 +55,9 @@ for p,s,f,pl in people:
 for obj,article,shape in [('plato','el','circular'),('libro','el','rectangular'),('mesa','la','cuadrado')]:
  for size in ['grande','pequeño']:
   a=adj(size,article=='la');c=adj(shape,article=='la');add(2,[obj,size,shape],f'{article} {obj} es {a} y {c}',[])
+for row in b['oraciones']:
+ alinear_fila(row)
+ if row['level']>=5:row['contentWords']=[w for w in row['words'] if w not in con]
 report=dict(new=len(added),levels=dict(Counter(r['level'] for r in added)),total=len(b['oraciones']))
 if added:(root/'tools/ampliacion_dos_descriptores.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 mfile=root/'ImagenesGeneradorOraciones/ampliacion_vocabulario.json';m=json.loads(mfile.read_text(encoding='utf-8'));m['resumen']['integracion']=f"{len(b['imagenes'])} imágenes; {len(b['oraciones'])} ejercicios de seis niveles y {len(b['categorias'])} categorías."
