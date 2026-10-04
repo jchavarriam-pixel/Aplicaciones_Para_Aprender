@@ -104,7 +104,7 @@ for p,s in people:
  for thing,prep in [('lavadora','al lado de'),('refrigeradora','al lado de'),('estufa','al lado de')]:
   series([thing,'casa'],f'{ph(thing)} está en la casa')
   series([thing,'casa','grande'],f'{ph(thing)} está en la casa grande')
-  add(6,[p,'caminar',thing,'casa','niño' if p!='niño' else 'niña','día'],f'{s} camina al lado de {ph(thing)} en la casa con {"el niño" if p!="niño" else "la niña"} durante el día')
+  add(6,[p,'caminar','al lado',thing,'casa','niño' if p!='niño' else 'niña','día'],f'{s} camina al lado de {ph(thing)} en la casa con {"el niño" if p!="niño" else "la niña"} durante el día')
  for toy in ['robot','pelota','bloques','rompecabezas']:
   add(6,[p,'juega',toy,'patio','casa','niño' if p!='niño' else 'niña'],f'{s} juega con {ph(toy)} en el patio de la casa y con {"el niño" if p!="niño" else "la niña"}')
  # Dos cláusulas claras, sin rellenar con atributos arbitrarios.

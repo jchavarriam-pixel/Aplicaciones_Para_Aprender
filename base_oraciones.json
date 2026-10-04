@@ -352586,10 +352586,11 @@
       ]
     },
     {
-      "level": 2,
+      "level": 3,
       "pics": [
         "Ana",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -352610,7 +352611,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -352618,6 +352620,7 @@
       "pics": [
         "Ana",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -352642,7 +352645,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -352650,6 +352654,7 @@
       "pics": [
         "Ana",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -352676,6 +352681,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -352684,6 +352690,7 @@
       "pics": [
         "Ana",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -352714,6 +352721,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -352722,6 +352730,7 @@
       "pics": [
         "Ana",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -352761,6 +352770,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -376478,10 +376488,11 @@
       ]
     },
     {
-      "level": 2,
+      "level": 3,
       "pics": [
         "Carlos",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -376502,7 +376513,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -376510,6 +376522,7 @@
       "pics": [
         "Carlos",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -376534,7 +376547,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -376542,6 +376556,7 @@
       "pics": [
         "Carlos",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -376568,6 +376583,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -376576,6 +376592,7 @@
       "pics": [
         "Carlos",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -376606,6 +376623,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -376614,6 +376632,7 @@
       "pics": [
         "Carlos",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -376653,6 +376672,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -400267,10 +400287,11 @@
       ]
     },
     {
-      "level": 2,
+      "level": 3,
       "pics": [
         "Daniel",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -400291,7 +400312,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -400299,6 +400321,7 @@
       "pics": [
         "Daniel",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -400323,7 +400346,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -400331,6 +400355,7 @@
       "pics": [
         "Daniel",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -400357,6 +400382,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -400365,6 +400391,7 @@
       "pics": [
         "Daniel",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -400395,6 +400422,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -400403,6 +400431,7 @@
       "pics": [
         "Daniel",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -400442,6 +400471,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -424159,10 +424189,11 @@
       ]
     },
     {
-      "level": 2,
+      "level": 3,
       "pics": [
         "Jimena",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -424183,7 +424214,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -424191,6 +424223,7 @@
       "pics": [
         "Jimena",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -424215,7 +424248,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -424223,6 +424257,7 @@
       "pics": [
         "Jimena",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -424249,6 +424284,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -424257,6 +424293,7 @@
       "pics": [
         "Jimena",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -424287,6 +424324,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -424295,6 +424333,7 @@
       "pics": [
         "Jimena",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -424334,6 +424373,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -448001,10 +448041,11 @@
       ]
     },
     {
-      "level": 2,
+      "level": 3,
       "pics": [
         "Juan",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -448025,7 +448066,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -448033,6 +448075,7 @@
       "pics": [
         "Juan",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -448057,7 +448100,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -448065,6 +448109,7 @@
       "pics": [
         "Juan",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -448091,6 +448136,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -448099,6 +448145,7 @@
       "pics": [
         "Juan",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -448129,6 +448176,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -448137,6 +448185,7 @@
       "pics": [
         "Juan",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -448176,6 +448225,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -471893,10 +471943,11 @@
       ]
     },
     {
-      "level": 2,
+      "level": 3,
       "pics": [
         "Manuel",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -471917,7 +471968,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -471925,6 +471977,7 @@
       "pics": [
         "Manuel",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -471949,7 +472002,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -471957,6 +472011,7 @@
       "pics": [
         "Manuel",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -471983,6 +472038,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -471991,6 +472047,7 @@
       "pics": [
         "Manuel",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -472021,6 +472078,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -472029,6 +472087,7 @@
       "pics": [
         "Manuel",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -472068,6 +472127,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -495682,10 +495742,11 @@
       ]
     },
     {
-      "level": 2,
+      "level": 3,
       "pics": [
         "Marta",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -495706,7 +495767,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -495714,6 +495776,7 @@
       "pics": [
         "Marta",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -495738,7 +495801,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -495746,6 +495810,7 @@
       "pics": [
         "Marta",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -495772,6 +495837,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -495780,6 +495846,7 @@
       "pics": [
         "Marta",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -495810,6 +495877,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -495818,6 +495886,7 @@
       "pics": [
         "Marta",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -495857,6 +495926,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -520512,10 +520582,11 @@
       ]
     },
     {
-      "level": 2,
+      "level": 3,
       "pics": [
         "Marcos",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -520536,7 +520607,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -520544,6 +520616,7 @@
       "pics": [
         "Marcos",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -520568,7 +520641,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -520576,6 +520650,7 @@
       "pics": [
         "Marcos",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -520602,6 +520677,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -520610,6 +520686,7 @@
       "pics": [
         "Marcos",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -520640,6 +520717,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -520648,6 +520726,7 @@
       "pics": [
         "Marcos",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -520687,6 +520766,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -546022,10 +546102,11 @@
       ]
     },
     {
-      "level": 2,
+      "level": 3,
       "pics": [
         "Pocoyó",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -546047,7 +546128,8 @@
         "personas",
         "hogar",
         "juegos",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -546055,6 +546137,7 @@
       "pics": [
         "Pocoyó",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -546080,7 +546163,8 @@
         "personas",
         "hogar",
         "juegos",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -546088,6 +546172,7 @@
       "pics": [
         "Pocoyó",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -546115,6 +546200,7 @@
         "hogar",
         "juegos",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -546123,6 +546209,7 @@
       "pics": [
         "Pocoyó",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -546154,6 +546241,7 @@
         "hogar",
         "juegos",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -546162,6 +546250,7 @@
       "pics": [
         "Pocoyó",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -546202,6 +546291,7 @@
         "hogar",
         "juegos",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -570507,10 +570597,11 @@
       ]
     },
     {
-      "level": 2,
+      "level": 3,
       "pics": [
         "niño",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -570532,7 +570623,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -570540,6 +570632,7 @@
       "pics": [
         "niño",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -570565,7 +570658,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -570573,6 +570667,7 @@
       "pics": [
         "niño",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -570600,6 +570695,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -570608,6 +570704,7 @@
       "pics": [
         "niño",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -570639,6 +570736,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -570647,6 +570745,7 @@
       "pics": [
         "niño",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -570687,6 +570786,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -594992,10 +595092,11 @@
       ]
     },
     {
-      "level": 2,
+      "level": 3,
       "pics": [
         "niña",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -595017,7 +595118,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -595025,6 +595127,7 @@
       "pics": [
         "niña",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -595050,7 +595153,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -595058,6 +595162,7 @@
       "pics": [
         "niña",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -595085,6 +595190,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -595093,6 +595199,7 @@
       "pics": [
         "niña",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -595124,6 +595231,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -595132,6 +595240,7 @@
       "pics": [
         "niña",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -595172,6 +595281,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -620610,10 +620720,11 @@
       ]
     },
     {
-      "level": 2,
+      "level": 3,
       "pics": [
         "señora",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -620635,7 +620746,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -620643,6 +620755,7 @@
       "pics": [
         "señora",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -620668,7 +620781,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -620676,6 +620790,7 @@
       "pics": [
         "señora",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -620703,6 +620818,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -620711,6 +620827,7 @@
       "pics": [
         "señora",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -620742,6 +620859,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -620750,6 +620868,7 @@
       "pics": [
         "señora",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -620790,6 +620909,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -646280,10 +646400,11 @@
       ]
     },
     {
-      "level": 2,
+      "level": 3,
       "pics": [
         "señor",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -646305,7 +646426,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -646313,6 +646435,7 @@
       "pics": [
         "señor",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -646338,7 +646461,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -646346,6 +646470,7 @@
       "pics": [
         "señor",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -646373,6 +646498,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -646381,6 +646507,7 @@
       "pics": [
         "señor",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -646412,6 +646539,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -646420,6 +646548,7 @@
       "pics": [
         "señor",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -646460,6 +646589,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -672421,10 +672551,11 @@
       ]
     },
     {
-      "level": 2,
+      "level": 3,
       "pics": [
         "maestra",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -672447,6 +672578,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "escolar"
       ]
     },
@@ -672455,6 +672587,7 @@
       "pics": [
         "maestra",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -672481,6 +672614,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "escolar"
       ]
     },
@@ -672489,6 +672623,7 @@
       "pics": [
         "maestra",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -672516,6 +672651,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "escolar",
         "habitaciones"
       ]
@@ -672525,6 +672661,7 @@
       "pics": [
         "maestra",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -672556,6 +672693,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "escolar",
         "habitaciones"
       ]
@@ -672565,6 +672703,7 @@
       "pics": [
         "maestra",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -672605,6 +672744,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "escolar",
         "habitaciones"
       ]
@@ -697991,10 +698131,11 @@
       ]
     },
     {
-      "level": 2,
+      "level": 3,
       "pics": [
         "niños",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -698016,7 +698157,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -698024,6 +698166,7 @@
       "pics": [
         "niños",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -698049,7 +698192,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -698057,6 +698201,7 @@
       "pics": [
         "niños",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -698084,6 +698229,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -698092,6 +698238,7 @@
       "pics": [
         "niños",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -698123,6 +698270,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -698131,6 +698279,7 @@
       "pics": [
         "niños",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -698171,6 +698320,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -723661,10 +723811,11 @@
       ]
     },
     {
-      "level": 2,
+      "level": 3,
       "pics": [
         "niñas",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -723686,7 +723837,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -723694,6 +723846,7 @@
       "pics": [
         "niñas",
         "pararse",
+        "al lado",
         "silla"
       ],
       "words": [
@@ -723719,7 +723872,8 @@
         "general",
         "personas",
         "hogar",
-        "acciones"
+        "acciones",
+        "ubicacion"
       ]
     },
     {
@@ -723727,6 +723881,7 @@
       "pics": [
         "niñas",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -723754,6 +723909,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -723762,6 +723918,7 @@
       "pics": [
         "niñas",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -723793,6 +723950,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -723801,6 +723959,7 @@
       "pics": [
         "niñas",
         "pararse",
+        "al lado",
         "silla",
         "casa"
       ],
@@ -723841,6 +724000,7 @@
         "personas",
         "hogar",
         "acciones",
+        "ubicacion",
         "habitaciones"
       ]
     },
@@ -880434,6 +880594,7 @@
       "pics": [
         "Ana",
         "caminar",
+        "al lado",
         "lavadora",
         "casa",
         "niño",
@@ -880479,6 +880640,7 @@
         "transportes",
         "hogar",
         "acciones",
+        "ubicacion",
         "clima",
         "generales",
         "habitaciones",
@@ -880574,6 +880736,7 @@
       "pics": [
         "Ana",
         "caminar",
+        "al lado",
         "refrigeradora",
         "casa",
         "niño",
@@ -880619,6 +880782,7 @@
         "transportes",
         "hogar",
         "acciones",
+        "ubicacion",
         "clima",
         "generales",
         "habitaciones",
@@ -880714,6 +880878,7 @@
       "pics": [
         "Ana",
         "caminar",
+        "al lado",
         "estufa",
         "casa",
         "niño",
@@ -880759,6 +880924,7 @@
         "transportes",
         "hogar",
         "acciones",
+        "ubicacion",
         "clima",
         "generales",
         "habitaciones",
@@ -892686,6 +892852,7 @@
       "pics": [
         "Marcos",
         "caminar",
+        "al lado",
         "lavadora",
         "casa",
         "niño",
@@ -892731,6 +892898,7 @@
         "transportes",
         "hogar",
         "acciones",
+        "ubicacion",
         "clima",
         "generales",
         "habitaciones",
@@ -892742,6 +892910,7 @@
       "pics": [
         "Marcos",
         "caminar",
+        "al lado",
         "refrigeradora",
         "casa",
         "niño",
@@ -892787,6 +892956,7 @@
         "transportes",
         "hogar",
         "acciones",
+        "ubicacion",
         "clima",
         "generales",
         "habitaciones",
@@ -892798,6 +892968,7 @@
       "pics": [
         "Marcos",
         "caminar",
+        "al lado",
         "estufa",
         "casa",
         "niño",
@@ -892843,6 +893014,7 @@
         "transportes",
         "hogar",
         "acciones",
+        "ubicacion",
         "clima",
         "generales",
         "habitaciones",
@@ -904924,6 +905096,7 @@
       "pics": [
         "niño",
         "caminar",
+        "al lado",
         "lavadora",
         "casa",
         "niña",
@@ -904970,6 +905143,7 @@
         "transportes",
         "hogar",
         "acciones",
+        "ubicacion",
         "clima",
         "generales",
         "habitaciones",
@@ -904981,6 +905155,7 @@
       "pics": [
         "niño",
         "caminar",
+        "al lado",
         "refrigeradora",
         "casa",
         "niña",
@@ -905027,6 +905202,7 @@
         "transportes",
         "hogar",
         "acciones",
+        "ubicacion",
         "clima",
         "generales",
         "habitaciones",
@@ -905038,6 +905214,7 @@
       "pics": [
         "niño",
         "caminar",
+        "al lado",
         "estufa",
         "casa",
         "niña",
@@ -905084,6 +905261,7 @@
         "transportes",
         "hogar",
         "acciones",
+        "ubicacion",
         "clima",
         "generales",
         "habitaciones",
@@ -917315,6 +917493,7 @@
       "pics": [
         "niña",
         "caminar",
+        "al lado",
         "lavadora",
         "casa",
         "niño",
@@ -917361,6 +917540,7 @@
         "transportes",
         "hogar",
         "acciones",
+        "ubicacion",
         "clima",
         "generales",
         "habitaciones",
@@ -917372,6 +917552,7 @@
       "pics": [
         "niña",
         "caminar",
+        "al lado",
         "refrigeradora",
         "casa",
         "niño",
@@ -917418,6 +917599,7 @@
         "transportes",
         "hogar",
         "acciones",
+        "ubicacion",
         "clima",
         "generales",
         "habitaciones",
@@ -917429,6 +917611,7 @@
       "pics": [
         "niña",
         "caminar",
+        "al lado",
         "estufa",
         "casa",
         "niño",
@@ -917475,6 +917658,7 @@
         "transportes",
         "hogar",
         "acciones",
+        "ubicacion",
         "clima",
         "generales",
         "habitaciones",

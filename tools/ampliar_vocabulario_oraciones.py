@@ -209,8 +209,8 @@ def main():
             sentence([person, 'sentarse', place], f'{subject} {action_forms["sentarse"][int(plural)]} {loc(place)}')
             sentence([person, 'sentarse', place, 'escuela' if place == 'pupitre' else 'casa'], f'{subject} {action_forms["sentarse"][int(plural)]} {loc(place)} {loc("escuela" if place == "pupitre" else "casa")}')
         sentence([person, 'pararse'], f'{subject} {action_forms["pararse"][int(plural)]}')
-        sentence([person, 'pararse', 'silla'], f'{subject} {action_forms["pararse"][int(plural)]} al lado de la silla')
-        sentence([person, 'pararse', 'silla', 'casa'], f'{subject} {action_forms["pararse"][int(plural)]} al lado de la silla en la casa')
+        sentence([person, 'pararse', 'al lado', 'silla'], f'{subject} {action_forms["pararse"][int(plural)]} al lado de la silla')
+        sentence([person, 'pararse', 'al lado', 'silla', 'casa'], f'{subject} {action_forms["pararse"][int(plural)]} al lado de la silla en la casa')
         for place in ['cama', 'dormitorio']:
             sentence([person, 'duerme', place], f'{subject} {action_forms["duerme"][int(plural)]} {loc(place)}')
             sentence([person, 'duerme', place, 'noche'], f'{subject} {action_forms["duerme"][int(plural)]} {loc(place)} de noche')

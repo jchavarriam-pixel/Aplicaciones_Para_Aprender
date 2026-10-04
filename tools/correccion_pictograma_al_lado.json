@@ -1,0 +1,3671 @@
+{
+  "oraciones_conservadas": 32788,
+  "corregidas": 92,
+  "changes": {
+    "pictograma_al_lado": 92,
+    "nivel_por_numero_de_imagenes": 16
+  },
+  "details": [
+    {
+      "before": {
+        "level": 2,
+        "pics": [
+          "Ana",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "Ana",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "Ana",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado",
+        "nivel_por_numero_de_imagenes"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "Ana",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "Ana",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "Ana",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 3,
+        "pics": [
+          "Ana",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "Ana",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "Ana",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "Ana",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "Ana",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "Ana",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 5,
+        "pics": [
+          "Ana",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 5,
+        "pics": [
+          "Ana",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "Ana",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 2,
+        "pics": [
+          "Carlos",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "Carlos",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "Carlos",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado",
+        "nivel_por_numero_de_imagenes"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "Carlos",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "Carlos",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "Carlos",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 3,
+        "pics": [
+          "Carlos",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "Carlos",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "Carlos",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "Carlos",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "Carlos",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "Carlos",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 5,
+        "pics": [
+          "Carlos",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 5,
+        "pics": [
+          "Carlos",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "Carlos",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 2,
+        "pics": [
+          "Daniel",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "Daniel",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "Daniel",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado",
+        "nivel_por_numero_de_imagenes"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "Daniel",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "Daniel",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "Daniel",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 3,
+        "pics": [
+          "Daniel",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "Daniel",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "Daniel",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "Daniel",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "Daniel",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "Daniel",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 5,
+        "pics": [
+          "Daniel",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 5,
+        "pics": [
+          "Daniel",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "Daniel",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 2,
+        "pics": [
+          "Jimena",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "Jimena",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "Jimena",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado",
+        "nivel_por_numero_de_imagenes"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "Jimena",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "Jimena",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "Jimena",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 3,
+        "pics": [
+          "Jimena",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "Jimena",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "Jimena",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "Jimena",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "Jimena",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "Jimena",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 5,
+        "pics": [
+          "Jimena",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 5,
+        "pics": [
+          "Jimena",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "Jimena",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 2,
+        "pics": [
+          "Juan",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "Juan",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "Juan",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado",
+        "nivel_por_numero_de_imagenes"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "Juan",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "Juan",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "Juan",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 3,
+        "pics": [
+          "Juan",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "Juan",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "Juan",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "Juan",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "Juan",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "Juan",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 5,
+        "pics": [
+          "Juan",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 5,
+        "pics": [
+          "Juan",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "Juan",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 2,
+        "pics": [
+          "Manuel",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "Manuel",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "Manuel",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado",
+        "nivel_por_numero_de_imagenes"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "Manuel",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "Manuel",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "Manuel",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 3,
+        "pics": [
+          "Manuel",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "Manuel",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "Manuel",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "Manuel",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "Manuel",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "Manuel",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 5,
+        "pics": [
+          "Manuel",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 5,
+        "pics": [
+          "Manuel",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "Manuel",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 2,
+        "pics": [
+          "Marta",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "Marta",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "Marta",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado",
+        "nivel_por_numero_de_imagenes"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "Marta",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "Marta",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "Marta",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 3,
+        "pics": [
+          "Marta",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "Marta",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "Marta",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "Marta",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "Marta",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "Marta",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 5,
+        "pics": [
+          "Marta",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 5,
+        "pics": [
+          "Marta",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "Marta",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 2,
+        "pics": [
+          "Marcos",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "Marcos",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "Marcos",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado",
+        "nivel_por_numero_de_imagenes"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "Marcos",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "Marcos",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "Marcos",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 3,
+        "pics": [
+          "Marcos",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "Marcos",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "Marcos",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "Marcos",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "Marcos",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "Marcos",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 5,
+        "pics": [
+          "Marcos",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 5,
+        "pics": [
+          "Marcos",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "Marcos",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 2,
+        "pics": [
+          "Pocoyó",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "Pocoyó",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "Pocoyó",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado",
+        "nivel_por_numero_de_imagenes"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "Pocoyó",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "Pocoyó",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "Pocoyó",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 3,
+        "pics": [
+          "Pocoyó",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "Pocoyó",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "Pocoyó",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "Pocoyó",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "Pocoyó",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "Pocoyó",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 5,
+        "pics": [
+          "Pocoyó",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 5,
+        "pics": [
+          "Pocoyó",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "Pocoyó",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 2,
+        "pics": [
+          "niño",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "niño",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "el",
+        "niño",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado",
+        "nivel_por_numero_de_imagenes"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "niño",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "niño",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "el",
+        "niño",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 3,
+        "pics": [
+          "niño",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "niño",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "el",
+        "niño",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "niño",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "niño",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "el",
+        "niño",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 5,
+        "pics": [
+          "niño",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 5,
+        "pics": [
+          "niño",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "el",
+        "niño",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 2,
+        "pics": [
+          "niña",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "niña",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "la",
+        "niña",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado",
+        "nivel_por_numero_de_imagenes"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "niña",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "niña",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "la",
+        "niña",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 3,
+        "pics": [
+          "niña",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "niña",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "la",
+        "niña",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "niña",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "niña",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "la",
+        "niña",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 5,
+        "pics": [
+          "niña",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 5,
+        "pics": [
+          "niña",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "la",
+        "niña",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 2,
+        "pics": [
+          "señora",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "señora",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "la",
+        "señora",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado",
+        "nivel_por_numero_de_imagenes"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "señora",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "señora",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "la",
+        "señora",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 3,
+        "pics": [
+          "señora",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "señora",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "la",
+        "señora",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "señora",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "señora",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "la",
+        "señora",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 5,
+        "pics": [
+          "señora",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 5,
+        "pics": [
+          "señora",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "la",
+        "señora",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 2,
+        "pics": [
+          "señor",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "señor",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "el",
+        "señor",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado",
+        "nivel_por_numero_de_imagenes"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "señor",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "señor",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "el",
+        "señor",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 3,
+        "pics": [
+          "señor",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "señor",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "el",
+        "señor",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "señor",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "señor",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "el",
+        "señor",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 5,
+        "pics": [
+          "señor",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 5,
+        "pics": [
+          "señor",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "el",
+        "señor",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 2,
+        "pics": [
+          "maestra",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "maestra",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "la",
+        "maestra",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado",
+        "nivel_por_numero_de_imagenes"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "maestra",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "maestra",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "la",
+        "maestra",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 3,
+        "pics": [
+          "maestra",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "maestra",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "la",
+        "maestra",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "maestra",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "maestra",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "la",
+        "maestra",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 5,
+        "pics": [
+          "maestra",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 5,
+        "pics": [
+          "maestra",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "la",
+        "maestra",
+        "se",
+        "pone",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 2,
+        "pics": [
+          "niños",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "niños",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "los",
+        "niños",
+        "se",
+        "ponen",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado",
+        "nivel_por_numero_de_imagenes"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "niños",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "niños",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "los",
+        "niños",
+        "se",
+        "ponen",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 3,
+        "pics": [
+          "niños",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "niños",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "los",
+        "niños",
+        "se",
+        "ponen",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "niños",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "niños",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "los",
+        "niños",
+        "se",
+        "ponen",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 5,
+        "pics": [
+          "niños",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 5,
+        "pics": [
+          "niños",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "los",
+        "niños",
+        "se",
+        "ponen",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 2,
+        "pics": [
+          "niñas",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "niñas",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "las",
+        "niñas",
+        "se",
+        "ponen",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado",
+        "nivel_por_numero_de_imagenes"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "niñas",
+          "pararse",
+          "silla"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "niñas",
+          "pararse",
+          "al lado",
+          "silla"
+        ]
+      },
+      "words": [
+        "las",
+        "niñas",
+        "se",
+        "ponen",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 3,
+        "pics": [
+          "niñas",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 3,
+        "pics": [
+          "niñas",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "las",
+        "niñas",
+        "se",
+        "ponen",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 4,
+        "pics": [
+          "niñas",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 4,
+        "pics": [
+          "niñas",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "las",
+        "niñas",
+        "se",
+        "ponen",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 5,
+        "pics": [
+          "niñas",
+          "pararse",
+          "silla",
+          "casa"
+        ]
+      },
+      "after": {
+        "level": 5,
+        "pics": [
+          "niñas",
+          "pararse",
+          "al lado",
+          "silla",
+          "casa"
+        ]
+      },
+      "words": [
+        "las",
+        "niñas",
+        "se",
+        "ponen",
+        "de",
+        "pie",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "silla",
+        "en",
+        "la",
+        "casa",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 6,
+        "pics": [
+          "Ana",
+          "caminar",
+          "lavadora",
+          "casa",
+          "niño",
+          "día"
+        ]
+      },
+      "after": {
+        "level": 6,
+        "pics": [
+          "Ana",
+          "caminar",
+          "al lado",
+          "lavadora",
+          "casa",
+          "niño",
+          "día"
+        ]
+      },
+      "words": [
+        "Ana",
+        "camina",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "lavadora",
+        "en",
+        "la",
+        "casa",
+        "con",
+        "el",
+        "niño",
+        "durante",
+        "el",
+        "día",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 6,
+        "pics": [
+          "Ana",
+          "caminar",
+          "refrigeradora",
+          "casa",
+          "niño",
+          "día"
+        ]
+      },
+      "after": {
+        "level": 6,
+        "pics": [
+          "Ana",
+          "caminar",
+          "al lado",
+          "refrigeradora",
+          "casa",
+          "niño",
+          "día"
+        ]
+      },
+      "words": [
+        "Ana",
+        "camina",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "refrigeradora",
+        "en",
+        "la",
+        "casa",
+        "con",
+        "el",
+        "niño",
+        "durante",
+        "el",
+        "día",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 6,
+        "pics": [
+          "Ana",
+          "caminar",
+          "estufa",
+          "casa",
+          "niño",
+          "día"
+        ]
+      },
+      "after": {
+        "level": 6,
+        "pics": [
+          "Ana",
+          "caminar",
+          "al lado",
+          "estufa",
+          "casa",
+          "niño",
+          "día"
+        ]
+      },
+      "words": [
+        "Ana",
+        "camina",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "estufa",
+        "en",
+        "la",
+        "casa",
+        "con",
+        "el",
+        "niño",
+        "durante",
+        "el",
+        "día",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 6,
+        "pics": [
+          "Marcos",
+          "caminar",
+          "lavadora",
+          "casa",
+          "niño",
+          "día"
+        ]
+      },
+      "after": {
+        "level": 6,
+        "pics": [
+          "Marcos",
+          "caminar",
+          "al lado",
+          "lavadora",
+          "casa",
+          "niño",
+          "día"
+        ]
+      },
+      "words": [
+        "Marcos",
+        "camina",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "lavadora",
+        "en",
+        "la",
+        "casa",
+        "con",
+        "el",
+        "niño",
+        "durante",
+        "el",
+        "día",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 6,
+        "pics": [
+          "Marcos",
+          "caminar",
+          "refrigeradora",
+          "casa",
+          "niño",
+          "día"
+        ]
+      },
+      "after": {
+        "level": 6,
+        "pics": [
+          "Marcos",
+          "caminar",
+          "al lado",
+          "refrigeradora",
+          "casa",
+          "niño",
+          "día"
+        ]
+      },
+      "words": [
+        "Marcos",
+        "camina",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "refrigeradora",
+        "en",
+        "la",
+        "casa",
+        "con",
+        "el",
+        "niño",
+        "durante",
+        "el",
+        "día",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 6,
+        "pics": [
+          "Marcos",
+          "caminar",
+          "estufa",
+          "casa",
+          "niño",
+          "día"
+        ]
+      },
+      "after": {
+        "level": 6,
+        "pics": [
+          "Marcos",
+          "caminar",
+          "al lado",
+          "estufa",
+          "casa",
+          "niño",
+          "día"
+        ]
+      },
+      "words": [
+        "Marcos",
+        "camina",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "estufa",
+        "en",
+        "la",
+        "casa",
+        "con",
+        "el",
+        "niño",
+        "durante",
+        "el",
+        "día",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 6,
+        "pics": [
+          "niño",
+          "caminar",
+          "lavadora",
+          "casa",
+          "niña",
+          "día"
+        ]
+      },
+      "after": {
+        "level": 6,
+        "pics": [
+          "niño",
+          "caminar",
+          "al lado",
+          "lavadora",
+          "casa",
+          "niña",
+          "día"
+        ]
+      },
+      "words": [
+        "el",
+        "niño",
+        "camina",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "lavadora",
+        "en",
+        "la",
+        "casa",
+        "con",
+        "la",
+        "niña",
+        "durante",
+        "el",
+        "día",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 6,
+        "pics": [
+          "niño",
+          "caminar",
+          "refrigeradora",
+          "casa",
+          "niña",
+          "día"
+        ]
+      },
+      "after": {
+        "level": 6,
+        "pics": [
+          "niño",
+          "caminar",
+          "al lado",
+          "refrigeradora",
+          "casa",
+          "niña",
+          "día"
+        ]
+      },
+      "words": [
+        "el",
+        "niño",
+        "camina",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "refrigeradora",
+        "en",
+        "la",
+        "casa",
+        "con",
+        "la",
+        "niña",
+        "durante",
+        "el",
+        "día",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 6,
+        "pics": [
+          "niño",
+          "caminar",
+          "estufa",
+          "casa",
+          "niña",
+          "día"
+        ]
+      },
+      "after": {
+        "level": 6,
+        "pics": [
+          "niño",
+          "caminar",
+          "al lado",
+          "estufa",
+          "casa",
+          "niña",
+          "día"
+        ]
+      },
+      "words": [
+        "el",
+        "niño",
+        "camina",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "estufa",
+        "en",
+        "la",
+        "casa",
+        "con",
+        "la",
+        "niña",
+        "durante",
+        "el",
+        "día",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 6,
+        "pics": [
+          "niña",
+          "caminar",
+          "lavadora",
+          "casa",
+          "niño",
+          "día"
+        ]
+      },
+      "after": {
+        "level": 6,
+        "pics": [
+          "niña",
+          "caminar",
+          "al lado",
+          "lavadora",
+          "casa",
+          "niño",
+          "día"
+        ]
+      },
+      "words": [
+        "la",
+        "niña",
+        "camina",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "lavadora",
+        "en",
+        "la",
+        "casa",
+        "con",
+        "el",
+        "niño",
+        "durante",
+        "el",
+        "día",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 6,
+        "pics": [
+          "niña",
+          "caminar",
+          "refrigeradora",
+          "casa",
+          "niño",
+          "día"
+        ]
+      },
+      "after": {
+        "level": 6,
+        "pics": [
+          "niña",
+          "caminar",
+          "al lado",
+          "refrigeradora",
+          "casa",
+          "niño",
+          "día"
+        ]
+      },
+      "words": [
+        "la",
+        "niña",
+        "camina",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "refrigeradora",
+        "en",
+        "la",
+        "casa",
+        "con",
+        "el",
+        "niño",
+        "durante",
+        "el",
+        "día",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    },
+    {
+      "before": {
+        "level": 6,
+        "pics": [
+          "niña",
+          "caminar",
+          "estufa",
+          "casa",
+          "niño",
+          "día"
+        ]
+      },
+      "after": {
+        "level": 6,
+        "pics": [
+          "niña",
+          "caminar",
+          "al lado",
+          "estufa",
+          "casa",
+          "niño",
+          "día"
+        ]
+      },
+      "words": [
+        "la",
+        "niña",
+        "camina",
+        "al",
+        "lado",
+        "de",
+        "la",
+        "estufa",
+        "en",
+        "la",
+        "casa",
+        "con",
+        "el",
+        "niño",
+        "durante",
+        "el",
+        "día",
+        "."
+      ],
+      "changes": [
+        "pictograma_al_lado"
+      ]
+    }
+  ]
+}

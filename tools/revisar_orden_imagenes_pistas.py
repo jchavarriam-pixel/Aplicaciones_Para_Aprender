@@ -50,6 +50,13 @@ def inversions(pics,words):
  return sum(a>b for i,a in enumerate(known) for b in known[i+1:]),ps
 def alinear_fila(row):
  changes=[]
+ # Las relaciones espaciales explícitas también requieren su pictograma.
+ if position('al lado',row['words']) is not None and 'al lado' not in row['pics']:
+  pos=position('al lado',row['words'])
+  at=next((i for i,p in enumerate(row['pics']) if position(p,row['words']) is not None and position(p,row['words'])>pos),len(row['pics']))
+  row['pics'].insert(at,'al lado');changes.append('pictograma_al_lado')
+  if row['level']==2 and len(row['pics'])==4:
+   row['level']=3;changes.append('nivel_por_numero_de_imagenes')
  # Correcciones verificadas: una tilde plural y dos imágenes sobrantes en plantillas.
  for words in [row['words'],*row.get('validAnswers',[])]:
   for i,w in enumerate(words):
