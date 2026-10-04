@@ -42,6 +42,8 @@
     @media(max-width:980px){.config-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.intro{grid-template-columns:1fr}.toggle-row{grid-template-columns:1fr}.work{grid-template-columns:minmax(0,1fr) minmax(245px,32vw)}.tile{min-width:64px}.cards{grid-template-columns:1fr}}
     @media(max-width:760px){body{padding:9px}.menu-link,.btn{width:100%}.panel{border-radius:22px;padding:12px}.config-grid{grid-template-columns:1fr}.work{display:flex;flex-direction:column}.side{order:-1;position:sticky;top:6px;z-index:20;width:100%;max-height:46vh;overflow:auto;background:rgba(255,255,255,.96);border-radius:24px}.sequence{grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:4px}.num-box{min-height:var(--box-h,70px);border-radius:16px}.slot:after{font-size:.48rem}.deck{max-height:30vh;overflow:auto}.key{min-height:54px}.actions{gap:8px}}
   </style>
+  <link rel="stylesheet" href="creditos.css">
+  <link rel="stylesheet" href="pantalla-completa.css">
 </head>
 <body>
   <div class="app">
@@ -200,5 +202,17 @@
     function sideJets(){for(let i=0;i<85;i++){const left=i%2===0;const p=particle(icon(),left?25:innerWidth-25,innerHeight+randomInt(0,100),randomInt(12,22));p.style.setProperty("--dx",(left?randomInt(50,290):-randomInt(50,290))+"px");p.style.setProperty("--dy",-randomInt(300,Math.max(360,innerHeight))+"px");p.style.animation=`burst 6s ease-out forwards`}}
     function horizontalLines(){for(let row=0;row<5;row++){const y=(innerHeight/6)*(row+1);for(let i=0;i<18;i++){const fromLeft=row%2===0;const p=particle(icon(),fromLeft?-60:innerWidth+60,y+randomInt(-18,18),randomInt(12,20));p.style.setProperty("--dx",(fromLeft?innerWidth+120:-(innerWidth+120))+"px");p.style.setProperty("--dy",randomInt(-35,35)+"px");p.style.animation=`burst 6s linear forwards`}}}
   </script>
+
+<footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos">
+  <div class="creditos-dedicatoria">
+    <span class="creditos-gabriel">Creado para <strong>Gabriel</strong></span>
+    <span class="creditos-familia">Por su familia, con ayuda de la IA.</span>
+  </div>
+  <div class="creditos-equipo">
+    <span class="creditos-autores">M.Sc. Jeffry Chavarría-Molina y Doctoranda Natalia Rodríguez-Granados</span>
+    <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
+  </div>
+</footer>
+<script src="pantalla-completa.js"></script>
 </body>
 </html>

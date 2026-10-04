@@ -1284,6 +1284,8 @@
   @keyframes explorerMarch{0%{transform:translate(var(--sx),var(--sy)) rotate(0deg)}14%{transform:translate(var(--x14),var(--y14)) rotate(-28deg)}29%{transform:translate(var(--x29),var(--y29)) rotate(24deg)}44%{transform:translate(var(--x44),var(--y44)) rotate(-20deg)}59%{transform:translate(var(--x59),var(--y59)) rotate(31deg)}74%{transform:translate(var(--x74),var(--y74)) rotate(-25deg)}89%{transform:translate(var(--x89),var(--y89)) rotate(18deg)}100%{transform:translate(var(--ex),var(--ey)) rotate(var(--turn))}}
   @media (pointer:coarse){.explorerToken{filter:drop-shadow(0 3px 2px rgba(20,35,45,.24))}.explorerMini{font-size:clamp(18px,3vw,27px)}}
 </style>
+  <link rel="stylesheet" href="../creditos.css">
+  <link rel="stylesheet" href="../pantalla-completa.css">
 </head>
 <body>
 <div class="app" id="app">
@@ -3712,5 +3714,17 @@ function cargarNombreDesdeIndex() {
   goHome();
 })();
 </script>
+
+<footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos">
+  <div class="creditos-dedicatoria">
+    <span class="creditos-gabriel">Creado para <strong>Gabriel</strong></span>
+    <span class="creditos-familia">Por su familia, con ayuda de la IA.</span>
+  </div>
+  <div class="creditos-equipo">
+    <span class="creditos-autores">M.Sc. Jeffry Chavarría-Molina y Doctoranda Natalia Rodríguez-Granados</span>
+    <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
+  </div>
+</footer>
+<script src="../pantalla-completa.js"></script>
 </body>
 </html>

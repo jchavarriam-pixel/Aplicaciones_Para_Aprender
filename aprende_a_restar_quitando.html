@@ -85,7 +85,9 @@ body{font-family:'Nunito',sans-serif;background:#FFF8E1;user-select:none;-webkit
 .remaining-label{font-family:'Bubblegum Sans',cursive;font-size:clamp(16px,2.5vw,22px);color:#6A1B9A;text-align:center;padding:2px}
 </style>
   <style>body { box-sizing: border-box; }</style>
- </head>
+   <link rel="stylesheet" href="creditos.css">
+  <link rel="stylesheet" href="pantalla-completa.css">
+</head>
  <body>
   <div class="app-wrapper" id="app">
    <h1 class="app-title" id="titleEl">🌈 Aprende a Restar 🌈</h1>
@@ -120,7 +122,18 @@ body{font-family:'Nunito',sans-serif;background:#FFF8E1;user-select:none;-webkit
    <div class="mode-bar">
     <button class="mode-btn active" data-mode="mix" onclick="setMode('mix',this)">🔀 Mixto</button> <button class="mode-btn" data-mode="yes" onclick="setMode('yes',this)">✅ Sí se puede</button> <button class="mode-btn" data-mode="no" onclick="setMode('no',this)">❌ No se puede</button>
    </div>
+
+<footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos">
+  <div class="creditos-dedicatoria">
+    <span class="creditos-gabriel">Creado para <strong>Gabriel</strong></span>
+    <span class="creditos-familia">Por su familia, con ayuda de la IA.</span>
   </div>
+  <div class="creditos-equipo">
+    <span class="creditos-autores">M.Sc. Jeffry Chavarría-Molina y Doctoranda Natalia Rodríguez-Granados</span>
+    <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
+  </div>
+</footer>
+</div>
   <script>
 const EMOJIS = ['🍎','⭐','🎈','🌸','⚽','🚗','🦋','🍓','🐱','🎀'];
 let numA=0, numB=0, removed=0, emoji='🍎', done=false, muted=false, mode='mix', lastAudio='';
@@ -384,5 +397,6 @@ function newExercise(){
 
 cargarNombreEstudiante();
 newExercise();
-</script></body>
+</script><script src="pantalla-completa.js"></script>
+</body>
 </html>

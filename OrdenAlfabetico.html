@@ -299,7 +299,9 @@ button, input { font-family: inherit; }
   <style>body { box-sizing: border-box; }</style>
   
   
- </head>
+   <link rel="stylesheet" href="creditos.css">
+  <link rel="stylesheet" href="pantalla-completa.css">
+</head>
  <body class="h-full" style="background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 40%, #fdf4ff 100%);">
   <div id="app" class="w-full h-full overflow-auto flex flex-col items-center p-4"><!-- SETUP SCREEN -->
    <div id="setup-screen" class="fade-in flex flex-col items-center justify-center gap-6 w-full max-w-lg mx-auto mt-8">
@@ -1630,5 +1632,17 @@ function celebrateExtraSparkles(shapes, colors) {
 cargarNombreDesdeIndex();
 buildSetup();
 </script>
- </body>
+
+<footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos">
+  <div class="creditos-dedicatoria">
+    <span class="creditos-gabriel">Creado para <strong>Gabriel</strong></span>
+    <span class="creditos-familia">Por su familia, con ayuda de la IA.</span>
+  </div>
+  <div class="creditos-equipo">
+    <span class="creditos-autores">M.Sc. Jeffry Chavarría-Molina y Doctoranda Natalia Rodríguez-Granados</span>
+    <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
+  </div>
+</footer>
+<script src="pantalla-completa.js"></script>
+</body>
 </html>

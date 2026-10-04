@@ -1,0 +1,65 @@
+/* Dedicatoria y créditos compartidos: sin tapar controles. */
+#creditos-aplicaciones {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  position: relative;
+  clear: both;
+  flex: 0 0 auto;
+  grid-column: 1 / -1;
+  width: calc(100% - 24px);
+  max-width: 1100px;
+  margin: 18px auto 16px;
+  padding: 16px 24px;
+  border: 1px solid #dce3ed;
+  border-radius: 14px;
+  background: linear-gradient(120deg, #f8faff, #ffffff);
+  box-shadow: 0 3px 12px rgb(38 55 80 / 5%);
+  color: #526176;
+  font: 400 12px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif;
+  text-align: left;
+  overflow-wrap: break-word;
+  user-select: text;
+}
+#creditos-aplicaciones .creditos-dedicatoria {
+  flex: 0 0 auto;
+  padding-right: 24px;
+  border-right: 1px solid #dce3ed;
+}
+#creditos-aplicaciones .creditos-equipo { min-width: 0; }
+#creditos-aplicaciones span {
+  display: block;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+}
+#creditos-aplicaciones .creditos-gabriel {
+  color: #334565;
+  font-size: 13px;
+  letter-spacing: .1px;
+}
+#creditos-aplicaciones strong { font: inherit; font-weight: 700; }
+#creditos-aplicaciones .creditos-autores { color: #334155; font-weight: 500; }
+#creditos-aplicaciones .creditos-institucion {
+  margin-top: 2px;
+  color: #526176;
+  font-size: 11px;
+  letter-spacing: .15px;
+}
+@media (max-width: 620px) {
+  #creditos-aplicaciones {
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px 16px;
+    text-align: center;
+  }
+  #creditos-aplicaciones .creditos-dedicatoria {
+    width: 100%;
+    padding: 0 0 10px;
+    border-right: 0;
+    border-bottom: 1px solid #dce3ed;
+  }
+}

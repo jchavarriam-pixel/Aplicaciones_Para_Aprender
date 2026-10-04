@@ -112,6 +112,8 @@
     .answer-slot.audio-highlight,.carry-slot.audio-highlight,.place-slot.audio-highlight,.sign-slot.audio-highlight{box-shadow:0 0 0 7px rgba(124,58,237,.16)!important}
     @media(max-width:700px){.subtitle{font-size:1rem;max-width:95%}.pos-format{font-size:.96rem}.mode-grid{grid-template-columns:1fr}.card{padding:16px}.vertical-op{--rowh:50px}.digit-col{width:58px}.digit,.answer-slot{width:46px;height:46px;font-size:1.65rem}.place-head-row,.carry-row,.top-row,.bottom-row,.line-row,.answer-row{height:50px}.sign-col{width:46px}.sign-space{height:50px}.sign{width:45px;height:45px;font-size:2.9rem}.minus-line{width:34px}.borrow-btn{position:sticky;right:8px;bottom:8px;transform:none;margin:10px auto 0;display:flex}.house{grid-template-columns:70px repeat(var(--cols),64px)}.place-slot,.sign-slot{width:54px;height:52px}.place-head{width:54px;font-size:.72rem}.house-cell{min-height:52px}.operation-preview{font-size:1.7rem}.chip{width:48px;height:48px;font-size:1.55rem}}
   </style>
+  <link rel="stylesheet" href="creditos.css">
+  <link rel="stylesheet" href="pantalla-completa.css">
 </head>
 <body>
 <div class="app">
@@ -428,5 +430,17 @@ setTimeout(()=>layer.remove(),8200);
 }
 window.addEventListener('DOMContentLoaded',()=>{loadName();setShowLeadingZeros(false);$('operationInput').addEventListener('keydown',e=>{if(e.key==='Enter')generateFromInput()})});
 </script>
+
+<footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos">
+  <div class="creditos-dedicatoria">
+    <span class="creditos-gabriel">Creado para <strong>Gabriel</strong></span>
+    <span class="creditos-familia">Por su familia, con ayuda de la IA.</span>
+  </div>
+  <div class="creditos-equipo">
+    <span class="creditos-autores">M.Sc. Jeffry Chavarría-Molina y Doctoranda Natalia Rodríguez-Granados</span>
+    <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
+  </div>
+</footer>
+<script src="pantalla-completa.js"></script>
 </body>
 </html>

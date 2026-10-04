@@ -19,6 +19,8 @@ button,input{font-family:inherit}.app{min-height:100svh;padding:18px;display:fle
 @media (max-width:720px){.hint-controls{margin:0 8px 8px auto;max-width:none;justify-content:flex-end}.hint-controls .btn{min-width:130px;flex:0 1 145px}.app{padding:10px}.panel{border-radius:24px;padding:14px}.tray{min-height:260px;margin-bottom:8px}.controls .btn{flex:1 1 150px}.grid{grid-template-columns:repeat(2,1fr)}.choices-small{grid-template-columns:repeat(4,1fr)}.option{min-height:60px;font-size:1rem}.slots-wrap{padding-top:82px}.slot.hint::before{top:-72px;font-size:.86rem}.slot.hint::after{top:-45px;font-size:2.55rem}}
 @media (max-width:430px){.hint-controls{margin:0 4px 8px auto;gap:8px}.hint-controls .btn{min-width:0;flex:1 1 120px}.choices-small{grid-template-columns:repeat(3,1fr)}.slot{width:62px;height:62px}.slot .token{font-size:1rem;border-radius:17px}.token{width:68px;height:68px;border-radius:20px}.slots{gap:7px 4px}.symbols-on .symbol{min-width:20px;max-width:22px}.btn{font-size:.98rem;padding:13px 14px}}
 </style>
+  <link rel="stylesheet" href="creditos.css">
+  <link rel="stylesheet" href="pantalla-completa.css">
 </head>
 <body>
 <main class="app">
@@ -497,5 +499,17 @@ function rainbowExplosions(parent,duration){
 }
 
 </script>
+
+<footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos">
+  <div class="creditos-dedicatoria">
+    <span class="creditos-gabriel">Creado para <strong>Gabriel</strong></span>
+    <span class="creditos-familia">Por su familia, con ayuda de la IA.</span>
+  </div>
+  <div class="creditos-equipo">
+    <span class="creditos-autores">M.Sc. Jeffry Chavarría-Molina y Doctoranda Natalia Rodríguez-Granados</span>
+    <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
+  </div>
+</footer>
+<script src="pantalla-completa.js"></script>
 </body>
 </html>

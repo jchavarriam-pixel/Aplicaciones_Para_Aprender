@@ -1,0 +1,126 @@
+/* Control flotante compacto, con margen para las zonas seguras del dispositivo. */
+#control-pantalla-completa {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: fixed;
+  right: max(10px, env(safe-area-inset-right));
+  bottom: max(10px, env(safe-area-inset-bottom));
+  width: 94px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  z-index: 10000;
+  font: 400 12px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: #475569;
+}
+#control-pantalla-completa button {
+  box-sizing: border-box;
+  appearance: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  margin: 0;
+  padding: 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  background: #fffffff0;
+  color: #334565;
+  box-shadow: 0 2px 8px rgb(38 55 80 / 12%);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+#control-pantalla-completa[data-corner="bottom-left"],
+#control-pantalla-completa[data-corner="top-left"] {
+  right: auto;
+  left: max(10px, env(safe-area-inset-left));
+}
+#control-pantalla-completa[data-corner="top-left"],
+#control-pantalla-completa[data-corner="top-right"] {
+  bottom: auto;
+  top: max(10px, env(safe-area-inset-top));
+}
+#control-pantalla-completa button:hover { background: #eef3fa; }
+#control-pantalla-completa button:focus-visible { outline: 3px solid #6366f1; outline-offset: 2px; }
+#control-pantalla-completa button:disabled { opacity: .65; cursor: wait; }
+#control-pantalla-completa button { flex: 0 0 auto; }
+#control-pantalla-completa svg {
+  display: block;
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+#mensaje-pantalla-completa {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  right: 0;
+  bottom: 54px;
+  width: min(320px, calc(100vw - 24px));
+  padding: 12px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 3px 12px rgb(38 55 80 / 12%);
+  font: inherit;
+  color: inherit;
+  text-align: left;
+}
+#mensaje-pantalla-completa:empty { display: none; }
+#control-pantalla-completa[data-corner="bottom-left"] #mensaje-pantalla-completa,
+#control-pantalla-completa[data-corner="top-left"] #mensaje-pantalla-completa { right: auto; left: 0; }
+#control-pantalla-completa[data-corner="top-left"] #mensaje-pantalla-completa,
+#control-pantalla-completa[data-corner="top-right"] #mensaje-pantalla-completa { bottom: auto; top: 54px; }
+#panel-zoom-aplicacion {
+  box-sizing: border-box;
+  position: absolute;
+  right: 0;
+  bottom: 54px;
+  width: min(280px, calc(100vw - 24px));
+  padding: 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgb(38 55 80 / 15%);
+  font: 400 13px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: #334565;
+  text-align: left;
+}
+#panel-zoom-aplicacion[hidden] { display: none; }
+#panel-zoom-aplicacion .zoom-cabecera { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-weight: 600; }
+#panel-zoom-aplicacion output { font: inherit; color: inherit; }
+#panel-zoom-aplicacion .zoom-ajuste { display: flex; align-items: center; gap: 10px; }
+#panel-zoom-aplicacion input {
+  box-sizing: border-box;
+  appearance: auto;
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  accent-color: #6366f1;
+  touch-action: pan-y;
+}
+#panel-zoom-aplicacion button { font: 600 20px/1 system-ui, sans-serif; }
+#panel-zoom-aplicacion #restablecer-zoom {
+  width: 100%;
+  margin-top: 10px;
+  font: 500 12px/1.4 system-ui, sans-serif;
+}
+#estado-zoom { display: block; margin-top: 8px; font: 400 11px/1.5 system-ui, sans-serif; color: #526176; }
+#estado-zoom:empty { display: none; }
+#control-pantalla-completa[data-corner="bottom-left"] #panel-zoom-aplicacion,
+#control-pantalla-completa[data-corner="top-left"] #panel-zoom-aplicacion { right: auto; left: 0; }
+#control-pantalla-completa[data-corner="top-left"] #panel-zoom-aplicacion,
+#control-pantalla-completa[data-corner="top-right"] #panel-zoom-aplicacion { bottom: auto; top: 54px; }
