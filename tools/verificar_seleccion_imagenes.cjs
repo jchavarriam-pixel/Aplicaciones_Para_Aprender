@@ -41,7 +41,8 @@ async function main(){
       const row=tomarOracion(level),key=canonical(row.words);
       if(seen.has(key)||(i===0&&key===previous&&pool.length>1))throw Error('Repeticion');
       if(row.extras?.some(p=>excludedImages.has(p)))throw Error('Distractor desmarcado');
-      if([4,6].includes(level)&&![2,3].includes(row.extras.length))throw Error('Distractores');
+      if(level===4&&![2,3].includes(row.extras.length))throw Error('Distractores');
+      if(level>=5&&row.extras.length!==extraWordsCount)throw Error('Cantidad de distractores');
       seen.add(key);previous=key;
      }
     }

@@ -1,0 +1,295 @@
+{
+  "removed": 56,
+  "new": 1983,
+  "total": 31342,
+  "newByLevel": {
+    "1": 9,
+    "2": 18,
+    "3": 489,
+    "4": 489,
+    "5": 489,
+    "6": 489
+  },
+  "removedSamples": [
+    {
+      "level": 6,
+      "text": "Ana lee el libro en la mesa de la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Ana escribe en el cuaderno en la mesa de la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Ana abre la puerta del dormitorio y camina por la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Ana cierra la puerta del dormitorio y camina por la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Carlos lee el libro en la mesa de la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Carlos escribe en el cuaderno en la mesa de la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Carlos abre la puerta del dormitorio y camina por la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Carlos cierra la puerta del dormitorio y camina por la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Daniel lee el libro en la mesa de la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Daniel escribe en el cuaderno en la mesa de la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Daniel abre la puerta del dormitorio y camina por la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Daniel cierra la puerta del dormitorio y camina por la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Jimena lee el libro en la mesa de la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Jimena escribe en el cuaderno en la mesa de la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Jimena abre la puerta del dormitorio y camina por la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Jimena cierra la puerta del dormitorio y camina por la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Juan lee el libro en la mesa de la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Juan escribe en el cuaderno en la mesa de la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Juan abre la puerta del dormitorio y camina por la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Juan cierra la puerta del dormitorio y camina por la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Manuel lee el libro en la mesa de la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Manuel escribe en el cuaderno en la mesa de la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Manuel abre la puerta del dormitorio y camina por la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Manuel cierra la puerta del dormitorio y camina por la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Marta lee el libro en la mesa de la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Marta escribe en el cuaderno en la mesa de la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Marta abre la puerta del dormitorio y camina por la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Marta cierra la puerta del dormitorio y camina por la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Marcos lee el libro en la mesa de la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Marcos escribe en el cuaderno en la mesa de la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Marcos abre la puerta del dormitorio y camina por la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Marcos cierra la puerta del dormitorio y camina por la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Pocoyó lee el libro en la mesa de la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Pocoyó escribe en el cuaderno en la mesa de la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Pocoyó abre la puerta del dormitorio y camina por la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Pocoyó cierra la puerta del dormitorio y camina por la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "el niño lee el libro en la mesa de la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "el niño escribe en el cuaderno en la mesa de la sala de la casa .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "el niño abre la puerta del dormitorio y camina por la sala de la casa .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "el niño cierra la puerta del dormitorio y camina por la sala de la casa .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "la niña lee el libro en la mesa de la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "la niña escribe en el cuaderno en la mesa de la sala de la casa .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "la niña abre la puerta del dormitorio y camina por la sala de la casa .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "la niña cierra la puerta del dormitorio y camina por la sala de la casa .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "los niños leen el libro en la mesa de la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "los niños escriben en el cuaderno en la mesa de la sala de la casa .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "los niños abren la puerta del dormitorio y caminan por la sala de la casa .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "los niños cierran la puerta del dormitorio y caminan por la sala de la casa .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "las niñas leen el libro en la mesa de la sala de la casa durante el día .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "las niñas escriben en el cuaderno en la mesa de la sala de la casa .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "las niñas abren la puerta del dormitorio y caminan por la sala de la casa .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "las niñas cierran la puerta del dormitorio y caminan por la sala de la casa .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Ana duerme en la cama del dormitorio de la casa y descansa durante la noche .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "Marcos duerme en la cama del dormitorio de la casa y descansa durante la noche .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "el niño duerme en la cama del dormitorio de la casa y descansa durante la noche .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    },
+    {
+      "level": 6,
+      "text": "la niña duerme en la cama del dormitorio de la casa y descansa durante la noche .",
+      "reason": "Cadena de lugares sin un atributo útil"
+    }
+  ]
+}

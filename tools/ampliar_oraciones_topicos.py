@@ -59,7 +59,7 @@ NOUNS = {
     'cancha': ('la', 'f'), 'perro': ('el', 'm'), 'gato': ('el', 'm'),
     'conejo': ('el', 'm'), 'caballo': ('el', 'm'), 'libro': ('el', 'm'),
     'cuaderno': ('el', 'm'), 'pelota': ('la', 'f'), 'carro': ('el', 'm'),
-    'bicicleta': ('la', 'f'), 'barco': ('el', 'm'),
+    'bicicleta': ('la', 'f'), 'barco': ('el', 'm'), 'patio': ('el', 'm'),
 }
 
 
@@ -113,6 +113,7 @@ def main():
     seen = {(row['level'], canonical(row['words'])) for row in db['oraciones']}
 
     def add(level, pics, text):
+        if level==6 and db.get('estructura_niveles_version')==2:level=5
         pics = list(dict.fromkeys(pics))
         expected = {1: (2,), 2: (3,), 3: (4, 5), 4: (3, 4, 5), 5: (4, 5), 6: (4, 5)}
         assert len(pics) in expected[level], (level, pics, text)
@@ -228,8 +229,12 @@ def main():
         for place in human_places:
             for action in ('corre', 'salta'):
                 simple([person, action, place], f'{subject} {action} {location(place)}')
+            detailed([person, 'caminar', 'día', place], f'{subject} camina en {phrase(place)} de día')
+            detailed([person, 'caminar', 'soleado', place], f'{subject} camina en {phrase(place)} en un día soleado')
+        for place in ('casa', 'escuela'):
             detailed([person, 'lee', 'libro', place], f'{subject} lee un libro {location(place)}')
             detailed([person, 'escribe', 'cuaderno', place], f'{subject} escribe en el cuaderno {location(place)}')
+        for place in ('patio', 'parque', 'cancha'):
             detailed([person, 'juega', 'pelota', place], f'{subject} juega con la pelota {location(place)}')
         for landmark in ('montaña', 'volcán', 'catarata', 'puente'):
             detailed([person, 'ver', landmark, 'al lado', 'árbol'],

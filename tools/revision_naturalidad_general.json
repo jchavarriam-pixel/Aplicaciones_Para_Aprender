@@ -1,0 +1,437 @@
+{
+  "removed": 15642,
+  "reasons": {
+    "Para la bicicleta es más natural pasear o montar": 5,
+    "Tamaño aplicado a una sustancia sin recipiente o porción": 22,
+    "Plantilla repetitiva de ver un objeto grande o pequeño": 15006,
+    "Vegetal crudo con persona, sin preparación o contexto de ensalada": 606,
+    "Agua azul sin explicación": 3
+  },
+  "updated": 727,
+  "added": 1597,
+  "total": 29415,
+  "levels": {
+    "3": 5727,
+    "1": 729,
+    "2": 4967,
+    "4": 10680,
+    "5": 5727,
+    "6": 1585
+  },
+  "samples": [
+    {
+      "reason": "Para la bicicleta es más natural pasear o montar",
+      "level": 3,
+      "text": "Juan juega con la bicicleta en el parque .",
+      "pics": [
+        "Juan",
+        "juega",
+        "bicicleta",
+        "parque"
+      ]
+    },
+    {
+      "reason": "Para la bicicleta es más natural pasear o montar",
+      "level": 2,
+      "text": "Juan juega con la bicicleta .",
+      "pics": [
+        "Juan",
+        "juega",
+        "bicicleta"
+      ]
+    },
+    {
+      "reason": "Para la bicicleta es más natural pasear o montar",
+      "level": 4,
+      "text": "Juan juega con la bicicleta .",
+      "pics": [
+        "Juan",
+        "juega",
+        "bicicleta"
+      ]
+    },
+    {
+      "reason": "Para la bicicleta es más natural pasear o montar",
+      "level": 4,
+      "text": "Juan juega con la bicicleta en el parque .",
+      "pics": [
+        "Juan",
+        "juega",
+        "bicicleta",
+        "parque"
+      ]
+    },
+    {
+      "reason": "Para la bicicleta es más natural pasear o montar",
+      "level": 5,
+      "text": "Juan juega con la bicicleta en el parque .",
+      "pics": [
+        "Juan",
+        "juega",
+        "bicicleta",
+        "parque"
+      ]
+    },
+    {
+      "reason": "Tamaño aplicado a una sustancia sin recipiente o porción",
+      "level": 2,
+      "text": "las plantas grandes están en el suelo .",
+      "pics": [
+        "plantas",
+        "grande",
+        "suelo"
+      ]
+    },
+    {
+      "reason": "Tamaño aplicado a una sustancia sin recipiente o porción",
+      "level": 4,
+      "text": "las plantas grandes están en el suelo .",
+      "pics": [
+        "plantas",
+        "grande",
+        "suelo"
+      ]
+    },
+    {
+      "reason": "Tamaño aplicado a una sustancia sin recipiente o porción",
+      "level": 2,
+      "text": "las plantas pequeñas están en el suelo .",
+      "pics": [
+        "plantas",
+        "pequeño",
+        "suelo"
+      ]
+    },
+    {
+      "reason": "Tamaño aplicado a una sustancia sin recipiente o porción",
+      "level": 4,
+      "text": "las plantas pequeñas están en el suelo .",
+      "pics": [
+        "plantas",
+        "pequeño",
+        "suelo"
+      ]
+    },
+    {
+      "reason": "Tamaño aplicado a una sustancia sin recipiente o porción",
+      "level": 2,
+      "text": "la arena grande está en la playa .",
+      "pics": [
+        "arena",
+        "grande",
+        "playa"
+      ]
+    },
+    {
+      "reason": "Tamaño aplicado a una sustancia sin recipiente o porción",
+      "level": 4,
+      "text": "la arena grande está en la playa .",
+      "pics": [
+        "arena",
+        "grande",
+        "playa"
+      ]
+    },
+    {
+      "reason": "Tamaño aplicado a una sustancia sin recipiente o porción",
+      "level": 2,
+      "text": "la arena pequeña está en la playa .",
+      "pics": [
+        "arena",
+        "pequeño",
+        "playa"
+      ]
+    },
+    {
+      "reason": "Tamaño aplicado a una sustancia sin recipiente o porción",
+      "level": 4,
+      "text": "la arena pequeña está en la playa .",
+      "pics": [
+        "arena",
+        "pequeño",
+        "playa"
+      ]
+    },
+    {
+      "reason": "Tamaño aplicado a una sustancia sin recipiente o porción",
+      "level": 2,
+      "text": "la arena grande está en la costa .",
+      "pics": [
+        "arena",
+        "grande",
+        "costa"
+      ]
+    },
+    {
+      "reason": "Tamaño aplicado a una sustancia sin recipiente o porción",
+      "level": 4,
+      "text": "la arena grande está en la costa .",
+      "pics": [
+        "arena",
+        "grande",
+        "costa"
+      ]
+    },
+    {
+      "reason": "Tamaño aplicado a una sustancia sin recipiente o porción",
+      "level": 2,
+      "text": "la arena pequeña está en la costa .",
+      "pics": [
+        "arena",
+        "pequeño",
+        "costa"
+      ]
+    },
+    {
+      "reason": "Tamaño aplicado a una sustancia sin recipiente o porción",
+      "level": 4,
+      "text": "la arena pequeña está en la costa .",
+      "pics": [
+        "arena",
+        "pequeño",
+        "costa"
+      ]
+    },
+    {
+      "reason": "Tamaño aplicado a una sustancia sin recipiente o porción",
+      "level": 1,
+      "text": "el suelo es grande .",
+      "pics": [
+        "suelo",
+        "grande"
+      ]
+    },
+    {
+      "reason": "Tamaño aplicado a una sustancia sin recipiente o porción",
+      "level": 1,
+      "text": "el suelo es pequeño .",
+      "pics": [
+        "suelo",
+        "pequeño"
+      ]
+    },
+    {
+      "reason": "Tamaño aplicado a una sustancia sin recipiente o porción",
+      "level": 1,
+      "text": "la arena es grande .",
+      "pics": [
+        "arena",
+        "grande"
+      ]
+    },
+    {
+      "reason": "Tamaño aplicado a una sustancia sin recipiente o porción",
+      "level": 1,
+      "text": "la arena es pequeña .",
+      "pics": [
+        "arena",
+        "pequeño"
+      ]
+    },
+    {
+      "reason": "Tamaño aplicado a una sustancia sin recipiente o porción",
+      "level": 1,
+      "text": "el gel es grande .",
+      "pics": [
+        "gel",
+        "grande"
+      ]
+    },
+    {
+      "reason": "Tamaño aplicado a una sustancia sin recipiente o porción",
+      "level": 1,
+      "text": "el gel es pequeño .",
+      "pics": [
+        "gel",
+        "pequeño"
+      ]
+    },
+    {
+      "reason": "Plantilla repetitiva de ver un objeto grande o pequeño",
+      "level": 3,
+      "text": "Ana ve el suelo grande .",
+      "pics": [
+        "Ana",
+        "ver",
+        "suelo",
+        "grande"
+      ]
+    },
+    {
+      "reason": "Plantilla repetitiva de ver un objeto grande o pequeño",
+      "level": 4,
+      "text": "Ana ve el suelo grande .",
+      "pics": [
+        "Ana",
+        "ver",
+        "suelo",
+        "grande"
+      ]
+    },
+    {
+      "reason": "Plantilla repetitiva de ver un objeto grande o pequeño",
+      "level": 5,
+      "text": "Ana ve el suelo grande .",
+      "pics": [
+        "Ana",
+        "ver",
+        "suelo",
+        "grande"
+      ]
+    },
+    {
+      "reason": "Plantilla repetitiva de ver un objeto grande o pequeño",
+      "level": 3,
+      "text": "Ana ve el suelo pequeño .",
+      "pics": [
+        "Ana",
+        "ver",
+        "suelo",
+        "pequeño"
+      ]
+    },
+    {
+      "reason": "Plantilla repetitiva de ver un objeto grande o pequeño",
+      "level": 4,
+      "text": "Ana ve el suelo pequeño .",
+      "pics": [
+        "Ana",
+        "ver",
+        "suelo",
+        "pequeño"
+      ]
+    },
+    {
+      "reason": "Plantilla repetitiva de ver un objeto grande o pequeño",
+      "level": 5,
+      "text": "Ana ve el suelo pequeño .",
+      "pics": [
+        "Ana",
+        "ver",
+        "suelo",
+        "pequeño"
+      ]
+    },
+    {
+      "reason": "Plantilla repetitiva de ver un objeto grande o pequeño",
+      "level": 3,
+      "text": "Ana ve la arena grande .",
+      "pics": [
+        "Ana",
+        "ver",
+        "arena",
+        "grande"
+      ]
+    },
+    {
+      "reason": "Plantilla repetitiva de ver un objeto grande o pequeño",
+      "level": 4,
+      "text": "Ana ve la arena grande .",
+      "pics": [
+        "Ana",
+        "ver",
+        "arena",
+        "grande"
+      ]
+    },
+    {
+      "reason": "Plantilla repetitiva de ver un objeto grande o pequeño",
+      "level": 5,
+      "text": "Ana ve la arena grande .",
+      "pics": [
+        "Ana",
+        "ver",
+        "arena",
+        "grande"
+      ]
+    },
+    {
+      "reason": "Plantilla repetitiva de ver un objeto grande o pequeño",
+      "level": 3,
+      "text": "Ana ve la arena pequeña .",
+      "pics": [
+        "Ana",
+        "ver",
+        "arena",
+        "pequeño"
+      ]
+    },
+    {
+      "reason": "Plantilla repetitiva de ver un objeto grande o pequeño",
+      "level": 4,
+      "text": "Ana ve la arena pequeña .",
+      "pics": [
+        "Ana",
+        "ver",
+        "arena",
+        "pequeño"
+      ]
+    },
+    {
+      "reason": "Plantilla repetitiva de ver un objeto grande o pequeño",
+      "level": 5,
+      "text": "Ana ve la arena pequeña .",
+      "pics": [
+        "Ana",
+        "ver",
+        "arena",
+        "pequeño"
+      ]
+    },
+    {
+      "reason": "Plantilla repetitiva de ver un objeto grande o pequeño",
+      "level": 3,
+      "text": "Ana ve el árbol grande .",
+      "pics": [
+        "Ana",
+        "ver",
+        "árbol",
+        "grande"
+      ]
+    },
+    {
+      "reason": "Plantilla repetitiva de ver un objeto grande o pequeño",
+      "level": 4,
+      "text": "Ana ve el árbol grande .",
+      "pics": [
+        "Ana",
+        "ver",
+        "árbol",
+        "grande"
+      ]
+    },
+    {
+      "reason": "Plantilla repetitiva de ver un objeto grande o pequeño",
+      "level": 5,
+      "text": "Ana ve el árbol grande .",
+      "pics": [
+        "Ana",
+        "ver",
+        "árbol",
+        "grande"
+      ]
+    },
+    {
+      "reason": "Plantilla repetitiva de ver un objeto grande o pequeño",
+      "level": 3,
+      "text": "Ana ve el árbol pequeño .",
+      "pics": [
+        "Ana",
+        "ver",
+        "árbol",
+        "pequeño"
+      ]
+    },
+    {
+      "reason": "Plantilla repetitiva de ver un objeto grande o pequeño",
+      "level": 4,
+      "text": "Ana ve el árbol pequeño .",
+      "pics": [
+        "Ana",
+        "ver",
+        "árbol",
+        "pequeño"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,2170 @@
+{
+  "criterios": [
+    "Leer, escribir y estudiar en espacios cotidianos",
+    "Caminar por espacios naturales de día",
+    "Jugar con pelota en patio, parque, cancha o casa",
+    "En y por válidos en las nuevas frases de caminar"
+  ],
+  "cambios": [
+    {
+      "antes": "Ana lee un libro en el bosque .",
+      "despues": "Ana camina por el bosque en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Ana lee un libro en el bosque .",
+      "despues": "Ana camina por el bosque en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Ana lee un libro en el bosque .",
+      "despues": "Ana camina por el bosque en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Ana lee un libro en el bosque .",
+      "despues": "Ana camina por el bosque en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Ana escribe en el cuaderno en el bosque .",
+      "despues": "Ana camina por el bosque de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Ana escribe en el cuaderno en el bosque .",
+      "despues": "Ana camina por el bosque de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Ana escribe en el cuaderno en el bosque .",
+      "despues": "Ana camina por el bosque de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Ana escribe en el cuaderno en el bosque .",
+      "despues": "Ana camina por el bosque de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Ana juega con la pelota en el bosque .",
+      "despues": "Ana juega con la pelota en el parque .",
+      "nivel": 3
+    },
+    {
+      "antes": "Ana juega con la pelota en el bosque .",
+      "despues": "Ana juega con la pelota en el parque .",
+      "nivel": 4
+    },
+    {
+      "antes": "Ana juega con la pelota en el bosque .",
+      "despues": "Ana juega con la pelota en el parque .",
+      "nivel": 5
+    },
+    {
+      "antes": "Ana juega con la pelota en el bosque .",
+      "despues": "Ana juega con la pelota en el parque .",
+      "nivel": 6
+    },
+    {
+      "antes": "Ana lee un libro en el valle .",
+      "despues": "Ana camina por el valle en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Ana lee un libro en el valle .",
+      "despues": "Ana camina por el valle en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Ana lee un libro en el valle .",
+      "despues": "Ana camina por el valle en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Ana lee un libro en el valle .",
+      "despues": "Ana camina por el valle en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Ana escribe en el cuaderno en el valle .",
+      "despues": "Ana camina por el valle de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Ana escribe en el cuaderno en el valle .",
+      "despues": "Ana camina por el valle de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Ana escribe en el cuaderno en el valle .",
+      "despues": "Ana camina por el valle de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Ana escribe en el cuaderno en el valle .",
+      "despues": "Ana camina por el valle de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Ana juega con la pelota en el valle .",
+      "despues": "Ana juega con la pelota en el patio .",
+      "nivel": 3
+    },
+    {
+      "antes": "Ana juega con la pelota en el valle .",
+      "despues": "Ana juega con la pelota en el patio .",
+      "nivel": 4
+    },
+    {
+      "antes": "Ana juega con la pelota en el valle .",
+      "despues": "Ana juega con la pelota en el patio .",
+      "nivel": 5
+    },
+    {
+      "antes": "Ana juega con la pelota en el valle .",
+      "despues": "Ana juega con la pelota en el patio .",
+      "nivel": 6
+    },
+    {
+      "antes": "Ana lee un libro en la llanura .",
+      "despues": "Ana camina por la llanura en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Ana lee un libro en la llanura .",
+      "despues": "Ana camina por la llanura en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Ana lee un libro en la llanura .",
+      "despues": "Ana camina por la llanura en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Ana lee un libro en la llanura .",
+      "despues": "Ana camina por la llanura en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Ana escribe en el cuaderno en la llanura .",
+      "despues": "Ana camina por la llanura de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Ana escribe en el cuaderno en la llanura .",
+      "despues": "Ana camina por la llanura de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Ana escribe en el cuaderno en la llanura .",
+      "despues": "Ana camina por la llanura de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Ana escribe en el cuaderno en la llanura .",
+      "despues": "Ana camina por la llanura de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Ana juega con la pelota en la llanura .",
+      "despues": "Ana juega con la pelota en la cancha .",
+      "nivel": 3
+    },
+    {
+      "antes": "Ana juega con la pelota en la llanura .",
+      "despues": "Ana juega con la pelota en la cancha .",
+      "nivel": 4
+    },
+    {
+      "antes": "Ana juega con la pelota en la llanura .",
+      "despues": "Ana juega con la pelota en la cancha .",
+      "nivel": 5
+    },
+    {
+      "antes": "Ana juega con la pelota en la llanura .",
+      "despues": "Ana juega con la pelota en la cancha .",
+      "nivel": 6
+    },
+    {
+      "antes": "Ana lee un libro en la costa .",
+      "despues": "Ana camina por la costa en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Ana lee un libro en la costa .",
+      "despues": "Ana camina por la costa en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Ana lee un libro en la costa .",
+      "despues": "Ana camina por la costa en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Ana lee un libro en la costa .",
+      "despues": "Ana camina por la costa en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Ana escribe en el cuaderno en la costa .",
+      "despues": "Ana camina por la costa de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Ana escribe en el cuaderno en la costa .",
+      "despues": "Ana camina por la costa de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Ana escribe en el cuaderno en la costa .",
+      "despues": "Ana camina por la costa de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Ana escribe en el cuaderno en la costa .",
+      "despues": "Ana camina por la costa de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Ana juega con la pelota en la costa .",
+      "despues": "Ana juega con la pelota en la casa .",
+      "nivel": 3
+    },
+    {
+      "antes": "Ana juega con la pelota en la costa .",
+      "despues": "Ana juega con la pelota en la casa .",
+      "nivel": 4
+    },
+    {
+      "antes": "Ana juega con la pelota en la costa .",
+      "despues": "Ana juega con la pelota en la casa .",
+      "nivel": 5
+    },
+    {
+      "antes": "Ana juega con la pelota en la costa .",
+      "despues": "Ana juega con la pelota en la casa .",
+      "nivel": 6
+    },
+    {
+      "antes": "Carlos lee un libro en el bosque .",
+      "despues": "Carlos camina por el bosque en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Carlos lee un libro en el bosque .",
+      "despues": "Carlos camina por el bosque en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Carlos lee un libro en el bosque .",
+      "despues": "Carlos camina por el bosque en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Carlos lee un libro en el bosque .",
+      "despues": "Carlos camina por el bosque en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Carlos escribe en el cuaderno en el bosque .",
+      "despues": "Carlos camina por el bosque de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Carlos escribe en el cuaderno en el bosque .",
+      "despues": "Carlos camina por el bosque de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Carlos escribe en el cuaderno en el bosque .",
+      "despues": "Carlos camina por el bosque de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Carlos escribe en el cuaderno en el bosque .",
+      "despues": "Carlos camina por el bosque de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Carlos juega con la pelota en el bosque .",
+      "despues": "Carlos juega con la pelota en el parque .",
+      "nivel": 3
+    },
+    {
+      "antes": "Carlos juega con la pelota en el bosque .",
+      "despues": "Carlos juega con la pelota en el parque .",
+      "nivel": 4
+    },
+    {
+      "antes": "Carlos juega con la pelota en el bosque .",
+      "despues": "Carlos juega con la pelota en el parque .",
+      "nivel": 5
+    },
+    {
+      "antes": "Carlos juega con la pelota en el bosque .",
+      "despues": "Carlos juega con la pelota en el parque .",
+      "nivel": 6
+    },
+    {
+      "antes": "Carlos lee un libro en el valle .",
+      "despues": "Carlos camina por el valle en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Carlos lee un libro en el valle .",
+      "despues": "Carlos camina por el valle en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Carlos lee un libro en el valle .",
+      "despues": "Carlos camina por el valle en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Carlos lee un libro en el valle .",
+      "despues": "Carlos camina por el valle en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Carlos escribe en el cuaderno en el valle .",
+      "despues": "Carlos camina por el valle de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Carlos escribe en el cuaderno en el valle .",
+      "despues": "Carlos camina por el valle de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Carlos escribe en el cuaderno en el valle .",
+      "despues": "Carlos camina por el valle de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Carlos escribe en el cuaderno en el valle .",
+      "despues": "Carlos camina por el valle de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Carlos juega con la pelota en el valle .",
+      "despues": "Carlos juega con la pelota en el patio .",
+      "nivel": 3
+    },
+    {
+      "antes": "Carlos juega con la pelota en el valle .",
+      "despues": "Carlos juega con la pelota en el patio .",
+      "nivel": 4
+    },
+    {
+      "antes": "Carlos juega con la pelota en el valle .",
+      "despues": "Carlos juega con la pelota en el patio .",
+      "nivel": 5
+    },
+    {
+      "antes": "Carlos juega con la pelota en el valle .",
+      "despues": "Carlos juega con la pelota en el patio .",
+      "nivel": 6
+    },
+    {
+      "antes": "Carlos lee un libro en la llanura .",
+      "despues": "Carlos camina por la llanura en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Carlos lee un libro en la llanura .",
+      "despues": "Carlos camina por la llanura en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Carlos lee un libro en la llanura .",
+      "despues": "Carlos camina por la llanura en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Carlos lee un libro en la llanura .",
+      "despues": "Carlos camina por la llanura en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Carlos escribe en el cuaderno en la llanura .",
+      "despues": "Carlos camina por la llanura de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Carlos escribe en el cuaderno en la llanura .",
+      "despues": "Carlos camina por la llanura de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Carlos escribe en el cuaderno en la llanura .",
+      "despues": "Carlos camina por la llanura de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Carlos escribe en el cuaderno en la llanura .",
+      "despues": "Carlos camina por la llanura de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Carlos juega con la pelota en la llanura .",
+      "despues": "Carlos juega con la pelota en la cancha .",
+      "nivel": 3
+    },
+    {
+      "antes": "Carlos juega con la pelota en la llanura .",
+      "despues": "Carlos juega con la pelota en la cancha .",
+      "nivel": 4
+    },
+    {
+      "antes": "Carlos juega con la pelota en la llanura .",
+      "despues": "Carlos juega con la pelota en la cancha .",
+      "nivel": 5
+    },
+    {
+      "antes": "Carlos juega con la pelota en la llanura .",
+      "despues": "Carlos juega con la pelota en la cancha .",
+      "nivel": 6
+    },
+    {
+      "antes": "Carlos lee un libro en la costa .",
+      "despues": "Carlos camina por la costa en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Carlos lee un libro en la costa .",
+      "despues": "Carlos camina por la costa en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Carlos lee un libro en la costa .",
+      "despues": "Carlos camina por la costa en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Carlos lee un libro en la costa .",
+      "despues": "Carlos camina por la costa en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Carlos escribe en el cuaderno en la costa .",
+      "despues": "Carlos camina por la costa de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Carlos escribe en el cuaderno en la costa .",
+      "despues": "Carlos camina por la costa de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Carlos escribe en el cuaderno en la costa .",
+      "despues": "Carlos camina por la costa de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Carlos escribe en el cuaderno en la costa .",
+      "despues": "Carlos camina por la costa de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Carlos juega con la pelota en la costa .",
+      "despues": "Carlos juega con la pelota en la casa .",
+      "nivel": 3
+    },
+    {
+      "antes": "Carlos juega con la pelota en la costa .",
+      "despues": "Carlos juega con la pelota en la casa .",
+      "nivel": 4
+    },
+    {
+      "antes": "Carlos juega con la pelota en la costa .",
+      "despues": "Carlos juega con la pelota en la casa .",
+      "nivel": 5
+    },
+    {
+      "antes": "Carlos juega con la pelota en la costa .",
+      "despues": "Carlos juega con la pelota en la casa .",
+      "nivel": 6
+    },
+    {
+      "antes": "Daniel lee un libro en el bosque .",
+      "despues": "Daniel camina por el bosque en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Daniel lee un libro en el bosque .",
+      "despues": "Daniel camina por el bosque en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Daniel lee un libro en el bosque .",
+      "despues": "Daniel camina por el bosque en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Daniel lee un libro en el bosque .",
+      "despues": "Daniel camina por el bosque en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Daniel escribe en el cuaderno en el bosque .",
+      "despues": "Daniel camina por el bosque de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Daniel escribe en el cuaderno en el bosque .",
+      "despues": "Daniel camina por el bosque de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Daniel escribe en el cuaderno en el bosque .",
+      "despues": "Daniel camina por el bosque de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Daniel escribe en el cuaderno en el bosque .",
+      "despues": "Daniel camina por el bosque de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Daniel juega con la pelota en el bosque .",
+      "despues": "Daniel juega con la pelota en el parque .",
+      "nivel": 3
+    },
+    {
+      "antes": "Daniel juega con la pelota en el bosque .",
+      "despues": "Daniel juega con la pelota en el parque .",
+      "nivel": 4
+    },
+    {
+      "antes": "Daniel juega con la pelota en el bosque .",
+      "despues": "Daniel juega con la pelota en el parque .",
+      "nivel": 5
+    },
+    {
+      "antes": "Daniel juega con la pelota en el bosque .",
+      "despues": "Daniel juega con la pelota en el parque .",
+      "nivel": 6
+    },
+    {
+      "antes": "Daniel lee un libro en el valle .",
+      "despues": "Daniel camina por el valle en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Daniel lee un libro en el valle .",
+      "despues": "Daniel camina por el valle en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Daniel lee un libro en el valle .",
+      "despues": "Daniel camina por el valle en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Daniel lee un libro en el valle .",
+      "despues": "Daniel camina por el valle en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Daniel escribe en el cuaderno en el valle .",
+      "despues": "Daniel camina por el valle de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Daniel escribe en el cuaderno en el valle .",
+      "despues": "Daniel camina por el valle de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Daniel escribe en el cuaderno en el valle .",
+      "despues": "Daniel camina por el valle de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Daniel escribe en el cuaderno en el valle .",
+      "despues": "Daniel camina por el valle de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Daniel juega con la pelota en el valle .",
+      "despues": "Daniel juega con la pelota en el patio .",
+      "nivel": 3
+    },
+    {
+      "antes": "Daniel juega con la pelota en el valle .",
+      "despues": "Daniel juega con la pelota en el patio .",
+      "nivel": 4
+    },
+    {
+      "antes": "Daniel juega con la pelota en el valle .",
+      "despues": "Daniel juega con la pelota en el patio .",
+      "nivel": 5
+    },
+    {
+      "antes": "Daniel juega con la pelota en el valle .",
+      "despues": "Daniel juega con la pelota en el patio .",
+      "nivel": 6
+    },
+    {
+      "antes": "Daniel lee un libro en la llanura .",
+      "despues": "Daniel camina por la llanura en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Daniel lee un libro en la llanura .",
+      "despues": "Daniel camina por la llanura en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Daniel lee un libro en la llanura .",
+      "despues": "Daniel camina por la llanura en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Daniel lee un libro en la llanura .",
+      "despues": "Daniel camina por la llanura en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Daniel escribe en el cuaderno en la llanura .",
+      "despues": "Daniel camina por la llanura de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Daniel escribe en el cuaderno en la llanura .",
+      "despues": "Daniel camina por la llanura de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Daniel escribe en el cuaderno en la llanura .",
+      "despues": "Daniel camina por la llanura de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Daniel escribe en el cuaderno en la llanura .",
+      "despues": "Daniel camina por la llanura de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Daniel juega con la pelota en la llanura .",
+      "despues": "Daniel juega con la pelota en la cancha .",
+      "nivel": 3
+    },
+    {
+      "antes": "Daniel juega con la pelota en la llanura .",
+      "despues": "Daniel juega con la pelota en la cancha .",
+      "nivel": 4
+    },
+    {
+      "antes": "Daniel juega con la pelota en la llanura .",
+      "despues": "Daniel juega con la pelota en la cancha .",
+      "nivel": 5
+    },
+    {
+      "antes": "Daniel juega con la pelota en la llanura .",
+      "despues": "Daniel juega con la pelota en la cancha .",
+      "nivel": 6
+    },
+    {
+      "antes": "Daniel lee un libro en la costa .",
+      "despues": "Daniel camina por la costa en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Daniel lee un libro en la costa .",
+      "despues": "Daniel camina por la costa en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Daniel lee un libro en la costa .",
+      "despues": "Daniel camina por la costa en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Daniel lee un libro en la costa .",
+      "despues": "Daniel camina por la costa en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Daniel escribe en el cuaderno en la costa .",
+      "despues": "Daniel camina por la costa de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Daniel escribe en el cuaderno en la costa .",
+      "despues": "Daniel camina por la costa de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Daniel escribe en el cuaderno en la costa .",
+      "despues": "Daniel camina por la costa de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Daniel escribe en el cuaderno en la costa .",
+      "despues": "Daniel camina por la costa de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Daniel juega con la pelota en la costa .",
+      "despues": "Daniel juega con la pelota en la casa .",
+      "nivel": 3
+    },
+    {
+      "antes": "Daniel juega con la pelota en la costa .",
+      "despues": "Daniel juega con la pelota en la casa .",
+      "nivel": 4
+    },
+    {
+      "antes": "Daniel juega con la pelota en la costa .",
+      "despues": "Daniel juega con la pelota en la casa .",
+      "nivel": 5
+    },
+    {
+      "antes": "Daniel juega con la pelota en la costa .",
+      "despues": "Daniel juega con la pelota en la casa .",
+      "nivel": 6
+    },
+    {
+      "antes": "Jimena lee un libro en el bosque .",
+      "despues": "Jimena camina por el bosque en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Jimena lee un libro en el bosque .",
+      "despues": "Jimena camina por el bosque en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Jimena lee un libro en el bosque .",
+      "despues": "Jimena camina por el bosque en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Jimena lee un libro en el bosque .",
+      "despues": "Jimena camina por el bosque en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Jimena escribe en el cuaderno en el bosque .",
+      "despues": "Jimena camina por el bosque de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Jimena escribe en el cuaderno en el bosque .",
+      "despues": "Jimena camina por el bosque de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Jimena escribe en el cuaderno en el bosque .",
+      "despues": "Jimena camina por el bosque de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Jimena escribe en el cuaderno en el bosque .",
+      "despues": "Jimena camina por el bosque de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Jimena juega con la pelota en el bosque .",
+      "despues": "Jimena juega con la pelota en el parque .",
+      "nivel": 3
+    },
+    {
+      "antes": "Jimena juega con la pelota en el bosque .",
+      "despues": "Jimena juega con la pelota en el parque .",
+      "nivel": 4
+    },
+    {
+      "antes": "Jimena juega con la pelota en el bosque .",
+      "despues": "Jimena juega con la pelota en el parque .",
+      "nivel": 5
+    },
+    {
+      "antes": "Jimena juega con la pelota en el bosque .",
+      "despues": "Jimena juega con la pelota en el parque .",
+      "nivel": 6
+    },
+    {
+      "antes": "Jimena lee un libro en el valle .",
+      "despues": "Jimena camina por el valle en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Jimena lee un libro en el valle .",
+      "despues": "Jimena camina por el valle en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Jimena lee un libro en el valle .",
+      "despues": "Jimena camina por el valle en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Jimena lee un libro en el valle .",
+      "despues": "Jimena camina por el valle en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Jimena escribe en el cuaderno en el valle .",
+      "despues": "Jimena camina por el valle de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Jimena escribe en el cuaderno en el valle .",
+      "despues": "Jimena camina por el valle de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Jimena escribe en el cuaderno en el valle .",
+      "despues": "Jimena camina por el valle de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Jimena escribe en el cuaderno en el valle .",
+      "despues": "Jimena camina por el valle de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Jimena juega con la pelota en el valle .",
+      "despues": "Jimena juega con la pelota en el patio .",
+      "nivel": 3
+    },
+    {
+      "antes": "Jimena juega con la pelota en el valle .",
+      "despues": "Jimena juega con la pelota en el patio .",
+      "nivel": 4
+    },
+    {
+      "antes": "Jimena juega con la pelota en el valle .",
+      "despues": "Jimena juega con la pelota en el patio .",
+      "nivel": 5
+    },
+    {
+      "antes": "Jimena juega con la pelota en el valle .",
+      "despues": "Jimena juega con la pelota en el patio .",
+      "nivel": 6
+    },
+    {
+      "antes": "Jimena lee un libro en la llanura .",
+      "despues": "Jimena camina por la llanura en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Jimena lee un libro en la llanura .",
+      "despues": "Jimena camina por la llanura en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Jimena lee un libro en la llanura .",
+      "despues": "Jimena camina por la llanura en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Jimena lee un libro en la llanura .",
+      "despues": "Jimena camina por la llanura en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Jimena escribe en el cuaderno en la llanura .",
+      "despues": "Jimena camina por la llanura de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Jimena escribe en el cuaderno en la llanura .",
+      "despues": "Jimena camina por la llanura de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Jimena escribe en el cuaderno en la llanura .",
+      "despues": "Jimena camina por la llanura de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Jimena escribe en el cuaderno en la llanura .",
+      "despues": "Jimena camina por la llanura de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Jimena juega con la pelota en la llanura .",
+      "despues": "Jimena juega con la pelota en la cancha .",
+      "nivel": 3
+    },
+    {
+      "antes": "Jimena juega con la pelota en la llanura .",
+      "despues": "Jimena juega con la pelota en la cancha .",
+      "nivel": 4
+    },
+    {
+      "antes": "Jimena juega con la pelota en la llanura .",
+      "despues": "Jimena juega con la pelota en la cancha .",
+      "nivel": 5
+    },
+    {
+      "antes": "Jimena juega con la pelota en la llanura .",
+      "despues": "Jimena juega con la pelota en la cancha .",
+      "nivel": 6
+    },
+    {
+      "antes": "Jimena lee un libro en la costa .",
+      "despues": "Jimena camina por la costa en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Jimena lee un libro en la costa .",
+      "despues": "Jimena camina por la costa en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Jimena lee un libro en la costa .",
+      "despues": "Jimena camina por la costa en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Jimena lee un libro en la costa .",
+      "despues": "Jimena camina por la costa en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Jimena escribe en el cuaderno en la costa .",
+      "despues": "Jimena camina por la costa de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Jimena escribe en el cuaderno en la costa .",
+      "despues": "Jimena camina por la costa de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Jimena escribe en el cuaderno en la costa .",
+      "despues": "Jimena camina por la costa de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Jimena escribe en el cuaderno en la costa .",
+      "despues": "Jimena camina por la costa de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Jimena juega con la pelota en la costa .",
+      "despues": "Jimena juega con la pelota en la casa .",
+      "nivel": 3
+    },
+    {
+      "antes": "Jimena juega con la pelota en la costa .",
+      "despues": "Jimena juega con la pelota en la casa .",
+      "nivel": 4
+    },
+    {
+      "antes": "Jimena juega con la pelota en la costa .",
+      "despues": "Jimena juega con la pelota en la casa .",
+      "nivel": 5
+    },
+    {
+      "antes": "Jimena juega con la pelota en la costa .",
+      "despues": "Jimena juega con la pelota en la casa .",
+      "nivel": 6
+    },
+    {
+      "antes": "Juan lee un libro en el bosque .",
+      "despues": "Juan camina por el bosque en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Juan lee un libro en el bosque .",
+      "despues": "Juan camina por el bosque en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Juan lee un libro en el bosque .",
+      "despues": "Juan camina por el bosque en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Juan lee un libro en el bosque .",
+      "despues": "Juan camina por el bosque en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Juan escribe en el cuaderno en el bosque .",
+      "despues": "Juan camina por el bosque de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Juan escribe en el cuaderno en el bosque .",
+      "despues": "Juan camina por el bosque de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Juan escribe en el cuaderno en el bosque .",
+      "despues": "Juan camina por el bosque de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Juan escribe en el cuaderno en el bosque .",
+      "despues": "Juan camina por el bosque de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Juan juega con la pelota en el bosque .",
+      "despues": "Juan juega con la pelota en el parque .",
+      "nivel": 3
+    },
+    {
+      "antes": "Juan juega con la pelota en el bosque .",
+      "despues": "Juan juega con la pelota en el parque .",
+      "nivel": 4
+    },
+    {
+      "antes": "Juan juega con la pelota en el bosque .",
+      "despues": "Juan juega con la pelota en el parque .",
+      "nivel": 5
+    },
+    {
+      "antes": "Juan juega con la pelota en el bosque .",
+      "despues": "Juan juega con la pelota en el parque .",
+      "nivel": 6
+    },
+    {
+      "antes": "Juan lee un libro en el valle .",
+      "despues": "Juan camina por el valle en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Juan lee un libro en el valle .",
+      "despues": "Juan camina por el valle en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Juan lee un libro en el valle .",
+      "despues": "Juan camina por el valle en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Juan lee un libro en el valle .",
+      "despues": "Juan camina por el valle en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Juan escribe en el cuaderno en el valle .",
+      "despues": "Juan camina por el valle de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Juan escribe en el cuaderno en el valle .",
+      "despues": "Juan camina por el valle de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Juan escribe en el cuaderno en el valle .",
+      "despues": "Juan camina por el valle de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Juan escribe en el cuaderno en el valle .",
+      "despues": "Juan camina por el valle de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Juan juega con la pelota en el valle .",
+      "despues": "Juan juega con la pelota en el patio .",
+      "nivel": 3
+    },
+    {
+      "antes": "Juan juega con la pelota en el valle .",
+      "despues": "Juan juega con la pelota en el patio .",
+      "nivel": 4
+    },
+    {
+      "antes": "Juan juega con la pelota en el valle .",
+      "despues": "Juan juega con la pelota en el patio .",
+      "nivel": 5
+    },
+    {
+      "antes": "Juan juega con la pelota en el valle .",
+      "despues": "Juan juega con la pelota en el patio .",
+      "nivel": 6
+    },
+    {
+      "antes": "Juan lee un libro en la llanura .",
+      "despues": "Juan camina por la llanura en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Juan lee un libro en la llanura .",
+      "despues": "Juan camina por la llanura en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Juan lee un libro en la llanura .",
+      "despues": "Juan camina por la llanura en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Juan lee un libro en la llanura .",
+      "despues": "Juan camina por la llanura en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Juan escribe en el cuaderno en la llanura .",
+      "despues": "Juan camina por la llanura de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Juan escribe en el cuaderno en la llanura .",
+      "despues": "Juan camina por la llanura de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Juan escribe en el cuaderno en la llanura .",
+      "despues": "Juan camina por la llanura de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Juan escribe en el cuaderno en la llanura .",
+      "despues": "Juan camina por la llanura de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Juan juega con la pelota en la llanura .",
+      "despues": "Juan juega con la pelota en la cancha .",
+      "nivel": 3
+    },
+    {
+      "antes": "Juan juega con la pelota en la llanura .",
+      "despues": "Juan juega con la pelota en la cancha .",
+      "nivel": 4
+    },
+    {
+      "antes": "Juan juega con la pelota en la llanura .",
+      "despues": "Juan juega con la pelota en la cancha .",
+      "nivel": 5
+    },
+    {
+      "antes": "Juan juega con la pelota en la llanura .",
+      "despues": "Juan juega con la pelota en la cancha .",
+      "nivel": 6
+    },
+    {
+      "antes": "Juan lee un libro en la costa .",
+      "despues": "Juan camina por la costa en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Juan lee un libro en la costa .",
+      "despues": "Juan camina por la costa en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Juan lee un libro en la costa .",
+      "despues": "Juan camina por la costa en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Juan lee un libro en la costa .",
+      "despues": "Juan camina por la costa en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Juan escribe en el cuaderno en la costa .",
+      "despues": "Juan camina por la costa de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Juan escribe en el cuaderno en la costa .",
+      "despues": "Juan camina por la costa de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Juan escribe en el cuaderno en la costa .",
+      "despues": "Juan camina por la costa de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Juan escribe en el cuaderno en la costa .",
+      "despues": "Juan camina por la costa de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Juan juega con la pelota en la costa .",
+      "despues": "Juan juega con la pelota en la casa .",
+      "nivel": 3
+    },
+    {
+      "antes": "Juan juega con la pelota en la costa .",
+      "despues": "Juan juega con la pelota en la casa .",
+      "nivel": 4
+    },
+    {
+      "antes": "Juan juega con la pelota en la costa .",
+      "despues": "Juan juega con la pelota en la casa .",
+      "nivel": 5
+    },
+    {
+      "antes": "Juan juega con la pelota en la costa .",
+      "despues": "Juan juega con la pelota en la casa .",
+      "nivel": 6
+    },
+    {
+      "antes": "Manuel lee un libro en el bosque .",
+      "despues": "Manuel camina por el bosque en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Manuel lee un libro en el bosque .",
+      "despues": "Manuel camina por el bosque en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Manuel lee un libro en el bosque .",
+      "despues": "Manuel camina por el bosque en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Manuel lee un libro en el bosque .",
+      "despues": "Manuel camina por el bosque en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Manuel escribe en el cuaderno en el bosque .",
+      "despues": "Manuel camina por el bosque de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Manuel escribe en el cuaderno en el bosque .",
+      "despues": "Manuel camina por el bosque de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Manuel escribe en el cuaderno en el bosque .",
+      "despues": "Manuel camina por el bosque de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Manuel escribe en el cuaderno en el bosque .",
+      "despues": "Manuel camina por el bosque de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Manuel juega con la pelota en el bosque .",
+      "despues": "Manuel juega con la pelota en el parque .",
+      "nivel": 3
+    },
+    {
+      "antes": "Manuel juega con la pelota en el bosque .",
+      "despues": "Manuel juega con la pelota en el parque .",
+      "nivel": 4
+    },
+    {
+      "antes": "Manuel juega con la pelota en el bosque .",
+      "despues": "Manuel juega con la pelota en el parque .",
+      "nivel": 5
+    },
+    {
+      "antes": "Manuel juega con la pelota en el bosque .",
+      "despues": "Manuel juega con la pelota en el parque .",
+      "nivel": 6
+    },
+    {
+      "antes": "Manuel lee un libro en el valle .",
+      "despues": "Manuel camina por el valle en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Manuel lee un libro en el valle .",
+      "despues": "Manuel camina por el valle en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Manuel lee un libro en el valle .",
+      "despues": "Manuel camina por el valle en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Manuel lee un libro en el valle .",
+      "despues": "Manuel camina por el valle en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Manuel escribe en el cuaderno en el valle .",
+      "despues": "Manuel camina por el valle de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Manuel escribe en el cuaderno en el valle .",
+      "despues": "Manuel camina por el valle de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Manuel escribe en el cuaderno en el valle .",
+      "despues": "Manuel camina por el valle de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Manuel escribe en el cuaderno en el valle .",
+      "despues": "Manuel camina por el valle de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Manuel juega con la pelota en el valle .",
+      "despues": "Manuel juega con la pelota en el patio .",
+      "nivel": 3
+    },
+    {
+      "antes": "Manuel juega con la pelota en el valle .",
+      "despues": "Manuel juega con la pelota en el patio .",
+      "nivel": 4
+    },
+    {
+      "antes": "Manuel juega con la pelota en el valle .",
+      "despues": "Manuel juega con la pelota en el patio .",
+      "nivel": 5
+    },
+    {
+      "antes": "Manuel juega con la pelota en el valle .",
+      "despues": "Manuel juega con la pelota en el patio .",
+      "nivel": 6
+    },
+    {
+      "antes": "Manuel lee un libro en la llanura .",
+      "despues": "Manuel camina por la llanura en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Manuel lee un libro en la llanura .",
+      "despues": "Manuel camina por la llanura en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Manuel lee un libro en la llanura .",
+      "despues": "Manuel camina por la llanura en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Manuel lee un libro en la llanura .",
+      "despues": "Manuel camina por la llanura en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Manuel escribe en el cuaderno en la llanura .",
+      "despues": "Manuel camina por la llanura de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Manuel escribe en el cuaderno en la llanura .",
+      "despues": "Manuel camina por la llanura de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Manuel escribe en el cuaderno en la llanura .",
+      "despues": "Manuel camina por la llanura de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Manuel escribe en el cuaderno en la llanura .",
+      "despues": "Manuel camina por la llanura de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Manuel juega con la pelota en la llanura .",
+      "despues": "Manuel juega con la pelota en la cancha .",
+      "nivel": 3
+    },
+    {
+      "antes": "Manuel juega con la pelota en la llanura .",
+      "despues": "Manuel juega con la pelota en la cancha .",
+      "nivel": 4
+    },
+    {
+      "antes": "Manuel juega con la pelota en la llanura .",
+      "despues": "Manuel juega con la pelota en la cancha .",
+      "nivel": 5
+    },
+    {
+      "antes": "Manuel juega con la pelota en la llanura .",
+      "despues": "Manuel juega con la pelota en la cancha .",
+      "nivel": 6
+    },
+    {
+      "antes": "Manuel lee un libro en la costa .",
+      "despues": "Manuel camina por la costa en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Manuel lee un libro en la costa .",
+      "despues": "Manuel camina por la costa en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Manuel lee un libro en la costa .",
+      "despues": "Manuel camina por la costa en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Manuel lee un libro en la costa .",
+      "despues": "Manuel camina por la costa en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Manuel escribe en el cuaderno en la costa .",
+      "despues": "Manuel camina por la costa de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Manuel escribe en el cuaderno en la costa .",
+      "despues": "Manuel camina por la costa de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Manuel escribe en el cuaderno en la costa .",
+      "despues": "Manuel camina por la costa de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Manuel escribe en el cuaderno en la costa .",
+      "despues": "Manuel camina por la costa de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Manuel juega con la pelota en la costa .",
+      "despues": "Manuel juega con la pelota en la casa .",
+      "nivel": 3
+    },
+    {
+      "antes": "Manuel juega con la pelota en la costa .",
+      "despues": "Manuel juega con la pelota en la casa .",
+      "nivel": 4
+    },
+    {
+      "antes": "Manuel juega con la pelota en la costa .",
+      "despues": "Manuel juega con la pelota en la casa .",
+      "nivel": 5
+    },
+    {
+      "antes": "Manuel juega con la pelota en la costa .",
+      "despues": "Manuel juega con la pelota en la casa .",
+      "nivel": 6
+    },
+    {
+      "antes": "Marta lee un libro en el bosque .",
+      "despues": "Marta camina por el bosque en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Marta lee un libro en el bosque .",
+      "despues": "Marta camina por el bosque en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Marta lee un libro en el bosque .",
+      "despues": "Marta camina por el bosque en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Marta lee un libro en el bosque .",
+      "despues": "Marta camina por el bosque en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Marta escribe en el cuaderno en el bosque .",
+      "despues": "Marta camina por el bosque de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Marta escribe en el cuaderno en el bosque .",
+      "despues": "Marta camina por el bosque de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Marta escribe en el cuaderno en el bosque .",
+      "despues": "Marta camina por el bosque de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Marta escribe en el cuaderno en el bosque .",
+      "despues": "Marta camina por el bosque de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Marta juega con la pelota en el bosque .",
+      "despues": "Marta juega con la pelota en el parque .",
+      "nivel": 3
+    },
+    {
+      "antes": "Marta juega con la pelota en el bosque .",
+      "despues": "Marta juega con la pelota en el parque .",
+      "nivel": 4
+    },
+    {
+      "antes": "Marta juega con la pelota en el bosque .",
+      "despues": "Marta juega con la pelota en el parque .",
+      "nivel": 5
+    },
+    {
+      "antes": "Marta juega con la pelota en el bosque .",
+      "despues": "Marta juega con la pelota en el parque .",
+      "nivel": 6
+    },
+    {
+      "antes": "Marta lee un libro en el valle .",
+      "despues": "Marta camina por el valle en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Marta lee un libro en el valle .",
+      "despues": "Marta camina por el valle en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Marta lee un libro en el valle .",
+      "despues": "Marta camina por el valle en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Marta lee un libro en el valle .",
+      "despues": "Marta camina por el valle en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Marta escribe en el cuaderno en el valle .",
+      "despues": "Marta camina por el valle de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Marta escribe en el cuaderno en el valle .",
+      "despues": "Marta camina por el valle de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Marta escribe en el cuaderno en el valle .",
+      "despues": "Marta camina por el valle de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Marta escribe en el cuaderno en el valle .",
+      "despues": "Marta camina por el valle de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Marta juega con la pelota en el valle .",
+      "despues": "Marta juega con la pelota en el patio .",
+      "nivel": 3
+    },
+    {
+      "antes": "Marta juega con la pelota en el valle .",
+      "despues": "Marta juega con la pelota en el patio .",
+      "nivel": 4
+    },
+    {
+      "antes": "Marta juega con la pelota en el valle .",
+      "despues": "Marta juega con la pelota en el patio .",
+      "nivel": 5
+    },
+    {
+      "antes": "Marta juega con la pelota en el valle .",
+      "despues": "Marta juega con la pelota en el patio .",
+      "nivel": 6
+    },
+    {
+      "antes": "Marta lee un libro en la llanura .",
+      "despues": "Marta camina por la llanura en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Marta lee un libro en la llanura .",
+      "despues": "Marta camina por la llanura en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Marta lee un libro en la llanura .",
+      "despues": "Marta camina por la llanura en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Marta lee un libro en la llanura .",
+      "despues": "Marta camina por la llanura en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Marta escribe en el cuaderno en la llanura .",
+      "despues": "Marta camina por la llanura de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Marta escribe en el cuaderno en la llanura .",
+      "despues": "Marta camina por la llanura de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Marta escribe en el cuaderno en la llanura .",
+      "despues": "Marta camina por la llanura de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Marta escribe en el cuaderno en la llanura .",
+      "despues": "Marta camina por la llanura de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Marta juega con la pelota en la llanura .",
+      "despues": "Marta juega con la pelota en la cancha .",
+      "nivel": 3
+    },
+    {
+      "antes": "Marta juega con la pelota en la llanura .",
+      "despues": "Marta juega con la pelota en la cancha .",
+      "nivel": 4
+    },
+    {
+      "antes": "Marta juega con la pelota en la llanura .",
+      "despues": "Marta juega con la pelota en la cancha .",
+      "nivel": 5
+    },
+    {
+      "antes": "Marta juega con la pelota en la llanura .",
+      "despues": "Marta juega con la pelota en la cancha .",
+      "nivel": 6
+    },
+    {
+      "antes": "Marta lee un libro en la costa .",
+      "despues": "Marta camina por la costa en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "Marta lee un libro en la costa .",
+      "despues": "Marta camina por la costa en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "Marta lee un libro en la costa .",
+      "despues": "Marta camina por la costa en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "Marta lee un libro en la costa .",
+      "despues": "Marta camina por la costa en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "Marta escribe en el cuaderno en la costa .",
+      "despues": "Marta camina por la costa de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "Marta escribe en el cuaderno en la costa .",
+      "despues": "Marta camina por la costa de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "Marta escribe en el cuaderno en la costa .",
+      "despues": "Marta camina por la costa de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "Marta escribe en el cuaderno en la costa .",
+      "despues": "Marta camina por la costa de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "Marta juega con la pelota en la costa .",
+      "despues": "Marta juega con la pelota en la casa .",
+      "nivel": 3
+    },
+    {
+      "antes": "Marta juega con la pelota en la costa .",
+      "despues": "Marta juega con la pelota en la casa .",
+      "nivel": 4
+    },
+    {
+      "antes": "Marta juega con la pelota en la costa .",
+      "despues": "Marta juega con la pelota en la casa .",
+      "nivel": 5
+    },
+    {
+      "antes": "Marta juega con la pelota en la costa .",
+      "despues": "Marta juega con la pelota en la casa .",
+      "nivel": 6
+    },
+    {
+      "antes": "el niño lee un libro en el bosque .",
+      "despues": "el niño camina por el bosque en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "el niño lee un libro en el bosque .",
+      "despues": "el niño camina por el bosque en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "el niño lee un libro en el bosque .",
+      "despues": "el niño camina por el bosque en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "el niño lee un libro en el bosque .",
+      "despues": "el niño camina por el bosque en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "el niño escribe en el cuaderno en el bosque .",
+      "despues": "el niño camina por el bosque de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "el niño escribe en el cuaderno en el bosque .",
+      "despues": "el niño camina por el bosque de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "el niño escribe en el cuaderno en el bosque .",
+      "despues": "el niño camina por el bosque de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "el niño escribe en el cuaderno en el bosque .",
+      "despues": "el niño camina por el bosque de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "el niño juega con la pelota en el bosque .",
+      "despues": "el niño juega con la pelota en el parque .",
+      "nivel": 3
+    },
+    {
+      "antes": "el niño juega con la pelota en el bosque .",
+      "despues": "el niño juega con la pelota en el parque .",
+      "nivel": 4
+    },
+    {
+      "antes": "el niño juega con la pelota en el bosque .",
+      "despues": "el niño juega con la pelota en el parque .",
+      "nivel": 5
+    },
+    {
+      "antes": "el niño juega con la pelota en el bosque .",
+      "despues": "el niño juega con la pelota en el parque .",
+      "nivel": 6
+    },
+    {
+      "antes": "el niño lee un libro en el valle .",
+      "despues": "el niño camina por el valle en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "el niño lee un libro en el valle .",
+      "despues": "el niño camina por el valle en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "el niño lee un libro en el valle .",
+      "despues": "el niño camina por el valle en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "el niño lee un libro en el valle .",
+      "despues": "el niño camina por el valle en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "el niño escribe en el cuaderno en el valle .",
+      "despues": "el niño camina por el valle de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "el niño escribe en el cuaderno en el valle .",
+      "despues": "el niño camina por el valle de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "el niño escribe en el cuaderno en el valle .",
+      "despues": "el niño camina por el valle de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "el niño escribe en el cuaderno en el valle .",
+      "despues": "el niño camina por el valle de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "el niño juega con la pelota en el valle .",
+      "despues": "el niño juega con la pelota en el patio .",
+      "nivel": 3
+    },
+    {
+      "antes": "el niño juega con la pelota en el valle .",
+      "despues": "el niño juega con la pelota en el patio .",
+      "nivel": 4
+    },
+    {
+      "antes": "el niño juega con la pelota en el valle .",
+      "despues": "el niño juega con la pelota en el patio .",
+      "nivel": 5
+    },
+    {
+      "antes": "el niño juega con la pelota en el valle .",
+      "despues": "el niño juega con la pelota en el patio .",
+      "nivel": 6
+    },
+    {
+      "antes": "el niño lee un libro en la llanura .",
+      "despues": "el niño camina por la llanura en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "el niño lee un libro en la llanura .",
+      "despues": "el niño camina por la llanura en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "el niño lee un libro en la llanura .",
+      "despues": "el niño camina por la llanura en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "el niño lee un libro en la llanura .",
+      "despues": "el niño camina por la llanura en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "el niño escribe en el cuaderno en la llanura .",
+      "despues": "el niño camina por la llanura de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "el niño escribe en el cuaderno en la llanura .",
+      "despues": "el niño camina por la llanura de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "el niño escribe en el cuaderno en la llanura .",
+      "despues": "el niño camina por la llanura de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "el niño escribe en el cuaderno en la llanura .",
+      "despues": "el niño camina por la llanura de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "el niño juega con la pelota en la llanura .",
+      "despues": "el niño juega con la pelota en la cancha .",
+      "nivel": 3
+    },
+    {
+      "antes": "el niño juega con la pelota en la llanura .",
+      "despues": "el niño juega con la pelota en la cancha .",
+      "nivel": 4
+    },
+    {
+      "antes": "el niño juega con la pelota en la llanura .",
+      "despues": "el niño juega con la pelota en la cancha .",
+      "nivel": 5
+    },
+    {
+      "antes": "el niño juega con la pelota en la llanura .",
+      "despues": "el niño juega con la pelota en la cancha .",
+      "nivel": 6
+    },
+    {
+      "antes": "el niño lee un libro en la costa .",
+      "despues": "el niño camina por la costa en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "el niño lee un libro en la costa .",
+      "despues": "el niño camina por la costa en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "el niño lee un libro en la costa .",
+      "despues": "el niño camina por la costa en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "el niño lee un libro en la costa .",
+      "despues": "el niño camina por la costa en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "el niño escribe en el cuaderno en la costa .",
+      "despues": "el niño camina por la costa de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "el niño escribe en el cuaderno en la costa .",
+      "despues": "el niño camina por la costa de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "el niño escribe en el cuaderno en la costa .",
+      "despues": "el niño camina por la costa de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "el niño escribe en el cuaderno en la costa .",
+      "despues": "el niño camina por la costa de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "el niño juega con la pelota en la costa .",
+      "despues": "el niño juega con la pelota en la casa .",
+      "nivel": 3
+    },
+    {
+      "antes": "el niño juega con la pelota en la costa .",
+      "despues": "el niño juega con la pelota en la casa .",
+      "nivel": 4
+    },
+    {
+      "antes": "el niño juega con la pelota en la costa .",
+      "despues": "el niño juega con la pelota en la casa .",
+      "nivel": 5
+    },
+    {
+      "antes": "el niño juega con la pelota en la costa .",
+      "despues": "el niño juega con la pelota en la casa .",
+      "nivel": 6
+    },
+    {
+      "antes": "la niña lee un libro en el bosque .",
+      "despues": "la niña camina por el bosque en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "la niña lee un libro en el bosque .",
+      "despues": "la niña camina por el bosque en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "la niña lee un libro en el bosque .",
+      "despues": "la niña camina por el bosque en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "la niña lee un libro en el bosque .",
+      "despues": "la niña camina por el bosque en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "la niña escribe en el cuaderno en el bosque .",
+      "despues": "la niña camina por el bosque de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "la niña escribe en el cuaderno en el bosque .",
+      "despues": "la niña camina por el bosque de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "la niña escribe en el cuaderno en el bosque .",
+      "despues": "la niña camina por el bosque de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "la niña escribe en el cuaderno en el bosque .",
+      "despues": "la niña camina por el bosque de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "la niña juega con la pelota en el bosque .",
+      "despues": "la niña juega con la pelota en el parque .",
+      "nivel": 3
+    },
+    {
+      "antes": "la niña juega con la pelota en el bosque .",
+      "despues": "la niña juega con la pelota en el parque .",
+      "nivel": 4
+    },
+    {
+      "antes": "la niña juega con la pelota en el bosque .",
+      "despues": "la niña juega con la pelota en el parque .",
+      "nivel": 5
+    },
+    {
+      "antes": "la niña juega con la pelota en el bosque .",
+      "despues": "la niña juega con la pelota en el parque .",
+      "nivel": 6
+    },
+    {
+      "antes": "la niña lee un libro en el valle .",
+      "despues": "la niña camina por el valle en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "la niña lee un libro en el valle .",
+      "despues": "la niña camina por el valle en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "la niña lee un libro en el valle .",
+      "despues": "la niña camina por el valle en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "la niña lee un libro en el valle .",
+      "despues": "la niña camina por el valle en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "la niña escribe en el cuaderno en el valle .",
+      "despues": "la niña camina por el valle de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "la niña escribe en el cuaderno en el valle .",
+      "despues": "la niña camina por el valle de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "la niña escribe en el cuaderno en el valle .",
+      "despues": "la niña camina por el valle de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "la niña escribe en el cuaderno en el valle .",
+      "despues": "la niña camina por el valle de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "la niña juega con la pelota en el valle .",
+      "despues": "la niña juega con la pelota en el patio .",
+      "nivel": 3
+    },
+    {
+      "antes": "la niña juega con la pelota en el valle .",
+      "despues": "la niña juega con la pelota en el patio .",
+      "nivel": 4
+    },
+    {
+      "antes": "la niña juega con la pelota en el valle .",
+      "despues": "la niña juega con la pelota en el patio .",
+      "nivel": 5
+    },
+    {
+      "antes": "la niña juega con la pelota en el valle .",
+      "despues": "la niña juega con la pelota en el patio .",
+      "nivel": 6
+    },
+    {
+      "antes": "la niña lee un libro en la llanura .",
+      "despues": "la niña camina por la llanura en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "la niña lee un libro en la llanura .",
+      "despues": "la niña camina por la llanura en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "la niña lee un libro en la llanura .",
+      "despues": "la niña camina por la llanura en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "la niña lee un libro en la llanura .",
+      "despues": "la niña camina por la llanura en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "la niña escribe en el cuaderno en la llanura .",
+      "despues": "la niña camina por la llanura de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "la niña escribe en el cuaderno en la llanura .",
+      "despues": "la niña camina por la llanura de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "la niña escribe en el cuaderno en la llanura .",
+      "despues": "la niña camina por la llanura de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "la niña escribe en el cuaderno en la llanura .",
+      "despues": "la niña camina por la llanura de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "la niña juega con la pelota en la llanura .",
+      "despues": "la niña juega con la pelota en la cancha .",
+      "nivel": 3
+    },
+    {
+      "antes": "la niña juega con la pelota en la llanura .",
+      "despues": "la niña juega con la pelota en la cancha .",
+      "nivel": 4
+    },
+    {
+      "antes": "la niña juega con la pelota en la llanura .",
+      "despues": "la niña juega con la pelota en la cancha .",
+      "nivel": 5
+    },
+    {
+      "antes": "la niña juega con la pelota en la llanura .",
+      "despues": "la niña juega con la pelota en la cancha .",
+      "nivel": 6
+    },
+    {
+      "antes": "la niña lee un libro en la costa .",
+      "despues": "la niña camina por la costa en un día soleado .",
+      "nivel": 3
+    },
+    {
+      "antes": "la niña lee un libro en la costa .",
+      "despues": "la niña camina por la costa en un día soleado .",
+      "nivel": 4
+    },
+    {
+      "antes": "la niña lee un libro en la costa .",
+      "despues": "la niña camina por la costa en un día soleado .",
+      "nivel": 5
+    },
+    {
+      "antes": "la niña lee un libro en la costa .",
+      "despues": "la niña camina por la costa en un día soleado .",
+      "nivel": 6
+    },
+    {
+      "antes": "la niña escribe en el cuaderno en la costa .",
+      "despues": "la niña camina por la costa de día .",
+      "nivel": 3
+    },
+    {
+      "antes": "la niña escribe en el cuaderno en la costa .",
+      "despues": "la niña camina por la costa de día .",
+      "nivel": 4
+    },
+    {
+      "antes": "la niña escribe en el cuaderno en la costa .",
+      "despues": "la niña camina por la costa de día .",
+      "nivel": 5
+    },
+    {
+      "antes": "la niña escribe en el cuaderno en la costa .",
+      "despues": "la niña camina por la costa de día .",
+      "nivel": 6
+    },
+    {
+      "antes": "la niña juega con la pelota en la costa .",
+      "despues": "la niña juega con la pelota en la casa .",
+      "nivel": 3
+    },
+    {
+      "antes": "la niña juega con la pelota en la costa .",
+      "despues": "la niña juega con la pelota en la casa .",
+      "nivel": 4
+    },
+    {
+      "antes": "la niña juega con la pelota en la costa .",
+      "despues": "la niña juega con la pelota en la casa .",
+      "nivel": 5
+    },
+    {
+      "antes": "la niña juega con la pelota en la costa .",
+      "despues": "la niña juega con la pelota en la casa .",
+      "nivel": 6
+    }
+  ]
+}

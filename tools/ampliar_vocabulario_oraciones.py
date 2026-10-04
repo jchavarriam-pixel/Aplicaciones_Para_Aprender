@@ -8,6 +8,7 @@ import re
 from collections import Counter
 from pathlib import Path
 from ampliar_oraciones_topicos import NOUNS, canonical
+from reglas_naturalidad import motivo_descarte
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = ROOT / 'base_oraciones.json'
@@ -81,6 +82,7 @@ def main():
         return stem + ('a' if f and a.endswith('o') else ('o' if a.endswith('o') else '')) + ('s' if plural else '')
 
     def add(level, pics, text):
+        if level==6 and db.get('estructura_niveles_version')==2:level=5
         pics = list(dict.fromkeys(pics))
         assert len(pics) in {1: [2], 2: [3], 3: [4, 5], 4: [3, 4, 5], 5: [4, 5], 6: [4, 5]}[level], (level, pics, text)
         assert all(p in db['imagenes'] for p in pics), pics
@@ -90,6 +92,7 @@ def main():
             return
         seen.add(key)
         row = dict(level=level, pics=pics, words=words, source='vocabulario_ampliado_v1')
+        if motivo_descarte(row):return
         if level in (4, 6):
             forbidden = set(words) | set(pics) | connectors
             row['extras'] = [w for w in ['cohete', 'sombrilla', 'zanahoria', 'gato', 'camión'] if w not in forbidden][:2]
@@ -182,11 +185,11 @@ def main():
         ('lee', ['libro', 'cuaderno'], ['casa', 'escuela', 'sala', 'dormitorio', 'patio'], ''),
         ('escribe', ['cuaderno', 'pizarra'], ['escuela', 'casa'], 'en '),
         ('juega', ['pelota', 'bloques', 'rompecabezas', 'robot', 'juguetes'], ['sala', 'patio', 'parque'], 'con '),
-        ('lavarse', ['dientes', 'manos', 'pies'], ['casa'], ''),
+        ('lavarse', ['manos', 'pies'], ['casa'], ''),
     ]
     foods = by_id['alimentos']['palabras']
     foods = [n for n in foods if n not in ['agua', 'fresco']]
-    frames.append(('come', foods, ['casa', 'escuela', 'patio'], ''))
+    frames.append(('come', foods, ['casa', 'escuela', 'mesa'], ''))
     for person, subject, plural in people:
         for action, objects, places, prep in frames:
             verb = action_forms[action][int(plural)]
@@ -223,7 +226,7 @@ def main():
         sentence([person, 'peinar', 'peine'], f'{subject} {action_forms["peinar"][int(plural)]} con el peine')
         sentence([person, 'peinar', 'peine', 'dormitorio'], f'{subject} {action_forms["peinar"][int(plural)]} con el peine en el dormitorio')
         sentence([person, 'peinar', 'gel', 'casa'], f'{subject} {action_forms["peinar"][int(plural)]} con gel en la casa')
-        sentence([person, 'lavarse', 'dientes', 'cepillo de dientes'], f'{subject} {action_forms["lavarse"][int(plural)]} los dientes con el cepillo de dientes')
+        sentence([person, 'lavarse', 'dientes', 'cepillo de dientes'], f'{subject} {"se cepillan" if plural else "se cepilla"} los dientes con el cepillo de dientes')
         sentence([person, 'lavarse', 'manos', 'lavamanos'], f'{subject} {action_forms["lavarse"][int(plural)]} las manos en el lavamanos')
         sentence([person, 'lavarse', 'pies', 'ducha'], f'{subject} {action_forms["lavarse"][int(plural)]} los pies en la ducha')
         for food, utensil in [('sopa', 'cuchara'), ('cereal', 'cuchara'), ('arroz', 'tenedor'), ('carne', 'tenedor'), ('espagueti', 'tenedor')]:

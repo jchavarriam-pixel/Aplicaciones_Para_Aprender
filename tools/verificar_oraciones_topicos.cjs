@@ -18,8 +18,7 @@ for (const row of db.oraciones) {
   if (row.level >= 5) {
     assert.deepEqual(row.contentWords, row.words.filter(w => !db.conectores_reutilizables.includes(w)));
     assert.ok(row.mode === 'connectors_free');
-    if (row.level === 5) assert.deepEqual(row.extras, []);
-    else assert.ok(row.extras.length === 2 || row.extras.length === 3);
+    assert.deepEqual(row.extras, []);
   }
 }
 
@@ -75,16 +74,19 @@ async function run() {
           const pool = poolUnicoNivel(level);
           if (!pool.length) { if (tomarOracion(level) !== null) fail('Mazo vacío'); continue; }
           pools++;
+          const activities = new Set(pool.map(familiaActividad));
+          const firstActivities = new Set();
           let previous = null;
           for (let round = 0; round < 3; round++) {
             const seen = new Set();
             for (let i = 0; i < pool.length; i++) {
               const row = tomarOracion(level), id = canonical(row.words);
+              if(round===0 && i<activities.size){const family=familiaActividad(row);if(firstActivities.has(family))fail('Actividad repetida antes de alternar las demás');firstActivities.add(family);}
               if (seen.has(id)) fail('Repetición antes de agotar mazo');
               if (i === 0 && previous === id && pool.length > 1) fail('Repetición al cambiar ronda');
               if (!coincideCategorias(row)) fail('Oración fuera del filtro');
-              if ((level === 4 || level === 6) && (row.extras.length < 2 || row.extras.length > 3)) fail('Distractores incorrectos');
-              if (level === 5 && row.extras.length) fail('Extras en nivel 5');
+              if (level === 4 && (row.extras.length < 2 || row.extras.length > 3)) fail('Distractores incorrectos');
+              if (level >= 5 && row.extras.length !== extraWordsCount) fail('Cantidad de extras incorrecta');
               if (level >= 5) {
                 const inventory = [...row.contentWords, ...row.words.filter(w => CONNECTORS.includes(w))];
                 const sorted = a => JSON.stringify([...a].sort());
@@ -120,8 +122,8 @@ async function run() {
             }
             renderWords(); checkAnswer();
             if (!isSolved) throw new Error('Respuesta principal rechazada');
-            if (level === 5 && bankItems.length) throw new Error('Palabras principales sobrantes');
-            if ((level === 4 || level === 6) && bankItems.length !== current.extras.length) throw new Error('Extras sobrantes incorrectos');
+            if (level < 4 && bankItems.length) throw new Error('Palabras principales sobrantes');
+            if (level >= 4 && bankItems.length !== current.extras.length) throw new Error('Extras sobrantes incorrectos');
             checked++;
           }
         }
@@ -173,7 +175,7 @@ async function run() {
         { level: 3, pics: ['Ana', 'ver', 'montaña', 'grande'], words: ['Ana', 've', 'la', 'montaña', 'grande', '.'] }
       ] };
       selectedCategories = new Set(['relieve']);aplicarBaseDeDatos(connectorFallback, 'Conectores derivados');
-      if (!tomarOracion(5)?.pics.includes('montaña') || !tomarOracion(6)?.pics.includes('montaña')) throw new Error('Fallback pierde categorías');
+      if (!tomarOracion(5)?.pics.includes('montaña') || tomarOracion(6) !== null) throw new Error('Fallback pierde categorías');
       selectedCategories = null;aplicarBaseDeDatos(original, 'Base restaurada');
       const first = tomarOracion(1);
       const remaining = mazosOraciones.get(claveMazo(1)).pendientes.length;
