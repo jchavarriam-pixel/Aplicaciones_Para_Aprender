@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hiato y diptongo · Aplicaciones para aprender</title>
+<meta name="theme-color" content="#edf8f6">
+<link rel="stylesheet" href="hiato-diptongo.css">
+<link rel="stylesheet" href="creditos.css">
+<link rel="stylesheet" href="pantalla-completa.css">
+</head>
+<body>
+<main class="hd-app">
+  <header class="hd-header">
+    <a class="hd-back" href="index.html">← Aplicaciones</a>
+    <span class="hd-kicker">PALABRAS EN PIEZAS</span>
+    <h1>Hiato y diptongo <span aria-hidden="true">🔤</span></h1>
+    <p>Separa en sílabas. Mira las vocales. Descubre cómo se unen.</p>
+  </header>
+  <section id="hd-settings" class="hd-card" aria-labelledby="hd-settings-title">
+    <div class="hd-section-heading"><span class="hd-badge" aria-hidden="true">✦</span><div><h2 id="hd-settings-title">Prepara tu práctica</h2><p>Un pequeño paso a la vez.</p></div></div>
+    <div class="hd-settings-grid">
+      <label>Nombre<input id="hd-name" type="text" maxlength="50" autocomplete="given-name" placeholder="Ejemplo: Gabriel"></label>
+      <label>Qué practicamos<select id="hd-kind"><option value="ambos">Hiatos y diptongos</option><option value="hiato">Hiatos</option><option value="diptongo">Diptongos</option></select></label>
+      <label>Palabras<select id="hd-level"><option value="easy">Para empezar: palabras cortas</option><option value="all">Todas: incluye palabras largas y h</option></select></label>
+      <label>Palabras por sesión<select id="hd-count"><option value="5">5 palabras</option><option value="10" selected>10 palabras</option><option value="20">20 palabras</option><option value="30">30 palabras</option></select></label>
+    </div>
+    <div class="hd-options"><label><input id="hd-help" type="checkbox" checked> Permitir pistas</label><label><input id="hd-sound" type="checkbox" checked> Leer la explicación al acertar</label><label><input id="hd-syllable-sound" type="checkbox" checked> Leer las sílabas al separar</label></div>
+    <p id="hd-available" class="hd-note" role="status"></p>
+    <p id="hd-storage" class="hd-note" role="status"></p>
+    <button id="hd-start" class="hd-button hd-primary" type="button">Empezar práctica →</button>
+    <div class="hd-how"><div><b>1. Separa</b><span>Toca entre las letras para poner o quitar una división.</span></div><div><b>2. Observa</b><span>Revisa en qué sílabas quedaron las dos vocales destacadas.</span></div><div><b>3. Clasifica</b><span>Juntas: diptongo. En sílabas distintas: hiato.</span></div></div>
+  </section>
+  <section id="hd-game" hidden aria-labelledby="hd-word-title">
+    <div class="hd-game-top"><div><span id="hd-greeting"></span><strong id="hd-progress"></strong></div><button id="hd-config" class="hd-button hd-secondary" type="button">Configuración</button></div>
+    <div class="hd-track" aria-hidden="true"><span id="hd-track-fill"></span></div>
+    <div class="hd-steps" aria-label="Pasos de la actividad"><span id="hd-step-one">1 · Separar</span><span id="hd-step-two">2 · Clasificar</span></div>
+    <div class="hd-card hd-workspace">
+      <span class="hd-kicker">TU PALABRA</span><h2 id="hd-word-title"></h2>
+      <div class="hd-listen"><button id="hd-listen-word" class="hd-button hd-secondary" type="button">🔊 Escuchar palabra</button></div>
+      <p id="hd-instruction">Arrastra el guion hacia el espacio entre dos letras para separar la palabra en sílabas.</p>
+      <div class="hd-legend"><span><i class="hd-open"></i> Abiertas: a, e, o</span><span><i class="hd-closed"></i> Cerradas: i, u</span></div>
+      <div id="hd-letter-scroll" class="hd-letter-scroll" tabindex="0" aria-label="Letras y espacios para separar"><div id="hd-letters" class="hd-letters"></div></div>
+      <p id="hd-scroll-note" class="hd-note" hidden>Desliza las letras para ver la palabra completa.</p>
+      <div id="hd-drag-instruction" class="hd-drag-instruction"><button id="hd-drag-token" type="button" aria-label="Arrastra este guion hacia la palabra para separar una sílaba"><span aria-hidden="true">−</span></button><span>Arrastra el guion a la palabra</span></div>
+      <p id="hd-vowel-state" class="hd-vowel-state" aria-live="polite"></p>
+      <div class="hd-preview-label">Así queda tu separación:</div><div id="hd-preview" class="hd-preview" aria-live="polite"></div>
+      <div class="hd-review-actions"><button id="hd-review" class="hd-button hd-primary" type="button">Revisar separación</button><button id="hd-clear" class="hd-button hd-secondary" type="button">Quitar divisiones</button><button id="hd-hint" class="hd-button hd-secondary" type="button">💡 Pista</button></div>
+      <p id="hd-feedback" class="hd-feedback" role="status" aria-live="polite"></p>
+      <section id="hd-classify" class="hd-classify" hidden aria-labelledby="hd-classify-title">
+        <h3 id="hd-classify-title">¿Qué ocurre con estas vocales?</h3><div id="hd-vowel-pair" class="hd-vowel-pair" aria-hidden="true"></div>
+        <p>Busca las vocales destacadas en los bloques de sílabas de arriba.</p>
+        <div class="hd-choice-grid"><button id="hd-diptongo" class="hd-choice" type="button"><strong>Diptongo</strong><span>Juntas en una sílaba</span><span class="hd-choice-demo" aria-hidden="true">a i</span></button><button id="hd-hiato" class="hd-choice" type="button"><strong>Hiato</strong><span>En sílabas distintas</span><span class="hd-choice-demo" aria-hidden="true">a <i>│</i> í</span></button></div>
+      </section>
+      <div id="hd-success" class="hd-success" hidden><strong>¡Lo descubriste! ⭐</strong><p id="hd-explanation"></p><button id="hd-next" class="hd-button hd-primary" type="button">Siguiente palabra →</button></div>
+    </div>
+  </section>
+  <section id="hd-finish" class="hd-card hd-finish" hidden aria-labelledby="hd-finish-title"><span class="hd-finish-icon" aria-hidden="true">🌟</span><h2 id="hd-finish-title">¡Práctica completada!</h2><p id="hd-summary"></p><div id="hd-results" class="hd-results"></div><button id="hd-again" class="hd-button hd-primary" type="button">Practicar otra vez</button><button id="hd-home" class="hd-button hd-secondary" type="button">Volver a configuración</button></section>
+  <details class="hd-reference"><summary>Una ayuda para aprender</summary><div class="hd-reference-grid"><article><h3>Diptongo</h3><p>Dos vocales están en la misma sílaba: <b>ai</b>-re, p<b>ue</b>r-ta. Se unen una abierta y una cerrada sin tilde, o dos cerradas distintas.</p></article><article><h3>Hiato</h3><p>Dos vocales están en sílabas distintas: te-<b>a</b>-tro, pa-<b>ís</b>. Se separan dos abiertas, o una abierta y una cerrada con tilde.</p></article></div><p>La h intercalada no cambia la relación entre las vocales: co-he-te, bú-ho. Usamos separaciones escolares basadas en los criterios ortográficos; algunas pronunciaciones varían según la región.</p><a href="https://www.rae.es/ortograf%C3%ADa-b%C3%A1sica/uso-de-la-tilde/las-reglas-de-acentuaci%C3%B3n-gr%C3%A1fica/la-acentuaci%C3%B3n-gr%C3%A1fica-de-las-palabras-con-secuencias-voc%C3%A1licas" target="_blank" rel="noopener noreferrer">Consultar los criterios de la RAE ↗</a></details>
+</main>
+<footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos"><div class="creditos-dedicatoria"><span class="creditos-gabriel">Creado para <strong>Gabriel</strong></span><span class="creditos-familia">Por su familia, con ayuda de la IA.</span></div><div class="creditos-equipo"><span class="creditos-autores">M.Sc. Jeffry Chavarría-Molina y Ph.D. (c) Natalia Rodríguez-Granados</span><span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span></div></footer>
+<div id="hd-celebration" aria-hidden="true"></div>
+<script src="hiato-diptongo-datos.js"></script>
+<script src="hiato-diptongo.js"></script>
+<script src="pantalla-completa.js"></script>
+</body>
+</html>
