@@ -35,23 +35,23 @@
     <div class="hd-game-top"><div><span id="hd-greeting"></span><strong id="hd-progress"></strong></div><button id="hd-config" class="hd-button hd-secondary" type="button">Configuración</button></div>
     <div class="hd-track" aria-hidden="true"><span id="hd-track-fill"></span></div>
     <div class="hd-steps" aria-label="Pasos de la actividad"><span id="hd-step-one">1 · Separar</span><span id="hd-step-two">2 · Clasificar</span></div>
-    <div class="hd-card hd-workspace">
+    <div id="hd-workspace" class="hd-card hd-workspace"><div class="hd-activity-layout"><div class="hd-word-area">
       <span class="hd-kicker">TU PALABRA</span><h2 id="hd-word-title"></h2>
       <div class="hd-listen"><button id="hd-listen-word" class="hd-button hd-secondary" type="button">🔊 Escuchar palabra</button></div>
       <p id="hd-instruction">Arrastra el guion hacia el espacio entre dos letras para separar la palabra en sílabas.</p>
       <div class="hd-legend"><span><i class="hd-open"></i> Abiertas: a, e, o</span><span><i class="hd-closed"></i> Cerradas: i, u</span></div>
       <div id="hd-letter-scroll" class="hd-letter-scroll" tabindex="0" aria-label="Letras y espacios para separar"><div id="hd-letters" class="hd-letters"></div></div>
       <p id="hd-scroll-note" class="hd-note" hidden>Desliza las letras para ver la palabra completa.</p>
-      <div id="hd-drag-instruction" class="hd-drag-instruction"><button id="hd-drag-token" type="button" aria-label="Arrastra este guion hacia la palabra para separar una sílaba"><span aria-hidden="true">−</span></button><span>Arrastra el guion a la palabra</span></div>
+      <div id="hd-drag-instruction" class="hd-drag-instruction"><button id="hd-drag-token" type="button" aria-label="Arrastra este guion hacia la palabra para separar una sílaba"><span aria-hidden="true">−</span></button><span>Arrastra el guion; toca uno puesto para quitarlo</span></div>
       <p id="hd-vowel-state" class="hd-vowel-state" aria-live="polite"></p>
       <div class="hd-preview-label">Así queda tu separación:</div><div id="hd-preview" class="hd-preview" aria-live="polite"></div>
       <div class="hd-review-actions"><button id="hd-review" class="hd-button hd-primary" type="button">Revisar separación</button><button id="hd-clear" class="hd-button hd-secondary" type="button">Quitar divisiones</button><button id="hd-hint" class="hd-button hd-secondary" type="button">💡 Pista</button></div>
-      <p id="hd-feedback" class="hd-feedback" role="status" aria-live="polite"></p>
+      <p id="hd-feedback" class="hd-feedback" role="status" aria-live="polite"></p></div>
       <section id="hd-classify" class="hd-classify" hidden aria-labelledby="hd-classify-title">
-        <h3 id="hd-classify-title">¿Qué ocurre con estas vocales?</h3><div id="hd-vowel-pair" class="hd-vowel-pair" aria-hidden="true"></div>
-        <p>Busca las vocales destacadas en los bloques de sílabas de arriba.</p>
-        <div class="hd-choice-grid"><button id="hd-diptongo" class="hd-choice" type="button"><strong>Diptongo</strong><span>Juntas en una sílaba</span><span class="hd-choice-demo" aria-hidden="true">a i</span></button><button id="hd-hiato" class="hd-choice" type="button"><strong>Hiato</strong><span>En sílabas distintas</span><span class="hd-choice-demo" aria-hidden="true">a <i>│</i> í</span></button></div>
-      </section>
+        <h3 id="hd-classify-title">¿Las vocales quedaron...?</h3><div id="hd-vowel-pair" class="hd-vowel-pair" aria-hidden="true"></div>
+        <p>Mira las vocales destacadas arriba y marca cómo quedaron.</p>
+        <div class="hd-choice-grid"><button id="hd-diptongo" class="hd-choice hd-choice-together" type="button"><span class="hd-visual-choice together" aria-hidden="true"><i></i><i></i></span><strong>Juntas</strong><span>Forman un diptongo</span><span class="hd-choice-circle" aria-hidden="true"></span></button><button id="hd-hiato" class="hd-choice hd-choice-separated" type="button"><span class="hd-visual-choice separated" aria-hidden="true"><i></i><b>↔</b><i></i></span><strong>Separadas</strong><span>Forman un hiato</span><span class="hd-choice-circle" aria-hidden="true"></span></button></div>
+      </section></div>
       <div id="hd-success" class="hd-success" hidden><strong>¡Lo descubriste! ⭐</strong><p id="hd-explanation"></p><button id="hd-next" class="hd-button hd-primary" type="button">Siguiente palabra →</button></div>
     </div>
   </section>

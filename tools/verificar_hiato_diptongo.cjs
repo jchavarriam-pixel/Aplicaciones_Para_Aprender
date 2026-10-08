@@ -35,18 +35,20 @@ async function main(){
    const a=await token.boundingBox(), b=await gap.boundingBox(); assert(a&&b,'Falta el guion o el espacio de separación');
    await page.mouse.move(a.x+a.width/2,a.y+a.height/2); await page.mouse.down();
    await page.mouse.move(b.x+b.width/2,b.y+b.height/2,{steps:5}); await page.mouse.up();
-   assert((await page.locator('.hd-drag-gap.selected').evaluateAll((nodes,value)=>nodes.some(n=>Number(n.dataset.cut)===value),cut)),'No se registró el corte '+cut);
+   await page.waitForTimeout(180);
+   const selected=await page.locator('.hd-drag-gap.selected').evaluateAll(nodes=>nodes.map(n=>n.dataset.cut).join(','));
+   assert(selected.split(',').includes(String(cut)),'No se registró el corte '+cut+'; quedaron '+selected);
  }
  async function exercise(record){
    await page.evaluate(word=>globalThis.__testWord=word,record.word);
    await page.locator('#hd-start').click();
    assert.equal(await page.locator('#hd-word-title').textContent(),record.word);
-   assert(await page.locator('#hd-classify').isHidden());
-   if(record.cuts.length){await page.locator('#hd-review').click();assert(await page.locator('#hd-classify').isHidden());assert((await page.locator('#hd-feedback').textContent()).includes('Todavía'));}
+   assert(await page.locator('#hd-classify').isVisible());assert(await page.locator('#hd-diptongo').isDisabled());
+   if(record.cuts.length){await page.locator('#hd-review').click();assert(await page.locator('#hd-diptongo').isDisabled());assert((await page.locator('#hd-feedback').textContent()).includes('Todavía'));}
    for(const cut of record.cuts)await dragToCut(cut);
+   await page.locator('#hd-review').click();assert(await page.locator('#hd-classify').isVisible(),record.word+' · '+await page.locator('#hd-feedback').textContent()+' · cortes: '+await page.locator('.hd-drag-gap.selected').evaluateAll(nodes=>nodes.map(n=>n.dataset.cut).join(',')));
    const state=await page.locator('#hd-vowel-state').textContent();
    assert(state.includes(record.kind==='diptongo'?'juntas':'separadas'),record.word+': '+state);
-   await page.locator('#hd-review').click();assert(await page.locator('#hd-classify').isVisible(),record.word+' · '+await page.locator('#hd-feedback').textContent()+' · cortes: '+await page.locator('.hd-drag-gap.selected').evaluateAll(nodes=>nodes.map(n=>n.dataset.cut).join(',')));
    await page.locator('#hd-'+(record.kind==='hiato'?'diptongo':'hiato')).click();assert(await page.locator('#hd-success').isHidden());
    await page.locator('#hd-'+record.kind).click();assert(await page.locator('#hd-success').isVisible());
    assert((await page.locator('#hd-explanation').textContent()).includes(record.kind));

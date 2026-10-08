@@ -7,7 +7,7 @@ const key = 'hiatoDiptongo.config.v1';
 const defaults = { name: '', kind: 'ambos', level: 'easy', count: 10, help: true, sound: true, syllableSound: true };
 let settings = { ...defaults }, session = [], index = 0, current = null;
 let cuts = new Set(), stage = 'separate', results = [], helped = false, helpCount = 0, attempts = 0, ticket = 0;
-let lastWord = '', speechTimer = null, speechRun = 0, dragCut = null, dragPointer = null;
+let lastWord = '', speechTimer = null, speechRun = 0, dragCut = null, dragPointer = null, dragTargets = [], dragMode = 'add', dragOriginalCut = null, ignoreGapClickUntil = 0;
 const canSpeak = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
 try {
   const saved = JSON.parse(localStorage.getItem(key) || '{}');
@@ -85,23 +85,49 @@ function vowelClass(letter) {
 function vowelState() {
   return data.vowelTogether(current, cuts) ? 'together' : 'separated';
 }
+function separationIsReady() {
+  return stage !== 'separate' && current && data.validateCuts(current, cuts);
+}
+function wordColorState(shownCuts = cuts) {
+  if (!shownCuts.size) return '';
+  return data.vowelTogether(current, shownCuts) ? 'diptongo' : 'hiato';
+}
 function updateVowelState() {
   const together = vowelState(), el = $('hd-vowel-state');
+  el.hidden = !separationIsReady();
+  if (!separationIsReady()) return;
   el.className = 'hd-vowel-state ' + together;
   el.textContent = together === 'together'
-    ? 'Vocales juntas · verde · piensa en diptongo'
-    : 'Vocales separadas · rojo · piensa en hiato';
+    ? '«' + current.pair + '»: juntas en la misma sílaba · diptongo'
+    : '«' + current.pair + '»: separadas en sílabas diferentes · hiato';
+}
+function updateReferenceWord(previewCut = null) {
+  const shownCuts = new Set(cuts);
+  if (previewCut !== null) shownCuts.add(previewCut);
+  const title = $('hd-word-title');
+  const pieces = data.groups(current.word, shownCuts);
+  title.replaceChildren();
+  let position = 0;
+  pieces.forEach((piece, index) => {
+    if (index) { const dash = document.createElement('span'); dash.className = 'hd-reference-hyphen'; dash.textContent = '−'; title.append(dash); }
+    const syllable = document.createElement('span'); syllable.className = 'hd-reference-syllable';
+    Array.from(piece).forEach(letter => { const span = document.createElement('span'); span.className = current.focus.includes(position) ? 'focus' : ''; position++; span.textContent = letter; syllable.append(span); });
+    title.append(syllable);
+  });
+  const color = wordColorState(shownCuts);
+  title.classList.toggle('diptongo', color === 'diptongo');
+  title.classList.toggle('hiato', color === 'hiato');
 }
 function makeLetter(letter, position, tile = false) {
   const span = document.createElement('span');
   span.textContent = letter;
   const focus = current.focus.includes(position);
-  span.className = (tile ? 'hd-letter ' : '') + vowelClass(letter) + (focus ? ' focus pair-' + vowelState() : '');
+  span.className = (tile ? 'hd-letter ' : '') + vowelClass(letter) + (focus ? ' focus' + (separationIsReady() ? ' pair-' + vowelState() : '') : '');
   if (tile && current.focus.includes(position)) span.setAttribute('aria-label', letter + ', vocal destacada');
   return span;
 }
 function afterSeparationChange() {
-  renderLetters(); renderPreview(); updateVowelState();
+  renderLetters(); renderPreview(); updateReferenceWord(); updateVowelState();
   if (settings.syllableSound) speak(data.groups(current.word, cuts).join(', '));
 }
 function toggleCut(cut) {
@@ -112,22 +138,44 @@ function toggleCut(cut) {
 function setDragCut(cut) {
   dragCut = cut;
   document.querySelectorAll('.hd-drag-gap').forEach(gap => gap.classList.toggle('preview', Number(gap.dataset.cut) === cut));
+  document.querySelectorAll('.hd-letter[data-position]').forEach(letter => {
+    const position = Number(letter.dataset.position);
+    letter.classList.toggle('preview-left', cut !== null && position < cut);
+    letter.classList.toggle('preview-right', cut !== null && position >= cut);
+  });
+  updateReferenceWord(cut);
 }
 function renderLetters() {
-  const host = $('hd-letters'); host.replaceChildren();
+  const host = $('hd-letters'); host.className = 'hd-letters word-' + (wordColorState() || 'neutral'); host.replaceChildren();
   Array.from(current.word).forEach((letter, i, all) => {
-    host.append(makeLetter(letter, i, true));
+    const tile = makeLetter(letter, i, true);
+    tile.dataset.position = String(i);
+    host.append(tile);
     if (i === all.length - 1) return;
     const cut = i + 1, button = document.createElement('button');
     button.type = 'button'; button.dataset.cut = String(cut);
     button.className = 'hd-drag-gap' + (cuts.has(cut) ? ' selected' : '');
     button.textContent = '';
-    button.setAttribute('aria-label', (cuts.has(cut) ? 'Quitar división' : 'Separar') + ' entre ' + letter + ' y ' + all[i + 1]);
+    button.setAttribute('aria-label', (cuts.has(cut) ? 'Quitar este guion' : 'Separar') + ' entre ' + letter + ' y ' + all[i + 1]);
     button.setAttribute('aria-pressed', String(cuts.has(cut)));
     button.disabled = stage !== 'separate';
-    button.addEventListener('click', () => toggleCut(cut));
+    button.addEventListener('click', () => { if (Date.now() < ignoreGapClickUntil) return; toggleCut(cut); });
+    button.addEventListener('pointerdown', event => { if (cuts.has(cut)) startRemoveDrag(event, cut, button); });
     host.append(button);
   });
+  if (separationIsReady()) {
+    const [first, last] = current.focus;
+    if (vowelState() === 'together') {
+      const start = host.querySelector('[data-position="' + first + '"]');
+      const end = host.querySelector('[data-position="' + last + '"]');
+      const group = document.createElement('span'); group.className = 'hd-main-vowel-group';
+      host.insertBefore(group, start);
+      let node = start;
+      while (node) { const next = node.nextSibling; group.append(node); if (node === end) break; node = next; }
+    } else {
+      host.querySelectorAll('.hd-letter.focus').forEach(letter => letter.classList.add('hd-main-vowel-separated'));
+    }
+  }
   requestAnimationFrame(updateScrollNote);
 }
 function updateScrollNote() {
@@ -137,6 +185,7 @@ function updateScrollNote() {
 window.addEventListener('resize', updateScrollNote, { passive: true });
 function renderPreview() {
   const pieces = data.groups(current.word, cuts), host = $('hd-preview');
+  host.className = 'hd-preview word-' + (wordColorState() || 'neutral');
   host.replaceChildren();
   const accessible = document.createElement('span');
   accessible.className = 'hd-sr'; accessible.textContent = pieces.join(' — '); host.append(accessible);
@@ -151,6 +200,17 @@ function renderPreview() {
   });
 }
 function dragGapAt(x, y) {
+  // Conservamos los centros al iniciar el gesto. Así la apertura animada de
+  // letras no puede cambiar el destino mientras el niño arrastra.
+  if (dragTargets.length) {
+    let closest = null, distance = Infinity;
+    dragTargets.forEach(target => {
+      if (y < target.top - 30 || y > target.bottom + 30) return;
+      const d = Math.abs(x - target.center);
+      if (d < distance) { closest = target.gap; distance = d; }
+    });
+    return distance <= 38 ? closest : null;
+  }
   const direct = document.elementFromPoint(x, y);
   const button = direct && direct.closest ? direct.closest('.hd-drag-gap') : null;
   if (button && !button.disabled) return button;
@@ -163,7 +223,7 @@ function dragGapAt(x, y) {
     const d = Math.abs(x - (box.left + box.width / 2));
     if (d < distance) { nearest = gap; distance = d; }
   });
-  return distance <= 30 ? nearest : null;
+  return distance <= 38 ? nearest : null;
 }
 function moveDragToken(event) {
   const token = $('hd-drag-token');
@@ -174,9 +234,26 @@ function moveDragToken(event) {
 function startDrag(event) {
   if (stage !== 'separate' || event.button > 0) return;
   event.preventDefault();
+  dragMode = 'add'; dragOriginalCut = null;
   dragPointer = event.pointerId; dragCut = null;
+  dragTargets = Array.from(document.querySelectorAll('.hd-drag-gap:not(:disabled)')).map(gap => {
+    const box = gap.getBoundingClientRect();
+    return { gap, center: box.left + box.width / 2, top: box.top, bottom: box.bottom };
+  });
   const token = $('hd-drag-token'); token.classList.add('dragging');
   token.setPointerCapture?.(event.pointerId); moveDragToken(event);
+}
+function startRemoveDrag(event, cut, source) {
+  if (stage !== 'separate' || event.button > 0) return;
+  event.preventDefault();
+  dragMode = 'remove'; dragOriginalCut = cut; dragPointer = event.pointerId; dragCut = cut;
+  dragTargets = Array.from(document.querySelectorAll('.hd-drag-gap:not(:disabled)')).map(gap => {
+    const box = gap.getBoundingClientRect();
+    return { gap, center: box.left + box.width / 2, top: box.top, bottom: box.bottom };
+  });
+  source.classList.add('drag-source');
+  const token = $('hd-drag-token'); token.classList.add('dragging');
+  source.setPointerCapture?.(event.pointerId); moveDragToken(event);
 }
 function endDrag(event) {
   if (dragPointer !== event.pointerId) return;
@@ -184,10 +261,22 @@ function endDrag(event) {
   // soltar. Leemos también el punto final para no perder esa división.
   const finalGap = dragGapAt(event.clientX, event.clientY);
   const token = $('hd-drag-token'), cut = finalGap ? Number(finalGap.dataset.cut) : dragCut;
-  dragPointer = null; dragCut = null;
+  const mode = dragMode, originalCut = dragOriginalCut;
+  dragPointer = null; dragCut = null; dragTargets = []; dragMode = 'add'; dragOriginalCut = null;
   token.classList.remove('dragging'); token.style.removeProperty('left'); token.style.removeProperty('top');
+  document.querySelectorAll('.hd-drag-gap.drag-source').forEach(gap => gap.classList.remove('drag-source'));
   try { token.releasePointerCapture?.(event.pointerId); } catch { /* El puntero puede haberse liberado antes. */ }
-  if (cut) {
+  if (mode === 'remove' && originalCut !== null) {
+    ignoreGapClickUntil = Date.now() + 400;
+    if (cut !== originalCut) {
+      cuts.delete(originalCut);
+      if (cut) cuts.add(cut);
+      feedback(cut ? 'Moviste el guion a otro espacio.' : 'Quitaste el guion.', 'good');
+      afterSeparationChange();
+    } else {
+      feedback('Arrastra el guion fuera de la palabra para quitarlo o a otro espacio para moverlo.');
+    }
+  } else if (cut) {
     cuts.add(cut); feedback('¡Separaste la palabra! Escucha cómo suenan las sílabas.', 'good');
     afterSeparationChange();
   } else feedback('Pon el guion en el pequeño espacio entre dos letras.', 'retry');
@@ -195,18 +284,23 @@ function endDrag(event) {
 function showWord() {
   ticket++; stopSpeech(); $('hd-celebration').replaceChildren();
   current = session[index]; cuts = new Set(); stage = 'separate'; helped = false; attempts = 0;
+  $('hd-workspace').classList.remove('reviewed');
+  $('hd-instruction').style.removeProperty('height');
+  $('hd-workspace').classList.add('classifying');
   $('hd-word-title').textContent = current.word;
+  $('hd-word-title').className = '';
   $('hd-greeting').textContent = settings.name ? '¡Vamos, ' + settings.name + '!' : 'Vamos paso a paso';
   $('hd-progress').textContent = 'Palabra ' + (index + 1) + ' de ' + session.length;
   $('hd-track-fill').style.width = (index / session.length * 100) + '%';
   $('hd-step-one').className = 'active'; $('hd-step-two').className = '';
   $('hd-instruction').textContent = current.cuts.length ? 'Arrastra el guion hacia el espacio entre dos letras para separar la palabra en sílabas.' : 'Esta palabra tiene una sola sílaba. Puedes revisarla sin separar.';
   $('hd-review').hidden = false; $('hd-clear').hidden = false;
+  $('hd-review').disabled = false; $('hd-clear').disabled = false;
   $('hd-drag-instruction').hidden = false; $('hd-drag-token').disabled = false;
   $('hd-hint').hidden = !settings.help;
-  $('hd-classify').hidden = true; $('hd-success').hidden = true;
-  for (const kind of ['hiato', 'diptongo']) { $('hd-' + kind).disabled = false; $('hd-' + kind).classList.remove('correct'); }
-  feedback(''); renderLetters(); renderPreview(); updateVowelState();
+  $('hd-classify').hidden = false; $('hd-classify').classList.add('pending'); $('hd-success').hidden = true;
+  for (const kind of ['hiato', 'diptongo']) { $('hd-' + kind).disabled = true; $('hd-' + kind).classList.remove('correct'); }
+  feedback(''); renderLetters(); renderPreview(); updateReferenceWord(); updateVowelState();
   $('hd-letter-scroll').scrollLeft = 0;
 }
 function start() {
@@ -221,22 +315,41 @@ function start() {
 }
 function checkSeparation() {
   if (stage !== 'separate') return;
+  const pageScroll = { x: window.scrollX, y: window.scrollY };
+  const letterScroll = $('hd-letter-scroll').scrollLeft;
+  const instructionHeight = $('hd-instruction').getBoundingClientRect().height;
   attempts++;
   if (!data.validateCuts(current, cuts)) {
     feedback('Todavía no coincide la separación. Revisa las divisiones que pusiste; puedes añadirlas o quitarlas.', 'retry');
     return;
   }
-  stage = 'classify'; renderLetters();
-  $('hd-review').hidden = true; $('hd-clear').hidden = true;
-  $('hd-drag-instruction').hidden = true; $('hd-drag-token').disabled = true;
+  stage = 'classify'; renderLetters(); renderPreview();
+  $('hd-workspace').classList.add('reviewed');
+  $('hd-workspace').classList.add('classifying');
+  updateReferenceWord(); updateVowelState();
+  $('hd-review').disabled = true; $('hd-clear').disabled = true;
+  $('hd-drag-token').disabled = true;
   $('hd-step-one').className = 'complete'; $('hd-step-two').className = 'active';
-  $('hd-instruction').textContent = '¡Separación correcta! Ahora observa las dos vocales destacadas.';
+  $('hd-instruction').style.height = instructionHeight + 'px';
+  $('hd-instruction').textContent = '👀 Mira las dos vocales destacadas.';
   $('hd-classify').hidden = false;
+  $('hd-classify').classList.remove('pending');
+  for (const kind of ['hiato', 'diptongo']) $('hd-' + kind).disabled = false;
   $('hd-vowel-pair').replaceChildren();
-  Array.from(current.pair).forEach(letter => { const span = document.createElement('span'); span.textContent = letter; $('hd-vowel-pair').append(span); });
-  feedback('Las letras marcadas en morado son las vocales que vas a comparar.', 'good');
-  $('hd-classify').scrollIntoView({ block: 'nearest', behavior: 'auto' });
-  $('hd-diptongo').focus({ preventScroll: true });
+  const pairHost = $('hd-vowel-pair'), together = vowelState() === 'together';
+  if (together) {
+    const group = document.createElement('span'); group.className = 'hd-vowel-pair-group together';
+    Array.from(current.pair).forEach(letter => { const span = document.createElement('span'); span.textContent = letter; group.append(span); });
+    pairHost.append(group);
+  } else {
+    Array.from(current.pair).forEach((letter, index) => {
+      if (index) { const mark = document.createElement('span'); mark.className = 'hd-pair-separation-mark'; mark.textContent = '↔'; mark.setAttribute('aria-hidden', 'true'); pairHost.append(mark); }
+      const span = document.createElement('span'); span.className = 'separated'; span.textContent = letter; pairHost.append(span);
+    });
+  }
+  feedback('👀 Fíjate en los recuadros de las vocales: ¿quedaron juntas o separadas?', 'good');
+  $('hd-letter-scroll').scrollLeft = letterScroll;
+  window.scrollTo(pageScroll.x, pageScroll.y);
 }
 function giveHint() {
   if (!settings.help || !current || stage === 'done') return;
@@ -312,7 +425,7 @@ $('hd-again').addEventListener('click', start);
 $('hd-config').addEventListener('click', configure);
 $('hd-home').addEventListener('click', configure);
 $('hd-review').addEventListener('click', checkSeparation);
-$('hd-clear').addEventListener('click', () => { if (stage !== 'separate') return; cuts.clear(); feedback(''); renderLetters(); renderPreview(); updateVowelState(); });
+$('hd-clear').addEventListener('click', () => { if (stage !== 'separate') return; cuts.clear(); feedback(''); renderLetters(); renderPreview(); updateReferenceWord(); updateVowelState(); });
 $('hd-drag-token').addEventListener('pointerdown', startDrag);
 // El seguimiento se hace desde la ventana: así el gesto sigue funcionando si el
 // navegador pierde la captura del botón al pasar por encima de una letra.
