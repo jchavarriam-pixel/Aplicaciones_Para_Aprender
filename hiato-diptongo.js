@@ -7,7 +7,7 @@ const key = 'hiatoDiptongo.config.v1';
 const defaults = { name: '', kind: 'ambos', level: 'easy', help: true, readWord: true, sound: true, syllableSound: true, visualHelp: true };
 let settings = { ...defaults }, session = [], index = 0, round = 0, current = null;
 let cuts = new Set(), stage = 'separate', results = [], helped = false, helpCount = 0, attempts = 0, ticket = 0;
-let lastWord = '', speechTimer = null, speechRun = 0, dragCut = null, dragPointer = null, dragTargets = [], dragMode = 'add', dragOriginalCut = null, ignoreGapClickUntil = 0;
+let lastWord = '', speechTimer = null, speechRun = 0, dragCut = null, dragPreviewCut, dragPointer = null, dragTargets = [], dragMode = 'add', dragOriginalCut = null, ignoreGapClickUntil = 0;
 const canSpeak = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
 try {
   const saved = JSON.parse(localStorage.getItem(key) || '{}');
@@ -136,6 +136,10 @@ function toggleCut(cut) {
 }
 function setDragCut(cut) {
   dragCut = cut;
+  // Los eventos táctiles llegan muchas veces sobre el mismo espacio. Solo
+  // redibujamos la palabra cuando el dedo cambia realmente de destino.
+  if (dragPreviewCut === cut) return;
+  dragPreviewCut = cut;
   document.querySelectorAll('.hd-drag-gap').forEach(gap => gap.classList.toggle('preview', Number(gap.dataset.cut) === cut));
   document.querySelectorAll('.hd-letter[data-position]').forEach(letter => {
     const position = Number(letter.dataset.position);
@@ -208,7 +212,7 @@ function dragGapAt(x, y) {
       const d = Math.abs(x - target.center);
       if (d < distance) { closest = target.gap; distance = d; }
     });
-    return distance <= 38 ? closest : null;
+    return distance <= 48 ? closest : null;
   }
   const direct = document.elementFromPoint(x, y);
   const button = direct && direct.closest ? direct.closest('.hd-drag-gap') : null;
@@ -218,18 +222,19 @@ function dragGapAt(x, y) {
   let nearest = null, distance = Infinity;
   document.querySelectorAll('.hd-drag-gap:not(:disabled)').forEach(gap => {
     const box = gap.getBoundingClientRect();
-    if (y < box.top - 28 || y > box.bottom + 28) return;
+    if (y < box.top - 40 || y > box.bottom + 40) return;
     const d = Math.abs(x - (box.left + box.width / 2));
     if (d < distance) { nearest = gap; distance = d; }
   });
-  return distance <= 38 ? nearest : null;
+  return distance <= 48 ? nearest : null;
 }
 function moveDragToken(event) {
   const touch = event.changedTouches?.[0] || event.touches?.[0];
   const x = touch ? touch.clientX : event.clientX, y = touch ? touch.clientY : event.clientY;
   const token = $('hd-drag-ghost');
-  // El guion queda apenas bajo el dedo: se ve sin tapar el punto de destino.
-  token.style.left = x + 'px'; token.style.top = (y + 30) + 'px';
+  // Usamos exactamente las coordenadas del dedo. El pequeño espacio visual
+  // debajo se define en CSS, sin sumar un desplazamiento que pueda desfasarse.
+  token.style.left = x + 'px'; token.style.top = y + 'px';
   const gap = dragGapAt(x, y);
   setDragCut(gap ? Number(gap.dataset.cut) : null);
 }
@@ -237,7 +242,7 @@ function startDrag(event) {
   if (stage !== 'separate' || event.button > 0) return;
   event.preventDefault();
   dragMode = 'add'; dragOriginalCut = null;
-  dragPointer = event.pointerId; dragCut = null;
+  dragPointer = event.pointerId; dragCut = null; dragPreviewCut = undefined;
   dragTargets = Array.from(document.querySelectorAll('.hd-drag-gap:not(:disabled)')).map(gap => {
     const box = gap.getBoundingClientRect();
     return { gap, center: box.left + box.width / 2, top: box.top, bottom: box.bottom };
@@ -248,7 +253,7 @@ function startDrag(event) {
 function startRemoveDrag(event, cut, source) {
   if (stage !== 'separate' || event.button > 0) return;
   event.preventDefault();
-  dragMode = 'remove'; dragOriginalCut = cut; dragPointer = event.pointerId; dragCut = cut;
+  dragMode = 'remove'; dragOriginalCut = cut; dragPointer = event.pointerId; dragCut = cut; dragPreviewCut = undefined;
   dragTargets = Array.from(document.querySelectorAll('.hd-drag-gap:not(:disabled)')).map(gap => {
     const box = gap.getBoundingClientRect();
     return { gap, center: box.left + box.width / 2, top: box.top, bottom: box.bottom };
@@ -264,7 +269,7 @@ function endDrag(event) {
   const finalGap = dragGapAt(event.clientX, event.clientY);
   const token = $('hd-drag-ghost'), cut = finalGap ? Number(finalGap.dataset.cut) : dragCut;
   const mode = dragMode, originalCut = dragOriginalCut;
-  dragPointer = null; dragCut = null; dragTargets = []; dragMode = 'add'; dragOriginalCut = null;
+  dragPointer = null; dragCut = null; dragPreviewCut = undefined; dragTargets = []; dragMode = 'add'; dragOriginalCut = null;
   token.classList.remove('dragging'); token.style.removeProperty('left'); token.style.removeProperty('top');
   document.querySelectorAll('.hd-drag-gap.drag-source').forEach(gap => gap.classList.remove('drag-source'));
   try { $('hd-drag-token').releasePointerCapture?.(event.pointerId); } catch { /* El puntero puede haberse liberado antes. */ }

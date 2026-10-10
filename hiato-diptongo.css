@@ -71,7 +71,7 @@
 .hd-drag-gap.selected::after{width:46px;height:46px;border:3px solid #bba8e8;background:#f0ecfb;color:#6941b8;font-size:40px;line-height:.7;transform:translateY(-1px)}
 .hd-drag-gap.preview::after{width:46px;height:46px;border:3px solid #bba8e8;background:#f0ecfb;color:#6941b8;font-size:40px;line-height:.7}
 #hd-drag-token{width:54px;height:54px;border:3px solid #bba8e8;background:#f0ecfb;color:#6941b8;font-size:40px;line-height:.7}
-#hd-drag-ghost{display:none;position:fixed;z-index:10002;pointer-events:none;width:54px;height:54px;place-items:center;border:3px solid #bba8e8;border-radius:13px;background:#f0ecfb;color:#6941b8;font-size:40px;font-weight:900;line-height:.7;transform:translate(-50%,-50%);box-shadow:0 5px 14px #4f388e50}
+#hd-drag-ghost{display:none;position:fixed;z-index:10002;pointer-events:none;width:54px;height:54px;place-items:center;border:3px solid #bba8e8;border-radius:13px;background:#f0ecfb;color:#6941b8;font-size:40px;font-weight:900;line-height:.7;transform:translate(-50%,12px);box-shadow:0 5px 14px #4f388e50;will-change:left,top}
 #hd-drag-ghost.dragging{display:grid}
 .hd-choice-kind{font-weight:800!important;letter-spacing:.2px}
 
@@ -124,6 +124,10 @@
 .hd-main-vowel-group{display:inline-flex;align-items:center;flex:none;padding:0;border:0;outline:3px solid #18804e;outline-offset:0;border-radius:15px;background:#daf5e6}
 .hd-main-vowel-group .hd-letter.focus{border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;outline:0!important}
 .hd-letters.word-hiato .hd-letter.hd-main-vowel-separated{border:0;border-radius:14px;background:#dcefff!important;box-shadow:inset 0 0 0 3px #1546e8!important}
+
+/* El gesto de soltar o mover un guion pertenece a la actividad, no al zoom ni
+   al desplazamiento táctil del navegador. */
+.hd-drag-gap,#hd-drag-token{touch-action:none;-webkit-tap-highlight-color:transparent}
 
 /* Celebración compacta: una gran explosión de figuras, sin imágenes pesadas. */
 .hd-burst-core{position:absolute;top:46%;left:50%;display:grid;place-items:center;width:76px;height:76px;border-radius:50%;background:radial-gradient(circle,#fff 0 18%,#ffe48c 20% 35%,#f4a83b 37% 57%,#e85d85 59% 100%);color:#fff;font-size:35px;text-shadow:0 2px 0 #b85633;transform:translate(-50%,-50%) scale(.15);opacity:0;animation:hd-burst-core .9s cubic-bezier(.18,.8,.25,1) forwards;will-change:transform,opacity}
