@@ -32,7 +32,8 @@ async function main(){
  let exercises=0;
  async function dragToCut(cut){
    const token=page.locator('#hd-drag-token'), gap=page.locator('.hd-drag-gap[data-cut="'+cut+'"]').first();
-   const a=await token.boundingBox(), b=await gap.boundingBox(); assert(a&&b,'Falta el guion o el espacio de separación');
+   assert(await gap.count(),'No existe el corte '+cut+' en «'+await page.locator('#hd-word-title').textContent()+'»');
+   const a=await token.boundingBox(), b=await gap.boundingBox(); assert(a&&b,'Falta el guion o el espacio de separación para el corte '+cut+' en «'+await page.locator('#hd-word-title').textContent()+'»');
    await page.mouse.move(a.x+a.width/2,a.y+a.height/2); await page.mouse.down();
    await page.mouse.move(b.x+b.width/2,b.y+b.height/2,{steps:5}); await page.mouse.up();
    await page.waitForTimeout(180);
@@ -43,6 +44,7 @@ async function main(){
    await page.evaluate(word=>globalThis.__testWord=word,record.word);
    await page.locator('#hd-start').click();
    assert.equal(await page.locator('#hd-word-title').textContent(),record.word);
+   assert(await page.locator('.hd-drag-gap').count(), 'No se dibujaron espacios para «'+record.word+'»: '+await page.locator('#hd-letters').innerHTML());
    if(record.cuts.length){await page.locator('#hd-review').click();assert((await page.locator('#hd-feedback').textContent()).includes('Todavía'));}
    for(const cut of record.cuts)await dragToCut(cut);
    await page.locator('#hd-review').click();assert(await page.locator('#hd-classify').isVisible(),record.word+' · '+await page.locator('#hd-feedback').textContent()+' · cortes: '+await page.locator('.hd-drag-gap.selected').evaluateAll(nodes=>nodes.map(n=>n.dataset.cut).join(',')));

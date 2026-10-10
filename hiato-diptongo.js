@@ -318,6 +318,14 @@ function startRound() {
   if (deck.length > 1 && deck[0].word === lastWord) deck.push(deck.shift());
   session = deck; index = 0; round++;
 }
+function separationPraise() {
+  const name = settings.name;
+  const openings = name
+    ? ['¡Buen trabajo, ' + name + '!', name + ', lo has hecho genial.', '¡Muy bien, ' + name + '!']
+    : ['¡Buen trabajo!', '¡Lo has hecho genial!', '¡Muy bien!'];
+  const opening = openings[(round + index) % openings.length];
+  return opening + ' Ahora dime: ¿las vocales están juntas o separadas? ¿Es hiato o diptongo?';
+}
 function checkSeparation() {
   if (stage !== 'separate') return;
   const pageScroll = { x: window.scrollX, y: window.scrollY };
@@ -333,7 +341,8 @@ function checkSeparation() {
   $('hd-review').hidden = true; $('hd-clear').hidden = true;
   $('hd-drag-instruction').hidden = true; $('hd-drag-token').disabled = true;
   $('hd-step-one').className = 'complete'; $('hd-step-two').className = 'active';
-  $('hd-instruction').textContent = settings.visualHelp ? '¡Separación correcta! Ahora observa las dos vocales destacadas.' : '¡Separación correcta! Ahora elige si quedaron juntas o separadas.';
+  const praise = separationPraise();
+  $('hd-instruction').textContent = praise;
   $('hd-classify').hidden = false;
   $('hd-classify').classList.remove('pending');
   for (const kind of ['hiato', 'diptongo']) { const choice = $('hd-' + kind); choice.disabled = false; choice.removeAttribute('disabled'); }
@@ -349,9 +358,10 @@ function checkSeparation() {
       const span = document.createElement('span'); span.className = 'separated'; span.textContent = letter; pairHost.append(span);
     });
   }
-  feedback(settings.visualHelp ? 'Las letras destacadas son las vocales que vas a comparar.' : 'Elige si las vocales quedaron juntas o separadas.', 'good');
+  feedback(praise, 'good');
   $('hd-letter-scroll').scrollLeft = letterScroll;
   window.scrollTo(pageScroll.x, pageScroll.y);
+  if (settings.sound) speak(praise);
 }
 function giveHint() {
   if (!settings.help || !current || stage === 'done') return;
@@ -372,16 +382,18 @@ function giveHint() {
 function celebrate() {
   if (stage !== 'done' || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const host = $('hd-celebration'); host.replaceChildren();
-  for (let i = 0; i < 14; i++) {
+  const core = document.createElement('span'); core.className = 'hd-burst-core'; core.textContent = '★'; host.append(core);
+  for (let i = 0; i < 26; i++) {
     const piece = document.createElement('span'); piece.className = 'hd-spark';
-    piece.textContent = ['⭐', '✦', '●'][i % 3];
-    const angle = i / 14 * Math.PI * 2, distance = Math.min(innerWidth * .35, 250);
+    piece.textContent = ['✦', '●', '✚', '◆', '•'][i % 5];
+    const angle = i / 26 * Math.PI * 2, distance = Math.min(Math.max(innerWidth, innerHeight) * .42, 340);
     piece.style.setProperty('--x', Math.cos(angle) * distance + 'px');
     piece.style.setProperty('--y', Math.sin(angle) * distance + 'px');
-    piece.style.setProperty('--r', i * 25 + 'deg');
-    piece.style.color = ['#7451c8', '#e7ad40', '#3a9d8b'][i % 3]; host.append(piece);
+    piece.style.setProperty('--r', i * 31 + 'deg');
+    piece.style.setProperty('--delay', (i % 4) * 24 + 'ms');
+    piece.style.color = ['#7451c8', '#e7ad40', '#3a9d8b', '#e85d85', '#3977df'][i % 5]; host.append(piece);
   }
-  const id = ticket; setTimeout(() => { if (id === ticket) host.replaceChildren(); }, 1800);
+  const id = ticket; setTimeout(() => { if (id === ticket) host.replaceChildren(); }, 1900);
 }
 function classify(kind) {
   if (stage !== 'classify') return;
@@ -401,7 +413,8 @@ function classify(kind) {
   $('hd-next').textContent = index + 1 === session.length ? 'Nueva ronda →' : 'Siguiente palabra →';
   feedback('¡Bien observado!', 'good');
   $('hd-success').scrollIntoView({ block: 'nearest', behavior: 'auto' });
-  if (settings.sound) speak(current.word + '. ' + data.explanation(current), celebrate); else celebrate();
+  celebrate();
+  if (settings.sound) speak(current.word + '. ' + data.explanation(current));
 }
 function finish() {
   ticket++; stopSpeech(); $('hd-celebration').replaceChildren();
