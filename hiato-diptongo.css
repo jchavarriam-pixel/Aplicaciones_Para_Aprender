@@ -71,6 +71,14 @@
 .hd-drag-gap.selected::after{width:46px;height:46px;border:3px solid #bba8e8;background:#f0ecfb;color:#6941b8;font-size:40px;line-height:.7;transform:translateY(-1px)}
 .hd-drag-gap.preview::after{width:46px;height:46px;border:3px solid #bba8e8;background:#f0ecfb;color:#6941b8;font-size:40px;line-height:.7}
 #hd-drag-token{width:54px;height:54px;border:3px solid #bba8e8;background:#f0ecfb;color:#6941b8;font-size:40px;line-height:.7}
+#hd-drag-ghost{display:none;position:fixed;z-index:10002;pointer-events:none;width:54px;height:54px;place-items:center;border:3px solid #bba8e8;border-radius:13px;background:#f0ecfb;color:#6941b8;font-size:40px;font-weight:900;line-height:.7;transform:translate(-50%,-50%);box-shadow:0 5px 14px #4f388e50}
+#hd-drag-ghost.dragging{display:grid}
+.hd-choice-kind{font-weight:800!important;letter-spacing:.2px}
+
+/* El área táctil sigue siendo amplia, pero la vista previa no debe verse como
+   un bloque alto ni cambiar la alineación de la palabra. */
+.hd-drag-gap.preview::before{background:transparent!important;box-shadow:none!important}
+.hd-drag-gap.preview::after{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);margin:0}
 @media(max-width:650px){.hd-workspace h2#hd-word-title{gap:8px}.hd-reference-hyphen{border-width:2px}.hd-drag-gap.selected{flex-basis:46px;width:46px;min-width:46px}.hd-drag-gap.selected::after,.hd-drag-gap.preview::after{width:39px;height:39px;font-size:34px;border-width:2px}#hd-drag-token{width:48px;height:48px;font-size:36px}}
 
 /* Al clasificar, la palabra queda a la izquierda y la decisión a la derecha. */
@@ -116,7 +124,3 @@
 .hd-main-vowel-group{display:inline-flex;align-items:center;flex:none;padding:0;border:0;outline:3px solid #18804e;outline-offset:0;border-radius:15px;background:#daf5e6}
 .hd-main-vowel-group .hd-letter.focus{border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;outline:0!important}
 .hd-letters.word-hiato .hd-letter.hd-main-vowel-separated{border:0;border-radius:14px;background:#dcefff!important;box-shadow:inset 0 0 0 3px #1546e8!important}
-.hd-workspace.reviewed .hd-drag-instruction{visibility:hidden}
-.hd-workspace.reviewed #hd-review,.hd-workspace.reviewed #hd-clear{visibility:hidden}
-.hd-workspace.reviewed #hd-instruction{font-weight:700;color:#6941b8}
-.hd-main-vowel-group{align-self:center}

@@ -23,9 +23,8 @@
       <label>Nombre<input id="hd-name" type="text" maxlength="50" autocomplete="given-name" placeholder="Ejemplo: Gabriel"></label>
       <label>Qué practicamos<select id="hd-kind"><option value="ambos">Hiatos y diptongos</option><option value="hiato">Hiatos</option><option value="diptongo">Diptongos</option></select></label>
       <label>Palabras<select id="hd-level"><option value="easy">Para empezar: palabras cortas</option><option value="all">Todas: incluye palabras largas y h</option></select></label>
-      <label>Palabras por sesión<select id="hd-count"><option value="5">5 palabras</option><option value="10" selected>10 palabras</option><option value="20">20 palabras</option><option value="30">30 palabras</option></select></label>
     </div>
-    <div class="hd-options"><label><input id="hd-help" type="checkbox" checked> Permitir pistas</label><label><input id="hd-sound" type="checkbox" checked> Leer la explicación al acertar</label><label><input id="hd-syllable-sound" type="checkbox" checked> Leer las sílabas al separar</label></div>
+    <div class="hd-options"><label><input id="hd-help" type="checkbox" checked> Pista verbal</label><label><input id="hd-read-word" type="checkbox" checked> Escuchar la palabra</label><label><input id="hd-syllable-sound" type="checkbox" checked> Leer las sílabas al separar</label><label><input id="hd-sound" type="checkbox" checked> Leer la explicación al acertar</label><label><input id="hd-visual-help" type="checkbox" checked> Señales visuales</label></div>
     <p id="hd-available" class="hd-note" role="status"></p>
     <p id="hd-storage" class="hd-note" role="status"></p>
     <button id="hd-start" class="hd-button hd-primary" type="button">Empezar práctica →</button>
@@ -50,7 +49,7 @@
       <section id="hd-classify" class="hd-classify" hidden aria-labelledby="hd-classify-title">
         <h3 id="hd-classify-title">¿Las vocales quedaron...?</h3><div id="hd-vowel-pair" class="hd-vowel-pair" aria-hidden="true"></div>
         <p>Mira las vocales destacadas arriba y marca cómo quedaron.</p>
-        <div class="hd-choice-grid"><button id="hd-diptongo" class="hd-choice hd-choice-together" type="button"><span class="hd-visual-choice together" aria-hidden="true"><i></i><i></i></span><strong>Juntas</strong><span>Forman un diptongo</span><span class="hd-choice-circle" aria-hidden="true"></span></button><button id="hd-hiato" class="hd-choice hd-choice-separated" type="button"><span class="hd-visual-choice separated" aria-hidden="true"><i></i><b>↔</b><i></i></span><strong>Separadas</strong><span>Forman un hiato</span><span class="hd-choice-circle" aria-hidden="true"></span></button></div>
+        <div class="hd-choice-grid"><button id="hd-diptongo" class="hd-choice hd-choice-together" type="button"><span class="hd-visual-choice together" aria-hidden="true"><i></i><i></i></span><strong>Juntas</strong><span class="hd-choice-kind">Diptongo</span><span class="hd-choice-circle" aria-hidden="true"></span></button><button id="hd-hiato" class="hd-choice hd-choice-separated" type="button"><span class="hd-visual-choice separated" aria-hidden="true"><i></i><b>↔</b><i></i></span><strong>Separadas</strong><span class="hd-choice-kind">Hiato</span><span class="hd-choice-circle" aria-hidden="true"></span></button></div>
       </section></div>
       <div id="hd-success" class="hd-success" hidden><strong>¡Lo descubriste! ⭐</strong><p id="hd-explanation"></p><button id="hd-next" class="hd-button hd-primary" type="button">Siguiente palabra →</button></div>
     </div>
@@ -59,7 +58,7 @@
   <details class="hd-reference"><summary>Una ayuda para aprender</summary><div class="hd-reference-grid"><article><h3>Diptongo</h3><p>Dos vocales están en la misma sílaba: <b>ai</b>-re, p<b>ue</b>r-ta. Se unen una abierta y una cerrada sin tilde, o dos cerradas distintas.</p></article><article><h3>Hiato</h3><p>Dos vocales están en sílabas distintas: te-<b>a</b>-tro, pa-<b>ís</b>. Se separan dos abiertas, o una abierta y una cerrada con tilde.</p></article></div><p>La h intercalada no cambia la relación entre las vocales: co-he-te, bú-ho. Usamos separaciones escolares basadas en los criterios ortográficos; algunas pronunciaciones varían según la región.</p><a href="https://www.rae.es/ortograf%C3%ADa-b%C3%A1sica/uso-de-la-tilde/las-reglas-de-acentuaci%C3%B3n-gr%C3%A1fica/la-acentuaci%C3%B3n-gr%C3%A1fica-de-las-palabras-con-secuencias-voc%C3%A1licas" target="_blank" rel="noopener noreferrer">Consultar los criterios de la RAE ↗</a></details>
 </main>
 <footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos"><div class="creditos-dedicatoria"><span class="creditos-gabriel">Creado para <strong>Gabriel</strong></span><span class="creditos-familia">Por su familia, con ayuda de la IA.</span></div><div class="creditos-equipo"><span class="creditos-autores">M.Sc. Jeffry Chavarría-Molina y Ph.D. (c) Natalia Rodríguez-Granados</span><span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span></div></footer>
-<div id="hd-celebration" aria-hidden="true"></div>
+<div id="hd-celebration" aria-hidden="true"></div><div id="hd-drag-ghost" aria-hidden="true">−</div>
 <script src="hiato-diptongo-datos.js"></script>
 <script src="hiato-diptongo.js"></script>
 <script src="pantalla-completa.js"></script>

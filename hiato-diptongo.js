@@ -4,8 +4,8 @@
 const data = globalThis.HiatoDiptongo;
 const $ = id => document.getElementById(id);
 const key = 'hiatoDiptongo.config.v1';
-const defaults = { name: '', kind: 'ambos', level: 'easy', count: 10, help: true, sound: true, syllableSound: true };
-let settings = { ...defaults }, session = [], index = 0, current = null;
+const defaults = { name: '', kind: 'ambos', level: 'easy', help: true, readWord: true, sound: true, syllableSound: true, visualHelp: true };
+let settings = { ...defaults }, session = [], index = 0, round = 0, current = null;
 let cuts = new Set(), stage = 'separate', results = [], helped = false, helpCount = 0, attempts = 0, ticket = 0;
 let lastWord = '', speechTimer = null, speechRun = 0, dragCut = null, dragPointer = null, dragTargets = [], dragMode = 'add', dragOriginalCut = null, ignoreGapClickUntil = 0;
 const canSpeak = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
@@ -15,22 +15,21 @@ try {
     settings.name = typeof saved.name === 'string' ? saved.name.slice(0, 50) : '';
     if (['ambos', 'hiato', 'diptongo'].includes(saved.kind)) settings.kind = saved.kind;
     if (['easy', 'all'].includes(saved.level)) settings.level = saved.level;
-    if ([5, 10, 20, 30].includes(saved.count)) settings.count = saved.count;
-    for (const k of ['help', 'sound', 'syllableSound']) if (typeof saved[k] === 'boolean') settings[k] = saved[k];
+    for (const k of ['help', 'readWord', 'sound', 'syllableSound', 'visualHelp']) if (typeof saved[k] === 'boolean') settings[k] = saved[k];
   }
   if (!settings.name) settings.name = (localStorage.getItem('nombreNinoGabrielApps') || '').slice(0, 50);
 } catch { /* La práctica sigue disponible con el almacenamiento bloqueado. */ }
-if (!canSpeak) { settings.sound = false; settings.syllableSound = false; }
-for (const [id, value] of [['hd-name', settings.name], ['hd-kind', settings.kind], ['hd-level', settings.level], ['hd-count', settings.count]]) $(id).value = String(value);
-$('hd-help').checked = settings.help; $('hd-sound').checked = settings.sound; $('hd-syllable-sound').checked = settings.syllableSound;
-$('hd-sound').disabled = !canSpeak; $('hd-syllable-sound').disabled = !canSpeak;
+if (!canSpeak) { settings.readWord = false; settings.sound = false; settings.syllableSound = false; }
+for (const [id, value] of [['hd-name', settings.name], ['hd-kind', settings.kind], ['hd-level', settings.level]]) $(id).value = String(value);
+$('hd-help').checked = settings.help; $('hd-read-word').checked = settings.readWord; $('hd-sound').checked = settings.sound; $('hd-syllable-sound').checked = settings.syllableSound; $('hd-visual-help').checked = settings.visualHelp;
+$('hd-read-word').disabled = !canSpeak; $('hd-sound').disabled = !canSpeak; $('hd-syllable-sound').disabled = !canSpeak;
 $('hd-listen-word').disabled = !canSpeak;
 if (!canSpeak) $('hd-listen-word').title = 'La lectura no está disponible en este navegador.';
 function readSettings() {
   settings = { name: $('hd-name').value.trim().slice(0, 50), kind: $('hd-kind').value,
-    level: $('hd-level').value, count: Number($('hd-count').value), help: $('hd-help').checked,
+    level: $('hd-level').value, help: $('hd-help').checked, readWord: canSpeak && $('hd-read-word').checked,
     sound: canSpeak && $('hd-sound').checked,
-    syllableSound: canSpeak && $('hd-syllable-sound').checked };
+    syllableSound: canSpeak && $('hd-syllable-sound').checked, visualHelp: $('hd-visual-help').checked };
 }
 function saveSettings() {
   readSettings();
@@ -43,10 +42,10 @@ function saveSettings() {
 }
 function updateAvailable() {
   const n = data.pool(settings).length;
-  $('hd-available').textContent = n + ' palabras disponibles · ' + Math.min(settings.count, n) + ' en esta sesión. La selección cambia y no repite palabras.';
+  $('hd-available').textContent = n + ' palabras disponibles por ronda. Se muestran al azar sin repetirse hasta completar la ronda.';
   $('hd-start').disabled = n === 0;
 }
-['hd-name', 'hd-kind', 'hd-level', 'hd-count', 'hd-help', 'hd-sound', 'hd-syllable-sound'].forEach(id => $(id).addEventListener(id === 'hd-name' ? 'input' : 'change', saveSettings));
+['hd-name', 'hd-kind', 'hd-level', 'hd-help', 'hd-read-word', 'hd-sound', 'hd-syllable-sound', 'hd-visual-help'].forEach(id => $(id).addEventListener(id === 'hd-name' ? 'input' : 'change', saveSettings));
 function stopSpeech() {
   speechRun++;
   if (speechTimer) clearTimeout(speechTimer);
@@ -94,8 +93,8 @@ function wordColorState(shownCuts = cuts) {
 }
 function updateVowelState() {
   const together = vowelState(), el = $('hd-vowel-state');
-  el.hidden = !separationIsReady();
-  if (!separationIsReady()) return;
+  el.hidden = !settings.visualHelp || !separationIsReady();
+  if (!settings.visualHelp || !separationIsReady()) return;
   el.className = 'hd-vowel-state ' + together;
   el.textContent = together === 'together'
     ? '«' + current.pair + '»: juntas en la misma sílaba · diptongo'
@@ -111,19 +110,19 @@ function updateReferenceWord(previewCut = null) {
   pieces.forEach((piece, index) => {
     if (index) { const dash = document.createElement('span'); dash.className = 'hd-reference-hyphen'; dash.textContent = '−'; title.append(dash); }
     const syllable = document.createElement('span'); syllable.className = 'hd-reference-syllable';
-    Array.from(piece).forEach(letter => { const span = document.createElement('span'); span.className = current.focus.includes(position) ? 'focus' : ''; position++; span.textContent = letter; syllable.append(span); });
+    Array.from(piece).forEach(letter => { const span = document.createElement('span'); span.className = settings.visualHelp && current.focus.includes(position) ? 'focus' : ''; position++; span.textContent = letter; syllable.append(span); });
     title.append(syllable);
   });
   const color = wordColorState(shownCuts);
-  title.classList.toggle('diptongo', color === 'diptongo');
-  title.classList.toggle('hiato', color === 'hiato');
+  title.classList.toggle('diptongo', settings.visualHelp && color === 'diptongo');
+  title.classList.toggle('hiato', settings.visualHelp && color === 'hiato');
 }
 function makeLetter(letter, position, tile = false) {
   const span = document.createElement('span');
   span.textContent = letter;
-  const focus = current.focus.includes(position);
+  const focus = settings.visualHelp && current.focus.includes(position);
   span.className = (tile ? 'hd-letter ' : '') + vowelClass(letter) + (focus ? ' focus' + (separationIsReady() ? ' pair-' + vowelState() : '') : '');
-  if (tile && current.focus.includes(position)) span.setAttribute('aria-label', letter + ', vocal destacada');
+  if (tile && settings.visualHelp && current.focus.includes(position)) span.setAttribute('aria-label', letter + ', vocal destacada');
   return span;
 }
 function afterSeparationChange() {
@@ -163,7 +162,7 @@ function renderLetters() {
     button.addEventListener('pointerdown', event => { if (cuts.has(cut)) startRemoveDrag(event, cut, button); });
     host.append(button);
   });
-  if (separationIsReady()) {
+  if (settings.visualHelp && separationIsReady()) {
     const [first, last] = current.focus;
     if (vowelState() === 'together') {
       const start = host.querySelector('[data-position="' + first + '"]');
@@ -195,7 +194,7 @@ function renderPreview() {
     const group = document.createElement('div'); group.className = 'hd-syllable';
     group.setAttribute('aria-hidden', 'true');
     Array.from(piece).forEach((letter, j) => group.append(makeLetter(letter, offset + j)));
-    if (current.focus.some(pos => pos >= offset && pos < offset + piece.length)) group.classList.add('focus-group', vowelState());
+    if (settings.visualHelp && current.focus.some(pos => pos >= offset && pos < offset + piece.length)) group.classList.add('focus-group', vowelState());
     host.append(group); offset += piece.length;
   });
 }
@@ -226,9 +225,12 @@ function dragGapAt(x, y) {
   return distance <= 38 ? nearest : null;
 }
 function moveDragToken(event) {
-  const token = $('hd-drag-token');
-  token.style.left = event.clientX + 'px'; token.style.top = event.clientY + 'px';
-  const gap = dragGapAt(event.clientX, event.clientY);
+  const touch = event.changedTouches?.[0] || event.touches?.[0];
+  const x = touch ? touch.clientX : event.clientX, y = touch ? touch.clientY : event.clientY;
+  const token = $('hd-drag-ghost');
+  // El guion queda apenas bajo el dedo: se ve sin tapar el punto de destino.
+  token.style.left = x + 'px'; token.style.top = (y + 30) + 'px';
+  const gap = dragGapAt(x, y);
   setDragCut(gap ? Number(gap.dataset.cut) : null);
 }
 function startDrag(event) {
@@ -240,8 +242,8 @@ function startDrag(event) {
     const box = gap.getBoundingClientRect();
     return { gap, center: box.left + box.width / 2, top: box.top, bottom: box.bottom };
   });
-  const token = $('hd-drag-token'); token.classList.add('dragging');
-  token.setPointerCapture?.(event.pointerId); moveDragToken(event);
+  $('hd-drag-ghost').classList.add('dragging');
+  $('hd-drag-token').setPointerCapture?.(event.pointerId); moveDragToken(event);
 }
 function startRemoveDrag(event, cut, source) {
   if (stage !== 'separate' || event.button > 0) return;
@@ -252,7 +254,7 @@ function startRemoveDrag(event, cut, source) {
     return { gap, center: box.left + box.width / 2, top: box.top, bottom: box.bottom };
   });
   source.classList.add('drag-source');
-  const token = $('hd-drag-token'); token.classList.add('dragging');
+  const token = $('hd-drag-ghost'); token.classList.add('dragging');
   source.setPointerCapture?.(event.pointerId); moveDragToken(event);
 }
 function endDrag(event) {
@@ -260,12 +262,12 @@ function endDrag(event) {
   // En algunos navegadores táctiles el último movimiento no llega antes de
   // soltar. Leemos también el punto final para no perder esa división.
   const finalGap = dragGapAt(event.clientX, event.clientY);
-  const token = $('hd-drag-token'), cut = finalGap ? Number(finalGap.dataset.cut) : dragCut;
+  const token = $('hd-drag-ghost'), cut = finalGap ? Number(finalGap.dataset.cut) : dragCut;
   const mode = dragMode, originalCut = dragOriginalCut;
   dragPointer = null; dragCut = null; dragTargets = []; dragMode = 'add'; dragOriginalCut = null;
   token.classList.remove('dragging'); token.style.removeProperty('left'); token.style.removeProperty('top');
   document.querySelectorAll('.hd-drag-gap.drag-source').forEach(gap => gap.classList.remove('drag-source'));
-  try { token.releasePointerCapture?.(event.pointerId); } catch { /* El puntero puede haberse liberado antes. */ }
+  try { $('hd-drag-token').releasePointerCapture?.(event.pointerId); } catch { /* El puntero puede haberse liberado antes. */ }
   if (mode === 'remove' && originalCut !== null) {
     ignoreGapClickUntil = Date.now() + 400;
     if (cut !== originalCut) {
@@ -284,70 +286,70 @@ function endDrag(event) {
 function showWord() {
   ticket++; stopSpeech(); $('hd-celebration').replaceChildren();
   current = session[index]; cuts = new Set(); stage = 'separate'; helped = false; attempts = 0;
-  $('hd-workspace').classList.remove('reviewed');
-  $('hd-instruction').style.removeProperty('height');
   $('hd-workspace').classList.add('classifying');
   $('hd-word-title').textContent = current.word;
   $('hd-word-title').className = '';
   $('hd-greeting').textContent = settings.name ? '¡Vamos, ' + settings.name + '!' : 'Vamos paso a paso';
-  $('hd-progress').textContent = 'Palabra ' + (index + 1) + ' de ' + session.length;
+  $('hd-progress').textContent = 'Ronda ' + round + ' · palabra ' + (index + 1) + ' de ' + session.length;
   $('hd-track-fill').style.width = (index / session.length * 100) + '%';
   $('hd-step-one').className = 'active'; $('hd-step-two').className = '';
   $('hd-instruction').textContent = current.cuts.length ? 'Arrastra el guion hacia el espacio entre dos letras para separar la palabra en sílabas.' : 'Esta palabra tiene una sola sílaba. Puedes revisarla sin separar.';
   $('hd-review').hidden = false; $('hd-clear').hidden = false;
-  $('hd-review').disabled = false; $('hd-clear').disabled = false;
   $('hd-drag-instruction').hidden = false; $('hd-drag-token').disabled = false;
   $('hd-hint').hidden = !settings.help;
+  $('hd-listen-word').hidden = !settings.readWord;
+  $('hd-legend').hidden = !settings.visualHelp;
   $('hd-classify').hidden = false; $('hd-classify').classList.add('pending'); $('hd-success').hidden = true;
-  for (const kind of ['hiato', 'diptongo']) { $('hd-' + kind).disabled = true; $('hd-' + kind).classList.remove('correct'); }
+  $('hd-vowel-pair').replaceChildren(); $('hd-vowel-pair').hidden = true;
+  for (const kind of ['hiato', 'diptongo']) { const choice = $('hd-' + kind); choice.disabled = true; choice.setAttribute('disabled', ''); choice.classList.remove('correct'); }
   feedback(''); renderLetters(); renderPreview(); updateReferenceWord(); updateVowelState();
   $('hd-letter-scroll').scrollLeft = 0;
 }
 function start() {
   saveSettings();
-  let deck = data.deck(data.pool(settings));
-  if (deck.length > 1 && deck[0].word === lastWord) deck.push(deck.shift());
-  session = deck.slice(0, Math.min(settings.count, deck.length));
+  startRound();
   if (!session.length) return;
-  index = 0; results = []; helpCount = 0;
+  results = []; helpCount = 0;
   $('hd-settings').hidden = true; $('hd-finish').hidden = true; $('hd-game').hidden = false;
   showWord(); $('hd-game').scrollIntoView({ block: 'start', behavior: 'auto' });
+}
+function startRound() {
+  let deck = data.deck(data.pool(settings));
+  if (deck.length > 1 && deck[0].word === lastWord) deck.push(deck.shift());
+  session = deck; index = 0; round++;
 }
 function checkSeparation() {
   if (stage !== 'separate') return;
   const pageScroll = { x: window.scrollX, y: window.scrollY };
   const letterScroll = $('hd-letter-scroll').scrollLeft;
-  const instructionHeight = $('hd-instruction').getBoundingClientRect().height;
   attempts++;
   if (!data.validateCuts(current, cuts)) {
     feedback('Todavía no coincide la separación. Revisa las divisiones que pusiste; puedes añadirlas o quitarlas.', 'retry');
     return;
   }
   stage = 'classify'; renderLetters(); renderPreview();
-  $('hd-workspace').classList.add('reviewed');
   $('hd-workspace').classList.add('classifying');
   updateReferenceWord(); updateVowelState();
-  $('hd-review').disabled = true; $('hd-clear').disabled = true;
-  $('hd-drag-token').disabled = true;
+  $('hd-review').hidden = true; $('hd-clear').hidden = true;
+  $('hd-drag-instruction').hidden = true; $('hd-drag-token').disabled = true;
   $('hd-step-one').className = 'complete'; $('hd-step-two').className = 'active';
-  $('hd-instruction').style.height = instructionHeight + 'px';
-  $('hd-instruction').textContent = '👀 Mira las dos vocales destacadas.';
+  $('hd-instruction').textContent = settings.visualHelp ? '¡Separación correcta! Ahora observa las dos vocales destacadas.' : '¡Separación correcta! Ahora elige si quedaron juntas o separadas.';
   $('hd-classify').hidden = false;
   $('hd-classify').classList.remove('pending');
-  for (const kind of ['hiato', 'diptongo']) $('hd-' + kind).disabled = false;
-  $('hd-vowel-pair').replaceChildren();
+  for (const kind of ['hiato', 'diptongo']) { const choice = $('hd-' + kind); choice.disabled = false; choice.removeAttribute('disabled'); }
+  $('hd-vowel-pair').replaceChildren(); $('hd-vowel-pair').hidden = !settings.visualHelp;
   const pairHost = $('hd-vowel-pair'), together = vowelState() === 'together';
-  if (together) {
+  if (settings.visualHelp && together) {
     const group = document.createElement('span'); group.className = 'hd-vowel-pair-group together';
     Array.from(current.pair).forEach(letter => { const span = document.createElement('span'); span.textContent = letter; group.append(span); });
     pairHost.append(group);
-  } else {
+  } else if (settings.visualHelp) {
     Array.from(current.pair).forEach((letter, index) => {
       if (index) { const mark = document.createElement('span'); mark.className = 'hd-pair-separation-mark'; mark.textContent = '↔'; mark.setAttribute('aria-hidden', 'true'); pairHost.append(mark); }
       const span = document.createElement('span'); span.className = 'separated'; span.textContent = letter; pairHost.append(span);
     });
   }
-  feedback('👀 Fíjate en los recuadros de las vocales: ¿quedaron juntas o separadas?', 'good');
+  feedback(settings.visualHelp ? 'Las letras destacadas son las vocales que vas a comparar.' : 'Elige si las vocales quedaron juntas o separadas.', 'good');
   $('hd-letter-scroll').scrollLeft = letterScroll;
   window.scrollTo(pageScroll.x, pageScroll.y);
 }
@@ -396,7 +398,7 @@ function classify(kind) {
   $('hd-track-fill').style.width = ((index + 1) / session.length * 100) + '%';
   const sentence = current.syllables.join(' · ') + '. «' + current.pair + '» forma un ' + current.kind + '. ' + data.explanation(current);
   $('hd-explanation').textContent = sentence; $('hd-success').hidden = false;
-  $('hd-next').textContent = index + 1 === session.length ? 'Ver mi resultado →' : 'Siguiente palabra →';
+  $('hd-next').textContent = index + 1 === session.length ? 'Nueva ronda →' : 'Siguiente palabra →';
   feedback('¡Bien observado!', 'good');
   $('hd-success').scrollIntoView({ block: 'nearest', behavior: 'auto' });
   if (settings.sound) speak(current.word + '. ' + data.explanation(current), celebrate); else celebrate();
@@ -434,12 +436,12 @@ window.addEventListener('pointerup', endDrag);
 window.addEventListener('pointercancel', endDrag);
 $('hd-drag-token').addEventListener('click', event => { if (!event.detail) feedback('Mantén presionado el guion y arrástralo al espacio entre dos letras.'); });
 $('hd-hint').addEventListener('click', giveHint);
-$('hd-listen-word').addEventListener('click', () => { if (current) speak(current.word); });
+$('hd-listen-word').addEventListener('click', () => { if (current && settings.readWord) speak(current.word); });
 $('hd-hiato').addEventListener('click', () => classify('hiato'));
 $('hd-diptongo').addEventListener('click', () => classify('diptongo'));
 $('hd-next').addEventListener('click', () => {
   if (stage !== 'done') return;
-  index++; if (index >= session.length) finish(); else showWord();
+  index++; if (index >= session.length) { startRound(); results = []; helpCount = 0; } showWord();
 });
 window.addEventListener('pagehide', () => { ticket++; stopSpeech(); });
 updateAvailable();

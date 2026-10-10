@@ -43,8 +43,7 @@ async function main(){
    await page.evaluate(word=>globalThis.__testWord=word,record.word);
    await page.locator('#hd-start').click();
    assert.equal(await page.locator('#hd-word-title').textContent(),record.word);
-   assert(await page.locator('#hd-classify').isVisible());assert(await page.locator('#hd-diptongo').isDisabled());
-   if(record.cuts.length){await page.locator('#hd-review').click();assert(await page.locator('#hd-diptongo').isDisabled());assert((await page.locator('#hd-feedback').textContent()).includes('Todavía'));}
+   if(record.cuts.length){await page.locator('#hd-review').click();assert((await page.locator('#hd-feedback').textContent()).includes('Todavía'));}
    for(const cut of record.cuts)await dragToCut(cut);
    await page.locator('#hd-review').click();assert(await page.locator('#hd-classify').isVisible(),record.word+' · '+await page.locator('#hd-feedback').textContent()+' · cortes: '+await page.locator('.hd-drag-gap.selected').evaluateAll(nodes=>nodes.map(n=>n.dataset.cut).join(',')));
    const state=await page.locator('#hd-vowel-state').textContent();
@@ -52,9 +51,8 @@ async function main(){
    await page.locator('#hd-'+(record.kind==='hiato'?'diptongo':'hiato')).click();assert(await page.locator('#hd-success').isHidden());
    await page.locator('#hd-'+record.kind).click();assert(await page.locator('#hd-success').isVisible());
    assert((await page.locator('#hd-explanation').textContent()).includes(record.kind));
-   await page.locator('#hd-next').click();assert(await page.locator('#hd-finish').isVisible());
-   assert.equal(await page.locator('.hd-result').count(),1);
-   await page.locator('#hd-home').click();exercises++;
+   await page.locator('#hd-next').click();assert(await page.locator('#hd-game').isVisible());
+   await page.locator('#hd-config').click();exercises++;
  }
  // Los datos ya se validan completos arriba. En interfaz cubrimos vocales
  // abiertas/cerradas, tildes, h intercalada y una palabra de cuatro sílabas.
@@ -70,8 +68,8 @@ async function main(){
    const fits=await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1);
    assert(fits,'La página no debe desbordarse horizontalmente');await page.locator('#hd-config').click();
  }
- await page.locator('#hd-kind').selectOption('hiato');await page.locator('#hd-help').uncheck();await page.locator('#hd-count').selectOption('20');
- await page.reload();assert.equal(await page.locator('#hd-kind').inputValue(),'hiato');assert.equal(await page.locator('#hd-count').inputValue(),'20');assert(!(await page.locator('#hd-help').isChecked()));assert(!(await page.locator('#hd-syllable-sound').isChecked()));assert.equal(await page.locator('#hd-name').inputValue(),'Gabriel');
+ await page.locator('#hd-kind').selectOption('hiato');await page.locator('#hd-help').uncheck();await page.locator('#hd-read-word').uncheck();await page.locator('#hd-visual-help').uncheck();
+ await page.reload();assert.equal(await page.locator('#hd-kind').inputValue(),'hiato');assert(!(await page.locator('#hd-help').isChecked()));assert(!(await page.locator('#hd-read-word').isChecked()));assert(!(await page.locator('#hd-visual-help').isChecked()));assert(!(await page.locator('#hd-syllable-sound').isChecked()));assert.equal(await page.locator('#hd-name').inputValue(),'Gabriel');
  await page.goto(pathToFileURL(path.join(root,'index.html')).href);
  assert.equal(await page.locator('a[href*="Hiato_y_Diptongo.html"]').count(),1);
  const blocked=await browser.newPage();await blocked.route(/^https?:/,r=>r.abort());
