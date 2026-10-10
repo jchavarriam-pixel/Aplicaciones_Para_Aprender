@@ -71,8 +71,9 @@
 .hd-drag-gap.selected::after{width:46px;height:46px;border:3px solid #bba8e8;background:#f0ecfb;color:#6941b8;font-size:40px;line-height:.7;transform:translateY(-1px)}
 .hd-drag-gap.preview::after{width:46px;height:46px;border:3px solid #bba8e8;background:#f0ecfb;color:#6941b8;font-size:40px;line-height:.7}
 #hd-drag-token{width:54px;height:54px;border:3px solid #bba8e8;background:#f0ecfb;color:#6941b8;font-size:40px;line-height:.7}
-#hd-drag-ghost{display:none;position:fixed;z-index:10002;pointer-events:none;width:54px;height:54px;place-items:center;border:3px solid #bba8e8;border-radius:13px;background:#f0ecfb;color:#6941b8;font-size:40px;font-weight:900;line-height:.7;transform:translate(-50%,12px);box-shadow:0 5px 14px #4f388e50;will-change:left,top}
+#hd-drag-ghost{display:none;position:fixed;top:0;left:0;z-index:10002;pointer-events:none;width:54px;height:54px;place-items:center;border:3px solid #bba8e8;border-radius:13px;background:#f0ecfb;color:#6941b8;font-size:40px;font-weight:900;line-height:.7;transform:translate3d(-100px,-100px,0);box-shadow:0 5px 14px #4f388e50;will-change:transform}
 #hd-drag-ghost.dragging{display:grid}
+#hd-drag-ghost.dragging.misaligned{display:none}
 .hd-choice-kind{font-weight:800!important;letter-spacing:.2px}
 
 /* El área táctil sigue siendo amplia, pero la vista previa no debe verse como

@@ -1,4 +1,14 @@
 /* Control flotante compacto, con margen para las zonas seguras del dispositivo. */
+#marco-pantalla-completa {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  border: 0;
+  background: #fff;
+  z-index: 9999;
+}
 #control-pantalla-completa {
   box-sizing: border-box;
   display: flex;
@@ -15,6 +25,8 @@
   font: 400 12px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
   color: #475569;
 }
+#control-pantalla-completa[data-fullscreen="true"] { width: 144px; }
+#control-pantalla-completa button[hidden] { display: none; }
 #control-pantalla-completa button {
   box-sizing: border-box;
   appearance: none;

@@ -25,6 +25,7 @@
       <label>Palabras<select id="hd-level"><option value="easy">Para empezar: palabras cortas</option><option value="all">Todas: incluye palabras largas y h</option></select></label>
     </div>
     <div class="hd-options"><label><input id="hd-help" type="checkbox" checked> Pista verbal</label><label><input id="hd-read-word" type="checkbox" checked> Escuchar la palabra</label><label><input id="hd-syllable-sound" type="checkbox" checked> Leer las sílabas al separar</label><label><input id="hd-sound" type="checkbox" checked> Leer la explicación al acertar</label><label><input id="hd-visual-help" type="checkbox" checked> Señales visuales</label></div>
+    <p id="hd-voice-status" class="hd-note" role="status"></p>
     <p id="hd-available" class="hd-note" role="status"></p>
     <p id="hd-storage" class="hd-note" role="status"></p>
     <button id="hd-start" class="hd-button hd-primary" type="button">Empezar práctica →</button>
@@ -36,7 +37,7 @@
     <div class="hd-steps" aria-label="Pasos de la actividad"><span id="hd-step-one">1 · Separar</span><span id="hd-step-two">2 · Clasificar</span></div>
     <div id="hd-workspace" class="hd-card hd-workspace"><div class="hd-activity-layout"><div class="hd-word-area">
       <span class="hd-kicker">TU PALABRA</span><h2 id="hd-word-title"></h2>
-      <div class="hd-listen"><button id="hd-listen-word" class="hd-button hd-secondary" type="button">🔊 Escuchar palabra</button></div>
+      <div class="hd-listen"><button id="hd-listen-word" class="hd-button hd-secondary" type="button">🔊 Escuchar palabra</button><p id="hd-voice-warning" class="hd-note" role="status"></p></div>
       <p id="hd-instruction">Arrastra el guion hacia el espacio entre dos letras para separar la palabra en sílabas.</p>
       <div id="hd-legend" class="hd-legend"><span><i class="hd-open"></i> Abiertas: a, e, o</span><span><i class="hd-closed"></i> Cerradas: i, u</span></div>
       <div id="hd-letter-scroll" class="hd-letter-scroll" tabindex="0" aria-label="Letras y espacios para separar"><div id="hd-letters" class="hd-letters"></div></div>

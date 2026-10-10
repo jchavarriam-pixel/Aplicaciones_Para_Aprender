@@ -3,11 +3,14 @@
 'use strict';
 const data = globalThis.HiatoDiptongo;
 const $ = id => document.getElementById(id);
+// El zoom compartido escala el body. El guion flotante usa coordenadas del
+// dedo en pantalla y debe vivir fuera de ese body para no desplazarse.
+document.documentElement.append($('hd-drag-ghost'));
 const key = 'hiatoDiptongo.config.v1';
 const defaults = { name: '', kind: 'ambos', level: 'easy', help: true, readWord: true, sound: true, syllableSound: true, visualHelp: true };
 let settings = { ...defaults }, session = [], index = 0, round = 0, current = null;
 let cuts = new Set(), stage = 'separate', results = [], helped = false, helpCount = 0, attempts = 0, ticket = 0;
-let lastWord = '', speechTimer = null, speechRun = 0, dragCut = null, dragPreviewCut, dragPointer = null, dragTargets = [], dragMode = 'add', dragOriginalCut = null, ignoreGapClickUntil = 0;
+let lastWord = '', speechTimer = null, speechRun = 0, pendingSpeech = null, voiceWaitTimer = null, voiceSearchDone = false, dragCut = null, dragPreviewCut, dragPointer = null, dragTargets = [], dragMode = 'add', dragOriginalCut = null, ignoreGapClickUntil = 0;
 const canSpeak = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
 try {
   const saved = JSON.parse(localStorage.getItem(key) || '{}');
@@ -23,8 +26,32 @@ if (!canSpeak) { settings.readWord = false; settings.sound = false; settings.syl
 for (const [id, value] of [['hd-name', settings.name], ['hd-kind', settings.kind], ['hd-level', settings.level]]) $(id).value = String(value);
 $('hd-help').checked = settings.help; $('hd-read-word').checked = settings.readWord; $('hd-sound').checked = settings.sound; $('hd-syllable-sound').checked = settings.syllableSound; $('hd-visual-help').checked = settings.visualHelp;
 $('hd-read-word').disabled = !canSpeak; $('hd-sound').disabled = !canSpeak; $('hd-syllable-sound').disabled = !canSpeak;
-$('hd-listen-word').disabled = !canSpeak;
-if (!canSpeak) $('hd-listen-word').title = 'La lectura no está disponible en este navegador.';
+function spanishVoice() {
+  if (!canSpeak) return null;
+  let voices;
+  try { voices = speechSynthesis.getVoices(); } catch { return null; }
+  if (!Array.isArray(voices)) return null;
+  return voices.find(v => /^es[-_]CR$/i.test(v.lang))
+    || voices.find(v => /^es[-_]419$/i.test(v.lang))
+    || voices.find(v => /^es(?:[-_]|$)/i.test(v.lang)) || null;
+}
+function refreshVoiceAvailability() {
+  const available = !!spanishVoice();
+  const message = !canSpeak ? 'Este navegador no permite leer palabras en voz alta.'
+    : available ? '' : voiceSearchDone ? 'No se encontró una voz en español en este dispositivo. Instálala o actívala para escuchar las palabras y sílabas.'
+      : 'Buscando una voz en español para leer las palabras y sílabas…';
+  $('hd-voice-status').textContent = message;
+  $('hd-voice-warning').textContent = current && (settings.readWord || settings.syllableSound || settings.sound) ? message : '';
+  $('hd-listen-word').disabled = !available;
+  $('hd-listen-word').title = available ? '' : message;
+  if (available) voiceSearchDone = true;
+  if (available && pendingSpeech) pendingSpeech();
+}
+if (canSpeak) {
+  speechSynthesis.addEventListener('voiceschanged', refreshVoiceAvailability);
+  setTimeout(() => { voiceSearchDone = true; refreshVoiceAvailability(); }, 3000);
+}
+refreshVoiceAvailability();
 function readSettings() {
   settings = { name: $('hd-name').value.trim().slice(0, 50), kind: $('hd-kind').value,
     level: $('hd-level').value, help: $('hd-help').checked, readWord: canSpeak && $('hd-read-word').checked,
@@ -50,28 +77,51 @@ function stopSpeech() {
   speechRun++;
   if (speechTimer) clearTimeout(speechTimer);
   speechTimer = null;
+  if (voiceWaitTimer) clearTimeout(voiceWaitTimer);
+  voiceWaitTimer = null;
+  pendingSpeech = null;
   if (canSpeak) speechSynthesis.cancel();
 }
 function speak(text, after) {
   stopSpeech();
   if (!canSpeak) { if (after) after(); return; }
-  const id = ticket, run = speechRun, utterance = new SpeechSynthesisUtterance(text);
-  const voices = speechSynthesis.getVoices();
-  const voice = voices.find(v => /^es[-_]CR$/i.test(v.lang)) || voices.find(v => /^es/i.test(v.lang));
-  if (voice) utterance.voice = voice;
-  utterance.lang = voice ? voice.lang : 'es-CR';
-  utterance.rate = .85;
-  let finished = false;
-  const finish = () => {
-    if (finished || run !== speechRun) return; finished = true;
-    if (speechTimer) clearTimeout(speechTimer);
-    speechTimer = null;
-    if (id === ticket && after) after();
+  const id = ticket, run = speechRun;
+  const begin = () => {
+    if (run !== speechRun) return;
+    const voice = spanishVoice();
+    if (!voice) return;
+    pendingSpeech = null;
+    if (voiceWaitTimer) clearTimeout(voiceWaitTimer);
+    voiceWaitTimer = null;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.voice = voice;
+    utterance.lang = voice.lang;
+    utterance.rate = .85;
+    let finished = false;
+    const finish = () => {
+      if (finished || run !== speechRun) return; finished = true;
+      if (speechTimer) clearTimeout(speechTimer);
+      speechTimer = null;
+      if (id === ticket && after) after();
+    };
+    utterance.onend = finish; utterance.onerror = finish;
+    // Algunos navegadores no devuelven eventos de lectura.
+    speechTimer = setTimeout(finish, 10000);
+    try { speechSynthesis.speak(utterance); } catch { finish(); }
   };
-  utterance.onend = finish; utterance.onerror = finish;
-  // Algunos navegadores no devuelven eventos de lectura.
-  speechTimer = setTimeout(finish, 10000);
-  try { speechSynthesis.speak(utterance); } catch { finish(); }
+  if (spanishVoice()) begin();
+  else {
+    pendingSpeech = begin;
+    voiceWaitTimer = setTimeout(() => {
+      if (run !== speechRun) return;
+      pendingSpeech = null;
+      voiceWaitTimer = null;
+      voiceSearchDone = true;
+      refreshVoiceAvailability();
+      if (id === ticket && after) after();
+    }, 3000);
+    refreshVoiceAvailability();
+  }
 }
 function feedback(text, type = '') {
   $('hd-feedback').textContent = text;
@@ -239,10 +289,20 @@ function dragPoint(event) {
 function positionDragGhost(event) {
   const { x, y } = dragPoint(event);
   const token = $('hd-drag-ghost');
-  // Usamos exactamente las coordenadas del dedo. El pequeño espacio visual
-  // debajo se define en CSS, sin sumar un desplazamiento que pueda desfasarse.
-  token.style.left = x + 'px'; token.style.top = y + 'px';
+  // Una sola transformación mantiene el centro del guion sobre el dedo,
+  // incluso cuando la actividad tiene un zoom distinto del navegador.
+  token.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0) translate(-50%,-50%)';
   return { x, y };
+}
+function guardDragGhost(event) {
+  // Algunos navegadores tratan el zoom táctil de manera distinta. Si el
+  // navegador dibuja el guion lejos del dedo, dejamos solo la apertura de
+  // letras para este gesto, que sigue indicando el destino correctamente.
+  const { x, y } = dragPoint(event);
+  const token = $('hd-drag-ghost'), box = token.getBoundingClientRect();
+  if (!box.width || Math.hypot(box.left + box.width / 2 - x, box.top + box.height / 2 - y) > 12) {
+    token.classList.add('misaligned');
+  }
 }
 function moveDragToken(event) {
   const { x, y } = positionDragGhost(event);
@@ -261,8 +321,9 @@ function startDrag(event) {
     const box = gap.getBoundingClientRect();
     return { gap, center: box.left + box.width / 2, top: box.top, bottom: box.bottom };
   });
+  $('hd-drag-ghost').classList.remove('misaligned');
   $('hd-drag-ghost').classList.add('dragging');
-  $('hd-drag-token').setPointerCapture?.(event.pointerId); moveDragToken(event);
+  $('hd-drag-token').setPointerCapture?.(event.pointerId); moveDragToken(event); guardDragGhost(event);
 }
 function startRemoveDrag(event, cut, source) {
   if (stage !== 'separate' || event.button > 0) return;
@@ -273,9 +334,9 @@ function startRemoveDrag(event, cut, source) {
     return { gap, center: box.left + box.width / 2, top: box.top, bottom: box.bottom };
   });
   source.classList.add('drag-source');
-  const token = $('hd-drag-ghost'); token.classList.add('dragging');
+  const token = $('hd-drag-ghost'); token.classList.remove('misaligned'); token.classList.add('dragging');
   source.setPointerCapture?.(event.pointerId);
-  positionDragGhost(event); setDragCut(null);
+  positionDragGhost(event); setDragCut(null); guardDragGhost(event);
 }
 function endDrag(event) {
   if (dragPointer !== event.pointerId) return;
@@ -285,7 +346,7 @@ function endDrag(event) {
   const token = $('hd-drag-ghost'), cut = finalGap ? Number(finalGap.dataset.cut) : dragCut;
   const mode = dragMode, originalCut = dragOriginalCut;
   dragPointer = null; dragCut = null; dragPreviewCut = undefined; dragTargets = []; dragMode = 'add'; dragOriginalCut = null;
-  token.classList.remove('dragging'); token.style.removeProperty('left'); token.style.removeProperty('top');
+  token.classList.remove('dragging', 'misaligned'); token.style.removeProperty('transform');
   document.querySelectorAll('.hd-drag-gap.drag-source').forEach(gap => gap.classList.remove('drag-source'));
   try { $('hd-drag-token').releasePointerCapture?.(event.pointerId); } catch { /* El puntero puede haberse liberado antes. */ }
   if (mode === 'remove' && originalCut !== null) {
@@ -318,6 +379,7 @@ function showWord() {
   $('hd-drag-instruction').hidden = false; $('hd-drag-token').disabled = false;
   $('hd-hint').hidden = !settings.help;
   $('hd-listen-word').hidden = !settings.readWord;
+  refreshVoiceAvailability();
   $('hd-legend').hidden = !settings.visualHelp;
   $('hd-classify').hidden = false; $('hd-classify').classList.add('pending'); $('hd-success').hidden = true;
   $('hd-vowel-pair').replaceChildren(); $('hd-vowel-pair').hidden = true;

@@ -3,6 +3,8 @@
   'use strict';
   if (document.getElementById('control-pantalla-completa')) return;
   const root = document.documentElement;
+  const appRoot = new URL('.', document.currentScript.src);
+  const insideAppFrame = window.parent !== window && window.name === 'marco-pantalla-completa';
   const bar = document.createElement('div');
   bar.id = 'control-pantalla-completa';
   const message = document.createElement('span');
@@ -12,6 +14,13 @@
   button.id = 'boton-pantalla-completa';
   button.type = 'button';
   button.setAttribute('aria-describedby', message.id);
+  const homeButton = document.createElement('button');
+  homeButton.id = 'boton-inicio-aplicaciones';
+  homeButton.type = 'button';
+  homeButton.hidden = true;
+  homeButton.title = 'Todas las aplicaciones';
+  homeButton.setAttribute('aria-label', 'Todas las aplicaciones');
+  homeButton.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m3 11 9-8 9 8M5 10v10h14V10M9 20v-7h6v7"/></svg>';
   const zoomButton = document.createElement('button');
   zoomButton.type = 'button';
   zoomButton.id = 'boton-zoom-aplicacion';
@@ -30,11 +39,55 @@
     '<input id="zoom-aplicacion" type="range" min="50" max="200" step="5" value="100">' +
     '<button type="button" id="aumentar-zoom" aria-label="Aumentar zoom">+</button></div>' +
     '<button type="button" id="restablecer-zoom">Restablecer a 100%</button><span id="estado-zoom" role="status"></span>';
-  bar.append(message, zoomPanel, zoomButton, button);
+  bar.append(message, zoomPanel, homeButton, zoomButton, button);
   // Fuera de los contenedores que desplazan o transforman los ejercicios.
   document.body.append(bar);
 
   const currentElement = () => document.fullscreenElement || document.webkitFullscreenElement;
+  let appFrame = null;
+  let framedUrl = '';
+  function localAppUrl(href) {
+    try {
+      const url = new URL(href, location.href);
+      return url.href.startsWith(appRoot.href) && /\.html?$/i.test(url.pathname) ? url : null;
+    } catch { return null; }
+  }
+  function navigate(href) {
+    const target = localAppUrl(href);
+    if (!target) { location.href = href; return; }
+    if (insideAppFrame || !currentElement()) { location.href = target.href; return; }
+    if (!appFrame) {
+      appFrame = document.createElement('iframe');
+      appFrame.id = 'marco-pantalla-completa';
+      appFrame.name = 'marco-pantalla-completa';
+      appFrame.title = 'Aplicación educativa';
+      root.append(appFrame);
+    }
+    framedUrl = target.href;
+    appFrame.src = target.href;
+  }
+  window.AppsFullscreen = { navigate };
+  if (insideAppFrame) {
+    // El control visible pertenece a la página principal; la actividad sigue
+    // aplicando su propia preferencia de zoom desde el almacenamiento local.
+    bar.style.display = 'none';
+    window.parent.postMessage({ type: 'apps-fullscreen-location', href: location.href }, '*');
+  } else {
+    document.addEventListener('click', event => {
+      const link = event.target.closest('a[href]');
+      if (event.defaultPrevented || !link || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || (link.target && link.target !== '_self') || link.hasAttribute('download') || link.getAttribute('href')?.startsWith('#') || !currentElement() || !localAppUrl(link.href)) return;
+      event.preventDefault();
+      navigate(link.href);
+    });
+  }
+  window.addEventListener('message', event => {
+    if (insideAppFrame) {
+      if (event.source === window.parent && event.data?.type === 'apps-fullscreen-zoom') applyZoom(event.data.value, false);
+    } else if (appFrame && event.source === appFrame.contentWindow && event.data?.type === 'apps-fullscreen-location') {
+      const target = localAppUrl(event.data.href);
+      if (target) framedUrl = target.href;
+    }
+  });
   const request = root.requestFullscreen || root.webkitRequestFullscreen;
   const exit = document.exitFullscreen || document.webkitExitFullscreen;
   const supported = Boolean(request && exit &&
@@ -69,6 +122,7 @@
     slider.value = String(zoom);
     slider.setAttribute('aria-valuetext', `${zoom}%`);
     zoomValue.value = `${zoom}%`;
+    if (appFrame) appFrame.contentWindow?.postMessage({ type: 'apps-fullscreen-zoom', value: zoom }, '*');
     zoomPanel.querySelector('#reducir-zoom').disabled = zoom === 50;
     zoomPanel.querySelector('#aumentar-zoom').disabled = zoom === 200;
     if (save) {
@@ -116,7 +170,7 @@
 
   function chooseCorner() {
     if (!zoomPanel.hidden) return;
-    const inset = 57;
+    const inset = currentElement() ? 82 : 57;
     const corners = [
       ['bottom-right', innerWidth - inset, innerHeight - 32],
       ['bottom-left', inset, innerHeight - 32],
@@ -154,6 +208,8 @@
 
   function update() {
     const active = Boolean(currentElement());
+    homeButton.hidden = !active;
+    bar.dataset.fullscreen = String(active);
     const label = active ? 'Salir de pantalla completa' : 'Pantalla completa';
     button.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
       '<path d="' + (active ? 'M4 9h5V4M20 9h-5V4M4 15h5v5M20 15h-5v5' :
@@ -165,11 +221,20 @@
   }
   function changed() {
     message.textContent = '';
+    if (!currentElement() && appFrame) {
+      const target = framedUrl;
+      appFrame.remove(); appFrame = null; framedUrl = '';
+      if (target && target !== location.href) { location.href = target; return; }
+    }
     update();
     scheduleCorner();
   }
   document.addEventListener('fullscreenchange', changed);
   document.addEventListener('webkitfullscreenchange', changed);
+  homeButton.addEventListener('click', () => {
+    closeZoom();
+    navigate(new URL('index.html', appRoot).href);
+  });
   button.addEventListener('click', async () => {
     closeZoom();
     if (pending) return;
