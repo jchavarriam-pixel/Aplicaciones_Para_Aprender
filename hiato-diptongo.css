@@ -129,6 +129,11 @@
    al desplazamiento táctil del navegador. */
 .hd-drag-gap,#hd-drag-token{touch-action:none;-webkit-tap-highlight-color:transparent}
 
+/* Al levantar un guion existente, su hueco vuelve a cerrarse. El destino
+   provisional usa la misma apertura y el mismo guion que una primera vez. */
+.hd-drag-gap.drag-source:not(.preview){flex-basis:8px!important;width:8px!important;min-width:8px!important;color:transparent!important}
+.hd-drag-gap.drag-source:not(.preview)::after{display:none}
+
 /* Celebración compacta: una gran explosión de figuras, sin imágenes pesadas. */
 .hd-burst-core{position:absolute;top:46%;left:50%;display:grid;place-items:center;width:76px;height:76px;border-radius:50%;background:radial-gradient(circle,#fff 0 18%,#ffe48c 20% 35%,#f4a83b 37% 57%,#e85d85 59% 100%);color:#fff;font-size:35px;text-shadow:0 2px 0 #b85633;transform:translate(-50%,-50%) scale(.15);opacity:0;animation:hd-burst-core .9s cubic-bezier(.18,.8,.25,1) forwards;will-change:transform,opacity}
 .hd-spark{font-size:clamp(18px,4vw,34px);animation:hd-burst-large 1.7s cubic-bezier(.12,.72,.28,1) var(--delay,0ms) forwards}

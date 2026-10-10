@@ -102,6 +102,10 @@ function updateVowelState() {
 }
 function updateReferenceWord(previewCut = null) {
   const shownCuts = new Set(cuts);
+  // Al mover un guion existente, primero lo levantamos visualmente de su
+  // espacio original. Así la referencia de arriba se anima igual que al
+  // colocar un guion por primera vez, en vez de mostrar dos divisiones.
+  if (dragMode === 'remove' && dragOriginalCut !== null) shownCuts.delete(dragOriginalCut);
   if (previewCut !== null) shownCuts.add(previewCut);
   const title = $('hd-word-title');
   const pieces = data.groups(current.word, shownCuts);
@@ -228,15 +232,25 @@ function dragGapAt(x, y) {
   });
   return distance <= 48 ? nearest : null;
 }
-function moveDragToken(event) {
+function dragPoint(event) {
   const touch = event.changedTouches?.[0] || event.touches?.[0];
-  const x = touch ? touch.clientX : event.clientX, y = touch ? touch.clientY : event.clientY;
+  return { x: touch ? touch.clientX : event.clientX, y: touch ? touch.clientY : event.clientY };
+}
+function positionDragGhost(event) {
+  const { x, y } = dragPoint(event);
   const token = $('hd-drag-ghost');
   // Usamos exactamente las coordenadas del dedo. El pequeño espacio visual
   // debajo se define en CSS, sin sumar un desplazamiento que pueda desfasarse.
   token.style.left = x + 'px'; token.style.top = y + 'px';
+  return { x, y };
+}
+function moveDragToken(event) {
+  const { x, y } = positionDragGhost(event);
   const gap = dragGapAt(x, y);
-  setDragCut(gap ? Number(gap.dataset.cut) : null);
+  const cut = gap ? Number(gap.dataset.cut) : null;
+  // Mientras el dedo sigue sobre el guion que levantó, las letras permanecen
+  // juntas. Solo abrimos un espacio al llegar a un destino diferente.
+  setDragCut(dragMode === 'remove' && cut === dragOriginalCut ? null : cut);
 }
 function startDrag(event) {
   if (stage !== 'separate' || event.button > 0) return;
@@ -260,7 +274,8 @@ function startRemoveDrag(event, cut, source) {
   });
   source.classList.add('drag-source');
   const token = $('hd-drag-ghost'); token.classList.add('dragging');
-  source.setPointerCapture?.(event.pointerId); moveDragToken(event);
+  source.setPointerCapture?.(event.pointerId);
+  positionDragGhost(event); setDragCut(null);
 }
 function endDrag(event) {
   if (dragPointer !== event.pointerId) return;
