@@ -82,19 +82,20 @@
     game.innerHTML = `
       <div class="topline"><div class="round">Animal ${index + 1} of ${deck.length}</div><div class="progress" aria-label="Question ${Math.min(step + 1, 5)} of 5">${Array.from({length:5}, (_, i) => `<span class="dot ${i < step ? 'done' : i === step ? 'now' : ''}">${i + 1}</span>`).join('')}</div><div class="score">⭐ ${score} correct</div></div>
       <div class="play"><div class="picture"><img src="images/${animal.id}.webp" alt="Animal to identify" draggable="false"></div>
-      <section class="question-area"><span class="tag ${question ? question.kind : ''}">${label}</span><h2 class="question">${currentPrompt()}</h2><p class="instruction">${instruction}</p>
+      <section class="question-area"><span class="tag ${question ? question.kind : ''}">${label}</span><h2 class="question">${currentPrompt()}</h2><button type="button" class="listen-question" data-listen>🔊 Listen to the question</button><p class="instruction">${instruction}</p>
       ${question ? `<div class="answers">${answerWords.map((words, i) => `<button type="button" class="answer ${i ? 'no' : ''} ${selected === i ? 'chosen correct' : ''} ${lastWrong === i ? 'chosen incorrect' : ''}" data-answer="${i}" ${answered ? 'disabled' : ''}>${words}</button>`).join('')}</div>` : ''}
       <div class="feedback ${answered || done ? 'good' : lastWrong !== null ? 'try' : ''}" role="status">${feedback}</div>
       <div class="actions"><button type="button" class="primary" data-next ${question && !answered ? 'disabled' : ''}>${done ? 'Next animal →' : 'Continue →'}</button></div></section></div>`;
     if (read && autoRead.checked) speak(currentPrompt());
   }
   game.addEventListener('click', event => {
+    if (event.target.closest('[data-listen]')) { speak(currentPrompt()); return; }
     const answer = event.target.closest('[data-answer]');
     if (answer && step >= 1 && step <= 4 && !answered) {
       const choice = Number(answer.dataset.answer);
       if ((choice === 0) === questions[step - 1].correct) {
         selected = choice; lastWrong = null; answered = true; score++; save(); render();
-        if (autoRead.checked) speak('Great job!');
+        speak(`Great job! ${choice === 0 ? (questions[step - 1].kind === 'have' ? 'Yes, it does.' : 'Yes, it can.') : (questions[step - 1].kind === 'have' ? "No, it doesn't." : "No, it can't.")}`);
       } else {
         lastWrong = choice; render();
         if (autoRead.checked) speak('Try again.');
@@ -121,7 +122,6 @@
     answered = false; selected = null; lastWrong = null;
     render(true);
   });
-  document.getElementById('listen').addEventListener('click', () => speak(currentPrompt()));
   document.getElementById('restart').addEventListener('click', () => {
     if ('speechSynthesis' in window) speechSynthesis.cancel();
     const previous = deck[index];
