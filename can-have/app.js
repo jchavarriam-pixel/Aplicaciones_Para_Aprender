@@ -4,6 +4,7 @@
   const storageKey = 'animal_lab_can_have_v1';
   const game = document.getElementById('game');
   const autoRead = document.getElementById('autoRead');
+  const voiceChoice = document.getElementById('voiceChoice');
   const byId = new Map(animals.map(animal => [animal.id, animal]));
   const shuffle = items => [...items].sort(() => Math.random() - 0.5);
   const pick = items => items[Math.floor(Math.random() * items.length)];
@@ -19,9 +20,10 @@
   let selected = null;
   let lastWrong = null;
   autoRead.checked = saved.autoRead !== false;
+  let voiceURI = typeof saved.voiceURI === 'string' ? saved.voiceURI : '';
 
   function save() {
-    try { localStorage.setItem(storageKey, JSON.stringify({deck, index, score, autoRead: autoRead.checked})); } catch (_) {}
+    try { localStorage.setItem(storageKey, JSON.stringify({deck, index, score, autoRead: autoRead.checked, voiceURI})); } catch (_) {}
   }
   function questionsFor(animal) {
     return shuffle([
@@ -32,14 +34,35 @@
     ]);
   }
   let questions = questionsFor(byId.get(deck[index]));
+  function englishVoices() {
+    return 'speechSynthesis' in window ? speechSynthesis.getVoices().filter(voice => /^en([-_]|$)/i.test(voice.lang)) : [];
+  }
+  function preferredVoice(voices) {
+    const choices = [/\bAndrew\b/i, /\bGuy\b/i, /\bRyan\b/i, /\bChristopher\b/i, /\bBrian\b/i, /\bEric\b/i, /\bThomas\b/i, /\bGeorge\b/i];
+    for (const name of choices) {
+      const match = voices.find(voice => name.test(voice.name) && /^en[-_]US$/i.test(voice.lang));
+      if (match) return match;
+    }
+    return voices.find(voice => /^en[-_]US$/i.test(voice.lang) && /natural|neural/i.test(voice.name)) ||
+      voices.find(voice => /^en[-_]US$/i.test(voice.lang)) || voices[0] || null;
+  }
+  function updateVoiceChoices() {
+    const voices = englishVoices();
+    voiceChoice.replaceChildren(new Option('Automatic English voice', ''));
+    voices.forEach(voice => voiceChoice.add(new Option(`${voice.name} (${voice.lang})`, voice.voiceURI)));
+    voiceChoice.value = voices.some(voice => voice.voiceURI === voiceURI) ? voiceURI : '';
+    voiceChoice.disabled = !voices.length;
+  }
   function speak(message) {
     if (!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(message);
     utterance.lang = 'en-US';
-    utterance.rate = .9;
-    const voice = speechSynthesis.getVoices().find(voice => /^en([-_]|$)/i.test(voice.lang));
+    utterance.rate = 1;
+    const voices = englishVoices();
+    const voice = voices.find(voice => voice.voiceURI === voiceURI) || preferredVoice(voices);
     if (voice) utterance.voice = voice;
+    if (voice) utterance.lang = voice.lang;
     speechSynthesis.speak(utterance);
   }
   function currentPrompt() {
@@ -109,5 +132,8 @@
     save(); render(true);
   });
   autoRead.addEventListener('change', save);
+  voiceChoice.addEventListener('change', () => { voiceURI = voiceChoice.value; save(); speak(currentPrompt()); });
+  if ('speechSynthesis' in window) speechSynthesis.addEventListener('voiceschanged', updateVoiceChoices);
+  updateVoiceChoices();
   save(); render(true);
 })();
