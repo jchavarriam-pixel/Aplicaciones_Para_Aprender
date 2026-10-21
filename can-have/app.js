@@ -94,7 +94,7 @@
     if (read && autoRead.checked) speak(currentPrompt());
   }
   game.addEventListener('click', event => {
-    if (event.target.closest('[data-listen-slow]')) { speak(currentPrompt(), Math.max(0.6, speechSpeed * 0.75)); return; }
+    if (event.target.closest('[data-listen-slow]')) { speak(currentPrompt(), 0.75); return; }
     if (event.target.closest('[data-listen]')) { speak(currentPrompt()); return; }
     const answer = event.target.closest('[data-answer]');
     if (answer && step >= 1 && step <= 4 && !answered) {
