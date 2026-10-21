@@ -5,6 +5,8 @@
   const game = document.getElementById('game');
   const autoRead = document.getElementById('autoRead');
   const voiceChoice = document.getElementById('voiceChoice');
+  const speechSpeedControl = document.getElementById('speechSpeed');
+  const voiceStatus = document.getElementById('voiceStatus');
   const byId = new Map(animals.map(animal => [animal.id, animal]));
   const shuffle = items => [...items].sort(() => Math.random() - 0.5);
   const pick = items => items[Math.floor(Math.random() * items.length)];
@@ -21,9 +23,11 @@
   let lastWrong = null;
   autoRead.checked = saved.autoRead !== false;
   let voiceURI = typeof saved.voiceURI === 'string' ? saved.voiceURI : '';
+  let speechSpeed = [0.75, 0.9, 1, 1.15].includes(Number(saved.speechSpeed)) ? Number(saved.speechSpeed) : 1;
+  speechSpeedControl.value = String(speechSpeed);
 
   function save() {
-    try { localStorage.setItem(storageKey, JSON.stringify({deck, index, score, autoRead: autoRead.checked, voiceURI})); } catch (_) {}
+    try { localStorage.setItem(storageKey, JSON.stringify({deck, index, score, autoRead: autoRead.checked, voiceURI, speechSpeed})); } catch (_) {}
   }
   function questionsFor(animal) {
     return shuffle([
@@ -52,13 +56,14 @@
     voices.forEach(voice => voiceChoice.add(new Option(`${voice.name} (${voice.lang})`, voice.voiceURI)));
     voiceChoice.value = voices.some(voice => voice.voiceURI === voiceURI) ? voiceURI : '';
     voiceChoice.disabled = !voices.length;
+    voiceStatus.textContent = voices.length ? `${voices.length} English voices available. Voice and speed are saved on this device.` : 'This browser has not listed other English voices. Its default English voice remains available.';
   }
-  function speak(message) {
+  function speak(message, rate = speechSpeed) {
     if (!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(message);
     utterance.lang = 'en-US';
-    utterance.rate = 1;
+    utterance.rate = rate;
     const voices = englishVoices();
     const voice = voices.find(voice => voice.voiceURI === voiceURI) || preferredVoice(voices);
     if (voice) utterance.voice = voice;
@@ -82,13 +87,14 @@
     game.innerHTML = `
       <div class="topline"><div class="round">Animal ${index + 1} of ${deck.length}</div><div class="progress" aria-label="Question ${Math.min(step + 1, 5)} of 5">${Array.from({length:5}, (_, i) => `<span class="dot ${i < step ? 'done' : i === step ? 'now' : ''}">${i + 1}</span>`).join('')}</div><div class="score">⭐ ${score} correct</div></div>
       <div class="play"><div class="picture"><img src="images/${animal.id}.webp" alt="Animal to identify" draggable="false"></div>
-      <section class="question-area"><span class="tag ${question ? question.kind : ''}">${label}</span><h2 class="question">${currentPrompt()}</h2><button type="button" class="listen-question" data-listen>🔊 Listen to the question</button><p class="instruction">${instruction}</p>
+      <section class="question-area"><span class="tag ${question ? question.kind : ''}">${label}</span><h2 class="question">${currentPrompt()}</h2><div class="listen-tools"><button type="button" class="listen-question" data-listen>🔊 Listen again</button><button type="button" class="listen-question slow" data-listen-slow>🐢 Repeat slowly</button></div><p class="instruction">${instruction}</p>
       ${question ? `<div class="answers">${answerWords.map((words, i) => `<button type="button" class="answer ${i ? 'no' : ''} ${selected === i ? 'chosen correct' : ''} ${lastWrong === i ? 'chosen incorrect' : ''}" data-answer="${i}" ${answered ? 'disabled' : ''}>${words}</button>`).join('')}</div>` : ''}
       <div class="feedback ${answered || done ? 'good' : lastWrong !== null ? 'try' : ''}" role="status">${feedback}</div>
       <div class="actions"><button type="button" class="primary" data-next ${question && !answered ? 'disabled' : ''}>${done ? 'Next animal →' : 'Continue →'}</button></div></section></div>`;
     if (read && autoRead.checked) speak(currentPrompt());
   }
   game.addEventListener('click', event => {
+    if (event.target.closest('[data-listen-slow]')) { speak(currentPrompt(), Math.max(0.6, speechSpeed * 0.75)); return; }
     if (event.target.closest('[data-listen]')) { speak(currentPrompt()); return; }
     const answer = event.target.closest('[data-answer]');
     if (answer && step >= 1 && step <= 4 && !answered) {
@@ -133,6 +139,8 @@
   });
   autoRead.addEventListener('change', save);
   voiceChoice.addEventListener('change', () => { voiceURI = voiceChoice.value; save(); speak(currentPrompt()); });
+  speechSpeedControl.addEventListener('change', () => { speechSpeed = Number(speechSpeedControl.value); save(); speak(currentPrompt()); });
+  document.getElementById('previewVoice').addEventListener('click', () => speak(currentPrompt()));
   if ('speechSynthesis' in window) speechSynthesis.addEventListener('voiceschanged', updateVoiceChoices);
   updateVoiceChoices();
   save(); render(true);
