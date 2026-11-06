@@ -285,7 +285,7 @@
       font-size: 2.55rem;
     }
 
-    .card h2 {
+    .card h3 {
       position: relative;
       z-index: 1;
       margin: 0;
@@ -478,6 +478,21 @@
         min-height: 210px;
       }
     }
+    .materias-nav{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 26px}
+    .materias-nav a{padding:11px 16px;border:2px solid #cbdcf0;border-radius:16px;background:#fff;color:#244667;text-decoration:none;font-weight:800;min-height:46px}
+    .materias-nav a:hover{border-color:#2563eb;background:#eff6ff}
+    .materia{margin:0 0 30px;padding:clamp(15px,3vw,26px);background:rgba(255,255,255,.7);border:2px solid #fff;border-radius:26px;scroll-margin-top:20px}
+    .materia-cabecera{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+    .materia h2{margin:0;font-size:clamp(1.5rem,3vw,2rem);color:#21436b}
+    .materia-total{font-weight:750;color:#536575;font-size:.95rem}
+    .filtros-tema{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 20px}
+    .filtro-tema{font:inherit;font-size:.95rem;font-weight:750;min-height:44px;padding:9px 14px;border:2px solid #ccdaeb;border-radius:999px;background:#fff;color:#36536f;cursor:pointer;touch-action:manipulation}
+    .filtro-tema[aria-pressed="true"]{background:#245ac5;border-color:#245ac5;color:white}
+    .filtro-tema:hover{border-color:#245ac5}
+    .filtro-tema:focus-visible,.materias-nav a:focus-visible{outline:3px solid #b45309;outline-offset:3px}
+    .tema-ayuda{margin:0;color:#536575;line-height:1.5}
+    .materia .grid{margin:0}.materia .nota{grid-column:1/-1}
+    @media(prefers-reduced-motion:reduce){.burbuja{animation:none}}
   </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
@@ -533,10 +548,11 @@
         <span aria-hidden="true">🔎</span>
         <input id="buscar" type="search" placeholder="Buscar una aplicación..." />
       </div>
-      <div class="contador" id="contador">0 aplicaciones</div>
+      <div class="contador" id="contador" role="status" aria-live="polite">0 aplicaciones</div>
     </section>
 
-    <section class="grid" id="contenedorApps" aria-label="Lista de aplicaciones"></section>
+    <nav class="materias-nav" id="navegacionMaterias" aria-label="Ir a una materia"></nav>
+    <div id="contenedorApps" aria-label="Aplicaciones por materia"></div>
   </main>
 
   <script>
@@ -699,6 +715,43 @@
 }
     ];
 
+    const materias = [
+      {id:'matematicas', nombre:'Matemáticas', icono:'🔢'},
+      {id:'espanol', nombre:'Español', icono:'📚'},
+      {id:'ingles', nombre:'Inglés', icono:'🐾'},
+      {id:'sociales', nombre:'Estudios Sociales', icono:'🧭'},
+      {id:'ciencias', nombre:'Ciencias y sentidos', icono:'🎧'},
+      {id:'tecnologia', nombre:'Tecnología y lógica', icono:'🤖'}
+    ];
+    // Una aplicación puede aparecer en varios filtros de su materia.
+    const clasificacion = {
+      'aprende_a_restar_quitando.html':['matematicas',['Operaciones matemáticas','Conteo']],
+      'Mayor_Menor.html':['matematicas',['Comparación de números']],
+      'mayor_menor_igual.html':['matematicas',['Comparación de números']],
+      'OrdenarAscendenteYDescendente.html':['matematicas',['Orden y secuencias']],
+      'reconocer_numeros.html':['matematicas',['Conteo','Reconocimiento de números']],
+      'Antecesor_y_Sucesor.html':['matematicas',['Orden y secuencias']],
+      'Sumas_y_restas.html':['matematicas',['Operaciones matemáticas']],
+      'Sumas_y_Restas_UM_C_D_U.html':['matematicas',['Operaciones matemáticas','Valor posicional']],
+      'Situaciones_Problema_Sumas_Restas.html':['matematicas',['Operaciones matemáticas','Resolución de problemas']],
+      'Modelador_de_Solidos_3D.html':['matematicas',['Geometría']],
+      'Fracciones_Propias_1.html':['matematicas',['Fracciones']],
+      'generador-oraciones.html':['espanol',['Construcción de oraciones']],
+      'Hiato_y_Diptongo.html':['espanol',['Sílabas, hiatos y diptongos']],
+      'Hiatos_yDiptongo2.html':['espanol',['Sílabas, hiatos y diptongos']],
+      'OrdenAlfabetico.html':['espanol',['Orden alfabético']],
+      'Comprension_Lectora.html':['espanol',['Comprensión lectora']],
+      'Ortografia_Dictado.html':['espanol',['Ortografía y dictado']],
+      'can-have/can-have.html':['ingles',['Have y can','Animales y vocabulario']],
+      'Croquis_Direcciones/Aplicacion_Direcciones.html':['sociales',['Croquis y recorridos','Puntos cardinales']],
+      'Croquis_Direcciones/Aplicacion_ReferenciasCardinales.html':['sociales',['Puntos cardinales','Ubicación espacial']],
+      'SonidosAgradablesYDesagradable.html':['ciencias',['Sonidos y percepción']],
+      'RobotLab/RobotLab.html':['tecnologia',['Programación','Pensamiento lógico']]
+    };
+    let filtrosTemas = {};
+    try { filtrosTemas = JSON.parse(localStorage.getItem('filtrosMateriasApps')) || {}; } catch (_) {}
+    if (typeof filtrosTemas !== 'object' || Array.isArray(filtrosTemas)) filtrosTemas = {};
+
     const colores = {
       azul: { suave: "#dbeafe", medio: "#93c5fd", fuerte: "#2563eb" },
       verde: { suave: "#dcfce7", medio: "#86efac", fuerte: "#16a34a" },
@@ -842,7 +895,7 @@
       tarjeta.innerHTML = `
         <div>
           <div class="icono">${app.icono}</div>
-          <h2>${app.nombre}</h2>
+          <h3>${app.nombre}</h3>
           <p>${app.descripcion}</p>
         </div>
         <div class="abrir">Abrir actividad <span aria-hidden="true">➡️</span></div>
@@ -855,18 +908,59 @@
       const filtroLimpio = normalizar(filtro);
       contenedorApps.innerHTML = "";
 
-      const appsFiltradas = aplicaciones.filter(app => {
-        const texto = `${app.nombre} ${app.descripcion} ${app.archivo}`;
-        return normalizar(texto).includes(filtroLimpio);
+      let totalVisible = 0;
+      materias.forEach(materia => {
+        const appsMateria = aplicaciones.filter(app => clasificacion[app.archivo]?.[0] === materia.id);
+        const temas = [...new Set(appsMateria.flatMap(app => clasificacion[app.archivo][1]))];
+        const activo = temas.includes(filtrosTemas[materia.id]) ? filtrosTemas[materia.id] : '';
+        const coincidencias = appsMateria.filter(app => normalizar(`${app.nombre} ${app.descripcion} ${materia.nombre} ${clasificacion[app.archivo][1].join(' ')}`).includes(filtroLimpio));
+        if (!coincidencias.length) return;
+        const visibles = coincidencias.filter(app => !activo || clasificacion[app.archivo][1].includes(activo));
+        totalVisible += visibles.length;
+        const seccion = document.createElement('section');
+        seccion.className = 'materia';
+        seccion.id = `materia-${materia.id}`;
+        seccion.setAttribute('aria-labelledby', `titulo-${materia.id}`);
+        seccion.innerHTML = `<div class="materia-cabecera"><h2 id="titulo-${materia.id}">${materia.icono} ${materia.nombre}</h2><span class="materia-total">${visibles.length} de ${appsMateria.length} ${appsMateria.length === 1 ? 'aplicación' : 'aplicaciones'}</span></div><p class="tema-ayuda">Filtra las actividades por tema.</p>`;
+        const filtros = document.createElement('div');
+        filtros.className = 'filtros-tema';
+        filtros.setAttribute('role', 'group');
+        filtros.setAttribute('aria-label', `Temas de ${materia.nombre}`);
+        ['', ...temas].forEach((tema, i) => {
+          const boton = document.createElement('button');
+          boton.type = 'button';
+          boton.className = 'filtro-tema';
+          boton.id = `filtro-${materia.id}-${i}`;
+          boton.setAttribute('aria-pressed', String(activo === tema));
+          const cantidad = coincidencias.filter(app => !tema || clasificacion[app.archivo][1].includes(tema)).length;
+          boton.textContent = `${tema || 'Todas'} (${cantidad})`;
+          boton.addEventListener('click', () => {
+            filtrosTemas[materia.id] = tema;
+            try { localStorage.setItem('filtrosMateriasApps', JSON.stringify(filtrosTemas)); } catch (_) {}
+            renderizarApps(buscar.value);
+            document.getElementById(boton.id)?.focus({preventScroll:true});
+          });
+          filtros.appendChild(boton);
+        });
+        seccion.appendChild(filtros);
+        const grid = document.createElement('div');
+        grid.className = 'grid';
+        visibles.forEach(app => grid.appendChild(crearTarjeta(app)));
+        if (!visibles.length) {
+          const mensaje = document.createElement('p');
+          mensaje.className = 'nota';
+          mensaje.textContent = 'No hay coincidencias en este tema. Selecciona Todas o cambia la búsqueda.';
+          grid.appendChild(mensaje);
+        }
+        seccion.appendChild(grid);
+        contenedorApps.appendChild(seccion);
       });
 
-      appsFiltradas.forEach(app => contenedorApps.appendChild(crearTarjeta(app)));
-
-      contador.textContent = appsFiltradas.length === 1
+      contador.textContent = totalVisible === 1
         ? "1 aplicación"
-        : `${appsFiltradas.length} aplicaciones`;
+        : `${totalVisible} aplicaciones`;
 
-      if (appsFiltradas.length === 0) {
+      if (!contenedorApps.children.length) {
         const mensaje = document.createElement("div");
         mensaje.className = "nota";
         mensaje.style.gridColumn = "1 / -1";
@@ -875,6 +969,7 @@
       }
     }
 
+    document.getElementById('navegacionMaterias').innerHTML = materias.map(materia => `<a href="#materia-${materia.id}">${materia.icono} ${materia.nombre}</a>`).join('');
     buscar.addEventListener("input", () => renderizarApps(buscar.value));
 
     window.addEventListener("pageshow", () => {
