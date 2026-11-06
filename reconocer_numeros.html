@@ -225,7 +225,7 @@ function sizePareoCards(board,row,flag){
   const longest=Math.max(...boxes.map(box=>context.measureText(box.textContent).width));
   const padding=parseFloat(col.paddingLeft)+parseFloat(col.paddingRight)+parseFloat(col.borderLeftWidth)+parseFloat(col.borderRightWidth);
   const cardPadding=parseFloat(style.paddingLeft)+parseFloat(style.paddingRight)+parseFloat(style.borderLeftWidth)+parseFloat(style.borderRightWidth);
-  board.style.setProperty('--pair-col',Math.min(340,Math.max(140,longest+cardPadding+flag+parseFloat(pair.columnGap)+padding+4))+'px');
+  board.style.setProperty('--pair-col',Math.min(510,Math.max(140,longest+cardPadding+flag+parseFloat(pair.columnGap)+padding+4)*1.5)+'px');
   const measuredHeight=()=>Math.max(...boxes.map(box=>box.scrollHeight+parseFloat(getComputedStyle(box).borderTopWidth)+parseFloat(getComputedStyle(box).borderBottomWidth)));
   let font=parseFloat(style.fontSize),height=measuredHeight();
   while(height>row+1&&font>11){font=Math.max(11,font-.5);board.style.setProperty('--pair-font',font+'px');height=measuredHeight();}
