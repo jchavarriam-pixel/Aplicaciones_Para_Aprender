@@ -764,6 +764,32 @@
       'SonidosAgradablesYDesagradable.html':['ciencias',['Sonidos y percepción']],
       'RobotLab/RobotLab.html':['tecnologia',['Programación','Pensamiento lógico']]
     };
+    // Progresión sugerida dentro de cada materia; se conserva también al filtrar.
+    const secuenciaAprendizaje = [
+      'reconocer_numeros.html',
+      'Mayor_Menor.html',
+      'mayor_menor_igual.html',
+      'OrdenarAscendenteYDescendente.html',
+      'Antecesor_y_Sucesor.html',
+      'aprende_a_restar_quitando.html',
+      'Sumas_y_restas.html',
+      'Sumas_y_Restas_UM_C_D_U.html',
+      'Situaciones_Problema_Sumas_Restas.html',
+      'Modelador_de_Solidos_3D.html',
+      'Fracciones_Propias_1.html',
+      'OrdenAlfabetico.html',
+      'Hiato_y_Diptongo.html',
+      'Hiatos_yDiptongo2.html',
+      'Ortografia_Dictado.html',
+      'generador-oraciones.html',
+      'Comprension_Lectora.html',
+      'can-have/can-have.html',
+      'Croquis_Direcciones/Aplicacion_ReferenciasCardinales.html',
+      'Croquis_Direcciones/Aplicacion_Direcciones.html',
+      'SonidosAgradablesYDesagradable.html',
+      'RobotLab/RobotLab.html'
+    ];
+    const ordenAprendizaje = new Map(secuenciaAprendizaje.map((archivo, indice) => [archivo, indice]));
     let filtrosTemas = {};
     try { filtrosTemas = JSON.parse(localStorage.getItem('filtrosMateriasApps')) || {}; } catch (_) {}
     if (typeof filtrosTemas !== 'object' || Array.isArray(filtrosTemas)) filtrosTemas = {};
@@ -928,7 +954,8 @@
 
       let totalVisible = 0;
       materias.forEach(materia => {
-        const appsMateria = aplicaciones.filter(app => clasificacion[app.archivo]?.[0] === materia.id);
+        const appsMateria = aplicaciones.filter(app => clasificacion[app.archivo]?.[0] === materia.id)
+          .sort((a, b) => (ordenAprendizaje.get(a.archivo) ?? Infinity) - (ordenAprendizaje.get(b.archivo) ?? Infinity));
         const temas = [...new Set(appsMateria.flatMap(app => clasificacion[app.archivo][1]))];
         const activo = temas.includes(filtrosTemas[materia.id]) ? filtrosTemas[materia.id] : '';
         const coincidencias = appsMateria.filter(app => normalizar(`${app.nombre} ${app.descripcion} ${materia.nombre} ${clasificacion[app.archivo][1].join(' ')}`).includes(filtroLimpio));
@@ -945,7 +972,7 @@
         seccion.setAttribute('aria-labelledby', `tab-${materia.id}`);
         seccion.tabIndex = 0;
         seccion.hidden = materia.id !== materiaActiva;
-        seccion.innerHTML = `<div class="materia-cabecera"><h2 id="titulo-${materia.id}">${materia.icono} ${materia.nombre}</h2><span class="materia-total">${visibles.length} de ${appsMateria.length} ${appsMateria.length === 1 ? 'aplicación' : 'aplicaciones'}</span></div><p class="tema-ayuda">Filtra las actividades por tema.</p>`;
+        seccion.innerHTML = `<div class="materia-cabecera"><h2 id="titulo-${materia.id}">${materia.icono} ${materia.nombre}</h2><span class="materia-total">${visibles.length} de ${appsMateria.length} ${appsMateria.length === 1 ? 'aplicación' : 'aplicaciones'}</span></div><p class="tema-ayuda">De lo más básico a actividades más completas. Puedes filtrar por tema.</p>`;
         const filtros = document.createElement('div');
         filtros.className = 'filtros-tema';
         filtros.setAttribute('role', 'group');
