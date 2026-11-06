@@ -479,8 +479,10 @@
       }
     }
     .materias-nav{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 26px}
-    .materias-nav a{padding:11px 16px;border:2px solid #cbdcf0;border-radius:16px;background:#fff;color:#244667;text-decoration:none;font-weight:800;min-height:46px}
-    .materias-nav a:hover{border-color:#2563eb;background:#eff6ff}
+    .materias-nav button{font:inherit;padding:11px 16px;border:2px solid #cbdcf0;border-radius:16px;background:#fff;color:#244667;font-weight:800;min-height:46px;cursor:pointer;touch-action:manipulation}
+    .materias-nav button:hover{border-color:#2563eb;background:#eff6ff}
+    .materias-nav button[aria-selected="true"]{background:#245ac5;border-color:#245ac5;color:#fff;box-shadow:0 4px 0 #163c8c}
+    .materia[hidden]{display:none}
     .materia{margin:0 0 30px;padding:clamp(15px,3vw,26px);background:rgba(255,255,255,.7);border:2px solid #fff;border-radius:26px;scroll-margin-top:20px}
     .materia-cabecera{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:8px}
     .materia h2{margin:0;font-size:clamp(1.5rem,3vw,2rem);color:#21436b}
@@ -489,7 +491,7 @@
     .filtro-tema{font:inherit;font-size:.95rem;font-weight:750;min-height:44px;padding:9px 14px;border:2px solid #ccdaeb;border-radius:999px;background:#fff;color:#36536f;cursor:pointer;touch-action:manipulation}
     .filtro-tema[aria-pressed="true"]{background:#245ac5;border-color:#245ac5;color:white}
     .filtro-tema:hover{border-color:#245ac5}
-    .filtro-tema:focus-visible,.materias-nav a:focus-visible{outline:3px solid #b45309;outline-offset:3px}
+    .filtro-tema:focus-visible,.materias-nav button:focus-visible{outline:3px solid #b45309;outline-offset:3px}
     .tema-ayuda{margin:0;color:#536575;line-height:1.5}
     .materia .grid{margin:0}.materia .nota{grid-column:1/-1}
     @media(prefers-reduced-motion:reduce){.burbuja{animation:none}}
@@ -551,7 +553,7 @@
       <div class="contador" id="contador" role="status" aria-live="polite">0 aplicaciones</div>
     </section>
 
-    <nav class="materias-nav" id="navegacionMaterias" aria-label="Ir a una materia"></nav>
+    <div class="materias-nav" id="navegacionMaterias" role="tablist" aria-label="Materias"></div>
     <div id="contenedorApps" aria-label="Aplicaciones por materia"></div>
   </main>
 
@@ -751,6 +753,8 @@
     let filtrosTemas = {};
     try { filtrosTemas = JSON.parse(localStorage.getItem('filtrosMateriasApps')) || {}; } catch (_) {}
     if (typeof filtrosTemas !== 'object' || Array.isArray(filtrosTemas)) filtrosTemas = {};
+    let materiaActiva = materias[0].id;
+    try { const guardada = localStorage.getItem('materiaActivaApps'); if (materias.some(m => m.id === guardada)) materiaActiva = guardada; } catch (_) {}
 
     const colores = {
       azul: { suave: "#dbeafe", medio: "#93c5fd", fuerte: "#2563eb" },
@@ -914,13 +918,19 @@
         const temas = [...new Set(appsMateria.flatMap(app => clasificacion[app.archivo][1]))];
         const activo = temas.includes(filtrosTemas[materia.id]) ? filtrosTemas[materia.id] : '';
         const coincidencias = appsMateria.filter(app => normalizar(`${app.nombre} ${app.descripcion} ${materia.nombre} ${clasificacion[app.archivo][1].join(' ')}`).includes(filtroLimpio));
-        if (!coincidencias.length) return;
+        const tab = document.getElementById(`tab-${materia.id}`);
+        tab.textContent = `${materia.icono} ${materia.nombre} (${coincidencias.length})`;
+        tab.setAttribute('aria-selected', String(materiaActiva === materia.id));
+        tab.tabIndex = materiaActiva === materia.id ? 0 : -1;
         const visibles = coincidencias.filter(app => !activo || clasificacion[app.archivo][1].includes(activo));
-        totalVisible += visibles.length;
+        if (materia.id === materiaActiva) totalVisible = visibles.length;
         const seccion = document.createElement('section');
         seccion.className = 'materia';
         seccion.id = `materia-${materia.id}`;
-        seccion.setAttribute('aria-labelledby', `titulo-${materia.id}`);
+        seccion.setAttribute('role', 'tabpanel');
+        seccion.setAttribute('aria-labelledby', `tab-${materia.id}`);
+        seccion.tabIndex = 0;
+        seccion.hidden = materia.id !== materiaActiva;
         seccion.innerHTML = `<div class="materia-cabecera"><h2 id="titulo-${materia.id}">${materia.icono} ${materia.nombre}</h2><span class="materia-total">${visibles.length} de ${appsMateria.length} ${appsMateria.length === 1 ? 'aplicación' : 'aplicaciones'}</span></div><p class="tema-ayuda">Filtra las actividades por tema.</p>`;
         const filtros = document.createElement('div');
         filtros.className = 'filtros-tema';
@@ -949,7 +959,7 @@
         if (!visibles.length) {
           const mensaje = document.createElement('p');
           mensaje.className = 'nota';
-          mensaje.textContent = 'No hay coincidencias en este tema. Selecciona Todas o cambia la búsqueda.';
+          mensaje.textContent = 'No hay coincidencias en este tema. Selecciona Todas, cambia la búsqueda o elige otra pestaña.';
           grid.appendChild(mensaje);
         }
         seccion.appendChild(grid);
@@ -969,7 +979,26 @@
       }
     }
 
-    document.getElementById('navegacionMaterias').innerHTML = materias.map(materia => `<a href="#materia-${materia.id}">${materia.icono} ${materia.nombre}</a>`).join('');
+    const pestanasMaterias = document.getElementById('navegacionMaterias');
+    pestanasMaterias.innerHTML = materias.map(materia => `<button type="button" role="tab" id="tab-${materia.id}" aria-controls="materia-${materia.id}" data-materia="${materia.id}">${materia.icono} ${materia.nombre}</button>`).join('');
+    function seleccionarMateria(id) {
+      materiaActiva = id;
+      try { localStorage.setItem('materiaActivaApps', id); } catch (_) {}
+      renderizarApps(buscar.value);
+    }
+    pestanasMaterias.addEventListener('click', event => {
+      const tab = event.target.closest('[data-materia]');
+      if (tab) seleccionarMateria(tab.dataset.materia);
+    });
+    pestanasMaterias.addEventListener('keydown', event => {
+      const tab = event.target.closest('[data-materia]');
+      if (!tab || !['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
+      event.preventDefault();
+      const actual = materias.findIndex(m => m.id === tab.dataset.materia);
+      const siguiente = event.key === 'Home' ? 0 : event.key === 'End' ? materias.length - 1 : (actual + (event.key === 'ArrowRight' ? 1 : -1) + materias.length) % materias.length;
+      seleccionarMateria(materias[siguiente].id);
+      document.getElementById(`tab-${materias[siguiente].id}`).focus();
+    });
     buscar.addEventListener("input", () => renderizarApps(buscar.value));
 
     window.addEventListener("pageshow", () => {
