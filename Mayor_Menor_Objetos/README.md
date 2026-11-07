@@ -1,21 +1,38 @@
 # Mayor y menor con objetos
 
-Abrir `mayor_menor_objetos.html` directamente o desde el índice principal. Funciona como archivo local y desde un servidor, sin dependencias externas para el juego.
+Abrir `mayor_menor_objetos.html` directamente o desde el índice principal. La aplicación funciona como archivo local y desde servidor, sin librerías externas para jugar.
 
-Actividad de comparación de tamaños: cada una de las ocho imágenes contiene dos objetos del mismo tipo, diseño y color; cambia su tamaño. Se muestran pelotas, tazas, manzanas, zapatos, mochilas, osos de peluche, cucharas y botellas. Cada par completo está guardado en un solo archivo WebP dentro de `imagenes/`. Las ocho imágenes juntas ocupan aproximadamente 300 KB.
+## Tres modos
 
-## Dinámica
+1. **Grande y pequeño:** dos opciones del mismo tipo de objeto. Se puede buscar siempre grande, siempre pequeño o variar.
+2. **Grande, mediano y pequeño:** tres grados de tamaño. Se puede practicar cualquiera de los tres o mezclarlos.
+3. **Características:** tres opciones, con comparación **más**, **menos** o **mixta**. Se eligen las características desde la configuración.
 
-1. Observar el par y escuchar o leer la pregunta.
-2. Tocar el objeto mayor o menor y pulsar Revisar.
-3. Si hay un error, volver a observar y elegir. Si hay un acierto, se muestra la explicación, se gana una estrella y se habilita Siguiente.
+Las 18 categorías son tamaño, altura, longitud, anchura, grosor, claridad del color, forma, superficie, limpieza, humedad, orden, abertura, contenido, cantidad, separación, distancia, inclinación y clima. Cada categoría tiene al menos dos variantes de imágenes; clima incluye sol/nubes, lluvia y nieve. Se usa vertical frente a inclinado para describir la inclinación, sin confundirla con que una línea sea recta.
 
-El modo mixto alterna mayor/menor con un objetivo inicial aleatorio. Se pueden practicar solo mayor o solo menor. En cada ronda se mezclan cuatro u ocho pares sin repetir; se sortea también la orientación de cada imagen, por lo que el objeto grande puede aparecer a cualquiera de los lados. La imagen completa se refleja junto con la lógica de respuesta.
+Las comparaciones se apoyan en grados ordenados. Por ejemplo, menos delgado corresponde al cilindro más grueso cuando lo único que varía es su diámetro. En cantidad se pregunta dónde hay más/menos objetos; en distancia se nombra la referencia (casa o banco). Las preguntas usan es o está según corresponda a la característica.
 
-Las preferencias se guardan en `mayorMenorObjetos.config.v1`: modo, longitud de ronda, voz y ayuda. El nombre comparte `nombreNinoGabrielApps` con el resto de aplicaciones. Si el navegador bloquea el almacenamiento, el juego sigue funcionando con las opciones en memoria.
+## Selección y dinámica
 
-Incluye las mismas referencias a Gabriel, créditos y controles de zoom/pantalla completa del proyecto. La interfaz aprovecha el ancho disponible, se adapta a orientación vertical y horizontal y permite responder con toque, ratón o teclado. La celebración utiliza 28 elementos breves y respeta la preferencia de movimiento reducido.
+Tocar una opción la ilumina con un halo dorado, una marca y la etiqueta Seleccionado. El halo rodea la tarjeta: conserva el color y el tamaño del dibujo, para no alterar la característica evaluada. La animación es breve y se desactiva con la preferencia de movimiento reducido, manteniendo el resplandor fijo.
+
+Después se pulsa Revisar. Los errores permiten otra elección; los aciertos muestran una explicación, una estrella y el botón Siguiente. No hay avance automático. Las posiciones se mezclan por separado: el mediano no aparece siempre al centro. Cada ejercicio tiene una sola respuesta válida. Las rondas no repiten una imagen y, en modo 3, reparten las categorías antes de repetirlas.
+
+Se eligen rondas de 4, 8 o 12 ejercicios. Si las categorías seleccionadas ofrecen menos imágenes, la ronda usa las disponibles y lo indica en configuración. No se permite dejar todas las categorías desactivadas.
 
 ## Imágenes
 
-Ilustraciones originales generadas con la herramienta integrada de imágenes y optimizadas a WebP de 1200 × 800. No contienen texto, fondos distractores ni marcas que indiquen la respuesta. Los prompts de producción se conservan en `prompts-imagenes.md`.
+- Se conservaron los ocho pares originales de `imagenes/`.
+- Se generaron **38 imágenes nuevas** con tres grados cada una, en `imagenes/caracteristicas/`. Cada archivo conserva sus tres paneles; la interfaz muestra cada panel por separado y mezcla su posición.
+- Se reutilizan las seis ilustraciones transparentes de `../Ordenar_Objetos_Tamano/imagenes/` para ofrecer más familias en tamaño, usando escalas visuales progresivas. No se duplican sus archivos.
+- El catálogo y la dirección de cada rasgo están en `caracteristicas.js`. Los prompts de los pares originales están en `prompts-imagenes.md`; los de las variantes nuevas y sus revisiones están en `prompts-caracteristicas.md`.
+
+Las ilustraciones nuevas se generaron con la herramienta integrada de imágenes y se optimizaron a WebP. Se revisaron visualmente los tres grados y se corrigieron dos generaciones para conservar la cantidad de libros y eliminar una pelota adicional en distancia.
+
+## Preferencias y compatibilidad
+
+Se conserva la clave `mayorMenorObjetos.config.v1`. Se guardan modo, tamaño objetivo, tipo de comparación, categorías, cantidad, voz y ayuda. Las preferencias antiguas mayor/menor se migran a grande/pequeño. El nombre comparte `nombreNinoGabrielApps`. Si el navegador bloquea el almacenamiento, se puede seguir jugando.
+
+Las pestañas cambian de modo inmediatamente. Cantidad, tamaño objetivo y categorías se aplican con Nueva ronda; voz y ayuda cambian de inmediato. La carga de imágenes permite reintentar y descarta respuestas de cargas antiguas al cambiar rápidamente de actividad.
+
+Se mantienen créditos, referencia a Gabriel, controles de zoom y pantalla completa. Se comprobó el uso táctil, la adaptación a teléfono/tableta y zoom al 85 %, las tres actividades, el guardado, la migración de preferencias y las respuestas únicas de todos los rasgos y comparadores.

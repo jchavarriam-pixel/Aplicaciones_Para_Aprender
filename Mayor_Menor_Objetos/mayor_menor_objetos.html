@@ -8,30 +8,39 @@
   <link rel="stylesheet" href="../creditos.css">
   <link rel="stylesheet" href="../pantalla-completa.css">
   <script src="objetos.js" defer></script>
+  <script src="caracteristicas.js" defer></script>
   <script src="juego.js" defer></script>
 </head>
 <body>
 <main class="app">
   <header class="cabecera">
     <div class="marca" aria-hidden="true">●<span>●</span></div>
-    <div><h1>Mayor y menor con objetos</h1><p>¡Descubre los tamaños!</p></div>
+    <div><h1>Mayor y menor con objetos</h1><p>¡Descubre tamaños y características!</p></div>
     <a class="volver" href="../index.html">⌂ Aplicaciones</a>
   </header>
+  <nav class="modos" aria-label="Modos de juego">
+    <button data-actividad="1" aria-pressed="true"><b>1</b><span>Grande y pequeño<small>Dos opciones</small></span></button>
+    <button data-actividad="2" aria-pressed="false"><b>2</b><span>Grande, mediano y pequeño<small>Tres opciones</small></span></button>
+    <button data-actividad="3" aria-pressed="false"><b>3</b><span>Características<small>Más, menos o mixto</small></span></button>
+  </nav>
   <div class="distribucion">
     <aside class="lateral">
       <section class="guia panel" aria-labelledby="comoJugar">
         <h2 id="comoJugar">Así jugamos</h2>
         <svg viewBox="0 0 240 95" aria-hidden="true"><circle cx="64" cy="47" r="37" fill="#f4b548" stroke="#b77918" stroke-width="3"/><circle cx="183" cy="65" r="19" fill="#f4b548" stroke="#b77918" stroke-width="3"/><path d="M110 83h113M17 88h86" stroke="#c4cbd8" stroke-width="3" stroke-linecap="round"/></svg>
-        <ol><li><b>1</b> Mira los dos objetos.</li><li><b>2</b> Toca el que se pide.</li><li><b>3</b> Pulsa <strong>Revisar</strong>.</li></ol>
+        <ol><li><b>1</b> Mira las opciones.</li><li><b>2</b> Toca la que se pide.</li><li><b>3</b> Pulsa <strong>Revisar</strong>.</li></ol>
       </section>
       <details class="panel ajustes">
         <summary>⚙ Configuración</summary>
         <div class="campos">
           <label>Nombre del niño<input id="nombre" maxlength="50" autocomplete="off" placeholder="Gabriel"></label>
-          <label>¿Qué practicamos?<select id="modo"><option value="mixto">Mayor y menor</option><option value="mayor">Solo el mayor</option><option value="menor">Solo el menor</option></select></label>
-          <label>Imágenes por ronda<select id="cantidad"><option value="4">4 imágenes</option><option value="8">8 imágenes</option></select></label>
+          <label id="tamanosConfig">¿Qué tamaño buscamos?<select id="tamano"><option value="mixto">Variar los tamaños</option><option value="grande">Solo grande</option><option value="mediano">Solo mediano</option><option value="pequeno">Solo pequeño</option></select></label>
+          <label id="comparacionConfig" hidden>Tipo de comparación<select id="comparacion"><option value="mixto">Más y menos</option><option value="mas">Solo más</option><option value="menos">Solo menos</option></select></label>
+          <fieldset id="categoriasConfig" hidden><legend>Características para practicar</legend><div class="categoria-acciones"><button type="button" id="todasCategorias">Todas</button><button type="button" id="basicasCategorias">Básicas</button></div><div id="categorias" class="categorias"></div><p id="estadoCategorias" class="nota" role="status"></p></fieldset>
+          <label>Ejercicios por ronda<select id="cantidad"><option value="4">4 ejercicios</option><option value="8">8 ejercicios</option><option value="12">12 ejercicios</option></select></label>
           <label class="opcion"><input type="checkbox" id="voz"> Leer preguntas y respuestas</label>
-          <label class="opcion"><input type="checkbox" id="ayuda"> Mostrar ayuda de tamaños</label>
+          <label class="opcion"><input type="checkbox" id="ayuda"> Mostrar ayuda escrita</label>
+          <p id="disponibles" class="nota"></p>
           <p class="nota">Las opciones se guardan en este navegador. Los cambios de práctica se aplican en una nueva ronda.</p>
         </div>
       </details>
@@ -41,13 +50,8 @@
       <div class="avance"><span id="contador"></span><span id="estrellas" aria-label="Aciertos de la ronda"></span></div>
       <div class="pregunta-fila"><h2 id="pregunta" tabindex="-1"></h2><button id="escuchar" class="boton escuchar" aria-label="Escuchar la pregunta">🔊</button></div>
       <p id="ayudaTamano" class="ayuda">Mayor = más grande <span>·</span> Menor = más pequeño</p>
-      <div id="zonaImagen" class="zona-imagen">
-        <img id="imagenPar" alt="" draggable="false" decoding="async">
-        <div class="elecciones" role="group" aria-label="Elige uno de los dos objetos">
-          <button class="elegir" id="izquierda" aria-label="Elegir el objeto de la izquierda" aria-pressed="false"><span>Este objeto</span></button>
-          <button class="elegir" id="derecha" aria-label="Elegir el objeto de la derecha" aria-pressed="false"><span>Este objeto</span></button>
-        </div>
-      </div>
+      <p id="temaActual" class="tema-actual"></p>
+      <div id="zonaImagen" class="zona-opciones" role="group" aria-label="Elige una opción"></div>
       <div id="errorImagen" hidden><p>No se pudo cargar la imagen.</p><button class="boton secundaria" id="reintentar">Reintentar</button></div>
       <p id="respuesta" class="respuesta" role="status" aria-live="polite">Toca uno de los objetos.</p>
       <div class="acciones"><button class="boton principal" id="revisar" disabled>✓ Revisar</button><button class="boton siguiente" id="siguiente" hidden>Siguiente →</button></div>
