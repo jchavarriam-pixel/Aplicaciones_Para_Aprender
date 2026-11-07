@@ -2,30 +2,35 @@
 <html lang="es">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Ordenar objetos por tamaño</title>
-  <link rel="stylesheet" href="estilo.css"><link rel="stylesheet" href="../creditos.css"><link rel="stylesheet" href="../pantalla-completa.css">
-  <script src="juego.js" defer></script>
+  <title>Ordenar objetos</title>
+  <link rel="stylesheet" href="estilo.css?v=20261107-series-1"><link rel="stylesheet" href="../creditos.css"><link rel="stylesheet" href="../pantalla-completa.css">
+  <script src="series.js?v=20261107-series-1" defer></script>
+  <script src="juego.js?v=20261107-series-1" defer></script>
 </head>
 <body>
 <main class="app">
-  <header><div><h1>Ordenar objetos por tamaño</h1><p>Del más grande al más pequeño.</p></div><a href="../index.html" class="inicio">⌂ Aplicaciones</a></header>
+  <header><div><h1>Ordenar objetos</h1><p>Observa, compara y construye una secuencia.</p></div><a href="../index.html" class="inicio">⌂ Aplicaciones</a></header>
   <div class="layout">
     <aside class="lateral">
       <section class="panel guia"><h2>¡Ponlos en orden!</h2><svg viewBox="0 0 250 96" aria-hidden="true"><path d="M12 85h224" stroke="#c5d5df" stroke-width="3"/><circle cx="52" cy="47" r="36" fill="#efa936"/><circle cx="137" cy="60" r="23" fill="#efa936"/><circle cx="205" cy="72" r="11" fill="#efa936"/><path d="m100 20 66 0m-8-7 8 7-8 7" fill="none" stroke="#5a7c9f" stroke-width="4" stroke-linecap="round"/></svg><ol><li><b>1</b> Mira los tamaños.</li><li><b>2</b> Coloca primero el mayor.</li><li><b>3</b> Sigue hasta el menor.</li></ol><p class="tip">Arrastra cada objeto. También puedes tocarlo y después tocar un espacio.</p></section>
       <details class="panel ajustes"><summary>⚙ Configuración</summary><div class="campos">
         <label>Nombre del niño<input id="nombre" maxlength="50" placeholder="Gabriel" autocomplete="off"></label>
+        <label>¿Cómo ordenamos?<select id="criterio"></select></label>
+        <label>Sentido del orden<select id="sentido"><option value="descendente">De mayor a menor</option><option value="ascendente">De menor a mayor</option><option value="mixto">Alternar los dos sentidos</option></select></label>
         <label>Cantidad de objetos<select id="cantidad"><option value="2">2 objetos</option><option value="3">3 objetos</option><option value="4">4 objetos</option><option value="5">5 objetos</option><option value="6">6 objetos</option></select></label>
-        <label>Objetos para practicar<select id="familia"><option value="azar">Variar en cada ronda</option><option value="pelota">Pelotas</option><option value="taza">Tazas</option><option value="manzana">Manzanas</option><option value="mochila">Mochilas</option><option value="peluche">Osos de peluche</option><option value="botella">Botellas</option></select></label>
+        <label>Objetos para practicar<select id="familia"></select></label>
+        <label class="opcion"><input id="guiaVisual" type="checkbox"> Mostrar guía visual de círculos y flechas</label>
         <label class="opcion"><input id="voz" type="checkbox"> Leer instrucciones y respuestas</label>
         <label class="opcion"><input id="posiciones" type="checkbox"> Mostrar números de posición</label>
-        <p class="nota">Las opciones se guardan en este navegador. Cantidad y objetos se aplican en la siguiente ronda.</p>
+        <p class="nota">Las opciones se guardan en este navegador. La guía, la voz y las posiciones cambian al instante; las demás opciones se aplican en la siguiente ronda.</p>
       </div></details>
       <button class="boton secundaria" id="nuevaRonda">↻ Nueva ronda</button>
     </aside>
     <section class="panel juego" aria-labelledby="tituloReto">
       <div class="reto"><div><span id="familiaActual" class="etiqueta"></span><h2 id="tituloReto">Del más grande al más pequeño</h2></div><button id="escuchar" class="boton audio" aria-label="Escuchar la instrucción">🔊</button></div>
+      <section id="ayudaVisual" class="ayuda-visual" aria-label="Guía visual del orden"><p id="textoGuia"></p><div id="dibujoGuia" role="img"></div></section>
       <section class="banco" aria-labelledby="tituloBanco"><h3 id="tituloBanco">Objetos para ordenar</h3><div id="banco" class="rejilla" role="group" aria-label="Objetos disponibles"></div></section>
-      <section class="destino" aria-labelledby="tituloOrden"><div class="sentido"><h3 id="tituloOrden">Tu orden</h3><p>Mayor <span aria-hidden="true">⟶</span> Menor</p></div><div id="orden" class="rejilla" role="group" aria-label="Ordena de izquierda a derecha; continúa en la siguiente fila"></div></section>
+      <section class="destino" aria-labelledby="tituloOrden"><div class="sentido"><h3 id="tituloOrden">Tu orden</h3><p id="sentidoActual"></p></div><div id="orden" class="rejilla" role="group" aria-label="Ordena de izquierda a derecha; continúa en la siguiente fila"></div></section>
       <p id="mensaje" class="mensaje" role="status" aria-live="polite">Cargando las imágenes…</p>
       <button id="reintentar" class="boton secundaria" hidden>Reintentar imagen</button>
       <div class="acciones"><button id="revisar" class="boton principal" disabled>✓ Revisar el orden</button><button id="otraRonda" class="boton otra" hidden>↻ Otra ronda</button></div>
