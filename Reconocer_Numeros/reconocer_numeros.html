@@ -133,6 +133,19 @@ button,input,select{font-family:inherit}.pantalla{display:none;min-height:100vh;
 .corral-slot .animal.guardado{width:var(--settled-width,100%);height:var(--settled-height,auto);flex:none}
 @media(prefers-reduced-motion:reduce){.puerta-corral{transition:none}}
 @media(max-width:760px){.pareo{grid-template-columns:minmax(0,1fr) clamp(36px,10vw,76px) minmax(0,1fr);column-gap:0;padding:8px}.pareo .col{padding:12px 10px;border-width:2px;border-radius:18px}.pareo .par-row{gap:8px}.pareo .caja-par{padding:1px 3px!important}.encabezado{flex-wrap:wrap}.encabezado .titulo{flex:1 1 100%;min-width:0}.encabezado .control{width:100%;justify-content:space-between}.pareo .inst{font-size:.92rem}.pareo .acciones .btn{font-size:.85rem;padding:9px}}
+.box-game{grid-template-columns:minmax(0,1fr)}
+.box-game .pool,.box-game .cajas{min-height:0;padding:14px}
+.box-game h2{font-size:1.25rem;margin-bottom:12px}
+.box-game .pool-items{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:12px}
+.number-slot{min-width:0;height:76px;border-radius:18px;background:#f1f5f9;border:2px dashed #cbd5e1;display:flex;align-items:center;justify-content:center}
+.box-game .drag-num{width:100%;height:72px;min-width:0;border-radius:16px;background:var(--number-bg,#fef3c7);border:3px solid var(--number-border,#f59e0b);color:#18324e;font-family:Arial,Helvetica,sans-serif;font-size:1.45rem;font-weight:900;box-shadow:0 3px 0 #18324e18}
+.box-game .grid-cajas{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px}
+.box-game .sound-box{min-width:0;min-height:160px;padding:12px;border-style:solid;transition:background-color .15s,border-color .15s}
+.box-game .sound-box.sonando{background:#fff0a8;border-color:#ec9b18;box-shadow:0 0 0 4px #ffdc71}
+.box-game .sonando .speaker{background:#b85d0b;box-shadow:0 0 0 5px #fff7d6}
+.box-game .speaker{cursor:pointer;flex:none;min-width:58px;min-height:58px}
+.box-game .sound-box .drag-num{max-width:210px;flex:none}
+@media(prefers-reduced-motion:reduce){.box-game .sound-box{transition:none}}
 </style>
   <link rel="stylesheet" href="../creditos.css">
   <link rel="stylesheet" href="../pantalla-completa.css">
@@ -223,7 +236,7 @@ const specials={10:'diez',11:'once',12:'doce',13:'trece',14:'catorce',15:'quince
 const tens={30:'treinta',40:'cuarenta',50:'cincuenta',60:'sesenta',70:'setenta',80:'ochenta',90:'noventa'};
 const hundreds={100:'ciento',200:'doscientos',300:'trescientos',400:'cuatrocientos',500:'quinientos',600:'seiscientos',700:'setecientos',800:'ochocientos',900:'novecientos'};
 function numberToSpanish(n){n=Number(n);if(n in specials)return specials[n];if(n<10)return ones[n];if(n<100){let t=Math.floor(n/10)*10,u=n%10;return u===0?tens[t]:`${tens[t]} y ${ones[u]}`;}if(n<1000){let h=Math.floor(n/100)*100,r=n%100;return r===0?(hundreds[h]||specials[h]):`${hundreds[h]} ${numberToSpanish(r)}`;}let th=Math.floor(n/1000),r=n%1000;let pre=th===1?'mil':`${numberToSpanish(th)} mil`;return r===0?pre:`${pre} ${numberToSpanish(r)}`;}
-function speak(text,interrupt=true){if(!('speechSynthesis' in window))return null;if(interrupt)speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(text);u.lang='es-ES';u.rate=.65;u.pitch=1;speechSynthesis.speak(u);return u;}
+function speak(text,interrupt=true){if(!('speechSynthesis' in window))return null;if(interrupt){clearSoundBox();speechSynthesis.cancel();}let u=new SpeechSynthesisUtterance(text);u.lang='es-ES';u.rate=.65;u.pitch=1;speechSynthesis.speak(u);return u;}
 function probarVoz(){
   const input = document.getElementById('childName');
   let nombre = guardarNombreEstudiante(input.value);
@@ -232,7 +245,7 @@ function probarVoz(){
   input.value = state.childName;
   speak(`Hola ${state.childName}. Vamos a reconocer números.`);
 }
-function stopAudio(){if(state.timer){clearTimeout(state.timer);state.timer=null;} if('speechSynthesis' in window)speechSynthesis.cancel();}
+function stopAudio(){clearSoundBox();if(state.timer){clearTimeout(state.timer);state.timer=null;} if('speechSynthesis' in window)speechSynthesis.cancel();}
 function startLoop(text){stopAudio();function loop(){let u=speak(text,true);if(!u)return;u.onend=function(){state.timer=setTimeout(loop,4000);};}loop();}
 function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function sample(a,n){const count=Math.max(0,Math.min(Math.floor(n),a.length)),indices=new Set();for(let i=a.length-count;i<a.length;i++){const pick=Math.floor(Math.random()*(i+1));indices.add(indices.has(pick)?i:pick);}return shuffle([...indices].map(i=>a[i]));}
@@ -655,8 +668,35 @@ function onDropAnimal(el,x,y,rect){
   speak(`Ese no es el número ${numberToSpanish(data.current)}. Intenta de nuevo.`);
   el.dataset.recovering='yes';returnRandom(el);el._timer=setTimeout(()=>{el.dataset.recovering='no';animateAnimal(el);},850);
 }
-function startMode3(){let nums=sample(state.numbers,+document.getElementById('m3Count').value);state.data={numbers:nums,assigned:new Set(),total:nums.length};setGame('📦 Modo 3: Cajas con sonido','Toca el parlante, escucha el nombre y mete el número correcto.');document.getElementById('progressPill').classList.remove('oculto');progress(0,nums.length);document.getElementById('gameContent').innerHTML=`<div class="box-game"><div class="pool"><h2>Números</h2><div class="pool-items" id="poolItems">${shuffle(nums).map(n=>`<div class="drag-num" data-num="${n}">${n}</div>`).join('')}</div></div><div class="cajas"><h2>Cajas</h2><div class="grid-cajas">${nums.map(n=>`<div class="sound-box" data-target="${n}"><button class="speaker" onclick="speak('${numberToSpanish(n)}')">🔊</button><div>Escucha y coloca</div></div>`).join('')}</div></div></div>`;document.querySelectorAll('.drag-num').forEach(el=>makeDrag(el,onDropBox));}
-function onDropBox(el,x,y,rect){let n=+el.dataset.num;let box=[...document.querySelectorAll('.sound-box')].find(b=>pointIn(x,y,b))||[...document.querySelectorAll('.sound-box')].find(b=>overlap(el,b,rect));if(!box){returnPool(el);return;}if(n===+box.dataset.target&&!box.classList.contains('llena')){box.classList.add('llena');box.appendChild(el);el.style.position='relative';el.style.left='0';el.style.top='0';el.style.pointerEvents='none';state.data.assigned.add(n);progress(state.data.assigned.size,state.data.total);speak(`Muy bien ${state.childName}.`);if(state.data.assigned.size===state.data.total)setTimeout(finishSuccess,600);}else{speak('Revisa esta opción. Intenta de nuevo.');returnPool(el);}}
+function clearSoundBox(){
+  state.boxUtterance=null;
+  document.querySelectorAll('.sound-box.sonando').forEach(box=>{box.classList.remove('sonando');box.removeAttribute('aria-busy');box.querySelector('.audio-status').textContent='Escucha y coloca';});
+}
+function playSoundBox(button){
+  const box=button.closest('.sound-box'),u=speak(numberToSpanish(+box.dataset.target));if(!u)return;
+  state.boxUtterance=u;
+  const mark=()=>{if(state.boxUtterance!==u||!box.isConnected)return;box.classList.add('sonando');box.setAttribute('aria-busy','true');box.querySelector('.audio-status').textContent='Sonando…';};
+  const done=()=>{if(state.boxUtterance===u)clearSoundBox();};
+  mark();u.addEventListener('start',mark);u.addEventListener('end',done);u.addEventListener('error',done);
+}
+function startMode3(){
+  stopAudio();clearTimeout(state.boxFinishTimer);
+  const nums=sample(state.numbers,+document.getElementById('m3Count').value),colors=[['#fef3c7','#e8af27'],['#dbeafe','#6099e8'],['#fce7f3','#e988b9'],['#dcfce7','#65ba80'],['#ede9fe','#a48ae4'],['#ffedd5','#eaa265']];
+  state.data={numbers:nums,assigned:new Set(),total:nums.length};
+  setGame('📦 Modo 3: Cajas con sonido','Escucha una caja de abajo y arrastra hasta ella el número de arriba.');
+  document.getElementById('progressPill').classList.remove('oculto');progress(0,nums.length);
+  document.getElementById('gameContent').innerHTML=`<div class="box-game"><section class="pool"><h2>🔢 Números</h2><div class="pool-items" id="poolItems">${shuffle(nums).map((n,i)=>`<div class="number-slot" data-number="${n}"><div class="drag-num" data-num="${n}" style="--number-bg:${colors[i%colors.length][0]};--number-border:${colors[i%colors.length][1]}">${n}</div></div>`).join('')}</div></section><section class="cajas"><h2>🔊 Cajas con sonido</h2><div class="grid-cajas">${nums.map((n,i)=>`<div class="sound-box" data-target="${n}"><button class="speaker" aria-label="Escuchar caja ${i+1}" onclick="playSoundBox(this)">🔊</button><div class="audio-status">Escucha y coloca</div></div>`).join('')}</div></section></div>`;
+  document.querySelectorAll('.drag-num').forEach(el=>makeDrag(el,onDropBox));
+}
+function onDropBox(el,x,y,rect){
+  const n=+el.dataset.num,box=[...document.querySelectorAll('.sound-box')].find(b=>pointIn(x,y,b))||[...document.querySelectorAll('.sound-box')].find(b=>overlap(el,b,rect));
+  if(!box){returnPool(el);return;}
+  if(n===+box.dataset.target&&!box.classList.contains('llena')){
+    box.classList.add('llena');box.appendChild(el);el.style.position='relative';el.style.left='0';el.style.top='0';el.style.pointerEvents='none';el.onpointerdown=null;
+    state.data.assigned.add(n);progress(state.data.assigned.size,state.data.total);speak(`Muy bien ${state.childName}.`);
+    if(state.data.assigned.size===state.data.total){const data=state.data;state.boxFinishTimer=setTimeout(()=>{if(state.mode===3&&state.data===data&&document.getElementById('game').classList.contains('activa'))finishSuccess();},600);}
+  }else{speak('Revisa esta opción. Intenta de nuevo.');returnPool(el);}
+}
 function startMode4(){let nums=sample(state.numbers,+document.getElementById('m4Count').value);state.data={numbers:nums,index:0,answer:'',done:0,total:nums.length,key:document.getElementById('m4Key').value,hints:document.getElementById('m4Hint').value==='yes'};setGame('✍️ Modo 4: Escritura','Observa el número y forma su nombre con el teclado virtual.');document.getElementById('progressPill').classList.remove('oculto');renderWrite();}
 function renderWrite(){let d=state.data;if(d.index>=d.numbers.length){finishSuccess();return;}let n=d.numbers[d.index],letters=(d.key==='qwerty'?'qwertyuiopasdfghjklñzxcvbnm':'abcdefghijklmnñopqrstuvwxyz').split('');document.getElementById('gameContent').innerHTML=`<div class="write-layout"><div class="big-card"><div class="big-num">${n}</div><button class="btn orange small" onclick="speak('${numberToSpanish(n)}')">🔊 Escuchar</button></div><div class="tarjeta"><h2>Escribe el nombre</h2><div id="answer" class="answer">${d.answer||'_'}</div><div class="keyboard">${letters.map(ch=>`<button class="key" data-key="${ch}" onclick="typeLetter('${ch}')">${ch}</button>`).join('')}<button class="key wide" onclick="typeLetter(' ')">espacio</button><button class="key del wide" onclick="deleteLetter()">borrar</button><button class="key check wide" onclick="checkWrite()">revisar</button></div></div></div>`;progress(d.done,d.total);}
 function typeLetter(ch){state.data.answer+=ch;document.getElementById('answer').textContent=state.data.answer||'_';scheduleHint();}
@@ -688,7 +728,7 @@ function place(el,x,y){el.dataset.x=x;el.dataset.y=y;el.style.left='0';el.style.
 function overlap(a,b,rect){if(!a||!b)return false;let ra=rect||a.getBoundingClientRect(),rb=b.getBoundingClientRect(),cx=ra.left+ra.width/2,cy=ra.top+ra.height/2;return cx>=rb.left&&cx<=rb.right&&cy>=rb.top&&cy<=rb.bottom;}
 function pointIn(x,y,b){if(x==null||y==null||!b)return false;let r=b.getBoundingClientRect();return x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom;}
 function returnRandom(el){let p=document.getElementById('corral');el.style.position='absolute';el.style.width='';el.style.height='';p.appendChild(el);const destination=cowDestination(el);el.dataset.facing=destination.x<Number(el.dataset.x)?'left':'right';el.style.transition='transform .65s ease';setCowMotion(el,true);place(el,destination.x,destination.y);}
-function returnPool(el){let p=document.getElementById('poolItems');if(p){p.appendChild(el);el.style.position='relative';el.style.width='';el.style.height='';el.style.left='0';el.style.top='0';}}
+function returnPool(el){let p=document.querySelector(`.number-slot[data-number="${el.dataset.num}"]`)||document.getElementById('poolItems');if(p){p.appendChild(el);el.style.position='relative';el.style.width='';el.style.height='';el.style.left='0';el.style.top='0';}}
 function stopVictory(){
   const run=victoryRun;victoryRun=null;
   if(run){run.timers.forEach(clearTimeout);run.layer.remove();}

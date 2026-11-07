@@ -19,3 +19,5 @@ La celebración del pareo usa un único lienzo, dibujos reutilizables y sonidos 
 El archivo `../reconocer_numeros.html` mantiene el acceso desde los enlaces anteriores mediante una redirección.
 
 Los números de las vacas se muestran sin recuadro, con cifras oscuras y contorno blanco de alto contraste; su tamaño se adapta a las cifras y al espacio de cada plaza del corral.
+
+En Cajas con sonido, los números de colores están arriba y conservan su espacio durante toda la ronda. Las cajas de audio están abajo y se resaltan durante la reproducción; el resaltado se limpia al terminar, interrumpir el audio o salir.
