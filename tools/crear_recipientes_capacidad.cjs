@@ -53,7 +53,12 @@ const escenas=definiciones.flatMap((original,i)=>[original,...[3,2,1].map(d=>{
   const orden=[0,1,2].sort((a,b)=>capacidades[a]-capacidades[b]);
   const nuevas=[0,0,0],agua=[0,0,0],base=300+(i%3)*100;
   orden.forEach((fuente,rango)=>{nuevas[fuente]=base+rango*d*100;agua[fuente]=nuevas[fuente]-200;});
-  return [`${id}-d${d}`,nombre,formas,nuevas,agua,alturas,d];
+  // Misma forma y anchura: la altura crece en proporción a la capacidad.
+  // Así, 3 vasitos producen una diferencia visual mayor que 2 o 1.
+  const forma=formas[i%3],alturaReferencia=alturas[i%3];
+  const formasNivel=[forma,forma,forma],alturasNivel=nuevas.map(v=>alturaReferencia*v/500);
+  const titulos={vaso:'Vasos',jarra:'Jarras',botella:'Botellas',cuenco:'Cuencos',taza:'Tazas',matraz:'Matraces'};
+  return [`${id}-d${d}`,`${titulos[forma]} de distinta capacidad`,formasNivel,nuevas,agua,alturasNivel,d];
 })]);
 const catalogo=escenas.map(([id,nombre,formas,capacidades,agua,alturas,diferenciaVasos])=>{
   if(new Set(capacidades).size!==3||new Set(agua).size!==3)throw Error('Respuestas ambiguas: '+id);

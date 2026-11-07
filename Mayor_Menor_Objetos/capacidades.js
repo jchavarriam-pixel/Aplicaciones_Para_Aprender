@@ -48,7 +48,7 @@ window.EJERCICIOS_CAPACIDAD = [
   },
   {
     "id": "capacidad-vasos-d3",
-    "nombre": "Vasos de tres tamaños",
+    "nombre": "Vasos de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -70,31 +70,31 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "vaso",
         "capacidadMl": 300,
         "aguaMl": 100,
-        "alturaCm": 7,
-        "radioCm": 4.1842,
+        "alturaCm": 4.2,
+        "radioCm": 5.4018,
         "nivel": 0.3977
       },
       {
         "forma": "vaso",
         "capacidadMl": 600,
         "aguaMl": 400,
-        "alturaCm": 12,
-        "radioCm": 4.5195,
+        "alturaCm": 8.4,
+        "radioCm": 5.4018,
         "nivel": 0.7222
       },
       {
         "forma": "vaso",
         "capacidadMl": 900,
         "aguaMl": 700,
-        "alturaCm": 18,
-        "radioCm": 4.5195,
+        "alturaCm": 12.6,
+        "radioCm": 5.4018,
         "nivel": 0.8191
       }
     ]
   },
   {
     "id": "capacidad-vasos-d2",
-    "nombre": "Vasos de tres tamaños",
+    "nombre": "Vasos de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -116,31 +116,31 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "vaso",
         "capacidadMl": 300,
         "aguaMl": 100,
-        "alturaCm": 7,
-        "radioCm": 4.1842,
+        "alturaCm": 4.2,
+        "radioCm": 5.4018,
         "nivel": 0.3977
       },
       {
         "forma": "vaso",
         "capacidadMl": 500,
         "aguaMl": 300,
-        "alturaCm": 12,
-        "radioCm": 4.1257,
+        "alturaCm": 7,
+        "radioCm": 5.4018,
         "nivel": 0.6616
       },
       {
         "forma": "vaso",
         "capacidadMl": 700,
         "aguaMl": 500,
-        "alturaCm": 18,
-        "radioCm": 3.9858,
+        "alturaCm": 9.8,
+        "radioCm": 5.4018,
         "nivel": 0.7643
       }
     ]
   },
   {
     "id": "capacidad-vasos-d1",
-    "nombre": "Vasos de tres tamaños",
+    "nombre": "Vasos de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -162,24 +162,24 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "vaso",
         "capacidadMl": 300,
         "aguaMl": 100,
-        "alturaCm": 7,
-        "radioCm": 4.1842,
+        "alturaCm": 4.2,
+        "radioCm": 5.4018,
         "nivel": 0.3977
       },
       {
         "forma": "vaso",
         "capacidadMl": 400,
         "aguaMl": 200,
-        "alturaCm": 12,
-        "radioCm": 3.6901,
+        "alturaCm": 5.6,
+        "radioCm": 5.4018,
         "nivel": 0.567
       },
       {
         "forma": "vaso",
         "capacidadMl": 500,
         "aguaMl": 300,
-        "alturaCm": 18,
-        "radioCm": 3.3686,
+        "alturaCm": 7,
+        "radioCm": 5.4018,
         "nivel": 0.6616
       }
     ]
@@ -232,7 +232,7 @@ window.EJERCICIOS_CAPACIDAD = [
   },
   {
     "id": "capacidad-jarras-d3",
-    "nombre": "Jarras con distinta cantidad de agua",
+    "nombre": "Jarras de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -254,31 +254,31 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "jarra",
         "capacidadMl": 400,
         "aguaMl": 200,
-        "alturaCm": 8,
-        "radioCm": 4.3309,
+        "alturaCm": 10.4,
+        "radioCm": 3.7984,
         "nivel": 0.5432
       },
       {
         "forma": "jarra",
         "capacidadMl": 700,
         "aguaMl": 500,
-        "alturaCm": 13,
-        "radioCm": 4.4944,
+        "alturaCm": 18.2,
+        "radioCm": 3.7984,
         "nivel": 0.7475
       },
       {
         "forma": "jarra",
         "capacidadMl": 1000,
         "aguaMl": 800,
-        "alturaCm": 20,
-        "radioCm": 4.3309,
+        "alturaCm": 26,
+        "radioCm": 3.7984,
         "nivel": 0.8255
       }
     ]
   },
   {
     "id": "capacidad-jarras-d2",
-    "nombre": "Jarras con distinta cantidad de agua",
+    "nombre": "Jarras de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -300,31 +300,31 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "jarra",
         "capacidadMl": 400,
         "aguaMl": 200,
-        "alturaCm": 8,
-        "radioCm": 4.3309,
+        "alturaCm": 10.4,
+        "radioCm": 3.7984,
         "nivel": 0.5432
       },
       {
         "forma": "jarra",
         "capacidadMl": 600,
         "aguaMl": 400,
-        "alturaCm": 13,
-        "radioCm": 4.161,
+        "alturaCm": 15.6,
+        "radioCm": 3.7984,
         "nivel": 0.7033
       },
       {
         "forma": "jarra",
         "capacidadMl": 800,
         "aguaMl": 600,
-        "alturaCm": 20,
-        "radioCm": 3.8737,
+        "alturaCm": 20.8,
+        "radioCm": 3.7984,
         "nivel": 0.7802
       }
     ]
   },
   {
     "id": "capacidad-jarras-d1",
-    "nombre": "Jarras con distinta cantidad de agua",
+    "nombre": "Jarras de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -346,8 +346,8 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "jarra",
         "capacidadMl": 400,
         "aguaMl": 200,
-        "alturaCm": 8,
-        "radioCm": 4.3309,
+        "alturaCm": 10.4,
+        "radioCm": 3.7984,
         "nivel": 0.5432
       },
       {
@@ -362,8 +362,8 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "jarra",
         "capacidadMl": 600,
         "aguaMl": 400,
-        "alturaCm": 20,
-        "radioCm": 3.3547,
+        "alturaCm": 15.6,
+        "radioCm": 3.7984,
         "nivel": 0.7033
       }
     ]
@@ -416,7 +416,7 @@ window.EJERCICIOS_CAPACIDAD = [
   },
   {
     "id": "capacidad-botellas-d3",
-    "nombre": "Botellas altas y anchas",
+    "nombre": "Botellas de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -438,16 +438,16 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "botella",
         "capacidadMl": 800,
         "aguaMl": 600,
-        "alturaCm": 20,
-        "radioCm": 4.0759,
+        "alturaCm": 35.2,
+        "radioCm": 3.0723,
         "nivel": 0.5748
       },
       {
         "forma": "botella",
         "capacidadMl": 1100,
         "aguaMl": 900,
-        "alturaCm": 16,
-        "radioCm": 5.3435,
+        "alturaCm": 48.4,
+        "radioCm": 3.0723,
         "nivel": 0.6271
       },
       {
@@ -462,7 +462,7 @@ window.EJERCICIOS_CAPACIDAD = [
   },
   {
     "id": "capacidad-botellas-d2",
-    "nombre": "Botellas altas y anchas",
+    "nombre": "Botellas de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -484,16 +484,16 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "botella",
         "capacidadMl": 700,
         "aguaMl": 500,
-        "alturaCm": 20,
-        "radioCm": 3.8127,
+        "alturaCm": 30.8,
+        "radioCm": 3.0723,
         "nivel": 0.5474
       },
       {
         "forma": "botella",
         "capacidadMl": 900,
         "aguaMl": 700,
-        "alturaCm": 16,
-        "radioCm": 4.8334,
+        "alturaCm": 39.6,
+        "radioCm": 3.0723,
         "nivel": 0.5961
       },
       {
@@ -508,7 +508,7 @@ window.EJERCICIOS_CAPACIDAD = [
   },
   {
     "id": "capacidad-botellas-d1",
-    "nombre": "Botellas altas y anchas",
+    "nombre": "Botellas de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -530,16 +530,16 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "botella",
         "capacidadMl": 600,
         "aguaMl": 400,
-        "alturaCm": 20,
-        "radioCm": 3.5298,
+        "alturaCm": 26.4,
+        "radioCm": 3.0723,
         "nivel": 0.5109
       },
       {
         "forma": "botella",
         "capacidadMl": 700,
         "aguaMl": 500,
-        "alturaCm": 16,
-        "radioCm": 4.2627,
+        "alturaCm": 30.8,
+        "radioCm": 3.0723,
         "nivel": 0.5474
       },
       {
@@ -600,7 +600,7 @@ window.EJERCICIOS_CAPACIDAD = [
   },
   {
     "id": "capacidad-formas-d3",
-    "nombre": "Un vaso, un cuenco y una botella",
+    "nombre": "Vasos de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -622,31 +622,31 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "vaso",
         "capacidadMl": 300,
         "aguaMl": 100,
-        "alturaCm": 18,
-        "radioCm": 2.6093,
+        "alturaCm": 10.8,
+        "radioCm": 3.3686,
         "nivel": 0.3977
       },
       {
-        "forma": "cuenco",
+        "forma": "vaso",
         "capacidadMl": 900,
         "aguaMl": 700,
-        "alturaCm": 6,
-        "radioCm": 8.8472,
-        "nivel": 0.8564
+        "alturaCm": 32.4,
+        "radioCm": 3.3686,
+        "nivel": 0.8191
       },
       {
-        "forma": "botella",
+        "forma": "vaso",
         "capacidadMl": 600,
         "aguaMl": 400,
-        "alturaCm": 20,
-        "radioCm": 3.5298,
-        "nivel": 0.5109
+        "alturaCm": 21.6,
+        "radioCm": 3.3686,
+        "nivel": 0.7222
       }
     ]
   },
   {
     "id": "capacidad-formas-d2",
-    "nombre": "Un vaso, un cuenco y una botella",
+    "nombre": "Vasos de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -668,31 +668,31 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "vaso",
         "capacidadMl": 300,
         "aguaMl": 100,
-        "alturaCm": 18,
-        "radioCm": 2.6093,
+        "alturaCm": 10.8,
+        "radioCm": 3.3686,
         "nivel": 0.3977
       },
       {
-        "forma": "cuenco",
+        "forma": "vaso",
         "capacidadMl": 700,
         "aguaMl": 500,
-        "alturaCm": 6,
-        "radioCm": 7.8025,
-        "nivel": 0.8119
+        "alturaCm": 25.2,
+        "radioCm": 3.3686,
+        "nivel": 0.7643
       },
       {
-        "forma": "botella",
+        "forma": "vaso",
         "capacidadMl": 500,
         "aguaMl": 300,
-        "alturaCm": 20,
-        "radioCm": 3.2223,
-        "nivel": 0.4598
+        "alturaCm": 18,
+        "radioCm": 3.3686,
+        "nivel": 0.6616
       }
     ]
   },
   {
     "id": "capacidad-formas-d1",
-    "nombre": "Un vaso, un cuenco y una botella",
+    "nombre": "Vasos de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -714,25 +714,25 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "vaso",
         "capacidadMl": 300,
         "aguaMl": 100,
-        "alturaCm": 18,
-        "radioCm": 2.6093,
+        "alturaCm": 10.8,
+        "radioCm": 3.3686,
         "nivel": 0.3977
       },
       {
-        "forma": "cuenco",
+        "forma": "vaso",
         "capacidadMl": 500,
         "aguaMl": 300,
-        "alturaCm": 6,
-        "radioCm": 6.5943,
-        "nivel": 0.7269
+        "alturaCm": 18,
+        "radioCm": 3.3686,
+        "nivel": 0.6616
       },
       {
-        "forma": "botella",
+        "forma": "vaso",
         "capacidadMl": 400,
         "aguaMl": 200,
-        "alturaCm": 20,
-        "radioCm": 2.8821,
-        "nivel": 0.3832
+        "alturaCm": 14.4,
+        "radioCm": 3.3686,
+        "nivel": 0.567
       }
     ]
   },
@@ -784,7 +784,7 @@ window.EJERCICIOS_CAPACIDAD = [
   },
   {
     "id": "capacidad-cuencos-d3",
-    "nombre": "Cuencos de distintas capacidades",
+    "nombre": "Cuencos de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -806,31 +806,31 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "cuenco",
         "capacidadMl": 400,
         "aguaMl": 200,
-        "alturaCm": 5,
-        "radioCm": 6.4611,
+        "alturaCm": 6.4,
+        "radioCm": 5.7108,
         "nivel": 0.6462
       },
       {
         "forma": "cuenco",
         "capacidadMl": 1000,
         "aguaMl": 800,
-        "alturaCm": 8,
-        "radioCm": 8.0764,
+        "alturaCm": 16,
+        "radioCm": 5.7108,
         "nivel": 0.8716
       },
       {
         "forma": "cuenco",
         "capacidadMl": 700,
         "aguaMl": 500,
-        "alturaCm": 6,
-        "radioCm": 7.8025,
+        "alturaCm": 11.2,
+        "radioCm": 5.7108,
         "nivel": 0.8119
       }
     ]
   },
   {
     "id": "capacidad-cuencos-d2",
-    "nombre": "Cuencos de distintas capacidades",
+    "nombre": "Cuencos de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -852,31 +852,31 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "cuenco",
         "capacidadMl": 400,
         "aguaMl": 200,
-        "alturaCm": 5,
-        "radioCm": 6.4611,
+        "alturaCm": 6.4,
+        "radioCm": 5.7108,
         "nivel": 0.6462
       },
       {
         "forma": "cuenco",
         "capacidadMl": 800,
         "aguaMl": 600,
-        "alturaCm": 8,
-        "radioCm": 7.2237,
+        "alturaCm": 12.8,
+        "radioCm": 5.7108,
         "nivel": 0.8372
       },
       {
         "forma": "cuenco",
         "capacidadMl": 600,
         "aguaMl": 400,
-        "alturaCm": 6,
-        "radioCm": 7.2237,
+        "alturaCm": 9.6,
+        "radioCm": 5.7108,
         "nivel": 0.7773
       }
     ]
   },
   {
     "id": "capacidad-cuencos-d1",
-    "nombre": "Cuencos de distintas capacidades",
+    "nombre": "Cuencos de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -898,24 +898,24 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "cuenco",
         "capacidadMl": 400,
         "aguaMl": 200,
-        "alturaCm": 5,
-        "radioCm": 6.4611,
+        "alturaCm": 6.4,
+        "radioCm": 5.7108,
         "nivel": 0.6462
       },
       {
         "forma": "cuenco",
         "capacidadMl": 600,
         "aguaMl": 400,
-        "alturaCm": 8,
-        "radioCm": 6.2559,
+        "alturaCm": 9.6,
+        "radioCm": 5.7108,
         "nivel": 0.7773
       },
       {
         "forma": "cuenco",
         "capacidadMl": 500,
         "aguaMl": 300,
-        "alturaCm": 6,
-        "radioCm": 6.5943,
+        "alturaCm": 8,
+        "radioCm": 5.7108,
         "nivel": 0.7269
       }
     ]
@@ -968,7 +968,7 @@ window.EJERCICIOS_CAPACIDAD = [
   },
   {
     "id": "capacidad-lleno-parcial-d3",
-    "nombre": "Lleno y parcialmente llenos",
+    "nombre": "Botellas de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -987,34 +987,34 @@ window.EJERCICIOS_CAPACIDAD = [
     ],
     "recipientes": [
       {
-        "forma": "jarra",
+        "forma": "botella",
         "capacidadMl": 1100,
         "aguaMl": 900,
-        "alturaCm": 16,
-        "radioCm": 5.0784,
-        "nivel": 0.8417
+        "alturaCm": 52.8,
+        "radioCm": 2.9415,
+        "nivel": 0.6271
       },
       {
-        "forma": "vaso",
+        "forma": "botella",
         "capacidadMl": 500,
         "aguaMl": 300,
-        "alturaCm": 10,
-        "radioCm": 4.5195,
-        "nivel": 0.6616
+        "alturaCm": 24,
+        "radioCm": 2.9415,
+        "nivel": 0.4598
       },
       {
         "forma": "botella",
         "capacidadMl": 800,
         "aguaMl": 600,
-        "alturaCm": 24,
-        "radioCm": 3.7208,
+        "alturaCm": 38.4,
+        "radioCm": 2.9415,
         "nivel": 0.5748
       }
     ]
   },
   {
     "id": "capacidad-lleno-parcial-d2",
-    "nombre": "Lleno y parcialmente llenos",
+    "nombre": "Botellas de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -1033,34 +1033,34 @@ window.EJERCICIOS_CAPACIDAD = [
     ],
     "recipientes": [
       {
-        "forma": "jarra",
+        "forma": "botella",
         "capacidadMl": 900,
         "aguaMl": 700,
-        "alturaCm": 16,
-        "radioCm": 4.5936,
-        "nivel": 0.8054
+        "alturaCm": 43.2,
+        "radioCm": 2.9415,
+        "nivel": 0.5961
       },
       {
-        "forma": "vaso",
+        "forma": "botella",
         "capacidadMl": 500,
         "aguaMl": 300,
-        "alturaCm": 10,
-        "radioCm": 4.5195,
-        "nivel": 0.6616
+        "alturaCm": 24,
+        "radioCm": 2.9415,
+        "nivel": 0.4598
       },
       {
         "forma": "botella",
         "capacidadMl": 700,
         "aguaMl": 500,
-        "alturaCm": 24,
-        "radioCm": 3.4805,
+        "alturaCm": 33.6,
+        "radioCm": 2.9415,
         "nivel": 0.5474
       }
     ]
   },
   {
     "id": "capacidad-lleno-parcial-d1",
-    "nombre": "Lleno y parcialmente llenos",
+    "nombre": "Botellas de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -1079,27 +1079,27 @@ window.EJERCICIOS_CAPACIDAD = [
     ],
     "recipientes": [
       {
-        "forma": "jarra",
+        "forma": "botella",
         "capacidadMl": 700,
         "aguaMl": 500,
-        "alturaCm": 16,
-        "radioCm": 4.0512,
-        "nivel": 0.7475
+        "alturaCm": 33.6,
+        "radioCm": 2.9415,
+        "nivel": 0.5474
       },
       {
-        "forma": "vaso",
+        "forma": "botella",
         "capacidadMl": 500,
         "aguaMl": 300,
-        "alturaCm": 10,
-        "radioCm": 4.5195,
-        "nivel": 0.6616
+        "alturaCm": 24,
+        "radioCm": 2.9415,
+        "nivel": 0.4598
       },
       {
         "forma": "botella",
         "capacidadMl": 600,
         "aguaMl": 400,
-        "alturaCm": 24,
-        "radioCm": 3.2223,
+        "alturaCm": 28.8,
+        "radioCm": 2.9415,
         "nivel": 0.5109
       }
     ]
@@ -1152,7 +1152,7 @@ window.EJERCICIOS_CAPACIDAD = [
   },
   {
     "id": "capacidad-aberturas-d3",
-    "nombre": "Recipientes de formas diferentes",
+    "nombre": "Vasos de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -1174,31 +1174,31 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "vaso",
         "capacidadMl": 300,
         "aguaMl": 100,
-        "alturaCm": 14,
-        "radioCm": 2.9587,
+        "alturaCm": 8.4,
+        "radioCm": 3.8196,
         "nivel": 0.3977
       },
       {
-        "forma": "matraz",
+        "forma": "vaso",
         "capacidadMl": 900,
         "aguaMl": 700,
-        "alturaCm": 18,
-        "radioCm": 5.0306,
-        "nivel": 0.5227
+        "alturaCm": 25.2,
+        "radioCm": 3.8196,
+        "nivel": 0.8191
       },
       {
-        "forma": "jarra",
+        "forma": "vaso",
         "capacidadMl": 600,
         "aguaMl": 400,
-        "alturaCm": 12,
-        "radioCm": 4.3309,
-        "nivel": 0.7033
+        "alturaCm": 16.8,
+        "radioCm": 3.8196,
+        "nivel": 0.7222
       }
     ]
   },
   {
     "id": "capacidad-aberturas-d2",
-    "nombre": "Recipientes de formas diferentes",
+    "nombre": "Vasos de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -1220,31 +1220,31 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "vaso",
         "capacidadMl": 300,
         "aguaMl": 100,
-        "alturaCm": 14,
-        "radioCm": 2.9587,
+        "alturaCm": 8.4,
+        "radioCm": 3.8196,
         "nivel": 0.3977
       },
       {
-        "forma": "matraz",
+        "forma": "vaso",
         "capacidadMl": 700,
         "aguaMl": 500,
-        "alturaCm": 18,
-        "radioCm": 4.4366,
-        "nivel": 0.4816
+        "alturaCm": 19.6,
+        "radioCm": 3.8196,
+        "nivel": 0.7643
       },
       {
-        "forma": "jarra",
+        "forma": "vaso",
         "capacidadMl": 500,
         "aguaMl": 300,
-        "alturaCm": 12,
-        "radioCm": 3.9535,
-        "nivel": 0.6403
+        "alturaCm": 14,
+        "radioCm": 3.8196,
+        "nivel": 0.6616
       }
     ]
   },
   {
     "id": "capacidad-aberturas-d1",
-    "nombre": "Recipientes de formas diferentes",
+    "nombre": "Vasos de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -1266,25 +1266,25 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "vaso",
         "capacidadMl": 300,
         "aguaMl": 100,
-        "alturaCm": 14,
-        "radioCm": 2.9587,
+        "alturaCm": 8.4,
+        "radioCm": 3.8196,
         "nivel": 0.3977
       },
       {
-        "forma": "matraz",
+        "forma": "vaso",
         "capacidadMl": 500,
         "aguaMl": 300,
-        "alturaCm": 18,
-        "radioCm": 3.7496,
-        "nivel": 0.4097
+        "alturaCm": 14,
+        "radioCm": 3.8196,
+        "nivel": 0.6616
       },
       {
-        "forma": "jarra",
+        "forma": "vaso",
         "capacidadMl": 400,
         "aguaMl": 200,
-        "alturaCm": 12,
-        "radioCm": 3.5361,
-        "nivel": 0.5432
+        "alturaCm": 11.2,
+        "radioCm": 3.8196,
+        "nivel": 0.567
       }
     ]
   },
@@ -1336,7 +1336,7 @@ window.EJERCICIOS_CAPACIDAD = [
   },
   {
     "id": "capacidad-tazas-d3",
-    "nombre": "Tazas de tres capacidades",
+    "nombre": "Tazas de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -1358,31 +1358,31 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "taza",
         "capacidadMl": 400,
         "aguaMl": 200,
-        "alturaCm": 5.5,
-        "radioCm": 4.8114,
+        "alturaCm": 7.2,
+        "radioCm": 4.2052,
         "nivel": 0.5
       },
       {
         "forma": "taza",
         "capacidadMl": 700,
         "aguaMl": 500,
-        "alturaCm": 9,
-        "radioCm": 4.9757,
+        "alturaCm": 12.6,
+        "radioCm": 4.2052,
         "nivel": 0.7143
       },
       {
         "forma": "taza",
         "capacidadMl": 1000,
         "aguaMl": 800,
-        "alturaCm": 14,
-        "radioCm": 4.7683,
+        "alturaCm": 18,
+        "radioCm": 4.2052,
         "nivel": 0.8
       }
     ]
   },
   {
     "id": "capacidad-tazas-d2",
-    "nombre": "Tazas de tres capacidades",
+    "nombre": "Tazas de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -1404,31 +1404,31 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "taza",
         "capacidadMl": 400,
         "aguaMl": 200,
-        "alturaCm": 5.5,
-        "radioCm": 4.8114,
+        "alturaCm": 7.2,
+        "radioCm": 4.2052,
         "nivel": 0.5
       },
       {
         "forma": "taza",
         "capacidadMl": 600,
         "aguaMl": 400,
-        "alturaCm": 9,
-        "radioCm": 4.6066,
+        "alturaCm": 10.8,
+        "radioCm": 4.2052,
         "nivel": 0.6667
       },
       {
         "forma": "taza",
         "capacidadMl": 800,
         "aguaMl": 600,
-        "alturaCm": 14,
-        "radioCm": 4.2649,
+        "alturaCm": 14.4,
+        "radioCm": 4.2052,
         "nivel": 0.75
       }
     ]
   },
   {
     "id": "capacidad-tazas-d1",
-    "nombre": "Tazas de tres capacidades",
+    "nombre": "Tazas de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -1450,8 +1450,8 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "taza",
         "capacidadMl": 400,
         "aguaMl": 200,
-        "alturaCm": 5.5,
-        "radioCm": 4.8114,
+        "alturaCm": 7.2,
+        "radioCm": 4.2052,
         "nivel": 0.5
       },
       {
@@ -1466,8 +1466,8 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "taza",
         "capacidadMl": 600,
         "aguaMl": 400,
-        "alturaCm": 14,
-        "radioCm": 3.6935,
+        "alturaCm": 10.8,
+        "radioCm": 4.2052,
         "nivel": 0.6667
       }
     ]
@@ -1520,7 +1520,7 @@ window.EJERCICIOS_CAPACIDAD = [
   },
   {
     "id": "capacidad-alturas-d3",
-    "nombre": "Una botella alta puede ser estrecha",
+    "nombre": "Botellas de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -1542,31 +1542,31 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "botella",
         "capacidadMl": 500,
         "aguaMl": 300,
-        "alturaCm": 22,
-        "radioCm": 3.0723,
+        "alturaCm": 18,
+        "radioCm": 3.3966,
         "nivel": 0.4598
       },
       {
         "forma": "botella",
         "capacidadMl": 800,
         "aguaMl": 600,
-        "alturaCm": 14,
-        "radioCm": 4.8716,
+        "alturaCm": 28.8,
+        "radioCm": 3.3966,
         "nivel": 0.5748
       },
       {
         "forma": "botella",
         "capacidadMl": 1100,
         "aguaMl": 900,
-        "alturaCm": 18,
-        "radioCm": 5.0379,
+        "alturaCm": 39.6,
+        "radioCm": 3.3966,
         "nivel": 0.6271
       }
     ]
   },
   {
     "id": "capacidad-alturas-d2",
-    "nombre": "Una botella alta puede ser estrecha",
+    "nombre": "Botellas de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -1588,31 +1588,31 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "botella",
         "capacidadMl": 500,
         "aguaMl": 300,
-        "alturaCm": 22,
-        "radioCm": 3.0723,
+        "alturaCm": 18,
+        "radioCm": 3.3966,
         "nivel": 0.4598
       },
       {
         "forma": "botella",
         "capacidadMl": 700,
         "aguaMl": 500,
-        "alturaCm": 14,
-        "radioCm": 4.557,
+        "alturaCm": 25.2,
+        "radioCm": 3.3966,
         "nivel": 0.5474
       },
       {
         "forma": "botella",
         "capacidadMl": 900,
         "aguaMl": 700,
-        "alturaCm": 18,
-        "radioCm": 4.557,
+        "alturaCm": 32.4,
+        "radioCm": 3.3966,
         "nivel": 0.5961
       }
     ]
   },
   {
     "id": "capacidad-alturas-d1",
-    "nombre": "Una botella alta puede ser estrecha",
+    "nombre": "Botellas de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -1634,24 +1634,24 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "botella",
         "capacidadMl": 500,
         "aguaMl": 300,
-        "alturaCm": 22,
-        "radioCm": 3.0723,
+        "alturaCm": 18,
+        "radioCm": 3.3966,
         "nivel": 0.4598
       },
       {
         "forma": "botella",
         "capacidadMl": 600,
         "aguaMl": 400,
-        "alturaCm": 14,
-        "radioCm": 4.219,
+        "alturaCm": 21.6,
+        "radioCm": 3.3966,
         "nivel": 0.5109
       },
       {
         "forma": "botella",
         "capacidadMl": 700,
         "aguaMl": 500,
-        "alturaCm": 18,
-        "radioCm": 4.0189,
+        "alturaCm": 25.2,
+        "radioCm": 3.3966,
         "nivel": 0.5474
       }
     ]
@@ -1704,7 +1704,7 @@ window.EJERCICIOS_CAPACIDAD = [
   },
   {
     "id": "capacidad-mezcla-d3",
-    "nombre": "Comparar agua y capacidad",
+    "nombre": "Tazas de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -1726,31 +1726,31 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "taza",
         "capacidadMl": 600,
         "aguaMl": 400,
-        "alturaCm": 10,
-        "radioCm": 4.3702,
+        "alturaCm": 12,
+        "radioCm": 3.9894,
         "nivel": 0.6667
       },
       {
-        "forma": "jarra",
+        "forma": "taza",
         "capacidadMl": 900,
         "aguaMl": 700,
-        "alturaCm": 16,
-        "radioCm": 4.5936,
-        "nivel": 0.8054
+        "alturaCm": 18,
+        "radioCm": 3.9894,
+        "nivel": 0.7778
       },
       {
-        "forma": "vaso",
+        "forma": "taza",
         "capacidadMl": 300,
         "aguaMl": 100,
-        "alturaCm": 12,
-        "radioCm": 3.1957,
-        "nivel": 0.3977
+        "alturaCm": 6,
+        "radioCm": 3.9894,
+        "nivel": 0.3333
       }
     ]
   },
   {
     "id": "capacidad-mezcla-d2",
-    "nombre": "Comparar agua y capacidad",
+    "nombre": "Tazas de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -1777,26 +1777,26 @@ window.EJERCICIOS_CAPACIDAD = [
         "nivel": 0.6
       },
       {
-        "forma": "jarra",
+        "forma": "taza",
         "capacidadMl": 700,
         "aguaMl": 500,
-        "alturaCm": 16,
-        "radioCm": 4.0512,
-        "nivel": 0.7475
+        "alturaCm": 14,
+        "radioCm": 3.9894,
+        "nivel": 0.7143
       },
       {
-        "forma": "vaso",
+        "forma": "taza",
         "capacidadMl": 300,
         "aguaMl": 100,
-        "alturaCm": 12,
-        "radioCm": 3.1957,
-        "nivel": 0.3977
+        "alturaCm": 6,
+        "radioCm": 3.9894,
+        "nivel": 0.3333
       }
     ]
   },
   {
     "id": "capacidad-mezcla-d1",
-    "nombre": "Comparar agua y capacidad",
+    "nombre": "Tazas de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -1818,25 +1818,25 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "taza",
         "capacidadMl": 400,
         "aguaMl": 200,
-        "alturaCm": 10,
-        "radioCm": 3.5682,
+        "alturaCm": 8,
+        "radioCm": 3.9894,
         "nivel": 0.5
       },
       {
-        "forma": "jarra",
+        "forma": "taza",
         "capacidadMl": 500,
         "aguaMl": 300,
-        "alturaCm": 16,
-        "radioCm": 3.4239,
-        "nivel": 0.6403
+        "alturaCm": 10,
+        "radioCm": 3.9894,
+        "nivel": 0.6
       },
       {
-        "forma": "vaso",
+        "forma": "taza",
         "capacidadMl": 300,
         "aguaMl": 100,
-        "alturaCm": 12,
-        "radioCm": 3.1957,
-        "nivel": 0.3977
+        "alturaCm": 6,
+        "radioCm": 3.9894,
+        "nivel": 0.3333
       }
     ]
   },
@@ -1888,7 +1888,7 @@ window.EJERCICIOS_CAPACIDAD = [
   },
   {
     "id": "capacidad-vacio-d3",
-    "nombre": "Un recipiente vacío y dos con agua",
+    "nombre": "Cuencos de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -1907,34 +1907,34 @@ window.EJERCICIOS_CAPACIDAD = [
     ],
     "recipientes": [
       {
-        "forma": "jarra",
+        "forma": "cuenco",
         "capacidadMl": 700,
         "aguaMl": 500,
         "alturaCm": 14,
-        "radioCm": 4.3309,
-        "nivel": 0.7475
+        "radioCm": 5.1079,
+        "nivel": 0.8119
       },
       {
         "forma": "cuenco",
         "capacidadMl": 1000,
         "aguaMl": 800,
-        "alturaCm": 10,
-        "radioCm": 7.2237,
+        "alturaCm": 20,
+        "radioCm": 5.1079,
         "nivel": 0.8716
       },
       {
-        "forma": "taza",
+        "forma": "cuenco",
         "capacidadMl": 400,
         "aguaMl": 200,
-        "alturaCm": 7,
-        "radioCm": 4.2649,
-        "nivel": 0.5
+        "alturaCm": 8,
+        "radioCm": 5.1079,
+        "nivel": 0.6462
       }
     ]
   },
   {
     "id": "capacidad-vacio-d2",
-    "nombre": "Un recipiente vacío y dos con agua",
+    "nombre": "Cuencos de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -1953,34 +1953,34 @@ window.EJERCICIOS_CAPACIDAD = [
     ],
     "recipientes": [
       {
-        "forma": "jarra",
+        "forma": "cuenco",
         "capacidadMl": 600,
         "aguaMl": 400,
-        "alturaCm": 14,
-        "radioCm": 4.0096,
-        "nivel": 0.7033
+        "alturaCm": 12,
+        "radioCm": 5.1079,
+        "nivel": 0.7773
       },
       {
         "forma": "cuenco",
         "capacidadMl": 800,
         "aguaMl": 600,
-        "alturaCm": 10,
-        "radioCm": 6.4611,
+        "alturaCm": 16,
+        "radioCm": 5.1079,
         "nivel": 0.8372
       },
       {
-        "forma": "taza",
+        "forma": "cuenco",
         "capacidadMl": 400,
         "aguaMl": 200,
-        "alturaCm": 7,
-        "radioCm": 4.2649,
-        "nivel": 0.5
+        "alturaCm": 8,
+        "radioCm": 5.1079,
+        "nivel": 0.6462
       }
     ]
   },
   {
     "id": "capacidad-vacio-d1",
-    "nombre": "Un recipiente vacío y dos con agua",
+    "nombre": "Cuencos de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -1999,28 +1999,28 @@ window.EJERCICIOS_CAPACIDAD = [
     ],
     "recipientes": [
       {
-        "forma": "jarra",
+        "forma": "cuenco",
         "capacidadMl": 500,
         "aguaMl": 300,
-        "alturaCm": 14,
-        "radioCm": 3.6603,
-        "nivel": 0.6403
+        "alturaCm": 10,
+        "radioCm": 5.1079,
+        "nivel": 0.7269
       },
       {
         "forma": "cuenco",
         "capacidadMl": 600,
         "aguaMl": 400,
-        "alturaCm": 10,
-        "radioCm": 5.5955,
+        "alturaCm": 12,
+        "radioCm": 5.1079,
         "nivel": 0.7773
       },
       {
-        "forma": "taza",
+        "forma": "cuenco",
         "capacidadMl": 400,
         "aguaMl": 200,
-        "alturaCm": 7,
-        "radioCm": 4.2649,
-        "nivel": 0.5
+        "alturaCm": 8,
+        "radioCm": 5.1079,
+        "nivel": 0.6462
       }
     ]
   },
@@ -2072,7 +2072,7 @@ window.EJERCICIOS_CAPACIDAD = [
   },
   {
     "id": "capacidad-matraces-d3",
-    "nombre": "Matraces con distinta capacidad",
+    "nombre": "Matraces de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -2094,31 +2094,31 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "matraz",
         "capacidadMl": 500,
         "aguaMl": 300,
-        "alturaCm": 12,
-        "radioCm": 4.5923,
+        "alturaCm": 27,
+        "radioCm": 3.0616,
         "nivel": 0.4097
       },
       {
         "forma": "matraz",
         "capacidadMl": 800,
         "aguaMl": 600,
-        "alturaCm": 20,
-        "radioCm": 4.4995,
+        "alturaCm": 43.2,
+        "radioCm": 3.0616,
         "nivel": 0.5041
       },
       {
         "forma": "matraz",
         "capacidadMl": 1100,
         "aguaMl": 900,
-        "alturaCm": 27,
-        "radioCm": 4.541,
+        "alturaCm": 59.4,
+        "radioCm": 3.0616,
         "nivel": 0.5534
       }
     ]
   },
   {
     "id": "capacidad-matraces-d2",
-    "nombre": "Matraces con distinta capacidad",
+    "nombre": "Matraces de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -2140,31 +2140,31 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "matraz",
         "capacidadMl": 500,
         "aguaMl": 300,
-        "alturaCm": 12,
-        "radioCm": 4.5923,
+        "alturaCm": 27,
+        "radioCm": 3.0616,
         "nivel": 0.4097
       },
       {
         "forma": "matraz",
         "capacidadMl": 700,
         "aguaMl": 500,
-        "alturaCm": 20,
-        "radioCm": 4.2089,
+        "alturaCm": 37.8,
+        "radioCm": 3.0616,
         "nivel": 0.4816
       },
       {
         "forma": "matraz",
         "capacidadMl": 900,
         "aguaMl": 700,
-        "alturaCm": 27,
-        "radioCm": 4.1075,
+        "alturaCm": 48.6,
+        "radioCm": 3.0616,
         "nivel": 0.5227
       }
     ]
   },
   {
     "id": "capacidad-matraces-d1",
-    "nombre": "Matraces con distinta capacidad",
+    "nombre": "Matraces de distinta capacidad",
     "categoria": "capacidad",
     "tipo": "paneles",
     "columnas": 3,
@@ -2186,24 +2186,24 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "matraz",
         "capacidadMl": 500,
         "aguaMl": 300,
-        "alturaCm": 12,
-        "radioCm": 4.5923,
+        "alturaCm": 27,
+        "radioCm": 3.0616,
         "nivel": 0.4097
       },
       {
         "forma": "matraz",
         "capacidadMl": 600,
         "aguaMl": 400,
-        "alturaCm": 20,
-        "radioCm": 3.8967,
+        "alturaCm": 32.4,
+        "radioCm": 3.0616,
         "nivel": 0.4517
       },
       {
         "forma": "matraz",
         "capacidadMl": 700,
         "aguaMl": 500,
-        "alturaCm": 27,
-        "radioCm": 3.6225,
+        "alturaCm": 37.8,
+        "radioCm": 3.0616,
         "nivel": 0.4816
       }
     ]
