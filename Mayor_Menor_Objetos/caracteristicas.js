@@ -115,7 +115,7 @@ window.CATEGORIAS_OBJETOS = [
     "id": "inclinacion",
     "nombre": "Inclinación",
     "mayor": "inclinado",
-    "menor": "vertical",
+    "menor": "derecho",
     "ayuda": "Compara cuánto se inclina cada objeto."
   },
   {

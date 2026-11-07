@@ -63,7 +63,7 @@ function geometriaOpciones(item){
   const ancho=Math.max(...objetos.map(o=>o.r.w*o.escala));
   const arriba=Math.max(...objetos.map(o=>(o.r.base-o.r.y+1)*o.escala));
   const abajo=Math.max(...objetos.map(o=>(o.r.y+o.r.h-o.r.base-1)*o.escala));
-  const margen=Math.max(7,Math.max(ancho,arriba+abajo)*.065),w=ancho+2*margen,h=arriba+abajo+2*margen;
+  const margen=Math.max(7,Math.max(ancho,arriba+abajo)*(item.asset.categoria==='clima'?.018:.065)),w=ancho+2*margen,h=arriba+abajo+2*margen;
   return {m,objetos,ancho,arriba,abajo,margen,w,h,base:(margen+arriba)/h*100};
 }
 function opcionHTML(item,g,o,i){
@@ -80,6 +80,7 @@ function mostrar(){
   $('zonaImagen').style.setProperty('--opciones',item.opciones.length);
   const geometria=geometriaOpciones(item);
   $('zonaImagen').classList.toggle('ilustracion-baja',geometria.w/geometria.h>3);
+  $('zonaImagen').classList.toggle('escenas-clima',a.categoria==='clima');
   $('zonaImagen').innerHTML=item.opciones.map((o,i)=>opcionHTML(item,geometria,o,i)).join('');
   document.querySelectorAll('.tarjeta-opcion').forEach((b,i)=>b.addEventListener('click',()=>elegir(i)));
   const image=new Image();image.onload=()=>{if(token!==cargaToken)return;lista=true;document.querySelectorAll('.tarjeta-opcion').forEach(b=>b.disabled=false);};

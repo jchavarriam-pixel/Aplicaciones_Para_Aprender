@@ -8,7 +8,7 @@ Abrir `mayor_menor_objetos.html` directamente o desde el índice principal. La a
 2. **Grande, mediano y pequeño:** tres grados de tamaño. Se puede practicar cualquiera de los tres o mezclarlos.
 3. **Características:** tres opciones, con comparación **más**, **menos** o **mixta**. Se eligen las características desde la configuración.
 
-Las 18 categorías son tamaño, altura, longitud, anchura, grosor, claridad del color, forma, superficie, limpieza, humedad, orden, abertura, contenido, cantidad, separación, distancia, inclinación y clima. Cada categoría tiene al menos dos variantes de imágenes; clima incluye sol/nubes, lluvia y nieve. Se usa vertical frente a inclinado para describir la inclinación, sin confundirla con que una línea sea recta.
+Las 18 categorías son tamaño, altura, longitud, anchura, grosor, claridad del color, forma, superficie, limpieza, humedad, orden, abertura, contenido, cantidad, separación, distancia, inclinación y clima. Cada categoría tiene al menos dos variantes de imágenes; clima incluye sol/nubes, lluvia y nieve. La inclinación se describe con derecho frente a inclinado; por ejemplo: ¿cuál está más derecho?
 
 Las comparaciones se apoyan en grados ordenados. Por ejemplo, menos delgado corresponde al cilindro más grueso cuando lo único que varía es su diámetro. En cantidad se pregunta dónde hay más/menos objetos; en distancia se nombra la referencia (casa o banco). Las preguntas usan es o está según corresponda a la característica.
 
@@ -44,3 +44,5 @@ Se mantienen créditos, referencia a Gabriel, controles de zoom y pantalla compl
 Cada ejercicio utiliza un mismo lienzo, margen, línea de base y factor de escala para todas sus opciones. Los recortes se centran por su contenido visible; ningún dibujo se amplía por separado para llenar la tarjeta. Así se conservan las diferencias reales de tamaño, altura, longitud y anchura. Las tarjetas y sus etiquetas tienen medidas uniformes; seleccionar o corregir una opción no mueve el dibujo. Las cintas y otras ilustraciones muy anchas usan una tarjeta más baja para evitar espacio vacío excesivo.
 
 Las 52 imágenes están medidas, incluidos los ocho pares anteriores y las seis ilustraciones transparentes reutilizadas. Para volver a medir después de cambiar una ilustración: ejecutar `tools/medir_recortes_objetos.cjs` con Node.js y Sharp. La opción `--revision` crea hojas temporales de inspección. La aplicación normal solo necesita los archivos estáticos y no ejecuta ese proceso.
+
+Las escenas de clima se muestran más grandes y con un margen interior reducido. En teléfonos verticales se distribuyen en dos columnas con la tercera tarjeta centrada y del mismo ancho, para conservar la misma escala entre opciones. En horizontal se mantienen tres escenas lado a lado.
