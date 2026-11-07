@@ -1,4 +1,4 @@
-# Mayor y menor con objetos
+# Explora y compara
 
 Abrir `mayor_menor_objetos.html` directamente o desde el índice principal. La aplicación funciona como archivo local y desde servidor, sin librerías externas para jugar.
 
