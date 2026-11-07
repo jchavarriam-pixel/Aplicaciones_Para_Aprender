@@ -57,3 +57,10 @@ fieldset{min-width:0;margin:0;padding:10px;border:2px solid #d4e2ed;border-radiu
 .control-llenado .boton{min-height:44px;padding:9px 14px;font-size:.9rem}.control-llenado p{margin:0;color:#4b728c;font-size:.88rem;line-height:1.35;flex:1;min-width:180px;text-align:center}
 .estado-recipiente{color:#337599;font-size:.88rem;font-weight:bold}
 @media(max-width:480px){.control-llenado{gap:8px}.control-llenado p{font-size:.8rem}.estado-recipiente{font-size:.73rem}}
+
+/* Vasitos de referencia idénticos: cada uno equivale a100mL, incluso durante el llenado. */
+.apoyo-capacidad{height:98px}.apoyo-capacidad .vasitos{display:flex;flex-wrap:wrap;justify-content:center;align-content:flex-start;width:min(100%,147px);gap:3px;min-height:63px}
+.apoyo-capacidad .vasitos svg{flex:0 0 calc((100% - 15px)/6);width:calc((100% - 15px)/6);max-width:22px;height:30px}
+@media(max-width:480px){.apoyo-capacidad{height:112px}.apoyo-capacidad .vasitos{width:min(100%,86px);gap:2px;min-height:82px}.apoyo-capacidad .vasitos svg{flex-basis:calc((100% - 6px)/4);width:calc((100% - 6px)/4);max-width:20px;height:26px}}
+
+.apoyo-capacidad .vasitos .vacio{width:100%;text-align:center}

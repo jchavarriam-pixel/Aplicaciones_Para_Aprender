@@ -23,7 +23,7 @@ function hablar(texto){if(!config.voz||!('speechSynthesis'in window))return;spee
 function guardar(){try{localStorage.setItem(clave,JSON.stringify(config));}catch{}}
 function bancoDisponible(){if(config.actividad===4)return capacidades;if(config.actividad===1)return [...originales,...variantes.filter(a=>a.categoria==='tamano')];if(config.actividad===2)return variantes.filter(a=>a.categoria==='tamano');return variantes.filter(a=>config.categorias.includes(a.categoria));}
 function actualizarConfig(){
-  document.querySelector('.guia svg').innerHTML=config.actividad===4?'<path d="M25 30h38l-4 53H29zM98 15h47l-5 68h-37zM180 25h40l-4 58h-32z" fill="#eef8ff" stroke="#557a96" stroke-width="3"/><path d="M28 55h32l-2 25H30zM102 57h39l-2 23h-35zM183 40h34l-3 40h-28z" fill="#70d2f2"/>':guiaGeneral;
+  document.querySelector('.guia svg').innerHTML=config.actividad===4?'<g stroke="#557a96" stroke-width="2.5"><path d="M25 30h38l-4 50a15 3 0 0 1-30 0zM98 15h47l-5 65a18.5 3 0 0 1-37 0zM180 25h40l-4 55a16 3 0 0 1-32 0z" fill="#eef8ff"/><path d="M27 55h34l-2 25a15 3 0 0 1-30 0zM101 57h41l-2 23a18.5 3 0 0 1-37 0zM181 40h38l-3 40a16 3 0 0 1-32 0z" fill="#70d2f2" stroke="none"/><g fill="none"><ellipse cx="44" cy="30" rx="19" ry="3"/><ellipse cx="121.5" cy="15" rx="23.5" ry="4"/><ellipse cx="200" cy="25" rx="20" ry="3.5"/></g><g fill="#d6effa"><ellipse cx="44" cy="80" rx="15" ry="3"/><ellipse cx="121.5" cy="80" rx="18.5" ry="3"/><ellipse cx="200" cy="80" rx="16" ry="3"/></g></g>':guiaGeneral;
   $('comoJugar').textContent=config.actividad===4?'Agua y capacidad':'Así jugamos';
   document.querySelector('.guia ol li').innerHTML='<b>1</b> '+(config.actividad===4?'Observa el llenado.':'Mira las opciones.');
   document.querySelectorAll('[data-actividad]').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.actividad===config.actividad)));
@@ -73,7 +73,7 @@ function nuevaRonda(){
   for(const id of ['zonaImagen','respuesta','temaActual'])$(id).hidden=false;
   document.querySelector('.acciones').hidden=false;document.querySelector('.pregunta-fila').hidden=false;actualizarConfig();mostrar();
 }
-function actualizarAyuda(){const item=ronda[indice];$('ayudaTamano').hidden=fin||!config.ayuda;$('escuchar').hidden=!config.voz;if(item&&!fin){$('pregunta').textContent=item.pregunta;$('ayudaTamano').textContent=item.ayuda+(item.actividad===4&&config.apoyoCapacidad==='vasitos'?' Cada vasito representa 100 mL.':'');}}
+function actualizarAyuda(){const item=ronda[indice];$('ayudaTamano').hidden=fin||!config.ayuda;$('escuchar').hidden=!config.voz;if(item&&!fin){$('pregunta').textContent=item.pregunta;$('ayudaTamano').textContent=item.ayuda+(item.actividad===4&&config.apoyoCapacidad==='vasitos'?' Cada vasito lleno equivale a 100 mL de agua.':'');}}
 function geometriaOpciones(item){
   const m=window.RECORTES_OBJETOS[item.asset.id];
   if(!m)throw Error('Falta la medición de '+item.asset.id);
@@ -84,21 +84,34 @@ function geometriaOpciones(item){
   const margen=Math.max(7,Math.max(ancho,arriba+abajo)*(item.asset.categoria==='clima'?.018:.065)),w=ancho+2*margen,h=arriba+abajo+2*margen;
   return {m,objetos,ancho,arriba,abajo,margen,w,h,base:(margen+arriba)/h*100};
 }
+function volumenVisible(item,o){return llenado?.item===item?llenado.volumenes[o.fuente]:0;}
+function etiquetaCapacidad(item,o){
+  if(item.objetivo==='agua')return 'Tiene';
+  const v=volumenVisible(item,o);return v>=o.valor?'Le caben':v>0?'Agua añadida':'Vacío';
+}
+function vasitoHTML(item,o,j){
+  const clip=`vasito-${cargaToken}-${o.fuente}-${j}`;
+  return `<svg data-vasito="${j}" data-fraccion="0" viewBox="0 0 28 38" aria-hidden="true"><defs><clipPath id="${clip}"><path d="M5 6H23V32A9 2.5 0 0 1 5 32Z"/></clipPath></defs><path d="M5 6H23V32A9 2.5 0 0 1 5 32Z" fill="#effaff" stroke="#4b7c97" stroke-width="1.7"/><g data-vaso-agua opacity="0" clip-path="url(#${clip})"><rect data-vaso-rect x="5" y="32" width="18" height="0" fill="#42b8e9"/><ellipse data-vaso-superficie cx="14" cy="32" rx="9" ry="2.5" fill="#a4e8ff" stroke="#258fbd" stroke-width=".8"/></g><ellipse cx="14" cy="32" rx="9" ry="2.5" fill="#cdebf4" fill-opacity=".25" stroke="#4b7c97" stroke-width="1.2"/><path d="M5 6H23V32A9 2.5 0 0 1 5 32Z" fill="none" stroke="#4b7c97" stroke-width="1.7"/><ellipse cx="14" cy="6" rx="9" ry="2.5" fill="none" stroke="#4b7c97" stroke-width="1.4"/></svg>`;
+}
 function apoyoCapacidadHTML(item,o){
   if(item.actividad!==4||config.apoyoCapacidad==='ninguno')return '';
-  if(llenado?.item===item&&!llenado.terminado){
-    const volume=llenado.volumenes[o.fuente],meta=item.objetivo==='capacidad'?item.asset.capacidades[o.fuente]:item.asset.agua[o.fuente];
-    const estado=!llenado.activo?'Vacío':volume>=meta?(item.objetivo==='capacidad'?'Lleno':meta===0?'Sin agua':'Listo'):'Llenándose…';
-    return `<span class="estado-recipiente">${estado}</span>`;
-  }
-  const etiqueta=item.objetivo==='agua'?'Tiene':'Le caben';
-  if(config.apoyoCapacidad==='medidas')return `<span class="etiqueta-volumen">${etiqueta}</span><strong>${o.valor.toLocaleString('es-CR')} mL</strong>`;
-  const n=o.valor/100,vasito='<svg viewBox="0 0 20 24" aria-hidden="true"><path d="M3 3h14l-2 18H5z" fill="'+(item.objetivo==='agua'?'#70d1f3':'#fff8e4')+'" stroke="'+(item.objetivo==='agua'?'#288dbb':'#b58534')+'" stroke-width="2"/></svg>';
-  return `<span class="etiqueta-volumen">${etiqueta}</span><span class="vasitos" role="img" aria-label="${n} vasitos iguales, ${o.valor} mililitros">${n?vasito.repeat(n):'<span class="vacio">Sin agua</span>'}</span>`;
+  const etiqueta=etiquetaCapacidad(item,o),v=volumenVisible(item,o);
+  if(config.apoyoCapacidad==='medidas')return `<span class="etiqueta-volumen">${etiqueta}</span><strong data-mililitros>${Math.round(v).toLocaleString('es-CR')} mL</strong>`;
+  const n=Math.ceil(o.valor/100);
+  return `<span class="etiqueta-volumen">${etiqueta}</span><span class="vasitos" role="img" aria-label="${Math.round(v)} mililitros en vasitos de 100 mililitros">${n?Array.from({length:n},(_,j)=>vasitoHTML(item,o,j)).join(''):'<span class="vacio">Sin agua</span>'}</span>`;
 }
 function actualizarApoyosCapacidad(){
   const item=ronda[indice];if(!item||fin||item.actividad!==4)return;
-  document.querySelectorAll('.apoyo-capacidad').forEach(el=>{const html=apoyoCapacidadHTML(item,item.opciones[+el.dataset.opcion]);if(el.innerHTML!==html)el.innerHTML=html;});
+  let reconstruido=false;
+  document.querySelectorAll('.apoyo-capacidad').forEach(el=>{
+    const o=item.opciones[+el.dataset.opcion],claveApoyo=[item.asset.id,item.objetivo,o.fuente,o.valor,config.apoyoCapacidad].join('|');
+    if(el.dataset.claveApoyo!==claveApoyo){el.innerHTML=apoyoCapacidadHTML(item,o);el.dataset.claveApoyo=claveApoyo;reconstruido=true;}
+    const label=el.querySelector('.etiqueta-volumen'),text=etiquetaCapacidad(item,o);if(label&&label.textContent!==text)label.textContent=text;
+    const v=Math.round(volumenVisible(item,o)),medida=el.querySelector('[data-mililitros]'),cups=el.querySelector('.vasitos');
+    if(medida){const value=v.toLocaleString('es-CR')+' mL';if(medida.textContent!==value)medida.textContent=value;}
+    if(cups)cups.setAttribute('aria-label',`${v} mililitros en vasitos de 100 mililitros`);
+  });
+  if(reconstruido&&llenado?.item===item)llenado.sincronizarVasitos();
 }
 function opcionHTML(item,g,o,i){
   const {r,escala}=g.objetos[i],x=(g.margen+(g.ancho-r.w*escala)/2)/g.w*100,y=(g.margen+g.arriba-(r.base-r.y+1)*escala)/g.h*100;

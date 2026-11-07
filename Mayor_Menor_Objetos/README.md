@@ -63,10 +63,18 @@ La comprobación incluye 48 comparaciones posibles, escenas donde el recipiente 
 
 ## Llenado animado
 
-Cada pregunta del modo 4 comienza con los tres recipientes vacíos. Tras una pausa breve, reciben agua a un caudal común de 250 mL/s. En preguntas de capacidad se llenan hasta su capacidad total y cada chorro se detiene al llegar al borde; los recipientes menores terminan antes. En preguntas sobre agua actual, se detienen en los volúmenes propios del ejercicio.
+Cada pregunta del modo 4 comienza con los tres recipientes vacíos. Tras una pausa breve, reciben agua a un caudal común de 100 mL/s (un vasito por segundo). En preguntas de capacidad se llenan hasta su capacidad total y cada chorro se detiene al llegar al borde; los recipientes menores terminan antes. En preguntas sobre agua actual, se detienen en los volúmenes propios del ejercicio.
 
-La elección se habilita al finalizar. Durante el llenado, las ayudas numéricas se sustituyen por el estado de cada recipiente (Vacío, Llenándose, Lleno o Listo), y luego reaparecen las medidas o vasitos si estaban activados. El botón Repetir llenado permite volver a observarlo sin alterar la respuesta ni las estrellas conseguidas.
+La elección se habilita al finalizar. Durante el llenado, las medidas y los vasitos muestran el agua que ha entrado. Los vasitos se llenan uno a uno; un vasito parcialmente lleno representa exactamente el volumen restante después de los vasitos completos. Al terminar, la indicación corresponde al agua actual o a la capacidad total, según la pregunta. El botón Repetir llenado permite volver a observarlo sin alterar la respuesta ni las estrellas conseguidas.
 
 `dibujos-capacidad.js` conserva las plantillas SVG vacías y curvas de volumen/altura precalculadas; lo genera la misma herramienta `tools/crear_recipientes_capacidad.cjs`. `animacion-capacidad.js` mueve únicamente el agua, la superficie y el chorro. Los recipientes mantienen su base, tamaño y centrado. Cada SVG utiliza identificadores únicos para que sus recortes y degradados no interfieran con los de las otras opciones.
 
 Se utiliza un solo ciclo de animación, limitado a 30 actualizaciones por segundo, sin lecturas de diseño por fotograma. Se pausa al ocultar la página y continúa al volver; cambiar de modo, pregunta o ronda cancela los ciclos anteriores. Los cambios de orientación y zoom conservan el nivel porque la animación utiliza coordenadas vectoriales. Con movimiento reducido se muestran directamente los niveles finales después de la presentación en vacío.
+
+## Recipientes con profundidad y vasitos proporcionales
+
+Los recipientes tienen boca y fondo ovalados, bases curvas, reflejos de vidrio y superficies de agua elípticas. La proyección ovalada de la base no modifica las capacidades asignadas: las curvas de llenado siguen calculándose a partir del volumen y el perfil interior. Las bases de todos los recipientes se apoyan en la misma altura del dibujo. En vasos, jarras, tazas y matraces se acentúan las diferencias visuales de altura, conservando sus capacidades y cantidades de agua.
+
+Todos los vasitos de referencia son cilindros iguales de 100 mL. Sus dimensiones en pantalla son iguales entre opciones; el número de vasitos depende del volumen objetivo. Se presentan centrados, con hasta seis por fila (cuatro en teléfono). Cada fotograma sincroniza su agua con la del recipiente: 250 mL equivalen a dos vasitos completos y la mitad del tercero. Solo se actualizan las partes que cambian, sin reconstruir los vasitos durante la animación. Los mililitros, cuando se escoge esa ayuda, también aumentan progresivamente.
+
+Los archivos de la aplicación incluyen una versión de recursos para que el navegador cargue juntos el nuevo dibujo, sus recortes y la animación actualizada.

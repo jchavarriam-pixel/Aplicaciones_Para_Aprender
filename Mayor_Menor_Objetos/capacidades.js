@@ -22,8 +22,8 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "vaso",
         "capacidadMl": 300,
         "aguaMl": 100,
-        "alturaCm": 8,
-        "radioCm": 3.914,
+        "alturaCm": 7,
+        "radioCm": 4.1842,
         "nivel": 0.3977
       },
       {
@@ -38,8 +38,8 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "vaso",
         "capacidadMl": 900,
         "aguaMl": 600,
-        "alturaCm": 14,
-        "radioCm": 5.1246,
+        "alturaCm": 18,
+        "radioCm": 4.5195,
         "nivel": 0.7222
       }
     ]
@@ -66,24 +66,24 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "jarra",
         "capacidadMl": 400,
         "aguaMl": 300,
-        "alturaCm": 10,
-        "radioCm": 3.8737,
+        "alturaCm": 8,
+        "radioCm": 4.3309,
         "nivel": 0.7802
       },
       {
         "forma": "jarra",
         "capacidadMl": 800,
         "aguaMl": 200,
-        "alturaCm": 14,
-        "radioCm": 4.6299,
+        "alturaCm": 13,
+        "radioCm": 4.8047,
         "nivel": 0.2849
       },
       {
         "forma": "jarra",
         "capacidadMl": 1200,
         "aguaMl": 600,
-        "alturaCm": 18,
-        "radioCm": 5.0009,
+        "alturaCm": 20,
+        "radioCm": 4.7442,
         "nivel": 0.5432
       }
     ]
@@ -330,8 +330,8 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "taza",
         "capacidadMl": 200,
         "aguaMl": 100,
-        "alturaCm": 6,
-        "radioCm": 3.2574,
+        "alturaCm": 5.5,
+        "radioCm": 3.4022,
         "nivel": 0.5
       },
       {
@@ -346,8 +346,8 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "taza",
         "capacidadMl": 800,
         "aguaMl": 600,
-        "alturaCm": 12,
-        "radioCm": 4.6066,
+        "alturaCm": 14,
+        "radioCm": 4.2649,
         "nivel": 0.75
       }
     ]
@@ -506,8 +506,8 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "matraz",
         "capacidadMl": 500,
         "aguaMl": 400,
-        "alturaCm": 16,
-        "radioCm": 3.9771,
+        "alturaCm": 12,
+        "radioCm": 4.5923,
         "nivel": 0.539
       },
       {
@@ -522,8 +522,8 @@ window.EJERCICIOS_CAPACIDAD = [
         "forma": "matraz",
         "capacidadMl": 1200,
         "aguaMl": 600,
-        "alturaCm": 22,
-        "radioCm": 5.2543,
+        "alturaCm": 27,
+        "radioCm": 4.7429,
         "nivel": 0.3468
       }
     ]
