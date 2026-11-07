@@ -110,9 +110,14 @@ button,input,select{font-family:inherit}.pantalla{display:none;min-height:100vh;
 .entrada-corral{position:absolute;left:50%;bottom:calc(var(--zone-height) - 12px);transform:translateX(-50%);width:var(--gate-width);height:76px;z-index:6;border:3px dashed #f6dd83;border-radius:16px;background:linear-gradient(#fbf0c5d9,#cce3a9cc);box-shadow:0 0 0 3px #517c3555;text-align:center;perspective:500px}
 .entrada-corral strong{display:block;font-size:.85rem;color:#42552b;background:#fff6d7e8;border-radius:10px 10px 0 0;padding:2px 4px;position:relative;z-index:2}
 .entrada-corral span{display:block;font-weight:1000;font-size:1rem;color:#674721;position:relative;z-index:2;margin-top:4px;text-shadow:0 1px 2px #fff}
-.puerta-corral{position:absolute;bottom:0;width:50%;height:29px;border:3px solid #81512f;background:repeating-linear-gradient(90deg,#c7975e 0 8px,#a87542 8px 11px);transition:transform .3s ease}
+.puerta-corral{position:absolute;bottom:-1px;width:50%;height:36px;border:3px solid #774624;border-radius:3px;background:repeating-linear-gradient(90deg,#d8a76b 0 9px,#bc854b 9px 12px);box-shadow:inset 0 2px 0 #ffe0a4,0 4px 3px #56331640;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.25,.7,.3,1);pointer-events:none}
+.puerta-corral:before{content:'';position:absolute;inset:2px;background:linear-gradient(23deg,transparent 44%,#89552d 45% 53%,#ecc18b 54% 58%,transparent 59%);border-top:4px solid #edc68d;border-bottom:4px solid #ad713d}
+.puerta-corral:after{content:'';position:absolute;top:3px;bottom:3px;width:6px;border-radius:2px;background:linear-gradient(#53616a 0 25%,transparent 25% 75%,#53616a 75%);box-shadow:0 1px 1px #fff5}
+.puerta-izquierda:after{left:-4px}.puerta-derecha:after{right:-4px}
+.entrada-corral:before,.entrada-corral:after{content:'';position:absolute;bottom:-6px;width:12px;height:48px;border-radius:4px 4px 1px 1px;border:2px solid #774624;background:linear-gradient(90deg,#b87c44,#e4b67c 45%,#a66b37);box-shadow:0 3px 2px #62402440;z-index:3;pointer-events:none}
+.entrada-corral:before{left:-6px}.entrada-corral:after{right:-6px}
 .puerta-izquierda{left:0;transform-origin:left center}.puerta-derecha{right:0;transform-origin:right center}
-.entrada-ocupada .puerta-izquierda{transform:rotateY(-75deg)}.entrada-ocupada .puerta-derecha{transform:rotateY(75deg)}
+.entrada-ocupada .puerta-izquierda{transform:rotateY(-102deg)}.entrada-ocupada .puerta-derecha{transform:rotateY(102deg)}
 .entrada-corral.resaltar{box-shadow:0 0 0 6px #ffe385,0 0 22px #fff4b3}
 .animal.entrando{z-index:8;pointer-events:none}.entrada-ocupada .animal:not(.entrando):not(.guardado){pointer-events:none}
 .corral-slot .animal.guardado{width:var(--settled-width,100%);height:var(--settled-height,auto);flex:none}
@@ -485,9 +490,9 @@ function animatePareoSuccess(pairs,data,onComplete){
 document.addEventListener('visibilitychange',()=>{
   if(document.hidden){
     stopPareoAnimation();stopVictory();stopCorralAnimals();stopAudio();
-    const a=state.corralArrival;if(a?.animation)a.animation.pause();else if(a)finishCowArrival(a,false);
+    const a=state.corralArrival;if(a?.animation){a.animation.pause();a.gateAnimations?.forEach(animation=>animation.pause());}else if(a)finishCowArrival(a,false);
   }else if(state.mode===2&&document.getElementById('game').classList.contains('activa')){
-    const a=state.corralArrival;if(a?.animation){setCowMotion(a.el,true);a.animation.play();}
+    const a=state.corralArrival;if(a?.animation){setCowMotion(a.el,true);a.animation.play();a.gateAnimations?.forEach(animation=>animation.play());}
     document.querySelectorAll('.animal:not(.guardado):not(.entrando)').forEach(animateAnimal);
     if(state.data.awaitingTarget){state.data.awaitingTarget=false;nextTarget();}else if(!a&&state.data.current!=null)startLoop(`Atrapa el número ${numberToSpanish(state.data.current)}.`);
   }
@@ -579,7 +584,7 @@ function sizeCapturedCows(){
 }
 function cancelCowArrival(){
   const a=state.corralArrival;if(!a)return;
-  state.corralArrival=null;if(a.animation){a.animation.onfinish=null;a.animation.cancel();}clearTimeout(a.timer);
+  state.corralArrival=null;if(a.animation){a.animation.onfinish=null;a.animation.cancel();}clearTimeout(a.timer);a.gateAnimations?.forEach(animation=>animation.cancel());
   a.data.entering=false;a.board.classList.remove('entrada-ocupada');a.slot.classList.remove('reservada');
 }
 function finishCowArrival(a,announce=true){
@@ -606,10 +611,24 @@ function walkCowIntoCorral(el,dropRect){
   data.entering=true;data.remaining.shift();data.current=null;state.speed=Math.max(1050,state.speed-70);el.dataset.free='no';el.classList.add('entrando');el.style.pointerEvents='none';el.style.transition='none';el.style.left='0';el.style.top='0';el.style.transform=transform(start,1);el.dataset.facing=end.x<entrance.x?'left':'right';setCowMotion(el,true);
   board.classList.add('entrada-ocupada');slot.classList.add('reservada');gate.querySelector('span').textContent='Entrando…';document.getElementById('corralGuide').textContent='La vaca camina hasta su lugar.';
   const distance=Math.hypot(entrance.x-start.x,entrance.y-start.y)+Math.abs(end.x-entrance.x)+Math.abs(end.y-entrance.y),duration=Math.max(1400,Math.min(2400,distance*5));
-  const a={el,board,data,slot,animation:null,timer:null};state.corralArrival=a;
+  const opening=matchMedia('(prefers-reduced-motion: reduce)').matches?0:420;
+  const a={el,board,data,slot,animation:null,timer:null,gateAnimations:[]};state.corralArrival=a;
+  // Las hojas abren antes del paso y cierran cuando la vaca ya está dentro.
+  if(gate.animate&&opening){
+    gate.querySelectorAll('.puerta-corral').forEach((leaf,i)=>{
+      const turn=i===0?-102:102;
+      a.gateAnimations.push(leaf.animate([
+        {transform:'rotateY(0deg)',offset:0},
+        {transform:`rotateY(${turn}deg)`,offset:opening/(duration+opening)},
+        {transform:`rotateY(${turn}deg)`,offset:.68},
+        {transform:`rotateY(${-Math.sign(turn)*3}deg)`,offset:.94},
+        {transform:'rotateY(0deg)',offset:1}
+      ],{duration:duration+opening,easing:'ease-in-out',fill:'forwards'}));
+    });
+  }
   const frames=[{transform:transform(start,1),offset:0},{transform:transform(entrance,shrink),offset:.35},{transform:transform({x:end.x,y:entrance.y},shrink),offset:.72},{transform:transform(end,shrink),offset:1}];
-  if(el.animate){a.animation=el.animate(frames,{duration,easing:'ease-in-out',fill:'forwards'});a.animation.onfinish=()=>finishCowArrival(a);}
-  else{el.style.transition=`transform ${duration}ms ease-in-out`;requestAnimationFrame(()=>{if(state.corralArrival===a)el.style.transform=transform(end,shrink);});a.timer=setTimeout(()=>finishCowArrival(a),duration);}
+  if(el.animate){a.animation=el.animate(frames,{duration,delay:opening,easing:'ease-in-out',fill:'forwards'});a.animation.onfinish=()=>finishCowArrival(a);}
+  else{el.style.transition=`transform ${duration}ms ease-in-out ${opening}ms`;requestAnimationFrame(()=>{if(state.corralArrival===a)el.style.transform=transform(end,shrink);});a.timer=setTimeout(()=>finishCowArrival(a),duration+opening);}
   // Tras soltar, acercar la vista al corral si queda fuera de la pantalla del teléfono.
   if(zoneRect.bottom>innerHeight-12||zoneRect.top<12)document.getElementById('zona').scrollIntoView({block:'nearest',inline:'nearest',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
 }
