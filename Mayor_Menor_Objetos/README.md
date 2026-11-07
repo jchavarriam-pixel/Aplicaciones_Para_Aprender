@@ -36,3 +36,11 @@ Se conserva la clave `mayorMenorObjetos.config.v1`. Se guardan modo, tamaño obj
 Las pestañas cambian de modo inmediatamente. Cantidad, tamaño objetivo y categorías se aplican con Nueva ronda; voz y ayuda cambian de inmediato. La carga de imágenes permite reintentar y descarta respuestas de cargas antiguas al cambiar rápidamente de actividad.
 
 Se mantienen créditos, referencia a Gabriel, controles de zoom y pantalla completa. Se comprobó el uso táctil, la adaptación a teléfono/tableta y zoom al 85 %, las tres actividades, el guardado, la migración de preferencias y las respuestas únicas de todos los rasgos y comparadores.
+
+## Recortes, escala y alineación
+
+`recortes.js` define el área completa de cada dibujo sobre su archivo original. No se supone que los objetos estén dentro de mitades o tercios exactos: se localizan los espacios en blanco entre ellos. Las escenas y los grupos mantienen sus límites de panel originales.
+
+Cada ejercicio utiliza un mismo lienzo, margen, línea de base y factor de escala para todas sus opciones. Los recortes se centran por su contenido visible; ningún dibujo se amplía por separado para llenar la tarjeta. Así se conservan las diferencias reales de tamaño, altura, longitud y anchura. Las tarjetas y sus etiquetas tienen medidas uniformes; seleccionar o corregir una opción no mueve el dibujo. Las cintas y otras ilustraciones muy anchas usan una tarjeta más baja para evitar espacio vacío excesivo.
+
+Las 52 imágenes están medidas, incluidos los ocho pares anteriores y las seis ilustraciones transparentes reutilizadas. Para volver a medir después de cambiar una ilustración: ejecutar `tools/medir_recortes_objetos.cjs` con Node.js y Sharp. La opción `--revision` crea hojas temporales de inspección. La aplicación normal solo necesita los archivos estáticos y no ejecuta ese proceso.

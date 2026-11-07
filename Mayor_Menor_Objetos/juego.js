@@ -56,15 +56,33 @@ function nuevaRonda(){
   document.querySelector('.acciones').hidden=false;document.querySelector('.pregunta-fila').hidden=false;actualizarConfig();mostrar();
 }
 function actualizarAyuda(){const item=ronda[indice];$('ayudaTamano').hidden=fin||!config.ayuda;$('escuchar').hidden=!config.voz;if(item&&!fin){$('pregunta').textContent=item.pregunta;$('ayudaTamano').textContent=item.ayuda;}}
+function geometriaOpciones(item){
+  const m=window.RECORTES_OBJETOS[item.asset.id];
+  if(!m)throw Error('Falta la medición de '+item.asset.id);
+  const objetos=item.opciones.map(o=>({r:m.regiones[item.asset.tipo==='sprite'?0:o.fuente],escala:item.asset.tipo==='sprite'?[.38,.68,1][o.fuente]:1}));
+  const ancho=Math.max(...objetos.map(o=>o.r.w*o.escala));
+  const arriba=Math.max(...objetos.map(o=>(o.r.base-o.r.y+1)*o.escala));
+  const abajo=Math.max(...objetos.map(o=>(o.r.y+o.r.h-o.r.base-1)*o.escala));
+  const margen=Math.max(7,Math.max(ancho,arriba+abajo)*.065),w=ancho+2*margen,h=arriba+abajo+2*margen;
+  return {m,objetos,ancho,arriba,abajo,margen,w,h,base:(margen+arriba)/h*100};
+}
+function opcionHTML(item,g,o,i){
+  const {r,escala}=g.objetos[i],x=(g.margen+(g.ancho-r.w*escala)/2)/g.w*100,y=(g.margen+g.arriba-(r.base-r.y+1)*escala)/g.h*100;
+  const caja=`left:${x}%;top:${y}%;width:${r.w*escala/g.w*100}%;height:${r.h*escala/g.h*100}%`;
+  const imagen=`left:${-r.x/r.w*100}%;top:${-r.y/r.h*100}%;width:${g.m.ancho/r.w*100}%;height:${g.m.alto/r.h*100}%`;
+  return `<button class="tarjeta-opcion" id="eleccion-${i}" aria-label="Elegir opción ${i+1}" aria-pressed="false" disabled><div class="muestra escenario" style="--proporcion:${g.w/g.h}"><div class="lienzo"><span class="linea-base" style="top:${g.base}%" aria-hidden="true"></span><div class="recorte-objeto" data-fuente="${o.fuente}" style="${caja}"><img src="${item.asset.src}" alt="Opción ${i+1}" draggable="false" decoding="async" style="${imagen}"></div></div></div><span class="marca-seleccion" aria-hidden="true">✓</span><span class="texto-eleccion">Elegir</span></button>`;
+}
 function mostrar(){
   const token=++cargaToken,item=ronda[indice],a=item.asset;seleccion=null;resuelta=false;lista=false;
   $('errorImagen').hidden=true;$('zonaImagen').hidden=false;$('contador').textContent=`Ejercicio ${indice+1} de ${ronda.length}`;$('estrellas').textContent='★'.repeat(aciertos)+'☆'.repeat(ronda.length-aciertos);
   $('temaActual').textContent=`Modo ${item.actividad} · ${categorias.find(c=>c.id===a.categoria).nombre}`;
   $('respuesta').textContent='Toca una opción: la selección se iluminará.';$('respuesta').className='respuesta';$('revisar').disabled=true;$('revisar').hidden=false;$('siguiente').hidden=true;
   $('zonaImagen').style.setProperty('--opciones',item.opciones.length);
-  $('zonaImagen').innerHTML=item.opciones.map((o,i)=>`<button class="tarjeta-opcion" id="eleccion-${i}" aria-label="Elegir opción ${i+1}" aria-pressed="false" disabled><div class="muestra ${a.tipo==='sprite'?'sprite':'panel-recortado'}"><img src="${a.src}" alt="Opción ${i+1}" draggable="false" decoding="async" style="${a.tipo==='sprite'?`--escala:${[.38,.68,1][o.fuente]}`:`--panel:${o.fuente};--paneles:${a.columnas}`}"></div><span class="marca-seleccion" aria-hidden="true">✓</span><span class="texto-eleccion">Elegir</span></button>`).join('');
+  const geometria=geometriaOpciones(item);
+  $('zonaImagen').classList.toggle('ilustracion-baja',geometria.w/geometria.h>3);
+  $('zonaImagen').innerHTML=item.opciones.map((o,i)=>opcionHTML(item,geometria,o,i)).join('');
   document.querySelectorAll('.tarjeta-opcion').forEach((b,i)=>b.addEventListener('click',()=>elegir(i)));
-  const image=new Image();image.onload=()=>{if(token!==cargaToken)return;$('zonaImagen').style.setProperty('--aspecto',image.naturalWidth/(a.columnas*image.naturalHeight));lista=true;document.querySelectorAll('.tarjeta-opcion').forEach(b=>b.disabled=false);};
+  const image=new Image();image.onload=()=>{if(token!==cargaToken)return;lista=true;document.querySelectorAll('.tarjeta-opcion').forEach(b=>b.disabled=false);};
   image.onerror=()=>{if(token!==cargaToken)return;lista=false;$('zonaImagen').hidden=true;$('errorImagen').hidden=false;$('revisar').disabled=true;};image.src=a.src;
   actualizarAyuda();hablar(item.pregunta);
 }
