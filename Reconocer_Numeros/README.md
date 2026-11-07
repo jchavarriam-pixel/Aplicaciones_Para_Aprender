@@ -21,3 +21,5 @@ El archivo `../reconocer_numeros.html` mantiene el acceso desde los enlaces ante
 Los números de las vacas se muestran sin recuadro, con cifras oscuras y contorno blanco de alto contraste; su tamaño se adapta a las cifras y al espacio de cada plaza del corral.
 
 En Cajas con sonido, los números de colores están arriba y conservan su espacio durante toda la ronda. Las cajas de audio están abajo y se resaltan durante la reproducción; el resaltado se limpia al terminar, interrumpir el audio o salir.
+
+Corral, Cajas con sonido y Escritura incluyen una guía breve con pasos y ejemplo visual. En Cajas con sonido se colocan las respuestas antes de pulsar Revisar: los aciertos quedan verdes y los errores se pueden mover para corregirlos. Cajas y Escritura tienen un botón grande de Revisar y otro pequeño de Nueva ronda. Las cajas reservan el espacio del número para conservar su tamaño.
