@@ -27,7 +27,7 @@ button,input,select{font-family:inherit}.pantalla{display:none;min-height:100vh;
 .pareo .bandera{flex-shrink:0}.pareo .acciones{margin-top:0;flex-wrap:wrap;padding:9px;gap:10px}
 .caja-par.asociada{border-color:#60a5fa;background:#eff6ff}.caja-par[data-pareja]:after{content:'↔ ' attr(data-pareja);font-size:.8rem;font-weight:700;color:#475569;margin-top:5px}
 .bandera.elegida{outline:5px solid #fbbf24;outline-offset:2px}
-.pareo .col:before{font-size:.9rem;line-height:20px;margin-bottom:2px;flex-shrink:0}
+.pareo .col:before{font-size:1.1rem;line-height:26px;margin-bottom:2px;flex-shrink:0}
 .pareo .par-row{min-height:var(--pair-row,50px)}
 .pareo .caja-par{min-height:var(--pair-row,50px);padding:1px 5px!important;border-width:1.5px;border-radius:10px;font-size:var(--pair-font,1.2rem)!important;line-height:1.1;box-shadow:0 2px 4px #0f172a18}
 .pareo .bandera{width:var(--pair-flag,42px);height:var(--pair-flag,42px);font-size:var(--pair-icon,1.4rem);border-width:2px;box-shadow:0 2px 4px #0f172a30}
@@ -46,12 +46,15 @@ button,input,select{font-family:inherit}.pantalla{display:none;min-height:100vh;
 #game.modo-pareo .inst small{margin-top:3px;font-size:.82rem;line-height:1.2}
 #game.modo-pareo .acciones{padding:6px;gap:8px;border-width:2px;border-radius:16px}
 #game.modo-pareo .acciones .btn{padding:8px 12px;min-height:36px;font-size:.88rem}
-#game.modo-pareo.pareo-horizontal.activa{display:grid;grid-template-columns:clamp(195px,26%,325px) minmax(0,1fr);gap:12px;align-items:start}
-.pareo-sidebar{min-width:0;display:flex;flex-direction:column;gap:14px;padding:14px;background:#ffffffed;border:2px solid #dbeafe;border-radius:20px;box-shadow:var(--sombra)}
+#game.modo-pareo.pareo-horizontal.activa{display:grid;grid-template-columns:clamp(234px,31.2%,390px) minmax(0,1fr);gap:12px;align-items:start}
+.pareo-sidebar{min-width:0;display:flex;flex-direction:column;gap:16px;padding:18px;background:radial-gradient(circle at 100% 0,#dce8ff 0,transparent 55%),linear-gradient(160deg,#fff,#f1f5ff 65%,#f3edff);border:2px solid #bdcef4;border-top:6px solid #6879de;border-radius:24px;box-shadow:0 10px 25px #334e9320}
+.pareo-mision{display:flex;align-items:center;gap:12px;padding:12px;border-radius:18px;background:linear-gradient(120deg,#24448d,#6250bd);color:white;box-shadow:0 5px 12px #4855a829}
+.pareo-mision span{display:grid;place-items:center;flex:0 0 48px;height:48px;border-radius:15px;background:#ffffff24;font-size:2rem;transform:rotate(-8deg)}
+.pareo-mision strong{display:block;font-size:1.18rem;line-height:1.2}.pareo-mision small{display:block;margin-top:5px;font-size:.8rem;color:#e5ecff}
 #game.pareo-horizontal .pareo-sidebar .encabezado{margin:0;padding:0;border:0;background:none;gap:12px}
 #game.pareo-horizontal .pareo-sidebar .titulo{flex-basis:100%}
 #game.pareo-horizontal .pareo-sidebar .control{width:100%;justify-content:space-between}
-#game.pareo-horizontal .pareo-sidebar .inst{text-align:left;padding:10px}
+#game.pareo-horizontal .pareo-sidebar .inst{text-align:left;padding:14px;background:#fff9ea;border-color:#f4d490;box-shadow:0 3px 8px #ae741110}
 #game.pareo-horizontal .pareo-sidebar .inst small{margin-top:8px}
 #game.pareo-horizontal .pareo-sidebar .acciones{display:flex;flex-direction:column;flex:1;padding:0;margin:0;border:0;background:none;box-shadow:none;gap:12px}
 #game.pareo-horizontal .pareo-sidebar .acciones .btn{width:100%;min-height:42px}
@@ -61,6 +64,8 @@ button,input,select{font-family:inherit}.pantalla{display:none;min-height:100vh;
 #game.modo-pareo .acciones #checkPareo{flex:1;min-height:62px;padding:14px;font-size:1.15rem}
 #game.modo-pareo .acciones{flex-direction:column}
 #game.pareo-horizontal .pareo-sidebar .acciones #checkPareo{flex:0 0 auto;min-height:80px;font-size:1.3rem}
+#game.pareo-horizontal .pareo-sidebar #checkPareo{background:linear-gradient(135deg,#20aa75,#148354);box-shadow:0 6px 0 #11643f,0 9px 16px #178b6030;border:2px solid #7ee3b7;border-radius:20px}
+#game.pareo-horizontal .pareo-sidebar #checkPareo:disabled{opacity:.5;box-shadow:0 4px 0 #3e9470}
 #game.modo-pareo .acciones .nueva-ronda{flex:0 0 auto;min-height:32px;padding:7px 10px;font-size:.75rem;align-self:flex-end}
 #game.pareo-horizontal .pareo-sidebar .acciones .nueva-ronda{width:auto;min-height:32px;margin-top:auto;align-self:center;font-size:.75rem}
 .pareo.revisando .bandera,.pareo.revisando .caja-par{pointer-events:none}
@@ -212,7 +217,7 @@ function fitPareo(){
   const rect=board.getBoundingClientRect(),scale=rect.width/board.offsetWidth||1,css=getComputedStyle(board),colCss=getComputedStyle(board.querySelector('.col'));
   const rows=Math.max(state.data.left.length,state.data.right.length),gap=rows>10?3:6;
   const boardFrame=(board.querySelector('.inst')?.offsetHeight||0)+(board.querySelector('.acciones')?.offsetHeight||0)+parseFloat(css.paddingTop)+parseFloat(css.paddingBottom)+parseFloat(css.borderTopWidth)+parseFloat(css.borderBottomWidth)+(document.getElementById('game').classList.contains('pareo-horizontal')?0:2)*parseFloat(css.rowGap);
-  const colFrame=22+gap+parseFloat(colCss.paddingTop)+parseFloat(colCss.paddingBottom)+parseFloat(colCss.borderTopWidth)+parseFloat(colCss.borderBottomWidth);
+  const colFrame=28+gap+parseFloat(colCss.paddingTop)+parseFloat(colCss.paddingBottom)+parseFloat(colCss.borderTopWidth)+parseFloat(colCss.borderBottomWidth);
   const sidebar=document.getElementById('pareoSidebar');if(sidebar)sidebar.style.minHeight=Math.max(0,(innerHeight-sidebar.getBoundingClientRect().top-18)/scale)+'px';
   const available=(innerHeight-rect.top-18)/scale-boardFrame,budget=(available-colFrame-gap*(rows-1))/rows;
   const row=Math.max(20,Math.min(64,budget)),flag=Math.max(18,Math.min(48,row-2));
@@ -244,6 +249,7 @@ function layoutPareo(){
   if(!sidebar){
     sidebar=document.createElement('aside');sidebar.id='pareoSidebar';sidebar.className='pareo-sidebar';sidebar.setAttribute('aria-label','Controles del pareo');
     game.insertBefore(sidebar,document.getElementById('gameContent'));
+    const mission=document.createElement('div');mission.className='pareo-mision';mission.setAttribute('aria-hidden','true');mission.innerHTML='<span>🚀</span><div><strong>¡A despegar!</strong><small>Conecta cada pareja</small></div>';sidebar.appendChild(mission);
     sidebar.append(game.querySelector('.encabezado'),board.querySelector('.inst'),board.querySelector('.acciones'));
   }
   game.classList.add('pareo-horizontal');
