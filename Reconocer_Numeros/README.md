@@ -18,4 +18,4 @@ La celebración del pareo usa un único lienzo, dibujos reutilizables y sonidos 
 
 El archivo `../reconocer_numeros.html` mantiene el acceso desde los enlaces anteriores mediante una redirección.
 
-Los números de las vacas usan etiquetas blancas con borde oscuro y tipografía de alto contraste; su tamaño se adapta a las cifras y al espacio de cada plaza del corral.
+Los números de las vacas se muestran sin recuadro, con cifras oscuras y contorno blanco de alto contraste; su tamaño se adapta a las cifras y al espacio de cada plaza del corral.
