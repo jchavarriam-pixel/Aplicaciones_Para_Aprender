@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" preserveAspectRatio="none">
+<defs><linearGradient id="sky" x2="0" y2="1"><stop stop-color="#cdeefd"/><stop offset="1" stop-color="#effbff"/></linearGradient><linearGradient id="grass" x2="0" y2="1"><stop stop-color="#b6dd83"/><stop offset="1" stop-color="#76ba59"/></linearGradient><pattern id="tufts" width="110" height="82" patternUnits="userSpaceOnUse"><path d="M19 52l-4-8m4 8 2-10m-2 10 7-6M78 28l-3-6m3 6 4-7" fill="none" stroke="#5b9948" stroke-width="2" opacity=".25" stroke-linecap="round"/><ellipse cx="62" cy="65" rx="16" ry="4" fill="#d0e69e" opacity=".28"/></pattern></defs>
+<path fill="url(#sky)" d="M0 0h1200v190H0z"/><circle cx="1030" cy="58" r="31" fill="#ffe08b"/>
+<g fill="#fff" opacity=".8"><ellipse cx="300" cy="42" rx="45" ry="13"/><ellipse cx="326" cy="35" rx="24" ry="16"/><ellipse cx="750" cy="55" rx="48" ry="12"/></g>
+<path d="M0 110Q170 50 360 126Q550 60 780 118Q1030 45 1200 105V800H0Z" fill="#a5cf81"/>
+<path d="M0 150Q220 102 410 153Q680 100 900 148Q1070 108 1200 146V800H0Z" fill="url(#grass)"/>
+<path d="M0 158Q240 130 420 164Q680 125 900 160Q1080 130 1200 158V800H0Z" fill="url(#tufts)"/>
+<g opacity=".72" transform="translate(1030 92)"><path d="M0 28L42 0l42 28" fill="#a65d46"/><path d="M9 27h66v51H9z" fill="#d9a382"/><path d="M32 46h22v32H32z" fill="#936244"/><path d="M15 38h12v13H15zM59 38h10v13H59z" fill="#e8f6fa"/></g>
+</svg>

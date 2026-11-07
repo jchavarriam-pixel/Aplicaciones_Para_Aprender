@@ -89,12 +89,34 @@ button,input,select{font-family:inherit}.pantalla{display:none;min-height:100vh;
 .animal:before,.animal:after{display:none;content:none}.animal.corre{animation:none}
 .cow-art{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none;-webkit-user-drag:none;transform-origin:center}
 .animal[data-facing="left"] .cow-art{transform:scaleX(-1)}
-.animal-number{position:absolute;left:45%;top:55%;transform:translate(-50%,-50%);display:block;min-width:26px;padding:2px 5px;line-height:1.05;border:2px solid #fff;border-radius:12px;background:#ffffffed;color:#173c72;box-shadow:0 2px 4px #263a4629;font-size:var(--cow-number,27px);font-weight:1000;pointer-events:none;white-space:nowrap}
+.animal-number{position:absolute;left:45%;top:55%;transform:translate(-50%,-50%);display:block;min-width:1.05em;padding:3px 5px;line-height:1;border:2px solid #19375b;border-radius:9px;background:#fff;color:#102c50;box-shadow:0 2px 0 #ffffffb3,0 3px 5px #17324d40;font-family:Arial,Helvetica,sans-serif;font-size:var(--cow-number,32px);font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:0;pointer-events:none;white-space:nowrap}
 .animal[data-facing="left"] .animal-number{left:55%}
 .animal.guardado{position:relative!important;left:auto!important;top:auto!important;width:100%;height:auto;aspect-ratio:4/3;max-width:116px;max-height:88px;margin:0;transform:none!important;justify-self:center}
-.animal.guardado .animal-number{font-size:var(--caught-number,15px);padding:1px 3px;border-width:1px;border-radius:7px;min-width:18px}
+.animal.guardado .animal-number{font-size:var(--caught-number,22px);padding:2px 3px;border-width:2px;border-radius:7px;min-width:1.05em}
 #game.modo-corral{padding:10px}#game.modo-corral .encabezado{gap:8px;margin-bottom:10px}#game.modo-corral .titulo{padding:9px 13px;border-width:2px;border-radius:18px}#game.modo-corral h2{font-size:1.3rem}#game.modo-corral .sub{font-size:.9rem}#game.modo-corral .acciones{padding:8px;margin-top:10px}
 .cow-styles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0}.cow-styles img{display:block;width:100%;max-height:100px;object-fit:contain}.cow-styles span{text-align:center;background:#f2f8f2;border:1px solid #c9e2cc;border-radius:14px;font-size:.85rem;color:#3c5b44}
+.corral{background:#8fc366 url('assets/potrero.svg') center top/100% 100% no-repeat;border:6px solid #8a5835;--gate-width:clamp(140px,22%,220px);box-shadow:inset 0 0 0 4px #f7e1b075,var(--sombra)}
+.corral:before{display:none}.potrero-cartel{position:absolute;left:14px;top:10px;padding:5px 12px;border:2px solid #9a7447;border-radius:8px;background:#fff5d9;color:#70502f;font-size:1rem;font-weight:1000;box-shadow:0 3px 0 #80613b22;pointer-events:none}
+.corral-guia{position:absolute;left:16px;top:46px;color:#355a35;font-size:.8rem;font-weight:800;pointer-events:none;max-width:calc(100% - 32px)}
+.cerca{left:12px;right:12px;bottom:calc(var(--zone-height) - 2px);height:28px;background:none;opacity:1;pointer-events:none;z-index:5}
+.cerca:before,.cerca:after,.zona:after{content:'';position:absolute;height:28px;background:repeating-linear-gradient(90deg,#8c5b35 0 11px,transparent 11px 65px),linear-gradient(180deg,transparent 3px,#bd8a55 3px 10px,transparent 10px 17px,#a87141 17px 24px,transparent 24px);filter:drop-shadow(0 2px 1px #68412433)}
+.cerca:before{left:0;right:calc(50% + var(--gate-width)/2 - 20px)}.cerca:after{right:0;left:calc(50% + var(--gate-width)/2 - 20px)}
+.zona{bottom:14px;display:block;background:#e7cc9d url('assets/corral-suelo.svg') repeat;border:7px solid #95643c;border-top:0;border-radius:12px;padding:0;overflow:hidden;box-shadow:inset 0 0 18px #9a6a3233}
+.zona:after{left:0;right:0;bottom:0;height:23px;z-index:5;pointer-events:none}
+.corral-cartel{position:absolute;left:10px;top:10px;color:#78512d;background:#fff2d4d9;border:1px solid #bd9463;border-radius:6px;padding:3px 10px;font-size:.9rem;font-weight:1000;pointer-events:none}
+.corral-plazas{position:absolute;inset:48px 10px 22px;display:grid;grid-template-columns:repeat(var(--caught-cols,6),minmax(0,1fr));grid-auto-rows:minmax(0,1fr);gap:5px}
+.corral-slot{display:flex;align-items:center;justify-content:center;min-width:0;min-height:0;border-radius:14px;background:radial-gradient(ellipse at center,#f1dcae66 0 48%,transparent 52%)}
+.corral-slot.reservada{background:radial-gradient(ellipse at center,#fff2b2ba 0 52%,transparent 57%)}
+.entrada-corral{position:absolute;left:50%;bottom:calc(var(--zone-height) - 12px);transform:translateX(-50%);width:var(--gate-width);height:76px;z-index:6;border:3px dashed #f6dd83;border-radius:16px;background:linear-gradient(#fbf0c5d9,#cce3a9cc);box-shadow:0 0 0 3px #517c3555;text-align:center;perspective:500px}
+.entrada-corral strong{display:block;font-size:.85rem;color:#42552b;background:#fff6d7e8;border-radius:10px 10px 0 0;padding:2px 4px;position:relative;z-index:2}
+.entrada-corral span{display:block;font-weight:1000;font-size:1rem;color:#674721;position:relative;z-index:2;margin-top:4px;text-shadow:0 1px 2px #fff}
+.puerta-corral{position:absolute;bottom:0;width:50%;height:29px;border:3px solid #81512f;background:repeating-linear-gradient(90deg,#c7975e 0 8px,#a87542 8px 11px);transition:transform .3s ease}
+.puerta-izquierda{left:0;transform-origin:left center}.puerta-derecha{right:0;transform-origin:right center}
+.entrada-ocupada .puerta-izquierda{transform:rotateY(-75deg)}.entrada-ocupada .puerta-derecha{transform:rotateY(75deg)}
+.entrada-corral.resaltar{box-shadow:0 0 0 6px #ffe385,0 0 22px #fff4b3}
+.animal.entrando{z-index:8;pointer-events:none}.entrada-ocupada .animal:not(.entrando):not(.guardado){pointer-events:none}
+.corral-slot .animal.guardado{width:var(--settled-width,100%);height:var(--settled-height,auto);flex:none}
+@media(prefers-reduced-motion:reduce){.puerta-corral{transition:none}}
 @media(max-width:760px){.pareo{grid-template-columns:minmax(0,1fr) clamp(36px,10vw,76px) minmax(0,1fr);column-gap:0;padding:8px}.pareo .col{padding:12px 10px;border-width:2px;border-radius:18px}.pareo .par-row{gap:8px}.pareo .caja-par{padding:1px 3px!important}.encabezado{flex-wrap:wrap}.encabezado .titulo{flex:1 1 100%;min-width:0}.encabezado .control{width:100%;justify-content:space-between}.pareo .inst{font-size:.92rem}.pareo .acciones .btn{font-size:.85rem;padding:9px}}
 </style>
   <link rel="stylesheet" href="../creditos.css">
@@ -200,7 +222,7 @@ function startLoop(text){stopAudio();function loop(){let u=speak(text,true);if(!
 function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function sample(a,n){const count=Math.max(0,Math.min(Math.floor(n),a.length)),indices=new Set();for(let i=a.length-count;i<a.length;i++){const pick=Math.floor(Math.random()*(i+1));indices.add(indices.has(pick)?i:pick);}return shuffle([...indices].map(i=>a[i]));}
 function norm(s){return(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim();}
-function screen(id){stopVictory();if(id!=='game'){if(state.drag)finishDrag({pointerId:state.drag.pid,clientX:state.drag.x,clientY:state.drag.y},true);stopPareoAnimation();stopCorralAnimals();clearTimeout(state.targetTimer);state.targetTimer=null;}document.querySelectorAll('.pantalla').forEach(x=>x.classList.remove('activa'));document.getElementById(id).classList.add('activa');}
+function screen(id){stopVictory();if(id!=='game'){cancelCowArrival();if(state.drag)finishDrag({pointerId:state.drag.pid,clientX:state.drag.x,clientY:state.drag.y},true);stopPareoAnimation();stopCorralAnimals();clearTimeout(state.targetTimer);state.targetTimer=null;}document.querySelectorAll('.pantalla').forEach(x=>x.classList.remove('activa'));document.getElementById(id).classList.add('activa');}
 function goHome(){
   stopAudio();
   const nombre = state.childName || obtenerNombreGuardado();
@@ -460,7 +482,16 @@ function animatePareoSuccess(pairs,data,onComplete){
   }
   run.frame=requestAnimationFrame(frame);
 }
-document.addEventListener('visibilitychange',()=>{if(document.hidden){stopPareoAnimation();stopVictory();stopCorralAnimals();}else if(state.mode===2&&document.getElementById('game').classList.contains('activa'))document.querySelectorAll('.animal:not(.guardado)').forEach(animateAnimal);});
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){
+    stopPareoAnimation();stopVictory();stopCorralAnimals();stopAudio();
+    const a=state.corralArrival;if(a?.animation)a.animation.pause();else if(a)finishCowArrival(a,false);
+  }else if(state.mode===2&&document.getElementById('game').classList.contains('activa')){
+    const a=state.corralArrival;if(a?.animation){setCowMotion(a.el,true);a.animation.play();}
+    document.querySelectorAll('.animal:not(.guardado):not(.entrando)').forEach(animateAnimal);
+    if(state.data.awaitingTarget){state.data.awaitingTarget=false;nextTarget();}else if(!a&&state.data.current!=null)startLoop(`Atrapa el número ${numberToSpanish(state.data.current)}.`);
+  }
+});
 function mark(id,cls){let x=document.querySelector(`.caja-par[data-id="${id}"]`);if(x)x.classList.add(cls);}
 const cowStyles=['clasica','caramelo','dorada','lavanda'];
 function cowSource(style,moving){return `assets/vaca-${style}-${moving?'caminar':'quieta'}.gif`;}
@@ -471,45 +502,47 @@ function setCowMotion(el,moving){
 }
 function stopCorralAnimals(){document.querySelectorAll('.animal').forEach(el=>{clearTimeout(el._timer);clearTimeout(el._idleTimer);setCowMotion(el,false);});}
 function startMode2(){
-  clearTimeout(state.targetTimer);state.targetTimer=null;stopCorralAnimals();const nums=sample(state.numbers,+document.getElementById('m2Count').value);
+  cancelCowArrival();clearTimeout(state.targetTimer);state.targetTimer=null;stopCorralAnimals();const nums=sample(state.numbers,+document.getElementById('m2Count').value);
   state.speed=1900;state.data={numbers:nums,remaining:shuffle(nums),current:null,total:nums.length};
-  setGame('🐮 Modo 2: Corral','Escucha y lleva la vaca con el número correcto al corral.');
+  setGame('🐮 Modo 2: Corral','Escucha y lleva la vaca con el número correcto a la entrada del corral.');
   document.getElementById('progressPill').classList.add('oculto');renderCorral();nextTarget();
 }
 function renderCorral(){
   stopCorralAnimals();const d=state.data;
-  document.getElementById('gameContent').innerHTML=`<div class="corral" id="corral"><div class="cerca"></div><div class="zona" id="zona" aria-label="Corral de vacas atrapadas"></div>${d.numbers.map((n,i)=>`<div class="animal" data-num="${n}" data-style="${cowStyles[i%4]}" data-facing="right" data-motion="idle" role="img" aria-label="Vaca con el número ${n}"><img class="cow-art" src="${cowSource(cowStyles[i%4],false)}" alt="" draggable="false" decoding="async"><span class="animal-number">${n}</span></div>`).join('')}</div><div class="acciones"><button class="btn orange small" onclick="startMode2()">🔄 Nueva ronda</button></div>`;
+  document.getElementById('gameContent').innerHTML=`<div class="corral" id="corral"><div class="potrero-cartel">🌿 Potrero</div><div class="corral-guia" id="corralGuide" role="status">Lleva la vaca a la entrada del corral.</div><div class="cerca"></div><div class="zona" id="zona" aria-label="Corral de vacas atrapadas"><div class="corral-cartel">Corral</div><div class="corral-plazas">${d.numbers.map((_,i)=>`<div class="corral-slot" data-slot="${i}"></div>`).join('')}</div></div><div class="entrada-corral" id="entradaCorral" role="region" aria-label="Entrada del corral: suelta aquí la vaca"><strong>Entrada del corral</strong><span>Suelta aquí ↓</span><div class="puerta-corral puerta-izquierda"></div><div class="puerta-corral puerta-derecha"></div></div>${d.numbers.map((n,i)=>`<div class="animal" data-num="${n}" data-style="${cowStyles[i%4]}" data-facing="right" data-motion="idle" role="img" aria-label="Vaca con el número ${n}"><img class="cow-art" src="${cowSource(cowStyles[i%4],false)}" alt="" draggable="false" decoding="async"><span class="animal-number">${n}</span></div>`).join('')}</div><div class="acciones"><button class="btn orange small" onclick="startMode2()">🔄 Nueva ronda</button></div>`;
   document.querySelectorAll('.animal').forEach(el=>makeDrag(el,onDropAnimal));layoutCorral();
 }
 function corralBounds(){
-  const c=document.getElementById('corral');return{width:c.clientWidth,height:c.clientHeight-(parseFloat(c.style.getPropertyValue('--zone-height'))||178)-44};
+  const c=document.getElementById('corral');return{width:c.clientWidth,top:58,height:Math.max(90,c.clientHeight-(parseFloat(c.style.getPropertyValue('--zone-height'))||210)-134)};
 }
 function layoutCorral(){
   const c=document.getElementById('corral');if(!c||!c.getBoundingClientRect().width||state.drag)return;
-  const zone=document.getElementById('zona'),count=state.data.total,free=[...c.querySelectorAll('.animal:not(.guardado)')],scale=c.getBoundingClientRect().width/c.offsetWidth||1;
+  if(state.corralArrival)finishCowArrival(state.corralArrival,false);
+  const zone=document.getElementById('zona'),count=state.data.total,free=[...c.querySelectorAll('.animal:not(.guardado):not(.entrando)')],scale=c.getBoundingClientRect().width/c.offsetWidth||1;
   stopCorralAnimals();
-  const caughtCols=Math.max(2,Math.min(count,Math.floor((c.clientWidth-34)/96))),zoneHeight=Math.max(158,Math.ceil(count/caughtCols)*74+24);
+  const caughtCols=Math.max(2,Math.min(count,Math.floor((c.clientWidth-34)/96))),zoneHeight=Math.max(210,Math.ceil(count/caughtCols)*84+70);
   c.style.setProperty('--zone-height',zoneHeight+'px');zone.style.setProperty('--caught-cols',caughtCols);
   let height=Math.max(610,(innerHeight-c.getBoundingClientRect().top-82)/scale);
   const minCols=Math.max(1,Math.floor((c.clientWidth-24)/120)),minRows=Math.ceil(Math.max(1,free.length)/minCols);
-  height=Math.max(height,zoneHeight+58+minRows*94);c.style.setProperty('--corral-height',height+'px');
+  height=Math.max(height,zoneHeight+134+minRows*94);c.style.setProperty('--corral-height',height+'px');
   const bounds=corralBounds(),n=Math.max(1,free.length);let best={cols:1,rows:n,size:0};
   for(let cols=1;cols<=n;cols++){const rows=Math.ceil(n/cols),size=Math.min((bounds.width-24)/cols-10,((bounds.height-20)/rows-10)*4/3);if(size>best.size)best={cols,rows,size};}
   const size=Math.max(100,Math.min(180,best.size));
   free.forEach((el,i)=>{
-    const digits=String(el.dataset.num).length,font=Math.max(12,Math.min(digits>=5?22:32,size*(digits>=5?.12:.18)));
+    const digits=String(el.dataset.num).length,font=Math.max(12,Math.min(42,size*.28,(size*.68-14)/(digits*.62)));
     el.style.setProperty('--animalW',size+'px');el.style.setProperty('--cow-number',font+'px');el.style.setProperty('--caught-number',digits>=5?'11px':'15px');
     el.style.position='absolute';el.style.transition='none';
     const col=i%best.cols,row=Math.floor(i/best.cols),cellW=(bounds.width-20)/best.cols,cellH=(bounds.height-16)/best.rows;
-    place(el,10+col*cellW+(cellW-size)/2,8+row*cellH+(cellH-size*.75)/2);
+    place(el,10+col*cellW+(cellW-size)/2,bounds.top+8+row*cellH+(cellH-size*.75)/2);
     animateAnimal(el);
   });
+  sizeCapturedCows();
 }
 function cowDestination(el){
   const c=document.getElementById('corral'),bounds=corralBounds(),width=el.offsetWidth,height=el.offsetHeight,x=Number(el.dataset.x)||0,y=Number(el.dataset.y)||0;
-  const others=[...c.querySelectorAll('.animal:not(.guardado)')].filter(other=>other!==el);
+  const others=[...c.querySelectorAll('.animal:not(.guardado):not(.entrando)')].filter(other=>other!==el);
   for(let i=0;i<14;i++){
-    const nx=Math.max(6,Math.min(bounds.width-width-6,x+(Math.random()*180-90))),ny=Math.max(6,Math.min(bounds.height-height-6,y+(Math.random()*100-50)));
+    const nx=Math.max(6,Math.min(bounds.width-width-6,x+(Math.random()*180-90))),ny=Math.max(bounds.top+6,Math.min(bounds.top+bounds.height-height-6,y+(Math.random()*100-50)));
     if(others.every(other=>Math.abs(nx-Number(other.dataset.x))>(width+other.offsetWidth)*.39||Math.abs(ny-Number(other.dataset.y))>(height+other.offsetHeight)*.37))return{x:nx,y:ny};
   }
   return{x,y};
@@ -536,8 +569,61 @@ function pauseCow(el){
 }
 let corralResizeFrame=0;
 window.addEventListener('resize',()=>{cancelAnimationFrame(corralResizeFrame);corralResizeFrame=requestAnimationFrame(()=>{if(state.mode===2&&document.getElementById('game').classList.contains('activa'))layoutCorral();});});
-function nextTarget(){if(state.data.remaining.length===0){finishSuccess();return;}state.data.current=state.data.remaining[0];startLoop(`Atrapa el número ${numberToSpanish(state.data.current)}.`);}
-function onDropAnimal(el,x,y,rect){let zona=document.getElementById('zona'),n=+el.dataset.num;if(pointIn(x,y,zona)||overlap(el,zona,rect)){if(n===state.data.current){stopAudio();clearTimeout(el._timer);clearTimeout(el._idleTimer);setCowMotion(el,false);el.style.transform='';el.style.width='';el.style.height='';state.data.remaining.shift();state.speed=Math.max(1050,state.speed-70);el.classList.add('guardado');el.dataset.free='no';el.style.transition='none';el.style.position='relative';el.style.left='auto';el.style.top='auto';el.style.pointerEvents='none';zona.appendChild(el);speak(`Muy bien ${state.childName}.`);clearTimeout(state.targetTimer);state.targetTimer=setTimeout(()=>{state.targetTimer=null;if(state.mode===2&&document.getElementById('game').classList.contains('activa'))nextTarget();},1600);}else{speak(`Ese no es el número ${numberToSpanish(state.data.current)}. Intenta de nuevo.`);el.dataset.recovering='yes';returnRandom(el);el._timer=setTimeout(()=>{el.dataset.recovering='no';animateAnimal(el);},850);}}}
+function nextTarget(){if(state.data.entering)return;if(document.hidden){state.data.awaitingTarget=true;return;}if(state.data.remaining.length===0){finishSuccess();return;}state.data.current=state.data.remaining[0];startLoop(`Atrapa el número ${numberToSpanish(state.data.current)}.`);}
+function sizeCapturedCows(){
+  document.querySelectorAll('.corral-slot .animal.guardado').forEach(el=>{
+    const slot=el.parentNode,width=Math.min(116,slot.clientWidth,slot.clientHeight*4/3),digits=String(el.dataset.num).length;
+    el.style.setProperty('--settled-width',width+'px');el.style.setProperty('--settled-height',width*.75+'px');
+    el.style.setProperty('--caught-number',Math.max(9,Math.min(30,width*.28,(width*.7-10)/(digits*.62)))+'px');
+  });
+}
+function cancelCowArrival(){
+  const a=state.corralArrival;if(!a)return;
+  state.corralArrival=null;if(a.animation){a.animation.onfinish=null;a.animation.cancel();}clearTimeout(a.timer);
+  a.data.entering=false;a.board.classList.remove('entrada-ocupada');a.slot.classList.remove('reservada');
+}
+function finishCowArrival(a,announce=true){
+  if(state.corralArrival!==a||state.data!==a.data)return;
+  cancelCowArrival();
+  const el=a.el;el.classList.remove('entrando');el.classList.add('guardado');el.style.transition='none';el.style.transform='';el.style.position='relative';el.style.left='auto';el.style.top='auto';el.style.width='';el.style.height='';el.style.pointerEvents='none';
+  a.slot.appendChild(el);setCowMotion(el,false);sizeCapturedCows();
+  document.querySelector('#entradaCorral span').textContent='Suelta aquí ↓';
+  document.getElementById('corralGuide').textContent='¡La vaca ya está dentro!';
+  if(announce)speak(`Muy bien ${state.childName}. La vaca llegó al corral.`);
+  clearTimeout(state.targetTimer);state.targetTimer=setTimeout(()=>{
+    state.targetTimer=null;
+    if(state.mode===2&&state.data===a.data&&document.getElementById('game').classList.contains('activa')){document.getElementById('corralGuide').textContent='Lleva la vaca a la entrada del corral.';nextTarget();}
+  },announce?1200:300);
+}
+function walkCowIntoCorral(el,dropRect){
+  const board=document.getElementById('corral'),gate=document.getElementById('entradaCorral'),data=state.data,index=data.total-data.remaining.length,slot=board.querySelector(`.corral-slot[data-slot="${index}"]`);
+  const stage=board.getBoundingClientRect(),scale=stage.width/board.offsetWidth||1,rect=dropRect||el.getBoundingClientRect(),gateRect=gate.getBoundingClientRect(),slotRect=slot.getBoundingClientRect(),zoneRect=document.getElementById('zona').getBoundingClientRect();
+  const local=(x,y)=>({x:(x-stage.left)/scale-board.clientLeft,y:(y-stage.top)/scale-board.clientTop});
+  const start=local(rect.left+rect.width/2,rect.top+rect.height/2),entrance=local(gateRect.left+gateRect.width/2,zoneRect.top+34*scale),end=local(slotRect.left+slotRect.width/2,slotRect.top+slotRect.height/2);
+  const width=el.offsetWidth,height=el.offsetHeight,settled=Math.min(116,slot.clientWidth,slot.clientHeight*4/3),shrink=settled/width;
+  const transform=(point,s)=>`translate3d(${point.x-width*s/2}px,${point.y-height*s/2}px,0) scale(${s})`;
+  clearTimeout(el._timer);clearTimeout(el._idleTimer);clearTimeout(state.targetTimer);stopAudio();
+  data.entering=true;data.remaining.shift();data.current=null;state.speed=Math.max(1050,state.speed-70);el.dataset.free='no';el.classList.add('entrando');el.style.pointerEvents='none';el.style.transition='none';el.style.left='0';el.style.top='0';el.style.transform=transform(start,1);el.dataset.facing=end.x<entrance.x?'left':'right';setCowMotion(el,true);
+  board.classList.add('entrada-ocupada');slot.classList.add('reservada');gate.querySelector('span').textContent='Entrando…';document.getElementById('corralGuide').textContent='La vaca camina hasta su lugar.';
+  const distance=Math.hypot(entrance.x-start.x,entrance.y-start.y)+Math.abs(end.x-entrance.x)+Math.abs(end.y-entrance.y),duration=Math.max(1400,Math.min(2400,distance*5));
+  const a={el,board,data,slot,animation:null,timer:null};state.corralArrival=a;
+  const frames=[{transform:transform(start,1),offset:0},{transform:transform(entrance,shrink),offset:.35},{transform:transform({x:end.x,y:entrance.y},shrink),offset:.72},{transform:transform(end,shrink),offset:1}];
+  if(el.animate){a.animation=el.animate(frames,{duration,easing:'ease-in-out',fill:'forwards'});a.animation.onfinish=()=>finishCowArrival(a);}
+  else{el.style.transition=`transform ${duration}ms ease-in-out`;requestAnimationFrame(()=>{if(state.corralArrival===a)el.style.transform=transform(end,shrink);});a.timer=setTimeout(()=>finishCowArrival(a),duration);}
+  // Tras soltar, acercar la vista al corral si queda fuera de la pantalla del teléfono.
+  if(zoneRect.bottom>innerHeight-12||zoneRect.top<12)document.getElementById('zona').scrollIntoView({block:'nearest',inline:'nearest',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+}
+function onDropAnimal(el,x,y,rect){
+  const gate=document.getElementById('entradaCorral'),data=state.data;
+  if(data.entering||data.current==null)return;
+  if(!pointIn(x,y,gate)&&!overlap(el,gate,rect)){
+    gate.classList.add('resaltar');clearTimeout(gate._hintTimer);gate._hintTimer=setTimeout(()=>gate.classList.remove('resaltar'),700);
+    document.getElementById('corralGuide').textContent='Suelta la vaca en la entrada marcada.';return;
+  }
+  if(+el.dataset.num===data.current){walkCowIntoCorral(el,rect);return;}
+  speak(`Ese no es el número ${numberToSpanish(data.current)}. Intenta de nuevo.`);
+  el.dataset.recovering='yes';returnRandom(el);el._timer=setTimeout(()=>{el.dataset.recovering='no';animateAnimal(el);},850);
+}
 function startMode3(){let nums=sample(state.numbers,+document.getElementById('m3Count').value);state.data={numbers:nums,assigned:new Set(),total:nums.length};setGame('📦 Modo 3: Cajas con sonido','Toca el parlante, escucha el nombre y mete el número correcto.');document.getElementById('progressPill').classList.remove('oculto');progress(0,nums.length);document.getElementById('gameContent').innerHTML=`<div class="box-game"><div class="pool"><h2>Números</h2><div class="pool-items" id="poolItems">${shuffle(nums).map(n=>`<div class="drag-num" data-num="${n}">${n}</div>`).join('')}</div></div><div class="cajas"><h2>Cajas</h2><div class="grid-cajas">${nums.map(n=>`<div class="sound-box" data-target="${n}"><button class="speaker" onclick="speak('${numberToSpanish(n)}')">🔊</button><div>Escucha y coloca</div></div>`).join('')}</div></div></div>`;document.querySelectorAll('.drag-num').forEach(el=>makeDrag(el,onDropBox));}
 function onDropBox(el,x,y,rect){let n=+el.dataset.num;let box=[...document.querySelectorAll('.sound-box')].find(b=>pointIn(x,y,b))||[...document.querySelectorAll('.sound-box')].find(b=>overlap(el,b,rect));if(!box){returnPool(el);return;}if(n===+box.dataset.target&&!box.classList.contains('llena')){box.classList.add('llena');box.appendChild(el);el.style.position='relative';el.style.left='0';el.style.top='0';el.style.pointerEvents='none';state.data.assigned.add(n);progress(state.data.assigned.size,state.data.total);speak(`Muy bien ${state.childName}.`);if(state.data.assigned.size===state.data.total)setTimeout(finishSuccess,600);}else{speak('Revisa esta opción. Intenta de nuevo.');returnPool(el);}}
 function startMode4(){let nums=sample(state.numbers,+document.getElementById('m4Count').value);state.data={numbers:nums,index:0,answer:'',done:0,total:nums.length,key:document.getElementById('m4Key').value,hints:document.getElementById('m4Hint').value==='yes'};setGame('✍️ Modo 4: Escritura','Observa el número y forma su nombre con el teclado virtual.');document.getElementById('progressPill').classList.remove('oculto');renderWrite();}
@@ -547,7 +633,7 @@ function deleteLetter(){state.data.answer=state.data.answer.slice(0,-1);document
 function scheduleHint(){clearTimeout(state.hint);let d=state.data;if(!d.hints)return;state.hint=setTimeout(()=>{let exp=norm(numberToSpanish(d.numbers[d.index])),cur=norm(d.answer);if(exp.startsWith(cur)&&cur.length<exp.length){let next=exp[cur.length];speak(next===' '?'Ahora toca espacio':`La siguiente letra puede ser ${next}`,false);}},5000);}
 function checkWrite(){let d=state.data,exp=numberToSpanish(d.numbers[d.index]);if(norm(d.answer)===norm(exp)){d.done++;d.index++;d.answer='';speak(`Excelente ${state.childName}. Está correcto.`);setTimeout(renderWrite,800);}else{speak(`Revisa la palabra. El nombre correcto es ${exp}.`);}}
 // La capa compensa el zoom CSS: sus píxeles coinciden con clientX/clientY.
-function makeDrag(el,onDrop){el.onpointerdown=e=>{if(state.drag||e.isPrimary===false||(e.pointerType==='mouse'&&e.button!==0))return;e.preventDefault();if(el.classList.contains('animal'))pauseCow(el);let r=el.getBoundingClientRect(),body=document.body,scale=body.getBoundingClientRect().width/body.offsetWidth||1,layer=document.createElement('div');layer.style.cssText=`position:fixed;inset:0;pointer-events:none;z-index:9999;zoom:${1/scale}`;state.drag={el,onDrop,pid:e.pointerId,layer,parent:el.parentNode,next:el.nextSibling,css:el.style.cssText,dx:e.clientX-r.left,dy:e.clientY-r.top};clearTimeout(el._timer);el.dataset.dragging='yes';el.style.transition='none';el.style.position='absolute';el.style.transform='none';el.style.width=r.width+'px';el.style.height=r.height+'px';el.style.zIndex=9999;el.style.pointerEvents='auto';body.appendChild(layer);layer.appendChild(el);moveDrag(e.clientX,e.clientY);state.drag.scrollFrame=requestAnimationFrame(scrollActiveDrag);try{el.setPointerCapture(e.pointerId);}catch{}};}
+function makeDrag(el,onDrop){el.onpointerdown=e=>{if(state.drag||(el.classList.contains('animal')&&(state.data.entering||state.data.current==null))||e.isPrimary===false||(e.pointerType==='mouse'&&e.button!==0))return;e.preventDefault();if(el.classList.contains('animal'))pauseCow(el);let r=el.getBoundingClientRect(),body=document.body,scale=body.getBoundingClientRect().width/body.offsetWidth||1,layer=document.createElement('div');layer.style.cssText=`position:fixed;inset:0;pointer-events:none;z-index:9999;zoom:${1/scale}`;state.drag={el,onDrop,pid:e.pointerId,layer,parent:el.parentNode,next:el.nextSibling,css:el.style.cssText,dx:e.clientX-r.left,dy:e.clientY-r.top};clearTimeout(el._timer);el.dataset.dragging='yes';el.style.transition='none';el.style.position='absolute';el.style.transform='none';el.style.width=r.width+'px';el.style.height=r.height+'px';el.style.zIndex=9999;el.style.pointerEvents='auto';body.appendChild(layer);layer.appendChild(el);moveDrag(e.clientX,e.clientY);state.drag.scrollFrame=requestAnimationFrame(scrollActiveDrag);try{el.setPointerCapture(e.pointerId);}catch{}};}
 window.addEventListener('pointermove',e=>{if(state.drag&&state.drag.pid===e.pointerId){e.preventDefault();moveDrag(e.clientX,e.clientY);}}, {passive:false});
 function finishDrag(e,cancel=false){let d=state.drag;if(!d||d.pid!==e.pointerId)return;moveDrag(e.clientX,e.clientY);let rect=d.el.getBoundingClientRect();cancelAnimationFrame(d.scrollFrame);state.drag=null;d.el.dataset.dragging='no';try{d.el.releasePointerCapture(e.pointerId);}catch{}d.parent.insertBefore(d.el,d.next?.parentNode===d.parent?d.next:null);d.el.style.cssText=d.css;d.layer.remove();if(cancel){if(d.el.classList.contains('animal'))animateAnimal(d.el);return;}d.onDrop(d.el,e.clientX,e.clientY,rect);if(d.el.classList.contains('animal')&&d.el.dataset.free!=='no'){if(d.el.parentNode===document.getElementById('corral')&&d.el.dataset.recovering!=='yes')animateAnimal(d.el);}}
 window.addEventListener('pointerup',e=>finishDrag(e),{passive:false});
@@ -557,7 +643,9 @@ function scrollActiveDrag(now){
   const d=state.drag;if(!d)return;
   const dt=Math.min(32,now-(d.scrollTime||now));d.scrollTime=now;
   const edge=Math.min(64,innerHeight*.1),direction=d.y<edge?-1:d.y>innerHeight-edge?1:0;
-  if(direction)window.scrollBy(0,direction*dt*.6);
+  let onEntry=false;
+  if(direction&&d.el.classList.contains('animal')){const gate=document.getElementById('entradaCorral'),r=gate?.getBoundingClientRect();onEntry=!!r&&r.top>=8&&r.bottom<=innerHeight-8&&d.x>=r.left&&d.x<=r.right&&d.y>=r.top&&d.y<=r.bottom;}
+  if(direction&&!onEntry)window.scrollBy(0,direction*dt*.6);
   d.scrollFrame=requestAnimationFrame(scrollActiveDrag);
 }
 function place(el,x,y){el.dataset.x=x;el.dataset.y=y;el.style.left='0';el.style.top='0';el.style.transform=`translate3d(${x}px,${y}px,0)`;}
