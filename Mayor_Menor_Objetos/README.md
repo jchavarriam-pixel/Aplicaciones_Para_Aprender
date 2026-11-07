@@ -60,3 +60,13 @@ Las ilustraciones se producen con `tools/crear_recipientes_capacidad.cjs`. Los p
 La ayuda puede mostrar vasitos iguales de 100 mL, mililitros o ninguna medida. Solo se muestra el valor que se está comparando: Tiene para agua actual, Le caben para capacidad total. La elección de ayuda cambia inmediatamente; el tema de práctica se aplica en una nueva ronda. Ambas opciones se guardan junto con el resto de preferencias. Las figuras de los vasitos son iguales en todas las opciones y permiten comparar formas distintas con una unidad común.
 
 La comprobación incluye 48 comparaciones posibles, escenas donde el recipiente con más agua no es el de mayor capacidad, rondas completas, preferencias y presentación vertical/horizontal con zoom.
+
+## Llenado animado
+
+Cada pregunta del modo 4 comienza con los tres recipientes vacíos. Tras una pausa breve, reciben agua a un caudal común de 250 mL/s. En preguntas de capacidad se llenan hasta su capacidad total y cada chorro se detiene al llegar al borde; los recipientes menores terminan antes. En preguntas sobre agua actual, se detienen en los volúmenes propios del ejercicio.
+
+La elección se habilita al finalizar. Durante el llenado, las ayudas numéricas se sustituyen por el estado de cada recipiente (Vacío, Llenándose, Lleno o Listo), y luego reaparecen las medidas o vasitos si estaban activados. El botón Repetir llenado permite volver a observarlo sin alterar la respuesta ni las estrellas conseguidas.
+
+`dibujos-capacidad.js` conserva las plantillas SVG vacías y curvas de volumen/altura precalculadas; lo genera la misma herramienta `tools/crear_recipientes_capacidad.cjs`. `animacion-capacidad.js` mueve únicamente el agua, la superficie y el chorro. Los recipientes mantienen su base, tamaño y centrado. Cada SVG utiliza identificadores únicos para que sus recortes y degradados no interfieran con los de las otras opciones.
+
+Se utiliza un solo ciclo de animación, limitado a 30 actualizaciones por segundo, sin lecturas de diseño por fotograma. Se pausa al ocultar la página y continúa al volver; cambiar de modo, pregunta o ronda cancela los ciclos anteriores. Los cambios de orientación y zoom conservan el nivel porque la animación utiliza coordenadas vectoriales. Con movimiento reducido se muestran directamente los niveles finales después de la presentación en vacío.

@@ -51,3 +51,9 @@ fieldset{min-width:0;margin:0;padding:10px;border:2px solid #d4e2ed;border-radiu
 
 .apoyo-capacidad .vasitos{min-height:47px;align-content:start}
 @media(max-width:480px){.apoyo-capacidad .vasitos{min-height:34px}}
+
+.recorte-objeto .dibujo-capacidad{position:absolute;max-width:none;display:block;pointer-events:none}
+.control-llenado{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px 14px;padding:8px 0 12px}
+.control-llenado .boton{min-height:44px;padding:9px 14px;font-size:.9rem}.control-llenado p{margin:0;color:#4b728c;font-size:.88rem;line-height:1.35;flex:1;min-width:180px;text-align:center}
+.estado-recipiente{color:#337599;font-size:.88rem;font-weight:bold}
+@media(max-width:480px){.control-llenado{gap:8px}.control-llenado p{font-size:.8rem}.estado-recipiente{font-size:.73rem}}

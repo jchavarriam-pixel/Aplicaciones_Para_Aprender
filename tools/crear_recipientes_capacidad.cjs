@@ -38,11 +38,23 @@ function dibujar(recipientes){
     return `<defs><clipPath id="body${i}"><path d="${p}"/></clipPath></defs>${handle?`<path d="M${red(cx+r*.83)},${red(top+c.alturaCm*s*.23)} C${red(cx+r*2)},${red(top+c.alturaCm*s*.12)} ${red(cx+r*2)},${red(base-c.alturaCm*s*.15)} ${red(cx+r*.86)},${red(base-c.alturaCm*s*.23)}" fill="none" stroke="#496f89" stroke-width="9"/><path d="M${red(cx+r*.83)},${red(top+c.alturaCm*s*.23)} C${red(cx+r*2)},${red(top+c.alturaCm*s*.12)} ${red(cx+r*2)},${red(base-c.alturaCm*s*.15)} ${red(cx+r*.86)},${red(base-c.alturaCm*s*.23)}" fill="none" stroke="#d5e9f2" stroke-width="4"/>`:''}<path d="${p}" fill="url(#glass)" stroke="#496f89" stroke-width="4.5" stroke-linejoin="round"/><g clip-path="url(#body${i})">${c.aguaMl?`<rect x="${i*400}" y="${red(fillY)}" width="400" height="${red(base-fillY+3)}" fill="url(#water)"/><ellipse cx="${cx}" cy="${red(fillY)}" rx="${red(rf)}" ry="${red(Math.max(2,rf*.1))}" fill="#9ee8ff" stroke="#2199cb" stroke-width="2"/>`:''}<path d="M${red(cx-r*.66)} ${red(top+10)} L${red(cx-r*.66)} ${base-12}" stroke="white" stroke-opacity=".62" stroke-width="5" stroke-linecap="round"/></g><path d="${p}" fill="none" stroke="#496f89" stroke-width="4.5" stroke-linejoin="round"/><ellipse cx="${cx}" cy="${red(top)}" rx="${red(rt)}" ry="${red(Math.max(2,rt*.1))}" fill="none" stroke="#496f89" stroke-width="3"/>`;
   }).join('')}</svg>`;
 }
+const animaciones={};
 const catalogo=definiciones.map(([id,nombre,formas,capacidades,agua,alturas])=>{
   if(new Set(capacidades).size!==3||new Set(agua).size!==3)throw Error('Respuestas ambiguas: '+id);
   const recipientes=formas.map((forma,i)=>{if(agua[i]>capacidades[i]||agua[i]<0)throw Error('Cantidad inválida');const radioCm=Math.sqrt(capacidades[i]/(Math.PI*alturas[i]*integral(forma,1))),n=nivel(forma,agua[i]/capacidades[i]);if(Math.abs(integral(forma,n)/integral(forma,1)*capacidades[i]-agua[i])>.03)throw Error('Nivel incorrecto');return{forma,capacidadMl:capacidades[i],aguaMl:agua[i],alturaCm:alturas[i],radioCm:red(radioCm),nivel:red(n)};});
-  fs.writeFileSync(path.join(out,id+'.svg'),dibujar(recipientes));
+  const svg=dibujar(recipientes);
+  fs.writeFileSync(path.join(out,id+'.svg'),svg);
+  const s=Math.min(366/Math.max(...recipientes.map(c=>c.alturaCm)),302/Math.max(...recipientes.map(c=>c.radioCm*2*(c.forma==='taza'||c.forma==='jarra'?1.43:1))));
+  const geometria=recipientes.map((c,i)=>({centro:i*400+190,base:440,altura:c.alturaCm*s,radio:c.radioCm*s,forma:c.forma}));
+  // Se reutiliza el mismo dibujo y se insertan únicamente las capas de agua.
+  const vacio=svg.replace(/<g clip-path="url\(#body(\d+)\)">(?:<rect[^>]*\/><ellipse[^>]*\/>)?/g,(_,index)=>{
+    const g=geometria[+index];
+    return `<g clip-path="url(#body${index})"><g data-agua="${index}" opacity="0"><rect data-rect x="${+index*400}" y="440" width="400" height="0" fill="url(#water)"/><ellipse data-superficie cx="${g.centro}" cy="440" rx="0" ry="2" fill="#9ee8ff" stroke="#2199cb" stroke-width="2"/></g><path data-chorro="${index}" d="M${g.centro} ${red(g.base-g.altura)}V440" stroke="#46b9e9" stroke-width="5" stroke-linecap="round" opacity="0"/>`;
+  });
+  animaciones['capacidad-'+id]={svg:vacio,geometria};
   return{id:'capacidad-'+id,nombre,categoria:'capacidad',tipo:'paneles',columnas:3,src:'imagenes/capacidad/'+id+'.svg',capacidades,agua,recipientes};
 });
 fs.writeFileSync(path.join(app,'capacidades.js'),'// Generado por tools/crear_recipientes_capacidad.cjs. Volúmenes en mililitros.\nwindow.EJERCICIOS_CAPACIDAD = '+JSON.stringify(catalogo,null,2)+';\n');
+const curvas={};for(const tipo of Object.keys(perfiles)){const total=integral(tipo,1);curvas[tipo]=Array.from({length:257},(_,i)=>({v:integral(tipo,i/256)/total,h:i/256,r:perfiles[tipo](i/256)}));}
+fs.writeFileSync(path.join(app,'dibujos-capacidad.js'),'// SVG y curvas precalculadas para el llenado. Generado por tools/crear_recipientes_capacidad.cjs.\nwindow.DIBUJOS_CAPACIDAD = '+JSON.stringify({escenas:animaciones,curvas})+';\n');
 console.log(catalogo.length+' escenas SVG, 36 recipientes y niveles de agua verificados.');

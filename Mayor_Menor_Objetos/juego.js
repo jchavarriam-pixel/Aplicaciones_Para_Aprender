@@ -17,7 +17,7 @@ try{const s=JSON.parse(localStorage.getItem(clave)||'null');if(s&&typeof s==='ob
   for(const k of ['voz','ayuda'])if(typeof s[k]==='boolean')config[k]=s[k];
 }nombre=localStorage.getItem('nombreNinoGabrielApps')?.trim()||nombre;}catch{}
 if(config.actividad===1&&config.tamano==='mediano')config.tamano='mixto';
-let ronda=[],indice=0,seleccion=null,resuelta=false,lista=false,aciertos=0,fin=false,celebracionTimer,cargaToken=0;
+let ronda=[],indice=0,seleccion=null,resuelta=false,lista=false,aciertos=0,fin=false,celebracionTimer,cargaToken=0,llenado=null,timerLlenado=null,autoLlenadoPendiente=false;
 function mezclar(items){const a=[...items];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function hablar(texto){if(!config.voz||!('speechSynthesis'in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(texto);u.lang='es-ES';u.rate=.9;const voices=speechSynthesis.getVoices();u.voice=voices.find(v=>/^es[-_]/i.test(v.lang)&&v.localService)||voices.find(v=>/^es[-_]/i.test(v.lang))||null;speechSynthesis.speak(u);}
 function guardar(){try{localStorage.setItem(clave,JSON.stringify(config));}catch{}}
@@ -25,6 +25,7 @@ function bancoDisponible(){if(config.actividad===4)return capacidades;if(config.
 function actualizarConfig(){
   document.querySelector('.guia svg').innerHTML=config.actividad===4?'<path d="M25 30h38l-4 53H29zM98 15h47l-5 68h-37zM180 25h40l-4 58h-32z" fill="#eef8ff" stroke="#557a96" stroke-width="3"/><path d="M28 55h32l-2 25H30zM102 57h39l-2 23h-35zM183 40h34l-3 40h-28z" fill="#70d2f2"/>':guiaGeneral;
   $('comoJugar').textContent=config.actividad===4?'Agua y capacidad':'Así jugamos';
+  document.querySelector('.guia ol li').innerHTML='<b>1</b> '+(config.actividad===4?'Observa el llenado.':'Mira las opciones.');
   document.querySelectorAll('[data-actividad]').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.actividad===config.actividad)));
   $('tamanosConfig').hidden=config.actividad>=3;$('comparacionConfig').hidden=config.actividad<3;$('categoriasConfig').hidden=config.actividad!==3;
   $('capacidadConfig').hidden=config.actividad!==4;$('capacidadTema').value=config.capacidadTema;$('apoyoCapacidad').value=config.apoyoCapacidad;
@@ -43,7 +44,7 @@ function crearEjercicioCapacidad(asset,i,comparaciones){
   const valores=objetivo==='agua'?asset.agua:asset.capacidades,valorCorrecto=comparacion==='mas'?Math.max(...valores):Math.min(...valores);
   return {asset,actividad:4,rasgo:objetivo,objetivo,comparacion,valorCorrecto,
     pregunta:objetivo==='agua'?`¿Cuál tiene ${palabra} agua?`:`¿A cuál le cabe ${palabra} agua?`,
-    ayuda:objetivo==='agua'?'Compara la cantidad de agua que tienen ahora.':'Imagina cada recipiente lleno hasta el borde.',
+    ayuda:objetivo==='agua'?'Observa el llenado y compara el agua que queda.':'Observa cuánto entra hasta llenar cada recipiente.',
     opciones:mezclar([0,1,2]).map(fuente=>({fuente,valor:valores[fuente]}))};
 }
 function crearEjercicio(asset,i,tamanos,comparaciones){
@@ -64,6 +65,7 @@ function crearEjercicio(asset,i,tamanos,comparaciones){
   return {asset,actividad,rasgo,comparacion,objetivo,valorCorrecto,pregunta,ayuda,opciones};
 }
 function nuevaRonda(){
+  detenerLlenado();
   if('speechSynthesis'in window)speechSynthesis.cancel();limpiarCelebracion();
   const pool=bancoDisponible(),n=Math.min(config.cantidad,pool.length),tamanos=mezclar(config.actividad===1?['grande','pequeno']:['grande','mediano','pequeno']),comparaciones=mezclar(['mas','menos']);
   ronda=gruposEquilibrados(pool,n).map((a,i)=>crearEjercicio(a,i,tamanos,comparaciones));
@@ -84,6 +86,11 @@ function geometriaOpciones(item){
 }
 function apoyoCapacidadHTML(item,o){
   if(item.actividad!==4||config.apoyoCapacidad==='ninguno')return '';
+  if(llenado?.item===item&&!llenado.terminado){
+    const volume=llenado.volumenes[o.fuente],meta=item.objetivo==='capacidad'?item.asset.capacidades[o.fuente]:item.asset.agua[o.fuente];
+    const estado=!llenado.activo?'Vacío':volume>=meta?(item.objetivo==='capacidad'?'Lleno':meta===0?'Sin agua':'Listo'):'Llenándose…';
+    return `<span class="estado-recipiente">${estado}</span>`;
+  }
   const etiqueta=item.objetivo==='agua'?'Tiene':'Le caben';
   if(config.apoyoCapacidad==='medidas')return `<span class="etiqueta-volumen">${etiqueta}</span><strong>${o.valor.toLocaleString('es-CR')} mL</strong>`;
   const n=o.valor/100,vasito='<svg viewBox="0 0 20 24" aria-hidden="true"><path d="M3 3h14l-2 18H5z" fill="'+(item.objetivo==='agua'?'#70d1f3':'#fff8e4')+'" stroke="'+(item.objetivo==='agua'?'#288dbb':'#b58534')+'" stroke-width="2"/></svg>';
@@ -91,15 +98,17 @@ function apoyoCapacidadHTML(item,o){
 }
 function actualizarApoyosCapacidad(){
   const item=ronda[indice];if(!item||fin||item.actividad!==4)return;
-  document.querySelectorAll('.apoyo-capacidad').forEach(el=>el.innerHTML=apoyoCapacidadHTML(item,item.opciones[+el.dataset.opcion]));
+  document.querySelectorAll('.apoyo-capacidad').forEach(el=>{const html=apoyoCapacidadHTML(item,item.opciones[+el.dataset.opcion]);if(el.innerHTML!==html)el.innerHTML=html;});
 }
 function opcionHTML(item,g,o,i){
   const {r,escala}=g.objetos[i],x=(g.margen+(g.ancho-r.w*escala)/2)/g.w*100,y=(g.margen+g.arriba-(r.base-r.y+1)*escala)/g.h*100;
   const caja=`left:${x}%;top:${y}%;width:${r.w*escala/g.w*100}%;height:${r.h*escala/g.h*100}%`;
   const imagen=`left:${-r.x/r.w*100}%;top:${-r.y/r.h*100}%;width:${g.m.ancho/r.w*100}%;height:${g.m.alto/r.h*100}%`;
-  return `<button class="tarjeta-opcion" id="eleccion-${i}" aria-label="Elegir opción ${i+1}" aria-pressed="false" disabled><div class="muestra escenario" style="--proporcion:${g.w/g.h}"><div class="lienzo"><span class="linea-base" style="top:${g.base}%" aria-hidden="true"></span><div class="recorte-objeto" data-fuente="${o.fuente}" style="${caja}"><img src="${item.asset.src}" alt="Opción ${i+1}" draggable="false" decoding="async" style="${imagen}"></div></div></div>${item.actividad===4?`<span class="apoyo-capacidad" data-opcion="${i}">${apoyoCapacidadHTML(item,o)}</span>`:''}<span class="marca-seleccion" aria-hidden="true">✓</span><span class="texto-eleccion">Elegir</span></button>`;
+  const dibujo=item.actividad===4?AnimacionCapacidad.marcado(item.asset.id,`llenado-${cargaToken}-${i}`,imagen):`<img src="${item.asset.src}" alt="Opción ${i+1}" draggable="false" decoding="async" style="${imagen}">`;
+  return `<button class="tarjeta-opcion" id="eleccion-${i}" aria-label="Elegir opción ${i+1}" aria-pressed="false" disabled><div class="muestra escenario" style="--proporcion:${g.w/g.h}"><div class="lienzo"><span class="linea-base" style="top:${g.base}%" aria-hidden="true"></span><div class="recorte-objeto" data-fuente="${o.fuente}" style="${caja}">${dibujo}</div></div></div>${item.actividad===4?`<span class="apoyo-capacidad" data-opcion="${i}">${apoyoCapacidadHTML(item,o)}</span>`:''}<span class="marca-seleccion" aria-hidden="true">✓</span><span class="texto-eleccion">Elegir</span></button>`;
 }
 function mostrar(){
+  detenerLlenado();
   const token=++cargaToken,item=ronda[indice],a=item.asset;seleccion=null;resuelta=false;lista=false;
   $('errorImagen').hidden=true;$('zonaImagen').hidden=false;$('contador').textContent=`Ejercicio ${indice+1} de ${ronda.length}`;$('estrellas').textContent='★'.repeat(aciertos)+'☆'.repeat(ronda.length-aciertos);
   $('temaActual').textContent=`Modo ${item.actividad} · ${item.actividad===4?(item.objetivo==='agua'?'Agua que contiene':'Lo que le cabe'):categorias.find(c=>c.id===a.categoria).nombre}`;
@@ -111,9 +120,34 @@ function mostrar(){
   $('zonaImagen').classList.toggle('recipientes-capacidad',item.actividad===4);
   $('zonaImagen').innerHTML=item.opciones.map((o,i)=>opcionHTML(item,geometria,o,i)).join('');
   document.querySelectorAll('.tarjeta-opcion').forEach((b,i)=>b.addEventListener('click',()=>elegir(i)));
+  if(item.actividad===4){actualizarAyuda();hablar(item.pregunta);prepararLlenado(item,token);return;}
   const image=new Image();image.onload=()=>{if(token!==cargaToken)return;lista=true;document.querySelectorAll('.tarjeta-opcion').forEach(b=>b.disabled=false);};
   image.onerror=()=>{if(token!==cargaToken)return;lista=false;$('zonaImagen').hidden=true;$('errorImagen').hidden=false;$('revisar').disabled=true;};image.src=a.src;
   actualizarAyuda();hablar(item.pregunta);
+}
+function detenerLlenado(){clearTimeout(timerLlenado);timerLlenado=null;autoLlenadoPendiente=false;llenado?.cancelar();llenado=null;$('controlLlenado').hidden=true;}
+function prepararLlenado(item,token){
+  $('controlLlenado').hidden=false;$('repetirLlenado').disabled=false;$('repetirLlenado').textContent='▶ Ver llenado';
+  $('estadoLlenado').textContent='Los recipientes empiezan vacíos.';$('respuesta').textContent='Observa el llenado antes de elegir.';
+  llenado=AnimacionCapacidad.crear(item,session=>{
+    if(session!==llenado||token!==cargaToken)return;actualizarApoyosCapacidad();
+  },session=>{
+    if(session!==llenado||token!==cargaToken)return;
+    lista=true;document.querySelectorAll('.tarjeta-opcion').forEach(b=>b.disabled=resuelta);
+    $('revisar').disabled=seleccion===null||resuelta;$('repetirLlenado').disabled=false;$('repetirLlenado').textContent='↻ Repetir llenado';
+    $('estadoLlenado').textContent=item.objetivo==='capacidad'?'Ya están llenos. Compara cuánto ha entrado en cada uno.':'El agua quedó en la cantidad del ejercicio.';
+    if(!resuelta)$('respuesta').textContent='Ahora toca una opción y pulsa Revisar.';
+  });
+  actualizarApoyosCapacidad();autoLlenadoPendiente=true;
+  timerLlenado=setTimeout(()=>{timerLlenado=null;if(!document.hidden)iniciarLlenado();},650);
+}
+function iniciarLlenado(){
+  if(!llenado||llenado.activo||llenado.cancelado)return;
+  clearTimeout(timerLlenado);timerLlenado=null;autoLlenadoPendiente=false;lista=false;
+  document.querySelectorAll('.tarjeta-opcion').forEach(b=>b.disabled=true);$('revisar').disabled=true;$('repetirLlenado').disabled=true;$('repetirLlenado').textContent='💧 Llenando…';
+  if(!resuelta){seleccion=null;document.querySelectorAll('.tarjeta-opcion').forEach(b=>{b.className='tarjeta-opcion';b.setAttribute('aria-pressed','false');b.querySelector('.texto-eleccion').textContent='Elegir';});$('respuesta').textContent='Observa cómo sube el agua.';}
+  $('estadoLlenado').textContent=llenado.item.objetivo==='capacidad'?'Reciben agua al mismo ritmo. Mira cuándo se llena cada uno.':'El agua sube hasta la cantidad de este ejercicio.';
+  llenado.iniciar();
 }
 function elegir(i){if(!lista||resuelta||fin)return;seleccion=i;document.querySelectorAll('.tarjeta-opcion').forEach((b,pos)=>{b.className='tarjeta-opcion'+(pos===i?' seleccionada':'');b.setAttribute('aria-pressed',String(pos===i));b.querySelector('.texto-eleccion').textContent=pos===i?'Seleccionado':'Elegir';});$('respuesta').textContent='La opción iluminada es tu selección. Pulsa Revisar.';$('respuesta').className='respuesta';$('revisar').disabled=false;}
 function explicacion(item){if(item.actividad===4)return item.objetivo==='agua'?`Este recipiente tiene ${item.valorCorrecto} mililitros de agua.`:`En este recipiente caben ${item.valorCorrecto} mililitros cuando está lleno.`;if(item.actividad<3)return `Es el objeto ${item.objetivo==='pequeno'?'pequeño':item.objetivo}.`;const q=item.comparacion==='mas'?'más':'menos';if(item.asset.categoria==='cantidad')return `Aquí hay ${q} ${item.asset.sustantivo}.`;if(item.asset.categoria==='distancia')return `La pelota está ${q} ${item.rasgo} ${item.asset.referencia}.`;if(item.asset.categoria==='separacion')return `En este grupo están ${q} ${item.rasgo}.`;return `Encontraste la opción: ${q} ${item.rasgo}.`;}
@@ -123,7 +157,7 @@ function revisar(){
     const texto=`¡Muy bien, ${nombre}! ${explicacion(item)}`;$('respuesta').textContent=texto;$('respuesta').classList.add('acierto');$('revisar').hidden=true;$('siguiente').hidden=false;$('siguiente').textContent=indice===ronda.length-1?'Ver mis estrellas ★':'Siguiente →';$('estrellas').textContent='★'.repeat(aciertos)+'☆'.repeat(ronda.length-aciertos);hablar(texto);celebrar();
   }else{b.classList.add('incorrecta');$('respuesta').textContent='Mira otra vez las opciones. '+item.pregunta;hablar($('respuesta').textContent);$('revisar').disabled=true;}
 }
-function siguiente(){if(!resuelta||fin)return;limpiarCelebracion();indice++;if(indice<ronda.length){mostrar();return;}fin=true;for(const id of ['zonaImagen','respuesta','ayudaTamano','errorImagen','temaActual'])$(id).hidden=true;document.querySelector('.acciones').hidden=true;document.querySelector('.pregunta-fila').hidden=true;$('contador').textContent=`${ronda.length} ejercicios completados`;$('fin').hidden=false;$('mensajeFinal').textContent=`${nombre}, completaste ${ronda.length} comparaciones. ¡Conseguiste ${aciertos} estrellas!`;$('fin').focus();hablar(`¡Buen trabajo, ${nombre}! Completaste la ronda.`);celebrar();}
+function siguiente(){if(!resuelta||fin)return;detenerLlenado();limpiarCelebracion();indice++;if(indice<ronda.length){mostrar();return;}fin=true;for(const id of ['zonaImagen','respuesta','ayudaTamano','errorImagen','temaActual'])$(id).hidden=true;document.querySelector('.acciones').hidden=true;document.querySelector('.pregunta-fila').hidden=true;$('contador').textContent=`${ronda.length} ejercicios completados`;$('fin').hidden=false;$('mensajeFinal').textContent=`${nombre}, completaste ${ronda.length} comparaciones. ¡Conseguiste ${aciertos} estrellas!`;$('fin').focus();hablar(`¡Buen trabajo, ${nombre}! Completaste la ronda.`);celebrar();}
 function limpiarCelebracion(){clearTimeout(celebracionTimer);document.querySelector('.confeti')?.remove();}
 function celebrar(){limpiarCelebracion();if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;const layer=document.createElement('div');layer.className='confeti';layer.setAttribute('aria-hidden','true');const colors=['#e4af30','#4a99d7','#5eb68a','#cf80a5'];for(let i=0;i<28;i++){const p=document.createElement('i');p.style.setProperty('--x',`${Math.cos(i*2.4)*(70+Math.random()*170)}px`);p.style.setProperty('--y',`${-100+Math.random()*320}px`);p.style.setProperty('--giro',`${Math.random()*500}deg`);p.style.setProperty('--color',colors[i%colors.length]);layer.append(p);}document.querySelector('.actividad').append(layer);celebracionTimer=setTimeout(limpiarCelebracion,950);}
 $('categorias').innerHTML=categorias.map(c=>`<label class="opcion"><input type="checkbox" data-categoria="${c.id}">${c.nombre}</label>`).join('');
@@ -132,6 +166,9 @@ $('todasCategorias').addEventListener('click',()=>{config.categorias=categorias.
 for(const id of ['tamano','comparacion','cantidad','voz','ayuda','capacidadTema','apoyoCapacidad']){const input=$(id);input.addEventListener('change',()=>{config[id]=input.type==='checkbox'?input.checked:id==='cantidad'?+input.value:input.value;guardar();actualizarConfig();if(id==='voz'&&!config.voz&&'speechSynthesis'in window)speechSynthesis.cancel();actualizarAyuda();actualizarApoyosCapacidad();});}
 document.querySelectorAll('[data-actividad]').forEach(b=>b.addEventListener('click',()=>{config.actividad=+b.dataset.actividad;if(config.actividad===1&&config.tamano==='mediano')config.tamano='mixto';guardar();actualizarConfig();nuevaRonda();}));
 $('nombre').value=nombre;$('nombre').addEventListener('change',()=>{nombre=$('nombre').value.trim()||'Gabriel';$('nombre').value=nombre;try{localStorage.setItem('nombreNinoGabrielApps',nombre);}catch{}});
+$('repetirLlenado').addEventListener('click',iniciarLlenado);
 $('revisar').addEventListener('click',revisar);$('siguiente').addEventListener('click',siguiente);$('nuevaRonda').addEventListener('click',nuevaRonda);$('otraRonda').addEventListener('click',nuevaRonda);$('escuchar').addEventListener('click',()=>{if(!fin)hablar(ronda[indice].pregunta);});$('reintentar').addEventListener('click',mostrar);
-document.addEventListener('visibilitychange',()=>{if(document.hidden){if('speechSynthesis'in window)speechSynthesis.cancel();limpiarCelebracion();}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){
+  clearTimeout(timerLlenado);timerLlenado=null;llenado?.pausar();if('speechSynthesis'in window)speechSynthesis.cancel();limpiarCelebracion();
+}else if(llenado){if(autoLlenadoPendiente)iniciarLlenado();else llenado.reanudar();}});
 actualizarConfig();nuevaRonda();

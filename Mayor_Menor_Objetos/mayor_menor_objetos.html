@@ -10,6 +10,8 @@
   <script src="objetos.js" defer></script>
   <script src="caracteristicas.js" defer></script>
   <script src="capacidades.js" defer></script>
+  <script src="dibujos-capacidad.js" defer></script>
+  <script src="animacion-capacidad.js" defer></script>
   <script src="recortes.js" defer></script>
   <script src="juego.js" defer></script>
 </head>
@@ -58,6 +60,7 @@
       <div class="pregunta-fila"><h2 id="pregunta" tabindex="-1"></h2><button id="escuchar" class="boton escuchar" aria-label="Escuchar la pregunta">🔊</button></div>
       <p id="ayudaTamano" class="ayuda">Mayor = más grande <span>·</span> Menor = más pequeño</p>
       <p id="temaActual" class="tema-actual"></p>
+      <div id="controlLlenado" class="control-llenado" hidden><button id="repetirLlenado" class="boton secundaria">▶ Ver llenado</button><p id="estadoLlenado" role="status"></p></div>
       <div id="zonaImagen" class="zona-opciones" role="group" aria-label="Elige una opción"></div>
       <div id="errorImagen" hidden><p>No se pudo cargar la imagen.</p><button class="boton secundaria" id="reintentar">Reintentar</button></div>
       <p id="respuesta" class="respuesta" role="status" aria-live="polite">Toca uno de los objetos.</p>
