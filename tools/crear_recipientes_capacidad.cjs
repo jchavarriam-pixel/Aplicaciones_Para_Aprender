@@ -39,6 +39,14 @@ function cuerpo(c,g){
   for(let i=96;i>=0;i--){const t=i/96;points.push([g.centro+g.radio*perfiles[c.forma](t),g.base-g.altura*t]);}
   return points.map(([x,y],i)=>(i?'L':'M')+red(x)+','+red(y)).join(' ')+` A${red(g.radioBase)},${red(g.baseRy)} 0 0 1 ${red(g.centro-g.radioBase)},${red(g.base)} Z`;
 }
+function acabadoVidrio(svg,geometry){
+  let indice=0;
+  const brillo='<linearGradient id="brillo"><stop stop-color="white" stop-opacity=".42"/><stop offset=".24" stop-color="white" stop-opacity=".12"/><stop offset=".56" stop-color="white" stop-opacity="0"/><stop offset=".86" stop-color="#d6f5ff" stop-opacity=".12"/><stop offset="1" stop-color="#456f89" stop-opacity=".14"/></linearGradient>';
+  return svg.replace('</defs>',brillo+'</defs>').replace(/<ellipse data-base="true"/g,()=>{
+    const g=geometry[indice++],top=g.base-g.altura,rt=g.radio*perfiles[g.forma](1),ry=Math.max(2,rt*.14);
+    return `<g aria-hidden="true" clip-path="url(#body${indice-1})"><rect x="${red(g.centro-g.radio)}" y="${red(top)}" width="${red(g.radio*2)}" height="${red(g.altura+g.baseRy)}" fill="url(#brillo)"/></g><path d="M${red(g.centro-rt*.82)},${red(top-ry*.2)} A${red(rt*.84)},${red(ry*.65)} 0 0 1 ${red(g.centro+rt*.82)},${red(top-ry*.2)}" fill="none" stroke="white" stroke-opacity=".9" stroke-width="2.8" stroke-linecap="round"/><ellipse data-base="true"`;
+  });
+}
 function dibujar(recipientes){
   const geometry=medidas(recipientes);
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500" viewBox="0 0 1200 500"><defs><linearGradient id="glass"><stop stop-color="#91bfd5" stop-opacity=".7"/><stop offset=".17" stop-color="#eafaff" stop-opacity=".5"/><stop offset=".43" stop-color="white" stop-opacity=".12"/><stop offset=".78" stop-color="#d8f2fc" stop-opacity=".45"/><stop offset="1" stop-color="#8bb9d0" stop-opacity=".75"/></linearGradient><linearGradient id="water" x2="0" y2="1"><stop stop-color="#74e1fc"/><stop offset="1" stop-color="#238fce"/></linearGradient><linearGradient id="baseGlass" x2="0" y2="1"><stop stop-color="#f1fcff" stop-opacity=".55"/><stop offset="1" stop-color="#86b8d0" stop-opacity=".7"/></linearGradient><linearGradient id="rim" x2="0" y2="1"><stop stop-color="#9cc9dc" stop-opacity=".3"/><stop offset=".5" stop-color="white" stop-opacity=".1"/><stop offset="1" stop-color="#bce0ed" stop-opacity=".45"/></linearGradient></defs><rect width="1200" height="500" fill="white"/>${recipientes.map((c,i)=>{
@@ -58,12 +66,18 @@ const escenas=definiciones.flatMap((original,i)=>[original,...[3,2,1].map(d=>{
   const forma=formas[i%3],alturaReferencia=alturas[i%3];
   const formasNivel=[forma,forma,forma],alturasNivel=nuevas.map(v=>alturaReferencia*v/500);
   const titulos={vaso:'Vasos',jarra:'Jarras',botella:'Botellas',cuenco:'Cuencos',taza:'Tazas',matraz:'Matraces'};
-  return [`${id}-d${d}`,`${titulos[forma]} de distinta capacidad`,formasNivel,nuevas,agua,alturasNivel,d];
-})]);
+  const grupos=[['cuenco','taza','jarra'],['vaso','botella','matraz'],['taza','vaso','jarra'],['cuenco','vaso','botella']];
+  const formasMixtas=[null,null,null];orden.forEach((fuente,rango)=>formasMixtas[fuente]=grupos[i%grupos.length][rango]);
+  const alturasMixtas=nuevas.map(v=>(8+(i%3)*2)*v/500);
+  return [
+    [`${id}-d${d}`,`${titulos[forma]} de distinta capacidad`,formasNivel,nuevas,agua,alturasNivel,d],
+    [`${id}-d${d}-mixtos`,'Recipientes de distintas formas',formasMixtas,nuevas,agua,alturasMixtas,d]
+  ];
+}).flat()]);
 const catalogo=escenas.map(([id,nombre,formas,capacidades,agua,alturas,diferenciaVasos])=>{
   if(new Set(capacidades).size!==3||new Set(agua).size!==3)throw Error('Respuestas ambiguas: '+id);
   const recipientes=formas.map((forma,i)=>{if(agua[i]>capacidades[i]||agua[i]<0)throw Error('Cantidad inválida');const radioCm=Math.sqrt(capacidades[i]/(Math.PI*alturas[i]*integral(forma,1))),n=nivel(forma,agua[i]/capacidades[i]);if(Math.abs(integral(forma,n)/integral(forma,1)*capacidades[i]-agua[i])>.03)throw Error('Nivel incorrecto');return{forma,capacidadMl:capacidades[i],aguaMl:agua[i],alturaCm:alturas[i],radioCm:red(radioCm),nivel:red(n)};});
-  const svg=dibujar(recipientes);
+  const svg=acabadoVidrio(dibujar(recipientes),medidas(recipientes));
   fs.writeFileSync(path.join(out,id+'.svg'),svg);
   const geometria=medidas(recipientes).map(({escala,...g})=>g);
   // Se reutiliza el mismo dibujo y se insertan únicamente las capas de agua.
@@ -72,7 +86,7 @@ const catalogo=escenas.map(([id,nombre,formas,capacidades,agua,alturas,diferenci
     return `<g clip-path="url(#body${index})"><g data-agua="${index}" opacity="0"><rect data-rect x="${+index*400}" y="${red(g.base)}" width="400" height="0" fill="url(#water)"/><ellipse data-superficie cx="${g.centro}" cy="${red(g.base)}" rx="0" ry="2" fill="#9ee8ff" stroke="#2199cb" stroke-width="2"/></g><path data-chorro="${index}" d="M${g.centro} ${red(g.base-g.altura)}V${red(g.base)}" stroke="#46b9e9" stroke-width="5" stroke-linecap="round" opacity="0"/>`;
   });
   animaciones['capacidad-'+id]={svg:vacio,geometria};
-  return{id:'capacidad-'+id,nombre,categoria:'capacidad',tipo:'paneles',columnas:3,src:'imagenes/capacidad/'+id+'.svg',nivel:diferenciaVasos?String(diferenciaVasos):'variado',diferenciaVasos:diferenciaVasos||null,capacidades,agua,recipientes};
+  return{id:'capacidad-'+id,nombre,categoria:'capacidad',tipo:'paneles',columnas:3,src:'imagenes/capacidad/'+id+'.svg',nivel:diferenciaVasos?String(diferenciaVasos):'variado',estructura:new Set(formas).size===1?'misma':'diferente',diferenciaVasos:diferenciaVasos||null,capacidades,agua,recipientes};
 });
 fs.writeFileSync(path.join(app,'capacidades.js'),'// Generado por tools/crear_recipientes_capacidad.cjs. Volúmenes en mililitros.\nwindow.EJERCICIOS_CAPACIDAD = '+JSON.stringify(catalogo,null,2)+';\n');
 const curvas={};for(const tipo of Object.keys(perfiles)){const total=integral(tipo,1);curvas[tipo]=Array.from({length:257},(_,i)=>({v:integral(tipo,i/256)/total,h:i/256,r:perfiles[tipo](i/256)}));}
