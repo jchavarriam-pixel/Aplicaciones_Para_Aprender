@@ -3,9 +3,9 @@
 const fs=require('fs'),path=require('path'),vm=require('vm'),sharp=require('sharp');
 const root=path.resolve(__dirname,'..'),app=path.join(root,'Mayor_Menor_Objetos');
 const context={window:{}};vm.createContext(context);
-for(const file of ['objetos.js','caracteristicas.js'])vm.runInContext(fs.readFileSync(path.join(app,file),'utf8'),context);
-const assets=[...context.window.OBJETOS_TAMANOS.map(a=>({...a,categoria:'tamano',columnas:2,src:'imagenes/'+a.archivo})),...context.window.VARIANTES_OBJETOS];
-const fixed=new Set(['clima','cantidad','separacion','distancia','orden']);
+for(const file of ['objetos.js','caracteristicas.js','capacidades.js'])vm.runInContext(fs.readFileSync(path.join(app,file),'utf8'),context);
+const assets=[...context.window.OBJETOS_TAMANOS.map(a=>({...a,categoria:'tamano',columnas:2,src:'imagenes/'+a.archivo})),...context.window.VARIANTES_OBJETOS,...context.window.EJERCICIOS_CAPACIDAD];
+const fixed=new Set(['clima','cantidad','separacion','distancia','orden','capacidad']);
 function maskPixel(data,p,alpha){const a=data[p+3];if(alpha)return a>24;const lo=Math.min(data[p],data[p+1],data[p+2]),hi=Math.max(data[p],data[p+1],data[p+2]);return a>24&&(lo<165||(lo<242&&hi-lo>22));}
 async function medir(asset){
   const file=path.resolve(app,asset.src),image=sharp(file),meta=await image.metadata(),{data,info}=await image.ensureAlpha().raw().toBuffer({resolveWithObject:true}),w=info.width,h=info.height;

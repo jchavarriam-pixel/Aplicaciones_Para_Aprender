@@ -40,3 +40,14 @@ fieldset{min-width:0;margin:0;padding:10px;border:2px solid #d4e2ed;border-radiu
   .zona-opciones.escenas-clima{grid-template-columns:repeat(2,minmax(0,1fr));--alto-panel:420px;gap:12px}
   .escenas-clima .tarjeta-opcion:last-child:nth-child(3){grid-column:1/-1;width:calc((100% - 12px)/2);justify-self:center}
 }
+
+/* Comparación de agua y capacidad con unidades visuales iguales. */
+.modos{grid-template-columns:repeat(4,minmax(0,1fr))}
+#capacidadConfig{margin-top:0}.apoyo-capacidad{height:78px;min-width:0;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#315e7d;font-size:.9rem}
+.etiqueta-volumen{font-size:.8rem;font-weight:bold;color:#60788d}.vasitos{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:3px;width:min(100%,126px);justify-items:center}.vasitos svg{width:100%;height:22px;max-width:17px}.vasitos .vacio{grid-column:1/-1;font-size:.86rem;color:#6c8190;white-space:nowrap}.apoyo-capacidad strong{font-size:1.08rem}.recipientes-capacidad{--alto-panel:clamp(190px,35dvh,320px)}
+@media(max-width:1000px){.modos{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){.apoyo-capacidad{height:72px;gap:3px}.vasitos{gap:2px}.vasitos svg{height:16px}.etiqueta-volumen{font-size:.7rem}.apoyo-capacidad strong{font-size:.85rem}.recipientes-capacidad{--alto-panel:240px}}
+@media(orientation:landscape) and (max-height:600px){.modos{grid-template-columns:repeat(4,minmax(0,1fr))}.modos button{gap:7px;font-size:.8rem;padding:7px}.modos button small{font-size:.66rem}.recipientes-capacidad{--alto-panel:180px}}
+
+.apoyo-capacidad .vasitos{min-height:47px;align-content:start}
+@media(max-width:480px){.apoyo-capacidad .vasitos{min-height:34px}}

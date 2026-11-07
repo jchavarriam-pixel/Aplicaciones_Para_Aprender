@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="../pantalla-completa.css">
   <script src="objetos.js" defer></script>
   <script src="caracteristicas.js" defer></script>
+  <script src="capacidades.js" defer></script>
   <script src="recortes.js" defer></script>
   <script src="juego.js" defer></script>
 </head>
@@ -16,13 +17,14 @@
 <main class="app">
   <header class="cabecera">
     <div class="marca" aria-hidden="true">●<span>●</span></div>
-    <div><h1>Mayor y menor con objetos</h1><p>¡Descubre tamaños y características!</p></div>
+    <div><h1>Mayor y menor con objetos</h1><p>¡Compara tamaños, características y capacidad!</p></div>
     <a class="volver" href="../index.html">⌂ Aplicaciones</a>
   </header>
   <nav class="modos" aria-label="Modos de juego">
     <button data-actividad="1" aria-pressed="true"><b>1</b><span>Grande y pequeño<small>Dos opciones</small></span></button>
     <button data-actividad="2" aria-pressed="false"><b>2</b><span>Grande, mediano y pequeño<small>Tres opciones</small></span></button>
     <button data-actividad="3" aria-pressed="false"><b>3</b><span>Características<small>Más, menos o mixto</small></span></button>
+    <button data-actividad="4" aria-pressed="false"><b>4</b><span>Capacidad y agua<small>Lo que tiene y lo que le cabe</small></span></button>
   </nav>
   <div class="distribucion">
     <aside class="lateral">
@@ -37,6 +39,10 @@
           <label>Nombre del niño<input id="nombre" maxlength="50" autocomplete="off" placeholder="Gabriel"></label>
           <label id="tamanosConfig">¿Qué tamaño buscamos?<select id="tamano"><option value="mixto">Variar los tamaños</option><option value="grande">Solo grande</option><option value="mediano">Solo mediano</option><option value="pequeno">Solo pequeño</option></select></label>
           <label id="comparacionConfig" hidden>Tipo de comparación<select id="comparacion"><option value="mixto">Más y menos</option><option value="mas">Solo más</option><option value="menos">Solo menos</option></select></label>
+          <div id="capacidadConfig" class="campos" hidden>
+            <label>¿Qué comparamos?<select id="capacidadTema"><option value="mixto">Agua y capacidad</option><option value="agua">El agua que contiene</option><option value="capacidad">Lo que le cabe</option></select></label>
+            <label>Ayuda para comparar<select id="apoyoCapacidad"><option value="vasitos">Vasitos iguales</option><option value="medidas">Cantidad en mililitros</option><option value="ninguno">Sin medidas</option></select></label>
+          </div>
           <fieldset id="categoriasConfig" hidden><legend>Características para practicar</legend><div class="categoria-acciones"><button type="button" id="todasCategorias">Todas</button><button type="button" id="basicasCategorias">Básicas</button></div><div id="categorias" class="categorias"></div><p id="estadoCategorias" class="nota" role="status"></p></fieldset>
           <label>Ejercicios por ronda<select id="cantidad"><option value="4">4 ejercicios</option><option value="8">8 ejercicios</option><option value="12">12 ejercicios</option></select></label>
           <label class="opcion"><input type="checkbox" id="voz"> Leer preguntas y respuestas</label>

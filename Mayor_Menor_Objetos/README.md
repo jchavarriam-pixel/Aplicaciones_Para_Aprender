@@ -2,13 +2,15 @@
 
 Abrir `mayor_menor_objetos.html` directamente o desde el índice principal. La aplicación funciona como archivo local y desde servidor, sin librerías externas para jugar.
 
-## Tres modos
+## Cuatro modos
 
 1. **Grande y pequeño:** dos opciones del mismo tipo de objeto. Se puede buscar siempre grande, siempre pequeño o variar.
 2. **Grande, mediano y pequeño:** tres grados de tamaño. Se puede practicar cualquiera de los tres o mezclarlos.
 3. **Características:** tres opciones, con comparación **más**, **menos** o **mixta**. Se eligen las características desde la configuración.
 
-Las 18 categorías son tamaño, altura, longitud, anchura, grosor, claridad del color, forma, superficie, limpieza, humedad, orden, abertura, contenido, cantidad, separación, distancia, inclinación y clima. Cada categoría tiene al menos dos variantes de imágenes; clima incluye sol/nubes, lluvia y nieve. La inclinación se describe con derecho frente a inclinado; por ejemplo: ¿cuál está más derecho?
+4. **Capacidad y agua:** comparar cuánto contiene un recipiente y cuánto puede contener en total. Se eligen agua, capacidad o ambas preguntas, junto con más, menos o mixto.
+
+Las 18 categorías del modo 3 son tamaño, altura, longitud, anchura, grosor, claridad del color, forma, superficie, limpieza, humedad, orden, abertura, contenido, cantidad, separación, distancia, inclinación y clima. Cada categoría tiene al menos dos variantes de imágenes; clima incluye sol/nubes, lluvia y nieve. La inclinación se describe con derecho frente a inclinado; por ejemplo: ¿cuál está más derecho?
 
 Las comparaciones se apoyan en grados ordenados. Por ejemplo, menos delgado corresponde al cilindro más grueso cuando lo único que varía es su diámetro. En cantidad se pregunta dónde hay más/menos objetos; en distancia se nombra la referencia (casa o banco). Las preguntas usan es o está según corresponda a la característica.
 
@@ -35,7 +37,7 @@ Se conserva la clave `mayorMenorObjetos.config.v1`. Se guardan modo, tamaño obj
 
 Las pestañas cambian de modo inmediatamente. Cantidad, tamaño objetivo y categorías se aplican con Nueva ronda; voz y ayuda cambian de inmediato. La carga de imágenes permite reintentar y descarta respuestas de cargas antiguas al cambiar rápidamente de actividad.
 
-Se mantienen créditos, referencia a Gabriel, controles de zoom y pantalla completa. Se comprobó el uso táctil, la adaptación a teléfono/tableta y zoom al 85 %, las tres actividades, el guardado, la migración de preferencias y las respuestas únicas de todos los rasgos y comparadores.
+Se mantienen créditos, referencia a Gabriel, controles de zoom y pantalla completa. Se comprobó el uso táctil, la adaptación a teléfono/tableta y zoom al 85 %, los cuatro modos, el guardado, la migración de preferencias y las respuestas únicas de todos los rasgos y comparadores.
 
 ## Recortes, escala y alineación
 
@@ -43,6 +45,18 @@ Se mantienen créditos, referencia a Gabriel, controles de zoom y pantalla compl
 
 Cada ejercicio utiliza un mismo lienzo, margen, línea de base y factor de escala para todas sus opciones. Los recortes se centran por su contenido visible; ningún dibujo se amplía por separado para llenar la tarjeta. Así se conservan las diferencias reales de tamaño, altura, longitud y anchura. Las tarjetas y sus etiquetas tienen medidas uniformes; seleccionar o corregir una opción no mueve el dibujo. Las cintas y otras ilustraciones muy anchas usan una tarjeta más baja para evitar espacio vacío excesivo.
 
-Las 52 imágenes están medidas, incluidos los ocho pares anteriores y las seis ilustraciones transparentes reutilizadas. Para volver a medir después de cambiar una ilustración: ejecutar `tools/medir_recortes_objetos.cjs` con Node.js y Sharp. La opción `--revision` crea hojas temporales de inspección. La aplicación normal solo necesita los archivos estáticos y no ejecuta ese proceso.
+Las 64 imágenes están medidas, incluidos los ocho pares anteriores, las seis ilustraciones transparentes reutilizadas y las doce escenas de capacidad. Para volver a medir después de cambiar una ilustración: ejecutar `tools/medir_recortes_objetos.cjs` con Node.js y Sharp. La opción `--revision` crea hojas temporales de inspección. La aplicación normal solo necesita los archivos estáticos y no ejecuta ese proceso.
 
 Las escenas de clima se muestran más grandes y con un margen interior reducido. En teléfonos verticales se distribuyen en dos columnas con la tercera tarjeta centrada y del mismo ancho, para conservar la misma escala entre opciones. En horizontal se mantienen tres escenas lado a lado.
+
+## Capacidad y cantidad de agua
+
+El modo 4 incorpora 12 escenas originales en SVG con 36 recipientes: vasos, tazas, jarras, botellas, cuencos y matraces. Se conservan las diferentes formas y los tamaños físicos relativos al presentarlos. Todos están centrados y alineados por su base.
+
+Cada recipiente tiene dos valores independientes en mililitros: agua actual y capacidad total. La respuesta se calcula con el valor preguntado, no con la altura del dibujo ni con el porcentaje que parece lleno. Cada escena tiene tres valores distintos en ambas medidas, por lo que las cuatro combinaciones (más/menos agua, más/menos capacidad) tienen una respuesta única. En modo mixto aparecen las cuatro preguntas equilibradas.
+
+Las ilustraciones se producen con `tools/crear_recipientes_capacidad.cjs`. Los perfiles representan cuerpos de revolución; su radio se calcula a partir de su capacidad y altura, y la altura del agua se obtiene integrando secciones horizontales. La ilustración conserva el mismo factor de escala físico entre los tres recipientes de cada escena. El catálogo con capacidades y volúmenes es `capacidades.js`; las imágenes están en `imagenes/capacidad/`. Son recursos vectoriales locales y no requieren librerías al jugar.
+
+La ayuda puede mostrar vasitos iguales de 100 mL, mililitros o ninguna medida. Solo se muestra el valor que se está comparando: Tiene para agua actual, Le caben para capacidad total. La elección de ayuda cambia inmediatamente; el tema de práctica se aplica en una nueva ronda. Ambas opciones se guardan junto con el resto de preferencias. Las figuras de los vasitos son iguales en todas las opciones y permiten comparar formas distintas con una unidad común.
+
+La comprobación incluye 48 comparaciones posibles, escenas donde el recipiente con más agua no es el de mayor capacidad, rondas completas, preferencias y presentación vertical/horizontal con zoom.

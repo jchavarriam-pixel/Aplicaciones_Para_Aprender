@@ -1659,5 +1659,425 @@ window.RECORTES_OBJETOS = {
       800
     ],
     "advertencias": []
+  },
+  "capacidad-vasos": {
+    "ancho": 1200,
+    "alto": 500,
+    "regiones": [
+      {
+        "x": 83,
+        "y": 217,
+        "w": 214,
+        "h": 228,
+        "base": 442
+      },
+      {
+        "x": 467,
+        "y": 111,
+        "w": 246,
+        "h": 334,
+        "base": 442
+      },
+      {
+        "x": 852,
+        "y": 57,
+        "w": 276,
+        "h": 388,
+        "base": 442
+      }
+    ],
+    "escena": false,
+    "cortes": [
+      0,
+      400,
+      800,
+      1200
+    ],
+    "advertencias": []
+  },
+  "capacidad-jarras": {
+    "ancho": 1200,
+    "alto": 500,
+    "regiones": [
+      {
+        "x": 107,
+        "y": 225,
+        "w": 224,
+        "h": 220,
+        "base": 442
+      },
+      {
+        "x": 491,
+        "y": 142,
+        "w": 267,
+        "h": 303,
+        "base": 442
+      },
+      {
+        "x": 884,
+        "y": 60,
+        "w": 287,
+        "h": 385,
+        "base": 442
+      }
+    ],
+    "escena": false,
+    "cortes": [
+      0,
+      400,
+      800,
+      1200
+    ],
+    "advertencias": []
+  },
+  "capacidad-botellas": {
+    "ancho": 1200,
+    "alto": 500,
+    "regiones": [
+      {
+        "x": 132,
+        "y": 101,
+        "w": 116,
+        "h": 344,
+        "base": 442
+      },
+      {
+        "x": 505,
+        "y": 167,
+        "w": 170,
+        "h": 278,
+        "base": 442
+      },
+      {
+        "x": 946,
+        "y": 68,
+        "w": 88,
+        "h": 377,
+        "base": 442
+      }
+    ],
+    "escena": false,
+    "cortes": [
+      0,
+      400,
+      800,
+      1200
+    ],
+    "advertencias": []
+  },
+  "capacidad-formas": {
+    "ancho": 1200,
+    "alto": 500,
+    "regiones": [
+      {
+        "x": 138,
+        "y": 106,
+        "w": 104,
+        "h": 339,
+        "base": 442
+      },
+      {
+        "x": 434,
+        "y": 313,
+        "w": 312,
+        "h": 132,
+        "base": 442
+      },
+      {
+        "x": 922,
+        "y": 72,
+        "w": 136,
+        "h": 373,
+        "base": 442
+      }
+    ],
+    "escena": false,
+    "cortes": [
+      0,
+      400,
+      800,
+      1200
+    ],
+    "advertencias": []
+  },
+  "capacidad-cuencos": {
+    "ancho": 1200,
+    "alto": 500,
+    "regiones": [
+      {
+        "x": 65,
+        "y": 331,
+        "w": 250,
+        "h": 114,
+        "base": 442
+      },
+      {
+        "x": 434,
+        "y": 272,
+        "w": 312,
+        "h": 173,
+        "base": 442
+      },
+      {
+        "x": 840,
+        "y": 310,
+        "w": 300,
+        "h": 135,
+        "base": 442
+      }
+    ],
+    "escena": false,
+    "cortes": [
+      0,
+      400,
+      800,
+      1200
+    ],
+    "advertencias": []
+  },
+  "capacidad-lleno-parcial": {
+    "ancho": 1200,
+    "alto": 500,
+    "regiones": [
+      {
+        "x": 105,
+        "y": 184,
+        "w": 230,
+        "h": 261,
+        "base": 442
+      },
+      {
+        "x": 532,
+        "y": 279,
+        "w": 116,
+        "h": 166,
+        "base": 442
+      },
+      {
+        "x": 932,
+        "y": 68,
+        "w": 116,
+        "h": 377,
+        "base": 442
+      }
+    ],
+    "escena": false,
+    "cortes": [
+      0,
+      400,
+      800,
+      1200
+    ],
+    "advertencias": []
+  },
+  "capacidad-aberturas": {
+    "ancho": 1200,
+    "alto": 500,
+    "regiones": [
+      {
+        "x": 116,
+        "y": 145,
+        "w": 148,
+        "h": 300,
+        "base": 442
+      },
+      {
+        "x": 483,
+        "y": 67,
+        "w": 214,
+        "h": 378,
+        "base": 442
+      },
+      {
+        "x": 897,
+        "y": 184,
+        "w": 250,
+        "h": 261,
+        "base": 442
+      }
+    ],
+    "escena": false,
+    "cortes": [
+      0,
+      400,
+      800,
+      1200
+    ],
+    "advertencias": []
+  },
+  "capacidad-tazas": {
+    "ancho": 1200,
+    "alto": 500,
+    "regiones": [
+      {
+        "x": 111,
+        "y": 291,
+        "w": 213,
+        "h": 154,
+        "base": 442
+      },
+      {
+        "x": 489,
+        "y": 220,
+        "w": 273,
+        "h": 225,
+        "base": 442
+      },
+      {
+        "x": 880,
+        "y": 151,
+        "w": 297,
+        "h": 294,
+        "base": 442
+      }
+    ],
+    "escena": false,
+    "cortes": [
+      0,
+      400,
+      800,
+      1200
+    ],
+    "advertencias": []
+  },
+  "capacidad-alturas": {
+    "ancho": 1200,
+    "alto": 500,
+    "regiones": [
+      {
+        "x": 140,
+        "y": 68,
+        "w": 100,
+        "h": 377,
+        "base": 442
+      },
+      {
+        "x": 504,
+        "y": 200,
+        "w": 172,
+        "h": 245,
+        "base": 442
+      },
+      {
+        "x": 898,
+        "y": 133,
+        "w": 184,
+        "h": 312,
+        "base": 442
+      }
+    ],
+    "escena": false,
+    "cortes": [
+      0,
+      400,
+      800,
+      1200
+    ],
+    "advertencias": []
+  },
+  "capacidad-mezcla": {
+    "ancho": 1200,
+    "alto": 500,
+    "regiones": [
+      {
+        "x": 98,
+        "y": 229,
+        "w": 248,
+        "h": 216,
+        "base": 442
+      },
+      {
+        "x": 480,
+        "y": 107,
+        "w": 297,
+        "h": 338,
+        "base": 442
+      },
+      {
+        "x": 912,
+        "y": 190,
+        "w": 156,
+        "h": 255,
+        "base": 442
+      }
+    ],
+    "escena": false,
+    "cortes": [
+      0,
+      400,
+      800,
+      1200
+    ],
+    "advertencias": []
+  },
+  "capacidad-vacio": {
+    "ancho": 1200,
+    "alto": 500,
+    "regiones": [
+      {
+        "x": 109,
+        "y": 136,
+        "w": 219,
+        "h": 309,
+        "base": 442
+      },
+      {
+        "x": 435,
+        "y": 212,
+        "w": 310,
+        "h": 233,
+        "base": 442
+      },
+      {
+        "x": 908,
+        "y": 282,
+        "w": 221,
+        "h": 163,
+        "base": 442
+      }
+    ],
+    "escena": false,
+    "cortes": [
+      0,
+      400,
+      800,
+      1200
+    ],
+    "advertencias": []
+  },
+  "capacidad-matraces": {
+    "ancho": 1200,
+    "alto": 500,
+    "regiones": [
+      {
+        "x": 119,
+        "y": 168,
+        "w": 142,
+        "h": 277,
+        "base": 442
+      },
+      {
+        "x": 506,
+        "y": 101,
+        "w": 168,
+        "h": 344,
+        "base": 442
+      },
+      {
+        "x": 898,
+        "y": 67,
+        "w": 184,
+        "h": 378,
+        "base": 442
+      }
+    ],
+    "escena": false,
+    "cortes": [
+      0,
+      400,
+      800,
+      1200
+    ],
+    "advertencias": []
   }
 };
