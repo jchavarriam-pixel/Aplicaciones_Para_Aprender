@@ -4,16 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Explora y compara</title>
-  <link rel="stylesheet" href="estilo.css?v=20261107-recipientes-2">
+  <link rel="stylesheet" href="estilo.css?v=20261107-niveles-3">
   <link rel="stylesheet" href="../creditos.css">
   <link rel="stylesheet" href="../pantalla-completa.css">
-  <script src="objetos.js?v=20261107-recipientes-2" defer></script>
-  <script src="caracteristicas.js?v=20261107-recipientes-2" defer></script>
-  <script src="capacidades.js?v=20261107-recipientes-2" defer></script>
-  <script src="dibujos-capacidad.js?v=20261107-recipientes-2" defer></script>
-  <script src="animacion-capacidad.js?v=20261107-recipientes-2" defer></script>
-  <script src="recortes.js?v=20261107-recipientes-2" defer></script>
-  <script src="juego.js?v=20261107-recipientes-2" defer></script>
+  <script src="objetos.js?v=20261107-niveles-3" defer></script>
+  <script src="caracteristicas.js?v=20261107-niveles-3" defer></script>
+  <script src="capacidades.js?v=20261107-niveles-3" defer></script>
+  <script src="dibujos-capacidad.js?v=20261107-niveles-3" defer></script>
+  <script src="animacion-capacidad.js?v=20261107-niveles-3" defer></script>
+  <script src="recortes.js?v=20261107-niveles-3" defer></script>
+  <script src="juego.js?v=20261107-niveles-3" defer></script>
 </head>
 <body>
 <main class="app">
@@ -42,6 +42,8 @@
           <label id="tamanosConfig">¿Qué tamaño buscamos?<select id="tamano"><option value="mixto">Variar los tamaños</option><option value="grande">Solo grande</option><option value="mediano">Solo mediano</option><option value="pequeno">Solo pequeño</option></select></label>
           <label id="comparacionConfig" hidden>Tipo de comparación<select id="comparacion"><option value="mixto">Más y menos</option><option value="mas">Solo más</option><option value="menos">Solo menos</option></select></label>
           <div id="capacidadConfig" class="campos" hidden>
+            <label>Nivel de dificultad<select id="capacidadNivel"><option value="3">Nivel 1 · Diferencia de 3 vasitos</option><option value="2">Nivel 2 · Diferencia de 2 vasitos</option><option value="1">Nivel 3 · Diferencia de 1 vasito</option><option value="variado">Variado · Comparaciones anteriores</option></select></label>
+            <p class="nota">Cada vasito equivale a 100 mL. La diferencia es entre recipientes consecutivos al ordenarlos por cantidad. Se aplica al iniciar una nueva ronda.</p>
             <label>¿Qué comparamos?<select id="capacidadTema"><option value="mixto">Agua y capacidad</option><option value="agua">El agua que contiene</option><option value="capacidad">Lo que le cabe</option></select></label>
             <label>Ayuda para comparar<select id="apoyoCapacidad"><option value="vasitos">Vasitos iguales</option><option value="medidas">Cantidad en mililitros</option><option value="ninguno">Sin medidas</option></select></label>
           </div>

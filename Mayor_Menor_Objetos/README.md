@@ -65,7 +65,7 @@ La comprobación incluye 48 comparaciones posibles, escenas donde el recipiente 
 
 Cada pregunta del modo 4 comienza con los tres recipientes vacíos. Tras una pausa breve, reciben agua a un caudal común de 100 mL/s (un vasito por segundo). En preguntas de capacidad se llenan hasta su capacidad total y cada chorro se detiene al llegar al borde; los recipientes menores terminan antes. En preguntas sobre agua actual, se detienen en los volúmenes propios del ejercicio.
 
-La elección se habilita al finalizar. Durante el llenado, las medidas y los vasitos muestran el agua que ha entrado. Los vasitos se llenan uno a uno; un vasito parcialmente lleno representa exactamente el volumen restante después de los vasitos completos. Al terminar, la indicación corresponde al agua actual o a la capacidad total, según la pregunta. El botón Repetir llenado permite volver a observarlo sin alterar la respuesta ni las estrellas conseguidas.
+La elección se habilita al finalizar. Durante el llenado, las medidas y los vasitos muestran el agua que ha entrado. Los vasitos se llenan uno a uno; un vasito parcialmente lleno representa exactamente el volumen restante después de los vasitos completos. Al terminar, la indicación corresponde al agua actual o a la capacidad total, según la pregunta. El botón Repetir animación permite comenzar de nuevo incluso durante el llenado, sin alterar las estrellas conseguidas ni una respuesta ya corregida. Se cancela el ciclo anterior antes de reiniciar.
 
 `dibujos-capacidad.js` conserva las plantillas SVG vacías y curvas de volumen/altura precalculadas; lo genera la misma herramienta `tools/crear_recipientes_capacidad.cjs`. `animacion-capacidad.js` mueve únicamente el agua, la superficie y el chorro. Los recipientes mantienen su base, tamaño y centrado. Cada SVG utiliza identificadores únicos para que sus recortes y degradados no interfieran con los de las otras opciones.
 
@@ -78,3 +78,9 @@ Los recipientes tienen boca y fondo ovalados, bases curvas, reflejos de vidrio y
 Todos los vasitos de referencia son cilindros iguales de 100 mL. Sus dimensiones en pantalla son iguales entre opciones; el número de vasitos depende del volumen objetivo. Se presentan centrados, con hasta seis por fila (cuatro en teléfono). Cada fotograma sincroniza su agua con la del recipiente: 250 mL equivalen a dos vasitos completos y la mitad del tercero. Solo se actualizan las partes que cambian, sin reconstruir los vasitos durante la animación. Los mililitros, cuando se escoge esa ayuda, también aumentan progresivamente.
 
 Los archivos de la aplicación incluyen una versión de recursos para que el navegador cargue juntos el nuevo dibujo, sus recortes y la animación actualizada.
+
+## Niveles de agua y capacidad
+
+La configuración del modo 4 permite elegir Nivel 1 (diferencias de 3 vasitos), Nivel 2 (2 vasitos) o Nivel 3 (1 vasito). Un vasito equivale a 100 mL. En cada ejercicio, al ordenar los tres valores, la distancia entre valores consecutivos es exactamente la indicada. Esto se cumple tanto para el agua que contienen como para la capacidad total. La elección se guarda localmente y se aplica al iniciar una nueva ronda; las cuentas, las figuras, el agua y la respuesta correcta utilizan el mismo catálogo.
+
+Se generan 12 escenas por nivel, con los perfiles y la escala física de las ilustraciones originales. Los radios y niveles de agua se recalculan para sus nuevos volúmenes. Se conservan además las 12 escenas anteriores en la opción Variado, con comparaciones de formas y cantidades más diversas: 48 escenas en total. Las rondas de cada nivel no repiten escena. El nivel inicial es el 1, con diferencias más fáciles de distinguir.

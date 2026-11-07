@@ -3,7 +3,7 @@ const $=id=>document.getElementById(id),clave='mayorMenorObjetos.config.v1';
 const guiaGeneral=document.querySelector('.guia svg').innerHTML;
 const categorias=window.CATEGORIAS_OBJETOS,variantes=window.VARIANTES_OBJETOS,capacidades=window.EJERCICIOS_CAPACIDAD;
 const originales=window.OBJETOS_TAMANOS.map(a=>({...a,categoria:'tamano',tipo:'paneles',columnas:2,niveles:[2,0],src:'imagenes/'+a.archivo}));
-const defaults={actividad:1,tamano:'mixto',comparacion:'mixto',categorias:categorias.map(c=>c.id),cantidad:8,voz:true,ayuda:true,capacidadTema:'mixto',apoyoCapacidad:'vasitos'};
+const defaults={actividad:1,tamano:'mixto',comparacion:'mixto',categorias:categorias.map(c=>c.id),cantidad:8,voz:true,ayuda:true,capacidadTema:'mixto',apoyoCapacidad:'vasitos',capacidadNivel:'3'};
 let config={...defaults,categorias:[...defaults.categorias]},nombre='Gabriel';
 try{const s=JSON.parse(localStorage.getItem(clave)||'null');if(s&&typeof s==='object'){
   if([1,2,3,4].includes(s.actividad))config.actividad=s.actividad;
@@ -11,6 +11,7 @@ try{const s=JSON.parse(localStorage.getItem(clave)||'null');if(s&&typeof s==='ob
   else if(s.modo==='mayor')config.tamano='grande';else if(s.modo==='menor')config.tamano='pequeno';
   if(['mas','menos','mixto'].includes(s.comparacion))config.comparacion=s.comparacion;
   if(['agua','capacidad','mixto'].includes(s.capacidadTema))config.capacidadTema=s.capacidadTema;
+  if(['3','2','1','variado'].includes(s.capacidadNivel))config.capacidadNivel=s.capacidadNivel;
   if(['vasitos','medidas','ninguno'].includes(s.apoyoCapacidad))config.apoyoCapacidad=s.apoyoCapacidad;
   if(Array.isArray(s.categorias)){const ids=[...new Set(s.categorias.filter(id=>categorias.some(c=>c.id===id)))];if(ids.length)config.categorias=ids;}
   if([4,8,12].includes(s.cantidad))config.cantidad=s.cantidad;
@@ -21,7 +22,7 @@ let ronda=[],indice=0,seleccion=null,resuelta=false,lista=false,aciertos=0,fin=f
 function mezclar(items){const a=[...items];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function hablar(texto){if(!config.voz||!('speechSynthesis'in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(texto);u.lang='es-ES';u.rate=.9;const voices=speechSynthesis.getVoices();u.voice=voices.find(v=>/^es[-_]/i.test(v.lang)&&v.localService)||voices.find(v=>/^es[-_]/i.test(v.lang))||null;speechSynthesis.speak(u);}
 function guardar(){try{localStorage.setItem(clave,JSON.stringify(config));}catch{}}
-function bancoDisponible(){if(config.actividad===4)return capacidades;if(config.actividad===1)return [...originales,...variantes.filter(a=>a.categoria==='tamano')];if(config.actividad===2)return variantes.filter(a=>a.categoria==='tamano');return variantes.filter(a=>config.categorias.includes(a.categoria));}
+function bancoDisponible(){if(config.actividad===4)return capacidades.filter(a=>a.nivel===config.capacidadNivel);if(config.actividad===1)return [...originales,...variantes.filter(a=>a.categoria==='tamano')];if(config.actividad===2)return variantes.filter(a=>a.categoria==='tamano');return variantes.filter(a=>config.categorias.includes(a.categoria));}
 function actualizarConfig(){
   document.querySelector('.guia svg').innerHTML=config.actividad===4?'<g stroke="#557a96" stroke-width="2.5"><path d="M25 30h38l-4 50a15 3 0 0 1-30 0zM98 15h47l-5 65a18.5 3 0 0 1-37 0zM180 25h40l-4 55a16 3 0 0 1-32 0z" fill="#eef8ff"/><path d="M27 55h34l-2 25a15 3 0 0 1-30 0zM101 57h41l-2 23a18.5 3 0 0 1-37 0zM181 40h38l-3 40a16 3 0 0 1-32 0z" fill="#70d2f2" stroke="none"/><g fill="none"><ellipse cx="44" cy="30" rx="19" ry="3"/><ellipse cx="121.5" cy="15" rx="23.5" ry="4"/><ellipse cx="200" cy="25" rx="20" ry="3.5"/></g><g fill="#d6effa"><ellipse cx="44" cy="80" rx="15" ry="3"/><ellipse cx="121.5" cy="80" rx="18.5" ry="3"/><ellipse cx="200" cy="80" rx="16" ry="3"/></g></g>':guiaGeneral;
   $('comoJugar').textContent=config.actividad===4?'Agua y capacidad':'Así jugamos';
@@ -29,6 +30,7 @@ function actualizarConfig(){
   document.querySelectorAll('[data-actividad]').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.actividad===config.actividad)));
   $('tamanosConfig').hidden=config.actividad>=3;$('comparacionConfig').hidden=config.actividad<3;$('categoriasConfig').hidden=config.actividad!==3;
   $('capacidadConfig').hidden=config.actividad!==4;$('capacidadTema').value=config.capacidadTema;$('apoyoCapacidad').value=config.apoyoCapacidad;
+  $('capacidadNivel').value=config.capacidadNivel;
   $('tamano').querySelector('[value=mediano]').disabled=config.actividad===1;
   $('tamano').value=config.tamano;$('comparacion').value=config.comparacion;$('cantidad').value=String(config.cantidad);
   $('voz').checked=config.voz;$('ayuda').checked=config.ayuda;
@@ -124,7 +126,7 @@ function mostrar(){
   detenerLlenado();
   const token=++cargaToken,item=ronda[indice],a=item.asset;seleccion=null;resuelta=false;lista=false;
   $('errorImagen').hidden=true;$('zonaImagen').hidden=false;$('contador').textContent=`Ejercicio ${indice+1} de ${ronda.length}`;$('estrellas').textContent='★'.repeat(aciertos)+'☆'.repeat(ronda.length-aciertos);
-  $('temaActual').textContent=`Modo ${item.actividad} · ${item.actividad===4?(item.objetivo==='agua'?'Agua que contiene':'Lo que le cabe'):categorias.find(c=>c.id===a.categoria).nombre}`;
+  $('temaActual').textContent=`Modo ${item.actividad} · ${item.actividad===4?(item.objetivo==='agua'?'Agua que contiene':'Lo que le cabe'):categorias.find(c=>c.id===a.categoria).nombre}`+(item.actividad===4&&a.diferenciaVasos?` · Nivel ${4-a.diferenciaVasos}: diferencia de ${a.diferenciaVasos} ${a.diferenciaVasos===1?'vasito':'vasitos'}`:'');
   $('respuesta').textContent='Toca una opción: la selección se iluminará.';$('respuesta').className='respuesta';$('revisar').disabled=true;$('revisar').hidden=false;$('siguiente').hidden=true;
   $('zonaImagen').style.setProperty('--opciones',item.opciones.length);
   const geometria=geometriaOpciones(item);
@@ -140,14 +142,14 @@ function mostrar(){
 }
 function detenerLlenado(){clearTimeout(timerLlenado);timerLlenado=null;autoLlenadoPendiente=false;llenado?.cancelar();llenado=null;$('controlLlenado').hidden=true;}
 function prepararLlenado(item,token){
-  $('controlLlenado').hidden=false;$('repetirLlenado').disabled=false;$('repetirLlenado').textContent='▶ Ver llenado';
+  $('controlLlenado').hidden=false;$('repetirLlenado').disabled=false;$('repetirLlenado').textContent='▶ Ver animación';
   $('estadoLlenado').textContent='Los recipientes empiezan vacíos.';$('respuesta').textContent='Observa el llenado antes de elegir.';
   llenado=AnimacionCapacidad.crear(item,session=>{
     if(session!==llenado||token!==cargaToken)return;actualizarApoyosCapacidad();
   },session=>{
     if(session!==llenado||token!==cargaToken)return;
     lista=true;document.querySelectorAll('.tarjeta-opcion').forEach(b=>b.disabled=resuelta);
-    $('revisar').disabled=seleccion===null||resuelta;$('repetirLlenado').disabled=false;$('repetirLlenado').textContent='↻ Repetir llenado';
+    $('revisar').disabled=seleccion===null||resuelta;$('repetirLlenado').disabled=false;$('repetirLlenado').textContent='↻ Repetir animación';
     $('estadoLlenado').textContent=item.objetivo==='capacidad'?'Ya están llenos. Compara cuánto ha entrado en cada uno.':'El agua quedó en la cantidad del ejercicio.';
     if(!resuelta)$('respuesta').textContent='Ahora toca una opción y pulsa Revisar.';
   });
@@ -155,9 +157,9 @@ function prepararLlenado(item,token){
   timerLlenado=setTimeout(()=>{timerLlenado=null;if(!document.hidden)iniciarLlenado();},650);
 }
 function iniciarLlenado(){
-  if(!llenado||llenado.activo||llenado.cancelado)return;
+  if(!llenado||llenado.cancelado)return;
   clearTimeout(timerLlenado);timerLlenado=null;autoLlenadoPendiente=false;lista=false;
-  document.querySelectorAll('.tarjeta-opcion').forEach(b=>b.disabled=true);$('revisar').disabled=true;$('repetirLlenado').disabled=true;$('repetirLlenado').textContent='💧 Llenando…';
+  document.querySelectorAll('.tarjeta-opcion').forEach(b=>b.disabled=true);$('revisar').disabled=true;$('repetirLlenado').disabled=false;$('repetirLlenado').textContent='↻ Repetir animación';
   if(!resuelta){seleccion=null;document.querySelectorAll('.tarjeta-opcion').forEach(b=>{b.className='tarjeta-opcion';b.setAttribute('aria-pressed','false');b.querySelector('.texto-eleccion').textContent='Elegir';});$('respuesta').textContent='Observa cómo sube el agua.';}
   $('estadoLlenado').textContent=llenado.item.objetivo==='capacidad'?'Reciben agua al mismo ritmo. Mira cuándo se llena cada uno.':'El agua sube hasta la cantidad de este ejercicio.';
   llenado.iniciar();
@@ -176,7 +178,7 @@ function celebrar(){limpiarCelebracion();if(matchMedia('(prefers-reduced-motion:
 $('categorias').innerHTML=categorias.map(c=>`<label class="opcion"><input type="checkbox" data-categoria="${c.id}">${c.nombre}</label>`).join('');
 document.querySelectorAll('[data-categoria]').forEach(el=>el.addEventListener('change',()=>{const elegidas=[...document.querySelectorAll('[data-categoria]:checked')].map(e=>e.dataset.categoria);if(!elegidas.length){el.checked=true;$('estadoCategorias').textContent='Mantén al menos una característica seleccionada.';return;}config.categorias=elegidas;$('estadoCategorias').textContent='';guardar();actualizarConfig();}));
 $('todasCategorias').addEventListener('click',()=>{config.categorias=categorias.map(c=>c.id);guardar();actualizarConfig();});$('basicasCategorias').addEventListener('click',()=>{config.categorias=['tamano','altura','longitud','anchura','grosor'];guardar();actualizarConfig();});
-for(const id of ['tamano','comparacion','cantidad','voz','ayuda','capacidadTema','apoyoCapacidad']){const input=$(id);input.addEventListener('change',()=>{config[id]=input.type==='checkbox'?input.checked:id==='cantidad'?+input.value:input.value;guardar();actualizarConfig();if(id==='voz'&&!config.voz&&'speechSynthesis'in window)speechSynthesis.cancel();actualizarAyuda();actualizarApoyosCapacidad();});}
+for(const id of ['tamano','comparacion','cantidad','voz','ayuda','capacidadTema','apoyoCapacidad','capacidadNivel']){const input=$(id);input.addEventListener('change',()=>{config[id]=input.type==='checkbox'?input.checked:id==='cantidad'?+input.value:input.value;guardar();actualizarConfig();if(id==='voz'&&!config.voz&&'speechSynthesis'in window)speechSynthesis.cancel();actualizarAyuda();actualizarApoyosCapacidad();});}
 document.querySelectorAll('[data-actividad]').forEach(b=>b.addEventListener('click',()=>{config.actividad=+b.dataset.actividad;if(config.actividad===1&&config.tamano==='mediano')config.tamano='mixto';guardar();actualizarConfig();nuevaRonda();}));
 $('nombre').value=nombre;$('nombre').addEventListener('change',()=>{nombre=$('nombre').value.trim()||'Gabriel';$('nombre').value=nombre;try{localStorage.setItem('nombreNinoGabrielApps',nombre);}catch{}});
 $('repetirLlenado').addEventListener('click',iniciarLlenado);

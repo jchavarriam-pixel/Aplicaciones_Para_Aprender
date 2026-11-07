@@ -46,7 +46,7 @@ window.AnimacionCapacidad=(()=>{
       dibujar(ml,true);if(now-session.ultimoAviso>=120){session.ultimoAviso=now;onProgress(session);}
       session.frame=requestAnimationFrame(tick);
     }
-    session.iniciar=()=>{if(session.cancelado||session.activo)return;session.terminado=false;session.activo=true;session.pausado=false;session.transcurrido=0;session.last=null;session.ultimoAviso=-Infinity;dibujar(0,true);onProgress(session);
+    session.iniciar=()=>{if(session.cancelado)return;cancelAnimationFrame(session.frame);session.terminado=false;session.activo=true;session.pausado=false;session.transcurrido=0;session.last=null;session.ultimoAviso=-Infinity;dibujar(0,true);onProgress(session);
       if(matchMedia('(prefers-reduced-motion: reduce)').matches){terminar();return;}session.frame=requestAnimationFrame(tick);};
     session.pausar=()=>{if(!session.activo||session.pausado)return;session.pausado=true;cancelAnimationFrame(session.frame);session.frame=null;session.last=null;};
     session.reanudar=()=>{if(!session.activo||!session.pausado||session.cancelado)return;session.pausado=false;session.last=null;session.frame=requestAnimationFrame(tick);};

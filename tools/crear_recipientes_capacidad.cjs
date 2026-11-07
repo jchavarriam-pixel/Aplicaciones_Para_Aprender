@@ -47,7 +47,15 @@ function dibujar(recipientes){
   }).join('')}</svg>`;
 }
 const animaciones={};
-const catalogo=definiciones.map(([id,nombre,formas,capacidades,agua,alturas])=>{
+// En cada nivel, las cantidades consecutivas difieren exactamente en 3, 2 o 1 vasitos.
+const escenas=definiciones.flatMap((original,i)=>[original,...[3,2,1].map(d=>{
+  const [id,nombre,formas,capacidades,,alturas]=original;
+  const orden=[0,1,2].sort((a,b)=>capacidades[a]-capacidades[b]);
+  const nuevas=[0,0,0],agua=[0,0,0],base=300+(i%3)*100;
+  orden.forEach((fuente,rango)=>{nuevas[fuente]=base+rango*d*100;agua[fuente]=nuevas[fuente]-200;});
+  return [`${id}-d${d}`,nombre,formas,nuevas,agua,alturas,d];
+})]);
+const catalogo=escenas.map(([id,nombre,formas,capacidades,agua,alturas,diferenciaVasos])=>{
   if(new Set(capacidades).size!==3||new Set(agua).size!==3)throw Error('Respuestas ambiguas: '+id);
   const recipientes=formas.map((forma,i)=>{if(agua[i]>capacidades[i]||agua[i]<0)throw Error('Cantidad inválida');const radioCm=Math.sqrt(capacidades[i]/(Math.PI*alturas[i]*integral(forma,1))),n=nivel(forma,agua[i]/capacidades[i]);if(Math.abs(integral(forma,n)/integral(forma,1)*capacidades[i]-agua[i])>.03)throw Error('Nivel incorrecto');return{forma,capacidadMl:capacidades[i],aguaMl:agua[i],alturaCm:alturas[i],radioCm:red(radioCm),nivel:red(n)};});
   const svg=dibujar(recipientes);
@@ -59,9 +67,9 @@ const catalogo=definiciones.map(([id,nombre,formas,capacidades,agua,alturas])=>{
     return `<g clip-path="url(#body${index})"><g data-agua="${index}" opacity="0"><rect data-rect x="${+index*400}" y="${red(g.base)}" width="400" height="0" fill="url(#water)"/><ellipse data-superficie cx="${g.centro}" cy="${red(g.base)}" rx="0" ry="2" fill="#9ee8ff" stroke="#2199cb" stroke-width="2"/></g><path data-chorro="${index}" d="M${g.centro} ${red(g.base-g.altura)}V${red(g.base)}" stroke="#46b9e9" stroke-width="5" stroke-linecap="round" opacity="0"/>`;
   });
   animaciones['capacidad-'+id]={svg:vacio,geometria};
-  return{id:'capacidad-'+id,nombre,categoria:'capacidad',tipo:'paneles',columnas:3,src:'imagenes/capacidad/'+id+'.svg',capacidades,agua,recipientes};
+  return{id:'capacidad-'+id,nombre,categoria:'capacidad',tipo:'paneles',columnas:3,src:'imagenes/capacidad/'+id+'.svg',nivel:diferenciaVasos?String(diferenciaVasos):'variado',diferenciaVasos:diferenciaVasos||null,capacidades,agua,recipientes};
 });
 fs.writeFileSync(path.join(app,'capacidades.js'),'// Generado por tools/crear_recipientes_capacidad.cjs. Volúmenes en mililitros.\nwindow.EJERCICIOS_CAPACIDAD = '+JSON.stringify(catalogo,null,2)+';\n');
 const curvas={};for(const tipo of Object.keys(perfiles)){const total=integral(tipo,1);curvas[tipo]=Array.from({length:257},(_,i)=>({v:integral(tipo,i/256)/total,h:i/256,r:perfiles[tipo](i/256)}));}
 fs.writeFileSync(path.join(app,'dibujos-capacidad.js'),'// SVG y curvas precalculadas para el llenado. Generado por tools/crear_recipientes_capacidad.cjs.\nwindow.DIBUJOS_CAPACIDAD = '+JSON.stringify({escenas:animaciones,curvas})+';\n');
-console.log(catalogo.length+' escenas SVG, 36 recipientes y niveles de agua verificados.');
+console.log(catalogo.length+' escenas SVG, '+catalogo.length*3+' recipientes y niveles de agua verificados.');
