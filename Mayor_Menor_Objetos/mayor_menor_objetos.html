@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Mayor y menor con objetos</title>
+  <link rel="stylesheet" href="estilo.css">
+  <link rel="stylesheet" href="../creditos.css">
+  <link rel="stylesheet" href="../pantalla-completa.css">
+  <script src="objetos.js" defer></script>
+  <script src="juego.js" defer></script>
+</head>
+<body>
+<main class="app">
+  <header class="cabecera">
+    <div class="marca" aria-hidden="true">●<span>●</span></div>
+    <div><h1>Mayor y menor con objetos</h1><p>¡Descubre los tamaños!</p></div>
+    <a class="volver" href="../index.html">⌂ Aplicaciones</a>
+  </header>
+  <div class="distribucion">
+    <aside class="lateral">
+      <section class="guia panel" aria-labelledby="comoJugar">
+        <h2 id="comoJugar">Así jugamos</h2>
+        <svg viewBox="0 0 240 95" aria-hidden="true"><circle cx="64" cy="47" r="37" fill="#f4b548" stroke="#b77918" stroke-width="3"/><circle cx="183" cy="65" r="19" fill="#f4b548" stroke="#b77918" stroke-width="3"/><path d="M110 83h113M17 88h86" stroke="#c4cbd8" stroke-width="3" stroke-linecap="round"/></svg>
+        <ol><li><b>1</b> Mira los dos objetos.</li><li><b>2</b> Toca el que se pide.</li><li><b>3</b> Pulsa <strong>Revisar</strong>.</li></ol>
+      </section>
+      <details class="panel ajustes">
+        <summary>⚙ Configuración</summary>
+        <div class="campos">
+          <label>Nombre del niño<input id="nombre" maxlength="50" autocomplete="off" placeholder="Gabriel"></label>
+          <label>¿Qué practicamos?<select id="modo"><option value="mixto">Mayor y menor</option><option value="mayor">Solo el mayor</option><option value="menor">Solo el menor</option></select></label>
+          <label>Imágenes por ronda<select id="cantidad"><option value="4">4 imágenes</option><option value="8">8 imágenes</option></select></label>
+          <label class="opcion"><input type="checkbox" id="voz"> Leer preguntas y respuestas</label>
+          <label class="opcion"><input type="checkbox" id="ayuda"> Mostrar ayuda de tamaños</label>
+          <p class="nota">Las opciones se guardan en este navegador. Los cambios de práctica se aplican en una nueva ronda.</p>
+        </div>
+      </details>
+      <button class="boton secundaria" id="nuevaRonda">↻ Nueva ronda</button>
+    </aside>
+    <section class="panel actividad" aria-labelledby="pregunta">
+      <div class="avance"><span id="contador"></span><span id="estrellas" aria-label="Aciertos de la ronda"></span></div>
+      <div class="pregunta-fila"><h2 id="pregunta" tabindex="-1"></h2><button id="escuchar" class="boton escuchar" aria-label="Escuchar la pregunta">🔊</button></div>
+      <p id="ayudaTamano" class="ayuda">Mayor = más grande <span>·</span> Menor = más pequeño</p>
+      <div id="zonaImagen" class="zona-imagen">
+        <img id="imagenPar" alt="" draggable="false" decoding="async">
+        <div class="elecciones" role="group" aria-label="Elige uno de los dos objetos">
+          <button class="elegir" id="izquierda" aria-label="Elegir el objeto de la izquierda" aria-pressed="false"><span>Este objeto</span></button>
+          <button class="elegir" id="derecha" aria-label="Elegir el objeto de la derecha" aria-pressed="false"><span>Este objeto</span></button>
+        </div>
+      </div>
+      <div id="errorImagen" hidden><p>No se pudo cargar la imagen.</p><button class="boton secundaria" id="reintentar">Reintentar</button></div>
+      <p id="respuesta" class="respuesta" role="status" aria-live="polite">Toca uno de los objetos.</p>
+      <div class="acciones"><button class="boton principal" id="revisar" disabled>✓ Revisar</button><button class="boton siguiente" id="siguiente" hidden>Siguiente →</button></div>
+      <section id="fin" class="fin" hidden tabindex="-1"><div aria-hidden="true">🌟</div><h2>¡Ronda completada!</h2><p id="mensajeFinal"></p><button id="otraRonda" class="boton principal">↻ Jugar otra ronda</button></section>
+    </section>
+  </div>
+</main>
+<footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos">
+  <div class="creditos-dedicatoria"><span class="creditos-gabriel">Creado para <strong>Gabriel</strong></span><span class="creditos-familia">Por su familia, con ayuda de la IA.</span></div>
+  <div class="creditos-equipo"><span class="creditos-autores">M.Sc. Jeffry Chavarría-Molina y Ph.D. (c) Natalia Rodríguez-Granados</span><span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span></div>
+</footer>
+<script src="../pantalla-completa.js"></script>
+</body>
+</html>
