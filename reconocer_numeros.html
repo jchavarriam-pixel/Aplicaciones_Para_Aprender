@@ -19,7 +19,7 @@ button,input,select{font-family:inherit}.pantalla{display:none;min-height:100vh;
 .pareo{grid-template-columns:minmax(0,1fr) clamp(48px,16vw,240px) minmax(0,1fr);grid-template-rows:auto auto auto;gap:12px 0;height:auto;min-height:0;padding:14px;overflow:hidden}
 .pareo .inst{font-size:1rem;padding:9px 12px}.inst small{display:block;font-size:.88rem;margin-top:5px;color:#685548}
 .pareo .col{min-height:0;min-width:0;width:min(100%,var(--pair-col,320px));height:var(--pair-col-height,auto);overflow:visible;touch-action:pan-y;padding:14px;gap:var(--pair-gap,6px)}
-.lista-pares{display:flex;flex-direction:column;flex:1;min-height:0;gap:var(--pair-gap,6px);justify-content:space-between}
+.lista-pares{display:flex;flex-direction:column;flex:1;min-height:0;gap:var(--pair-list-gap,var(--pair-gap,6px));justify-content:var(--pair-align,space-between)}
 .pareo .izq{grid-column:1;grid-row:2;justify-self:end}.pareo .der{grid-column:3;grid-row:2;justify-self:start}
 .espacio-pareo{grid-column:2;grid-row:2;pointer-events:none}
 .pareo .par-row{width:100%;min-width:0;flex-shrink:0;gap:12px}
@@ -59,6 +59,10 @@ button,input,select{font-family:inherit}.pantalla{display:none;min-height:100vh;
 #game.pareo-horizontal .pareo-sidebar .acciones{display:flex;flex-direction:column;flex:1;padding:0;margin:0;border:0;background:none;box-shadow:none;gap:12px}
 #game.pareo-horizontal .pareo-sidebar .acciones .btn{width:100%;min-height:42px}
 #game.pareo-horizontal #gameContent{min-width:0}
+#game.pareo-horizontal #gameContent{align-self:center}
+#game.modo-pareo.activa:not(.pareo-horizontal){display:flex;flex-direction:column}
+#game.modo-pareo:not(.pareo-horizontal)>.encabezado{flex-shrink:0}
+#game.modo-pareo:not(.pareo-horizontal)>#gameContent{margin-top:auto;margin-bottom:auto}
 #game.pareo-horizontal .pareo{grid-template-rows:auto}
 #game.pareo-horizontal .pareo .izq,#game.pareo-horizontal .pareo .der,#game.pareo-horizontal .espacio-pareo{grid-row:1}
 #game.modo-pareo .acciones #checkPareo{flex:1;min-height:62px;padding:14px;font-size:1.15rem}
@@ -70,9 +74,16 @@ button,input,select{font-family:inherit}.pantalla{display:none;min-height:100vh;
 #game.pareo-horizontal .pareo-sidebar .acciones .nueva-ronda{width:auto;min-height:32px;margin-top:auto;align-self:center;font-size:.75rem}
 .pareo.revisando .bandera,.pareo.revisando .caja-par{pointer-events:none}
 .pareo .caja-par.ok{border-color:#22c55e;background:#dcfce7}.pareo .caja-par.mal{border-color:#ef4444;background:#fee2e2}
-.pareo-effects{position:absolute;inset:0;width:100%;height:100%;z-index:40;pointer-events:none;overflow:visible}
-.pareo-rocket{font-size:32px;text-anchor:middle;dominant-baseline:central;filter:drop-shadow(0 2px 2px #17255466)}
+.pareo-effects{position:absolute;inset:0;width:100%;height:100%;z-index:40;pointer-events:none;overflow:hidden}
+.pareo-rocket{font-size:42px;text-anchor:middle;dominant-baseline:central;filter:drop-shadow(0 2px 2px #17255466)}
 .pareo-spark{font-weight:1000;text-anchor:middle;dominant-baseline:central;paint-order:stroke;stroke:white;stroke-width:.7px}
+.pasos-pareo,.ejemplo-pareo{display:none}
+.pareo-sidebar .pasos-pareo{display:grid;gap:9px;margin:12px 0}
+.pasos-pareo p{display:flex;align-items:flex-start;gap:8px;margin:0;font-size:.9rem;line-height:1.35;font-weight:700}
+.pasos-pareo b{display:grid;place-items:center;flex:0 0 23px;height:23px;border-radius:8px;background:#fde7b7;color:#8d4b14}
+.pareo-sidebar .ejemplo-pareo{display:block;padding:8px;background:#fff;border:1px solid #e1d8fb;border-radius:12px}
+.ejemplo-pareo span{display:block;font-size:.72rem;letter-spacing:.03em;color:#6d5c90;text-transform:uppercase;margin-bottom:3px}
+.ejemplo-pareo svg{display:block;width:100%;height:auto;max-height:76px}
 @media(max-width:760px){.pareo{grid-template-columns:minmax(0,1fr) clamp(36px,10vw,76px) minmax(0,1fr);column-gap:0;padding:8px}.pareo .col{padding:12px 10px;border-width:2px;border-radius:18px}.pareo .par-row{gap:8px}.pareo .caja-par{padding:1px 3px!important}.encabezado{flex-wrap:wrap}.encabezado .titulo{flex:1 1 100%;min-width:0}.encabezado .control{width:100%;justify-content:space-between}.pareo .inst{font-size:.92rem}.pareo .acciones .btn{font-size:.85rem;padding:9px}}
 </style>
   <link rel="stylesheet" href="creditos.css">
@@ -185,7 +196,7 @@ function goHome(){
   if(nombre) document.getElementById('childName').value = nombre;
   screen('home');
 }
-function setGame(t,s){resetPareoLayout();document.getElementById('game').classList.toggle('modo-pareo',state.mode===1);document.getElementById('gameTitle').textContent=t;document.getElementById('gameSubtitle').textContent=s;screen('game');}
+function setGame(t,s){resetPareoLayout();if(state.mode!==1)document.getElementById('game').style.minHeight='';document.getElementById('game').classList.toggle('modo-pareo',state.mode===1);document.getElementById('gameTitle').textContent=t;document.getElementById('gameSubtitle').textContent=s;screen('game');}
 function progress(a,b){document.getElementById('progressPill').textContent=`${a}/${b}`;}
 document.querySelectorAll('input[name="selectType"]').forEach(r=>r.addEventListener('change',actualizarSeleccionNumeros));
 function getNums(){let type=document.querySelector('input[name="selectType"]:checked').value,arr=[];if(type==='digits'){let d=+document.getElementById('digitsCount').value;let min=d===1?0:10**(d-1),max=10**d-1;for(let i=min;i<=max;i++)arr.push(i);}else{let min=Math.max(0,Math.min(999999,+document.getElementById('minNumber').value||0));let max=Math.max(0,Math.min(999999,Number.isFinite(document.getElementById('maxNumber').valueAsNumber)?document.getElementById('maxNumber').valueAsNumber:30));if(min>max)[min,max]=[max,min];for(let i=min;i<=max;i++)arr.push(i);}return arr;}
@@ -204,9 +215,9 @@ function openModeSetup(m){
   renderSetup(m);
   screen('setup');
 }
-function renderSetup(m){guardarConfiguracion();let c=document.getElementById('setupContent');if(m===1)c.innerHTML=`<h2>🔗 Opciones de pareo</h2><div class="fila"><div><label>Cantidad</label><select id="m1Count">${Array.from({length:13},(_,i)=>i+3).map(n=>`<option ${n===6?'selected':''}>${n}</option>`).join('')}</select></div><div><label>Dificultad</label><select id="m1Diff"><option value="low">Baja: exacto</option><option value="medium">Media: sobra 1</option><option value="high">Alta: sobran 2</option></select></div></div><div class="fila"><div><label>Orden</label><select id="m1Order"><option value="num-name">Números → Nombres</option><option value="name-num">Nombres → Números</option></select></div><div><label>Ayuda verbal</label><select id="m1Voice"><option value="no">Desactivada</option><option value="yes">Activada</option></select></div></div><div class="fila uno"><div><label>Sonido de explosión</label><select id="m1Sound"><option value="yes">Activado</option><option value="no">Desactivado</option></select></div></div><button class="btn green" onclick="startMode1()">▶️ Iniciar pareo</button>`;if(m===2)c.innerHTML=`<h2>🐮 Opciones del corral</h2><div class="fila"><div><label>Cantidad</label><select id="m2Count">${Array.from({length:13},(_,i)=>i+3).map(n=>`<option ${n===6?'selected':''}>${n}</option>`).join('')}</select></div><div><label>Audio</label><select disabled><option>Frase única cada 4 segundos</option></select></div></div><button class="btn green" onclick="startMode2()">▶️ Iniciar corral</button>`;if(m===3)c.innerHTML=`<h2>📦 Opciones</h2><div class="fila"><div><label>Cantidad</label><select id="m3Count">${Array.from({length:13},(_,i)=>i+3).map(n=>`<option ${n===6?'selected':''}>${n}</option>`).join('')}</select></div></div><button class="btn green" onclick="startMode3()">▶️ Iniciar cajas</button>`;if(m===4)c.innerHTML=`<h2>✍️ Opciones</h2><div class="fila"><div><label>Cantidad</label><select id="m4Count">${Array.from({length:18},(_,i)=>i+3).map(n=>`<option ${n===8?'selected':''}>${n}</option>`).join('')}</select></div><div><label>Teclado</label><select id="m4Key"><option value="abc">ABC</option><option value="qwerty">QWERTY</option></select></div></div><div class="fila uno"><div><label>Pista por pausa</label><select id="m4Hint"><option value="no">Desactivada</option><option value="yes">Activada</option></select></div></div><button class="btn green" onclick="startMode4()">▶️ Iniciar escritura</button>`;restaurarConfiguracion(c);}
+function renderSetup(m){guardarConfiguracion();let c=document.getElementById('setupContent');if(m===1)c.innerHTML=`<h2>🔗 Opciones de pareo</h2><div class="fila"><div><label>Cantidad</label><select id="m1Count">${Array.from({length:13},(_,i)=>i+3).map(n=>`<option ${n===6?'selected':''}>${n}</option>`).join('')}</select></div><div><label>Dificultad</label><select id="m1Diff"><option value="low">Baja: exacto</option><option value="medium">Media: sobra 1</option><option value="high">Alta: sobran 2</option></select></div></div><div class="fila"><div><label>Orden</label><select id="m1Order"><option value="num-name">Números → Nombres</option><option value="name-num">Nombres → Números</option></select></div><div><label>Ayuda verbal</label><select id="m1Voice"><option value="no">Desactivada</option><option value="yes">Activada</option></select></div></div><div class="fila uno"><div><label>Sonidos del vuelo y explosión</label><select id="m1Sound"><option value="yes">Activado</option><option value="no">Desactivado</option></select></div></div><button class="btn green" onclick="startMode1()">▶️ Iniciar pareo</button>`;if(m===2)c.innerHTML=`<h2>🐮 Opciones del corral</h2><div class="fila"><div><label>Cantidad</label><select id="m2Count">${Array.from({length:13},(_,i)=>i+3).map(n=>`<option ${n===6?'selected':''}>${n}</option>`).join('')}</select></div><div><label>Audio</label><select disabled><option>Frase única cada 4 segundos</option></select></div></div><button class="btn green" onclick="startMode2()">▶️ Iniciar corral</button>`;if(m===3)c.innerHTML=`<h2>📦 Opciones</h2><div class="fila"><div><label>Cantidad</label><select id="m3Count">${Array.from({length:13},(_,i)=>i+3).map(n=>`<option ${n===6?'selected':''}>${n}</option>`).join('')}</select></div></div><button class="btn green" onclick="startMode3()">▶️ Iniciar cajas</button>`;if(m===4)c.innerHTML=`<h2>✍️ Opciones</h2><div class="fila"><div><label>Cantidad</label><select id="m4Count">${Array.from({length:18},(_,i)=>i+3).map(n=>`<option ${n===8?'selected':''}>${n}</option>`).join('')}</select></div><div><label>Teclado</label><select id="m4Key"><option value="abc">ABC</option><option value="qwerty">QWERTY</option></select></div></div><div class="fila uno"><div><label>Pista por pausa</label><select id="m4Hint"><option value="no">Desactivada</option><option value="yes">Activada</option></select></div></div><button class="btn green" onclick="startMode4()">▶️ Iniciar escritura</button>`;restaurarConfiguracion(c);}
 function startMode1(){let count=+document.getElementById('m1Count').value,diff=document.getElementById('m1Diff').value,order=document.getElementById('m1Order').value;state.voice=document.getElementById('m1Voice').value==='yes';let base=sample(state.numbers,count),extras=diff==='low'?0:(diff==='medium'?1:2),extra=sample(state.numbers.filter(n=>!base.includes(n)),extras),extraRight=Math.random()<.5,left=[],right=[];if(order==='num-name'){left=base.map(n=>({id:`n${n}`,num:n,type:'num',text:String(n)}));right=base.map(n=>({id:`w${n}`,num:n,type:'nom',text:numberToSpanish(n)}));if(extraRight)right.push(...extra.map(n=>({id:`w${n}`,num:n,type:'nom',text:numberToSpanish(n),extra:true})));else left.push(...extra.map(n=>({id:`n${n}`,num:n,type:'num',text:String(n),extra:true})));}else{left=base.map(n=>({id:`w${n}`,num:n,type:'nom',text:numberToSpanish(n)}));right=base.map(n=>({id:`n${n}`,num:n,type:'num',text:String(n)}));if(extraRight)right.push(...extra.map(n=>({id:`n${n}`,num:n,type:'num',text:String(n),extra:true})));else left.push(...extra.map(n=>({id:`w${n}`,num:n,type:'nom',text:numberToSpanish(n),extra:true})));}state.data={base,left:shuffle(left),right:shuffle(right),links:new Map(),colors:{},explosionSound:document.getElementById('m1Sound').value==='yes'};['#2563eb','#f97316','#16a34a','#9333ea','#dc2626','#0891b2','#ca8a04','#db2777','#4f46e5','#65a30d'].forEach((c,i)=>{if(state.data.left[i])state.data.colors[state.data.left[i].id]=c;});setGame('🔗 Modo 1: Pareo','Une cada número con su nombre.');document.getElementById('progressPill').classList.remove('oculto');renderPareo();progress(0,base.length);if(state.voice)speak('Arrastra cada cohete hasta el planeta que tiene el nombre correcto del número.');}
-function renderPareo(){stopPareoAnimation();resetPareoLayout();flagCancel();state.selection=null;let d=state.data;document.getElementById('gameContent').innerHTML=`<div class="pareo" id="pareo"><div class="inst">🚀 Une cada número con su nombre.<small id="pareoHelp" role="status">Arrastra o toca ambos elementos.</small></div><svg id="svgPareo"></svg><div class="espacio-pareo" aria-hidden="true"></div><div class="col izq" id="leftCol" tabindex="0" role="region" aria-label="Números de salida"><div class="lista-pares">${d.left.map(x=>parHTML(x,'left')).join('')}</div></div><div class="col der" id="rightCol" tabindex="0" role="region" aria-label="Destinos"><div class="lista-pares">${d.right.map(x=>parHTML(x,'right')).join('')}</div></div><div class="acciones"><button id="checkPareo" class="btn green small" onclick="checkMode1()" disabled>✅ Revisar</button><button class="btn orange small nueva-ronda" onclick="startMode1()">🔄 Nueva ronda</button></div></div>`;document.querySelectorAll('.bandera').forEach(b=>{b.onpointerdown=flagDown;b.onpointermove=flagMove;b.onpointerup=flagUp;b.onpointercancel=flagCancel;b.onclick=e=>{if(e.detail===0)chooseFlag(b.dataset);};b.setAttribute('aria-pressed','false');b.setAttribute('aria-label',`Seleccionar ${d[b.dataset.side].find(x=>x.id===b.dataset.id).text}`);});document.querySelectorAll('.pareo .col').forEach(col=>{col.onscroll=()=>{if(state.temp)drawTemp(state.temp.x,state.temp.y);else drawLinks();};col.onclick=e=>{let box=e.target.closest('.caja-par');if(box)chooseFlag(box.parentNode.querySelector('.bandera').dataset);};});fitPareo();drawLinks();}
+function renderPareo(){stopPareoAnimation();resetPareoLayout();flagCancel();state.selection=null;let d=state.data;document.getElementById('gameContent').innerHTML=`<div class="pareo" id="pareo"><div class="inst"><strong>Une cada número con su nombre.</strong><div class="pasos-pareo"><p><b>1</b>Toca un número o su cohete.</p><p><b>2</b>Arrástralo hasta su nombre, o toca el planeta correcto.</p></div><div class="ejemplo-pareo"><span>Así se unen</span><svg viewBox="0 0 260 76" aria-hidden="true"><rect x="4" y="20" width="45" height="38" rx="10" fill="#eaf2ff" stroke="#93b6ec"/><text x="26" y="46" text-anchor="middle" fill="#245ac5" font-size="24" font-weight="900">7</text><text x="69" y="47" text-anchor="middle" font-size="25">🚀</text><path d="M85 40 C110 10 140 66 166 40" fill="none" stroke="#8b73cc" stroke-width="3" stroke-dasharray="5 4"/><path d="M158 36 L169 39 L163 48" fill="none" stroke="#8b73cc" stroke-width="3"/><text x="185" y="47" text-anchor="middle" font-size="25">🪐</text><rect x="205" y="20" width="52" height="38" rx="10" fill="#fff3e5" stroke="#f3be87"/><text x="231" y="44" text-anchor="middle" fill="#9a531f" font-size="16" font-weight="900">siete</text></svg></div><small id="pareoHelp" role="status">Busca el número escrito con letras.</small></div><svg id="svgPareo"></svg><div class="espacio-pareo" aria-hidden="true"></div><div class="col izq" id="leftCol" tabindex="0" role="region" aria-label="Números de salida"><div class="lista-pares">${d.left.map(x=>parHTML(x,'left')).join('')}</div></div><div class="col der" id="rightCol" tabindex="0" role="region" aria-label="Destinos"><div class="lista-pares">${d.right.map(x=>parHTML(x,'right')).join('')}</div></div><div class="acciones"><button id="checkPareo" class="btn green small" onclick="checkMode1()" disabled>✅ Revisar</button><button class="btn orange small nueva-ronda" onclick="startMode1()">🔄 Nueva ronda</button></div></div>`;document.querySelectorAll('.bandera').forEach(b=>{b.onpointerdown=flagDown;b.onpointermove=flagMove;b.onpointerup=flagUp;b.onpointercancel=flagCancel;b.onclick=e=>{if(e.detail===0)chooseFlag(b.dataset);};b.setAttribute('aria-pressed','false');b.setAttribute('aria-label',`Seleccionar ${d[b.dataset.side].find(x=>x.id===b.dataset.id).text}`);});document.querySelectorAll('.pareo .col').forEach(col=>{col.onscroll=()=>{if(state.temp)drawTemp(state.temp.x,state.temp.y);else drawLinks();};col.onclick=e=>{let box=e.target.closest('.caja-par');if(box)chooseFlag(box.parentNode.querySelector('.bandera').dataset);};});fitPareo();drawLinks();}
 function parHTML(x,side){let box=`<div class="caja-par ${x.type}" data-id="${x.id}" data-num="${x.num}">${x.text}</div>`;let flag=`<button class="bandera ${side==='left'?'salida':'meta'}" data-id="${x.id}" data-side="${side}">${side==='left'?'🚀':'🪐'}</button>`;return side==='left'?`<div class="par-row left">${box}${flag}</div>`:`<div class="par-row right">${flag}${box}</div>`;}
 function svgPoint(x,y){return new DOMPoint(x,y).matrixTransform(document.getElementById('svgPareo').getScreenCTM().inverse());}
 function flagCenter(id){let f=document.querySelector(`.bandera[data-id="${id}"]`),rf=f.getBoundingClientRect(),rc=f.closest('.col').getBoundingClientRect();return svgPoint(rf.left+rf.width/2,Math.max(rc.top+10,Math.min(rc.bottom-10,rf.top+rf.height/2)));}
@@ -215,11 +226,14 @@ function fitPareo(){
   const board=document.getElementById('pareo');
   if(!board||!board.getBoundingClientRect().width)return;
   const rect=board.getBoundingClientRect(),scale=rect.width/board.offsetWidth||1,css=getComputedStyle(board),colCss=getComputedStyle(board.querySelector('.col'));
+  const game=document.getElementById('game'),horizontal=game.classList.contains('pareo-horizontal'),header=game.querySelector('.encabezado');
+  game.style.minHeight=innerHeight/scale+'px';
+  const origin=horizontal?game.getBoundingClientRect().top+parseFloat(getComputedStyle(game).paddingTop)*scale:header.getBoundingClientRect().bottom+parseFloat(getComputedStyle(header).marginBottom)*scale;
   const rows=Math.max(state.data.left.length,state.data.right.length),gap=rows>10?3:6;
   const boardFrame=(board.querySelector('.inst')?.offsetHeight||0)+(board.querySelector('.acciones')?.offsetHeight||0)+parseFloat(css.paddingTop)+parseFloat(css.paddingBottom)+parseFloat(css.borderTopWidth)+parseFloat(css.borderBottomWidth)+(document.getElementById('game').classList.contains('pareo-horizontal')?0:2)*parseFloat(css.rowGap);
   const colFrame=28+gap+parseFloat(colCss.paddingTop)+parseFloat(colCss.paddingBottom)+parseFloat(colCss.borderTopWidth)+parseFloat(colCss.borderBottomWidth);
   const sidebar=document.getElementById('pareoSidebar');if(sidebar)sidebar.style.minHeight=Math.max(0,(innerHeight-sidebar.getBoundingClientRect().top-18)/scale)+'px';
-  const available=(innerHeight-rect.top-18)/scale-boardFrame,budget=(available-colFrame-gap*(rows-1))/rows;
+  const available=(innerHeight-Math.max(0,origin)-18)/scale-boardFrame,budget=(available-colFrame-gap*(rows-1))/rows;
   const row=Math.max(20,Math.min(64,budget)),flag=Math.max(18,Math.min(48,row-2));
   board.style.height='auto';
   board.style.setProperty('--pair-line',Math.max(3,Math.min(7,row*.15)));
@@ -230,7 +244,16 @@ function fitPareo(){
   board.style.setProperty('--pair-font',Math.max(11,Math.min(21,row*.66))+'px');
   sizePareoCards(board,row,flag);
   const uniform=parseFloat(board.style.getPropertyValue('--pair-box-height'));
-  board.style.setProperty('--pair-col-height',Math.max(available,uniform*rows+gap*(rows-1)+colFrame)+'px');
+  const comfortableGap=Math.min(40,uniform*.6),compact=uniform*rows+comfortableGap*(rows-1)+colFrame<available;
+  const target=compact?Math.min(available,uniform*rows+comfortableGap*(rows-1)+colFrame):available;
+  const height=Math.max(target,uniform*rows+gap*(rows-1)+colFrame);
+  board.style.setProperty('--pair-col-height',height+'px');
+  if(compact){
+    board.style.setProperty('--pair-align','center');
+    board.style.setProperty('--pair-list-gap',Math.max(gap,Math.min(comfortableGap,(height-colFrame-uniform*rows)/Math.max(1,rows-1)))+'px');
+  }else{
+    board.style.removeProperty('--pair-align');board.style.removeProperty('--pair-list-gap');
+  }
 }
 function resetPareoLayout(){
   const game=document.getElementById('game'),sidebar=document.getElementById('pareoSidebar'),content=document.getElementById('gameContent'),board=document.getElementById('pareo');
@@ -272,11 +295,11 @@ function sizePareoCards(board,row,flag){
   board.style.setProperty('--pair-row',uniform+'px');
   board.style.setProperty('--pair-box-height',uniform+'px');
 }
-function chooseFlag(flag){if(state.data.reviewing)return;let chosen=state.selection;if(chosen&&chosen.side!==flag.side){connectFlags(chosen,flag);state.selection=null;}else state.selection=chosen?.id===flag.id?null:{id:flag.id,side:flag.side};document.querySelectorAll('.bandera').forEach(b=>{let selected=b.dataset.id===state.selection?.id;b.classList.toggle('elegida',selected);b.setAttribute('aria-pressed',String(selected));});let help=document.getElementById('pareoHelp');if(help)help.textContent=state.selection?'Seleccionado: toca su pareja.':'Arrastra o toca ambos elementos.';drawLinks();}
+function chooseFlag(flag){if(state.data.reviewing)return;let chosen=state.selection;if(chosen&&chosen.side!==flag.side){connectFlags(chosen,flag);state.selection=null;}else state.selection=chosen?.id===flag.id?null:{id:flag.id,side:flag.side};document.querySelectorAll('.bandera').forEach(b=>{let selected=b.dataset.id===state.selection?.id;b.classList.toggle('elegida',selected);b.setAttribute('aria-pressed',String(selected));});let help=document.getElementById('pareoHelp');if(help)help.textContent=state.selection?'Seleccionado: toca su pareja.':'Busca el número escrito con letras.';drawLinks();}
 function connectFlags(a,b){let l=a.side==='left'?a.id:b.id,r=a.side==='right'?a.id:b.id,d=state.data;for(let [x,y] of [...d.links])if(x===l||y===r)d.links.delete(x);d.links.set(l,r);d.linkStatus={};document.querySelectorAll('.caja-par').forEach(el=>{el.classList.remove('asociada','ok','mal');delete el.dataset.pareja;});for(let [x,y] of d.links){let left=document.querySelector(`.caja-par[data-id="${x}"]`),right=document.querySelector(`.caja-par[data-id="${y}"]`);left.dataset.pareja=d.right.find(i=>i.id===y).text;right.dataset.pareja=d.left.find(i=>i.id===x).text;left.classList.add('asociada');right.classList.add('asociada');}progress(d.links.size,d.base.length);document.getElementById('checkPareo').disabled=d.links.size<d.base.length;}
 function flagDown(e){if(state.data.reviewing||state.temp||e.isPrimary===false||(e.pointerType==='mouse'&&e.button!==0))return;e.preventDefault();let b=e.currentTarget;try{b.setPointerCapture(e.pointerId);}catch{}b.classList.add('activa');state.temp={id:b.dataset.id,side:b.dataset.side,pid:e.pointerId,startX:e.clientX,startY:e.clientY,x:e.clientX,y:e.clientY,moved:false};if(state.voice){let item=state.data[b.dataset.side].find(x=>x.id===b.dataset.id);speak(item.type==='num'?`número ${numberToSpanish(item.num)}`:item.text);}drawTemp(e.clientX,e.clientY);}
 function flagMove(e){let t=state.temp;if(t&&t.pid===e.pointerId){e.preventDefault();t.x=e.clientX;t.y=e.clientY;t.moved=t.moved||Math.hypot(t.x-t.startX,t.y-t.startY)>8;drawTemp(t.x,t.y);}}
-function flagUp(e){let o=state.temp;if(!o||o.pid!==e.pointerId)return;let target=document.elementFromPoint(e.clientX,e.clientY)?.closest?.('.par-row')?.querySelector('.bandera');flagCancel();if(o.moved){if(target&&target.dataset.side!==o.side){connectFlags(o,target.dataset);state.selection=null;document.querySelectorAll('.elegida').forEach(b=>{b.classList.remove('elegida');b.setAttribute('aria-pressed','false');});document.getElementById('pareoHelp').textContent='Arrastra o toca ambos elementos.';}}else chooseFlag(o);drawLinks();}
+function flagUp(e){let o=state.temp;if(!o||o.pid!==e.pointerId)return;let target=document.elementFromPoint(e.clientX,e.clientY)?.closest?.('.par-row')?.querySelector('.bandera');flagCancel();if(o.moved){if(target&&target.dataset.side!==o.side){connectFlags(o,target.dataset);state.selection=null;document.querySelectorAll('.elegida').forEach(b=>{b.classList.remove('elegida');b.setAttribute('aria-pressed','false');});document.getElementById('pareoHelp').textContent='Busca el número escrito con letras.';}}else chooseFlag(o);drawLinks();}
 function flagCancel(){state.temp=null;document.querySelectorAll('.bandera').forEach(b=>b.classList.remove('activa'));drawLinks();}
 window.addEventListener('resize',()=>requestAnimationFrame(()=>{if(document.getElementById('svgPareo')?.getScreenCTM()){stopPareoAnimation();fitPareo();drawLinks();}}));
 function drawTemp(cx,cy){drawLinks();let svg=document.getElementById('svgPareo'),a=flagCenter(state.temp.id),{x,y}=svgPoint(cx,cy),mid=(a.x+x)/2,path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d',`M ${a.x} ${a.y} C ${mid} ${a.y}, ${mid} ${y}, ${x} ${y}`);path.setAttribute('class','temporal');svg.appendChild(path);}
@@ -323,9 +346,23 @@ function playPareoExplosion(){
     noise.start(t);bass.start(t);bass.stop(t+.19);
   }catch(_){}
 }
+function playPareoWhistle(duration,run){
+  try{
+    const audio=explosionAudio;if(!audio||audio.context.state!=='running')return;
+    const c=audio.context,t=c.currentTime,osc=c.createOscillator(),gain=c.createGain(),vibrato=c.createOscillator(),depth=c.createGain();
+    osc.type='sine';osc.frequency.setValueAtTime(650,t);osc.frequency.exponentialRampToValueAtTime(1550,t+duration*.65);osc.frequency.exponentialRampToValueAtTime(1000,t+duration);
+    gain.gain.setValueAtTime(.0001,t);gain.gain.exponentialRampToValueAtTime(.03,t+.04);gain.gain.exponentialRampToValueAtTime(.012,t+duration*.7);gain.gain.exponentialRampToValueAtTime(.0001,t+duration);
+    vibrato.frequency.value=6;depth.gain.value=18;vibrato.connect(depth).connect(osc.frequency);osc.connect(gain).connect(c.destination);
+    run.sounds.add(osc);run.sounds.add(vibrato);
+    osc.onended=()=>{run.sounds.delete(osc);osc.disconnect();gain.disconnect();};
+    vibrato.onended=()=>{run.sounds.delete(vibrato);vibrato.disconnect();depth.disconnect();};
+    osc.start(t);vibrato.start(t);osc.stop(t+duration);vibrato.stop(t+duration);
+  }catch(_){}
+}
 function stopPareoAnimation(){
   const run=pareoAnimation;if(!run)return;
   pareoAnimation=null;cancelAnimationFrame(run.frame);run.layer.remove();run.board.classList.remove('revisando');run.data.reviewing=false;
+  for(const sound of run.sounds)try{sound.stop();}catch(_){}run.sounds.clear();
   if(state.data===run.data){const button=document.getElementById('checkPareo');if(button)button.disabled=run.data.links.size<run.data.base.length;}
 }
 function animatePareoSuccess(pairs,data,onComplete){
@@ -333,20 +370,21 @@ function animatePareoSuccess(pairs,data,onComplete){
   const ns='http://www.w3.org/2000/svg',board=document.getElementById('pareo'),layer=document.createElementNS(ns,'svg');
   layer.setAttribute('class','pareo-effects');layer.setAttribute('aria-hidden','true');board.appendChild(layer);
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches,duration=reduced?450:1150,delay=reduced?100:210;
-  const run={data,board,layer,frame:0};pareoAnimation=run;data.reviewing=true;board.classList.add('revisando');document.getElementById('checkPareo').disabled=true;
+  const run={data,board,layer,frame:0,sounds:new Set()};pareoAnimation=run;data.reviewing=true;board.classList.add('revisando');document.getElementById('checkPareo').disabled=true;
   if(data.explosionSound)prepareExplosionAudio();
   const flights=pairs.map(([left,right],i)=>{
     const a=flagCenter(left),b=flagCenter(right),mid=(a.x+b.x)/2,path=document.createElementNS(ns,'path'),rocket=document.createElementNS(ns,'text');
     path.setAttribute('d',`M ${a.x} ${a.y} C ${mid} ${a.y}, ${mid} ${b.y}, ${b.x} ${b.y}`);path.setAttribute('fill','none');path.setAttribute('stroke','none');
     rocket.textContent='🚀';rocket.setAttribute('class','pareo-rocket');rocket.style.visibility='hidden';layer.append(path,rocket);
-    return{path,rocket,length:path.getTotalLength(),delay:i*delay,arrived:false};
+    return{path,rocket,length:path.getTotalLength(),delay:i*delay,arrived:false,launched:false};
   });
-  const colors=['#ef4444','#f59e0b','#16a34a','#2563eb','#9333ea','#db2777'],particles=[];
+  const colors=['#ef4444','#f59e0b','#16a34a','#2563eb','#9333ea','#db2777'],particles=[],rings=[];
   function burst(point,time){
     if(data.explosionSound)playPareoExplosion();
-    for(let i=0;i<(reduced?6:12);i++){
-      const el=document.createElementNS(ns,'text'),angle=2*Math.PI*i/(reduced?6:12)+Math.random()*.25,speed=75+Math.random()*100;
-      el.textContent=String(Math.floor(Math.random()*10));el.setAttribute('class','pareo-spark');el.setAttribute('fill',colors[i%colors.length]);el.setAttribute('font-size',String(10+Math.random()*6));layer.appendChild(el);
+    const ring=document.createElementNS(ns,'circle');ring.setAttribute('cx',String(point.x));ring.setAttribute('cy',String(point.y));ring.setAttribute('fill','none');ring.setAttribute('stroke','#fbbf24');ring.setAttribute('stroke-width','4');layer.appendChild(ring);rings.push({el:ring,start:time});
+    for(let i=0;i<(reduced?8:18);i++){
+      const el=document.createElementNS(ns,'text'),angle=2*Math.PI*i/(reduced?8:18)+Math.random()*.25,speed=125+Math.random()*150;
+      el.textContent=String(Math.floor(Math.random()*10));el.setAttribute('class','pareo-spark');el.setAttribute('fill',colors[i%colors.length]);el.setAttribute('font-size',String(12+Math.random()*8));layer.appendChild(el);
       particles.push({el,x:point.x,y:point.y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,start:time});
     }
   }
@@ -356,6 +394,7 @@ function animatePareoSuccess(pairs,data,onComplete){
     const elapsed=now-started;
     for(const f of flights){
       if(f.arrived||elapsed<f.delay)continue;
+      if(!f.launched){f.launched=true;if(data.explosionSound)playPareoWhistle(duration/1000,run);}
       const progress=Math.min(1,(elapsed-f.delay)/duration),distance=progress*f.length,point=f.path.getPointAtLength(distance),ahead=f.path.getPointAtLength(Math.min(f.length,distance+2)),behind=f.path.getPointAtLength(Math.max(0,distance-2));
       const angle=Math.atan2(ahead.y-behind.y,ahead.x-behind.x)*180/Math.PI+45;
       f.rocket.style.visibility='visible';f.rocket.setAttribute('transform',`translate(${point.x} ${point.y}) rotate(${angle})`);
@@ -363,10 +402,11 @@ function animatePareoSuccess(pairs,data,onComplete){
     }
     for(let i=particles.length-1;i>=0;i--){
       const p=particles[i],age=(now-p.start)/1000;
-      if(age>=.75){p.el.remove();particles.splice(i,1);continue;}
-      p.el.setAttribute('x',String(p.x+p.vx*age));p.el.setAttribute('y',String(p.y+p.vy*age+90*age*age));p.el.setAttribute('opacity',String(1-age/.75));
+      if(age>=.95){p.el.remove();particles.splice(i,1);continue;}
+      p.el.setAttribute('x',String(p.x+p.vx*age));p.el.setAttribute('y',String(p.y+p.vy*age+110*age*age));p.el.setAttribute('opacity',String(1-age/.95));
     }
-    if(flights.every(f=>f.arrived)&&!particles.length){stopPareoAnimation();if(state.data===data)onComplete();return;}
+    for(let i=rings.length-1;i>=0;i--){const ring=rings[i],age=(now-ring.start)/1000;if(age>=.4){ring.el.remove();rings.splice(i,1);}else{ring.el.setAttribute('r',String(age*200));ring.el.setAttribute('opacity',String(.8*(1-age/.4)));}}
+    if(flights.every(f=>f.arrived)&&!particles.length&&!rings.length){stopPareoAnimation();if(state.data===data)onComplete();return;}
     run.frame=requestAnimationFrame(frame);
   }
   run.frame=requestAnimationFrame(frame);

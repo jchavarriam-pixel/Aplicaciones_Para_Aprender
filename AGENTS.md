@@ -8,6 +8,7 @@
 - Adaptar la distribución a teléfonos y tabletas, en orientación vertical y horizontal, y a pantallas grandes. Evitar desbordamientos y desplazamiento horizontal, incluso al cambiar el zoom.
 - Al crear o modificar una aplicación, comprobar su aprovechamiento horizontal y su adaptación a distintos tamaños. Aplicar esta regla progresivamente a las aplicaciones que se trabajen; no implica modificar todas las aplicaciones existentes en una sola tarea.
 - Excepción acordada para el pareo de Reconocer números: usar dos columnas laterales compactas del mismo ancho, con una tercera columna central reservada a las líneas. Todas las tarjetas de números y palabras deben tener el mismo ancho y alto, tomando como referencia el contenido más largo y el espacio disponible. Conservar margen interior en las columnas y una separación pequeña entre las etiquetas y los cohetes o planetas. No estirar las columnas para llenar la pantalla: priorizar simetría y proximidad entre cada etiqueta y su punto de unión.
+- En el pareo, cuando haya pocos elementos, mantener una separación vertical moderada y columnas compactas; no repartir tres o cuatro pares por toda la altura de la pantalla. Centrar verticalmente el bloque cuando sobre espacio. Con listas más grandes, adaptar la distribución para aprovechar la altura disponible y mantener visibles los elementos.
 
 ## Orden de las actividades en el índice
 
