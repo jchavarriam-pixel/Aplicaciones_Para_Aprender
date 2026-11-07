@@ -74,7 +74,7 @@ button,input,select{font-family:inherit}.pantalla{display:none;min-height:100vh;
 #game.pareo-horizontal .pareo-sidebar .acciones .nueva-ronda{width:auto;min-height:32px;margin-top:auto;align-self:center;font-size:.75rem}
 .pareo.revisando .bandera,.pareo.revisando .caja-par{pointer-events:none}
 .pareo .caja-par.ok{border-color:#22c55e;background:#dcfce7}.pareo .caja-par.mal{border-color:#ef4444;background:#fee2e2}
-.pareo-effects{position:absolute;inset:0;width:100%;height:100%;z-index:40;pointer-events:none;overflow:hidden;contain:layout paint}
+.pareo-effects{position:absolute;inset:0;width:100%;height:100%;z-index:40;pointer-events:none;overflow:hidden;background:transparent!important;contain:layout}
 .pasos-pareo,.ejemplo-pareo{display:none}
 .pareo-sidebar .pasos-pareo{display:grid;gap:9px;margin:12px 0}
 .pasos-pareo p{display:flex;align-items:flex-start;gap:8px;margin:0;font-size:.9rem;line-height:1.35;font-weight:700}
@@ -387,7 +387,8 @@ function effectSurface(layer,width,height){
   // Resolución acotada incluso en tabletas con densidad de pantalla muy alta.
   const ratio=Math.min(devicePixelRatio||1,1.5,Math.sqrt(1800000/(width*height)));
   layer.width=Math.ceil(width*ratio);layer.height=Math.ceil(height*ratio);
-  const ctx=layer.getContext('2d',{alpha:true,desynchronized:true});
+  // Mantener la composición normal con alfa, también bajo el zoom CSS de la página.
+  const ctx=layer.getContext('2d',{alpha:true});
   if(ctx)ctx.setTransform(ratio,0,0,ratio,0,0);
   return ctx;
 }
@@ -438,7 +439,9 @@ function animatePareoSuccess(pairs,data,onComplete){
       f.position=flightPosition(f,Math.min(1,(elapsed-f.delay)/duration));
       if(elapsed-f.delay>=duration){f.arrived=true;burst(f.position,now);}
     }
-    ctx.globalAlpha=1;ctx.clearRect(0,0,width,height);
+    // Limpiar todo el bitmap físico: no conservar píxeles opacos de un fotograma anterior.
+    ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,layer.width,layer.height);ctx.restore();
+    ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';
     for(let i=run.rings.length-1;i>=0;i--){
       const ring=run.rings[i],age=(now-ring.start)/1000;if(age>=ring.duration){run.rings.splice(i,1);continue;}
       ctx.globalAlpha=(ring.flash ? .9 : .85)*(1-age/ring.duration);ctx.beginPath();ctx.arc(ring.x,ring.y,age*ring.speed,0,Math.PI*2);ctx.fillStyle=ring.flash?'rgba(255,243,176,.65)':'rgba(253,230,138,.12)';ctx.fill();ctx.strokeStyle=ring.flash?'#fff8d7':'#fbbf24';ctx.lineWidth=ring.flash?3:6;ctx.stroke();
