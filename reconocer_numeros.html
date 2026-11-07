@@ -381,10 +381,13 @@ function animatePareoSuccess(pairs,data,onComplete){
   const colors=['#ef4444','#f59e0b','#16a34a','#2563eb','#9333ea','#db2777'],particles=[],rings=[];
   function burst(point,time){
     if(data.explosionSound)playPareoExplosion();
-    const ring=document.createElementNS(ns,'circle');ring.setAttribute('cx',String(point.x));ring.setAttribute('cy',String(point.y));ring.setAttribute('fill','none');ring.setAttribute('stroke','#fbbf24');ring.setAttribute('stroke-width','4');layer.appendChild(ring);rings.push({el:ring,start:time});
-    for(let i=0;i<(reduced?8:18);i++){
-      const el=document.createElementNS(ns,'text'),angle=2*Math.PI*i/(reduced?8:18)+Math.random()*.25,speed=125+Math.random()*150;
-      el.textContent=String(Math.floor(Math.random()*10));el.setAttribute('class','pareo-spark');el.setAttribute('fill',colors[i%colors.length]);el.setAttribute('font-size',String(12+Math.random()*8));layer.appendChild(el);
+    for(const flash of [false,true]){
+      const ring=document.createElementNS(ns,'circle');ring.setAttribute('cx',String(point.x));ring.setAttribute('cy',String(point.y));ring.setAttribute('fill',flash?'#fff3b0':'#fde68a');ring.setAttribute('fill-opacity',flash?'.65':'.12');ring.setAttribute('stroke',flash?'#fff8d7':'#fbbf24');ring.setAttribute('stroke-width',flash?'3':'6');layer.appendChild(ring);
+      rings.push({el:ring,start:time,duration:flash ? .22 : .6,speed:reduced?150:300,opacity:flash ? .9 : .85});
+    }
+    for(let i=0;i<(reduced?10:24);i++){
+      const el=document.createElementNS(ns,'text'),angle=2*Math.PI*i/(reduced?10:24)+Math.random()*.25,speed=reduced?80+Math.random()*80:200+Math.random()*220;
+      el.textContent=String(Math.floor(Math.random()*10));el.setAttribute('class','pareo-spark');el.setAttribute('fill',colors[i%colors.length]);el.setAttribute('font-size',String(14+Math.random()*10));layer.appendChild(el);
       particles.push({el,x:point.x,y:point.y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,start:time});
     }
   }
@@ -402,10 +405,10 @@ function animatePareoSuccess(pairs,data,onComplete){
     }
     for(let i=particles.length-1;i>=0;i--){
       const p=particles[i],age=(now-p.start)/1000;
-      if(age>=.95){p.el.remove();particles.splice(i,1);continue;}
-      p.el.setAttribute('x',String(p.x+p.vx*age));p.el.setAttribute('y',String(p.y+p.vy*age+110*age*age));p.el.setAttribute('opacity',String(1-age/.95));
+      if(age>=1.1){p.el.remove();particles.splice(i,1);continue;}
+      p.el.setAttribute('x',String(p.x+p.vx*age));p.el.setAttribute('y',String(p.y+p.vy*age+110*age*age));p.el.setAttribute('opacity',String(1-age/1.1));
     }
-    for(let i=rings.length-1;i>=0;i--){const ring=rings[i],age=(now-ring.start)/1000;if(age>=.4){ring.el.remove();rings.splice(i,1);}else{ring.el.setAttribute('r',String(age*200));ring.el.setAttribute('opacity',String(.8*(1-age/.4)));}}
+    for(let i=rings.length-1;i>=0;i--){const ring=rings[i],age=(now-ring.start)/1000;if(age>=ring.duration){ring.el.remove();rings.splice(i,1);}else{ring.el.setAttribute('r',String(age*ring.speed));ring.el.setAttribute('opacity',String(ring.opacity*(1-age/ring.duration)));}}
     if(flights.every(f=>f.arrived)&&!particles.length&&!rings.length){stopPareoAnimation();if(state.data===data)onComplete();return;}
     run.frame=requestAnimationFrame(frame);
   }
