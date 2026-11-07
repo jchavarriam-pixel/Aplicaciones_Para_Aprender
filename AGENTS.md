@@ -11,6 +11,7 @@
 - En el pareo, cuando haya pocos elementos, mantener una separación vertical moderada y columnas compactas; no repartir tres o cuatro pares por toda la altura de la pantalla. Centrar verticalmente el bloque cuando sobre espacio. Con listas más grandes, adaptar la distribución para aprovechar la altura disponible y mantener visibles los elementos.
 - Reconocer números está en `Reconocer_Numeros/reconocer_numeros.html`, con sus recursos en la misma carpeta. En el corral, conservar el número como etiqueta separada de la imagen: el animal puede cambiar de orientación, pero el número siempre debe permanecer derecho. Reutilizar los cuatro estilos y sus GIF de caminar/reposo, sin crear un archivo distinto por cada número.
 - En el modo Corral, distinguir visualmente el potrero de césped, la cerca y el corral de tierra. El punto para soltar la vaca es la entrada marcada: cuando es correcta, debe caminar hasta una plaza del corral antes de quedar en reposo, sin aparecer directamente en su destino.
+- Ajustar la escena del Corral a la altura útil y al ancho de la pantalla, sin una altura mínima fija que la saque de la vista. En horizontal, colocar la guía al lado y el corral de tierra a la derecha del potrero; en vertical, dejar el corral debajo. Redistribuir vacas y plazas al girar o cambiar el zoom, conservando las capturas y el espacio libre de la entrada.
 
 ## Orden de las actividades en el índice
 

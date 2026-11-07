@@ -159,6 +159,56 @@ button,input,select{font-family:inherit}.pantalla{display:none;min-height:100vh;
 .box-game .sound-box.mal{background:#fff0eb;border-color:#e8755b}
 .box-game .sound-box.sonando{background:#fff0a8;border-color:#ec9b18}
 @media(max-width:600px){.guia-actividad{grid-template-columns:minmax(0,1fr) 96px;gap:8px;padding:10px}.guia-pasos{display:grid;gap:6px}.guia-pasos p{font-size:.85rem}.guia-actividad h3{font-size:.95rem}.guia-actividad svg{min-width:0}.acciones-actividad>.btn.green{min-height:54px}}
+/* El modo Corral ocupa la pantalla; la orientación decide la distribución. */
+#game.modo-corral>.encabezado{flex-wrap:nowrap;align-items:center;margin-bottom:8px}
+#game.modo-corral>.encabezado .titulo{min-width:0;padding:7px 11px;flex:1 1 auto}
+#game.modo-corral>.encabezado h2{font-size:clamp(.95rem,2vw,1.25rem)}
+#game.modo-corral>.encabezado .control{width:auto;flex:0 0 auto}
+#game.modo-corral>.encabezado .btn{min-height:36px;padding:7px 10px;font-size:.85rem}
+#game.modo-corral #gameContent{display:grid;grid-template-areas:'guia' 'escena' 'acciones';grid-template-rows:auto minmax(0,1fr) auto;gap:8px;height:var(--corral-content-height,75dvh);min-width:0}
+#game.modo-corral .guia-actividad{grid-area:guia;margin:0;padding:8px 12px;grid-template-columns:minmax(0,1fr) 100px;border-radius:16px;gap:8px}
+#game.modo-corral .guia-actividad h3{font-size:.95rem;margin-bottom:5px}
+#game.modo-corral .guia-pasos{gap:6px 12px}
+#game.modo-corral .guia-pasos p{font-size:.83rem}
+#game.modo-corral .guia-pasos b{width:22px;height:22px}
+#game.modo-corral .guia-actividad svg{max-height:65px}
+#game.modo-corral .corral{grid-area:escena;height:100%;min-height:0;min-width:0;border-width:4px;border-radius:22px}
+#game.modo-corral .acciones{grid-area:acciones;margin:0;padding:4px;min-width:0;border-radius:14px}
+#game.modo-corral .acciones .btn{min-height:34px;padding:7px 12px;font-size:.8rem}
+#game.modo-corral .corral-guia{width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+#game.modo-corral .potrero-cartel{left:9px;top:7px;padding:3px 8px;font-size:.85rem}
+#game.modo-corral .corral-cartel{top:5px;left:6px;font-size:.75rem;padding:2px 7px}
+#game.modo-corral .corral-plazas{inset:30px 6px 18px;gap:3px}
+#game.modo-corral .entrada-corral{height:62px;width:var(--gate-width);border-width:2px;border-radius:12px}
+#game.modo-corral .entrada-corral strong{font-size:.7rem;padding:1px 3px}
+#game.modo-corral .entrada-corral span{font-size:.8rem;margin-top:2px}
+#game.modo-corral .puerta-corral{height:28px;border-width:2px}
+#game.modo-corral .entrada-corral:before,#game.modo-corral .entrada-corral:after{height:36px;width:10px}
+#game.modo-corral .destino-flecha{font-size:.8rem;padding:4px 7px;margin-bottom:7px}
+#game.modo-corral.corral-horizontal #gameContent{grid-template-columns:clamp(145px,20%,250px) minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;grid-template-areas:'guia escena' 'acciones escena';gap:10px}
+#game.modo-corral.corral-horizontal .guia-actividad{display:flex;flex-direction:column;align-items:stretch;justify-content:center;padding:12px;gap:10px}
+#game.modo-corral.corral-horizontal .guia-pasos{display:grid;gap:12px}
+#game.modo-corral.corral-horizontal .guia-actividad h3{font-size:1rem;margin:0}
+#game.modo-corral.corral-horizontal .guia-actividad svg{width:100%;max-height:85px}
+#game.modo-corral .corral-lateral .zona{left:auto;right:8px;top:8px;bottom:8px;transform:none;width:var(--zone-width);height:auto;border:5px solid #95643c;border-left:0;border-radius:12px}
+#game.modo-corral .corral-lateral .corral-plazas{inset:32px 5px 40px 50px}
+#game.modo-corral .corral-lateral .cerca{top:10px;bottom:10px;left:calc(100% - var(--zone-width) - 17px);right:auto;width:18px;height:auto;background:none;opacity:1}
+#game.modo-corral .corral-lateral .cerca:before,#game.modo-corral .corral-lateral .cerca:after{left:0;right:0;width:18px;height:auto;background:repeating-linear-gradient(180deg,#8c5b35 0 10px,transparent 10px 52px),linear-gradient(90deg,transparent 2px,#bd8a55 2px 7px,transparent 7px 11px,#a87141 11px 16px,transparent 16px)}
+#game.modo-corral .corral-lateral .cerca:before{top:0;bottom:calc(50% + 42px)}
+#game.modo-corral .corral-lateral .cerca:after{top:calc(50% + 42px);bottom:0}
+#game.modo-corral .corral-lateral .entrada-corral{left:calc(100% - var(--zone-width) - 8px);top:50%;bottom:auto;transform:translate(-50%,-50%);width:96px;height:82px}
+#game.modo-corral .corral-lateral .entrada-corral strong{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);width:116px;border-radius:7px;padding:3px;background:#fff6d7f5;margin-bottom:4px}
+#game.modo-corral .corral-lateral .entrada-corral span{position:absolute;top:50%;left:0;right:0;transform:translateY(-50%);z-index:4;background:#fff5d9d9;border-radius:5px;padding:2px;font-size:.75rem}
+#game.modo-corral .corral-lateral .puerta-corral{left:calc(50% - 13px);right:auto;bottom:auto;width:26px;height:50%;transform-origin:center top}
+#game.modo-corral .corral-lateral .puerta-izquierda{top:0;transform-origin:center top}
+#game.modo-corral .corral-lateral .puerta-derecha{top:50%;transform-origin:center bottom}
+#game.modo-corral .corral-lateral.entrada-ocupada .puerta-izquierda{transform:rotateX(-102deg)}
+#game.modo-corral .corral-lateral.entrada-ocupada .puerta-derecha{transform:rotateX(102deg)}
+#game.modo-corral .corral-lateral .entrada-corral:before,#game.modo-corral .corral-lateral .entrada-corral:after{width:36px;height:9px;left:calc(50% - 18px);right:auto;bottom:auto}
+#game.modo-corral .corral-lateral .entrada-corral:before{top:-5px}
+#game.modo-corral .corral-lateral .entrada-corral:after{top:calc(100% - 4px)}
+#game.modo-corral .corral-lateral .destino-flecha{bottom:calc(100% + 28px);white-space:nowrap}
+@media(max-height:500px){#game.modo-corral{padding:6px}#game.modo-corral.corral-horizontal .guia-actividad{padding:8px;gap:7px}#game.modo-corral.corral-horizontal .guia-pasos{gap:8px}#game.modo-corral.corral-horizontal .guia-pasos p{font-size:.76rem}#game.modo-corral.corral-horizontal .guia-actividad h3{font-size:.88rem}#game.modo-corral.corral-horizontal .guia-actividad svg{max-height:56px}}
 </style>
   <link rel="stylesheet" href="../creditos.css">
   <link rel="stylesheet" href="../pantalla-completa.css">
@@ -563,38 +613,54 @@ function renderCorral(){
   document.querySelectorAll('.animal').forEach(el=>makeDrag(el,onDropAnimal));layoutCorral();
 }
 function corralBounds(){
-  const c=document.getElementById('corral');return{width:c.clientWidth,top:58,height:Math.max(90,c.clientHeight-(parseFloat(c.style.getPropertyValue('--zone-height'))||210)-134)};
+  const c=document.getElementById('corral');return c?._pastureBounds||{left:8,top:42,width:Math.max(1,c.clientWidth-16),height:Math.max(1,c.clientHeight-150)};
+}
+function cowGrid(width,height,count,maxSize){
+  let best={cols:1,rows:Math.max(1,count),size:0};
+  for(let cols=1;cols<=Math.max(1,count);cols++){
+    const rows=Math.ceil(Math.max(1,count)/cols),size=Math.max(1,Math.min(maxSize,(width-6*(cols-1))/cols,(height-5*(rows-1))/rows*4/3));
+    if(size>best.size)best={cols,rows,size};
+  }
+  return best;
 }
 function layoutCorral(){
   const c=document.getElementById('corral');if(!c||!c.getBoundingClientRect().width||state.drag)return;
   if(state.corralArrival)finishCowArrival(state.corralArrival,false);
-  const zone=document.getElementById('zona'),count=state.data.total,free=[...c.querySelectorAll('.animal:not(.guardado):not(.entrando)')],scale=c.getBoundingClientRect().width/c.offsetWidth||1;
+  const game=document.getElementById('game'),content=document.getElementById('gameContent'),zone=document.getElementById('zona'),count=state.data.total;
+  const scale=c.getBoundingClientRect().width/c.offsetWidth||1,viewportHeight=window.visualViewport?.height||innerHeight,horizontal=innerWidth>=480&&innerWidth>viewportHeight*1.15;
+  game.classList.toggle('corral-horizontal',horizontal);c.classList.toggle('corral-lateral',horizontal);
+  // Se mide desde el documento para que desplazar la página no cambie la altura.
+  const top=(content.getBoundingClientRect().top+scrollY)/scale,padding=parseFloat(getComputedStyle(game).paddingBottom)||0;
+  content.style.setProperty('--corral-content-height',Math.max(180,viewportHeight/scale-top-padding)+'px');
   stopCorralAnimals();
-  const large=state.data.numbers.some(n=>String(n).length>=6),caughtCell=large?184:96,caughtRow=large?140:84;
-  const caughtCols=Math.max(1,Math.min(count,Math.floor((c.clientWidth-34)/caughtCell))),zoneHeight=Math.max(210,Math.ceil(count/caughtCols)*caughtRow+70);
-  c.style.setProperty('--zone-height',zoneHeight+'px');zone.style.setProperty('--caught-cols',caughtCols);
-  let height=Math.max(610,(innerHeight-c.getBoundingClientRect().top-82)/scale);
-  const minCols=Math.max(1,Math.floor((c.clientWidth-24)/(large?210:120))),minRows=Math.ceil(Math.max(1,free.length)/minCols);
-  height=Math.max(height,zoneHeight+134+minRows*(large?160:94));c.style.setProperty('--corral-height',height+'px');
-  const bounds=corralBounds(),n=Math.max(1,free.length);let best={cols:1,rows:n,size:0};
-  for(let cols=1;cols<=n;cols++){const rows=Math.ceil(n/cols),size=Math.min((bounds.width-24)/cols-10,((bounds.height-20)/rows-10)*4/3);if(size>best.size)best={cols,rows,size};}
-  const size=Math.max(large?180:100,Math.min(large?240:180,best.size));
+  const large=state.data.numbers.some(n=>String(n).length>=6),w=c.clientWidth,h=c.clientHeight;
+  if(horizontal){
+    const penWidth=Math.min(w*.37,Math.max(112,w*(count>9?.3:.26)));
+    c.style.setProperty('--zone-width',penWidth+'px');
+    c._pastureBounds={left:8,top:40,width:Math.max(1,w-penWidth-65),height:Math.max(1,h-48)};
+  }else{
+    const penHeight=Math.max(95,Math.min(h*.31,count>9?205:180));
+    c.style.setProperty('--zone-height',penHeight+'px');c.style.setProperty('--gate-width',Math.min(180,Math.max(126,w*.38))+'px');
+    c._pastureBounds={left:8,top:40,width:Math.max(1,w-16),height:Math.max(1,h-penHeight-104)};
+  }
+  const plazas=zone.querySelector('.corral-plazas'),caught=cowGrid(plazas.clientWidth,plazas.clientHeight,count,large?176:116);
+  zone.style.setProperty('--caught-cols',caught.cols);
+  const free=[...c.querySelectorAll('.animal:not(.guardado):not(.entrando)')],bounds=corralBounds(),best=cowGrid(bounds.width,bounds.height,free.length,large?240:180),size=best.size;
   free.forEach((el,i)=>{
-    const digits=String(el.dataset.num).length,font=Math.max(12,Math.min(digits>=6?28:42,size*.28,(size*(digits>=6?.5:.68)-14)/(digits*.62)))*.85;
-    el.classList.toggle('numero-largo',digits>=6);
-    el.style.setProperty('--animalW',size+'px');el.style.setProperty('--cow-number',font+'px');el.style.setProperty('--caught-number',digits>=5?'11px':'15px');
+    const digits=String(el.dataset.num).length,font=Math.max(digits>=5?12:13,Math.min(digits>=6?28:42,size*.24,size*(digits>=6?.55:.65)/(digits*.62))*.85);
+    el.classList.toggle('numero-largo',digits>=6);el.style.setProperty('--animalW',size+'px');el.style.setProperty('--cow-number',font+'px');
     el.style.position='absolute';el.style.transition='none';
-    const col=i%best.cols,row=Math.floor(i/best.cols),cellW=(bounds.width-20)/best.cols,cellH=(bounds.height-16)/best.rows;
-    place(el,10+col*cellW+(cellW-size)/2,bounds.top+8+row*cellH+(cellH-size*.75)/2);
-    animateAnimal(el);
+    const cellW=bounds.width/best.cols,cellH=bounds.height/best.rows,col=i%best.cols,row=Math.floor(i/best.cols);
+    place(el,bounds.left+col*cellW+(cellW-size)/2,bounds.top+row*cellH+(cellH-size*.75)/2);animateAnimal(el);
   });
+  const label=document.querySelector('#entradaCorral>span');if(!state.data.entering)label.textContent=horizontal?'Suelta aquí →':'Suelta aquí ↓';
   sizeCapturedCows();
 }
 function cowDestination(el){
   const c=document.getElementById('corral'),bounds=corralBounds(),width=el.offsetWidth,height=el.offsetHeight,x=Number(el.dataset.x)||0,y=Number(el.dataset.y)||0;
   const others=[...c.querySelectorAll('.animal:not(.guardado):not(.entrando)')].filter(other=>other!==el);
   for(let i=0;i<14;i++){
-    const nx=Math.max(6,Math.min(bounds.width-width-6,x+(Math.random()*180-90))),ny=Math.max(bounds.top+6,Math.min(bounds.top+bounds.height-height-6,y+(Math.random()*100-50)));
+    const nx=Math.max(bounds.left,Math.min(bounds.left+bounds.width-width,x+(Math.random()*180-90))),ny=Math.max(bounds.top,Math.min(bounds.top+bounds.height-height,y+(Math.random()*100-50)));
     if(others.every(other=>Math.abs(nx-Number(other.dataset.x))>(width+other.offsetWidth)*.39||Math.abs(ny-Number(other.dataset.y))>(height+other.offsetHeight)*.37))return{x:nx,y:ny};
   }
   return{x,y};
@@ -620,7 +686,14 @@ function pauseCow(el){
   el.style.transition='none';place(el,(r.left-p.left)/scale-c.clientLeft,(r.top-p.top)/scale-c.clientTop);
 }
 let corralResizeFrame=0;
-window.addEventListener('resize',()=>{cancelAnimationFrame(corralResizeFrame);corralResizeFrame=requestAnimationFrame(()=>{if(state.mode===2&&document.getElementById('game').classList.contains('activa'))layoutCorral();});});
+function scheduleCorralLayout(){cancelAnimationFrame(corralResizeFrame);corralResizeFrame=requestAnimationFrame(()=>{
+  if(state.mode!==2||!document.getElementById('game').classList.contains('activa'))return;
+  if(state.drag?.el.classList.contains('animal'))finishDrag({pointerId:state.drag.pid,clientX:state.drag.x,clientY:state.drag.y},true);
+  layoutCorral();
+});}
+window.addEventListener('resize',scheduleCorralLayout);
+window.visualViewport?.addEventListener('resize',scheduleCorralLayout);
+if(document.fonts)document.fonts.ready.then(scheduleCorralLayout);
 function nextTarget(){if(state.data.entering)return;if(document.hidden){state.data.awaitingTarget=true;return;}if(state.data.remaining.length===0){finishSuccess();return;}state.data.current=state.data.remaining[0];startLoop(`Atrapa el número ${numberToSpanish(state.data.current)}.`);}
 function sizeCapturedCows(){
   document.querySelectorAll('.corral-slot .animal.guardado').forEach(el=>{
@@ -639,7 +712,7 @@ function finishCowArrival(a,announce=true){
   cancelCowArrival();
   const el=a.el;el.classList.remove('entrando');el.classList.add('guardado');el.style.transition='none';el.style.transform='';el.style.position='relative';el.style.left='auto';el.style.top='auto';el.style.width='';el.style.height='';el.style.pointerEvents='none';
   a.slot.appendChild(el);setCowMotion(el,false);sizeCapturedCows();
-  document.querySelector('#entradaCorral span').textContent='Suelta aquí ↓';
+  document.querySelector('#entradaCorral>span').textContent=a.board.classList.contains('corral-lateral')?'Suelta aquí →':'Suelta aquí ↓';
   document.getElementById('corralGuide').textContent='¡La vaca ya está dentro!';
   if(announce)speak(`Muy bien ${state.childName}. La vaca llegó al corral.`);
   clearTimeout(state.targetTimer);state.targetTimer=setTimeout(()=>{
@@ -651,7 +724,7 @@ function walkCowIntoCorral(el,dropRect){
   const board=document.getElementById('corral'),gate=document.getElementById('entradaCorral'),data=state.data,index=data.total-data.remaining.length,slot=board.querySelector(`.corral-slot[data-slot="${index}"]`);
   const stage=board.getBoundingClientRect(),scale=stage.width/board.offsetWidth||1,rect=dropRect||el.getBoundingClientRect(),gateRect=gate.getBoundingClientRect(),slotRect=slot.getBoundingClientRect(),zoneRect=document.getElementById('zona').getBoundingClientRect();
   const local=(x,y)=>({x:(x-stage.left)/scale-board.clientLeft,y:(y-stage.top)/scale-board.clientTop});
-  const start=local(rect.left+rect.width/2,rect.top+rect.height/2),entrance=local(gateRect.left+gateRect.width/2,zoneRect.top+34*scale),end=local(slotRect.left+slotRect.width/2,slotRect.top+slotRect.height/2);
+  const start=local(rect.left+rect.width/2,rect.top+rect.height/2),entrance=board.classList.contains('corral-lateral')?local(zoneRect.left+30*scale,gateRect.top+gateRect.height/2):local(gateRect.left+gateRect.width/2,zoneRect.top+26*scale),end=local(slotRect.left+slotRect.width/2,slotRect.top+slotRect.height/2);
   const width=el.offsetWidth,height=el.offsetHeight,settled=Math.min(el.classList.contains('numero-largo')?176:116,slot.clientWidth,slot.clientHeight*4/3),shrink=settled/width;
   const transform=(point,s)=>`translate3d(${point.x-width*s/2}px,${point.y-height*s/2}px,0) scale(${s})`;
   clearTimeout(el._timer);clearTimeout(el._idleTimer);clearTimeout(state.targetTimer);stopAudio();
@@ -663,13 +736,13 @@ function walkCowIntoCorral(el,dropRect){
   // Las hojas abren antes del paso y cierran cuando la vaca ya está dentro.
   if(gate.animate&&opening){
     gate.querySelectorAll('.puerta-corral').forEach((leaf,i)=>{
-      const turn=i===0?-102:102;
+      const turn=i===0?-102:102,axis=board.classList.contains('corral-lateral')?'X':'Y';
       a.gateAnimations.push(leaf.animate([
-        {transform:'rotateY(0deg)',offset:0},
-        {transform:`rotateY(${turn}deg)`,offset:opening/(duration+opening)},
-        {transform:`rotateY(${turn}deg)`,offset:.68},
-        {transform:`rotateY(${-Math.sign(turn)*3}deg)`,offset:.94},
-        {transform:'rotateY(0deg)',offset:1}
+        {transform:`rotate${axis}(0deg)`,offset:0},
+        {transform:`rotate${axis}(${turn}deg)`,offset:opening/(duration+opening)},
+        {transform:`rotate${axis}(${turn}deg)`,offset:.68},
+        {transform:`rotate${axis}(${-Math.sign(turn)*3}deg)`,offset:.94},
+        {transform:`rotate${axis}(0deg)`,offset:1}
       ],{duration:duration+opening,easing:'ease-in-out',fill:'forwards'}));
     });
   }
@@ -749,7 +822,7 @@ window.addEventListener('pointercancel',e=>finishDrag(e,true),{passive:false});
 function setCorralDropHint(active,over=false){
   const gate=document.getElementById('entradaCorral');if(!gate)return;
   gate.classList.toggle('destino-activo',active);gate.classList.toggle('destino-listo',active&&over);
-  const arrow=gate.querySelector('.destino-flecha');if(arrow)arrow.textContent=over?'¡Suelta la vaca! ↓':'Suelta aquí ↓';
+  const arrow=gate.querySelector('.destino-flecha');if(arrow){const dir=document.getElementById('corral').classList.contains('corral-lateral')?'→':'↓';arrow.textContent=(over?'¡Suelta la vaca! ':'Suelta aquí ')+dir;}
 }
 function moveDrag(x,y){let d=state.drag;if(!d)return;d.x=x;d.y=y;d.el.style.left=(x-d.dx)+'px';d.el.style.top=(y-d.dy)+'px';if(d.el.classList.contains('animal'))setCorralDropHint(true,pointIn(x,y,document.getElementById('entradaCorral')));}
 function scrollActiveDrag(now){
