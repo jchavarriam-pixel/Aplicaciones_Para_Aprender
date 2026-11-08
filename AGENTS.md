@@ -1,5 +1,18 @@
 # Reglas del proyecto
 
+## Protocolo de ajuste
+
+Al comenzar a crear o modificar cualquier aplicación, aplicar este protocolo como parte inicial del trabajo autorizado:
+
+1. **Voz:** permitir escoger voz y velocidad de reproducción. Ofrecer hasta tres voces femeninas y tres masculinas reales por idioma, priorizando las más naturales y una femenina como predeterminada; indicar las voces no disponibles sin simularlas. Incluir velocidades de 0.7x a 1.5x en pasos de 0.1x.
+2. **Idioma:** ofrecer español e inglés. El idioma elegido debe aplicarse a textos, instrucciones, ayudas, respuestas, etiquetas accesibles y lecturas; las voces deben corresponder al idioma activo.
+3. **Pantalla:** adaptar la actividad a PC, tabletas y teléfonos, en vertical y horizontal, con zoom y pantalla completa. En vertical, poner título, instrucciones, configuración y demás herramientas arriba y aprovechar todo el ancho para la actividad. En horizontal, poner todas esas herramientas, incluido el título, en una columna izquierda y aprovechar toda la altura para la actividad.
+4. **Visibilidad:** mantener visibles la instrucción de la actividad, los ejercicios/objetos y sus espacios de respuesta, hasta Revisar o el siguiente control principal. Abrir o desplazar la configuración no debe sacar el ejercicio de la vista. Si hace falta, dar desplazamiento propio al panel de herramientas; adaptar las ilustraciones sin deformarlas ni alterar su escala comparativa.
+5. **Persistencia:** guardar localmente las preferencias, incluidas voz por idioma, velocidad, idioma, ayudas y opciones de cada actividad. Reutilizar las preferencias existentes y tolerar el bloqueo del almacenamiento sin impedir jugar.
+6. **Comprobación:** verificar ambas orientaciones, distintos tamaños de pantalla, el zoom de la aplicación (50% a 200%), y entrada/salida de pantalla completa. Comprobar expresamente que el área del ejercicio y el control principal quedan dentro de la vista, que los controles no se superponen, y que el arrastre táctil sigue al dedo con zoom cuando corresponda.
+
+Aplicar el protocolo progresivamente a las aplicaciones que se trabajen. No supone modificar de una vez todas las aplicaciones del repositorio. Las peticiones específicas de cada actividad se suman a este protocolo.
+
 ## Aprovechar el espacio horizontal disponible
 
 - En toda aplicación nueva o modificada, incluido el índice, el contenido principal debe aprovechar todo el ancho disponible del navegador, con márgenes laterales pequeños y adaptables. Evitar límites fijos de `max-width` en el contenedor principal que dejen grandes franjas vacías en pantallas anchas.
