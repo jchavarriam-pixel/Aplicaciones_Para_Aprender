@@ -1,0 +1,60 @@
+/* Distribución compartida por los cuatro modos, sin recortar las ilustraciones. */
+.app{padding:clamp(8px,1.2vw,20px);padding-left:max(8px,env(safe-area-inset-left));padding-right:max(8px,env(safe-area-inset-right))}
+.cabecera{margin-bottom:10px}.cabecera p{margin-top:3px}
+.modos{gap:8px;margin-bottom:12px;grid-template-columns:repeat(4,minmax(0,1fr))}
+.modos button{min-height:64px;padding:9px 12px;gap:9px}.modos button span{min-width:0;overflow-wrap:anywhere}
+.distribucion{grid-template-columns:clamp(210px,21vw,300px) minmax(0,1fr);gap:12px}
+.lateral{gap:10px}.guia{padding:14px}.guia svg{max-height:72px}.guia ol{gap:10px}.guia li{line-height:1.35}
+.actividad{padding:clamp(10px,1.2vw,20px)}.avance{margin-bottom:6px}.avance span{min-width:0}#estrellas{overflow-wrap:anywhere}
+.ayuda{margin:7px 0}.tema-actual{margin:6px 0;line-height:1.3}
+.zona-opciones,.zona-opciones.ilustracion-baja,.zona-opciones.escenas-clima,.zona-opciones.recipientes-capacidad{--alto-panel:var(--alto-disponible,clamp(150px,38dvh,540px));gap:clamp(6px,1vw,16px);padding:5px;grid-template-columns:repeat(var(--opciones,2),minmax(0,1fr))}
+.escenas-clima .tarjeta-opcion:last-child:nth-child(3){grid-column:auto;width:auto;justify-self:stretch}
+.tarjeta-opcion{padding:clamp(5px,.8vw,12px);min-height:44px}
+.muestra{height:var(--alto-panel);aspect-ratio:auto;min-height:0;align-items:flex-end}
+.lienzo{max-width:100%;max-height:100%}
+.texto-eleccion{height:auto;min-height:40px;margin-top:8px;padding:8px;white-space:normal;line-height:1.15;text-align:center}
+.respuesta{min-height:2.4em;margin:8px 0;font-size:clamp(.85rem,1.15vw,1rem)}
+.control-llenado{padding:5px 0 8px;gap:6px 10px}.control-llenado p{min-width:0;flex-basis:180px}
+.acciones{gap:10px}.acciones .boton{min-height:48px}
+.apoyo-capacidad{height:auto;min-height:100px;padding-top:6px;flex:none}
+.apoyo-capacidad:empty{display:none}.apoyo-capacidad .vasitos{width:min(100%,147px);min-height:63px;gap:3px}
+.apoyo-capacidad .vasitos svg{flex-basis:calc((100% - 15px)/6);width:calc((100% - 15px)/6);height:28px;max-width:22px}
+.detalles-practica{padding:10px;background:#f3f8ff}.detalles-practica .ayuda{text-align:left;margin:0 0 6px}.detalles-practica .tema-actual{text-align:left;margin:4px 0}.detalles-practica .control-llenado{padding:5px 0 0}.detalles-practica .control-llenado p{flex-basis:100%;text-align:left}
+/* En vertical la guía pasa a una franja; la configuración solo ocupa espacio al abrirla. */
+@media(max-width:900px) and (orientation:portrait){
+ .distribucion{grid-template-columns:minmax(0,1fr);gap:10px}
+ .lateral{grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:start}
+ .guia{grid-column:1/-1;display:grid;grid-template-columns:62px minmax(0,1fr);gap:4px 10px;padding:9px 12px;align-items:center}
+ .guia h2{grid-column:2;grid-row:1;font-size:.95rem;margin:0}
+ .guia svg{grid-column:1;grid-row:1/3;width:62px;height:48px}
+ .guia ol{grid-column:2;grid-row:2;display:flex;flex-wrap:wrap;gap:5px 12px;margin:0}
+ .guia li{font-size:.8rem;gap:4px}.guia b{width:22px;height:22px}
+ .ajustes{padding:10px 12px;border-radius:14px}.ajustes summary{min-height:24px;display:flex;align-items:center}
+ .ajustes[open]{grid-column:1/-1}.lateral>.boton{min-height:46px;padding:10px;font-size:.85rem}
+ .modos{grid-template-columns:repeat(2,minmax(0,1fr))}.modos button{flex-direction:row;align-items:center;min-height:59px;font-size:.84rem}
+ .modos button b{width:26px;height:26px}.modos button small{font-size:.7rem;margin-top:2px}
+}
+@media(max-width:500px){
+ .cabecera{gap:7px;flex-wrap:nowrap}.marca{display:none}.cabecera>div:not(.marca){min-width:0;flex:1}.cabecera h1{font-size:1.2rem}.cabecera p{font-size:.76rem}.volver{font-size:.75rem;padding:9px}
+ .modos{gap:6px;margin-bottom:8px}.modos button{padding:7px;gap:6px}.modos button small{line-height:1.15}
+ .actividad{border-radius:17px;padding:10px}.pregunta-fila h2{font-size:1.16rem}.escuchar{width:44px;min-height:44px}
+ .ayuda{font-size:.8rem}.tema-actual{font-size:.75rem}.avance{font-size:.78rem}#estrellas{font-size:.8rem;letter-spacing:0}
+ .tarjeta-opcion{border-radius:13px;padding:4px}.texto-eleccion{font-size:.72rem;padding:7px 2px}.marca-seleccion{width:22px;height:22px}
+ .apoyo-capacidad{min-height:101px}.apoyo-capacidad .vasitos{width:100%;gap:2px;min-height:68px}.apoyo-capacidad .vasitos svg{flex-basis:calc((100% - 6px)/4);width:calc((100% - 6px)/4);height:22px;max-width:17px}
+ .etiqueta-volumen{font-size:.7rem}.control-llenado p{font-size:.76rem}.acciones .boton{padding:10px 12px;font-size:.95rem}
+}
+/* Teléfonos acostados: reservar el ancho principal al juego y reducir las franjas. */
+@media(orientation:landscape) and (max-height:650px){
+ .app{display:grid;grid-template-columns:clamp(160px,22vw,210px) minmax(0,1fr);gap:8px;align-items:start}.cabecera{grid-column:1/-1}.app>.modos{grid-column:1;grid-row:2;grid-template-columns:repeat(2,minmax(0,1fr));margin:0}.distribucion{display:contents}.lateral{grid-column:1;grid-row:3}.actividad{grid-column:2;grid-row:2/4;align-self:start}
+ .cabecera{margin-bottom:6px}.cabecera h1{font-size:1.2rem}.cabecera p{font-size:.75rem}.marca{font-size:30px}.marca span{font-size:17px}.volver{padding:8px;font-size:.8rem}
+ .modos{margin-bottom:8px;gap:6px}.modos button{min-height:48px;padding:6px;gap:6px;flex-direction:row;font-size:.75rem}.modos button b{width:24px;height:24px}.modos button small{font-size:.65rem;margin-top:2px}
+ .app>.modos{grid-template-columns:minmax(0,1fr);gap:5px}.app>.modos button{flex-direction:row;align-items:center;font-size:.75rem;gap:6px;padding:6px;min-height:44px}.app>.modos button span{overflow-wrap:normal}.app>.modos button b{width:22px;height:22px}.app>.modos button small{display:none}
+ .distribucion{grid-template-columns:clamp(160px,22vw,210px) minmax(0,1fr);gap:8px}.lateral{grid-template-columns:minmax(0,1fr);gap:7px}
+ .guia{display:block;padding:10px}.guia h2{font-size:.95rem;margin-bottom:4px}.guia svg{width:100%;max-height:48px}.guia ol{display:grid;gap:6px;margin:4px 0 0}.guia li{font-size:.76rem;gap:5px}.guia b{width:22px;height:22px}
+ .ajustes{padding:10px;font-size:.85rem}.ajustes summary{min-height:24px}.lateral>.boton{min-height:44px;padding:8px;font-size:.8rem}
+ .actividad{padding:8px}.avance{margin-bottom:3px;font-size:.75rem;min-height:18px}#estrellas{font-size:.85rem;letter-spacing:0}.pregunta-fila h2{font-size:1.1rem}.escuchar{width:44px;min-height:44px;padding:6px}
+ .ayuda{font-size:.75rem;margin:4px 0}.tema-actual{font-size:.7rem;margin:3px 0}.respuesta{font-size:.8rem;margin:5px 0;min-height:1.5em}.texto-eleccion{margin-top:5px;min-height:32px;font-size:.75rem;padding:6px}
+ .control-llenado{padding:3px 0;gap:5px}.control-llenado p{font-size:.73rem}.control-llenado .boton{min-height:40px;padding:6px 10px;font-size:.8rem}
+ .apoyo-capacidad{min-height:64px;gap:3px}.apoyo-capacidad .vasitos{min-height:40px;width:min(100%,160px)}.apoyo-capacidad .vasitos svg{height:19px;max-width:17px}.etiqueta-volumen{font-size:.7rem}
+ .acciones .boton{min-height:44px;padding:8px 14px;font-size:.9rem}
+}

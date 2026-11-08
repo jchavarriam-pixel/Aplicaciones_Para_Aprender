@@ -95,3 +95,8 @@ Se agregan 12 escenas de formas diferentes a cada nivel: ahora hay 24 por nivel,
 ## Idioma y voz
 
 La configuración permite español o inglés, voz femenina o masculina y velocidad de 0.7x a 1.5x en pasos de 0.1x. Las preferencias se guardan localmente; cada idioma recuerda su voz. Se prioriza la voz femenina más natural disponible. Las voces no ofrecidas por el navegador se indican como no disponibles. Véase [la documentación compartida](../idioma-voz.md).
+# Distribución adaptable
+
+Los cuatro modos comparten `adaptable.css` y `adaptable.js`. En vertical, la guía se compacta sobre el juego; en teléfonos horizontales, los modos, las ayudas y el control de llenado pasan al lateral. En pantallas amplias se aprovecha el ancho disponible. La altura de las ilustraciones se calcula con el espacio útil y se vuelve a ajustar al girar, cambiar el zoom, abrir ajustes o cambiar los textos, sin modificar la escala relativa de las opciones. En pantallas muy pequeñas se conserva el desplazamiento vertical para mantener dibujos y controles legibles.
+
+`tools/probar_comparar_adaptable.cjs` verifica los cuatro modos en nueve tamaños entre 360×640 y 1920×1080, las proporciones, la ausencia de desbordamiento horizontal, la estabilidad del ajuste, los aciertos y la configuración, además de inglés y zoom de 85%, 125% y 150%.
