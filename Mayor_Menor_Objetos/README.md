@@ -95,8 +95,10 @@ Se agregan 12 escenas de formas diferentes a cada nivel: ahora hay 24 por nivel,
 ## Idioma y voz
 
 La configuración permite español o inglés, voz femenina o masculina y velocidad de 0.7x a 1.5x en pasos de 0.1x. Las preferencias se guardan localmente; cada idioma recuerda su voz. Se prioriza la voz femenina más natural disponible. Las voces no ofrecidas por el navegador se indican como no disponibles. Véase [la documentación compartida](../idioma-voz.md).
-# Distribución adaptable
+## Distribución adaptable
 
-Los cuatro modos comparten `adaptable.css` y `adaptable.js`. En vertical, la guía se compacta sobre el juego; en teléfonos horizontales, los modos, las ayudas y el control de llenado pasan al lateral. En pantallas amplias se aprovecha el ancho disponible. La altura de las ilustraciones se calcula con el espacio útil y se vuelve a ajustar al girar, cambiar el zoom, abrir ajustes o cambiar los textos, sin modificar la escala relativa de las opciones. En pantallas muy pequeñas se conserva el desplazamiento vertical para mantener dibujos y controles legibles.
+Los cuatro modos comparten `adaptable.css` y `adaptable.js`. En vertical, título, modos, guía y ajustes ocupan una franja superior desplazable; la actividad utiliza todo el ancho restante. En horizontal, todas esas herramientas, incluido el título, quedan en una columna izquierda desplazable. Abrir la configuración o recorrer las instrucciones no desplaza el juego. Los créditos se conservan al final de las herramientas.
 
-`tools/probar_comparar_adaptable.cjs` verifica los cuatro modos en nueve tamaños entre 360×640 y 1920×1080, las proporciones, la ausencia de desbordamiento horizontal, la estabilidad del ajuste, los aciertos y la configuración, además de inglés y zoom de 85%, 125% y 150%.
+El área de juego ocupa la altura útil, desde la pregunta hasta Revisar o Siguiente. Las ilustraciones se adaptan al espacio restante, conservando proporciones y escala relativa; los controles se compactan cuando el zoom deja poco espacio. Se recalcula con la orientación, el zoom, los cambios de tamaño, el teclado y la entrada/salida de pantalla completa. La altura se mide en coordenadas CSS para compensar el zoom guardado de la aplicación.
+
+`tools/probar_comparar_adaptable.cjs` verifica nueve tamaños entre 360×640 y 1920×1080, proporciones, estabilidad, aciertos y configuración. Comprueba explícitamente que pregunta, ilustraciones y Revisar quedan dentro de la vista en los cuatro modos, siete tamaños y siete valores de zoom (50%, 70%, 85%, 100%, 125%, 150% y 200%). También entra y sale de pantalla completa en tres tamaños, con cuatro valores de zoom, los cuatro modos y los ajustes abiertos/desplazados. Incluye textos ingleses y cambios de orientación en la misma sesión.

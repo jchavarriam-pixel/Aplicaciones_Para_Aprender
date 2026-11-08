@@ -10,6 +10,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),path
    await page.waitForTimeout(220);
    const data=await page.evaluate(()=>{const z=document.querySelector('#zonaImagen'),a=document.querySelector('.actividad');return {overflow:document.documentElement.scrollWidth>innerWidth+2,cards:[...z.children].map(e=>{const r=e.getBoundingClientRect(),l=e.querySelector('.lienzo').getBoundingClientRect(),m=e.querySelector('.muestra').getBoundingClientRect();return {w:r.width,h:r.height,fits:l.width<=m.width+1&&l.height<=m.height+1};}),alto:z.style.getPropertyValue('--alto-disponible'),right:a.getBoundingClientRect().right};});
    assert(!data.overflow,`overflow ${width}x${height} modo ${modo}`);assert(data.cards.every(c=>c.w>=50&&c.h>=44&&c.fits),JSON.stringify({width,height,modo,data}));assert(data.alto);
+   assert(await page.locator('#revisar').evaluate(e=>{const r=e.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight+1;}),`Revisar fuera de vista ${width} ${height} ${modo}`);
    const antes=data.alto;await page.waitForTimeout(100);assert.equal(await page.locator('#zonaImagen').evaluate(e=>e.style.getPropertyValue('--alto-disponible')),antes,'La distribución debe estabilizarse');
    if(modo<4){await page.waitForFunction(()=>lista);await page.evaluate(()=>{elegir(ronda[indice].opciones.findIndex(o=>o.valor===ronda[indice].valorCorrecto));revisar();});assert(await page.locator('#siguiente').isVisible());}
   }
@@ -19,5 +20,25 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),path
  await page.setViewportSize({width:844,height:390});await page.locator('.ajustes').evaluate(e=>e.open=true);await page.locator('#idiomaAplicacion').selectOption('en');await page.locator('.ajustes').evaluate(e=>e.open=false);
  for(const zoom of [85,125,150]){await page.locator('#zoom-aplicacion').evaluate((e,z)=>{e.value=z;e.dispatchEvent(new Event('input',{bubbles:true}));},zoom);await page.waitForTimeout(180);assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2));}
  assert.deepEqual(errors,[]);console.log('PASS inglés y zoom 85%, 125%, 150%');
+ async function visible(contexto){
+  const d=await page.evaluate(()=>{const r=e=>{const b=e.getBoundingClientRect();return {x:b.x,y:b.y,w:b.width,h:b.height,b:b.bottom,r:b.right};};return {width:innerWidth,height:innerHeight,actividad:r(document.querySelector('.actividad')),pregunta:r(document.querySelector('.pregunta-fila')),boton:r(document.querySelector('#revisar')),titulo:r(document.querySelector('.cabecera')),herramientas:r(document.querySelector('.herramientas')),muestras:[...document.querySelectorAll('.muestra')].map(r),overflow:document.documentElement.scrollWidth>innerWidth+2};});
+  assert(!d.overflow,contexto+' ancho');for(const k of ['actividad','pregunta','boton'])assert(d[k].y>=-1&&d[k].b<=d.height+1&&d[k].r<=d.width+1,contexto+' '+k+' '+JSON.stringify(d));assert(d.muestras.every(r=>r.h>5&&r.w>5),contexto+' ilustraciones '+JSON.stringify(d));
+  assert(await page.locator('.apoyo-capacidad').evaluateAll(es=>es.every(el=>[...el.children].every(c=>getComputedStyle(c).display==='none'||c.getBoundingClientRect().bottom<=el.getBoundingClientRect().bottom+2))),contexto+' apoyos sin traslaparse');
+  if(d.width>d.height)assert(d.titulo.r<=d.actividad.x+1,contexto+' título a la izquierda');else assert(d.herramientas.b<=d.actividad.y+1,contexto+' herramientas arriba');
+ }
+ for(const [width,height]of [[360,640],[640,360],[390,844],[844,390],[768,1024],[1024,768],[1920,1080]]){
+  await page.setViewportSize({width,height});
+  for(const zoom of [50,70,85,100,125,150,200]){
+   await page.locator('#zoom-aplicacion').evaluate((e,z)=>{e.value=z;e.dispatchEvent(new Event('input',{bubbles:true}));},zoom);
+   for(const modo of [1,2,3,4]){await page.evaluate(m=>{config.actividad=m;actualizarConfig();nuevaRonda();},modo);await page.waitForTimeout(85);await visible(`${width}x${height} ${zoom}% modo ${modo}`);}
+  }
+  console.log(`PASS actividad completa visible: ${width}x${height}, zoom 50–200%, cuatro modos`);
+ }
+ for(const [width,height]of [[390,844],[844,390],[1024,768]]){
+  await page.setViewportSize({width,height});await page.locator('#boton-pantalla-completa').click();await page.waitForFunction(()=>!!document.fullscreenElement);await page.waitForTimeout(100);
+  for(const z of [85,100,125,150]){await page.locator('#zoom-aplicacion').evaluate((e,z)=>{e.value=z;e.dispatchEvent(new Event('input',{bubbles:true}));},z);for(const modo of [1,2,3,4]){await page.evaluate(m=>{config.actividad=m;actualizarConfig();nuevaRonda();},modo);await page.waitForTimeout(100);await visible(`Pantalla completa ${width}x${height} ${z}% modo ${modo}`);}}
+  await page.locator('.ajustes').evaluate(e=>e.open=true);await page.locator('#nombre').scrollIntoViewIfNeeded();await page.waitForTimeout(100);await visible('Configuración abierta y desplazada');await page.locator('.ajustes').evaluate(e=>e.open=false);
+  await page.evaluate(()=>document.exitFullscreen());await page.waitForTimeout(100);await visible('Salida de pantalla completa');console.log(`PASS pantalla completa y salida: ${width}x${height}`);
+ }
  if(process.env.CAPTURAS){await page.locator('#zoom-aplicacion').evaluate(e=>{e.value=100;e.dispatchEvent(new Event('input',{bubbles:true}));});for(const [w,h]of [[390,844],[844,390],[1024,768]]){await page.setViewportSize({width:w,height:h});await page.waitForTimeout(180);await page.screenshot({path:path.resolve(__dirname,`../.qa-comparar-${w}.png`),fullPage:true});}}
 }finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

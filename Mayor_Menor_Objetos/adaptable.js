@@ -1,33 +1,33 @@
 'use strict';
-// Medir en coordenadas CSS mantiene la escala al cambiar zoom u orientación.
 (()=>{
- const zona=document.getElementById('zonaImagen'),actividad=document.querySelector('.actividad');
- const compacto=matchMedia('(orientation:landscape) and (max-height:650px)');
- const detalles=document.createElement('section');detalles.className='panel detalles-practica';detalles.hidden=true;
- document.querySelector('.guia').after(detalles);
- const ayudas=['ayudaTamano','temaActual','controlLlenado'].map(id=>{const el=document.getElementById(id),marca=document.createComment(id);el.before(marca);return {el,marca};});
- function distribuir(){detalles.hidden=!compacto.matches;for(const {el,marca}of ayudas){if(compacto.matches)detalles.append(el);else marca.after(el);}programar();}
+ const app=document.querySelector('.app'),actividad=document.querySelector('.actividad'),zona=document.getElementById('zonaImagen');
+ const herramientas=document.createElement('aside');herramientas.className='herramientas';app.prepend(herramientas);
+ herramientas.append(document.querySelector('.cabecera'),document.querySelector('.modos'));
+ const lateral=document.querySelector('.lateral');herramientas.append(lateral);
+ const detalles=document.createElement('section');detalles.className='panel detalles-practica';
+ detalles.append(...['ayudaTamano','temaActual','controlLlenado'].map(id=>document.getElementById(id)));lateral.append(detalles);
+ lateral.prepend(document.querySelector('.ajustes'),document.getElementById('nuevaRonda'));
+ lateral.append(document.getElementById('creditos-aplicaciones'));
+ app.append(actividad);document.querySelector('.distribucion').remove();
  let pendiente=false;
  function ajustar(){
   pendiente=false;
-  if(zona.hidden||!zona.children.length)return;
-  const rect=actividad.getBoundingClientRect(),escala=rect.width/actividad.offsetWidth||1;
-  const estilo=getComputedStyle(actividad),altoVentana=document.documentElement.clientHeight;
-  const alturaUtil=(altoVentana-Math.max(0,rect.top))/escala;
-  let resto=parseFloat(estilo.paddingTop)+parseFloat(estilo.paddingBottom)+4;
-  for(const el of actividad.children){if(el===zona||el.hidden||getComputedStyle(el).position==='absolute')continue;const s=getComputedStyle(el);resto+=el.getBoundingClientRect().height/escala+(parseFloat(s.marginTop)||0)+(parseFloat(s.marginBottom)||0);}
-  const tarjetas=[...zona.querySelectorAll('.tarjeta-opcion')];
-  const extra=Math.max(...tarjetas.map(el=>{const s=getComputedStyle(el);return el.getBoundingClientRect().height/escala-el.querySelector('.muestra').getBoundingClientRect().height/escala;}),0);
-  const zs=getComputedStyle(zona);resto+=extra+(parseFloat(zs.paddingTop)||0)+(parseFloat(zs.paddingBottom)||0)+16;
-  // En pantallas pequeñas se permite desplazamiento vertical antes que dibujos ilegibles.
-  const minimo=compacto.matches?100:innerWidth<=500?140:120;
-  const alto=Math.round(Math.max(minimo,Math.min(620,alturaUtil-resto)));
-  if(zona.style.getPropertyValue('--alto-disponible')!==alto+'px')zona.style.setProperty('--alto-disponible',alto+'px');
+  const escala=app.getBoundingClientRect().width/app.offsetWidth||1;
+  const alto=(window.visualViewport?.height||innerHeight)/escala,ancho=(window.visualViewport?.width||innerWidth)/escala;
+  app.style.setProperty('--alto-vista',alto+'px');app.dataset.orientacion=innerWidth>innerHeight?'horizontal':'vertical';
+  app.classList.toggle('compacta',alto<570||ancho<390);app.classList.toggle('muy-compacta',alto<330||ancho<270);
+  const apoyos=[...zona.querySelectorAll('.apoyo-capacidad')];
+  const altoApoyo=Math.ceil(Math.max(0,...apoyos.map(el=>{const s=getComputedStyle(el),hijos=[...el.children].filter(e=>getComputedStyle(e).display!=='none');return hijos.reduce((h,e)=>h+e.getBoundingClientRect().height/escala,0)+Math.max(0,hijos.length-1)*(parseFloat(s.rowGap)||0)+(parseFloat(s.paddingTop)||0)+(parseFloat(s.paddingBottom)||0);})));
+  zona.style.setProperty('--alto-apoyo',altoApoyo+'px');
+  const muestras=[...zona.querySelectorAll('.muestra')];
+  const disponible=muestras.length?Math.max(1,Math.floor(Math.min(...muestras.map(e=>e.getBoundingClientRect().height/escala)))):1;
+  if(zona.style.getPropertyValue('--alto-disponible')!==disponible+'px')zona.style.setProperty('--alto-disponible',disponible+'px');
  }
  function programar(){if(!pendiente){pendiente=true;requestAnimationFrame(ajustar);}}
- const observer=new ResizeObserver(programar);
- for(const el of [document.querySelector('.cabecera'),document.querySelector('.modos'),document.querySelector('.lateral'),...actividad.children])observer.observe(el);
- new MutationObserver(programar).observe(zona,{childList:true});
+ const observer=new ResizeObserver(programar);for(const el of [app,actividad,zona,herramientas])observer.observe(el);
+ new MutationObserver(programar).observe(zona,{childList:true,subtree:true,characterData:true});
+ new MutationObserver(programar).observe(document.body,{attributes:true,attributeFilter:['style']});
  window.addEventListener('resize',programar);window.visualViewport?.addEventListener('resize',programar);
- compacto.addEventListener('change',distribuir);document.fonts?.ready.then(programar);distribuir();
+ document.addEventListener('fullscreenchange',programar);document.addEventListener('webkitfullscreenchange',programar);
+ document.fonts?.ready.then(programar);programar();
 })();
