@@ -25,3 +25,8 @@ En Cajas con sonido, los números de colores están arriba y conservan su espaci
 Corral, Cajas con sonido y Escritura incluyen una guía breve con pasos y ejemplo visual. En Cajas con sonido se colocan las respuestas antes de pulsar Revisar: los aciertos quedan verdes y los errores se pueden mover para corregirlos. Cajas y Escritura tienen un botón grande de Revisar y otro pequeño de Nueva ronda. Las cajas reservan el espacio del número para conservar su tamaño.
 
 El escenario del corral se ajusta al ancho y a la altura útil de la pantalla, descontando encabezado, guía y controles. En horizontal, la guía queda a la izquierda y el corral de tierra a la derecha del potrero; en vertical, el corral queda debajo. Las vacas y las plazas se distribuyen según el espacio disponible y la cantidad total, sin imponer una altura mínima grande. Se recalcula al girar la pantalla, cambiar el zoom o variar la altura visible del navegador. Si se gira durante un arrastre se devuelve la vaca al potrero; si estaba entrando se conserva la captura. La entrada lateral tiene un pasillo reservado para no tapar las vacas acomodadas.
+
+
+## Idioma y voz
+
+La configuración permite español o inglés, voz femenina o masculina y velocidad de 0.7x a 1.5x en pasos de 0.1x. Las preferencias se guardan localmente; cada idioma recuerda su voz. Se prioriza la voz femenina más natural disponible. Las voces no ofrecidas por el navegador se indican como no disponibles. Véase [la documentación compartida](../idioma-voz.md).

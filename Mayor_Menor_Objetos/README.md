@@ -90,3 +90,8 @@ Se generan 12 escenas por nivel. En cada una se utiliza la misma forma y anchura
 La opción Estructura de los recipientes ofrece Misma estructura (predeterminada) y Mixtos. La primera filtra ejercicios donde las tres formas coinciden. Mixtos alterna de forma equilibrada ejercicios de igual forma y ejercicios con formas diferentes, sin repetir una escena dentro de la ronda. Se aplica al empezar una nueva ronda y se guarda en el navegador, independientemente del nivel, del tipo de pregunta y de la ayuda escogida.
 
 Se agregan 12 escenas de formas diferentes a cada nivel: ahora hay 24 por nivel, más las 12 anteriores de Variado, para un total de 84. En los nuevos ejercicios mixtos se conserva el crecimiento de altura con la capacidad, y el radio se recalcula para el perfil de cada forma. Los valores de agua y capacidad mantienen las diferencias exactas de 3, 2 o 1 vasito. La escala física continúa siendo común a los tres recipientes. Los acabados añaden brillo suave del vidrio y reflejos en el borde; son capas SVG sin filtros ni animaciones adicionales.
+
+
+## Idioma y voz
+
+La configuración permite español o inglés, voz femenina o masculina y velocidad de 0.7x a 1.5x en pasos de 0.1x. Las preferencias se guardan localmente; cada idioma recuerda su voz. Se prioriza la voz femenina más natural disponible. Las voces no ofrecidas por el navegador se indican como no disponibles. Véase [la documentación compartida](../idioma-voz.md).

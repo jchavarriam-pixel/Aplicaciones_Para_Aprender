@@ -42,3 +42,8 @@ La configuración se guarda en `ordenarObjetosTamano.config.v1`: cantidad, crite
 Incluye los créditos de Gabriel, autores y TEC, así como los controles compartidos de zoom y pantalla completa. El arrastre compensa el zoom de la página y permite desplazar todo el documento al acercar el dedo al borde de la pantalla. Mantiene los espacios de origen para evitar que los objetos cambien de posición durante el arrastre.
 
 Comprobación: 450 rondas (45 familias × cinco cantidades × dos sentidos), rechazo de órdenes invertidos, corrección por intercambio y final correcto. También se comprueban el mazo mixto, la migración y persistencia de preferencias, las ayudas, la interacción táctil para colocar y revisar, el arrastre con zoom al 85/100/125 %, el almacenamiento bloqueado y la ausencia de desbordamiento horizontal en teléfono y tableta en ambas orientaciones. Con seis objetos y pantalla horizontal pequeña se comprueba el arrastre hasta la última fila mediante desplazamiento automático. Al mantener el dedo junto al borde, la página continúa desplazándose aunque haya una casilla visible del banco bajo el dedo.
+
+
+## Idioma y voz
+
+La configuración permite español o inglés, voz femenina o masculina y velocidad de 0.7x a 1.5x en pasos de 0.1x. Las preferencias se guardan localmente; cada idioma recuerda su voz. Se prioriza la voz femenina más natural disponible. Las voces no ofrecidas por el navegador se indican como no disponibles. Véase [la documentación compartida](../idioma-voz.md).

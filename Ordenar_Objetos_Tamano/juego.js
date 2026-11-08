@@ -18,7 +18,7 @@ const mazosFamilias=new Map(),ultimasFamilias=new Map();
 let seleccion=null,drag=null,resuelto=false,listo=false,cantidad=3,premioTimer,ignorarClickHasta=0;
 function mezclar(items){const a=[...items];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function guardar(){try{localStorage.setItem(clave,JSON.stringify(config));}catch{}}
-function hablar(texto){if(!config.voz||!('speechSynthesis'in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(texto);u.lang='es-ES';u.rate=.9;u.voice=speechSynthesis.getVoices().find(v=>/^es[-_]/i.test(v.lang))||null;speechSynthesis.speak(u);}
+function hablar(texto){if(!config.voz)return;return IdiomaVoz.hablar(texto);}
 function sacarMazo(pool,restantes,ultimo){const mazo=restantes.length?[...restantes]:mezclar(pool);if(!restantes.length&&mazo.length>1&&mazo[0].id===ultimo)[mazo[0],mazo[1]]=[mazo[1],mazo[0]];return {elemento:mazo.shift(),restantes:mazo};}
 function siguienteFamilia(){
  let c=config.criterio;
@@ -130,4 +130,5 @@ $('reintentar').addEventListener('click',()=>nuevaRonda(true));$('revisar').addE
 document.addEventListener('visibilitychange',()=>{if(document.hidden){if(drag)terminarArrastre(null,true);limpiarPremio();if('speechSynthesis'in window)speechSynthesis.cancel();}});
 window.addEventListener('resize',()=>{if(drag)terminarArrastre(null,true);actualizarColumnas();});
 new ResizeObserver(actualizarColumnas).observe(document.querySelector('.juego'));
+IdiomaVoz.instalar('#preferenciasIdiomaVoz');
 nuevaRonda();

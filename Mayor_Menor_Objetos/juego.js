@@ -21,7 +21,7 @@ try{const s=JSON.parse(localStorage.getItem(clave)||'null');if(s&&typeof s==='ob
 if(config.actividad===1&&config.tamano==='mediano')config.tamano='mixto';
 let ronda=[],indice=0,seleccion=null,resuelta=false,lista=false,aciertos=0,fin=false,celebracionTimer,cargaToken=0,llenado=null,timerLlenado=null,autoLlenadoPendiente=false;
 function mezclar(items){const a=[...items];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function hablar(texto){if(!config.voz||!('speechSynthesis'in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(texto);u.lang='es-ES';u.rate=.9;const voices=speechSynthesis.getVoices();u.voice=voices.find(v=>/^es[-_]/i.test(v.lang)&&v.localService)||voices.find(v=>/^es[-_]/i.test(v.lang))||null;speechSynthesis.speak(u);}
+function hablar(texto){if(!config.voz)return;return IdiomaVoz.hablar(texto);}
 function guardar(){try{localStorage.setItem(clave,JSON.stringify(config));}catch{}}
 function bancoDisponible(){if(config.actividad===4)return capacidades.filter(a=>a.nivel===config.capacidadNivel&&(config.capacidadEstructura==='mixtos'||a.estructura==='misma'));if(config.actividad===1)return [...originales,...variantes.filter(a=>a.categoria==='tamano')];if(config.actividad===2)return variantes.filter(a=>a.categoria==='tamano');return variantes.filter(a=>config.categorias.includes(a.categoria));}
 function actualizarConfig(){
@@ -188,4 +188,5 @@ $('revisar').addEventListener('click',revisar);$('siguiente').addEventListener('
 document.addEventListener('visibilitychange',()=>{if(document.hidden){
   clearTimeout(timerLlenado);timerLlenado=null;llenado?.pausar();if('speechSynthesis'in window)speechSynthesis.cancel();limpiarCelebracion();
 }else if(llenado){if(autoLlenadoPendiente)iniciarLlenado();else llenado.reanudar();}});
+IdiomaVoz.instalar('#preferenciasIdiomaVoz');
 actualizarConfig();nuevaRonda();
