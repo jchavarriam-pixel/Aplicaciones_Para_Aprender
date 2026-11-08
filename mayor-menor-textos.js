@@ -13,6 +13,7 @@ Menú|Menu
 Arrastra cada número a su caja.|Drag each number to its box.
 Arrastra los números a las cajas.|Drag the numbers to the boxes.
 Coloca cada número en la caja correcta.|Place each number in the correct box.
+Completa las comparaciones.|Complete the comparisons.
 Nueva página|New page
 Reiniciar|Reset
 Mostrar ayuda en las cajas|Show help inside the boxes

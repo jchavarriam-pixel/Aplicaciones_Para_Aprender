@@ -8,7 +8,8 @@
   <script src="idioma-voz-textos.js?v=20261108-1"></script>
   <script src="mayor-menor-textos.js?v=20261108-1"></script>
   <script src="idioma-voz.js?v=20261108-mayor-1"></script>
-  <script src="mayor-menor-ajustes.js?v=20261108-1" defer></script>
+  <script src="mayor-menor-ajustes.js?v=20261108-2" defer></script>
+  <script src="mayor-menor-celebracion.js?v=20261108-1" defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -268,7 +269,7 @@
   </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
-  <link rel="stylesheet" href="mayor-menor-adaptable.css?v=20261108-1">
+  <link rel="stylesheet" href="mayor-menor-adaptable.css?v=20261108-2">
 </head>
 <body>
   <div class="app-wrapper" id="app">
@@ -606,6 +607,7 @@
     }
 
     function newPage() {
+      window.CelebracionMayor?.detener();
       exercises = generateExercises();
       isPageSolved = false;
       document.getElementById('pageLabel').textContent = `${exercisesPerPage} ejercicio${exercisesPerPage > 1 ? 's' : ''} por página • ${selectedDigits} dígito${selectedDigits > 1 ? 's' : ''}`;
@@ -617,6 +619,7 @@
     }
 
     function resetPage() {
+      window.CelebracionMayor?.detener();
       exercises = exercises.map(ex => ({
         ...ex,
         slots: [null, null],
@@ -1025,11 +1028,12 @@
     function showFeedback(emoji, title, msg, isSuccess) {
       const fb = document.getElementById('feedback');
       const card = document.getElementById('feedbackCard');
-      card.innerHTML = `
-        <h3>${emoji} ${title}</h3>
-        <p class="feedback-note">${msg}</p>
-        <button onclick="${isSuccess ? 'newPage()' : 'closeFeedback()'}">${isSuccess ? '➡️ Siguiente página' : '🔄 Seguir intentando'}</button>
-      `;
+      card.replaceChildren();
+      const premio=document.createElement('div');premio.className='premio-icono';premio.setAttribute('aria-hidden','true');premio.textContent=isSuccess?'🏆':emoji;
+      const encabezado=document.createElement('h3');encabezado.textContent=title;
+      const mensaje=document.createElement('p');mensaje.className='feedback-note';mensaje.textContent=msg;
+      const continuar=document.createElement('button');continuar.textContent=isSuccess?'🔄 Nueva ronda':'🔄 Seguir intentando';continuar.addEventListener('click',isSuccess?newPage:closeFeedback);
+      card.append(premio,encabezado,mensaje,continuar);
       fb.classList.add('show');
       speakText(msg);
     }
@@ -1039,39 +1043,7 @@
     }
 
     function triggerSuccessAnimation() {
-      const sets = [
-        ['⭐', '🌈', '❤️', '✨', '🎉', '👑', '🦋', '🌟'],
-        ['🎈', '🎊', '💫', '🪄', '🥳', '🌸', '🌺', '🍭'],
-        ['🚀', '🦄', '🎵', '☀️', '🍀', '💖', '🐣', '🍬']
-      ];
-      const centerX = window.innerWidth / 2;
-      const centerY = window.innerHeight / 2;
-
-      sets.forEach((emojis, waveIndex) => {
-        setTimeout(() => {
-          const count = 80 + waveIndex * 20;
-          for (let i = 0; i < count; i++) {
-            const elem = document.createElement('div');
-            elem.className = 'success-animation';
-            elem.textContent = emojis[i % emojis.length];
-            const angle = (i / count) * Math.PI * 2;
-            const distance = 280 + Math.random() * (420 + waveIndex * 120);
-            const tx = Math.cos(angle) * distance;
-            const ty = Math.sin(angle) * distance;
-            elem.style.left = centerX + 'px';
-            elem.style.top = centerY + 'px';
-            elem.style.setProperty('--tx', tx + 'px');
-            elem.style.setProperty('--ty', ty + 'px');
-            elem.style.animation = `${waveIndex % 2 === 0 ? 'stars-explode' : 'float-pop'} ${2.2 + waveIndex * 0.35}s ease-out forwards`;
-            elem.style.animationDelay = (i * 0.01) + 's';
-            elem.style.fontSize = (2 + Math.random() * 1.9) + 'rem';
-            document.body.appendChild(elem);
-            setTimeout(() => elem.remove(), 4800);
-          }
-        }, waveIndex * 450);
-      });
-
-      playCelebrationSound();
+      window.CelebracionMayor?.iniciar();
     }
 
     function playCelebrationSound() {

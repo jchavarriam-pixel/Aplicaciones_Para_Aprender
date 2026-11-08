@@ -21,3 +21,25 @@
 .compacta.jugando{padding:5px;gap:7px;grid-template-columns:minmax(145px,25%) minmax(0,1fr)}.compacta.jugando[data-orientacion=vertical]{grid-template-columns:minmax(0,1fr)}.compacta .game-screen{padding:6px;gap:5px}.compacta .instruccion-mayor{font-size:1rem}.compacta .exercise-card{padding:5px;gap:5px;border-radius:12px}.compacta .exercise-title{font-size:.72rem}.compacta .exercise-audio-btn{width:28px;height:28px;font-size:.8rem}.compacta .hint-bar{font-size:.7rem}.compacta .relation-row{gap:8px}.compacta .bank-chip,.compacta .drop-box{border-radius:8px}.compacta .game-screen>.actions .check{min-height:40px;padding:7px;font-size:.9rem}
 .muy-compacta.jugando{grid-template-columns:minmax(105px,25%) minmax(0,1fr);padding:3px;gap:5px}.muy-compacta.jugando[data-orientacion=vertical]{grid-template-columns:minmax(0,1fr)}.muy-compacta .game-screen{padding:4px;gap:3px}.muy-compacta .instruccion-mayor{font-size:.78rem}.muy-compacta .hint-bar{max-height:1.2em;padding:1px 3px;font-size:.6rem}.muy-compacta .exercise-card{padding:3px;gap:3px}.muy-compacta .exercise-title-row{height:18px}.muy-compacta .exercise-audio-btn{width:20px;height:20px;font-size:.65rem}.muy-compacta .exercise-title{font-size:.6rem}.muy-compacta .relation-row{gap:6px}.muy-compacta .relation-symbol{font-size:1.1rem}.muy-compacta .number-bank{padding:2px;gap:6px}.muy-compacta .drop-box{padding:1px;border-width:1px}.muy-compacta .game-screen>.actions .check{min-height:30px;padding:5px;font-size:.75rem}.muy-compacta .box-help-text{font-size:.5rem}
 .feedback{zoom:var(--inverso-mayor,1)}.feedback-card{max-height:90vh;overflow:auto}.feedback-card h3{font-size:1.4rem}
+/* Espacios disponibles no implican fichas estiradas: limitar cada componente. */
+.exercises-grid,.exercises-grid.one-exercise{align-items:center;justify-items:center;max-height:var(--alto-conjunto,544px);margin-block:auto}
+.exercise-card{width:min(100%,660px);height:min(100%,var(--altura-natural,260px));align-self:center;justify-self:center}
+.relation-row,.number-bank{--ancho-signo:30px;--separacion:12px;width:min(100%,420px);align-self:center}
+.relation-row{grid-template-columns:minmax(0,1fr) var(--ancho-signo) minmax(0,1fr);grid-template-rows:minmax(0,1fr);gap:var(--separacion)}
+.drop-box{height:100%;max-height:var(--alto-caja,94px);align-self:center}
+.number-bank{padding:0;border:0;background:transparent;gap:calc(var(--ancho-signo) + 2 * var(--separacion));align-items:center}
+.bank-chip{width:var(--ancho-ficha,100%);height:var(--alto-ficha,54px);max-width:100%;max-height:100%;justify-self:center;align-self:center;border:2px solid #ffffffd9;box-shadow:0 3px 6px #25114a19}
+.compacta .relation-row,.compacta .number-bank{--ancho-signo:16px;--separacion:6px}
+.compacta .number-bank,.muy-compacta .number-bank{padding:0;gap:calc(var(--ancho-signo) + 2 * var(--separacion))}
+.muy-compacta .relation-row,.muy-compacta .number-bank{--ancho-signo:16px;--separacion:6px}
+.configuracion-mayor .menu-screen{display:flex!important;flex-direction:column;gap:10px}
+.configuracion-mayor .config-card{width:100%;margin:0;padding:12px}.configuracion-mayor .section-title{text-align:left}
+.configuracion-mayor .digit-buttons{grid-template-columns:repeat(3,minmax(0,1fr))}.configuracion-mayor .section-note{margin-top:8px}
+.configuracion-mayor .idioma-voz{padding:10px;gap:10px}.configuracion-mayor .idioma-voz .iv-nota{line-height:1.3}
+.box-help-wrap{position:absolute;inset:2px;margin:0;pointer-events:none}.drop-box.filled .box-help-wrap{display:none}
+.herramientas-mayor>.hint-bar{flex:none;max-height:none;line-height:1.3;padding:6px}
+.muy-compacta .exercise-card{padding:2px;gap:2px;border-width:1px}.muy-compacta .exercise-title-row{height:14px}.muy-compacta .exercise-audio-btn{width:16px;height:16px}.muy-compacta .bank-chip{padding:0;border-width:1px}
+.feedback.show{background:#30316518;backdrop-filter:blur(2px)}.feedback-card{border:3px solid #f6cf67;background:linear-gradient(150deg,#fffdf2,#fff 55%,#f4efff);box-shadow:0 12px 55px #5237a638,0 0 0 7px #fff7d2b3;padding:24px;animation:premioMayor .45s ease-out}
+.premio-icono{font-size:4rem;line-height:1.2;margin-bottom:10px;filter:drop-shadow(0 5px 5px #c5992f35)}.feedback-card h3{color:#6639ad}.feedback-card button{background:linear-gradient(110deg,#7c3aed,#4f67d8);min-height:46px;box-shadow:0 3px 0 #4b2494}
+@keyframes premioMayor{from{opacity:0;transform:translateY(18px) scale(.92)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(prefers-reduced-motion:reduce){.feedback-card{animation:none}.premio-icono{filter:none}}
