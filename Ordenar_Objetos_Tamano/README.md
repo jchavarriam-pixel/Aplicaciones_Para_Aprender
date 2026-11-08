@@ -16,20 +16,24 @@ El orden inicial se mezcla y no se presenta ya resuelto. La guía visual opciona
 
 ## Archivos y preferencias
 
-Se conservan las seis ilustraciones WebP de tamaño en `imagenes/`. Los prompts originales están en `prompts-imagenes.md`. Las series nuevas incluyen 234 SVG en `imagenes/series/`, agrupados en 39 familias. Hay 45 familias en total:
+La aplicación carga exclusivamente imágenes PNG con transparencia desde `imagenes/png/`: 234 ilustraciones de las 39 series nuevas y seis PNG preparados a partir de las ilustraciones originales. Hay 240 archivos y 45 familias en total. Los WebP originales se conservan como fuentes, ya que también los utiliza otra aplicación.
 
 - Tamaño: las seis familias originales, coches y cohetes de juguete.
 - Grosor: tubos, velas encendidas, marcadores, lápices, tarros de mermelada y vasos de vidrio.
 - Longitud: cintas de tela, reglas de madera, dos familias de lápices y cuerdas.
-- Tono: globos, camisetas, hojas, ovillos de lana, tazas y mochilas. En cada familia solo cambia el tono, con la misma geometría y decoración.
+- Tono: globos, camisetas, hojas, ovillos de lana, tazas y mochilas, con una progresión de oscuro a claro y el mismo tipo de objeto y decoración.
 - Inclinación: postes, tablas de madera, lápices, flores y brochas.
 - Lados: cinco familias de piezas geométricas, cada una con figuras de tres a ocho lados.
 - Altura: edificios, torres de bloques, velas, lápices y botellas.
 - Anchura: puertas con ventana, marcos de fotos, regalos, libros y maletas.
 
-`tools/crear_series_ordenar.cjs` genera los SVG y su catálogo `series.js`; `tools/ilustraciones_ordenar.cjs` contiene los dibujos, materiales, detalles y ventanas de visualización. Las ilustraciones tienen contornos suaves, reflejos y detalles reconocibles: madera y grafito en lápices, mecha y llama en velas, tapas y etiquetas en tarros, bordes ovalados en vasos, cremalleras en mochilas y asas y ruedas en maletas. No utilizan filtros, animaciones ni recursos externos.
+Las ilustraciones nuevas se crearon con la herramienta integrada de generación de imágenes, no convirtiendo los SVG anteriores. Tienen texturas, volumen, reflejos y detalles infantiles: madera y grafito en lápices, mecha y llama en velas, tapas y etiquetas en tarros, bordes ovalados en vasos, cremalleras en mochilas y asas y ruedas en maletas. La aplicación no necesita servicios externos para mostrarlas.
 
-Las ilustraciones de una familia comparten ventana de visualización, márgenes, color y características no evaluadas. En grosor se conserva la altura; en longitud, el grosor; en anchura, la altura; y en tono, la geometría. Se verifica tanto la progresión como las dimensiones constantes sobre los píxeles renderizados. Las imágenes se escalan dentro de su ventana sin recortarlas ni deformarlas en el navegador. Se verificaron los bordes de las 234 imágenes, incluidos puntas, asas y llamas. Para los tamaños originales se reutiliza un mismo WebP con escala uniforme; los nuevos coches y cohetes también crecen con escala uniforme.
+El conjunto de prompts está en `prompts-png.json`; los prompts de las seis fuentes originales siguen en `prompts-imagenes.md`. Cada familia nueva se generó como una lámina de seis variantes. Las láminas completas se conservan localmente en `imagenes/fuentes-png/`, fuera del control de versiones porque no se necesitan para jugar. `tools/exportar_png_ordenar.cjs` separa las variantes, detectando el espacio transparente entre filas para no cortar objetos altos, y crea los archivos PNG individuales y el catálogo `series.js`.
+
+La preparación utiliza siempre escala uniforme y conserva el canal alfa y los colores completos, con compresión PNG sin pérdida. No estira los dibujos por un solo eje ni rasteriza los SVG anteriores. En grosor y anchura se normaliza la altura; en longitud, el grosor; en altura, la anchura. En tamaño se preparan seis escalas uniformes del mismo dibujo, y en inclinación se guarda la misma ilustración con seis rotaciones precisas. Cada familia comparte un marco y una base comunes; el navegador conserva las proporciones de cada PNG.
+
+Se verifican transparencia y márgenes en los 240 PNG, la progresión de dimensiones y luminosidad y, mediante el contorno de las imágenes, los lados de las 30 piezas geométricas (8, 7, 6, 5, 4 y 3). El conjunto completo de PNG ocupa aproximadamente 22 MB; solo se cargan las imágenes de la ronda. Las herramientas y los SVG de la versión anterior quedan como referencia; el generador vectorial escribe un catálogo separado y no reemplaza el catálogo PNG de la aplicación.
 
 Una muestra de las nuevas ilustraciones está en `vista-previa-ilustraciones.png`.
 
