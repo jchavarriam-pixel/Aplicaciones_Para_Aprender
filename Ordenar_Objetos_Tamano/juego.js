@@ -61,8 +61,8 @@ function actualizarAyudas(){
  const li=lateral.querySelectorAll('li');li[0].innerHTML='<b>1</b> Observa '+(actual.criterio==='lados'?'los lados.':'las diferencias.');li[1].innerHTML='<b>2</b> Sigue el orden indicado.';li[2].innerHTML='<b>3</b> Coloca y revisa.';
 }
 function actualizarColumnas(){
- const juego=document.querySelector('.juego'),ancho=juego.clientWidth-60;let cols=cantidad;
- if(ancho/cantidad<110)cols=cantidad===4?2:Math.min(cantidad,3);
+ const juego=document.querySelector('.juego');
+ const cols=innerWidth<=innerHeight&&cantidad>3?Math.ceil(cantidad/2):cantidad;
  if(juego.style.getPropertyValue('--columnas')!==String(cols))juego.style.setProperty('--columnas',cols);
  juego.style.setProperty('--columnas-movil',Math.min(cantidad,3));
 }

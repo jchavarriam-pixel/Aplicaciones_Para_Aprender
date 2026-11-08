@@ -39,11 +39,19 @@ Una muestra de las nuevas ilustraciones está en `vista-previa-ilustraciones.png
 
 La configuración se guarda en `ordenarObjetosTamano.config.v1`: cantidad, criterio, sentido, familia, lectura, guía visual y números de posición. Se conservan los ajustes anteriores de tamaño. El nombre usa la clave compartida `nombreNinoGabrielApps`. Cantidad, criterio, sentido y familia se aplican al iniciar otra ronda; las ayudas cambian inmediatamente sobre la ronda actual. El bloqueo del almacenamiento no impide jugar.
 
-Incluye los créditos de Gabriel, autores y TEC, así como los controles compartidos de zoom y pantalla completa. El arrastre compensa el zoom de la página y permite desplazar todo el documento al acercar el dedo al borde de la pantalla. Mantiene los espacios de origen para evitar que los objetos cambien de posición durante el arrastre.
+Incluye los créditos de Gabriel, autores y TEC, así como los controles compartidos de zoom y pantalla completa. El arrastre compensa el zoom de la página y mantiene los espacios de origen para evitar que los objetos cambien de posición durante el arrastre. La actividad completa permanece dentro del alto útil, sin necesitar desplazamiento para llegar al destino.
 
-Comprobación: 450 rondas (45 familias × cinco cantidades × dos sentidos), rechazo de órdenes invertidos, corrección por intercambio y final correcto. También se comprueban el mazo mixto, la migración y persistencia de preferencias, las ayudas, la interacción táctil para colocar y revisar, el arrastre con zoom al 85/100/125 %, el almacenamiento bloqueado y la ausencia de desbordamiento horizontal en teléfono y tableta en ambas orientaciones. Con seis objetos y pantalla horizontal pequeña se comprueba el arrastre hasta la última fila mediante desplazamiento automático. Al mantener el dedo junto al borde, la página continúa desplazándose aunque haya una casilla visible del banco bajo el dedo.
+La comprobación original de contenido incluyó 450 rondas (45 familias × cinco cantidades × dos sentidos), rechazo de órdenes invertidos, corrección por intercambio y final correcto; también el mazo mixto, migración y persistencia de preferencias, ayudas, interacción táctil y almacenamiento bloqueado. La comprobación actual de distribución se describe a continuación.
 
 
 ## Idioma y voz
 
 La configuración permite español o inglés, voz femenina o masculina y velocidad de 0.7x a 1.5x en pasos de 0.1x. Las preferencias se guardan localmente; cada idioma recuerda su voz. Se prioriza la voz femenina más natural disponible. Las voces no ofrecidas por el navegador se indican como no disponibles. Véase [la documentación compartida](../idioma-voz.md).
+
+## Orientación, zoom y pantalla completa
+
+`adaptable.css` y `adaptable.js` reservan el alto útil para la instrucción, el banco, todos los espacios de respuesta y Revisar/Otra ronda. En vertical, título, instrucciones y configuración quedan en una franja superior desplazable; el juego ocupa todo el ancho. En horizontal, las herramientas quedan en una columna izquierda, incluido el título. Abrir o recorrer los ajustes no desplaza el juego. La guía visual y los créditos se mantienen en las herramientas y conservan sus opciones actuales.
+
+En horizontal se usa una fila por zona; en vertical, cuatro a seis objetos se distribuyen en dos filas. Las casillas adaptan su altura al espacio restante y los PNG conservan sus proporciones. Se recalcula al girar, cambiar el zoom o entrar/salir de pantalla completa, compensando la escala de la página.
+
+`tools/probar_ordenar_adaptable.cjs` comprueba los espacios y Revisar dentro de la vista en nueve tamaños entre 360×640 y 1920×1080, con siete valores de zoom entre 50% y 200%, y dos, cuatro y seis objetos. También comprueba arrastre táctil con zoom, validación del orden, textos ingleses y pantalla completa en tres tamaños con cuatro valores de zoom, incluyendo ajustes abiertos y desplazados.
