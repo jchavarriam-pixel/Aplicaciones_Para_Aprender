@@ -71,7 +71,7 @@ function nuevaRonda(reintento=false){
  if(!reintento||!actual){actual=siguienteFamilia();cantidad=config.cantidad;criterioActual=criterios.find(c=>c.id===actual.criterio);ascendenteActual=config.sentido==='ascendente'||config.sentido==='mixto'&&ronda%2===0;}
  seleccion=null;resuelto=false;listo=false;
  let masters=indicesDeSerie(cantidad);if(ascendenteActual)masters.reverse();
- piezasActuales=masters.map((master,rank)=>({rank,master,src:actual.archivo||actual.imagenes[master],escala:actual.archivo?1-master*.132:1}));
+ piezasActuales=masters.map((master,rank)=>({rank,master,src:(actual.archivo||actual.imagenes[master])+(actual.version?'?v='+actual.version:''),escala:actual.archivo?1-master*.132:1}));
  actualizarColumnas();$('familiaActual').textContent=`${criterioActual.nombre} · ${actual.nombre} · ${cantidad} objetos`;
  $('tituloReto').textContent=instruccion();const first=ascendenteActual?criterioActual.fin:criterioActual.inicio,last=ascendenteActual?criterioActual.inicio:criterioActual.fin;
  $('sentidoActual').textContent=`${first} → ${last}`;$('otraRonda').hidden=true;$('revisar').disabled=true;$('reintentar').hidden=true;$('mensaje').className='mensaje';$('mensaje').textContent='Cargando las imágenes…';
