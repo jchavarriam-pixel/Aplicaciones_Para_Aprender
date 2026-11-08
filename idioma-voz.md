@@ -1,6 +1,6 @@
-# Idioma y voz en las tres actividades
+# Idioma y voz en las actividades adaptadas
 
-Explora y compara, Ordenar objetos y Reconocer números incluyen la misma sección **Idioma y voz** en su configuración. Las demás aplicaciones conservan su comportamiento anterior.
+Explora y compara, Ordenar objetos, Reconocer números y Mayor y menor incluyen la misma sección **Idioma y voz** en su configuración. Las demás aplicaciones conservan su comportamiento anterior. Los detalles de Mayor y menor están en [su documentación](mayor-menor.md).
 
 - Español o inglés. Se traducen títulos, menús, opciones, instrucciones, ayudas, feedback, felicitaciones, textos accesibles y controles de pantalla completa y zoom.
 - Velocidades 0.7x, 0.8x, 0.9x, 1.0x, 1.1x, 1.2x, 1.3x, 1.4x y 1.5x. La velocidad inicial es 1.0x.
@@ -23,6 +23,7 @@ Cada aplicación conserva su configuración anterior y guarda las nuevas prefere
 | Explora y compara | `idiomaVoz.comparar.v1` |
 | Ordenar objetos | `idiomaVoz.ordenar.v1` |
 | Reconocer números | `idiomaVoz.numeros.v1` |
+| Mayor y menor | `idiomaVoz.mayorMenor.v1` |
 
 Se guardan idioma, velocidad y voz elegida para cada idioma. Los fallos o el bloqueo del almacenamiento no impiden jugar, aunque las elecciones no puedan persistir en ese caso.
 
