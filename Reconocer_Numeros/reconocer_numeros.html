@@ -216,6 +216,7 @@ button,input,select{font-family:inherit}.pantalla{display:none;min-height:100vh;
 <script src="../idioma-voz-textos.js?v=20261108-1"></script>
 <script src="../idioma-voz.js?v=20261108-1"></script>
 <link rel="stylesheet" href="configuracion-formulario.css?v=20261113">
+<link rel="stylesheet" href="espacio-juego.css?v=20261113">
 </head>
 <body>
 <section id="home" class="pantalla activa"><div class="encabezado"><div class="titulo"><h1>🔢 Reconocer números</h1><div class="sub">Números, nombres, escucha, pareo y escritura.</div></div></div><div class="home-grid"><div class="tarjeta"><h2>Configuración general</h2><section id="preferenciasIdiomaVoz" aria-label="Idioma y voz" style="margin:14px 0"></section><p class="sub">Tus opciones se guardan automáticamente en este navegador.</p><div class="fila uno"><div><label>Nombre del niño</label><input id="childName" value="Gabriel"></div></div><div class="fila uno"><div><label>Forma de escoger los números</label><div class="radio"><label class="pill"><input type="radio" name="selectType" value="digits" checked> Por cantidad de cifras</label><label class="pill"><input type="radio" name="selectType" value="range"> Por mínimo y máximo</label></div></div></div><div id="digitsConfig" class="fila uno"><div><label>Cantidad de cifras</label><select id="digitsCount"><option value="1">1 cifra: 0 a 9</option><option value="2">2 cifras: 10 a 99</option><option value="3">3 cifras: 100 a 999</option><option value="4">4 cifras: 1 000 a 9 999</option><option value="5">5 cifras: 10 000 a 99 999</option><option value="6">6 cifras: 100 000 a 999 999</option></select></div></div><div id="rangeConfig" class="fila oculto"><div><label>Mínimo</label><input id="minNumber" type="number" value="0" min="0" max="999999"></div><div><label>Máximo</label><input id="maxNumber" type="number" value="30" min="0" max="999999"></div></div><button class="btn orange" onclick="probarVoz()">🔊 Probar voz</button></div><div class="tarjeta"><h2>Modos de juego</h2><div class="modos"><div class="modo" onclick="openModeSetup(1)"><div class="emoji">🔗</div><h3>Modo 1: Pareo</h3><p>Unir números con sus nombres.</p></div><div class="modo" onclick="openModeSetup(2)"><div class="emoji">🐮</div><h3>Modo 2: Corral</h3><p>Atrapar el número indicado.</p></div><div class="modo" onclick="openModeSetup(3)"><div class="emoji">📦</div><h3>Modo 3: Cajas con sonido</h3><p>Escuchar y colocar.</p></div><div class="modo" onclick="openModeSetup(4)"><div class="emoji">✍️</div><h3>Modo 4: Escritura</h3><p>Formar el nombre del número.</p></div></div></div></div></section>
@@ -355,22 +356,26 @@ function fitPareo(){
   const board=document.getElementById('pareo');
   if(!board||!board.getBoundingClientRect().width)return;
   const rect=board.getBoundingClientRect(),scale=rect.width/board.offsetWidth||1,css=getComputedStyle(board),colCss=getComputedStyle(board.querySelector('.col'));
+  const contexto=document.createElement('canvas').getContext('2d'),muestra=board.querySelector('.caja-par'),estilo=getComputedStyle(muestra);contexto.font=`${estilo.fontWeight} ${estilo.fontSize} ${estilo.fontFamily}`;
+  const palabraMasAncha=Math.max(...[...board.querySelectorAll('.caja-par')].flatMap(e=>e.textContent.split(/\s+/)).map(t=>contexto.measureText(t).width*scale));
+  const anchoColumna=Math.min(rect.width*.42,Math.max(110,palabraMasAncha+66));board.style.setProperty('--ancho-columna-pareo',anchoColumna/scale+'px');
+
   const game=document.getElementById('game'),horizontal=game.classList.contains('pareo-horizontal'),header=game.querySelector('.encabezado');
   game.style.minHeight=innerHeight/scale+'px';
   const origin=horizontal?game.getBoundingClientRect().top+parseFloat(getComputedStyle(game).paddingTop)*scale:header.getBoundingClientRect().bottom+parseFloat(getComputedStyle(header).marginBottom)*scale;
-  const rows=Math.max(state.data.left.length,state.data.right.length),gap=rows>10?3:6;
+  const rows=Math.max(state.data.left.length,state.data.right.length),gap=(rows>10?3:6)/scale;
   const boardFrame=(board.querySelector('.inst')?.offsetHeight||0)+(board.querySelector('.acciones')?.offsetHeight||0)+parseFloat(css.paddingTop)+parseFloat(css.paddingBottom)+parseFloat(css.borderTopWidth)+parseFloat(css.borderBottomWidth)+(document.getElementById('game').classList.contains('pareo-horizontal')?0:2)*parseFloat(css.rowGap);
   const colFrame=28+gap+parseFloat(colCss.paddingTop)+parseFloat(colCss.paddingBottom)+parseFloat(colCss.borderTopWidth)+parseFloat(colCss.borderBottomWidth);
   const sidebar=document.getElementById('pareoSidebar');if(sidebar)sidebar.style.minHeight=Math.max(0,(innerHeight-sidebar.getBoundingClientRect().top-18)/scale)+'px';
   const available=(innerHeight-Math.max(0,origin)-18)/scale-boardFrame,budget=(available-colFrame-gap*(rows-1))/rows;
-  const row=Math.max(20,Math.min(64,budget)),flag=Math.max(18,Math.min(48,row-2));
+  const row=Math.max(18/scale,Math.min(64/scale,budget)),flag=Math.max(16/scale,Math.min(48/scale,row-2/scale));
   board.style.height='auto';
   board.style.setProperty('--pair-line',Math.max(3,Math.min(7,row*.15)));
   board.style.setProperty('--pair-row',row+'px');
   board.style.setProperty('--pair-gap',gap+'px');
   board.style.setProperty('--pair-flag',flag+'px');
   board.style.setProperty('--pair-icon',Math.max(12,flag*.57)+'px');
-  board.style.setProperty('--pair-font',Math.max(11,Math.min(21,row*.66))+'px');
+  board.style.setProperty('--pair-font',Math.max(10/scale,Math.min(21/scale,row*.66))+'px');
   sizePareoCards(board,row,flag);
   const uniform=parseFloat(board.style.getPropertyValue('--pair-box-height'));
   const comfortableGap=Math.min(40,uniform*.6),compact=uniform*rows+comfortableGap*(rows-1)+colFrame<available;
@@ -418,8 +423,9 @@ function sizePareoCards(board,row,flag){
   const cardPadding=parseFloat(style.paddingLeft)+parseFloat(style.paddingRight)+parseFloat(style.borderLeftWidth)+parseFloat(style.borderRightWidth);
   board.style.setProperty('--pair-col',Math.min(510,Math.max(140,longest+cardPadding+flag+parseFloat(pair.columnGap)+padding+4)*1.5)+'px');
   const measuredHeight=()=>Math.max(...boxes.map(box=>box.scrollHeight+parseFloat(getComputedStyle(box).borderTopWidth)+parseFloat(getComputedStyle(box).borderBottomWidth)));
+  const escala=board.getBoundingClientRect().width/board.offsetWidth||1,minimo=10/escala;
   let font=parseFloat(style.fontSize),height=measuredHeight();
-  while(height>row+1&&font>11){font=Math.max(11,font-.5);board.style.setProperty('--pair-font',font+'px');height=measuredHeight();}
+  while(height>row+1&&font>minimo){font=Math.max(minimo,font-.5);board.style.setProperty('--pair-font',font+'px');height=measuredHeight();}
   const uniform=Math.max(row,height);
   board.style.setProperty('--pair-row',uniform+'px');
   board.style.setProperty('--pair-box-height',uniform+'px');
@@ -636,7 +642,7 @@ function layoutCorral(){
   game.classList.toggle('corral-horizontal',horizontal);c.classList.toggle('corral-lateral',horizontal);
   // Se mide desde el documento para que desplazar la página no cambie la altura.
   const top=(content.getBoundingClientRect().top+scrollY)/scale,padding=parseFloat(getComputedStyle(game).paddingBottom)||0;
-  content.style.setProperty('--corral-content-height',Math.max(180,viewportHeight/scale-top-padding)+'px');
+  content.style.setProperty('--corral-content-height',Math.max(60/scale,viewportHeight/scale-top-padding-10/scale)+'px');
   stopCorralAnimals();
   const large=state.data.numbers.some(n=>String(n).length>=6),w=c.clientWidth,h=c.clientHeight;
   if(horizontal){
@@ -1002,6 +1008,7 @@ window.addEventListener('resize',()=>{if(state.mode===1)setTimeout(drawLinks,100
   </div>
 </footer>
 <script src="configuracion-formulario.js?v=20261113"></script>
+<script src="espacio-juego.js?v=20261113"></script>
 <script src="../pantalla-completa.js"></script>
 </body>
 </html>

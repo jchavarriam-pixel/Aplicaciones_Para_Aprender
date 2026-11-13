@@ -45,9 +45,8 @@
   const cambio=pendientes.size;aplicar();const reiniciar=modoModal||modoAnterior;if(cambio&&eraJuego&&reiniciar){state.mode=reiniciar;state.numbers=getNums();window['startMode'+reiniciar]();}
  });
  const openOriginal=openModeSetup;openModeSetup=m=>abrir(m,true);
- for(const pantalla of [home,game]){const b=document.createElement('button');b.className='btn blue configurar-numeros';b.textContent=pantalla===game?'⚙ Ajustes del modo':'⚙ Configuración general';b.onclick=()=>abrir(pantalla===game?state.mode:null);pantalla.querySelector('.encabezado').append(b);}
- const generalJuego=document.createElement('button');generalJuego.className='btn gray small general-en-juego';generalJuego.textContent='⚙ Configuración general';generalJuego.onclick=()=>abrir(null);game.querySelector('.encabezado .control').append(generalJuego);
- function situarNombre(){const titulo=(game.classList.contains('activa')?game:home).querySelector('.titulo');titulo.querySelector('h1,h2').after(filaNombre);}
+ for(const pantalla of [home]){const b=document.createElement('button');b.className='btn blue configurar-numeros';b.textContent=pantalla===game?'⚙ Ajustes del modo':'⚙ Configuración general';b.onclick=()=>abrir(pantalla===game?state.mode:null);pantalla.querySelector('.encabezado').append(b);}
+ function situarNombre(){const titulo=home.querySelector('.titulo');titulo.querySelector('h1,h2').after(filaNombre);}
  for(const el of[home,game])new MutationObserver(situarNombre).observe(el,{attributes:true,attributeFilter:['class']});
  function ajustarInicio(){const z=parseFloat(getComputedStyle(document.body).zoom)||1;home.style.setProperty('--alto-inicio',((visualViewport?.height||innerHeight)/z)+'px');home.style.setProperty('--unidad-inicio',1/z+'px');home.classList.toggle('inicio-horizontal',innerWidth>innerHeight);}
  new MutationObserver(ajustarInicio).observe(document.body,{attributes:true,attributeFilter:['style']});addEventListener('resize',ajustarInicio);document.addEventListener('fullscreenchange',ajustarInicio);visualViewport?.addEventListener('resize',ajustarInicio);ajustarInicio();
