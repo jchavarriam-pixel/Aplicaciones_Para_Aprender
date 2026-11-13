@@ -2048,7 +2048,7 @@
   </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
-</head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-problemas.css"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js"></script><script src="matematicas-base.js"></script></head>
 <body>
   <main class="app">
     <section class="hero" aria-label="Encabezado de la aplicación">
@@ -2437,7 +2437,7 @@
     function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
     function getLang() {
-      return localStorage.getItem(LANG_KEY) || "es";
+      return IdiomaVoz.idioma;
     }
 
     function isEnglish() {
@@ -2863,43 +2863,29 @@
     }
 
     function getName() {
-      return (childName.value || localStorage.getItem(NAME_KEY) || "Gabriel").trim() || "Gabriel";
+      return (childName.value || Matematicas.almacen.getItem(NAME_KEY) || "Gabriel").trim() || "Gabriel";
     }
 
     function syncNameFromStorage() {
-      const saved = localStorage.getItem(NAME_KEY);
+      const saved = Matematicas.almacen.getItem(NAME_KEY);
       childName.value = saved && saved.trim() ? saved : "Gabriel";
     }
 
     function saveName() {
-      localStorage.setItem(NAME_KEY, getName());
+      Matematicas.almacen.setItem(NAME_KEY, getName());
       if (state.currentProblem) updateText();
     }
 
-    function speak(text) {
-      if (!("speechSynthesis" in window)) return;
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      const voice = getSelectedVoice();
-      if (voice) {
-        utterance.voice = voice;
-        utterance.lang = voice.lang || "es-ES";
-      } else {
-        utterance.lang = isEnglish() ? "en-US" : "es-ES";
-      }
-      utterance.rate = 0.88;
-      utterance.pitch = 1.05;
-      window.speechSynthesis.speak(utterance);
-    }
+    function speak(text){return IdiomaVoz.hablar(text)}
 
     function applyFontSetting() {
-      const savedFont = localStorage.getItem(FONT_KEY) || fontSelect.value;
+      const savedFont = Matematicas.almacen.getItem(FONT_KEY) || fontSelect.value;
       fontSelect.value = savedFont;
       document.documentElement.style.setProperty("--app-font", savedFont);
     }
 
     function saveFontSetting() {
-      localStorage.setItem(FONT_KEY, fontSelect.value);
+      Matematicas.almacen.setItem(FONT_KEY, fontSelect.value);
       applyFontSetting();
     }
 
@@ -2908,13 +2894,13 @@
     }
 
     function getSelectedVoice() {
-      const selectedURI = localStorage.getItem(VOICE_KEY) || voiceSelect.value;
+      const selectedURI = Matematicas.almacen.getItem(VOICE_KEY) || voiceSelect.value;
       return getVoicesList().find(voice => voice.voiceURI === selectedURI) || null;
     }
 
     function populateVoiceSelect() {
       const voices = getVoicesList();
-      const saved = localStorage.getItem(VOICE_KEY) || "";
+      const saved = Matematicas.almacen.getItem(VOICE_KEY) || "";
       const sorted = [...voices].sort((a, b) => {
         const preferred = isEnglish() ? "en" : "es";
         const aPreferred = a.lang?.toLowerCase().startsWith(preferred) ? 0 : 1;
@@ -2932,7 +2918,7 @@
     }
 
     function saveVoiceSetting() {
-      localStorage.setItem(VOICE_KEY, voiceSelect.value);
+      Matematicas.almacen.setItem(VOICE_KEY, voiceSelect.value);
     }
 
     function applyStaticLanguage() {
@@ -2973,34 +2959,34 @@
     }
 
     function applyLanguageSetting() {
-      const savedLang = localStorage.getItem(LANG_KEY) || "es";
+      const savedLang = IdiomaVoz.idioma;
       languageSelect.value = savedLang;
       applyStaticLanguage();
     }
 
     function saveLanguageSetting() {
-      localStorage.setItem(LANG_KEY, languageSelect.value);
-      localStorage.removeItem(VOICE_KEY);
+      Matematicas.almacen.setItem(LANG_KEY, languageSelect.value);
+      Matematicas.almacen.removeItem(VOICE_KEY);
       voiceSelect.value = "";
       applyStaticLanguage();
     }
 
     function loadSavedParams() {
       try {
-        const saved = JSON.parse(localStorage.getItem(PARAMS_KEY) || "{}");
+        const saved = JSON.parse(Matematicas.almacen.getItem(PARAMS_KEY) || "{}");
         if (saved.minTotal) minTotal.value = saved.minTotal;
         if (saved.maxTotal) maxTotal.value = saved.maxTotal;
         if (saved.minChange) minChange.value = saved.minChange;
         if (saved.maxChange) maxChange.value = saved.maxChange;
       } catch (error) {
-        localStorage.removeItem(PARAMS_KEY);
+        Matematicas.almacen.removeItem(PARAMS_KEY);
       }
       readParams();
     }
 
     function saveParams() {
       const params = readParams();
-      localStorage.setItem(PARAMS_KEY, JSON.stringify({
+      Matematicas.almacen.setItem(PARAMS_KEY, JSON.stringify({
         minTotal: params.minT,
         maxTotal: params.maxT,
         minChange: params.minC,
@@ -3696,8 +3682,7 @@
 
     function moveGhost(ghost, x, y) {
       if (!ghost) return;
-      ghost.style.left = `${x}px`;
-      ghost.style.top = `${y}px`;
+      Matematicas.fantasma(ghost,x,y);
     }
 
 
@@ -4087,6 +4072,6 @@
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="pantalla-completa.js"></script>
+<script src="matematicas-problemas.js"></script><script src="pantalla-completa.js"></script>
 </body>
 </html>

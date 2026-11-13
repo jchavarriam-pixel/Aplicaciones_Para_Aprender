@@ -1,0 +1,10 @@
+const{chromium}=require('playwright'),assert=require('node:assert/strict'),path=require('path');
+(async()=>{const b=await chromium.launch({executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true,args:['--enable-unsafe-swiftshader']});try{
+for(const [file,modes,setup,selector]of [
+ ['Fracciones_Propias_1.html',['a1','a2','a3','a4'],m=>{FraccionesAPI.setScreen(m);FraccionesAPI.startActivity(m)},'.screen.active .drop-cell,.screen.active .num-chip,.screen.active .match-item,.screen.active .parts-choice,.screen.active .actions button'],
+ ['Situaciones_Problema_Sumas_Restas.html',['problem'],()=>openProblem(Object.keys(problems)[0]),'#checkBtn,.scene,.digitSlot,.keypadGrid button'],
+ ['Modelador_de_Solidos_3D.html',['presentation','classification','evaluation'],m=>{closeSettings();setMode(m)},'.mode-view.active .match-source,.mode-view.active .match-target,.mode-view.active .eval-target,.mode-view.active .acciones-solidos button,.mode-view.active .viewer-wrap']
+]){const p=await b.newPage({hasTouch:true});const errors=[];p.on('pageerror',e=>errors.push(e.message));await p.goto('file:///'+path.resolve(file).replaceAll('\\','/'));await p.waitForTimeout(250);
+for(const mode of modes){await p.evaluate(setup,mode);for(const [w,h]of [[360,640],[640,360],[768,1024],[1024,768],[1920,1080]]){await p.setViewportSize({width:w,height:h});for(const z of [50,85,100,150,200]){await p.locator('#zoom-aplicacion').evaluate((e,z)=>{e.value=z;e.dispatchEvent(new Event('input',{bubbles:true}))},z);await p.waitForTimeout(130);const bad=await p.evaluate(sel=>[...document.querySelectorAll(sel)].filter(e=>e.offsetParent&&!e.closest('.hidden')).map(e=>({cls:e.className,r:e.getBoundingClientRect().toJSON()})).filter(e=>e.r.x<-.5||e.r.y<-.5||e.r.right>innerWidth+1||e.r.bottom>innerHeight+1||e.r.height<14),selector);if(bad.length){await p.screenshot({path:'.qa-fallo.png'});throw Error(file+' '+mode+' '+w+'x'+h+' '+z+' '+JSON.stringify(bad));}}console.log('PASS',file,mode,w+'x'+h);}}
+assert.deepEqual(errors,[],file);await p.close();}
+}finally{await b.close()}})().catch(e=>{console.error(e);process.exitCode=1});

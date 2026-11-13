@@ -2,6 +2,7 @@
 #creditos-aplicaciones {
   box-sizing: border-box;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   gap: 24px;
@@ -24,11 +25,17 @@
   user-select: text;
 }
 #creditos-aplicaciones .creditos-dedicatoria {
-  flex: 0 0 auto;
+  flex: 0 1 220px;
+  min-width: 0;
+  max-width: 100%;
   padding-right: 24px;
   border-right: 1px solid #dce3ed;
 }
-#creditos-aplicaciones .creditos-equipo { min-width: 0; }
+#creditos-aplicaciones .creditos-equipo {
+  flex: 1 1 340px;
+  min-width: 0;
+  max-width: 100%;
+}
 #creditos-aplicaciones span {
   display: block;
   margin: 0;
@@ -49,6 +56,23 @@
   font-size: 11px;
   letter-spacing: .15px;
 }
+/* El espacio del panel, no el ancho del navegador, determina el ajuste. */
+[class^="herramientas-"] #creditos-aplicaciones {
+  display: block;
+  width: 100%;
+  max-width: none;
+  margin: 8px 0;
+  padding: 10px;
+  font-size: 11px;
+  overflow-wrap: normal;
+}
+[class^="herramientas-"] #creditos-aplicaciones .creditos-dedicatoria {
+  padding: 0 0 6px;
+  border: 0;
+}
+[class^="herramientas-"] #creditos-aplicaciones .creditos-equipo {
+  width: 100%;
+}
 @media (max-width: 620px) {
   #creditos-aplicaciones {
     flex-direction: column;
@@ -57,9 +81,11 @@
     text-align: center;
   }
   #creditos-aplicaciones .creditos-dedicatoria {
+    flex-basis: auto;
     width: 100%;
     padding: 0 0 10px;
     border-right: 0;
     border-bottom: 1px solid #dce3ed;
   }
+  #creditos-aplicaciones .creditos-equipo { flex-basis: auto; }
 }

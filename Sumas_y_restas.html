@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sumas y Restas</title>
-  <script src="/_sdk/element_sdk.js"></script>
+
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -229,7 +229,7 @@
   </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
-</head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-operaciones.css"><script>window.IDIOMA_VOZ_APP='operaciones';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-operaciones-textos.js"></script><script src="idioma-voz.js"></script><script src="matematicas-base.js"></script></head>
 <body>
   <div class="app-wrapper" id="app">
     <audio id="bgMusic" loop preload="auto"><source src="data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQIAAAAAAAA=" type="audio/wav"></audio>
@@ -337,7 +337,7 @@
         <div class="line-sep"></div>
         <div class="columns-container" id="ansContainer"></div>
         <div class="borrow-btn-container">
-          <button class="act-btn borrow" id="borrowBtn" onclick="doBorrow()">Pedir<br>prestado</button>
+          <button class="act-btn borrow" id="borrowBtn" onclick="doBorrow()">Pedir prestado</button>
         </div>
       </div>
 
@@ -390,14 +390,14 @@
     const CLAVE_NOMBRE = 'nombreNinoGabrielApps';
 
     function obtenerNombreGuardado() {
-      const nombre = localStorage.getItem(CLAVE_NOMBRE);
+      let nombre='';try{nombre=localStorage.getItem(CLAVE_NOMBRE)||'';}catch{}
       return nombre ? nombre.trim() : '';
     }
 
     function guardarNombreEstudiante(nombre) {
       const nombreLimpio = (nombre || '').trim();
       if (nombreLimpio) {
-        localStorage.setItem(CLAVE_NOMBRE, nombreLimpio);
+        try{localStorage.setItem(CLAVE_NOMBRE, nombreLimpio);}catch{}
       }
       return nombreLimpio;
     }
@@ -614,7 +614,7 @@
 
     function goMenu() {
       document.getElementById('menuScreen').style.display = '';
-      document.getElementById('gameScreen').style.display = 'none';
+      document.querySelector('.ajustes-operaciones').open=true;
       document.getElementById('levelScreen').style.display = 'flex';
       const nombre = studentName || obtenerNombreGuardado();
       if (nombre) document.getElementById('nameInput').value = nombre;
@@ -639,7 +639,7 @@
       studentName = name;
       score = 0;
       updateScore();
-      document.getElementById('menuScreen').style.display = 'none';
+      document.querySelector('.ajustes-operaciones').open=false;
       document.getElementById('gameScreen').style.display = '';
       document.getElementById('levelLabel').textContent = `${getOperationModeText()} de ${digits} dígitos`;
       newProblem();
@@ -981,8 +981,7 @@
     }
 
     function moveGhost(e) {
-      ghost.style.left = e.clientX + 'px';
-      ghost.style.top = e.clientY + 'px';
+      Matematicas.fantasma(ghost,e.clientX,e.clientY);
     }
 
     function endDrag(e) {
@@ -1279,17 +1278,7 @@
       document.querySelectorAll('.audio-highlight').forEach(el => el.classList.remove('audio-highlight'));
     }
 
-    function speakText(text) {
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'es-ES';
-        utterance.rate = 0.9;
-        utterance.pitch = 1;
-        utterance.volume = 1;
-        window.speechSynthesis.speak(utterance);
-      }
-    }
+    function speakText(text){return IdiomaVoz.hablar(text)}
 
     function checkAnswer() {
       if (isAnswerCorrect) return;
@@ -1471,14 +1460,8 @@
         const B = digitsToNumber(bottomDigits);
         const result = currentOperation === '+' ? A + B : A - B;
         const operationMsg = currentOperation === '+' ? `${A} más ${B} es igual a ${result}` : `${A} menos ${B} es igual a ${result}`;
-        const utterance = new SpeechSynthesisUtterance(operationMsg);
-        utterance.lang = 'es-ES';
-        utterance.rate = 0.9;
-        utterance.pitch = 1;
-        utterance.volume = 1;
-        utterance.onend = () => setTimeout(() => speakText(personalMsg), 400);
-        window.speechSynthesis.cancel();
-        window.speechSynthesis.speak(utterance);
+        const utterance=IdiomaVoz.hablar(operationMsg);
+        if(utterance)utterance.onend=()=>speakText(personalMsg);
       } else {
         speakText('No te preocupes, inténtalo de nuevo. ¡Tú puedes!');
       }
@@ -1510,6 +1493,6 @@
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="pantalla-completa.js"></script>
+<script src="matematicas-operaciones.js"></script><script src="pantalla-completa.js"></script>
 </body>
 </html>

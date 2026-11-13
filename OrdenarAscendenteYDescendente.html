@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Ordenar números</title>
 <style>
 :root{
@@ -21,6 +21,8 @@ button,input{font-family:inherit}.app{min-height:100svh;padding:18px;display:fle
 </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-orden.css">
+<script>window.IDIOMA_VOZ_APP='ordenNumeros';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-orden-textos.js"></script><script src="idioma-voz.js"></script><script src="matematicas-base.js"></script>
 </head>
 <body>
 <main class="app">
@@ -64,14 +66,14 @@ const colors=[['#c4b5fd','#3b0764'],['#93c5fd','#1e3a8a'],['#fca5a5','#7f1d1d'],
 const CLAVE_NOMBRE = 'nombreNinoGabrielApps';
 
 function obtenerNombreGuardado(){
-  const nombre = localStorage.getItem(CLAVE_NOMBRE);
+  let nombre='';try{nombre=localStorage.getItem(CLAVE_NOMBRE)||'';}catch{}
   return nombre ? nombre.trim() : '';
 }
 
 function guardarNombreEstudiante(nombre){
   const nombreLimpio = (nombre || '').trim();
   if(nombreLimpio){
-    localStorage.setItem(CLAVE_NOMBRE, nombreLimpio);
+    try{localStorage.setItem(CLAVE_NOMBRE, nombreLimpio);}catch{}
   }
   return nombreLimpio;
 }
@@ -134,12 +136,12 @@ $('#startBtn').onclick=()=>{
 
   state.name = nombre || 'Gabriel';
   $('#childName').value = state.name;
-  $('#setup').style.display='none';
+  $('#setup').style.display='grid';document.querySelector('.ajustes-orden').open=false;
   $('#game').style.display='block';
   newRound();
 };
 $('#setupBtn').onclick=()=>{
-  $('#game').style.display='none';
+  document.querySelector('.ajustes-orden').open=true;
   $('#setup').style.display='grid';
   const nombre = state.name || obtenerNombreGuardado();
   if(nombre) $('#childName').value = nombre;
@@ -151,11 +153,11 @@ $('#hint1Btn').onclick=()=>showHint1();
 $('#hint2Btn').onclick=()=>showHint2();
 function generateNumbers(){const n=state.count,d=state.digits;if(d===1){let a=[0,1,2,3,4,5,6,7,8,9,10];shuffle(a);return a.slice(0,n)}const set=new Set(),min=Math.pow(10,d-1),max=Math.pow(10,d)-1;while(set.size<n)set.add(rand(min,max));return [...set]}
 function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a} function shuffle(a){for(let i=a.length-1;i>0;i--){const j=rand(0,i);[a[i],a[j]]=[a[j],a[i]]}return a}
-function newRound(){state.numbers=generateNumbers();state.order=state.mode==='mix'?(Math.random()<.5?'asc':'desc'):state.mode;state.slots=Array(state.count).fill(null);state.positions={};state.symbols=false;state.hintLevel=0;state.layoutKey='';state.correctChecks=0;$('#hint2Btn').disabled=true;$('#slots').classList.remove('symbols-on');$('#symbolsBtn').textContent='🔎 Ver < >';$('#feedback').textContent='';$('#orderLabel').textContent=state.order==='asc'?'⬆️ Ordena de menor a mayor':'⬇️ Ordena de mayor a menor';renderAll()}
+function newRound(){Matematicas.guardar('ordenNumeros.config.v1',{mode:state.mode,digits:state.digits,count:state.count});state.numbers=generateNumbers();state.order=state.mode==='mix'?(Math.random()<.5?'asc':'desc'):state.mode;state.slots=Array(state.count).fill(null);state.positions={};state.symbols=false;state.hintLevel=0;state.layoutKey='';state.correctChecks=0;$('#hint2Btn').disabled=true;$('#slots').classList.remove('symbols-on');$('#symbolsBtn').textContent='🔎 Ver < >';$('#feedback').textContent='';$('#orderLabel').textContent=state.order==='asc'?'⬆️ Ordena de menor a mayor':'⬇️ Ordena de mayor a menor';renderAll()}
 function resetRound(){state.slots=Array(state.count).fill(null);state.positions={};state.hintLevel=0;state.layoutKey='';state.correctChecks=0;$('#hint2Btn').disabled=true;$('#feedback').textContent='';renderAll()}
 function sorted(){return [...state.numbers].sort((a,b)=>state.order==='asc'?a-b:b-a)}
 function renderAll(){renderSlots();renderTray();renderFreeTokens();updateCheck()}
-function renderSlots(){const slots=$('#slots');slots.innerHTML='';slots.classList.toggle('symbols-on',state.symbols);const first=sorted()[0];for(let i=0;i<state.count;i++){const s=document.createElement('div');s.className='slot';s.dataset.index=i;s.textContent='?';if(state.hintLevel>=1&&i===0){s.classList.add('hint');s.dataset.hint=state.order==='asc'?'Número más pequeño':'Número más grande'} if(state.hintLevel>=2&&i===0){s.classList.add('shadow-hint');s.textContent='';s.appendChild(tokenEl(first,true,i))} else if(state.slots[i]!=null){s.textContent='';s.appendChild(tokenEl(state.slots[i],true,i))}slots.appendChild(s); if(i<state.count-1){const sym=document.createElement('div');sym.className='symbol';sym.textContent=state.order==='asc'?'<':'>';slots.appendChild(sym)}}}
+function renderSlots(){const slots=$('#slots');slots.innerHTML='';slots.classList.toggle('symbols-on',state.symbols);const first=sorted()[0];for(let i=0;i<state.count;i++){const s=document.createElement('div');s.className='slot';s.dataset.index=i;s.dataset.symbol=state.order==='asc'?'<':'>';s.textContent='?';if(state.hintLevel>=1&&i===0){s.classList.add('hint');s.dataset.hint=IdiomaVoz.t(state.order==='asc'?'Número más pequeño':'Número más grande')} if(state.hintLevel>=2&&i===0){s.classList.add('shadow-hint');s.textContent='';s.appendChild(tokenEl(first,true,i))} else if(state.slots[i]!=null){s.textContent='';s.appendChild(tokenEl(state.slots[i],true,i))}slots.appendChild(s); if(i<state.count-1){const sym=document.createElement('div');sym.className='symbol';sym.textContent=state.order==='asc'?'<':'>';slots.appendChild(sym)}}}
 function renderTray(){
   const tray=$('#tray');
   $$('#tray .token').forEach(t=>t.remove());
@@ -186,26 +188,14 @@ function renderFreeTokens(){
   });
 }
 function ensurePositions(nums){
-  const tray=$('#tray'),r=tray.getBoundingClientRect();
-  const tw=Math.min(118,Math.max(92,r.width*.115)),gap=14,cols=Math.max(1,Math.floor((r.width-28)/(tw+gap)));
-  const key=Math.round(r.width)+'-'+cols;
-  const normalNums=nums.filter(num=>!(state.positions[num]&&state.positions[num].free));
-  const reflow=state.layoutKey!==key;
-  if(reflow){
-    normalNums.forEach((num,i)=>{const row=Math.floor(i/cols),col=i%cols;state.positions[num]={x:18+col*(tw+gap),y:52+row*(tw+gap),free:false}});
-  }else{
-    let used=normalNums.map(num=>state.positions[num]).filter(Boolean);
-    let nextIndex=0;
-    normalNums.forEach(num=>{if(!state.positions[num]){let p,tries=0;do{const row=Math.floor(nextIndex/cols),col=nextIndex%cols;p={x:18+col*(tw+gap),y:52+row*(tw+gap),free:false};nextIndex++;tries++}while(used.some(q=>Math.abs(q.x-p.x)<tw*.7&&Math.abs(q.y-p.y)<tw*.7)&&tries<200);state.positions[num]=p;used.push(p)}});
-  }
-  state.layoutKey=key;
-  let maxY=0;
-  normalNums.forEach(num=>{const p=state.positions[num];if(p)maxY=Math.max(maxY,p.y+tw+gap)});
-  tray.style.minHeight=Math.max(260,Math.ceil(maxY)+28)+'px';
+  // The tray grid owns placement; dropped cards return here if not over a slot.
+  nums.forEach(num=>state.positions[num]={x:0,y:0,free:false});
 }
+
 function tokenEl(num,inSlot,slotIndex){const t=document.createElement('div');t.className='token';t.textContent=num;t.dataset.num=num;if(inSlot)t.dataset.slot=slotIndex;const c=colors[state.numbers.indexOf(num)%colors.length];t.style.background=c[0];t.style.color=c[1];t.addEventListener('pointerdown',dragStart,{passive:false});return t}
-function dragStart(e){e.preventDefault();const original=e.currentTarget,num=+original.dataset.num;const rect=original.getBoundingClientRect();const source=original.dataset.slot!==undefined?+original.dataset.slot:null;const ghost=original.cloneNode(true);ghost.classList.add('dragging');ghost.style.left=rect.left+'px';ghost.style.top=rect.top+'px';ghost.style.width=rect.width+'px';ghost.style.height=rect.height+'px';document.body.appendChild(ghost);original.classList.add('ghost');if(source!==null){state.slots[source]=null;renderSlots()}const originPos=state.positions[num]?{...state.positions[num]}:null;state.drag={num,source,ghost,dx:e.clientX-rect.left,dy:e.clientY-rect.top,originPos};window.addEventListener('pointermove',dragMove,{passive:false});window.addEventListener('pointerup',dragEnd,{passive:false,once:true});window.addEventListener('pointercancel',dragEnd,{passive:false,once:true})}
-function dragMove(e){if(!state.drag)return;e.preventDefault();const d=state.drag;d.ghost.style.left=(e.clientX-d.dx)+'px';d.ghost.style.top=(e.clientY-d.dy)+'px';$$('.slot').forEach(s=>s.classList.remove('hover','insert-target'));const s=slotAt(e.clientX,e.clientY);if(s){s.classList.add('hover');if(state.slots[+s.dataset.index]!=null)s.classList.add('insert-target')}}
+function dragStart(e){e.preventDefault();const original=e.currentTarget,num=+original.dataset.num;const rect=original.getBoundingClientRect();const source=original.dataset.slot!==undefined?+original.dataset.slot:null;const ghost=original.cloneNode(true);ghost.classList.add('dragging');ghost.style.left=rect.left+'px';ghost.style.top=rect.top+'px';ghost.style.width=rect.width+'px';ghost.style.height=rect.height+'px';document.body.appendChild(ghost);Matematicas.fantasma(ghost,e.clientX,e.clientY);original.classList.add('ghost');if(source!==null){state.slots[source]=null;renderSlots()}const originPos=state.positions[num]?{...state.positions[num]}:null;state.drag={num,source,ghost,dx:e.clientX-rect.left,dy:e.clientY-rect.top,originPos};window.addEventListener('pointermove',dragMove,{passive:false});window.addEventListener('pointerup',dragEnd,{passive:false,once:true});window.addEventListener('pointercancel',cancelOrderingDrag,{passive:false,once:true})}
+function dragMove(e){if(!state.drag)return;e.preventDefault();const d=state.drag;Matematicas.fantasma(d.ghost,e.clientX,e.clientY);$$('.slot').forEach(s=>s.classList.remove('hover','insert-target'));const s=slotAt(e.clientX,e.clientY);if(s){s.classList.add('hover');if(state.slots[+s.dataset.index]!=null)s.classList.add('insert-target')}}
+function cancelOrderingDrag(){if(!state.drag)return;const d=state.drag;if(d.source!==null)state.slots[d.source]=d.num;d.ghost.remove();state.drag=null;window.removeEventListener('pointermove',dragMove);window.removeEventListener('pointerup',dragEnd);window.removeEventListener('pointercancel',cancelOrderingDrag);renderAll();}
 function dragEnd(e){
   if(!state.drag)return;
   e.preventDefault();
@@ -217,14 +207,14 @@ function dragEnd(e){
   if(target){
     placeNumber(d.num,+target.dataset.index,d.source,overflowDrop);
   }else{
-    state.positions[d.num]=freeDrop;
+    if(d.source!==null)state.slots[d.source]=d.num;delete state.positions[d.num];
   }
   d.ghost.remove();
   state.drag=null;
   state.correctChecks=0;
   $('#feedback').textContent='';
   renderAll();
-  window.removeEventListener('pointermove',dragMove);
+  window.removeEventListener('pointermove',dragMove);window.removeEventListener('pointercancel',cancelOrderingDrag);
 }
 function slotAt(x,y){return $$('.slot').find(s=>{const r=s.getBoundingClientRect();return x>=r.left-10&&x<=r.right+10&&y>=r.top-10&&y<=r.bottom+10})}
 function placeNumber(num,idx,source,overflowDrop){
@@ -294,7 +284,7 @@ function check(){
 }
 function showHint1(){state.hintLevel=1;$('#hint2Btn').disabled=false;$('#feedback').textContent='';renderSlots()}
 function showHint2(){state.hintLevel=2;$('#feedback').textContent='';renderSlots()}
-function speak(text){try{if(!('speechSynthesis'in window))return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='es-ES';u.rate=.9;window.speechSynthesis.speak(u)}catch(e){}}
+function speak(text){return IdiomaVoz.hablar(text)}
 let resizeTimer=null;
 function reflowUnplacedOnlyOnTrayResize(){
   if($('#game').style.display!=='block') return;
@@ -510,6 +500,6 @@ function rainbowExplosions(parent,duration){
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="pantalla-completa.js"></script>
+<script src="matematicas-orden.js"></script><script src="pantalla-completa.js"></script>
 </body>
 </html>

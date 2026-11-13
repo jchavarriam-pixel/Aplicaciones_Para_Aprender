@@ -87,7 +87,7 @@ body{font-family:'Nunito',sans-serif;background:#FFF8E1;user-select:none;-webkit
   <style>body { box-sizing: border-box; }</style>
    <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
-</head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-restar.css"><script>window.IDIOMA_VOZ_APP='restarQuitando';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-restar-textos.js"></script><script src="idioma-voz.js"></script><script src="matematicas-base.js"></script></head>
  <body>
   <div class="app-wrapper" id="app">
    <h1 class="app-title" id="titleEl">🌈 Aprende a Restar 🌈</h1>
@@ -142,7 +142,7 @@ const synth=window.speechSynthesis;
 const CLAVE_NOMBRE = 'nombreNinoGabrielApps';
 
 function obtenerNombreNino(){
-  const nombre = localStorage.getItem(CLAVE_NOMBRE);
+  let nombre='';try{nombre=localStorage.getItem(CLAVE_NOMBRE)||'';}catch{}
   return nombre ? nombre.trim() : '';
 }
 
@@ -183,10 +183,7 @@ if (window.elementSdk && window.elementSdk.init) {
 function speak(text){
   lastAudio=text;
   if(muted)return;
-  synth.cancel();
-  const u=new SpeechSynthesisUtterance(text);
-  u.lang='es-ES';u.rate=.85;u.pitch=1.1;
-  synth.speak(u);
+  IdiomaVoz.hablar(text);
 }
 
 function repeatAudio(){if(lastAudio)speak(lastAudio)}
@@ -194,11 +191,11 @@ function toggleMute(){
   muted=!muted;
   const b=document.getElementById('muteBtn');
   b.textContent=muted?'🔊 Activar':'🔇 Silenciar';
-  if(muted)synth.cancel();
+  if(muted)synth.cancel();guardarRestar();
 }
 
 function setMode(m,btn){
-  mode=m;
+  mode=m;guardarRestar();
   document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   newExercise();
@@ -253,8 +250,7 @@ function isInsideDropZone(x,y){
 function moveDragClone(x,y){
   if(!activeDrag)return;
   const {clone,item}=activeDrag;
-  clone.style.left=(x-item.offsetWidth/2)+'px';
-  clone.style.top=(y-item.offsetHeight/2)+'px';
+  Matematicas.fantasma(clone,x,y);
   document.getElementById('dropZone').classList.toggle('over',isInsideDropZone(x,y));
 }
 
@@ -270,8 +266,8 @@ function startPointerDrag(e){
   clone.style.zIndex='9999';
   clone.style.pointerEvents='none';
   clone.style.opacity='.85';
-  clone.style.width=item.offsetWidth+'px';
-  clone.style.height=item.offsetHeight+'px';
+  clone.style.width=item.getBoundingClientRect().width+'px';
+  clone.style.height=item.getBoundingClientRect().height+'px';
   clone.style.transform='scale(1.15)';
   clone.style.filter='drop-shadow(3px 6px 4px rgba(0,0,0,.35))';
   document.body.appendChild(clone);
@@ -372,7 +368,7 @@ function showFail(){
 }
 
 function resetExercise(){
-  done=false;removed=0;
+  cleanupPointerDrag();done=false;removed=0;
   document.getElementById('removedCount').textContent='0';
   document.getElementById('resultArea').innerHTML='';
   document.getElementById('remainLabel').textContent='';
@@ -395,8 +391,12 @@ function newExercise(){
 // Con eventos pointer no se requieren eventos nativos de arrastrar y soltar.
 // Esto mejora el uso en pantallas touch y evita fallos en tabletas.
 
-cargarNombreEstudiante();
-newExercise();
-</script><script src="pantalla-completa.js"></script>
+function guardarRestar(){Matematicas.guardar('restarQuitando.config.v1',{mode,muted});}
+const savedRestar=Matematicas.leer('restarQuitando.config.v1');
+mode=['mix','yes','no'].includes(savedRestar.mode)?savedRestar.mode:'mix';muted=savedRestar.muted===true;
+document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));
+document.getElementById('muteBtn').textContent=muted?'🔊 Activar':'🔇 Silenciar';
+cargarNombreEstudiante();newExercise();
+</script><script src="matematicas-restar.js"></script><script src="pantalla-completa.js"></script>
 </body>
 </html>

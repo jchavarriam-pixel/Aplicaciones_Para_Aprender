@@ -1,7 +1,7 @@
 /* Preferencias locales y lectura compartidas por tres actividades. */
 (() => {
  'use strict';
- const app=/Mayor_Menor\.html$/i.test(location.pathname)?'mayorMenor':/Reconocer_Numeros/i.test(location.pathname)?'numeros':/Ordenar_Objetos/i.test(location.pathname)?'ordenar':'comparar';
+ const app=window.IDIOMA_VOZ_APP||(/Mayor_Menor\.html$/i.test(location.pathname)?'mayorMenor':/Reconocer_Numeros/i.test(location.pathname)?'numeros':/Ordenar_Objetos/i.test(location.pathname)?'ordenar':'comparar');
  const clave='idiomaVoz.'+app+'.v1',estado={idioma:'es',velocidad:1,voces:{es:'',en:''}};
  try{const s=JSON.parse(localStorage.getItem(clave)||'null');if(s){if(['es','en'].includes(s.idioma))estado.idioma=s.idioma;const v=Number(s.velocidad);if(v>=.7&&v<=1.5&&Math.abs(v*10-Math.round(v*10))<1e-8)estado.velocidad=v;for(const l of ['es','en'])if(typeof s.voces?.[l]==='string'&&s.voces[l].length<500)estado.voces[l]=s.voces[l];}}catch{}
  const guardar=()=>{try{localStorage.setItem(clave,JSON.stringify(estado));}catch{}};

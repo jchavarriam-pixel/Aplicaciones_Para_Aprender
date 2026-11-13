@@ -520,7 +520,7 @@
 </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
-</head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-fracciones.css"><script>window.IDIOMA_VOZ_APP='fracciones';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-fracciones-textos.js"></script><script src="idioma-voz.js"></script><script src="matematicas-base.js"></script></head>
 <body>
 <div id="app">
   <header class="topbar">
@@ -793,7 +793,7 @@ const STUDENT_NAME_KEY='nombreNinoGabrielApps';
 let studentName='';
 
 function readStudentName(){
-  try{return (localStorage.getItem(STUDENT_NAME_KEY)||'').trim()}catch(e){return ''}
+  try{return (Matematicas.almacen.getItem(STUDENT_NAME_KEY)||'').trim()}catch(e){return ''}
 }
 function successReview(detail=''){
   const openings=studentName
@@ -818,8 +818,8 @@ function setStudentName(value,persist=true){
   studentName=(value||'').trim();
   if(persist){
     try{
-      if(studentName)localStorage.setItem(STUDENT_NAME_KEY,studentName);
-      else localStorage.removeItem(STUDENT_NAME_KEY);
+      if(studentName)Matematicas.almacen.setItem(STUDENT_NAME_KEY,studentName);
+      else Matematicas.almacen.removeItem(STUDENT_NAME_KEY);
     }catch(e){}
   }
   updateStudentNameUI();
@@ -865,10 +865,10 @@ const states = {
 };
 
 function loadSettings(){
-  try{return {...defaults,...JSON.parse(localStorage.getItem('fraccionesPropias1Settings')||'{}')}}catch(e){return {...defaults}}
+  try{return {...defaults,...JSON.parse(Matematicas.almacen.getItem('fraccionesPropias1Settings')||'{}')}}catch(e){return {...defaults}}
 }
 function saveSettings(){
-  localStorage.setItem('fraccionesPropias1Settings',JSON.stringify(settings));
+  Matematicas.almacen.setItem('fraccionesPropias1Settings',JSON.stringify(settings));
 }
 function voiceIsEnabled(){return settings.voiceEnabled!==false&&!settings.examMode}
 function guidanceIsEnabled(){return settings.guidanceText!==false&&!settings.examMode}
@@ -901,20 +901,7 @@ function speak(text){
   speechSynthesis.cancel();
   speechSynthesis.speak(createUtterance(text));
 }
-function createUtterance(text){
-  const u=new SpeechSynthesisUtterance(text);
-  u.lang='es-ES';
-  u.rate=.9;
-  const voices=speechSynthesis.getVoices();
-  if(settings.voice){
-    const v=voices.find(x=>x.name===settings.voice);
-    if(v)u.voice=v;
-  } else {
-    const v=voices.find(x=>x.lang&&x.lang.toLowerCase().startsWith('es'));
-    if(v)u.voice=v;
-  }
-  return u;
-}
+function createUtterance(text){const u=new SpeechSynthesisUtterance(IdiomaVoz.t(text));u.voice=IdiomaVoz.voz;u.lang=IdiomaVoz.voz?.lang||(IdiomaVoz.idioma==='en'?'en-US':'es-ES');u.rate=IdiomaVoz.velocidad;return u;}
 function speakAndWait(text){
   if(!voiceIsEnabled()||!('speechSynthesis' in window)||!text)return Promise.resolve();
   speechSynthesis.cancel();
@@ -936,7 +923,7 @@ function giveReviewFeedback(id,explanation,correct=false){
   feedback(id,message,correct?'good':'hint');speak(message);return message;
 }
 function gcd(a,b){while(b){[a,b]=[b,a%b]}return a}
-function fractionText(n,d){
+function fractionText(n,d){if(IdiomaVoz.idioma==='en'){const singular={2:'half',3:'third',4:'quarter',5:'fifth',6:'sixth',7:'seventh',8:'eighth',9:'ninth',10:'tenth'};return IdiomaVoz.ingles(n)+' '+(n===1?singular[d]:d===2?'halves':singular[d]+'s');}
   const nums=['cero','un','dos','tres','cuatro','cinco','seis','siete','ocho','nueve','diez'];
   const dens={2:'medios',3:'tercios',4:'cuartos',5:'quintos',6:'sextos',7:'séptimos',8:'octavos',9:'novenos',10:'décimos'};
   if(n===1){
@@ -1365,7 +1352,7 @@ function startNumberDrag(e){
 }
 function moveNumberDrag(e){
   if(!numDrag)return;e.preventDefault();
-  numDrag.ghost.style.left=e.clientX+'px';numDrag.ghost.style.top=e.clientY+'px';
+  Matematicas.fantasma(numDrag.ghost,e.clientX,e.clientY);
   $$('.drop-cell').forEach(c=>c.classList.remove('drag-over'));
   const el=document.elementFromPoint(e.clientX,e.clientY);
   const cell=el&&el.closest('.drop-cell');
@@ -1886,7 +1873,7 @@ function openSettings(scope='all',focusMatch=false){
 }
 $('#saveSettings').addEventListener('click',()=>{
   const dens=$$('#denomList input:checked').map(c=>Number(c.value));
-  if(!dens.length){alert('Selecciona al menos un denominador.');return}
+  if(!dens.length){alert(IdiomaVoz.t('Selecciona al menos un denominador.'));return}
   const pairCount=Number($('#pairCount').value),leftoverSide=$('#leftoverSide').value,leftoverCount=Number($('#leftoverCount').value);
   const extraGroups=(leftoverSide==='both'?2:leftoverSide==='none'?0:1)*leftoverCount;
   const requiredFractions=pairCount+extraGroups,availableFractions=availableEquivalentFractions(dens);
@@ -1915,9 +1902,16 @@ $('#resetSettings').addEventListener('click',()=>{
   settings={...defaults};saveSettings();applySettings();openSettings();
 });
 
+function cancelActiveDrags(){
+ if(numDrag){numDrag.ghost.remove();numDrag=null;window.removeEventListener('pointermove',moveNumberDrag);window.removeEventListener('pointerup',endNumberDrag);}
+ if(states.a3.drag){states.a3.drag=null;window.removeEventListener('pointermove',moveMatchDrag);window.removeEventListener('pointerup',endMatchDrag);redrawConnections();}
+ $$('.drag-over,.hover-target').forEach(e=>e.classList.remove('drag-over','hover-target'));
+}
+window.addEventListener('pointercancel',cancelActiveDrags);window.addEventListener('resize',cancelActiveDrags);document.addEventListener('fullscreenchange',cancelActiveDrags);
 /* inicio */
 setStudentName(readStudentName(),false);
 setScreen('home');
+window.FraccionesAPI={startActivity,setScreen,openSettings,redrawConnections,get current(){return currentActivity},get states(){return states},get settings(){return settings},fractionText};
 })();
 </script>
 
@@ -1931,6 +1925,6 @@ setScreen('home');
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="pantalla-completa.js"></script>
+<script src="matematicas-fracciones.js"></script><script src="pantalla-completa.js"></script>
 </body>
 </html>
