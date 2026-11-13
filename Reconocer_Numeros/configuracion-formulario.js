@@ -13,14 +13,17 @@
  document.body.append(modal);const campos=document.getElementById('camposConfiguracionNumeros');campos.append(general,setup,document.getElementById('preferenciasIdiomaVoz'));
  general.querySelector('h2').remove();general.querySelector('p.sub').textContent='Los cambios se aplican al cerrar el formulario y se guardan en este navegador.';setup.querySelector('.encabezado').hidden=true;
  modos.classList.add('seleccion-modos');home.querySelector('.home-grid').append(modos);
- const pendientes=new Map();let aplicando=false,lanzando=false,eraJuego=false,modoModal=null,modoAnterior=null;
- Object.assign(window.TEXTOS_INGLES,{'Elige los números que quieres practicar y después un modo de juego.':'Choose the numbers you want to practise, then choose a game mode.','Aplicar y cerrar':'Apply and close','Aplicar y volver al juego':'Apply and return to the game','Elegir modo':'Choose a mode','Ajustes del modo':'Mode settings','Configuración general':'General settings','Los cambios se aplican al cerrar el formulario y se guardan en este navegador.':'Changes apply when you close the form and are saved in this browser.'});
+ const pendientes=new Map();let aplicando=false,lanzando=false,eraJuego=false,modoModal=null,modoAnterior=null,valoresPrevios=[],configPrevia=null;
+ Object.assign(window.TEXTOS_INGLES,{'Elige los números que quieres practicar y después un modo de juego.':'Choose the numbers you want to practise, then choose a game mode.','Jugar':'Play','Cancelar':'Cancel','Aplicar y cerrar':'Apply and close','Aplicar y volver al juego':'Apply and return to the game','Elegir modo':'Choose a mode','Ajustes del modo':'Mode settings','Configuración general':'General settings','Los cambios se aplican al cerrar el formulario y se guardan en este navegador.':'Changes apply when you close the form and are saved in this browser.'});
  function abrir(modo=null,preparar=false){
   pendientes.clear();eraJuego=game.classList.contains('activa');modoAnterior=state.mode;modoModal=modo;
   if(modo){
    if(preparar){openOriginal(modo);screen('home');}else renderSetup(modo);
   }
   setup.hidden=!modo;general.hidden=!!modo;document.getElementById('preferenciasIdiomaVoz').hidden=!!modo;document.getElementById('tituloConfiguracionNumeros').textContent=modo?document.getElementById('setupTitle').textContent:'Configuración general';
+  const principal=modal.querySelector('.aplicar-numeros');principal.type=modo?'button':'submit';principal.textContent=modo?'▶ Jugar':'Aplicar y volver al juego';cancelar.hidden=!modo;document.getElementById('cerrarConfiguracionNumeros').setAttribute('aria-label',modo?'Cancelar':'Aplicar y cerrar');
+  setup.querySelectorAll('[onclick^="startMode"]').forEach(b=>b.hidden=true);
+  valoresPrevios=[...modal.querySelectorAll('input,select')].map(el=>({el,value:el.value,checked:el.checked}));configPrevia=JSON.stringify(configuracion);
   modal.style.zoom=String(1/(parseFloat(getComputedStyle(document.body).zoom)||1));modal.showModal();
  }
  function aplicar(){
@@ -33,9 +36,12 @@
   if(e.target.name==='selectType')actualizarSeleccionNumeros();
  },true);
  modal.addEventListener('click',e=>{if(e.target.closest('[onclick^="startMode"]')){lanzando=true;aplicar();modal.close();}},true);
+ const cancelar=document.createElement('button');cancelar.type='button';cancelar.className='btn gray cancelar-numeros';cancelar.textContent='Cancelar';cancelar.onclick=()=>modal.close();modal.querySelector('form').append(cancelar);
+ modal.querySelector('.aplicar-numeros').addEventListener('click',()=>{if(!modoModal)return;lanzando=true;aplicar();modal.close();window['startMode'+modoModal]();});
  document.getElementById('cerrarConfiguracionNumeros').onclick=()=>modal.close();
  modal.addEventListener('close',()=>{
   if(lanzando){lanzando=false;return;}
+  if(modoModal){for(const {el,value,checked}of valoresPrevios){el.value=value;if(el.type==='checkbox'||el.type==='radio')el.checked=checked;}configuracion=JSON.parse(configPrevia);state.mode=modoAnterior;pendientes.clear();return;}
   const cambio=pendientes.size;aplicar();const reiniciar=modoModal||modoAnterior;if(cambio&&eraJuego&&reiniciar){state.mode=reiniciar;state.numbers=getNums();window['startMode'+reiniciar]();}
  });
  const openOriginal=openModeSetup;openModeSetup=m=>abrir(m,true);
