@@ -29,3 +29,7 @@ Aplicar el protocolo progresivamente a las aplicaciones que se trabajen. No supo
 ## Orden de las actividades en el índice
 
 - Mantener las aplicaciones de cada materia en una progresión sugerida de aprendizaje: primero habilidades básicas y luego actividades que integren más conocimientos. Al añadir una aplicación al índice, asignarle su lugar en `secuenciaAprendizaje`, su materia y sus filtros temáticos. Conservar esta secuencia al buscar o filtrar.
+
+## Configuración en los ajustes individuales
+
+Al ajustar una aplicación individualmente, usar un formulario adicional para idioma, voz, velocidad, opciones de práctica, ejercicios por ronda y ayudas. Aplicar los cambios al salir del formulario. Recordar esta petición al iniciar los siguientes ajustes individuales si no se menciona. En la barra de herramientas: título, «Así jugamos», modos, Configuración, Nueva ronda, Revisar y créditos al final; arriba en vertical y a la izquierda en horizontal. Evitar duplicar Nueva ronda.

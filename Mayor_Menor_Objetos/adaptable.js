@@ -2,11 +2,23 @@
 (()=>{
  const app=document.querySelector('.app'),actividad=document.querySelector('.actividad'),zona=document.getElementById('zonaImagen');
  const herramientas=document.createElement('aside');herramientas.className='herramientas';app.prepend(herramientas);
- herramientas.append(document.querySelector('.cabecera'),document.querySelector('.modos'));
+ herramientas.append(document.querySelector('.cabecera'),document.querySelector('.guia'),document.querySelector('.modos'));
  const lateral=document.querySelector('.lateral');herramientas.append(lateral);
  const detalles=document.createElement('section');detalles.className='panel detalles-practica';
  detalles.append(...['ayudaTamano','temaActual','controlLlenado'].map(id=>document.getElementById(id)));lateral.append(detalles);
- lateral.prepend(document.querySelector('.ajustes'),document.getElementById('nuevaRonda'));
+ const ajustes=document.querySelector('.ajustes');
+ const abrir=document.createElement('button');abrir.className='boton secundaria';abrir.textContent='⚙ Configuración';abrir.id='abrirConfiguracion';
+ const dialogo=document.createElement('dialog');dialogo.className='configuracion-formulario';dialogo.setAttribute('aria-labelledby','tituloConfiguracion');
+ dialogo.innerHTML='<header><h2 id="tituloConfiguracion">Configuración</h2><button type="button" class="boton secundaria" id="cerrarConfiguracion" aria-label="Aplicar y cerrar">✕</button></header><form method="dialog"><div class="contenido-configuracion"></div><button class="boton principal" value="aplicar">Aplicar y volver al juego</button></form>';
+ dialogo.querySelector('.contenido-configuracion').append(ajustes.querySelector('.campos'));ajustes.remove();document.body.append(dialogo);
+ const pendientes=new Set();let aplicando=false;
+ dialogo.addEventListener('change',e=>{if(!aplicando){e.stopImmediatePropagation();pendientes.add(e.target);}},true);
+ const acciones=[];dialogo.addEventListener('click',e=>{const b=e.target.closest('#todasCategorias,#basicasCategorias');if(b&&!aplicando){e.preventDefault();e.stopImmediatePropagation();acciones.push(b);}},true);
+ abrir.onclick=()=>{pendientes.clear();acciones.length=0;dialogo.style.zoom=String(1/(parseFloat(getComputedStyle(document.body).zoom)||1));dialogo.showModal();};
+ document.getElementById('cerrarConfiguracion').onclick=()=>dialogo.close();
+ dialogo.addEventListener('close',()=>{aplicando=true;const cambio=pendientes.size||acciones.length;for(const el of pendientes)el.dispatchEvent(new Event('change',{bubbles:true}));for(const b of acciones)b.click();aplicando=false;if(cambio)document.getElementById('nuevaRonda').click();});
+ lateral.prepend(abrir,document.getElementById('nuevaRonda'));
+ lateral.append(document.querySelector('.acciones'));
  lateral.append(document.getElementById('creditos-aplicaciones'));
  app.append(actividad);document.querySelector('.distribucion').remove();
  let pendiente=false;
