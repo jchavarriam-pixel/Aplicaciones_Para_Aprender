@@ -144,14 +144,14 @@ function mostrar(){
 }
 function detenerLlenado(){clearTimeout(timerLlenado);timerLlenado=null;autoLlenadoPendiente=false;llenado?.cancelar();llenado=null;$('controlLlenado').hidden=true;}
 function prepararLlenado(item,token){
-  $('controlLlenado').hidden=false;$('repetirLlenado').disabled=false;$('repetirLlenado').textContent='▶ Ver animación';
+  $('controlLlenado').hidden=false;$('repetirLlenado').disabled=false;$('repetirLlenado').textContent='↻ Animación';
   $('estadoLlenado').textContent='Los recipientes empiezan vacíos.';$('respuesta').textContent='Observa el llenado antes de elegir.';
   llenado=AnimacionCapacidad.crear(item,session=>{
     if(session!==llenado||token!==cargaToken)return;actualizarApoyosCapacidad();
   },session=>{
     if(session!==llenado||token!==cargaToken)return;
     lista=true;document.querySelectorAll('.tarjeta-opcion').forEach(b=>b.disabled=resuelta);
-    $('revisar').disabled=seleccion===null||resuelta;$('repetirLlenado').disabled=false;$('repetirLlenado').textContent='↻ Repetir animación';
+    $('revisar').disabled=seleccion===null||resuelta;$('repetirLlenado').disabled=false;$('repetirLlenado').textContent='↻ Animación';
     $('estadoLlenado').textContent=item.objetivo==='capacidad'?'Ya están llenos. Compara cuánto ha entrado en cada uno.':'El agua quedó en la cantidad del ejercicio.';
     if(!resuelta)$('respuesta').textContent='Ahora toca una opción y pulsa Revisar.';
   });
@@ -161,7 +161,7 @@ function prepararLlenado(item,token){
 function iniciarLlenado(){
   if(!llenado||llenado.cancelado)return;
   clearTimeout(timerLlenado);timerLlenado=null;autoLlenadoPendiente=false;lista=false;
-  document.querySelectorAll('.tarjeta-opcion').forEach(b=>b.disabled=true);$('revisar').disabled=true;$('repetirLlenado').disabled=false;$('repetirLlenado').textContent='↻ Repetir animación';
+  document.querySelectorAll('.tarjeta-opcion').forEach(b=>b.disabled=true);$('revisar').disabled=true;$('repetirLlenado').disabled=false;$('repetirLlenado').textContent='↻ Animación';
   if(!resuelta){seleccion=null;document.querySelectorAll('.tarjeta-opcion').forEach(b=>{b.className='tarjeta-opcion';b.setAttribute('aria-pressed','false');b.querySelector('.texto-eleccion').textContent='Elegir';});$('respuesta').textContent='Observa cómo sube el agua.';}
   $('estadoLlenado').textContent=llenado.item.objetivo==='capacidad'?'Reciben agua al mismo ritmo. Mira cuándo se llena cada uno.':'El agua sube hasta la cantidad de este ejercicio.';
   llenado.iniciar();

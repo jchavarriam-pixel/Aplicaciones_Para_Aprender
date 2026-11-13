@@ -1,5 +1,6 @@
 'use strict';
 (()=>{
+ Object.assign(window.TEXTOS_INGLES||(window.TEXTOS_INGLES={}),{'Animación':'Animation'});
  const app=document.querySelector('.app'),actividad=document.querySelector('.actividad'),zona=document.getElementById('zonaImagen');
  const herramientas=document.createElement('aside');herramientas.className='herramientas';app.prepend(herramientas);
  herramientas.append(document.querySelector('.cabecera'),document.querySelector('.guia'),document.querySelector('.modos'));
