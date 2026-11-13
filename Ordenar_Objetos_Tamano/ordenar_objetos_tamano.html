@@ -25,7 +25,6 @@
         <label>Sentido del orden<select id="sentido"><option value="descendente">De mayor a menor</option><option value="ascendente">De menor a mayor</option><option value="mixto">Alternar los dos sentidos</option></select></label>
         <label>Cantidad de objetos<select id="cantidad"><option value="2">2 objetos</option><option value="3">3 objetos</option><option value="4">4 objetos</option><option value="5">5 objetos</option><option value="6">6 objetos</option></select></label>
         <label>Objetos para practicar<select id="familia"></select></label>
-        <label class="opcion"><input id="guiaVisual" type="checkbox"> Mostrar guía visual de círculos y flechas</label>
         <label class="opcion"><input id="voz" type="checkbox"> Leer instrucciones y respuestas</label>
         <label class="opcion"><input id="posiciones" type="checkbox"> Mostrar números de posición</label>
         <p class="nota">Las opciones se guardan en este navegador. Los cambios se aplican al cerrar este formulario.</p>
@@ -34,7 +33,6 @@
     </aside>
     <section class="panel juego" aria-labelledby="tituloReto">
       <div class="reto"><div><span id="familiaActual" class="etiqueta"></span><h2 id="tituloReto">Del más grande al más pequeño</h2></div><button id="escuchar" class="boton audio" aria-label="Escuchar la instrucción">🔊</button></div>
-      <section id="ayudaVisual" class="ayuda-visual" aria-label="Guía visual del orden"><p id="textoGuia"></p><div id="dibujoGuia" role="img"></div></section>
       <section class="banco" aria-labelledby="tituloBanco"><h3 id="tituloBanco">Objetos para ordenar</h3><div id="banco" class="rejilla" role="group" aria-label="Objetos disponibles"></div></section>
       <section class="destino" aria-labelledby="tituloOrden"><div class="sentido"><h3 id="tituloOrden">Tu orden</h3><p id="sentidoActual"></p></div><div id="orden" class="rejilla" role="group" aria-label="Ordena de izquierda a derecha; continúa en la siguiente fila"></div></section>
       <p id="mensaje" class="mensaje" role="status" aria-live="polite">Cargando las imágenes…</p>
@@ -44,6 +42,8 @@
   </div>
 </main>
 <footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos"><div class="creditos-dedicatoria"><span class="creditos-gabriel">Creado para <strong>Gabriel</strong></span><span class="creditos-familia">Por su familia, con ayuda de la IA.</span></div><div class="creditos-equipo"><span class="creditos-autores">M.Sc. Jeffry Chavarría-Molina y Ph.D. (c) Natalia Rodríguez-Granados</span><span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span></div></footer>
+<script src="recortes-ejemplos.js?v=20261113" defer></script>
+<script src="ejemplos.js?v=20261113" defer></script>
 <script src="animaciones.js?v=20261113" defer></script>
 <script src="../pantalla-completa.js"></script>
 </body>

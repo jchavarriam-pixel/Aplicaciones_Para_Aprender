@@ -1,18 +1,21 @@
 'use strict';
 const familias=window.ORDENAR_FAMILIAS,criterios=window.ORDENAR_CRITERIOS;
 const $=id=>document.getElementById(id),clave='ordenarObjetosTamano.config.v1';
-let config={cantidad:3,criterio:'tamano',sentido:'descendente',familia:'azar',voz:true,posiciones:true,guiaVisual:true},nombre='Gabriel';
+let config={cantidad:3,criterio:'tamano',sentido:'descendente',familia:'azar',voz:true,posiciones:true},nombre='Gabriel';
 try{
  const s=JSON.parse(localStorage.getItem(clave)||'null');
  if(s&&typeof s==='object'){
   if([2,3,4,5,6].includes(s.cantidad))config.cantidad=s.cantidad;
   if(s.criterio==='mixto'||criterios.some(c=>c.id===s.criterio))config.criterio=s.criterio;
+  if(Array.isArray(s.caracteristicas)){const elegidas=criterios.filter(c=>s.caracteristicas.includes(c.id)).map(c=>c.id);if(elegidas.length)config.caracteristicas=elegidas;}
   if(['descendente','ascendente','mixto'].includes(s.sentido))config.sentido=s.sentido;
   if(s.familia==='azar'||familias.some(f=>f.id===s.familia))config.familia=s.familia;
-  for(const k of ['voz','posiciones','guiaVisual'])if(typeof s[k]==='boolean')config[k]=s[k];
+  for(const k of ['voz','posiciones'])if(typeof s[k]==='boolean')config[k]=s[k];
  }
  nombre=localStorage.getItem('nombreNinoGabrielApps')?.trim()||nombre;
 }catch{}
+config.caracteristicas??=config.criterio==='mixto'?criterios.map(c=>c.id):[config.criterio];
+config.criterio=config.caracteristicas.length===1?config.caracteristicas[0]:'mixto';
 let ronda=0,actual=null,criterioActual=null,ascendenteActual=false,piezasActuales=[],mazoCriterios=[],ultimoCriterio=null;
 const mazosFamilias=new Map(),ultimasFamilias=new Map();
 let seleccion=null,drag=null,resuelto=false,listo=false,cantidad=3,premioTimer,ignorarClickHasta=0;
@@ -22,7 +25,7 @@ function hablar(texto){if(!config.voz)return;return IdiomaVoz.hablar(texto);}
 function sacarMazo(pool,restantes,ultimo){const mazo=restantes.length?[...restantes]:mezclar(pool);if(!restantes.length&&mazo.length>1&&mazo[0].id===ultimo)[mazo[0],mazo[1]]=[mazo[1],mazo[0]];return {elemento:mazo.shift(),restantes:mazo};}
 function siguienteFamilia(){
  let c=config.criterio;
- if(c==='mixto'){const m=sacarMazo(criterios,mazoCriterios,ultimoCriterio);mazoCriterios=m.restantes;c=m.elemento.id;ultimoCriterio=c;}
+ if(c==='mixto'){const m=sacarMazo(criterios.filter(c=>config.caracteristicas.includes(c.id)),mazoCriterios.filter(c=>config.caracteristicas.includes(c.id)),ultimoCriterio);mazoCriterios=m.restantes;c=m.elemento.id;ultimoCriterio=c;}
  const pool=familias.filter(f=>f.criterio===c);
  if(config.criterio!=='mixto'&&config.familia!=='azar'){const f=pool.find(f=>f.id===config.familia);if(f)return f;}
  const m=sacarMazo(pool,mazosFamilias.get(c)||[],ultimasFamilias.get(c));mazosFamilias.set(c,m.restantes);ultimasFamilias.set(c,m.elemento.id);return m.elemento;
@@ -53,11 +56,10 @@ function guiaSVG(masters,tipo){
 }
 function actualizarAyudas(){
  $('escuchar').hidden=!config.voz;document.querySelectorAll('.posicion').forEach(el=>el.hidden=!config.posiciones);
- $('ayudaVisual').hidden=!config.guiaVisual;const lateral=document.querySelector('.guia');lateral.classList.toggle('sin-dibujo',!config.guiaVisual);
- const anterior=lateral.querySelector('svg');if(!actual){if(anterior)anterior.hidden=!config.guiaVisual;return;}
+ const lateral=document.querySelector('.guia');
+ const anterior=lateral.querySelector('svg');if(!actual)return;
  const masters=piezasActuales.map(p=>p.master);
- $('textoGuia').textContent='Guía visual · '+instruccion();$('dibujoGuia').setAttribute('aria-label',instruccion());$('dibujoGuia').innerHTML=guiaSVG(masters,actual.criterio);
- if(anterior){const mini=masters.length<=3?masters:[masters[0],masters[Math.floor((masters.length-1)/2)],masters.at(-1)];anterior.outerHTML=guiaSVG(mini,actual.criterio);lateral.querySelector('svg').hidden=!config.guiaVisual;}
+ if(anterior){const mini=masters.length<=3?masters:[masters[0],masters[Math.floor((masters.length-1)/2)],masters.at(-1)];anterior.outerHTML=guiaSVG(mini,actual.criterio);lateral.querySelector('svg').hidden=false;}
  const li=lateral.querySelectorAll('li');li[0].innerHTML='<b>1</b> Observa '+(actual.criterio==='lados'?'los lados.':'las diferencias.');li[1].innerHTML='<b>2</b> Sigue el orden indicado.';li[2].innerHTML='<b>3</b> Coloca y revisa.';
 }
 function actualizarColumnas(){
@@ -116,7 +118,7 @@ function premiar(){limpiarPremio();if(matchMedia('(prefers-reduced-motion: reduc
 
 $('criterio').innerHTML=criterios.map(c=>`<option value="${c.id}">${c.nombre}</option>`).join('')+'<option value="mixto">Mixto · Todos los criterios</option>';
 actualizarFamilias();
-for(const id of ['cantidad','familia','criterio','sentido','voz','posiciones','guiaVisual']){
+for(const id of ['cantidad','familia','criterio','sentido','voz','posiciones']){
  const input=$(id);input.type==='checkbox'?input.checked=config[id]:input.value=id==='familia'&&config.criterio==='mixto'?'azar':String(config[id]);
  input.addEventListener('change',()=>{
   config[id]=input.type==='checkbox'?input.checked:id==='cantidad'?+input.value:input.value;

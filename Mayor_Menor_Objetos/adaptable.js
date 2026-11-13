@@ -12,6 +12,8 @@
  const dialogo=document.createElement('dialog');dialogo.className='configuracion-formulario';dialogo.setAttribute('aria-labelledby','tituloConfiguracion');
  dialogo.innerHTML='<header><h2 id="tituloConfiguracion">Configuración</h2><button type="button" class="boton secundaria" id="cerrarConfiguracion" aria-label="Aplicar y cerrar">✕</button></header><form method="dialog"><div class="contenido-configuracion"></div><button class="boton principal" value="aplicar">Aplicar y volver al juego</button></form>';
  dialogo.querySelector('.contenido-configuracion').append(ajustes.querySelector('.campos'));ajustes.remove();document.body.append(dialogo);
+ const campoNombre=document.getElementById('nombre').closest('label');campoNombre.classList.add('nombre-cabecera');herramientas.querySelector('h1').after(campoNombre);
+ dialogo.querySelector('.campos').append(document.getElementById('preferenciasIdiomaVoz'));
  const pendientes=new Set();let aplicando=false;
  dialogo.addEventListener('change',e=>{if(!aplicando){e.stopImmediatePropagation();pendientes.add(e.target);}},true);
  const acciones=[];dialogo.addEventListener('click',e=>{const b=e.target.closest('#todasCategorias,#basicasCategorias');if(b&&!aplicando){e.preventDefault();e.stopImmediatePropagation();acciones.push(b);}},true);

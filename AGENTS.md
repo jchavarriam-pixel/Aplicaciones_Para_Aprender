@@ -33,3 +33,6 @@ Aplicar el protocolo progresivamente a las aplicaciones que se trabajen. No supo
 ## Configuración en los ajustes individuales
 
 Al ajustar una aplicación individualmente, usar un formulario adicional para idioma, voz, velocidad, opciones de práctica, ejercicios por ronda y ayudas. Aplicar los cambios al salir del formulario. Recordar esta petición al iniciar los siguientes ajustes individuales si no se menciona. En la barra de herramientas: título, «Así jugamos», modos, Configuración, Nueva ronda, Revisar y créditos al final; arriba en vertical y a la izquierda en horizontal. Evitar duplicar Nueva ronda.
+
+- El nombre editable del niño debe aparecer inmediatamente debajo del título de la aplicación, reutilizando el campo existente y el nombre guardado. No duplicarlo dentro de Configuración.
+- En los formularios de configuración, colocar idioma, voz y velocidad al final de las opciones. Aplicar esta ubicación en las aplicaciones que se ajusten de aquí en adelante.
