@@ -25,7 +25,7 @@
    const cajas=contenido.querySelector('.grid-cajas');if(cajas){const cifras=Math.max(...state.data.numbers.map(n=>String(n).length)),ancho=cajas.getBoundingClientRect().width/Math.min(cols,count)-50;game.style.setProperty('--fuente-caja',Math.max(10,Math.min(23,(ancho-8)/(cifras*.65)))*u+'px');}
    if(state.mode===3){contenido.querySelectorAll('.drag-num').forEach(el=>{el.style.fontSize='';const disponible=el.clientWidth-4;if(disponible<=0)return;const estilo=getComputedStyle(el),ctx=document.createElement('canvas').getContext('2d');ctx.font=`${estilo.fontWeight} ${estilo.fontSize} ${estilo.fontFamily}`;const ancho=ctx.measureText(el.textContent).width;if(ancho>disponible)el.style.fontSize=(parseFloat(estilo.fontSize)*disponible/ancho*.93)+'px';});}
    if(state.mode===2)layoutCorral();
-   const numero=contenido.querySelector('.big-card');if(numero){const w=numero.getBoundingClientRect().width,n=String(state.data.numbers[state.data.index]).length;game.style.setProperty('--fuente-numero',Math.max(24,Math.min(80,(w-20)/(n*.65)))*u+'px');}
+   const numero=contenido.querySelector('.big-card');if(numero){const r=numero.getBoundingClientRect(),n=String(state.data.numbers[state.data.index]).length,horizontal=innerWidth>innerHeight;const espacioAlto=Math.max(18,r.height-(horizontal?56:20));const espacioAncho=Math.max(30,r.width-(horizontal?20:110));game.style.setProperty('--fuente-numero',Math.max(18,Math.min(80,espacioAncho/(n*.65),espacioAlto/1.1))*u+'px');}
   }else{
    herramientas.hidden=true;if(cabecera.parentNode===herramientas)game.prepend(cabecera);
    if(state.mode===1&&document.getElementById('pareo')){game.style.setProperty('--filas-pareo',Math.max(state.data.left.length,state.data.right.length));fitPareo();drawLinks();}
