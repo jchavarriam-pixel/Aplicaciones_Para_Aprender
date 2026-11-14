@@ -18,18 +18,18 @@
   const texto=t=>window.IdiomaVoz?.t(t)||t;
   function actualizar(){
    pendiente=false;const horizontal=innerWidth>innerHeight,activo=archivo!=='reconocer_numeros.html'||root.classList.contains('activa');
-   const actual=archivo==='reconocer_numeros.html'?root.querySelector(root.classList.contains('modo-pareo')?'#pareoSidebar':'#herramientasJuego'):root.querySelector(opciones[1]);
+   const actual=archivo==='reconocer_numeros.html'?root.querySelector(root.classList.contains('modo-pareo')?(horizontal?'#pareoSidebar':':scope > .encabezado'):'#herramientasJuego'):root.querySelector(opciones[1]);
    const siguienteModo=archivo==='reconocer_numeros.html'?root.dataset.modo||'':'';
    if(siguienteModo!==modo){oculto=false;modo=siguienteModo;}
-   sidebar=actual;const plegado=horizontal&&activo&&!!sidebar&&oculto;
-   root.classList.toggle('panel-lateral-oculto',plegado);boton.hidden=!horizontal||!activo||!sidebar;
+   sidebar=actual;const plegado=activo&&!!sidebar&&oculto;
+   root.classList.toggle('panel-lateral-oculto',plegado);root.classList.toggle('panel-pareo-superior-oculto',plegado&&archivo==='reconocer_numeros.html'&&root.classList.contains('modo-pareo')&&!horizontal);boton.hidden=!activo||!sidebar;
    root.querySelectorAll('.panel-ocultable-compartido').forEach(e=>{if(e!==sidebar)e.classList.remove('panel-ocultable-compartido');});
    if(sidebar){sidebar.classList.add('panel-ocultable-compartido');sidebar.id||='panelHerramientasCompartido';boton.setAttribute('aria-controls',sidebar.id);}
    boton.setAttribute('aria-expanded',String(!plegado));boton.title=texto(plegado?'Mostrar panel lateral':'Ocultar panel lateral');boton.setAttribute('aria-label',boton.title);
    const z=parseFloat(getComputedStyle(document.body).zoom)||1;boton.style.zoom=String(1/z);flotante.style.zoom=String(1/z);document.documentElement.style.setProperty('--inverso-panel-compartido',String(1/z));
    if(plegado&&sidebar){sidebar.querySelectorAll('.hint-controls,[data-pistas-panel]').forEach(e=>{if(!e.hidden){if(!lugares.has(e)){const marca=document.createComment('Lugar de las pistas');e.before(marca);lugares.set(e,marca);}flotante.append(e);}});}
    if(!plegado)for(const [e,marca]of lugares){if(marca.isConnected)marca.after(e);else e.remove();}
-   revisar.hidden=!(plegado&&archivo==='reconocer_numeros.html'&&root.classList.contains('modo-pareo'));revisar.textContent=texto('✅ Revisar');revisar.disabled=document.getElementById('checkPareo')?.disabled??true;
+   revisar.hidden=!(horizontal&&plegado&&archivo==='reconocer_numeros.html'&&root.classList.contains('modo-pareo'));revisar.textContent=texto('✅ Revisar');revisar.disabled=document.getElementById('checkPareo')?.disabled??true;
    flotante.hidden=!plegado||![...flotante.children].some(e=>!e.hidden&&getComputedStyle(e).display!=='none');
   }
   function programar(){if(!pendiente){pendiente=true;requestAnimationFrame(actualizar);}}

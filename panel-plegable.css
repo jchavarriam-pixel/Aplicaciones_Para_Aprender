@@ -8,3 +8,10 @@
 #control-pantalla-completa,#control-pantalla-completa[data-corner]{position:fixed;left:auto!important;top:auto!important;right:max(10px,env(safe-area-inset-right))!important;bottom:max(10px,env(safe-area-inset-bottom))!important;zoom:var(--inverso-panel-compartido,1)!important}
 
 .revisar-pareo-plegado{min-width:160px;border:0;border-radius:12px;background:#21a76a;color:#fff;font-weight:800!important}.revisar-pareo-plegado:disabled{opacity:.5}.revisar-pareo-plegado[hidden]{display:none}
+
+/* El mismo control pliega también las herramientas superiores en vertical. */
+.con-panel-plegable.panel-lateral-oculto{grid-template-rows:minmax(0,1fr)!important}
+.con-panel-plegable.panel-lateral-oculto>#gameContent,.con-panel-plegable.panel-lateral-oculto>.actividad,.con-panel-plegable.panel-lateral-oculto>.juego,.con-panel-plegable.panel-lateral-oculto>#gameScreen,.con-panel-plegable.panel-lateral-oculto>#gameArea{grid-row:1!important}
+.panel-pareo-superior-oculto .pareo>.inst{display:none!important}
+.con-panel-plegable:not(.panel-lateral-oculto) .panel-ocultable-compartido .cabecera,.con-panel-plegable:not(.panel-lateral-oculto) .panel-ocultable-compartido>header,.con-panel-plegable:not(.panel-lateral-oculto) .panel-ocultable-compartido .cabecera-comparacion,.con-panel-plegable:not(.panel-lateral-oculto) .panel-ocultable-compartido.encabezado{padding-top:44px}
+.con-panel-plegable.panel-lateral-oculto .actividad>h2,.con-panel-plegable.panel-lateral-oculto .juego .reto,.con-panel-plegable.panel-lateral-oculto #gameArea>#symbolTray,.con-panel-plegable.panel-lateral-oculto #gameScreen>.instruccion-mayor{margin-top:36px}
