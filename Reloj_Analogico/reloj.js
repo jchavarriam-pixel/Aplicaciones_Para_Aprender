@@ -109,4 +109,5 @@ for(let n=0;n<=9;n++){const b=document.createElement('button');b.className='cifr
 function actualizarOrigenCelebracion(){if(efectoCelebracion)efectoCelebracion.matriz=$('#reloj').getScreenCTM();}
 $('.actividad').addEventListener('scroll',actualizarOrigenCelebracion,{passive:true});window.addEventListener('scroll',actualizarOrigenCelebracion,{passive:true});
 addEventListener('resize',()=>{parar();programar();});document.addEventListener('fullscreenchange',()=>{parar();programar();});document.addEventListener('visibilitychange',()=>{if(document.hidden)parar();});new MutationObserver(programar).observe(document.body,{attributes:true,attributeFilter:['style']});visualViewport?.addEventListener('resize',programar);document.fonts.ready.then(programar);nueva();
+window.addEventListener('nombre-estudiante-cambiado',e=>{nombre=e.detail.nombre;});
 })();

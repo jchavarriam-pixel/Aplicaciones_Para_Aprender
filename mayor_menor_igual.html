@@ -696,6 +696,7 @@
   addEventListener('resize',()=>cleanupDrag());
   document.addEventListener('fullscreenchange',()=>cleanupDrag());
   document.addEventListener('DOMContentLoaded',()=>{const credits=$('#creditos-aplicaciones');if(credits)document.body.append(credits);fit();});
+window.addEventListener('nombre-estudiante-cambiado',e=>{state.childName=e.detail.nombre;});
 })();
 </script>
 
@@ -711,5 +712,6 @@
 </footer>
 <script src="pantalla-completa.js"></script>
 <script src="panel-plegable.js"></script>
+<script src="nombre-compartido.js"></script>
 </body>
 </html>

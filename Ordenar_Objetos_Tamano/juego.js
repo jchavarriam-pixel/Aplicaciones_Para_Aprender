@@ -134,3 +134,4 @@ window.addEventListener('resize',()=>{if(drag)terminarArrastre(null,true);actual
 new ResizeObserver(actualizarColumnas).observe(document.querySelector('.juego'));
 IdiomaVoz.instalar('#preferenciasIdiomaVoz');
 nuevaRonda();
+window.addEventListener('nombre-estudiante-cambiado',e=>{nombre=e.detail.nombre;});

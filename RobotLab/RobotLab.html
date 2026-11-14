@@ -1273,7 +1273,7 @@ window.addEventListener('pagehide',()=>{execToken++;stopNoiseListening()});
 document.addEventListener('visibilitychange',()=>{const listener=activeNoiseListener;if(!listener)return;listener.stream?.getAudioTracks().forEach(track=>track.enabled=!document.hidden&&!state.paused);listener.readyAt=performance.now()+300;listener.quietSince=null});
 function startFromHome(mode){const input=$('#homeStudentName'),raw=(input?.value||'').trim();if(!raw){toast('Escribe el nombre del niño para comenzar.');input?.focus();return}const name=saveSharedStudentName(raw);settings.student=name;saveSettings();applyIdentity();$('#homeModal').classList.remove('show');setMode(mode||'challenges')}
 $$('[data-start]').forEach(b=>b.onclick=()=>startFromHome(b.dataset.start));$('#skipHome').onclick=()=>startFromHome(null);$('#homeStudentName').onkeydown=e=>{if(e.key==='Enter')startFromHome(null)};
-window.addEventListener('storage',e=>{if(!NAME_STORAGE_KEYS.includes(e.key))return;const name=(e.newValue||'').trim();if(!name)return;settings.student=name;saveSettings();applyIdentity()});
+window.addEventListener('storage',e=>{if(!NAME_STORAGE_KEYS.includes(e.key))return;const name=(localStorage.getItem(NAME_STORAGE_KEYS[0])||e.newValue||'').trim();if(!name)return;settings.student=name;saveSettings();applyIdentity()});
 $('#genericModal').onclick=e=>{if(e.target===$('#genericModal'))hideGeneric()};$('#settingsModal').onclick=e=>{if(e.target===$('#settingsModal')){$('#settingsModal').classList.remove('show');autoReadChallengeTasksIfNeeded()}};
 window.addEventListener('keydown',e=>{if(e.code==='Space'&&!/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)){e.preventDefault();if(state.status==='running')pause();else run(false)}});
 
@@ -1400,6 +1400,7 @@ if('ResizeObserver'in window){let boardFitQueued=false;const observer=new Resize
 loadObstacleFolder();
 // Initial state
 bindColumnResizers();bindChallengeTaskDragging();applySettingsToUI();generateLeveledChallenge(settings.challengeLevel,false);$('#homeModal').classList.add('show');
+window.addEventListener('nombre-estudiante-cambiado',e=>{settings.student=e.detail.nombre;saveSettings();applyIdentity();});
 })();
 </script>
 
@@ -1414,5 +1415,6 @@ bindColumnResizers();bindChallengeTaskDragging();applySettingsToUI();generateLev
   </div>
 </footer>
 <script src="../pantalla-completa.js"></script>
+<script src="../nombre-compartido.js"></script>
 </body>
 </html>

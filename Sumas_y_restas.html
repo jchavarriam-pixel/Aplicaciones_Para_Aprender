@@ -1481,7 +1481,8 @@
       if (speakResultCheckbox) speakResultCheckbox.checked = speakAudioResult;
       initBackgroundMusic();
     });
-  </script>
+  window.addEventListener('nombre-estudiante-cambiado',e=>{studentName=e.detail.nombre;});
+</script>
 
 <footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos">
   <div class="creditos-dedicatoria">
@@ -1494,5 +1495,6 @@
   </div>
 </footer>
 <script src="matematicas-operaciones.js"></script><script src="pantalla-completa.js"></script>
+<script src="nombre-compartido.js"></script>
 </body>
 </html>

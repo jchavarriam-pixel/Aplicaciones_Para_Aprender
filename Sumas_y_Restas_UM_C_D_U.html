@@ -424,6 +424,7 @@ setTimeout(()=>{layer.style.transition='opacity 2s ease';layer.style.opacity='0'
 setTimeout(()=>layer.remove(),8200);
 }
 window.addEventListener('DOMContentLoaded',()=>{loadName();setShowLeadingZeros(false);$('operationInput').addEventListener('keydown',e=>{if(e.key==='Enter')generateFromInput()})});
+window.addEventListener('nombre-estudiante-cambiado',e=>{studentName=e.detail.nombre;});
 </script>
 
 <footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos">
@@ -437,5 +438,6 @@ window.addEventListener('DOMContentLoaded',()=>{loadName();setShowLeadingZeros(f
   </div>
 </footer>
 <script src="matematicas-posicional.js"></script><script src="pantalla-completa.js"></script>
+<script src="nombre-compartido.js"></script>
 </body>
 </html>

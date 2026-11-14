@@ -3712,6 +3712,7 @@ function cargarNombreDesdeIndex() {
   initSetupControls();
   cargarNombreDesdeIndex();
   goHome();
+window.addEventListener('nombre-estudiante-cambiado',e=>{state.playerName=e.detail.nombre;state.currentSettings.playerName=e.detail.nombre;});
 })();
 </script>
 
@@ -3726,5 +3727,6 @@ function cargarNombreDesdeIndex() {
   </div>
 </footer>
 <script src="../pantalla-completa.js"></script>
+<script src="../nombre-compartido.js"></script>
 </body>
 </html>

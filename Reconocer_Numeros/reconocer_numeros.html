@@ -1015,6 +1015,7 @@ actualizarSeleccionNumeros();
 cargarNombreDesdeIndex();
 
 window.addEventListener('resize',()=>{if(state.mode===1)setTimeout(drawLinks,100);});
+window.addEventListener('nombre-estudiante-cambiado',e=>{state.childName=e.detail.nombre;});
 </script>
 
 <footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos">
@@ -1031,5 +1032,6 @@ window.addEventListener('resize',()=>{if(state.mode===1)setTimeout(drawLinks,100
 <script src="espacio-juego.js?v=20261113"></script>
 <script src="../pantalla-completa.js"></script>
 <script src="../panel-plegable.js"></script>
+<script src="../nombre-compartido.js"></script>
 </body>
 </html>

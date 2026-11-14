@@ -4056,7 +4056,8 @@
       populateVoiceSelect();
       renderMenu();
     }
-  </script>
+  window.addEventListener('nombre-estudiante-cambiado',e=>{if(state.currentProblem)updateText();});
+</script>
   <script src="escenas.js"></script>
   <script>
     startApp();
@@ -4073,5 +4074,6 @@
   </div>
 </footer>
 <script src="matematicas-problemas.js"></script><script src="pantalla-completa.js"></script>
+<script src="nombre-compartido.js"></script>
 </body>
 </html>

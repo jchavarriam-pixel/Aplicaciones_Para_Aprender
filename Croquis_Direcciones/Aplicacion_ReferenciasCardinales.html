@@ -179,6 +179,7 @@ $("#voiceSelect").addEventListener("change",e=>e.currentTarget.dataset.saved=e.c
 $("#studentName").addEventListener("input",e=>saveSharedName(e.currentTarget.value));
 $("#setupScreen").addEventListener("change",saveFormConfig);
 $("#setupScreen").addEventListener("input",saveFormConfig);
+window.addEventListener('nombre-estudiante-cambiado',e=>{if(state.config)state.config.name=e.detail.nombre;});
 window.addEventListener("storage",e=>{if(e.key===SHARED_NAME_KEY)$("#studentName").value=(e.newValue||"").trim()});
 if("speechSynthesis"in window)speechSynthesis.addEventListener?.("voiceschanged",populateVoices);
 $("#reviewBtn").addEventListener("click",reviewAnswer);
@@ -198,5 +199,6 @@ $("#answerMode").onchange=syncSelectionField;$("#languageSelect").onchange=apply
   </div>
 </footer>
 <script src="../pantalla-completa.js"></script>
+<script src="../nombre-compartido.js"></script>
 </body>
 </html>

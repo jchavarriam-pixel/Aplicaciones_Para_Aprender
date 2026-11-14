@@ -540,4 +540,5 @@ $('hd-next').addEventListener('click', () => {
 });
 window.addEventListener('pagehide', () => { ticket++; stopSpeech(); });
 updateAvailable();
+window.addEventListener('nombre-estudiante-cambiado',e=>{settings.name=e.detail.nombre;});
 })();

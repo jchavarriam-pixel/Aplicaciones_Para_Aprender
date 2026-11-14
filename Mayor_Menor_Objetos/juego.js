@@ -190,3 +190,4 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden){
 }else if(llenado){if(autoLlenadoPendiente)iniciarLlenado();else llenado.reanudar();}});
 IdiomaVoz.instalar('#preferenciasIdiomaVoz');
 actualizarConfig();nuevaRonda();
+window.addEventListener('nombre-estudiante-cambiado',e=>{nombre=e.detail.nombre;});

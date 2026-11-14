@@ -1912,6 +1912,7 @@ window.addEventListener('pointercancel',cancelActiveDrags);window.addEventListen
 setStudentName(readStudentName(),false);
 setScreen('home');
 window.FraccionesAPI={startActivity,setScreen,openSettings,redrawConnections,get current(){return currentActivity},get states(){return states},get settings(){return settings},fractionText};
+window.addEventListener('nombre-estudiante-cambiado',e=>{setStudentName(e.detail.nombre,false);});
 })();
 </script>
 
@@ -1926,5 +1927,6 @@ window.FraccionesAPI={startActivity,setScreen,openSettings,redrawConnections,get
   </div>
 </footer>
 <script src="matematicas-fracciones.js"></script><script src="pantalla-completa.js"></script>
+<script src="nombre-compartido.js"></script>
 </body>
 </html>

@@ -397,6 +397,8 @@ mode=['mix','yes','no'].includes(savedRestar.mode)?savedRestar.mode:'mix';muted=
 document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));
 document.getElementById('muteBtn').textContent=muted?'🔊 Activar':'🔇 Silenciar';
 cargarNombreEstudiante();newExercise();
+window.addEventListener('nombre-estudiante-cambiado',cargarNombreEstudiante);
 </script><script src="matematicas-restar.js"></script><script src="pantalla-completa.js"></script>
+<script src="nombre-compartido.js"></script>
 </body>
 </html>

@@ -1806,6 +1806,7 @@ function escapar(txt){
 function escaparAttr(txt){
     return escapar(txt).replaceAll("\n"," ");
 }
+window.addEventListener('nombre-estudiante-cambiado',e=>{sincronizarNombreDesdeIndex();});
 </script>
 
 
@@ -1820,5 +1821,6 @@ function escaparAttr(txt){
   </div>
 </footer>
 <script src="pantalla-completa.js"></script>
+<script src="nombre-compartido.js"></script>
 </body>
 </html>

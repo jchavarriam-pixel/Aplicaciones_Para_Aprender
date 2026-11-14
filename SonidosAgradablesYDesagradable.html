@@ -283,6 +283,7 @@ function cargarSaludoEstudiante(){
 
 cargarSaludoEstudiante();
 renderSingle();
+window.addEventListener('nombre-estudiante-cambiado',cargarSaludoEstudiante);
 </script>
 
 <footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos">
@@ -296,5 +297,6 @@ renderSingle();
   </div>
 </footer>
 <script src="pantalla-completa.js"></script>
+<script src="nombre-compartido.js"></script>
 </body>
 </html>

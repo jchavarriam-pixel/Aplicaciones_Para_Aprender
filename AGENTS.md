@@ -48,3 +48,7 @@ Al ajustar una aplicación individualmente, usar un formulario adicional para id
 - En las aplicaciones ajustadas, ofrecer un botón para ocultar y mostrar el panel lateral en horizontal y el panel superior en vertical. Al entrar a la aplicación, el panel debe estar visible; no persistirlo oculto.
 - Si hay botones de pistas activos, mantenerlos en la columna mientras esté visible y trasladarlos a una caja flotante discreta cuando se oculte, sin duplicarlos. Conservar accesibles los controles principales.
 - Mantener zoom y pantalla completa en el lado derecho, sin desplazarlos a las esquinas izquierdas.
+
+## Nombre compartido del estudiante
+
+- Reutilizar la clave `nombreNinoGabrielApps` y cargar `nombre-compartido.js` en el índice y en las actividades. El nombre del índice es la referencia inicial; los cambios en cualquier actividad deben actualizar las demás al abrirse, volver a ellas o recibir el evento de almacenamiento, sin reiniciar sus rondas. Si una actividad guarda el nombre en un estado privado, escuchar `nombre-estudiante-cambiado` para actualizarlo también. No guardar copias independientes que sustituyan un nombre compartido más reciente.

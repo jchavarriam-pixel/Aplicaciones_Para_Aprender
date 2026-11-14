@@ -1099,7 +1099,8 @@
       setCountButtonState(1);
       setDigitButtonState(1);
     });
-  </script>
+  window.addEventListener('nombre-estudiante-cambiado',e=>{studentName=e.detail.nombre;});
+</script>
 
 <footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos">
   <div class="creditos-dedicatoria">
@@ -1113,5 +1114,6 @@
 </footer>
 <script src="pantalla-completa.js"></script>
 <script src="panel-plegable.js"></script>
+<script src="nombre-compartido.js"></script>
 </body>
 </html>

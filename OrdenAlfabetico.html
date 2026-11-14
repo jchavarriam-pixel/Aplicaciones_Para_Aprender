@@ -1631,6 +1631,7 @@ function celebrateExtraSparkles(shapes, colors) {
 // Init
 cargarNombreDesdeIndex();
 buildSetup();
+window.addEventListener('nombre-estudiante-cambiado',e=>{studentName=e.detail.nombre;});
 </script>
 
 <footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos">
@@ -1644,5 +1645,6 @@ buildSetup();
   </div>
 </footer>
 <script src="pantalla-completa.js"></script>
+<script src="nombre-compartido.js"></script>
 </body>
 </html>

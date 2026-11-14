@@ -141,7 +141,7 @@ function validated(arr){if(!Array.isArray(arr))return [...DEFAULT];const out=[..
 const textCount=value=>Number.isInteger(Number(value))&&Number(value)>=1&&Number(value)<=5?Number(value):3;
 const app={name:(typeof saved.name==='string'?saved.name:sharedName||'Gabriel').trim().slice(0,50),selected:validated(saved.selected),voice:saved.voice!==false,voiceURI:typeof saved.voiceURI==='string'?saved.voiceURI:'',speechSpeed:Number.isFinite(Number(saved.speechSpeed))&&Number(saved.speechSpeed)>=.6&&Number(saved.speechSpeed)<=1.5?Number(saved.speechSpeed):1,announceOnTouch:saved.announceOnTouch===true,highlight:saved.highlight!==false,tab:[1,2,3,4,5,6].includes(Number(saved.tab))?Number(saved.tab):1,stats:{1:{ok:0,err:0},2:{ok:0,err:0},3:{ok:0,err:0},4:{ok:0,err:0},5:{ok:0,err:0},6:{ok:0,err:0}},message:null,picked:null,catch:{pairs:[],busy:false},sort:{pending:[],remaining:[],total:0,done:0,busy:false},word:{words:[],idx:0,busy:false},studyOrder:null,studyFlipped:new Set(),textSettings:{mode:['h','d','alternate'].includes(saved.textSettings?.mode)?saved.textSettings.mode:'h',hCount:textCount(saved.textSettings?.hCount),dCount:textCount(saved.textSettings?.dCount),highlightPairs:saved.textSettings?.highlightPairs===true},text:{round:0,lines:[],type:'h',selected:new Set(),correctIds:new Set(),checked:false,done:false,lastScene:{h:-1,d:-1}},buildSettings:{mode:saved.buildSettings?.mode==='free'?'free':'guided',goal:['h','d','mixed'].includes(saved.buildSettings?.goal)?saved.buildSettings.goal:'mixed'},build:{slots:[null,null],selected:null,done:false,round:0,target:'h',successes:Number.isInteger(saved.buildProgress?.successes)&&saved.buildProgress.successes>=0?Math.min(saved.buildProgress.successes,1000):0}};
 const $=s=>document.querySelector(s);const area=$('#gameArea');let draft=[...app.selected],drag=null,ignoreClickUntil=0,timeoutId=0,critterWalkTimer=0,critterLastFrame=0;
-function save(){try{localStorage.setItem(STORE,JSON.stringify({name:app.name,selected:app.selected,voice:app.voice,voiceURI:app.voiceURI,speechSpeed:app.speechSpeed,announceOnTouch:app.announceOnTouch,highlight:app.highlight,tab:app.tab,textSettings:app.textSettings,buildSettings:app.buildSettings,buildProgress:{successes:app.build.successes}}));if(app.name)localStorage.setItem('nombreNinoGabrielApps',app.name)}catch{}}
+function save(){try{localStorage.setItem(STORE,JSON.stringify({name:app.name,selected:app.selected,voice:app.voice,voiceURI:app.voiceURI,speechSpeed:app.speechSpeed,announceOnTouch:app.announceOnTouch,highlight:app.highlight,tab:app.tab,textSettings:app.textSettings,buildSettings:app.buildSettings,buildProgress:{successes:app.build.successes}}))}catch{}}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function rnd(a){return a[Math.floor(Math.random()*a.length)]}
 function shuffle(a){const s=[...a];for(let i=s.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[s[i],s[j]]=[s[j],s[i]]}return s}
@@ -294,8 +294,10 @@ if('speechSynthesis'in window)window.speechSynthesis.addEventListener('voicescha
 document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>changeTab(+b.dataset.tab)));
 let critterResizeTimer=0;window.addEventListener('resize',()=>{if(app.tab!==1||drag||app.catch.animating)return;clearTimeout(critterResizeTimer);critterResizeTimer=setTimeout(startCritterWalk,120)});
 render();
+window.addEventListener('nombre-estudiante-cambiado',e=>{app.name=e.detail.nombre;$('#studentName').value=app.name;$('#welcomeText').textContent=`Jugamos con los hiatos y los diptongos, ${app.name}`;save();});
 })();
 </script>
 <script src="pantalla-completa.js"></script>
+<script src="nombre-compartido.js"></script>
 </body>
 </html>
