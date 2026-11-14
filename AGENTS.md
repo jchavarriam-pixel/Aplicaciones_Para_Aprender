@@ -38,3 +38,7 @@ Al ajustar una aplicación individualmente, usar un formulario adicional para id
 - En los formularios de configuración, colocar idioma, voz y velocidad al final de las opciones. Aplicar esta ubicación en las aplicaciones que se ajusten de aquí en adelante.
 
 - Los créditos y la dedicatoria deben permanecer al final del documento, fuera de las barras de herramientas y del área del ejercicio. Pueden quedar por debajo de la pantalla; no reservarles espacio que reduzca la actividad o esconda sus controles.
+
+## Publicación en GitHub
+
+- Al completar cada petición que modifique el proyecto, comprobar los cambios, crear un commit y publicarlo en GitHub automáticamente. Esta publicación está autorizada por el usuario; no volver a pedir confirmación. Informar si la publicación falla.

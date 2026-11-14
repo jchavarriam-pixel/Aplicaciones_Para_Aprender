@@ -37,3 +37,17 @@
 
 /* Tarjetas uniformes con dos caracteres de aire a cada lado, sin huecos dentro de la columna. */
 #game.modo-pareo .pareo .par-row{display:grid;grid-template-columns:minmax(0,1fr) calc(30 * var(--unidad-juego,1px));width:100%;min-width:0;gap:calc(6 * var(--unidad-juego,1px));align-items:center}#game.modo-pareo .pareo .par-row.right{grid-template-columns:calc(30 * var(--unidad-juego,1px)) minmax(0,1fr)}#game.modo-pareo .pareo .caja-par{box-sizing:border-box;width:100%;min-width:0;max-width:100%;font-size:var(--fuente-pareo-ajustada,14px)!important;padding:calc(1 * var(--unidad-juego,1px)) 2ch!important;text-align:center;justify-self:stretch;line-height:1.1}#game.modo-pareo .pareo .bandera{justify-self:center;min-width:0;max-width:100%}
+
+/* Grupo centrado: el corredor de vuelo nunca supera 2,5 columnas. */
+#game.modo-pareo .pareo{grid-template-columns:minmax(0,var(--ancho-columna-pareo,28%)) minmax(0,var(--espacio-central-pareo,30%)) minmax(0,var(--ancho-columna-pareo,28%));column-gap:0;justify-content:center}
+#game.modo-pareo .pareo .col{box-sizing:border-box;justify-self:center;align-items:center;text-align:center}
+#game.modo-pareo .pareo .lista-pares{box-sizing:border-box;width:100%;align-self:center;justify-items:center}
+#game.modo-pareo .pareo .par-row{box-sizing:border-box;justify-self:center;align-items:center}
+#game.modo-pareo .pareo .caja-par{display:flex;align-items:center;justify-content:center;text-align:center}
+
+/* Conservar espacio táctil: desplazar el conjunto antes de superponer las cajas. */
+#game.modo-pareo .pareo .col{overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-gutter:stable;justify-content:flex-start;scroll-behavior:auto}
+#game.modo-pareo .pareo .lista-pares{flex:0 0 auto;height:auto;min-height:0;grid-template-rows:repeat(var(--filas-pareo),minmax(calc(60 * var(--unidad-juego,1px)),1fr));gap:calc(6 * var(--unidad-juego,1px));padding-bottom:calc(6 * var(--unidad-juego,1px))}
+#game.modo-pareo .pareo .par-row{min-height:calc(60 * var(--unidad-juego,1px))}
+#game.modo-pareo .pareo .caja-par{height:100%;min-height:calc(54 * var(--unidad-juego,1px));max-height:none}
+#game.modo-pareo .pareo .bandera{min-height:calc(36 * var(--unidad-juego,1px));height:calc(36 * var(--unidad-juego,1px));flex-shrink:0}
