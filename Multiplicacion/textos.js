@@ -47,5 +47,11 @@ Object.assign(window.TEXTOS_INGLES||(window.TEXTOS_INGLES={}),{
   "Leer instrucciones y respuestas": "Read instructions and answers",
   "Aplicar y volver al juego": "Apply and return to game",
   "Creado para": "Created for",
-  "Por su familia, con ayuda de la IA.": "By his family, with help from AI."
+  "Por su familia, con ayuda de la IA.": "By his family, with help from AI.",
+  "Cambiar en cada ronda": "Change each round",
+  "Estrellas": "Stars",
+  "Rombos": "Rhombuses",
+  "Hexágonos": "Hexagons",
+  "Rectángulos": "Rectangles",
+  "⌫ Borrar número": "⌫ Clear number"
 });
