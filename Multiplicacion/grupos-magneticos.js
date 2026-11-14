@@ -1,4 +1,4 @@
-/* Grupos como árboles de enlaces cortos. No hay simulación continua en reposo. */
+/* Grupos con enlaces locales y visibilidad directa. Sin simulación continua en reposo. */
 (() => {
   'use strict';
   const distancia = (a,b) => Math.hypot(a.x-b.x,a.y-b.y);
@@ -34,15 +34,36 @@
       for(const n of this.nodos){const b=document.createElement('button');b.type='button';b.className='figura nodo-magnetico';b.dataset.nodo=n.id;b.setAttribute('aria-label',nombreFigura+' '+(n.id+1));b.innerHTML=this.svgFigura(n);this.capa.append(b);this.botones.set(n.id,b);}
       this.adaptar(true);this.actualizar();
     }
-    componentes() {
+    componentes(enlaces=this.enlaces) {
       const vecinos=new Map(this.nodos.map(n=>[n.id,[]]));
-      for(const [a,b]of this.enlaces){vecinos.get(a).push(b);vecinos.get(b).push(a);}
+      for(const [a,b]of enlaces){vecinos.get(a).push(b);vecinos.get(b).push(a);}
       const visitados=new Set(),grupos=[];
       for(const n of this.nodos){if(visitados.has(n.id))continue;const ids=[],cola=[n.id];visitados.add(n.id);
         for(let i=0;i<cola.length;i++){const id=cola[i];ids.push(id);for(const v of vecinos.get(id))if(!visitados.has(v)){visitados.add(v);cola.push(v);}}
         grupos.push(ids.sort((a,b)=>a-b));
       }
       return grupos;
+    }
+    conexionLibre(a,b,nodos=this.nodos,tam=this.mundo.tam) {
+      const p=nodos[a],q=nodos[b],dx=q.x-p.x,dy=q.y-p.y,largo2=dx*dx+dy*dy;
+      if(largo2<.001||largo2>(tam*1.9+.01)**2)return false;
+      // Un margen alrededor de la figura evita que el trazo roce sus bordes.
+      const radio=tam*.51+2;
+      return !nodos.some(n=>{if(n.id===a||n.id===b)return false;
+        const t=limitar(((n.x-p.x)*dx+(n.y-p.y)*dy)/largo2,0,1);
+        return Math.hypot(n.x-p.x-t*dx,n.y-p.y-t*dy)<radio;
+      });
+    }
+    calcularEnlaces(grupos,nodos=this.nodos,tam=this.mundo.tam) {
+      const enlaces=[];
+      for(const ids of grupos)for(let i=0;i<ids.length;i++)for(let j=i+1;j<ids.length;j++)
+        if(this.conexionLibre(ids[i],ids[j],nodos,tam))enlaces.push([ids[i],ids[j]]);
+      return enlaces;
+    }
+    conectado(ids,enlaces) {
+      const visitados=new Set([ids[0]]);let cambio=true;
+      while(cambio){cambio=false;for(const[a,b]of enlaces){if(visitados.has(a)&&!visitados.has(b)){visitados.add(b);cambio=true;}if(visitados.has(b)&&!visitados.has(a)){visitados.add(a);cambio=true;}}}
+      return ids.every(id=>visitados.has(id));
     }
     completos(){return !!this.nodos.length&&this.componentes().every(g=>g.length===this.cantidad);}
     captura(){return {nodos:this.nodos.map(n=>({id:n.id,x:n.x,y:n.y})),enlaces:this.enlaces.map(e=>e.slice()),mundo:{...this.mundo}};}
@@ -81,7 +102,7 @@
         }
       }
       if(!inicial&&anterior.w&&this.enlaces.length)alto=this.repartirComponentes(ancho,alto,tam);
-      this.mundo={w:ancho,h:Math.ceil(alto),tam};this.plano.style.height=(this.mundo.h/z)+'px';
+      const gruposActuales=this.componentes();this.mundo={w:ancho,h:Math.ceil(alto),tam};this.enlaces=this.calcularEnlaces(gruposActuales);this.plano.style.height=(this.mundo.h/z)+'px';
       this.plano.style.setProperty('--tam-nodo',(tam/z)+'px');this.svg.setAttribute('viewBox',`0 0 ${ancho} ${this.mundo.h}`);
       this.pintar();
     }
@@ -101,6 +122,7 @@
       return h;
     }
     actualizar(cambio=false) {
+      if(!this.arrastre)this.enlaces=this.calcularEnlaces(this.componentes());
       this.pintar();if(cambio)this.alCambiar?.(this.completos());
     }
     pintar() {
@@ -116,8 +138,8 @@
         const arriba=ns.reduce((a,b)=>a.y<b.y?a:b),x=limitar(arriba.x,49,w-49),y=limitar(arriba.y-radio-13,13,h-13);
         svg+=`<g class="etiqueta-completo"><rect x="${x-46}" y="${y-10}" width="92" height="20" rx="10"/><text x="${x}" y="${y+4}" text-anchor="middle">${this.t('✓ Completo','✓ Complete')}</text></g>`;
       }
-      for(const [a,b]of this.enlaces){const p=this.nodos[a],q=this.nodos[b];svg+=`<line class="enlace" data-a="${a}" data-b="${b}" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}"/>`;}
-      if(this.candidato&&!this.candidato.bloqueado){const {a,b}=this.candidato,p=this.nodos[a],q=this.nodos[b];svg+=`<line class="enlace-propuesto" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}"/>`;}
+      for(const [a,b]of this.calcularEnlaces(grupos)){const p=this.nodos[a],q=this.nodos[b];svg+=`<line class="enlace" data-a="${a}" data-b="${b}" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}"/>`;}
+      if(this.candidato&&!this.candidato.bloqueado&&this.conexionLibre(this.candidato.a,this.candidato.b)){const {a,b}=this.candidato,p=this.nodos[a],q=this.nodos[b];svg+=`<line class="enlace-propuesto" data-a="${a}" data-b="${b}" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}"/>`;}
       this.svg.innerHTML=svg;
       this.separar.disabled=this.resuelto||this.seleccion===null||!this.enlaces.some(e=>e.includes(this.seleccion));
       this.deshacer.disabled=this.resuelto||!this.historial.length;
@@ -149,22 +171,24 @@
     }
     buscar(ids) {
       const propios=new Set(ids),grupos=this.componentes();let mejor=null;
-      for(const a of ids)for(const n of this.nodos){if(propios.has(n.id))continue;const d=distancia(this.nodos[a],n);if(d>this.mundo.tam*1.65||mejor&&d>=mejor.distancia)continue;const destino=grupos.find(g=>g.includes(n.id));mejor={a,b:n.id,distancia:d,destino,bloqueado:this.ayuda&&(ids.length>=this.cantidad||destino.length>=this.cantidad||ids.length+destino.length>this.cantidad)};}
+      for(const a of ids)for(const n of this.nodos){if(propios.has(n.id))continue;const d=distancia(this.nodos[a],n);if(d>this.mundo.tam*1.65||mejor&&d>=mejor.distancia||d>this.mundo.tam*.25&&!this.conexionLibre(a,n.id))continue;const destino=grupos.find(g=>g.includes(n.id));mejor={a,b:n.id,distancia:d,destino,bloqueado:this.ayuda&&(ids.length>=this.cantidad||destino.length>=this.cantidad||ids.length+destino.length>this.cantidad)};}
       return mejor;
     }
     encajar(ids,candidato) {
       const {tam,w,h}=this.mundo,paso=tam*1.22,m=tam*.57,otros=this.nodos.filter(n=>!ids.includes(n.id));
       const anclas=candidato.destino.map(id=>({id,d:Math.min(...ids.map(i=>distancia(this.nodos[i],this.nodos[id])))})).filter(p=>p.d<=tam*1.7).sort((a,b)=>a.d-b.d);
       const cambios=[0];for(let i=1;i<=12;i++){cambios.push(i,-i);}
-      // Buscar el vecino cercano que tenga un hueco. Nunca enlazar al grupo entero.
+      // Acercar al grupo y enlazar a todas las vecinas próximas con un paso libre.
       for(const ancla of anclas){const b=this.nodos[ancla.id],a=ids.map(id=>this.nodos[id]).sort((p,q)=>distancia(p,b)-distancia(q,b))[0],angulo=Math.atan2(a.y-b.y,a.x-b.x);
         for(const cambio of cambios)for(const giro of [0,Math.PI/3,-Math.PI/3,Math.PI*2/3,-Math.PI*2/3,Math.PI]){
           const ang=angulo+cambio*Math.PI/12,x=b.x+paso*Math.cos(ang),y=b.y+paso*Math.sin(ang),co=Math.cos(giro),si=Math.sin(giro);
           const puntos=ids.map(id=>{const n=this.nodos[id],dx=n.x-a.x,dy=n.y-a.y;return {id,x:x+dx*co-dy*si,y:y+dx*si+dy*co};});
           if(puntos.some(p=>p.x<m||p.x>w-m||p.y<m||p.y>h-m||otros.some(n=>distancia(p,n)<tam*1.04)))continue;
-          let vecino={a:a.id,b:b.id,d:paso};
-          for(const p of puntos)for(const id of candidato.destino){const d=distancia(p,this.nodos[id]);if(d<vecino.d)vecino={a:p.id,b:id,d};}
-          for(const p of puntos)Object.assign(this.nodos[p.id],{x:p.x,y:p.y});this.enlaces.push([vecino.a,vecino.b]);return true;
+          const propuesta=this.nodos.map(n=>({...n}));for(const p of puntos)Object.assign(propuesta[p.id],{x:p.x,y:p.y});
+          const juntos=[...ids,...candidato.destino].sort((a,b)=>a-b),incluidos=new Set(juntos),grupos=this.componentes().filter(g=>!g.some(id=>incluidos.has(id))).concat([juntos]);
+          const enlaces=this.calcularEnlaces(grupos,propuesta);
+          if(grupos.some(g=>!this.conectado(g,enlaces)))continue;
+          for(const p of puntos)Object.assign(this.nodos[p.id],{x:p.x,y:p.y});this.enlaces=enlaces;return true;
         }
       }
       return false;
@@ -203,7 +227,7 @@
     }
     deshacerUltimo() {
       const antes=this.historial.pop();if(!antes||this.resuelto)return;
-      this.cancelar();const cambio=JSON.stringify(this.enlaces)!==JSON.stringify(antes.enlaces);this.enlaces=antes.enlaces.map(e=>e.slice());
+      this.cancelar();const cambio=JSON.stringify(this.componentes())!==JSON.stringify(this.componentes(antes.enlaces));this.enlaces=antes.enlaces.map(e=>e.slice());
       this.restaurarPosiciones(antes);this.mundo={...antes.mundo};this.adaptar();
       this.actualizar(cambio);
     }
