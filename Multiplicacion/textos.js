@@ -28,7 +28,6 @@ Object.assign(window.TEXTOS_INGLES||(window.TEXTOS_INGLES={}),{
   "Filas: máximo": "Rows: maximum",
   "Columnas: mínimo": "Columns: minimum",
   "Columnas: máximo": "Columns: maximum",
-  "Mostrar números de filas y columnas": "Show row and column numbers",
   "Forma grupos": "Make groups",
   "Figuras por grupo: mínimo": "Shapes per group: minimum",
   "Figuras por grupo: máximo": "Shapes per group: maximum",
@@ -55,5 +54,11 @@ Object.assign(window.TEXTOS_INGLES||(window.TEXTOS_INGLES={}),{
   "⤢ Separar figura": "⤢ Separate shape",
   "↶ Deshacer": "↶ Undo",
   "Plano para formar grupos": "Space to form groups",
-  "Marcar y cerrar los grupos completos": "Mark and close completed groups"
+  "Marcar y cerrar los grupos completos": "Mark and close completed groups",
+  "💡 Pista 1": "💡 Hint 1",
+  "▶ Contar filas y columnas": "▶ Count rows and columns",
+  "■ Detener conteo": "■ Stop counting",
+  "Ayuda 2: conteo animado de filas y columnas": "Help 2: animated row and column counting",
+  "Campanitas durante el conteo": "Chimes while counting",
+  "Permitir pista breve (Ayuda 1)": "Allow a short hint (Help 1)"
 });
