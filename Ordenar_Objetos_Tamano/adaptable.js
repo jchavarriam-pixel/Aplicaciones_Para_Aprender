@@ -28,10 +28,10 @@
  abrir.onclick=()=>{pendientes.clear();dialogo.style.zoom=String(1/(parseFloat(getComputedStyle(document.body).zoom)||1));dialogo.showModal();};
  document.getElementById('cerrarConfiguracion').onclick=()=>dialogo.close();
  dialogo.addEventListener('close',()=>{const cambio=pendientes.size,familiaElegida=document.getElementById('familia').value;if(cambio){config.caracteristicas=[...dialogo.querySelectorAll('[data-caracteristica]:checked')].map(e=>e.dataset.caracteristica);mazoCriterios=[];guardar();}aplicando=true;for(const el of [...pendientes].sort((a,b)=>(b.id==='criterio')-(a.id==='criterio'))){if(el.id==='familia')el.value=familiaElegida;el.dispatchEvent(new Event('change',{bubbles:true}));}aplicando=false;if(cambio)document.getElementById('nuevaRonda').click();});
- lateral.prepend(document.querySelector('.guia'),abrir,document.getElementById('nuevaRonda'));
+ herramientas.insertBefore(document.querySelector('.guia'),lateral);lateral.prepend(abrir,document.getElementById('nuevaRonda'));
  const titulo=document.querySelector('.herramientas h1'),insignia=document.createElement('span');insignia.className='insignia-titulo';insignia.textContent='🧩';insignia.setAttribute('aria-hidden','true');titulo.prepend(insignia);
  const casa=document.querySelector('.inicio');casa.textContent='⌂';casa.setAttribute('aria-label','Aplicaciones');casa.title='Aplicaciones';
- lateral.append(document.getElementById('familiaActual'),document.getElementById('creditos-aplicaciones'));
+ lateral.append(document.getElementById('familiaActual'));document.body.append(document.getElementById('creditos-aplicaciones'));
  app.append(juego);document.querySelector('.layout').remove();
  let proporcion=.25;
  try{const n=Number(localStorage.getItem('ordenarObjetos.anchoHerramientas'));if(n>=.18&&n<=.48)proporcion=n;}catch{}

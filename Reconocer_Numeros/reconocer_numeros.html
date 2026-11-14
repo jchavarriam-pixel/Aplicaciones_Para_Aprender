@@ -356,9 +356,12 @@ function fitPareo(){
   const board=document.getElementById('pareo');
   if(!board||!board.getBoundingClientRect().width)return;
   const rect=board.getBoundingClientRect(),scale=rect.width/board.offsetWidth||1,css=getComputedStyle(board),colCss=getComputedStyle(board.querySelector('.col'));
-  const contexto=document.createElement('canvas').getContext('2d'),muestra=board.querySelector('.caja-par'),estilo=getComputedStyle(muestra);contexto.font=`${estilo.fontWeight} ${estilo.fontSize} ${estilo.fontFamily}`;
+  const contexto=document.createElement('canvas').getContext('2d'),muestra=board.querySelector('.caja-par'),estilo=getComputedStyle(muestra);contexto.font=`${estilo.fontWeight} ${14/scale}px ${estilo.fontFamily}`;
   const palabraMasAncha=Math.max(...[...board.querySelectorAll('.caja-par')].flatMap(e=>e.textContent.split(/\s+/)).map(t=>contexto.measureText(t).width*scale));
-  const anchoColumna=Math.min(rect.width*.42,Math.max(110,palabraMasAncha+66));board.style.setProperty('--ancho-columna-pareo',anchoColumna/scale+'px');
+  const caracter=contexto.measureText('0').width*scale,margen=(parseFloat(colCss.paddingLeft)+parseFloat(colCss.paddingRight)+parseFloat(colCss.borderLeftWidth)+parseFloat(colCss.borderRightWidth))*scale;
+  const separacion=6,cohete=30,textoConEspacio=palabraMasAncha+4*caracter+4;
+  const anchoColumna=Math.min(rect.width*.44,Math.max(105,textoConEspacio+margen+cohete+separacion));board.style.setProperty('--ancho-columna-pareo',anchoColumna/scale+'px');
+  const fuente=Math.min(14,Math.max(10.5,14*(anchoColumna-margen-cohete-separacion)/textoConEspacio));board.style.setProperty('--fuente-pareo-ajustada',fuente/scale+'px');
 
   const game=document.getElementById('game'),horizontal=game.classList.contains('pareo-horizontal'),header=game.querySelector('.encabezado');
   game.style.minHeight=innerHeight/scale+'px';

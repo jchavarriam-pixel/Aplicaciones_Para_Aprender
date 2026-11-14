@@ -58,3 +58,15 @@
 @container (max-width:240px){.herramientas .modos{grid-template-columns:minmax(0,1fr)}.herramientas .modos button{min-height:40px;flex-direction:row;padding:7px;align-items:center}}
 
 .herramientas .nombre-cabecera{display:flex;align-items:center;flex-wrap:wrap;gap:5px 8px;margin:9px 0 5px;font-size:12px;font-weight:650;line-height:1.3;min-width:0}.herramientas .nombre-cabecera input{display:block;flex:1 1 120px;width:100%;max-width:100%;min-width:0;min-height:36px;padding:6px 9px;font-size:15px;border:2px solid #cadbf0;border-radius:10px;background:#fff;color:#28436b}.configuracion-formulario #preferenciasIdiomaVoz{grid-column:1 / -1;border-top:1px solid #d5e1f2;padding-top:14px;margin-top:8px}
+/* En vertical, título y guía comparten la primera fila a partes iguales. */
+.app[data-orientacion=vertical] .herramientas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:max-content;align-content:start;align-items:stretch}
+.app[data-orientacion=vertical] .herramientas>.cabecera,.app[data-orientacion=vertical] .herramientas>.guia{grid-row:1;min-width:0;margin:0}
+.app[data-orientacion=vertical] .herramientas>.cabecera{grid-column:1;padding:9px;padding-top:42px;align-content:center}
+.app[data-orientacion=vertical] .herramientas>.guia{grid-column:2;grid-template-columns:minmax(0,1fr);align-content:center;padding:9px}
+.app[data-orientacion=vertical] .herramientas>.guia svg{display:none}
+.app[data-orientacion=vertical] .herramientas>.guia h2,.app[data-orientacion=vertical] .herramientas>.guia ol{grid-column:1;grid-row:auto}
+.app[data-orientacion=vertical] .herramientas>.guia ol{display:grid;gap:6px}
+.app[data-orientacion=vertical] .herramientas>.modos,.app[data-orientacion=vertical] .herramientas>.lateral{grid-column:1 / -1}
+.app[data-orientacion=vertical] .cabecera .titulo-aventura{font-size:clamp(16px,2.8vw,23px);gap:6px}
+.app[data-orientacion=vertical] .insignia-aventura{width:30px;height:30px;font-size:21px;border-radius:10px}
+.app[data-orientacion=vertical] .nombre-cabecera{margin:6px 0 3px}

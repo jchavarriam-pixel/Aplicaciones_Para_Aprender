@@ -137,9 +137,9 @@
       </div>
 
       <div class="symbol-tray" id="symbolTray" aria-label="signos">
-        <div class="symbol-card" data-symbol="<" style="background:#fde68a;color:#92400e">&lt;</div>
-        <div class="symbol-card" data-symbol="=" style="background:#a7f3d0;color:#065f46">=</div>
-        <div class="symbol-card" data-symbol=">" style="background:#c4b5fd;color:#4c1d95">&gt;</div>
+        <div class="symbol-card" data-symbol="<" role="button" tabindex="0" aria-label="menor que" style="background:#fde68a;color:#92400e"><span class="signo-grande" aria-hidden="true">&lt;</span><span class="nombre-signo">menor que</span></div>
+        <div class="symbol-card" data-symbol="=" role="button" tabindex="0" aria-label="igual que" style="background:#a7f3d0;color:#065f46"><span class="signo-grande" aria-hidden="true">=</span><span class="nombre-signo">igual que</span></div>
+        <div class="symbol-card" data-symbol=">" role="button" tabindex="0" aria-label="mayor que" style="background:#c4b5fd;color:#4c1d95"><span class="signo-grande" aria-hidden="true">&gt;</span><span class="nombre-signo">mayor que</span></div>
       </div>
       <div class="symbols-small">Mayor que &gt; &nbsp;&nbsp; Menor que &lt; &nbsp;&nbsp; Igual =</div>
 
@@ -406,7 +406,7 @@
     state.maxDigits = digits;
     Matematicas.guardar('signos.config.v1',{digitos:digits,ayuda:state.helpMode});
     $('#startScreen').style.display = 'flex';
-    document.querySelector('.ajustes-signos').open=false;
+
     $('#gameArea').classList.add('active');
     $('#levelBadge').textContent = `Nivel: hasta ${digits} dígito${digits>1?'s':''}`;
     newRound();
@@ -421,7 +421,7 @@
   }
 
   function changeLevel(){
-    cleanupDrag();document.querySelector('.ajustes-signos').open=true;
+    cleanupDrag();abrirConfiguracion();
   }
 
   function setHelpMode(mode){
@@ -630,11 +630,29 @@
   const app=document.querySelector('.app'), tools=document.createElement('aside');
   tools.className='herramientas-signos';app.prepend(tools);
   tools.append(document.querySelector('.title'),document.querySelector('.subtitle'));
-  const config=document.createElement('details');config.className='ajustes-signos';
-  config.innerHTML='<summary>⚙️ Configuración</summary>';tools.append(config);
-  config.append($('#startScreen'),document.querySelector('#gameArea .controls'));
-  const voice=document.createElement('div');voice.id='preferenciasSignos';config.append(voice);
-  tools.append(document.querySelector('.topbar'),$('#btnNew'),$('#btnReset'),$('#btnLevel'));
+  Object.assign(window.TEXTOS_INGLES,{'menor que':'less than','igual que':'equal to','mayor que':'greater than','Aplicar y cerrar':'Apply and close','Aplicar y volver al juego':'Apply and return to the game'});
+  const config=document.createElement('dialog');config.className='configuracion-signos';config.setAttribute('aria-labelledby','tituloConfiguracionSignos');
+  config.innerHTML='<header><h2 id="tituloConfiguracionSignos">Configuración</h2><button type="button" id="cerrarConfiguracionSignos" aria-label="Aplicar y cerrar">✕</button></header><div class="contenido-configuracion-signos"></div><button type="button" class="game-btn" id="aplicarConfiguracionSignos">Aplicar y volver al juego</button>';
+  document.body.append(config);
+  const contenido=config.querySelector('.contenido-configuracion-signos');
+  const nombre=document.createElement('label');nombre.className='nombre-signos';nombre.textContent='Nombre del niño';nombre.append($('#nameInput'));tools.querySelector('.title').after(nombre);
+  $('#startScreen .label').remove();
+  contenido.append($('#startScreen'),document.querySelector('#gameArea .controls'));
+  const voice=document.createElement('div');voice.id='preferenciasSignos';contenido.append(voice);
+  const abrir=document.createElement('button');abrir.type='button';abrir.className='game-btn configurar-signos';abrir.textContent='⚙ Configuración';tools.append(abrir);
+  tools.append(document.querySelector('.topbar'),$('#btnNew'),$('#btnReset'));
+  $('#btnLevel').hidden=true;
+  let digitosPendientes=1,ayudaPendiente=0,aplicando=false;const cambiosPendientes=new Set();
+  function abrirConfiguracion(){digitosPendientes=state.maxDigits;ayudaPendiente=state.helpMode;cambiosPendientes.clear();config.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('seleccionado',Number(b.dataset.digits)===digitosPendientes));config.style.zoom=String(1/(parseFloat(getComputedStyle(document.body).zoom)||1));config.showModal();}
+  const accesos=document.createElement('nav');accesos.className='accesos-signos';accesos.setAttribute('aria-label','Aplicaciones y configuración');abrir.before(accesos);const casa=document.createElement('a');casa.className='inicio-signos';casa.href='index.html';casa.textContent='⌂';casa.setAttribute('aria-label','Volver a las aplicaciones');casa.title='Volver a las aplicaciones';accesos.append(abrir);
+  const cabecera=document.createElement('header');cabecera.className='cabecera-comparacion';tools.prepend(cabecera);const insignia=document.createElement('span');insignia.className='insignia-comparacion';insignia.textContent='⚖️';insignia.setAttribute('aria-hidden','true');cabecera.append(insignia,tools.querySelector('.title'),nombre,tools.querySelector('.subtitle'),casa);cabecera.append(accesos);
+  abrir.onclick=abrirConfiguracion;
+  config.addEventListener('click',e=>{const nivel=e.target.closest('.level-btn'),ayuda=e.target.closest('.control-btn');if(nivel||ayuda){e.preventDefault();e.stopImmediatePropagation();if(nivel){digitosPendientes=Number(nivel.dataset.digits);config.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('seleccionado',b===nivel));}else{ayudaPendiente=['helpOff','helpRead','helpLive'].indexOf(ayuda.id);config.querySelectorAll('.control-btn').forEach(b=>b.classList.toggle('active',b===ayuda));}}},true);
+  config.addEventListener('change',e=>{if(!aplicando){e.stopImmediatePropagation();cambiosPendientes.add(e.target);}},true);
+  config.querySelector('#cerrarConfiguracionSignos').onclick=()=>config.close();
+  config.querySelector('#aplicarConfiguracionSignos').onclick=()=>config.close();
+  config.addEventListener('close',()=>{aplicando=true;for(const el of cambiosPendientes)el.dispatchEvent(new Event('change',{bubbles:true}));aplicando=false;setHelpMode(ayudaPendiente);startGame(digitosPendientes);});
+  $('#nameInput').addEventListener('change',()=>{state.childName=guardarNombreEstudiante($('#nameInput').value)||state.childName;});
   document.querySelectorAll('.decor,.family-legend,.footer').forEach(el=>el.remove());
   const saved=Matematicas.leer('signos.config.v1');
   cargarNombreDesdeIndex();attachEvents();
@@ -644,13 +662,14 @@
   startGame(state.maxDigits);
   IdiomaVoz.instalar('#preferenciasSignos');
   const fit=Matematicas.pantalla(app,(h,z)=>{
+    app.style.setProperty('--unidad-signos',(1/z)+'px');app.style.setProperty('--ancho-signos',(innerWidth/z)+'px');
     app.classList.toggle('compacta',h<450||innerWidth/z<300);
     const grid=$('#exercisesContainer'),r=grid.getBoundingClientRect();
     grid.style.setProperty('--columnas',r.width/z<350?1:2);
   });
   addEventListener('resize',()=>cleanupDrag());
   document.addEventListener('fullscreenchange',()=>cleanupDrag());
-  document.addEventListener('DOMContentLoaded',()=>{const credits=$('#creditos-aplicaciones');if(credits)tools.append(credits);fit();});
+  document.addEventListener('DOMContentLoaded',()=>{const credits=$('#creditos-aplicaciones');if(credits)document.body.append(credits);fit();});
 })();
 </script>
 

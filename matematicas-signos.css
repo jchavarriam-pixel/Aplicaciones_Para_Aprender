@@ -1,3 +1,52 @@
 html,body{height:100%;overflow:hidden}.app{height:var(--alto-util,100dvh);min-height:0;padding:8px;display:grid;grid-template-rows:minmax(0,25%) minmax(0,1fr);gap:10px;align-items:stretch}.app.horizontal{grid-template-columns:minmax(0,26%) minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
 .herramientas-signos{min-height:0;min-width:0;overflow:auto;background:#ffffffb8;padding:12px;border-radius:22px;display:flex;flex-direction:column;gap:10px;overscroll-behavior:contain}.title{font-size:clamp(20px,2.7vw,36px);line-height:1.1;margin:0}.subtitle{font-size:15px;border-radius:14px;margin:0;padding:8px}.ajustes-signos summary{font-weight:800;cursor:pointer;padding:10px;background:#ede9fe;border-radius:14px}.panel.start{width:100%;padding:10px;border:0;gap:10px;margin:0}.start-description{display:none}.label{font-size:15px}.name-input{width:100%;font-size:16px;padding:8px}.level-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.level-btn{font-size:14px;padding:8px}.topbar{display:grid;gap:8px}.help-text{text-align:left;font-size:14px}.herramientas-signos>.game-btn{flex:none;padding:10px}.controls{padding:8px;gap:6px}.control-btn{padding:7px;font-size:13px}
 .game.active{width:100%;min-width:0;min-height:0;display:grid;grid-template-rows:auto auto minmax(0,1fr) auto auto;gap:8px;align-items:stretch}.symbol-tray{position:static;padding:4px;gap:16px}.symbol-card{width:60px;height:60px;font-size:36px;border-radius:16px}.symbols-small{font-size:14px}.exercises{display:grid;grid-template-columns:repeat(var(--columnas,2),minmax(0,1fr));grid-auto-rows:minmax(0,1fr);gap:12px;max-height:540px;align-self:center;height:100%}.exercise-row{grid-template-columns:minmax(0,1fr) minmax(28px,18%) minmax(0,1fr);position:relative;gap:8px;padding:8px;min-height:0;max-height:150px;align-self:center;height:100%}.num-box{min-height:0;height:min(100%,74px);padding:2px;font-size:clamp(18px,3vw,36px);border-radius:12px}.drop-zone{width:100%;height:min(100%,60px);min-height:26px;border-width:2px;border-radius:12px;font-size:30px}.feedback{position:absolute;right:2px;top:-8px;width:20px;min-height:20px;font-size:20px}.message{display:none;min-height:0;font-size:14px;padding:6px}.message.show{display:block}.buttons{flex-wrap:nowrap}.buttons .game-btn{width:min(100%,360px);padding:10px;min-height:40px}.drag-ghost{width:60px;height:60px;font-size:36px}.compacta.app{padding:4px;gap:6px}.compacta .game.active{gap:4px}.compacta .symbol-card{width:34px;height:34px;font-size:25px;border-radius:10px;box-shadow:none}.compacta .symbols-small{font-size:11px}.compacta .exercises{gap:5px}.compacta .exercise-row{padding:3px;gap:3px;border-radius:10px}.compacta .num-box{font-size:16px}.compacta .drop-zone{font-size:22px;min-height:20px}.compacta .buttons .game-btn{min-height:28px;padding:4px;font-size:13px}.compacta .herramientas-signos{padding:6px}.compacta .message{font-size:11px;padding:2px}#creditos-aplicaciones{margin:4px 0;font-size:10px;flex:none}.congrats{backdrop-filter:blur(3px)}
+/* Ajustes independientes de la actividad; idioma y voz al final. */
+.configuracion-signos{box-sizing:border-box;width:min(760px,calc(100vw - 24px));max-height:calc(100dvh - 24px);padding:20px;border:2px solid #cedaf2;border-radius:22px;background:#fff;color:#283957;overflow:auto;box-shadow:0 20px 70px #17243e44;font-family:system-ui,sans-serif}
+.configuracion-signos::backdrop{background:#17243e88}
+.configuracion-signos header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}.configuracion-signos h2{margin:0;font-size:24px}.configuracion-signos header button{width:40px;height:40px;border:0;border-radius:12px;background:#edf1fc;font-size:22px;cursor:pointer}
+.configuracion-signos .panel.start{display:flex!important;max-width:none;box-sizing:border-box}.configuracion-signos .controls{display:flex;flex-wrap:wrap;justify-content:center}.configuracion-signos .level-btn.seleccionado{outline:3px solid #4e62ca;outline-offset:2px}.configuracion-signos #preferenciasSignos{margin-top:18px;padding-top:16px;border-top:1px solid #d5e1f2}.configuracion-signos>#aplicarConfiguracionSignos{width:100%;margin-top:18px;background:#455ac5;color:white;font-size:17px;padding:14px;white-space:normal}
+.nombre-signos{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:13px;font-weight:700}.nombre-signos input{flex:1;min-width:0;box-sizing:border-box}.herramientas-signos>.configurar-signos{font-size:16px;background:#e7e9ff;color:#343d90}.herramientas-signos button{white-space:normal;overflow-wrap:anywhere}.herramientas-signos #btnLevel[hidden]{display:none}
+
+/* Centrado del formulario, independiente de los márgenes generales. */
+.configuracion-signos{position:fixed;inset:0;margin:auto}
+
+.accesos-signos{display:flex;flex-wrap:wrap;gap:8px;align-items:center;flex:none}.inicio-signos{display:grid;place-items:center;box-sizing:border-box;width:42px;height:42px;flex:none;border:2px solid #d3dff2;border-radius:13px;background:#fff;color:#38568a;text-decoration:none;font:30px/1 system-ui}.accesos-signos .configurar-signos{flex:0 1 auto;min-height:42px;padding:8px 13px;font-size:15px;background:#e7e9ff;color:#343d90;max-width:100%}
+#gameArea .buttons #btnCheck{box-sizing:border-box;width:min(100%,520px);min-height:58px;padding:12px 20px;font-size:clamp(21px,2.5vw,27px);font-weight:800;border-radius:17px;box-shadow:0 4px 0 #176d3433}
+@media(max-height:450px){#gameArea .buttons #btnCheck{min-height:44px;padding:7px 14px;font-size:21px}}
+
+/* Familia visual de Explora y compara y Ordenar objetos. */
+.cabecera-comparacion{position:relative;display:grid;grid-template-columns:36px minmax(0,1fr);align-items:center;gap:7px;padding:12px 48px 12px 10px;border:1px solid #d9e4fa;border-radius:18px;background:linear-gradient(125deg,#e2f5ff,#f4eaff);box-shadow:0 4px 12px #4859a00a;font-family:system-ui,sans-serif;flex:none}
+.cabecera-comparacion .insignia-comparacion{display:grid;place-items:center;width:36px;height:36px;background:#fff;border-radius:12px;font-size:24px;box-shadow:0 3px 8px #42589c15}
+.cabecera-comparacion h1{font:750 clamp(19px,1.8vw,27px)/1.15 system-ui;color:#343d90;text-align:left;text-shadow:none;margin:0;overflow-wrap:anywhere}
+.cabecera-comparacion .nombre-mayor,.cabecera-comparacion .nombre-signos{grid-column:1 / -1;background:transparent;border:0;box-shadow:none;padding:0;margin:3px 0;font:650 12px/1.3 system-ui;color:#33496c}
+.cabecera-comparacion .nombre-mayor input,.cabecera-comparacion .nombre-signos input{border:2px solid #cadbf0;border-radius:10px;background:#fff;color:#28436b;font:600 15px system-ui;min-height:36px;padding:6px 9px}
+.cabecera-comparacion>p{grid-column:1 / -1;font:400 12px/1.4 system-ui;color:#586b88;background:transparent;padding:0;margin:0;text-align:left}
+.cabecera-comparacion .inicio-mayor,.cabecera-comparacion .inicio-signos{position:absolute;right:7px;top:7px;width:32px;height:32px;border-radius:10px;font-size:23px}
+.accesos-mayor,.accesos-signos{display:flex;justify-content:stretch}.accesos-mayor .boton-configuracion-mayor,.accesos-signos .configurar-signos{width:100%;border:2px solid #d2dded;border-radius:14px;background:#fff;color:#435d88;font:700 14px/1.3 system-ui;padding:9px 12px;min-height:42px;box-shadow:0 2px 0 #cad7eb44}
+
+/* Configuración integrada en el encabezado, sin una fila exterior adicional. */
+.cabecera-comparacion>.accesos-mayor,.cabecera-comparacion>.accesos-signos{grid-column:1 / -1;justify-content:flex-start}
+.cabecera-comparacion .accesos-mayor .boton-configuracion-mayor,.cabecera-comparacion .accesos-signos .configurar-signos{width:auto;min-height:36px;padding:7px 11px;font-size:13px}
+.cabecera-comparacion .nombre-mayor .name-input,.cabecera-comparacion .nombre-signos .name-input{text-align:left;margin:0;max-width:100%;box-shadow:none}
+.cabecera-comparacion .nombre-mayor .section-title{text-align:left;font-size:12px;margin-bottom:4px}
+
+.app:not(.horizontal) .cabecera-comparacion{grid-template-columns:36px minmax(0,1fr) auto;padding-right:48px}
+.app:not(.horizontal) .cabecera-comparacion h1{grid-column:2 / -1}
+.app:not(.horizontal) .cabecera-comparacion .nombre-mayor,.app:not(.horizontal) .cabecera-comparacion .nombre-signos{grid-column:1 / 3;grid-row:2;min-width:0;text-align:left}
+.app:not(.horizontal) .cabecera-comparacion>.accesos-mayor,.app:not(.horizontal) .cabecera-comparacion>.accesos-signos{grid-column:3;grid-row:2;align-self:end;justify-content:flex-end}
+.app:not(.horizontal) .cabecera-comparacion .nombre-mayor input{max-width:250px}
+/* En pantalla vertical, las comparaciones se leen de arriba hacia abajo. */
+.app:not(.horizontal) #exercisesContainer{grid-template-columns:minmax(0,1fr);gap:10px}
+.app:not(.horizontal) .exercise-row{box-sizing:border-box;width:100%;max-width:660px;justify-self:center}
+/* Paleta flotante siempre visible, con su espacio reservado sobre los ejercicios. */
+#gameArea.game.active{grid-template-rows:auto minmax(0,1fr) auto auto}
+#symbolTray{position:sticky;top:0;z-index:12;justify-self:center;width:min(100%,calc(380 * var(--unidad-signos,1px)));box-sizing:border-box;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:calc(12 * var(--unidad-signos,1px));padding:calc(10 * var(--unidad-signos,1px));margin:0;border:2px solid #d6def4;border-radius:calc(20 * var(--unidad-signos,1px));background:#fff;box-shadow:0 6px 18px #34487925;flex:none}
+#symbolTray .symbol-card{box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;width:100%;height:calc(88 * var(--unidad-signos,1px));min-width:0;border-radius:calc(14 * var(--unidad-signos,1px));box-shadow:0 3px 0 #31436425}
+#symbolTray .signo-grande{font:850 calc(56 * var(--unidad-signos,1px))/1 system-ui;pointer-events:none}
+#symbolTray .nombre-signo{font:750 calc(13 * var(--unidad-signos,1px))/1.25 system-ui;white-space:nowrap;pointer-events:none}
+#gameArea .symbols-small{display:none}
+#exercisesContainer{grid-row:2}#messageBox{grid-row:3}#gameArea>.buttons{grid-row:4}
+@media(max-height:500px){#symbolTray{padding:calc(6 * var(--unidad-signos,1px));gap:calc(10 * var(--unidad-signos,1px))}#symbolTray .symbol-card{height:calc(64 * var(--unidad-signos,1px))}#symbolTray .signo-grande{font-size:calc(40 * var(--unidad-signos,1px))}#symbolTray .nombre-signo{font-size:calc(12 * var(--unidad-signos,1px))}}
+
+.app{box-sizing:border-box;width:var(--ancho-signos,100%);max-width:none}

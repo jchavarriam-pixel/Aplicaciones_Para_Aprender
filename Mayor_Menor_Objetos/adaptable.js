@@ -25,7 +25,7 @@
  document.querySelector('.pregunta-fila').append(document.getElementById('controlLlenado'));
  const titulo=document.querySelector('.cabecera h1');titulo.classList.add('titulo-aventura');
  const insignia=document.createElement('span');insignia.className='insignia-aventura';insignia.textContent='🔎';insignia.setAttribute('aria-hidden','true');titulo.prepend(insignia);
- lateral.append(document.getElementById('creditos-aplicaciones'));
+ document.body.append(document.getElementById('creditos-aplicaciones'));
  app.append(actividad);document.querySelector('.distribucion').remove();
  let proporcion=.25;
  try{const n=Number(localStorage.getItem('exploraCompara.anchoHerramientas'));if(n>=.18&&n<=.48)proporcion=n;}catch{}

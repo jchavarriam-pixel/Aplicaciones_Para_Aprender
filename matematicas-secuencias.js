@@ -1,7 +1,7 @@
 (()=>{
  const app=document.querySelector('.app'),tools=document.createElement('aside');tools.className='herramientas-secuencias';app.prepend(tools);tools.append(document.querySelector('.topbar'));
  const config=document.createElement('details');config.className='ajustes-secuencias';config.innerHTML='<summary>⚙️ Configuración</summary><div id="preferenciasSecuencias"></div>';tools.append(config);config.append(els.configScreen);
- tools.append(document.querySelector('.exercise-toolbar'));for(const id of ['newRoundBtn','clearBtn','readBtn'])tools.append($(id));tools.append(document.getElementById('creditos-aplicaciones'));
+ tools.append(document.querySelector('.exercise-toolbar'));for(const id of ['newRoundBtn','clearBtn','readBtn'])tools.append($(id));document.body.append(document.getElementById('creditos-aplicaciones'));
  document.querySelector('.footer').remove();document.querySelector('.intro').remove();document.querySelector('.bottom-actions-panel h2').remove();els.startBtn.style.display='none';document.getElementById('configMessage').remove();
  IdiomaVoz.instalar('#preferenciasSecuencias',{cambioIdioma:()=>updateSummary()});
  const pager=document.createElement('div');pager.className='secuencias-paginas';pager.innerHTML='<button id="seqPrev">◀</button><span id="seqPage"></span><button id="seqNext">▶</button>';document.querySelector('.bottom-actions').prepend(pager);

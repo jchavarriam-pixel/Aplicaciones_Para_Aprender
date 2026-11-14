@@ -4,7 +4,7 @@
  const voice=document.createElement('div');voice.id='preferenciasOrden';config.append(voice);
  tools.append(document.querySelector('.hint-controls'));
  for(const id of ['symbolsBtn','newBtn','resetBtn','setupBtn'])tools.append(document.getElementById(id));
- tools.append(document.getElementById('creditos-aplicaciones'));
+ document.body.append(document.getElementById('creditos-aplicaciones'));
  document.querySelector('.credit').remove();document.getElementById('startBtn').parentElement.style.display='none';
  const saved=Matematicas.leer('ordenNumeros.config.v1');
  state.mode=['asc','desc','mix'].includes(saved.mode)?saved.mode:'asc';state.digits=[1,2,3,4].includes(saved.digits)?saved.digits:1;state.count=Number.isInteger(saved.count)&&saved.count>=3&&saved.count<=15?saved.count:5;if(state.digits===1)state.count=Math.min(11,state.count);

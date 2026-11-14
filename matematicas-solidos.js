@@ -10,7 +10,7 @@
   const toolbar=view.querySelector('.challenge-toolbar');if(toolbar){section.append(toolbar);const check=toolbar.querySelector('.success'),next=toolbar.querySelector('.primary.hidden');const actions=document.createElement('div');actions.className='acciones-solidos';actions.append(check,next);view.append(actions);}
  }
  document.querySelector('[data-mode-tools="presentation"]').append(document.querySelector('.controls-panel'),document.getElementById('solidStrip'),document.getElementById('dimensionControls'));
- tools.append(document.getElementById('cornerRead'),document.getElementById('cornerAnimate'),document.getElementById('creditos-aplicaciones'));document.querySelector('.app-shell>footer').remove();
+ tools.append(document.getElementById('cornerRead'),document.getElementById('cornerAnimate'));document.body.append(document.getElementById('creditos-aplicaciones'));document.querySelector('.app-shell>footer').remove();
  const change=()=>{state.config.language=IdiomaVoz.idioma;document.getElementById('languageSelect').value=IdiomaVoz.idioma;Matematicas.almacen.setItem(CONFIG_KEY,JSON.stringify(state.config));applyLanguage();selectSolid(state.currentSolid);newClassification();startEvaluation();};
  IdiomaVoz.instalar('#preferenciasSolidos',{cambioIdioma:change});
  const fit=Matematicas.pantalla(app,(h,z)=>{

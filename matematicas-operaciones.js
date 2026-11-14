@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded',()=>{
  const config=document.createElement('details');config.className='ajustes-operaciones';config.innerHTML='<summary>⚙️ Configuración</summary><div id="preferenciasOperaciones"></div>';tools.append(config);config.append(document.getElementById('menuScreen'));
  tools.append(document.querySelector('.top-bar'),document.getElementById('hintBar'));
  for(const el of [...document.querySelector('.actions').children])if(el.id!=='checkBtn')tools.append(el);
- config.append(document.querySelector('.audio-settings'));tools.append(document.getElementById('creditos-aplicaciones'));
+ config.append(document.querySelector('.audio-settings'));document.body.append(document.getElementById('creditos-aplicaciones'));
  document.querySelectorAll('.footer-credit,#levelScreen>p:last-child,[onclick="startGameValidated()"]').forEach(e=>e.remove());
  const saved=Matematicas.leer('operaciones.config.v1');
  if([2,3,4].includes(saved.digits))digits=saved.digits;

@@ -5,7 +5,7 @@
  const guide=document.createElement('div');guide.className='guia-problemas';tools.append(guide);guide.append(document.querySelector('.rightControlArea'),document.querySelector('.panelHeader'),answerTitle,numberGrid,feedback,equationBox);
  const play=document.querySelector('#problemScreen .layout');play.append(storyBox,checkBtn);play.querySelector('aside.card').style.display='none';
  guide.append(backBtn,newBtn,resetAnimationBtn,speakBtn,animateBtn);
- tools.append(document.getElementById('creditos-aplicaciones'));
+ document.body.append(document.getElementById('creditos-aplicaciones'));
  IdiomaVoz.instalar('#preferenciasProblemas',{cambioIdioma:()=>{languageSelect.value=IdiomaVoz.idioma;applyStaticLanguage();if(state.currentProblem)addOperationBuilder();}});
  Matematicas.pantalla(app,(h,z)=>{app.style.setProperty('--unidad',1/z+'px');app.classList.toggle('compacta',h<500||innerWidth/z<300);});
 })();

@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded',()=>{
  const intro=document.createElement('p');intro.textContent='Resuelve la operación. Arrastra los dígitos a las casillas.';tools.append(intro);
  const config=document.createElement('details');config.className='ajustes-posicional';config.innerHTML='<summary>⚙️ Configuración</summary><div id="preferenciasPosicional"></div>';tools.append(config);config.append($('menu'));
  for(const id of ['customScreen','houseScreen']){const screen=$(id),section=document.createElement('section');section.dataset.forScreen=id;section.append(screen.querySelector('.topbar'),screen.querySelector('.card'));config.append(section);}
- const dynamic=document.createElement('div');dynamic.id='controlesPosicional';tools.append(dynamic);tools.append($('creditos-aplicaciones'));document.querySelector('.footer').remove();
+ const dynamic=document.createElement('div');dynamic.id='controlesPosicional';tools.append(dynamic);document.body.append($('creditos-aplicaciones'));document.querySelector('.footer').remove();
  const saved=Matematicas.leer('valorPosicional.config.v1');if([2,3,4].includes(saved.digits))house.digits=saved.digits;if(['+','-','mix'].includes(saved.op))house.opMode=saved.op;
  $('operationInput').value=typeof saved.operation==='string'?saved.operation:'345+128';setShowLeadingZeros(saved.zeros===true);audioHelpOn=saved.audio===true;
  document.querySelectorAll('[data-d]').forEach(e=>e.classList.toggle('active',+e.dataset.d===house.digits));document.querySelectorAll('[data-op]').forEach(e=>e.classList.toggle('active',e.dataset.op===house.opMode));

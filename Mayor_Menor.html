@@ -559,6 +559,16 @@
     }
 
     function generateUniqueNumbers(amount) {
+      const rango=window.seleccionNumerosMayor;
+      if(rango?.modo==='rango'){
+        const resultado=[],usados=new Set(),capacidad=rango.max-rango.min+1;
+        for(let i=0;i<amount;i++){
+          if(usados.size>=capacidad)usados.clear();
+          let n;do{n=randomInt(rango.min,rango.max);}while(usados.has(n)||(i%2===1&&n===resultado[i-1]));
+          usados.add(n);resultado.push(n);
+        }
+        return resultado;
+      }
       const used = new Set();
       const plan = buildDigitPlan(amount);
       const numbers = [];
@@ -610,7 +620,7 @@
       window.CelebracionMayor?.detener();
       exercises = generateExercises();
       isPageSolved = false;
-      document.getElementById('pageLabel').textContent = `${exercisesPerPage} ejercicio${exercisesPerPage > 1 ? 's' : ''} por página • ${selectedDigits} dígito${selectedDigits > 1 ? 's' : ''}`;
+      document.getElementById('pageLabel').textContent = `${exercisesPerPage} ejercicio${exercisesPerPage > 1 ? 's' : ''} por página • ${window.seleccionNumerosMayor?.modo==='rango' ? (IdiomaVoz.idioma==='en'?'Range: ':'Rango: ')+window.seleccionNumerosMayor.min+'–'+window.seleccionNumerosMayor.max : selectedDigits+' '+(IdiomaVoz.idioma==='en'?'digits':'dígitos')}`;
       renderExercises();
       updateHint();
       updateCheckButton();
