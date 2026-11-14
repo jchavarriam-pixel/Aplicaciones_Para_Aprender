@@ -1,28 +1,48 @@
 (()=>{
- const app=document.querySelector('.app'),panel=document.querySelector('.panel'),tools=document.createElement('aside');tools.className='herramientas-orden';panel.prepend(tools);tools.append(document.querySelector('.header'));
- const config=document.createElement('details');config.className='ajustes-orden';config.innerHTML='<summary>⚙️ Configuración</summary>';tools.append(config);config.append(document.querySelector('#setup'));
+ const app=document.querySelector('.app'),panel=document.querySelector('.panel'),game=document.getElementById('game'),tools=document.createElement('aside');tools.className='herramientas-orden';panel.prepend(tools);
+ const header=document.querySelector('.header');tools.append(header);header.classList.add('cabecera-orden');
+ const nombre=document.getElementById('childName').closest('.card');nombre.className='nombre-orden';nombre.querySelector('.card-title').textContent='Nombre del niño';header.querySelector('h1').after(nombre);
+ const casa=document.createElement('a');casa.className='inicio-orden';casa.href='index.html';casa.textContent='⌂';casa.title='Volver a las aplicaciones';casa.setAttribute('aria-label',casa.title);header.append(casa);
+ const guia=document.createElement('section');guia.className='guia-orden';guia.innerHTML='<h2>Así jugamos</h2><div aria-hidden="true" class="ejemplo-orden">① → ② → ③</div><p>Arrastra las fichas a los espacios, siguiendo el orden indicado. Después pulsa Revisar.</p>';tools.append(guia);
+ header.querySelector('.subtitle').hidden=true;
+ const config=document.createElement('dialog');config.className='ajustes-orden formulario-orden';config.setAttribute('aria-labelledby','tituloAjustesOrden');config.innerHTML='<header><h2 id="tituloAjustesOrden">Configuración</h2><button type="button" class="cerrar-orden" aria-label="Aplicar y cerrar">✕</button></header>';
+ config.append(document.querySelector('#setup'));document.body.append(config);
+ const apoyos=document.createElement('section');apoyos.className='apoyos-orden';apoyos.innerHTML='<label><input id="permitirPista1Orden" type="checkbox"> Mostrar Pista 1</label><label><input id="permitirPista2Orden" type="checkbox"> Mostrar Pista 2</label><label><input id="permitirSimbolosOrden" type="checkbox"> Mostrar signos de comparación</label><label><input id="leerOrden" type="checkbox"> Leer instrucciones y respuestas</label>';config.append(apoyos);
  const voice=document.createElement('div');voice.id='preferenciasOrden';config.append(voice);
- tools.append(document.querySelector('.hint-controls'));
- for(const id of ['symbolsBtn','newBtn','resetBtn','setupBtn'])tools.append(document.getElementById(id));
- document.body.append(document.getElementById('creditos-aplicaciones'));
- document.querySelector('.credit').remove();document.getElementById('startBtn').parentElement.style.display='none';
- const saved=Matematicas.leer('ordenNumeros.config.v1');
+ const aceptar=document.createElement('button');aceptar.className='btn aplicar-orden';aceptar.textContent='Aplicar y volver al juego';config.append(aceptar);
+ const abrir=document.getElementById('setupBtn');abrir.textContent='⚙ Configuración';tools.append(abrir,document.querySelector('.hint-controls'));
+ const acciones=document.createElement('div');acciones.className='acciones-orden';tools.append(acciones);for(const id of ['symbolsBtn','newBtn','resetBtn'])acciones.append(document.getElementById(id));
+ document.body.append(document.getElementById('creditos-aplicaciones'));document.querySelector('.credit').remove();document.getElementById('startBtn').parentElement.hidden=true;
+ const saved=Matematicas.leer('ordenNumeros.config.v1'),preferencias=Matematicas.leer('ordenNumeros.apoyos.v1');
  state.mode=['asc','desc','mix'].includes(saved.mode)?saved.mode:'asc';state.digits=[1,2,3,4].includes(saved.digits)?saved.digits:1;state.count=Number.isInteger(saved.count)&&saved.count>=3&&saved.count<=15?saved.count:5;if(state.digits===1)state.count=Math.min(11,state.count);
- for(const [g,k]of [['modeOptions','mode'],['digitOptions','digits'],['countOptions','count']]){
-  selectOption('#'+g,document.querySelector(`#${g} [data-${k}="${state[k]}"]`));
-  document.getElementById(g).addEventListener('click',()=>{if(state.count===null)state.count=11;newRound();fit();});
- }
- updateCountLimits();document.getElementById('startBtn').onclick();
+ const pista1=document.getElementById('permitirPista1Orden'),pista2=document.getElementById('permitirPista2Orden'),pistas={get checked(){return pista1.checked||pista2.checked;}},simbolos=document.getElementById('permitirSimbolosOrden'),lectura=document.getElementById('leerOrden');pista1.checked=(preferencias.pista1??preferencias.pistas)!==false;pista2.checked=(preferencias.pista2??preferencias.pistas)!==false;simbolos.checked=preferencias.simbolos!==false;lectura.checked=preferencias.lectura!==false;
+ const hablarOriginal=speak;speak=text=>lectura.checked?hablarOriginal(text):Promise.resolve();
+ function apoyosVisibles(){document.getElementById('hint1Btn').hidden=!pista1.checked;document.getElementById('hint2Btn').hidden=!pista2.checked;if(!pista1.checked&&pista2.checked)document.getElementById('hint2Btn').disabled=false;document.querySelector('.hint-controls').hidden=!pistas.checked;document.getElementById('symbolsBtn').hidden=!simbolos.checked;}
+ const rondaOriginal=newRound;newRound=()=>{rondaOriginal();apoyosVisibles();};
+ for(const [g,k]of [['modeOptions','mode'],['digitOptions','digits'],['countOptions','count']])selectOption('#'+g,document.querySelector(`#${g} [data-${k}="${state[k]}"]`));
+ updateCountLimits();document.getElementById('startBtn').onclick();apoyosVisibles();
+ let aplicando=false;const cambios=new Set(),elecciones=new Map();
+ abrir.onclick=()=>{cancelOrderingDrag();cambios.clear();elecciones.clear();config.style.zoom=String(1/Matematicas.escala());config.showModal();};
+ config.addEventListener('click',e=>{const opcion=e.target.closest('.option:not(.disabled)');if(opcion&&!aplicando){e.preventDefault();e.stopImmediatePropagation();elecciones.set(opcion.parentElement.id,opcion);selectOption('#'+opcion.parentElement.id,opcion);if(opcion.dataset.digits)document.querySelectorAll('#countOptions .option').forEach(el=>el.classList.toggle('disabled',+opcion.dataset.digits===1&&+el.dataset.count>11));}},true);
+ config.addEventListener('change',e=>{if(!aplicando){e.stopImmediatePropagation();cambios.add(e.target);}},true);
+ config.querySelector('.cerrar-orden').onclick=()=>config.close();aceptar.onclick=()=>config.close();
+ config.addEventListener('close',()=>{aplicando=true;for(const el of elecciones.values())el.click();for(const el of cambios)el.dispatchEvent(new Event('change',{bubbles:true}));aplicando=false;if(!state.count)state.count=11;state.name=guardarNombreEstudiante(document.getElementById('childName').value)||'Gabriel';Matematicas.guardar('ordenNumeros.apoyos.v1',{pista1:pista1.checked,pista2:pista2.checked,simbolos:simbolos.checked,lectura:lectura.checked});apoyosVisibles();newRound();fit();});
+ document.getElementById('childName').addEventListener('change',()=>{state.name=guardarNombreEstudiante(document.getElementById('childName').value)||state.name;});
+ Object.assign(window.TEXTOS_INGLES,{'Así jugamos':'How to play','Arrastra las fichas a los espacios, siguiendo el orden indicado. Después pulsa Revisar.':'Drag the cards into the spaces in the indicated order. Then press Check.','Aplicar y cerrar':'Apply and close','Aplicar y volver al juego':'Apply and return to the game','Mostrar Pista 1':'Show Hint 1','Mostrar Pista 2':'Show Hint 2','Mostrar pistas':'Show hints','Mostrar signos de comparación':'Show comparison signs','Leer instrucciones y respuestas':'Read instructions and answers','Ajustar ancho de la barra de herramientas':'Resize the tools panel'});
  IdiomaVoz.instalar('#preferenciasOrden',{cambioIdioma:()=>renderSlots()});
+ let proporcion=.26;const anchoGuardado=Matematicas.leer('ordenNumeros.ancho.v1');if(anchoGuardado.valor>=.18&&anchoGuardado.valor<=.45)proporcion=anchoGuardado.valor;
+ const borde=document.createElement('div');borde.className='borde-orden';borde.tabIndex=0;borde.setAttribute('role','separator');borde.setAttribute('aria-orientation','vertical');borde.setAttribute('aria-label','Ajustar ancho de la barra de herramientas');panel.append(borde);
+ const pistasFlotantes=document.createElement('div');pistasFlotantes.className='pistas-flotantes-orden';pistasFlotantes.hidden=true;document.body.append(pistasFlotantes);const botonesPistas=document.querySelector('.hint-controls');
+ function situarPistas(){const flotante=app.classList.contains('horizontal')&&app.classList.contains('panel-oculto')&&pistas.checked;pistasFlotantes.hidden=!flotante;if(flotante){if(botonesPistas.parentElement!==pistasFlotantes)pistasFlotantes.append(botonesPistas);}else if(botonesPistas.parentElement!==tools)abrir.after(botonesPistas);}
+ const ocultar=document.createElement('button');ocultar.className='alternar-panel-orden';ocultar.type='button';ocultar.setAttribute('aria-expanded','true');ocultar.setAttribute('aria-controls','herramientasOrden');ocultar.setAttribute('aria-label','Ocultar panel lateral');ocultar.title='Ocultar panel lateral';tools.id='herramientasOrden';ocultar.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16"/></svg>';panel.append(ocultar);ocultar.onclick=()=>{const oculto=app.classList.toggle('panel-oculto');ocultar.setAttribute('aria-expanded',String(!oculto));ocultar.setAttribute('aria-label',IdiomaVoz.t(oculto?'Mostrar panel lateral':'Ocultar panel lateral'));ocultar.title=IdiomaVoz.t(oculto?'Mostrar panel lateral':'Ocultar panel lateral');fit();};Object.assign(window.TEXTOS_INGLES,{'Ocultar panel lateral':'Hide sidebar','Mostrar panel lateral':'Show sidebar'});
  const fit=Matematicas.pantalla(app,(h,z)=>{
-  const game=document.getElementById('game');app.classList.toggle('compacta',h<450||innerWidth/z<300);
-  const width=game.getBoundingClientRect().width/z;
-  app.style.setProperty('--unidad',1/z+'px');
-  const cols=Math.min(state.count,Math.max(3,Math.floor(width/(66/z))));
-  game.style.setProperty('--columnas',cols);
-  game.style.setProperty('--filas',Math.ceil(state.count/cols));
-  game.style.setProperty('--fuente-numero',Math.max(12/z,Math.min(34,(width/cols-18)/Math.max(2,state.digits)*1.4))+'px');
+  document.documentElement.style.setProperty('--inverso-orden',String(1/z));document.documentElement.style.setProperty('--ancho-orden-documento',innerWidth/z+'px');document.documentElement.style.setProperty('--alto-orden-documento',h+'px');app.style.setProperty('--ancho-vista',innerWidth/z+'px');app.style.setProperty('--unidad',1/z+'px');app.classList.toggle('compacta',h*z<500||innerWidth<400);
+  situarPistas();pistasFlotantes.style.zoom=String(1/z);panel.style.setProperty('--ancho-herramientas',proporcion*100+'%');borde.hidden=!app.classList.contains('horizontal')||app.classList.contains('panel-oculto');ocultar.hidden=!app.classList.contains('horizontal');borde.style.left=(panel.clientWidth*proporcion)+'px';
+  const width=game.getBoundingClientRect().width/z,cols=Math.min(state.count,Math.max(2,Math.floor(width/(78/z))));game.style.setProperty('--columnas',cols);game.style.setProperty('--filas',Math.ceil(state.count/cols));
+  const alto=game.getBoundingClientRect().height/z,filas=Math.ceil(state.count/cols),altoFila=Math.min(80/z,Math.max(38/z,(alto-(state.hintLevel?195:145)/z)/(2*filas)));game.style.setProperty('--alto-fila',altoFila+'px');game.style.setProperty('--aire-orden',Math.max(14,Math.min(58,(alto*z-2*filas*altoFila*z-(state.hintLevel?175:125))/3))/z+'px');
+  game.style.setProperty('--fuente-numero',Math.max(12/z,Math.min(32/z,(width/cols-16/z)/Math.max(2,state.digits)*1.1))+'px');
+  if(!app.classList.contains('horizontal')){const alto=e=>e.hidden?0:e.getBoundingClientRect().height/z,natural=Math.max(alto(header),alto(guia))+Math.max(alto(abrir),alto(botonesPistas))+alto(acciones)+30;panel.style.setProperty('--alto-herramientas',Math.min(natural,Math.max(120/z,h-270/z))+'px');}
  });
- new ResizeObserver(fit).observe(document.getElementById('game'));
- addEventListener('resize',cancelOrderingDrag);document.addEventListener('fullscreenchange',cancelOrderingDrag);
+ borde.onpointerdown=e=>{e.preventDefault();borde.setPointerCapture(e.pointerId);};borde.onpointermove=e=>{if(borde.hasPointerCapture(e.pointerId)){const r=panel.getBoundingClientRect();proporcion=Math.max(.18,Math.min(.45,(e.clientX-r.left)/r.width));fit();}};borde.onpointerup=()=>Matematicas.guardar('ordenNumeros.ancho.v1',{valor:proporcion});borde.onkeydown=e=>{if(['ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();proporcion=Math.max(.18,Math.min(.45,proporcion+(e.key==='ArrowLeft'?-.02:.02)));Matematicas.guardar('ordenNumeros.ancho.v1',{valor:proporcion});fit();}};
+ new ResizeObserver(fit).observe(game);new MutationObserver(fit).observe(document.getElementById('tray'),{childList:true});new MutationObserver(fit).observe(document.getElementById('slots'),{childList:true});addEventListener('resize',cancelOrderingDrag);document.addEventListener('fullscreenchange',cancelOrderingDrag);document.fonts.ready.then(fit);
 })();
