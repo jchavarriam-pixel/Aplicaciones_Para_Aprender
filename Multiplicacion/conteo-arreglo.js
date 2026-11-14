@@ -54,7 +54,7 @@
       const atributo=eje==='filas'?'fila':'columna';
       for(const celda of this.arreglo.querySelectorAll(`.celda[data-${atributo}="${indice}"]`)){
         celda.classList.add('contando');celda.dataset.eje=eje;
-        const pieza=celda.querySelector('.pieza');pieza.classList.add('girando');pieza.style.animationDelay=(Number(eje==='filas'?celda.dataset.columna:celda.dataset.fila)-1)*35+'ms';
+        const pieza=celda.querySelector('.pieza');pieza.classList.add('girando');pieza.style.animationDelay=(Number(eje==='filas'?celda.dataset.columna:celda.dataset.fila)-1)*18+'ms';
       }
       const etiqueta=this.arreglo.querySelector(`[data-etiqueta-${atributo}="${indice}"]`);etiqueta?.removeAttribute('hidden');etiqueta?.classList.add('etiqueta-activa');
       this.arreglo.dataset.conteo=eje;this.arreglo.dataset.paso=String(indice);this.campana(indice,eje);
@@ -66,14 +66,14 @@
         for(const [eje,cantidad]of [['filas',this.filas],['columnas',this.columnas]]){
           if(ticket!==this.ticket)return;
           this.arreglo.querySelectorAll('.contando,.girando,.etiqueta-activa').forEach(e=>e.classList.remove('contando','girando','etiqueta-activa'));
-          const intro=eje==='filas'?this.t(`Observa: los objetos forman ${cantidad} ${cantidad===1?'fila':'filas'}. Vamos a ${cantidad===1?'contarla':'contarlas'}.`,`Look: the shapes form ${cantidad} ${cantidad===1?'row':'rows'}. Let’s count them.`):this.t(`Ahora contamos las columnas. Los objetos forman ${cantidad} ${cantidad===1?'columna':'columnas'}.`,`Now count the columns. The shapes form ${cantidad} ${cantidad===1?'column':'columns'}.`);
+          const intro=eje==='filas'?this.t('Contemos las filas.','Let’s count the rows.'):this.t('Ahora las columnas.','Now the columns.');
           this.alEstado(intro);this.arreglo.dataset.conteo=eje;delete this.arreglo.dataset.paso;
-          await Promise.all([this.frase(intro,ticket),this.esperar(850,ticket)]);
+          await Promise.all([this.frase(intro,ticket),this.esperar(400,ticket)]);
           for(let i=1;i<=cantidad;i++){
             if(ticket!==this.ticket)return;this.marcar(eje,i);
-            const texto=eje==='filas'?this.t(`Fila ${i}.`,`Row ${i}.`):this.t(`Columna ${i}.`,`Column ${i}.`);
-            this.alEstado(texto);
-            await Promise.all([this.frase(texto,ticket),this.esperar(1120,ticket)]);
+            const texto=String(i);
+            this.alEstado(eje==='filas'?this.t(`Fila ${i}`,`Row ${i}`):this.t(`Columna ${i}`,`Column ${i}`));
+            await Promise.all([this.frase(texto,ticket),this.esperar(560,ticket)]);
           }
         }
         if(ticket!==this.ticket)return;
