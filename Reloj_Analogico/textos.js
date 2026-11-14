@@ -11,3 +11,5 @@ window.TEXTOS_INGLES["Cifra 6"]="Digit 6";
 window.TEXTOS_INGLES["Cifra 7"]="Digit 7";
 window.TEXTOS_INGLES["Cifra 8"]="Digit 8";
 window.TEXTOS_INGLES["Cifra 9"]="Digit 9";
+
+Object.assign(window.TEXTOS_INGLES,{'Borrar hora':'Clear hours','Borrar minutos':'Clear minutes','Arrastra las cifras en orden para formar la hora y los minutos.':'Drag the digits in order to form the hour and minutes.'});
