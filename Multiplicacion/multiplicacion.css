@@ -22,3 +22,7 @@
 .vertical #ayudas #contarArreglo{min-height:calc(36*var(--u))}#flotantes #contarArreglo{height:calc(42*var(--u));min-height:calc(42*var(--u))}
 
 .corta #flotantes #ayudas{display:flex;flex:0 1 auto}.corta #flotantes #ayudas button{width:auto;flex:0 1 auto}.corta #flotantes #contarArreglo{height:calc(34*var(--u));min-height:calc(34*var(--u))}
+
+.nodo-magnetico:disabled{opacity:1}.plano-magnetico[data-movimiento="ajuste"] .nodo-magnetico{cursor:default}
+
+#configuracion fieldset>.campo{margin:8px 0 12px}#configuracion fieldset>.casilla-config+.casilla-config{margin-top:8px}

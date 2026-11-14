@@ -60,5 +60,10 @@ Object.assign(window.TEXTOS_INGLES||(window.TEXTOS_INGLES={}),{
   "■ Detener conteo": "■ Stop counting",
   "Ayuda 2: conteo animado de filas y columnas": "Help 2: animated row and column counting",
   "Campanitas durante el conteo": "Chimes while counting",
-  "Permitir pista breve (Ayuda 1)": "Allow a short hint (Help 1)"
+  "Permitir pista breve (Ayuda 1)": "Allow a short hint (Help 1)",
+  "Cómo se forman los grupos": "How groups are arranged",
+  "Compactos (en puños)": "Compact clusters",
+  "En hileras": "In rows",
+  "Libre": "Free arrangement",
+  "Deslizar suavemente al soltar": "Glide gently when released"
 });
