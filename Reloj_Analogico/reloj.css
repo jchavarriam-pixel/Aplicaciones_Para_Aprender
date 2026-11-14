@@ -13,3 +13,9 @@ body{width:var(--w,100%)!important;min-height:var(--h,100dvh)!important}.app{wid
 @media(orientation:landscape) and (max-height:500px){.entrada-lectura{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);align-items:center;gap:calc(8 * var(--u,1px))}.entrada-lectura #respuesta{min-width:0}.entrada-lectura #bancoCifras{width:100%;min-width:0}.entrada-lectura .cifras{grid-template-columns:repeat(5,minmax(0,1fr))}.entrada-lectura #bancoCifras p{display:none}.entrada-lectura #respuesta input{width:calc(64 * var(--u,1px))}}
 
 #opcionesAprende .opcion-activa{background:#e9edff;border-color:#687acb;color:#3b4697}
+/* Asas visibles y selección por proximidad, incluso al superponerse las agujas. */
+#reloj{touch-action:none}.agarre{filter:drop-shadow(0 2px 2px #23365222)}.aguja[aria-disabled=true] .agarre{display:none}.aguja.agarrada .agarre{fill:#fff0a8;stroke-width:7}.aguja.agarrada{filter:drop-shadow(0 0 6px #ffcf5e)}#reloj.moviendo{cursor:grabbing}.panel-manipular{flex:none;width:calc(122 * var(--u,1px));padding:calc(8 * var(--u,1px));border:2px solid #d8e4f4;border-radius:16px;background:#f4f8ff}.panel-manipular #digital{display:block;margin-bottom:calc(10 * var(--u,1px))}.panel-manipular #exploracion{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.panel-manipular #exploracion button{min-width:0;font-size:calc(13 * var(--u,1px));padding:calc(6 * var(--u,1px))}.actividad{justify-content:safe center}
+
+.aguja:focus-visible{outline:none}.aguja:focus-visible .agarre{stroke-width:7;fill:#fff0a8}
+/* Prioridad al diámetro del reloj en las actividades de manipulación. */
+.actividad[data-actividad=explora],.actividad[data-actividad=construye]{padding-bottom:calc(16 * var(--u,1px))}.actividad[data-actividad=construye] #revisar{align-self:flex-start;width:min(calc(460 * var(--u,1px)),calc(100% - 108 * var(--u,1px)))}.actividad[data-actividad=explora]>.leyenda{width:calc(100% - 108 * var(--u,1px));align-self:flex-start}
