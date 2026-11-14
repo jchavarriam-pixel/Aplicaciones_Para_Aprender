@@ -475,9 +475,19 @@
       moved: false
     };
     scheduleGhostMove();
+    iniciarDesplazamientoSignos();
     window.addEventListener('pointermove', onPointerMove, {passive:false});
     window.addEventListener('pointerup', onPointerUp, {passive:false});
     window.addEventListener('pointercancel', cancelDrag, {passive:false});
+  }
+
+  let desplazamientoSignos=0;
+  function iniciarDesplazamientoSignos(){
+    cancelAnimationFrame(desplazamientoSignos);let anterior=0;
+    function paso(ahora){const d=state.drag;if(!d)return;const borde=65,dt=Math.min(40,anterior?ahora-anterior:16),dir=d.y<borde?-Math.min(1,(borde-d.y)/borde):d.y>innerHeight-borde?Math.min(1,(d.y-innerHeight+borde)/borde):0;
+      if(dir){window.scrollBy(0,dir*dt*.7);updateHoverZone(d.x,d.y);}anterior=ahora;desplazamientoSignos=requestAnimationFrame(paso);
+    }
+    desplazamientoSignos=requestAnimationFrame(paso);
   }
 
   function scheduleGhostMove(){
@@ -545,6 +555,7 @@
   }
 
   function cleanupDrag(){
+    cancelAnimationFrame(desplazamientoSignos);desplazamientoSignos=0;
     const d = state.drag;
     if(d){
       if(d.raf) cancelAnimationFrame(d.raf);
@@ -677,7 +688,7 @@
     app.style.setProperty('--unidad-signos',(1/z)+'px');app.style.setProperty('--ancho-signos',(innerWidth/z)+'px');
     app.classList.toggle('compacta',h<450||innerWidth/z<300);
     const grid=$('#exercisesContainer'),r=grid.getBoundingClientRect();
-    grid.style.setProperty('--columnas',r.width/z<350?1:2);
+    grid.style.setProperty('--columnas','1');
     grid.querySelectorAll('.num-box').forEach(el=>{const ancho=el.getBoundingClientRect().width/z-10;el.style.fontSize=Math.max(8,Math.min(36/z,ancho/(Math.max(1,el.textContent.trim().length)*.72)))+'px';});
   });
   new MutationObserver(()=>fit()).observe($('#exercisesContainer'),{childList:true});
