@@ -1,6 +1,7 @@
 const {chromium}=require('playwright');
 const assert=require('node:assert/strict');
 const path=require('node:path');
+const {unirGrupo}=require('./multiplicacion-utiles.cjs');
 const URL='file:///'+path.resolve('Multiplicacion/multiplicacion.html').replaceAll('\\','/');
 (async()=>{
  const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe'});
@@ -12,10 +13,9 @@ const URL='file:///'+path.resolve('Multiplicacion/multiplicacion.html').replaceA
  assert.equal(await page.locator('#arreglo svg g').count(),12);
  await answer('a',3);await answer('b',4);await answer('total',11);await page.locator('#revisar').click();assert.match(await page.locator('#estado').textContent(),/de nuevo/);
  await page.locator('#total').click();await page.locator('#borrarNumero').click();await answer('total',12);await page.locator('#revisar').click();assert.match(await page.locator('#estado').textContent(),/Buen trabajo/);
- await config({porGrupoMin:3,porGrupoMax:3,gruposMin:2,gruposMax:2});await page.locator('[data-modo="grupos"]').click();assert.equal(await page.locator('#figurasSueltas .figura').count(),6);assert.equal(await page.locator('#factorA').isDisabled(),true);
- const put=async(index=0)=>{await page.locator('#figurasSueltas .figura').first().click();await page.locator('.grupo header span').nth(index).click();};
- await put();await put();await put();await put();assert.equal(await page.locator('.grupo .figura').count(),3);assert.match(await page.locator('#estado').textContent(),/completo/);
- await page.locator('#agregarGrupo').click();await page.locator('.grupo header span').nth(1).click();await put(1);await put(1);assert.equal(await page.locator('#figurasSueltas .figura').count(),0);assert.equal(await page.locator('#factorA').isDisabled(),false);await answer('a',2);await answer('total',6);await page.locator('#revisar').click();assert.match(await page.locator('#estado').textContent(),/2 por 3 es 6/);
+ await config({porGrupoMin:3,porGrupoMax:3,gruposMin:2,gruposMax:2});await page.locator('[data-modo="grupos"]').click();assert.equal(await page.locator('[data-nodo]').count(),6);assert.equal(await page.locator('#factorA').isDisabled(),true);
+ await unirGrupo(page,[0,1,2]);assert.equal(await page.locator('.enlace').count(),2);assert.equal(await page.locator('.marco-completo').count(),1);
+ await unirGrupo(page,[3,4,5]);assert.equal(await page.locator('.enlace').count(),4);assert.equal(await page.locator('#factorA').isDisabled(),false);await answer('a',2);await answer('total',6);await page.locator('#revisar').click();assert.match(await page.locator('#estado').textContent(),/2 por 3 es 6/);
  await page.locator('#plegar').click();assert.equal(await page.locator('#nueva').isVisible(),true);assert.equal(await page.locator('#herramientas').isVisible(),false);await page.reload();await page.waitForTimeout(100);assert.equal(await page.locator('#herramientas').isVisible(),true);
  await page.locator('[data-modo="filas"]').click();await config({filasMin:1,filasMax:2,columnasMin:1,columnasMax:2});
  for(let round=0;round<3;round++){const seen=new Set();for(let i=0;i<4;i++){const shape=await page.locator('#arreglo svg').getAttribute('viewBox');assert(!seen.has(shape),'no repeated array in deck');seen.add(shape);await page.locator('#nueva').click();}assert.equal(seen.size,4);}

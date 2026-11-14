@@ -21,7 +21,7 @@ const path=require('node:path');
   assert.equal(await page.locator('#pregunta').textContent(),question);
   assert.equal(await page.evaluate(()=>window.frases.at(-1)),question,'automatic spoken question');
   await page.locator('#escuchar').click();assert((await page.evaluate(()=>window.frases.at(-1))).startsWith(question));
-  await page.locator('[data-modo="grupos"]').click();await checkUniform('#agrupacion .forma-geometrica',id);assert.equal(await page.locator('#pregunta').textContent(),language==='es'?`Haz grupos de 3 ${es}`:`Make groups of 3 ${en}`);
+  await page.locator('[data-modo="grupos"]').click();await checkUniform('#agrupacion .forma-geometrica',id);assert.equal(await page.locator('#pregunta').textContent(),language==='es'?`Vamos a hacer grupos de 3 ${es}`:`Let’s make groups of 3 ${en}`);
  }
  await page.locator('[data-modo="filas"]').click();await configure({forma:'azar',idiomaAplicacion:'es',narracion:false});
  const seen=new Set();for(let i=0;i<8;i++){const id=await page.locator('#arreglo .forma-geometrica').first().getAttribute('data-forma');assert(!seen.has(id),'variety between rounds without mixing within a round');seen.add(id);await checkUniform('#arreglo .forma-geometrica',id);await page.locator('#nueva').click();}

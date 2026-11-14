@@ -11,8 +11,6 @@ Object.assign(window.TEXTOS_INGLES||(window.TEXTOS_INGLES={}),{
   "↻ Nueva ronda": "↻ New round",
   "💡 Pista": "💡 Hint",
   "🔊 Escuchar": "🔊 Listen",
-  "＋ Crear grupo": "＋ Create group",
-  "↺ Vaciar grupos": "↺ Empty groups",
   "Figuras para agrupar": "Shapes to group",
   "Construye la multiplicación": "Build the multiplication",
   "Total": "Total",
@@ -36,7 +34,6 @@ Object.assign(window.TEXTOS_INGLES||(window.TEXTOS_INGLES={}),{
   "Figuras por grupo: máximo": "Shapes per group: maximum",
   "Cantidad de grupos: mínimo": "Number of groups: minimum",
   "Cantidad de grupos: máximo": "Number of groups: maximum",
-  "Mostrar lugares dentro de cada grupo": "Show spaces inside each group",
   "Figuras": "Shapes",
   "Variadas": "Mixed",
   "Círculos": "Circles",
@@ -53,5 +50,10 @@ Object.assign(window.TEXTOS_INGLES||(window.TEXTOS_INGLES={}),{
   "Rombos": "Rhombuses",
   "Hexágonos": "Hexagons",
   "Rectángulos": "Rectangles",
-  "⌫ Borrar número": "⌫ Clear number"
+  "⌫ Borrar número": "⌫ Clear number",
+  "Acerca una figura a otra para unirlas.": "Bring one shape close to another to join them.",
+  "⤢ Separar figura": "⤢ Separate shape",
+  "↶ Deshacer": "↶ Undo",
+  "Plano para formar grupos": "Space to form groups",
+  "Marcar y cerrar los grupos completos": "Mark and close completed groups"
 });
