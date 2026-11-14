@@ -168,7 +168,8 @@
 
   const state = {
     childName: '',
-    maxDigits: 1,
+    maxDigits: 1,comparisonCount:6,
+    numberMode:"digitos",rangeMin:0,rangeMax:100,
     exercises: [],
     answers: [],
     checked: false,
@@ -234,7 +235,8 @@
   function correctSymbol(a,b){ return a < b ? '<' : a > b ? '>' : '='; }
 
   function randNum(maxD){
-    const minDigits = Math.max(1, maxD - 1);
+    if(state.numberMode==='rango')return state.rangeMin+Math.floor(Math.random()*(state.rangeMax-state.rangeMin+1));
+    const minDigits = 1;
     const digits = minDigits + Math.floor(Math.random() * (maxD - minDigits + 1));
     const min = digits === 1 ? 0 : Math.pow(10, digits - 1);
     const max = Math.pow(10, digits) - 1;
@@ -243,8 +245,8 @@
 
   function generateExercises(){
     state.exercises = [];
-    const equalityIndex = Math.floor(Math.random() * 6);
-    for(let i=0;i<6;i++){
+    const equalityIndex = Math.floor(Math.random() * state.comparisonCount);
+    for(let i=0;i<state.comparisonCount;i++){
       let a,b;
       if(i === equalityIndex){
         a = randNum(state.maxDigits); b = a;
@@ -253,7 +255,7 @@
       }
       state.exercises.push({a,b});
     }
-    state.answers = Array(6).fill(null);
+    state.answers = Array(state.comparisonCount).fill(null);
     state.checked = false;
   }
 
@@ -319,7 +321,7 @@
     }
   }
 
-  function updateAllDropZones(){ for(let i=0;i<6;i++) updateDropZone(i); updateLiveFeedback(); }
+  function updateAllDropZones(){ for(let i=0;i<state.exercises.length;i++) updateDropZone(i); updateLiveFeedback(); }
 
   function updateLiveFeedback(){
     state.exercises.forEach((ex,i)=>{
@@ -404,11 +406,11 @@
     input.style.borderColor = '#3b82f6';
     state.childName = name;
     state.maxDigits = digits;
-    Matematicas.guardar('signos.config.v1',{digitos:digits,ayuda:state.helpMode});
+    Matematicas.guardar('signos.config.v1',{digitos:digits,ayuda:state.helpMode,modo:state.numberMode,minimo:state.rangeMin,maximo:state.rangeMax,cantidad:state.comparisonCount});
     $('#startScreen').style.display = 'flex';
 
     $('#gameArea').classList.add('active');
-    $('#levelBadge').textContent = `Nivel: hasta ${digits} dígito${digits>1?'s':''}`;
+    $('#levelBadge').textContent = state.numberMode==='rango'?(IdiomaVoz.idioma==='en'?'Range: ':'Rango: ')+state.rangeMin+'–'+state.rangeMax:`Nivel: hasta ${digits} dígito${digits>1?'s':''}`;
     newRound();
   }
 
@@ -426,7 +428,7 @@
 
   function setHelpMode(mode){
     state.helpMode = mode;
-    Matematicas.guardar('signos.config.v1',{digitos:state.maxDigits,ayuda:mode});
+    Matematicas.guardar('signos.config.v1',{digitos:state.maxDigits,ayuda:mode,modo:state.numberMode,minimo:state.rangeMin,maximo:state.rangeMax,cantidad:state.comparisonCount});
     $('#helpOff').classList.toggle('active', mode === 0);
     $('#helpRead').classList.toggle('active', mode === 1);
     $('#helpLive').classList.toggle('active', mode === 2);
@@ -638,26 +640,36 @@
   const nombre=document.createElement('label');nombre.className='nombre-signos';nombre.textContent='Nombre del niño';nombre.append($('#nameInput'));tools.querySelector('.title').after(nombre);
   $('#startScreen .label').remove();
   contenido.append($('#startScreen'),document.querySelector('#gameArea .controls'));
+  const opciones=document.createElement('section');opciones.className='seleccion-signos';opciones.innerHTML='<h3>Selección de números</h3><div class="casillas-signos"><label><input type="checkbox" id="digitosSignos"> Hasta N dígitos</label><label><input type="checkbox" id="rangoSignos"> Rango definido</label></div><div id="limitesSignos"><label>Mínimo<input type="number" id="minimoSignos" min="0" max="999998" step="1" required></label><label>Máximo<input type="number" id="maximoSignos" min="1" max="999999" step="1" required></label></div>';
+  contenido.prepend(opciones);
+  const cantidadLabel=document.createElement('label');cantidadLabel.className='cantidad-comparaciones';cantidadLabel.textContent='Comparaciones por ronda';const cantidad=document.createElement('select');cantidad.id='cantidadComparaciones';for(let n=1;n<=12;n++)cantidad.append(new Option(String(n),String(n)));cantidadLabel.append(cantidad);opciones.append(cantidadLabel);
+  for(const n of [5,6]){const b=document.createElement('button');b.type='button';b.className='level-btn';b.dataset.digits=n;b.textContent=n+' dígitos';$('#startScreen .level-grid').append(b);}
+  const casillaDigitos=$('#digitosSignos'),casillaRango=$('#rangoSignos'),minimo=$('#minimoSignos'),maximo=$('#maximoSignos');
+  function mostrarModoSignos(rango){casillaRango.checked=rango;casillaDigitos.checked=!rango;$('#limitesSignos').hidden=!rango;$('#startScreen').hidden=rango;}
+  casillaDigitos.oninput=()=>mostrarModoSignos(false);casillaRango.oninput=()=>mostrarModoSignos(true);
+  function cerrarAjustesSignos(){maximo.setCustomValidity('');if(casillaRango.checked&&(!minimo.checkValidity()||!maximo.checkValidity()||+maximo.value<=+minimo.value)){maximo.setCustomValidity(IdiomaVoz.idioma==='en'?'Maximum must be greater than minimum.':'El máximo debe ser mayor que el mínimo.');maximo.reportValidity();return;}config.close();}
+  config.addEventListener('cancel',e=>{e.preventDefault();cerrarAjustesSignos();});
+  Object.assign(window.TEXTOS_INGLES,{'Comparaciones por ronda':'Comparisons per round','Selección de números':'Number selection','Hasta N dígitos':'Up to N digits','Rango definido':'Defined range','Mínimo':'Minimum','Máximo':'Maximum'});
   const voice=document.createElement('div');voice.id='preferenciasSignos';contenido.append(voice);
   const abrir=document.createElement('button');abrir.type='button';abrir.className='game-btn configurar-signos';abrir.textContent='⚙ Configuración';tools.append(abrir);
   tools.append(document.querySelector('.topbar'),$('#btnNew'),$('#btnReset'));
   $('#btnLevel').hidden=true;
   let digitosPendientes=1,ayudaPendiente=0,aplicando=false;const cambiosPendientes=new Set();
-  function abrirConfiguracion(){digitosPendientes=state.maxDigits;ayudaPendiente=state.helpMode;cambiosPendientes.clear();config.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('seleccionado',Number(b.dataset.digits)===digitosPendientes));config.style.zoom=String(1/(parseFloat(getComputedStyle(document.body).zoom)||1));config.showModal();}
+  function abrirConfiguracion(){cantidad.value=String(state.comparisonCount);mostrarModoSignos(state.numberMode==='rango');minimo.value=state.rangeMin;maximo.value=state.rangeMax;digitosPendientes=state.maxDigits;ayudaPendiente=state.helpMode;cambiosPendientes.clear();config.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('seleccionado',Number(b.dataset.digits)===digitosPendientes));config.style.zoom=String(1/(parseFloat(getComputedStyle(document.body).zoom)||1));config.showModal();}
   const accesos=document.createElement('nav');accesos.className='accesos-signos';accesos.setAttribute('aria-label','Aplicaciones y configuración');abrir.before(accesos);const casa=document.createElement('a');casa.className='inicio-signos';casa.href='index.html';casa.textContent='⌂';casa.setAttribute('aria-label','Volver a las aplicaciones');casa.title='Volver a las aplicaciones';accesos.append(abrir);
   const cabecera=document.createElement('header');cabecera.className='cabecera-comparacion';tools.prepend(cabecera);const insignia=document.createElement('span');insignia.className='insignia-comparacion';insignia.textContent='⚖️';insignia.setAttribute('aria-hidden','true');cabecera.append(insignia,tools.querySelector('.title'),nombre,tools.querySelector('.subtitle'),casa);cabecera.append(accesos);
   abrir.onclick=abrirConfiguracion;
   config.addEventListener('click',e=>{const nivel=e.target.closest('.level-btn'),ayuda=e.target.closest('.control-btn');if(nivel||ayuda){e.preventDefault();e.stopImmediatePropagation();if(nivel){digitosPendientes=Number(nivel.dataset.digits);config.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('seleccionado',b===nivel));}else{ayudaPendiente=['helpOff','helpRead','helpLive'].indexOf(ayuda.id);config.querySelectorAll('.control-btn').forEach(b=>b.classList.toggle('active',b===ayuda));}}},true);
   config.addEventListener('change',e=>{if(!aplicando){e.stopImmediatePropagation();cambiosPendientes.add(e.target);}},true);
-  config.querySelector('#cerrarConfiguracionSignos').onclick=()=>config.close();
-  config.querySelector('#aplicarConfiguracionSignos').onclick=()=>config.close();
-  config.addEventListener('close',()=>{aplicando=true;for(const el of cambiosPendientes)el.dispatchEvent(new Event('change',{bubbles:true}));aplicando=false;setHelpMode(ayudaPendiente);startGame(digitosPendientes);});
+  config.querySelector('#cerrarConfiguracionSignos').onclick=cerrarAjustesSignos;
+  config.querySelector('#aplicarConfiguracionSignos').onclick=cerrarAjustesSignos;
+  config.addEventListener('close',()=>{state.comparisonCount=Math.max(1,Math.min(12,+cantidad.value||6));state.numberMode=casillaRango.checked?'rango':'digitos';state.rangeMin=+minimo.value;state.rangeMax=+maximo.value;aplicando=true;for(const el of cambiosPendientes)el.dispatchEvent(new Event('change',{bubbles:true}));aplicando=false;setHelpMode(ayudaPendiente);startGame(digitosPendientes);});
   $('#nameInput').addEventListener('change',()=>{state.childName=guardarNombreEstudiante($('#nameInput').value)||state.childName;});
   document.querySelectorAll('.decor,.family-legend,.footer').forEach(el=>el.remove());
   const saved=Matematicas.leer('signos.config.v1');
   cargarNombreDesdeIndex();attachEvents();
   $('#nameInput').value||= 'Gabriel';
-  state.maxDigits=[1,2,3,4].includes(saved.digitos)?saved.digitos:1;
+  state.comparisonCount=Math.max(1,Math.min(12,Math.floor(+saved.cantidad||6)));state.maxDigits=[1,2,3,4,5,6].includes(saved.digitos)?saved.digitos:1;state.numberMode=saved.modo==='rango'?'rango':'digitos';state.rangeMin=Math.max(0,Math.min(999998,Math.floor(+saved.minimo||0)));state.rangeMax=Math.max(state.rangeMin+1,Math.min(999999,Math.floor(+saved.maximo||100)));
   setHelpMode([0,1,2].includes(saved.ayuda)?saved.ayuda:0);
   startGame(state.maxDigits);
   IdiomaVoz.instalar('#preferenciasSignos');
@@ -666,7 +678,9 @@
     app.classList.toggle('compacta',h<450||innerWidth/z<300);
     const grid=$('#exercisesContainer'),r=grid.getBoundingClientRect();
     grid.style.setProperty('--columnas',r.width/z<350?1:2);
+    grid.querySelectorAll('.num-box').forEach(el=>{const ancho=el.getBoundingClientRect().width/z-10;el.style.fontSize=Math.max(8,Math.min(36/z,ancho/(Math.max(1,el.textContent.trim().length)*.72)))+'px';});
   });
+  new MutationObserver(()=>fit()).observe($('#exercisesContainer'),{childList:true});
   addEventListener('resize',()=>cleanupDrag());
   document.addEventListener('fullscreenchange',()=>cleanupDrag());
   document.addEventListener('DOMContentLoaded',()=>{const credits=$('#creditos-aplicaciones');if(credits)document.body.append(credits);fit();});
