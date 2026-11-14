@@ -10,11 +10,11 @@ function permitidos(){const mins=config.precision==='horas'?[0]:config.precision
 function ajustar(n){return permitidos().reduce((a,b)=>Math.abs(((b-n+1080)%720)-360)<Math.abs(((a-n+1080)%720)-360)?b:a);}
 function siguienteObjetivo(){if(firma!==config.precision||!bolsa.length){firma=config.precision;bolsa=permitidos();for(let i=bolsa.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[bolsa[i],bolsa[j]]=[bolsa[j],bolsa[i]];}}return bolsa.pop();}
 const lecciones=[
- {es:'La corta indica las horas; la larga, los minutos. En el 60 empieza otra hora: 00 minutos.',en:'The short hand shows hours; the long hand, minutes. At 60 a new hour starts: 00 minutes.',desde:60,hasta:60,duracion:2500},
+ {es:'La corta indica las horas; la larga, los minutos. En el 00 empieza otra hora. Una vuelta completa son 60 minutos.',en:'The short hand shows hours; the long hand, minutes. At 00 a new hour starts. One full turn is 60 minutes.',desde:60,hasta:60,duracion:2500},
  {es:'Una vuelta de la aguja larga son 60 minutos. La corta avanza una hora.',en:'One turn of the long hand is 60 minutes. The short hand moves forward one hour.',desde:60,hasta:120,duracion:14000},
  {es:'Un cuarto de hora son 15 minutos. La aguja larga llega al 15.',en:'A quarter of an hour is 15 minutes. The long hand reaches 15.',desde:180,hasta:195,duracion:6500},
  {es:'Media hora son 30 minutos. La aguja corta queda a mitad de camino.',en:'Half an hour is 30 minutes. The short hand is halfway to the next hour.',desde:240,hasta:270,duracion:8500},
- {es:'Entre dos números de las horas hay 5 minutos. Mira cómo avanza la aguja larga del 60 al 5.',en:'There are 5 minutes between two hour numbers. Watch the long hand move from 60 to 5.',desde:300,hasta:305,duracion:6500}
+ {es:'Entre dos números de las horas hay 5 minutos. Mira cómo avanza la aguja larga del 00 al 5.',en:'There are 5 minutes between two hour numbers. Watch the long hand move from 00 to 5.',desde:300,hasta:305,duracion:6500}
 ];
 function leccionesActuales(){const ids={horas:[0,1],medias:[0,3],cuartos:[0,2],cinco:[0,4,1],libre:[0,1,2,3,4]}[config.precision];return ids.map(i=>lecciones[i]);}
 function pintar(){total=norm(total);$('#horaria').setAttribute('transform',`rotate(${total*.5} 300 296)`);$('#minutera').setAttribute('transform',`rotate(${total*6} 300 296)`);$('#reloj').dataset.minutos=String(total);for(const el of [$('#horaria'),$('#minutera')]){el.setAttribute('aria-valuenow',String(Math.round(total)));el.setAttribute('aria-valuetext',digital(total));el.setAttribute('aria-disabled',String(!['explora','construye'].includes(config.modo)));el.tabIndex=['explora','construye'].includes(config.modo)?0:-1;}
