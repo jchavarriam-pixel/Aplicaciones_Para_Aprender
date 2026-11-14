@@ -51,3 +51,10 @@
 #game.modo-pareo .pareo .par-row{min-height:calc(60 * var(--unidad-juego,1px))}
 #game.modo-pareo .pareo .caja-par{height:100%;min-height:calc(54 * var(--unidad-juego,1px));max-height:none}
 #game.modo-pareo .pareo .bandera{min-height:calc(36 * var(--unidad-juego,1px));height:calc(36 * var(--unidad-juego,1px));flex-shrink:0}
+
+/* Una sola barra para la pantalla del pareo, únicamente si el contenido no cabe. */
+#game.modo-pareo.activa,#game.modo-pareo.pareo-horizontal.activa{overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;align-content:start}
+#game.modo-pareo #gameContent,#game.modo-pareo.pareo-horizontal #gameContent{height:auto;min-height:0;overflow:visible;flex:1 0 auto}
+#game.modo-pareo .pareo,#game.modo-pareo.pareo-horizontal .pareo,#game.modo-pareo:not(.pareo-horizontal) .pareo{height:100%!important;min-height:var(--alto-minimo-pareo,0px);overflow:visible}
+#game.modo-pareo .pareo .col{overflow:visible;scrollbar-gutter:auto;height:100%;max-height:none;min-height:0}
+#game.modo-pareo.pareo-horizontal.activa{grid-template-rows:minmax(100%,max-content)}
