@@ -1,0 +1,10 @@
+/* Caja plegable común para las aplicaciones ajustadas individualmente. */
+.alternar-panel-compartido{position:fixed;top:12px;left:12px;z-index:1001;display:grid;place-items:center;width:36px;height:36px;padding:5px;border:2px solid #d2dded;border-radius:10px;background:#fff;color:#435d88;box-shadow:0 2px 6px #34487920;cursor:pointer}.alternar-panel-compartido[hidden]{display:none}
+@media(orientation:landscape){.con-panel-plegable .panel-ocultable-compartido .cabecera,.con-panel-plegable .panel-ocultable-compartido>header,.con-panel-plegable .panel-ocultable-compartido .cabecera-comparacion,.con-panel-plegable .panel-ocultable-compartido .encabezado{padding-top:44px}}
+.con-panel-plegable.panel-lateral-oculto{grid-template-columns:minmax(0,1fr)!important;grid-template-areas:none!important}
+.con-panel-plegable.panel-lateral-oculto .panel-ocultable-compartido,.con-panel-plegable.panel-lateral-oculto>.ajustar-columna{display:none!important}
+.con-panel-plegable.panel-lateral-oculto>#gameContent,.con-panel-plegable.panel-lateral-oculto>.actividad,.con-panel-plegable.panel-lateral-oculto>.juego,.con-panel-plegable.panel-lateral-oculto>#gameScreen,.con-panel-plegable.panel-lateral-oculto>#gameArea{grid-column:1!important;grid-area:auto!important;min-width:0}
+.pistas-panel-compartido{position:fixed;bottom:12px;left:12px;z-index:1000;padding:8px;border:2px solid #d4dcef;border-radius:15px;background:#fff;box-shadow:0 5px 20px #34487925}.pistas-panel-compartido[hidden]{display:none}.pistas-panel-compartido .hint-controls{margin:0;display:flex;gap:6px}.pistas-panel-compartido button{min-height:38px;font:700 13px system-ui;padding:8px 10px}
+#control-pantalla-completa,#control-pantalla-completa[data-corner]{position:fixed;left:auto!important;top:auto!important;right:max(10px,env(safe-area-inset-right))!important;bottom:max(10px,env(safe-area-inset-bottom))!important;zoom:var(--inverso-panel-compartido,1)!important}
+
+.revisar-pareo-plegado{min-width:160px;border:0;border-radius:12px;background:#21a76a;color:#fff;font-weight:800!important}.revisar-pareo-plegado:disabled{opacity:.5}.revisar-pareo-plegado[hidden]{display:none}

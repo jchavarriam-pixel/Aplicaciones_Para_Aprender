@@ -42,3 +42,9 @@ Al ajustar una aplicación individualmente, usar un formulario adicional para id
 ## Publicación en GitHub
 
 - Al completar cada petición que modifique el proyecto, comprobar los cambios, crear un commit y publicarlo en GitHub automáticamente. Esta publicación está autorizada por el usuario; no volver a pedir confirmación. Informar si la publicación falla.
+
+## Panel lateral plegable
+
+- En las aplicaciones ajustadas, ofrecer un botón para ocultar y mostrar el panel lateral en horizontal. Al entrar a la aplicación, el panel debe estar visible; no persistirlo oculto.
+- Si hay botones de pistas activos, mantenerlos en la columna mientras esté visible y trasladarlos a una caja flotante discreta cuando se oculte, sin duplicarlos. Conservar accesibles los controles principales.
+- Mantener zoom y pantalla completa en el lado derecho, sin desplazarlos a las esquinas izquierdas.
