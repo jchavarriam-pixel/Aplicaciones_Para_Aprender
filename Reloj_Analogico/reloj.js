@@ -1,6 +1,6 @@
 (()=>{
-'use strict';const $=s=>document.querySelector(s),key='relojAnalogico.config.v1';let config={precision:'horas',pistas:true,narracion:true,modo:'explica',aprende:'lecciones',ayudaHoras:true,ayudaMinutos:true,nombresAgujas:false};try{Object.assign(config,JSON.parse(localStorage.getItem(key)||'{}'));}catch{}if(!['horas','medias','cuartos','cinco','libre'].includes(config.precision))config.precision='horas';if(!['explica','explora','construye','lee'].includes(config.modo))config.modo='explica';
-if(typeof config.nombresAgujas!=='boolean')config.nombresAgujas=false;
+'use strict';const $=s=>document.querySelector(s),key='relojAnalogico.config.v1';let config={precision:'horas',pistas:true,narracion:true,modo:'explica',aprende:'lecciones',ayudaHoras:true,ayudaMinutos:true,nombresAgujas:true};try{Object.assign(config,JSON.parse(localStorage.getItem(key)||'{}'));}catch{}if(!['horas','medias','cuartos','cinco','libre'].includes(config.precision))config.precision='horas';if(!['explica','explora','construye','lee'].includes(config.modo))config.modo='explica';
+if(typeof config.nombresAgujas!=='boolean')config.nombresAgujas=true;
 const entrada=document.createElement('div');entrada.className='entrada-lectura';$('#respuesta').before(entrada);entrada.append($('#respuesta'),$('#bancoCifras'));
 let total=60,objetivo=60,leccion=0,raf=0,drag=null,plegado=false,acertado=false,bolsa=[],firma='',pendiente=false,efectoCelebracion=null;
 const t=(es,en)=>IdiomaVoz.idioma==='en'?en:es,norm=n=>((n%720)+720)%720,partes=n=>{n=Math.round(norm(n));return {h:Math.floor(n/60)%12||12,m:n%60};},digital=n=>{const {h,m}=partes(n);return h+':'+String(m).padStart(2,'0');};
@@ -22,14 +22,13 @@ function leccionesActuales(){const ids={horas:[0,1],medias:[0,3],cuartos:[0,2],c
 function actualizarAyudaAgujas(){
  $('#reloj').classList.toggle('con-nombres',config.nombresAgujas);
  $('#textoHoraAguja').textContent=t('Hora','Hour');$('#textoMinutosAguja').textContent=t('Minutos','Minutes');
- $('#horaria .punta-aguja').setAttribute('d',config.nombresAgujas?'M300 161 L279 190 L321 190 Z':'M300 161 L288 184 L312 184 Z');
- $('#minutera .punta-aguja').setAttribute('d',config.nombresAgujas?'M300 77 L278 112 L322 112 Z':'M300 77 L289 109 L311 109 Z');
+ $('#horaria .punta-aguja').setAttribute('d',config.nombresAgujas?'M300 161 L284 187 L316 187 Z':'M300 161 L288 184 L312 184 Z');
+ $('#minutera .punta-aguja').setAttribute('d',config.nombresAgujas?'M300 77 L284 110 L316 110 Z':'M300 77 L289 109 L311 109 Z');
 }
 function pintarRotulosAgujas(){
  if(!config.nombresAgujas)return;
  for(const[id,angulo,y]of [['#rotuloHora',total*.5,251],['#rotuloMinutos',total*6,190]]){
   const global=((angulo-90)%360+360)%360,girar=global>90&&global<270;
-  $(id).setAttribute('transform',`rotate(${angulo} 300 296)`);
   $(id+' .orientacion-rotulo').setAttribute('transform',`rotate(${girar?90:-90} 300 ${y})`);
  }
 }
@@ -65,7 +64,7 @@ function cambio(){acertado=false;estado('');pintar();}
 function puntoReloj(e){return new DOMPoint(e.clientX,e.clientY).matrixTransform($('#reloj').getScreenCTM().inverse());}
 function anguloPunto(p){return Math.atan2(p.x-300,296-p.y)*180/Math.PI;}
 function distanciaSegmento(p,a,b){const dx=b.x-a.x,dy=b.y-a.y,t=Math.max(0,Math.min(1,((p.x-a.x)*dx+(p.y-a.y)*dy)/(dx*dx+dy*dy)));return Math.hypot(p.x-a.x-t*dx,p.y-a.y-t*dy);}
-function elegirAguja(e){const rotulo=e.target.closest('[data-aguja]');if(config.nombresAgujas&&rotulo)return $('#'+rotulo.dataset.aguja);const p=puntoReloj(e),escala=$('#reloj').getBoundingClientRect().width/600,umbral=Math.max(24/escala,config.nombresAgujas?22:0),radio=Math.hypot(p.x-300,p.y-296);if(radio<28)return null;
+function elegirAguja(e){const visible=e.target.closest('.aguja');if(visible&&!e.target.classList.contains('zona-tactil-aguja'))return visible;const p=puntoReloj(e),escala=$('#reloj').getBoundingClientRect().width/600,umbral=Math.max(24/escala,config.nombresAgujas?22:0),radio=Math.hypot(p.x-300,p.y-296);if(radio<28)return null;
  const candidatas=['horaria','minutera'].map(id=>{const hora=id==='horaria',a=total*(hora?.5:6)*Math.PI/180,punto=r=>({x:300+Math.sin(a)*r,y:296-Math.cos(a)*r}),agarre=punto(hora?95:198);return {id,agarre:Math.hypot(p.x-agarre.x,p.y-agarre.y),distancia:distanciaSegmento(p,punto(30),punto(hora?135:219))};});
  const cercanas=candidatas.filter(c=>c.agarre<=umbral).sort((a,b)=>a.agarre-b.agarre);if(cercanas.length)return $('#'+cercanas[0].id);
  const lineas=candidatas.filter(c=>c.distancia<=umbral).sort((a,b)=>Math.abs(a.distancia-b.distancia)<3?a.agarre-b.agarre:a.distancia-b.distancia);return lineas.length?$('#'+lineas[0].id):null;

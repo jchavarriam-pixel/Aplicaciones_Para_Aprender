@@ -61,5 +61,11 @@ body{width:var(--w,100%)!important;min-height:var(--h,100dvh)!important}.app{wid
 /* En horizontal con poca altura, la barra flotante usa el margen superior. */
 @media(orientation:landscape) and (max-height:500px){#ayudasFlotantes{left:58px;top:12px;bottom:auto;padding:3px;max-width:calc(100vw - 170px)}#ayudasFlotantes #nueva{min-height:34px;padding:4px 8px}#ayudasFlotantes #ayuda,#ayudasFlotantes #escuchar{width:34px;min-width:34px;height:34px;min-height:34px}.app.plegado .actividad{padding-top:calc(64 * var(--u,1px));padding-bottom:calc(16 * var(--u,1px))}}
 
-/* Ayuda opcional sobre las agujas. Los rótulos se orientan para poder leerlos. */
-#reloj:not(.con-nombres) #rotulosAgujas{display:none}#rotulosAgujas{pointer-events:none}.rotulo-aguja rect{pointer-events:all}.nombre-aguja{font:800 18px system-ui,sans-serif;fill:#fff;pointer-events:none;user-select:none}.nombre-hora{font-size:18px}#reloj.con-nombres #horaria .cuerpo-aguja{stroke-width:36px}#reloj.con-nombres #minutera .cuerpo-aguja{stroke-width:34px}#reloj.con-nombres .brillo-aguja{visibility:hidden}#reloj.con-nombres .zona-tactil-aguja{stroke-width:52px}.actividad:is([data-actividad=explora],[data-actividad=construye]) .rotulo-aguja{cursor:grab;touch-action:none}
+/* Cada nombre pertenece a su aguja: la minutera cubre la horaria y su texto. */
+#reloj:not(.con-nombres) .rotulo-aguja{display:none}
+.nombre-aguja{font:800 16px system-ui,sans-serif;fill:#fff;pointer-events:all;user-select:none}
+#reloj.con-nombres #horaria .cuerpo-aguja{stroke-width:26px}
+#reloj.con-nombres #minutera .cuerpo-aguja{stroke-width:24px}
+#reloj.con-nombres .brillo-aguja{visibility:hidden}
+/* El área de tolerancia se calcula en SVG; no debe tapar el contacto con la otra aguja. */
+.zona-tactil-aguja{pointer-events:none}
