@@ -5,11 +5,11 @@
   const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
   const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
   const t=(es,en)=>IdiomaVoz.idioma==='en'?en:es;
-  const defaults={cantidad:6,tablas:[2,3,4,5],minFactor:1,maxFactor:10,sobrantes:false,cantidadSobrantes:2,ladoSobrantes:'derecha',tipo:'producto',posicionFactor:'variado',opciones:3,sonidos:true};
+  const defaults={cantidad:6,porPagina:1,tablas:[2,3,4,5],minFactor:1,maxFactor:10,sobrantes:false,cantidadSobrantes:2,ladoSobrantes:'derecha',tipo:'producto',posicionFactor:'variado',opciones:3,sonidos:true};
   function sanitize(value){
     const c={...defaults,...value};
     c.tablas=Array.isArray(c.tablas)?[...new Set(c.tablas.filter(n=>Number.isInteger(n)&&n>=1&&n<=12))].sort((a,b)=>a-b):[...defaults.tablas];
-    for(const[k,min,max]of [['cantidad',1,24],['minFactor',0,12],['maxFactor',0,12],['cantidadSobrantes',0,6],['opciones',3,4]])c[k]=clamp(Number.isFinite(Number(c[k]))?Math.round(Number(c[k])):defaults[k],min,max);
+    for(const[k,min,max]of [['cantidad',1,24],['porPagina',1,4],['minFactor',0,12],['maxFactor',0,12],['cantidadSobrantes',0,6],['opciones',3,4]])c[k]=clamp(Number.isFinite(Number(c[k]))?Math.round(Number(c[k])):defaults[k],min,max);
     c.minFactor=1;c.maxFactor=10;c.opciones=Number(c.opciones)>=4?4:3;
     for(const[k,vs]of Object.entries({ladoSobrantes:['izquierda','derecha','ambos'],tipo:['producto','factor','mixto'],posicionFactor:['primero','segundo','variado']}))if(!vs.includes(c[k]))c[k]=defaults[k];
     for(const k of ['sobrantes','sonidos'])if(typeof c[k]!=='boolean')c[k]=defaults[k];
@@ -45,9 +45,9 @@
     }
     nueva(modo){
       this.cancelar();this.activo=true;this.modo=modo;this.ronda++;this.pagina=0;this.seleccion=null;this.ficha=null;this.revisando=false;this.resuelto=false;this.nota='';this.historial=[];this.links=new Map();this.estados={};this.porPagina=1;
-      const c=this.configuracion(),pool=this.bases(c);this.configActual=c;
+      const c=this.configuracion(),pool=this.bases(c);this.configActual=c;this.porPagina=c.porPagina;
       if(modo==='pareo')this.crearPareo(pool,c);else this.crearPreguntas(pool,c);
-      this.root.hidden=false;this.root.dataset.modo=modo;$('#espacio').scrollTop=0;this.estado('');this.render();
+      this.root.hidden=false;this.root.dataset.modo=modo;$('#espacio').scrollTop=0;if($('#preguntasTablas'))$('#preguntasTablas').scrollTop=0;if($('#fichasTablas'))$('#fichasTablas').scrollTop=0;this.estado('');this.render();
       if(this.opciones().narracion)this.leer();
     }
     crearPareo(pool,c){
@@ -72,7 +72,7 @@
         return q;
       });
       if(this.questions.length<c.cantidad)this.nota=t(`Con esta selección hay ${this.questions.length} ejercicios distintos.`,`This selection has ${this.questions.length} different questions.`);
-      this.tokens=new Map();this.poolFichas=this.questions.map(q=>({id:'f-'+q.id,valor:q.esperado}));
+      this.tokens=new Map();this.poolFichas=this.questions.map(q=>({id:'f-'+q.id,valor:q.esperado}));if(this.modo==='completar')this.seleccion=this.questions[0]?.id||null;
     }
     distractores(correctos,cantidad,max,excluir=new Set(correctos)){
       const usados=new Set(excluir),out=[];
@@ -126,11 +126,12 @@
     }
     enunciado(q){if(q.campo==='c')return t(`La multiplicación de ${q.a} × ${q.b} = __________.`,`Calculate ${q.a} × ${q.b} = __________.`);return t(`Completa la multiplicación: ${q.campo==='a'?'_____':q.a} × ${q.campo==='b'?'_____':q.b} = ${q.c}.`,`Complete the multiplication: ${q.campo==='a'?'_____':q.a} × ${q.campo==='b'?'_____':q.b} = ${q.c}.`);}
     renderPreguntas(){
+      const scrollPreguntas=$('#preguntasTablas')?.scrollTop||0,scrollFichas=$('#fichasTablas')?.scrollTop||0;
       const visibles=this.visibles(),pages=Math.max(1,Math.ceil(this.questions.length/this.porPagina));
-      this.root.innerHTML=`<div class="tablas-barra"><span id="progresoTablas">${t('Ejercicios','Questions')} ${this.pagina*this.porPagina+1}–${Math.min((this.pagina+1)*this.porPagina,this.questions.length)} / ${this.questions.length}</span><nav class="tablas-paginas" aria-label="${t('Páginas de ejercicios','Exercise pages')}" ${pages<=1?'hidden':''}><button id="tablaAnterior" aria-label="${t('Página anterior','Previous page')}">‹</button><span>${this.pagina+1} / ${pages}</span><button id="tablaSiguiente" aria-label="${t('Página siguiente','Next page')}">›</button></nav></div>${this.notaHTML()}<section id="preguntasTablas" class="preguntas-tablas" aria-label="${t('Multiplicaciones para resolver','Multiplications to solve')}">${visibles.map((q,i)=>`<article class="pregunta-tablas ${q.review&&q.respuesta===null?'sin-responder':''}" data-pregunta="${q.id}"><header><span>${t('Ejercicio','Question')} ${this.pagina*this.porPagina+i+1}</span></header><div class="formula-tablas ${this.modo==='seleccion'?'enunciado-examen':''}" id="formula-${q.id}">${this.modo==='seleccion'?this.enunciado(q):this.formula(q,true)}</div>${this.modo==='seleccion'?`<div class="opciones-tablas" role="radiogroup" aria-labelledby="formula-${q.id}">${q.choices.map((v,j)=>`<button type="button" class="opcion-tabla ${q.review&&q.respuesta===v?(v===q.esperado?'bien':'mal'):''}" role="radio" aria-checked="${q.respuesta===v}" data-opcion="${v}" data-q="${q.id}"><span class="opcion-letra" aria-hidden="true">${String.fromCharCode(65+j)}</span><span>${v}</span></button>`).join('')}</div>`:''}</article>`).join('')}</section>${this.modo==='completar'?`<section class="banco-tablas"><header><h3>${t('Fichas para completar','Tiles to complete')}</h3><div class="acciones-banco-tablas"><button id="borrarFicha" class="tablas-pequeno">${t('⌫ Borrar casilla','⌫ Clear box')}</button><button id="masFichasTablas" class="tablas-pequeno" aria-label="${t('Ver más fichas','See more tiles')}" hidden>↓</button></div></header><div id="fichasTablas" class="fichas-tablas"></div></section>`:''}`;
-      if(pages>1){$('#tablaAnterior').disabled=this.pagina===0;$('#tablaSiguiente').disabled=this.pagina===pages-1;$('#tablaAnterior').onclick=()=>this.cambiarPagina(-1);$('#tablaSiguiente').onclick=()=>this.cambiarPagina(1);$('#tablaSiguiente').classList.toggle('pagina-lista',this.paginaCorrecta());}
+      this.root.innerHTML=`<div class="tablas-barra"><span id="progresoTablas">${t(this.porPagina===1?'Pregunta':'Preguntas',this.porPagina===1?'Question':'Questions')} ${this.pagina*this.porPagina+1}${this.porPagina===1?'':'–'+Math.min((this.pagina+1)*this.porPagina,this.questions.length)} / ${this.questions.length}</span><nav class="tablas-paginas" aria-label="${t('Navegación de preguntas','Question navigation')}" ${pages<=1?'hidden':''}><button id="tablaAnterior" aria-label="${t('Pregunta anterior','Previous question')}">‹</button><button id="tablaSiguiente">${this.porPagina===1?t('Siguiente pregunta →','Next question →'):t('Siguientes preguntas →','Next questions →')}</button></nav></div>${this.notaHTML()}<section id="preguntasTablas" class="preguntas-tablas" aria-label="${t('Multiplicaciones para resolver','Multiplications to solve')}">${visibles.map((q,i)=>`<article class="pregunta-tablas ${q.review&&q.respuesta===null?'sin-responder':''}" data-pregunta="${q.id}"><header><span>${t('Ejercicio','Question')} ${this.pagina*this.porPagina+i+1}</span></header><div class="formula-tablas ${this.modo==='seleccion'?'enunciado-examen':''}" id="formula-${q.id}">${this.modo==='seleccion'?this.enunciado(q):this.formula(q,true)}</div>${this.modo==='seleccion'?`<div class="opciones-tablas" role="radiogroup" aria-labelledby="formula-${q.id}">${q.choices.map((v,j)=>`<button type="button" class="opcion-tabla ${q.review&&q.respuesta===v?(v===q.esperado?'bien':'mal'):''}" role="radio" aria-checked="${q.respuesta===v}" data-opcion="${v}" data-q="${q.id}"><span class="opcion-letra" aria-hidden="true">${String.fromCharCode(65+j)}</span><span>${v}</span></button>`).join('')}</div>`:''}</article>`).join('')}</section>${this.modo==='completar'?`<section class="banco-tablas"><header><h3>${t('Fichas para completar','Tiles to complete')}</h3><div class="acciones-banco-tablas"><button id="borrarFicha" class="tablas-pequeno">${t('⌫ Borrar casilla','⌫ Clear box')}</button><button id="masFichasTablas" class="tablas-pequeno" aria-label="${t('Ver más fichas','See more tiles')}" hidden>↓</button></div></header><div id="fichasTablas" class="fichas-tablas"></div></section>`:''}`;
+      if(pages>1){$('#tablaAnterior').disabled=this.pagina===0;$('#tablaSiguiente').disabled=this.pagina===pages-1||!this.paginaCorrecta();$('#tablaAnterior').onclick=()=>this.cambiarPagina(-1);$('#tablaSiguiente').onclick=()=>this.cambiarPagina(1);$('#tablaSiguiente').classList.toggle('pagina-lista',this.paginaCorrecta());}
       if(this.modo==='completar'){$('#borrarFicha').onclick=()=>this.borrar();this.renderFichas();$('#masFichasTablas').onclick=()=>{const b=$('#fichasTablas');b.scrollTo({top:b.scrollTop+b.clientHeight>=b.scrollHeight-2?0:b.scrollTop+Math.max(35,b.clientHeight-10),behavior:'smooth'});};$('#fichasTablas').onscroll=()=>this.bancoScroll();}
-      this.refrescarSeleccion();
+      $('#preguntasTablas').scrollTop=scrollPreguntas;if($('#fichasTablas'))$('#fichasTablas').scrollTop=scrollFichas;this.refrescarSeleccion();
     }
     renderFichas(){
       const actuales=this.visibles(),key=actuales.map(q=>q.id).join('|');
@@ -156,7 +157,7 @@
     elegirCasilla(id){this.seleccion=id;if(this.ficha){this.colocarFicha(this.ficha,id);return;}this.refrescarSeleccion();}
     borrar(){const q=this.questions.find(q=>q.id===this.seleccion);if(!q)return;this.editar(q);q.respuesta=null;delete q.token;this.ficha=null;this.renderPreguntas();this.alAjustar();}
     intercambiar(a,b){if(a===b)return;const p=this.questions.find(q=>q.id===a),q=this.questions.find(q=>q.id===b);if(!p||!q||p.respuesta===null)return;this.editar(p);this.editar(q);[p.respuesta,q.respuesta]=[q.respuesta,p.respuesta];[p.token,q.token]=[q.token,p.token];this.seleccion=b;this.renderPreguntas();this.alAjustar();}
-    cambiarPagina(delta){const pages=Math.ceil(this.questions.length/this.porPagina),n=this.pagina+delta;if(n<0||n>=pages)return;this.cancelar();this.activo=true;this.pagina=n;this.seleccion=this.ficha=null;this.estado('');this.render();}
+    cambiarPagina(delta){const pages=Math.ceil(this.questions.length/this.porPagina),n=this.pagina+delta;if(n<0||n>=pages)return;this.cancelar();this.activo=true;this.pagina=n;if($('#preguntasTablas'))$('#preguntasTablas').scrollTop=0;if($('#fichasTablas'))$('#fichasTablas').scrollTop=0;this.ficha=null;this.seleccion=this.modo==='completar'?this.visibles()[0]?.id||null:null;this.estado('');this.render();}
     click(e){
       const opcion=e.target.closest('[data-opcion]');if(opcion){const q=this.questions.find(q=>q.id===opcion.dataset.q);this.editar(q);q.respuesta=Number(opcion.dataset.opcion);this.renderPreguntas();this.alAjustar();return;}
       if(e.detail!==0)return;const m=e.target.closest('[data-match]'),f=e.target.closest('[data-ficha]:not(:disabled)'),c=e.target.closest('[data-respuesta]');if(m)this.elegirMatch(m.dataset.match,m.dataset.side);if(f)this.elegirFicha(f.dataset.ficha);if(c)this.elegirCasilla(c.dataset.respuesta);
@@ -188,7 +189,9 @@
       if(d.tipo==='match'&&m&&m.dataset.side!==d.side)this.unir({id:d.key,side:d.side},{id:m.dataset.match,side:m.dataset.side});
       else if(c&&d.tipo==='ficha')this.colocarFicha(d.key,c.dataset.respuesta);else if(c&&d.tipo==='casilla')this.intercambiar(d.key,c.dataset.respuesta);else if(bank&&d.tipo==='casilla'){this.seleccion=d.key;this.borrar();}
     }
-    autoScroll(){const step=()=>{if(!this.drag?.movido)return;const box=$('#espacio'),r=box.getBoundingClientRect(),d=this.drag;if(d.x>=r.left&&d.x<=r.right){const v=d.y>r.bottom-30?Math.min(12,(d.y-r.bottom+30)/2):d.y<r.top+30?-Math.min(12,(r.top+30-d.y)/2):0;box.scrollTop+=v/(parseFloat(getComputedStyle(document.body).zoom)||1);if(this.modo==='pareo')this.dibujarPareo();}this.scrollFrame=requestAnimationFrame(step);};this.scrollFrame=requestAnimationFrame(step);}
+    autoScroll(){const step=()=>{if(!this.drag?.movido)return;const d=this.drag,z=parseFloat(getComputedStyle(document.body).zoom)||1,boxes=this.modo==='pareo'?[$('#espacio')]:[$('#preguntasTablas'),$('#espacio')];
+      for(const box of boxes){if(!box)continue;const r=box.getBoundingClientRect();if(d.x<r.left||d.x>r.right||box.id==='preguntasTablas'&&(d.y<r.top-8||d.y>r.bottom+8))continue;const v=d.y>r.bottom-30?Math.min(12,(d.y-r.bottom+30)/2):d.y<r.top+30?-Math.min(12,(r.top+30-d.y)/2):0;if(v&&box.scrollHeight>box.clientHeight+1){box.scrollTop+=v/z;break;}}
+      if(this.modo==='pareo')this.dibujarPareo();this.scrollFrame=requestAnimationFrame(step);};this.scrollFrame=requestAnimationFrame(step);}
     cancelarArrastre(){const d=this.drag;this.drag=null;cancelAnimationFrame(this.scrollFrame);d?.ghost?.remove();d?.el.classList.remove('origen-arrastre');if(d)try{d.el.releasePointerCapture(d.id);}catch{}this.root.querySelectorAll('.destino-arrastre').forEach(e=>e.classList.remove('destino-arrastre'));if(this.activo&&this.modo==='pareo')this.dibujarPareo();}
     cancelarAnimacion(){this.efectos.detener();this.revisando=false;if(this.activo)$('#revisar').disabled=this.modo==='pareo'?this.resuelto:this.paginaCorrecta();}
     pausar(){this.cancelarArrastre();this.cancelarAnimacion();}
@@ -197,7 +200,7 @@
       if(!this.activo||this.revisando)return;if(this.modo==='pareo'){this.revisarPareo();return;}
       const qs=this.visibles();qs.forEach(q=>q.review=true);const correctas=qs.filter(q=>q.respuesta!==null&&Number(q.respuesta)===q.esperado).length;this.renderPreguntas();this.alAjustar();
       if(correctas!==qs.length){const text=this.modo==='seleccion'?t(`${correctas} de ${qs.length} correctas. Escoge una opción en cada ejercicio y revisa las marcadas.`,`${correctas} of ${qs.length} correct. Choose an option for each question and check the marked answers.`):t(`${correctas} de ${qs.length} correctas. Completa o corrige las casillas marcadas.`,`${correctas} of ${qs.length} correct. Complete or correct the marked answers.`);this.estado(text);this.decir(text);$('#revisar').disabled=false;return;}
-      const total=this.questions.every(q=>q.review&&q.respuesta!==null&&Number(q.respuesta)===q.esperado),text=total?t(`¡Buen trabajo, ${this.nombre()}! Completaste la ronda.`,`Great work, ${this.nombre()}! You completed the round.`):t(`¡Genial, ${this.nombre()}! Continúa con la siguiente página.`,`Great, ${this.nombre()}! Continue to the next page.`);
+      const total=this.questions.every(q=>q.review&&q.respuesta!==null&&Number(q.respuesta)===q.esperado),text=total?t(`¡Buen trabajo, ${this.nombre()}! Completaste la ronda.`,`Great work, ${this.nombre()}! You completed the round.`):t(`¡Genial, ${this.nombre()}! Continúa con ${this.porPagina===1?'la siguiente pregunta':'las siguientes preguntas'}.`,`Great, ${this.nombre()}! Continue to the next ${this.porPagina===1?'question':'questions'}.`);
       this.estado(text,true);this.decir(text);this.revisando=true;$('#revisar').disabled=true;const round=this.ronda;this.efectos.canones(this.configuracion().sonidos,()=>{if(this.activo&&this.ronda===round){this.revisando=false;$('#revisar').disabled=this.paginaCorrecta();}});
     }
     revisarPareo(){
@@ -225,9 +228,10 @@
         const available=Math.max(110,rootRect.height-bar.height-note-rootGap*(note?2:1)),min=n*(compact?35:42)+(n-1)*gap+title,height=n<=4?Math.max(min,Math.min(available,n*61+(n-1)*24+title)):Math.max(min,available),row=Math.min(62,(height-title-(n-1)*gap)/n);
         this.root.style.setProperty('--match-width',width/z+'px');this.root.style.setProperty('--match-col',col/z+'px');this.root.style.setProperty('--match-height',height/z+'px');this.root.style.setProperty('--match-row',row/z+'px');this.root.style.setProperty('--match-gap',gap/z+'px');this.root.style.setProperty('--match-font',clamp((col-45)/4.5,16,24)/z+'px');this.dibujarPareo();
       }else{
-        const columns=this.modo==='seleccion'?1:r.width>650?2:1,rows=this.modo==='seleccion'?Math.max(1,Math.min(2,Math.floor(r.height/(innerHeight<540?190:this.configuracion().opciones===4?285:245)))):r.height>360?2:1,size=columns*rows;
+        const size=this.configuracion().porPagina,columns=size>1&&r.width>(this.modo==='seleccion'?900:650)?2:1;
         if(size!==this.porPagina){const first=this.pagina*this.porPagina;this.porPagina=size;this.pagina=Math.floor(first/size);this.seleccion=this.ficha=null;this.renderPreguntas();$('#revisar').disabled=this.paginaCorrecta();}
         const count=this.visibles().length;this.root.style.setProperty('--preguntas-cols',Math.min(count,columns));this.root.style.setProperty('--preguntas-rows',Math.ceil(count/columns));
+        const minCard=Math.max(1,...[...this.root.querySelectorAll('.pregunta-tablas')].map(card=>{const style=getComputedStyle(card),children=[...card.children].filter(e=>e.getClientRects().length);return children.reduce((sum,e)=>sum+Math.max(e.getBoundingClientRect().height,e.scrollHeight*z),0)+(children.length-1)*parseFloat(style.rowGap)*z+(parseFloat(style.paddingTop)+parseFloat(style.paddingBottom)+parseFloat(style.borderTopWidth)+parseFloat(style.borderBottomWidth))*z;}));this.root.style.setProperty('--pregunta-minh',Math.ceil(minCard)/z+'px');
         const options=this.configuracion().opciones;this.root.style.setProperty('--opciones-cols',1);if(this.modo==='completar'){
           const bank=this.root.querySelector('.banco-tablas'),tiles=$('#fichasTablas'),cards=[...this.root.querySelectorAll('.pregunta-tablas')],gap=parseFloat(getComputedStyle($('#preguntasTablas')).rowGap)*z;
           const minimum=cards.length?Math.max(...cards.map(card=>{const style=getComputedStyle(card),head=card.querySelector('header').getBoundingClientRect().height,formula=card.querySelector('.formula-tablas').getBoundingClientRect().height;return head+formula+(head?parseFloat(style.rowGap)*z:0)+(parseFloat(style.paddingTop)+parseFloat(style.paddingBottom)+parseFloat(style.borderTopWidth)+parseFloat(style.borderBottomWidth))*z;})):80;
