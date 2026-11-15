@@ -1,15 +1,8 @@
 Object.assign(window.TEXTOS_INGLES,{
- 'Aprende a Restar':'Learn to subtract','🌈 Aprende a Restar 🌈':'🌈 Learn to subtract 🌈','Quitar:':'Take away:','Quitados:':'Taken away:',
- 'Objetos a restar':'Objects to subtract','Quitar aquí ⬇️':'Take away here ⬇️','Nuevo':'New exercise','Repetir':'Repeat','Silenciar':'Mute','Activar':'Unmute','Mixto':'Mixed','Sí se puede':'Enough objects','No se puede':'Not enough objects',
- 'Arrastra los objetos a la cesta para quitar la cantidad indicada.':'Drag objects into the basket to take away the given number.',
- '¡Sí se pudo!':'We did it!','¡NO! ¡NO! ¡NO! 🚫':'Not enough objects! 🚫','¡No hay suficientes!':'There are not enough!'
+ 'Restar':'Subtract','Aprende a restar quitando':'Learn subtraction by taking away','Aprende a restar':'Learn to subtract','quitando':'by taking away',
+ 'Quitar:':'Take away:','Quitados:':'Taken away:','Tus objetos':'Your objects','Quitar aquí':'Take away here','Mixto':'Mixed','Sí alcanza':'Enough objects','¿No alcanza?':'Not enough?',
+ 'Así jugamos':'How to play','Mira la resta.':'Look at the subtraction.','Arrastra o toca los objetos para quitarlos.':'Drag or tap the objects to take them away.','Cuenta los que quedan.':'Count the objects left.',
+ 'Herramientas de la actividad':'Activity tools','Volver a las aplicaciones':'Back to applications','Tipo de práctica':'Practice type','Restar quitando objetos':'Subtract by taking objects away','Resta del ejercicio':'Subtraction problem','Objetos y cesta':'Objects and basket','Cesta para quitar objetos':'Basket for objects taken away',
+ 'Ayudas':'Hints','Mostrar cuánto hay que quitar y cuántos se han quitado':'Show how many to take away and how many have been taken away','Mostrar cuántos objetos quedan':'Show how many objects are left','Leer instrucciones y mensajes':'Read instructions and messages',
+ 'Aplicar y volver al juego':'Apply and return to play','Aplicar y cerrar':'Apply and close','Reiniciar este ejercicio':'Restart this question','Ocultar panel':'Hide panel','Mostrar panel':'Show panel'
 });
-window.traducirActividad=s=>{
- let m;if((m=s.match(/^Hola, (.+)$/)))return 'Hello, '+m[1];
- if((m=s.match(/^Objeto (\d+)$/)))return 'Object '+m[1];
- if((m=s.match(/^Quedan: (.*)$/)))return 'Remaining: '+m[1];
- if((m=s.match(/^Debes quitar (\d+) más\.$/)))return 'Take away '+m[1]+' more.';
- if((m=s.match(/^(.*)a (\d+) no se le puede quitar (\d+)\.$/)))return m[1]+'you cannot take '+m[3]+' away from '+m[2]+'.';
- if(s.includes('menos')||s.includes('no se le puede quitar')){const words=['cero','uno','dos','tres','cuatro','cinco','seis','siete','ocho','nueve'];let out=s.replace(/¡Muy bien(?:, ([^!]+))?!/g,(_,n)=>n?'Well done, '+n+'!':'Well done!').replace('no, no, no. A ','There are not enough. From ').replace(' no se le puede quitar ',' you cannot take away ').replace('No hay suficientes.','There are not enough.').replace(' menos ',' minus ').replace(' es igual a ',' equals ');words.forEach((w,i)=>out=out.replace(new RegExp('\\b'+w+'\\b','g'),IdiomaVoz.ingles(i)));return out;}
- if((m=s.match(/^¡Muy bien(?:, (.+))?! ¡Sí se pudo! 🎉$/)))return 'Well done'+(m[1]?', '+m[1]:'')+'! We did it! 🎉';
-};
