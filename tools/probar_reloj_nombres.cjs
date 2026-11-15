@@ -8,7 +8,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),path
  const width=selector=>p.locator(selector+' .cuerpo-aguja').evaluate(e=>Number.parseFloat(getComputedStyle(e).strokeWidth));
  assert.equal(await width('#horaria'),26);assert.equal(await width('#minutera'),24);
  assert.equal(await p.locator('#rotuloHora').isVisible(),true);
- assert.equal(await p.locator('#horaria .cuerpo-aguja').evaluate(e=>getComputedStyle(e).stroke),'rgb(220, 38, 56)');
+ assert.equal(await p.locator('#horaria .cuerpo-aguja').getAttribute('stroke'),'#dc2638');
  await p.locator('#configurar').click();assert.equal(await p.locator('#nombresAgujas').isChecked(),true);await p.locator('#nombresAgujas').uncheck();
  assert.equal(await width('#horaria'),26,'Apply on closing the form');await p.locator('#cerrarConfig').click();await p.waitForFunction(()=>!document.querySelector('#reloj').classList.contains('con-nombres'));await p.reload();
  assert.equal(await width('#horaria'),17);assert.equal(await width('#minutera'),12);assert.equal(await p.locator('#rotuloHora').isVisible(),false);

@@ -22,8 +22,8 @@ function leccionesActuales(){const ids={horas:[0,1],medias:[0,3],cuartos:[0,2],c
 function actualizarAyudaAgujas(){
  $('#reloj').classList.toggle('con-nombres',config.nombresAgujas);
  $('#textoHoraAguja').textContent=t('Hora','Hour');$('#textoMinutosAguja').textContent=t('Minutos','Minutes');
- $('#horaria .punta-aguja').setAttribute('d',config.nombresAgujas?'M300 161 L284 187 L316 187 Z':'M300 161 L288 184 L312 184 Z');
- $('#minutera .punta-aguja').setAttribute('d',config.nombresAgujas?'M300 77 L284 110 L316 110 Z':'M300 77 L289 109 L311 109 Z');
+ document.querySelectorAll('#horaria .punta-aguja,#horaria .sombra-punta').forEach(p=>p.setAttribute('d',config.nombresAgujas?'M300 161 L284 187 L316 187 Z':'M300 161 L288 184 L312 184 Z'));
+ document.querySelectorAll('#minutera .punta-aguja,#minutera .sombra-punta').forEach(p=>p.setAttribute('d',config.nombresAgujas?'M300 77 L284 110 L316 110 Z':'M300 77 L289 109 L311 109 Z'));
 }
 function pintarRotulosAgujas(){
  if(!config.nombresAgujas)return;
