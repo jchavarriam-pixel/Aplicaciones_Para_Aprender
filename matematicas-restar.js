@@ -6,12 +6,17 @@ const savedRestar=Matematicas.leer('restarQuitando.config.v1');
 let mode=['mix','yes','no'].includes(savedRestar.mode)?savedRestar.mode:'mix',muted=savedRestar.muted===true;
 let mostrarContadores=savedRestar.mostrarContadores!==false,mostrarRestantes=savedRestar.mostrarRestantes!==false;
 const t=(es,en)=>IdiomaVoz.idioma==='en'?en:es,rand=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+const numWords=['cero','uno','dos','tres','cuatro','cinco','seis','siete','ocho','nueve'];
 function obtenerNombreNino(){return $('#nombre').value.trim()||window.NombreCompartido?.obtener()||'Gabriel';}
 function guardarRestar(){Matematicas.guardar('restarQuitando.config.v1',{mode,muted,mostrarContadores,mostrarRestantes});}
 function speak(text){lastAudio=text;if(!muted)IdiomaVoz.hablar(text);}
 function instruccion(){return t(`Quita ${numB} ${emoji}. ¿Cuántos quedan?`,`Take away ${numB} ${emoji}. How many are left?`);}
 function mensajeResultado(){const nombre=obtenerNombreNino();return numB<=numA?t(`¡Muy bien, ${nombre}! Quedan ${numA-removed}.`,`Well done, ${nombre}! ${numA-removed} are left.`):t(`${nombre}, no hay suficientes: tienes ${numA} y necesitas quitar ${numB}.`,`${nombre}, there are not enough: you have ${numA} and need to take away ${numB}.`);}
-function audioActual(){return done?(numB<=numA?t(`¡Muy bien, ${obtenerNombreNino()}! ${numA} menos ${numB} es igual a ${numA-numB}.`,`Well done, ${obtenerNombreNino()}! ${numA} minus ${numB} equals ${numA-numB}.`):mensajeResultado()):t(`Tienes ${numA} objetos. Quita ${numB}. ¿Cuántos quedan?`,`You have ${numA} objects. Take away ${numB}. How many are left?`);}
+function audioActual(){
+ if(done)return numB<=numA?t(`¡Muy bien, ${obtenerNombreNino()}! ${numWords[numA]} menos ${numWords[numB]} es igual a ${numWords[numA-numB]}.`,`Well done, ${obtenerNombreNino()}! ${IdiomaVoz.ingles(numA)} minus ${IdiomaVoz.ingles(numB)} equals ${IdiomaVoz.ingles(numA-numB)}.`):t(`${obtenerNombreNino()}, no, no, no. A ${numWords[numA]} no se le puede quitar ${numWords[numB]}. No hay suficientes.`,`${obtenerNombreNino()}, no, no, no. You cannot take ${IdiomaVoz.ingles(numB)} away from ${IdiomaVoz.ingles(numA)}. There are not enough.`);
+ if(removed>0)return t(`Debes quitar ${numB-removed} más.`,`Take away ${numB-removed} more.`);
+ return t(`Tienes ${numA} objetos. Quita ${numB}. ¿Cuántos quedan?`,`You have ${numA} objects. Take away ${numB}. How many are left?`);
+}
 function repeatAudio(){speak(audioActual());}
 function actualizarVista(){
  $('#instruccionRestar').textContent=instruccion();$('#numAEl').textContent=numA;$('#numBEl').textContent=numB;$('#wantRemove').textContent=numB;$('#removedCount').textContent=removed;
@@ -28,7 +33,7 @@ function buildObjects(){const pa=$('#playArea');pa.replaceChildren();for(let i=0
 function resetExercise(){cleanupPointerDrag();done=false;removed=0;$('#objetosQuitados').replaceChildren();buildObjects();actualizarVista();}
 function newExercise(){generateNumbers();emoji=EMOJIS[rand(0,EMOJIS.length-1)];resetExercise();speak(audioActual());}
 function setMode(m){if(!['mix','yes','no'].includes(m))return;mode=m;guardarRestar();newExercise();}
-function handleDrop(item){if(done||item.classList.contains('removed'))return;item.classList.add('removed');item.disabled=true;removed++;const s=document.createElement('span');s.className='obj-in';s.textContent=emoji;$('#objetosQuitados').append(s);done=removed===numB||removed===numA;actualizarVista();speak(done?audioActual():t(`Quita ${numB-removed} más.`,`Take away ${numB-removed} more.`));}
+function handleDrop(item){if(done||item.classList.contains('removed'))return;item.classList.add('removed');item.disabled=true;removed++;const s=document.createElement('span');s.className='obj-in';s.textContent=emoji;$('#objetosQuitados').append(s);done=removed===numB||removed===numA;actualizarVista();speak(audioActual());}
 function isInsideDropZone(x,y){const r=$('#dropZone').getBoundingClientRect();return x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom;}
 function moveDragClone(x,y){if(!activeDrag)return;Matematicas.fantasma(activeDrag.clone,x,y);$('#dropZone').classList.toggle('over',isInsideDropZone(x,y));}
 function startPointerDrag(e){const item=e.currentTarget;if(done||item.disabled||e.button>0||e.isPrimary===false||activeDrag)return;e.preventDefault();const rect=item.getBoundingClientRect(),z=Matematicas.escala(),clone=item.cloneNode(true);clone.className='obj-item drag-ghost';clone.tabIndex=-1;clone.setAttribute('aria-hidden','true');clone.style.width=rect.width+'px';clone.style.height=rect.height+'px';clone.style.fontSize=parseFloat(getComputedStyle(item).fontSize)*z+'px';document.body.append(clone);activeDrag={item,clone,pointerId:e.pointerId,x:e.clientX,y:e.clientY,movido:false};item.classList.add('dragging');item.setPointerCapture(e.pointerId);moveDragClone(e.clientX,e.clientY);}
