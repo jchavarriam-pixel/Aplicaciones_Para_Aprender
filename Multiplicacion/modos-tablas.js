@@ -30,9 +30,9 @@
       $('#espacio').addEventListener('scroll',()=>{if(this.activo&&this.modo==='pareo')this.dibujarPareo();},{passive:true});
       addEventListener('resize',()=>{if(this.activo)this.pausar();});document.addEventListener('fullscreenchange',()=>{if(this.activo)this.pausar();});
     }
-    configuracion(){return this.guardadas[this.modo];}
+    configuracion(){const c=this.guardadas[this.modo];if(this.modo==='seleccion')c.porPagina=1;return c;}
     titulo(){return this.modo==='pareo'?t('Une cada multiplicación con su resultado','Match each multiplication to its result'):this.modo==='completar'?t('Completa las multiplicaciones','Complete the multiplications'):t('Escoge la respuesta correcta','Choose the correct answer');}
-    instrucciones(){return this.modo==='pareo'?t('Arrastra un cohete hasta su planeta, o toca las dos tarjetas. Revisa para ver los vuelos correctos.','Drag a rocket to its planet, or tap both cards. Check to see the correct flights.'):this.modo==='completar'?t('Arrastra una ficha al espacio vacío. También puedes tocar una ficha y su casilla.','Drag a tile to the empty space. You can also tap a tile and its box.'):t('Lee la multiplicación. Escoge una sola opción en cada ejercicio y pulsa Revisar.','Read the multiplication. Choose one option for each question and press Check.');}
+    instrucciones(){return this.modo==='pareo'?t('Arrastra un cohete hasta su planeta, o toca las dos tarjetas. Revisa para ver los vuelos correctos.','Drag a rocket to its planet, or tap both cards. Check to see the correct flights.'):this.modo==='completar'?t('Arrastra una ficha al espacio vacío. También puedes tocar una ficha y su casilla.','Drag a tile to the empty space. You can also tap a tile and its box.'):t('Lee la multiplicación. Escoge una opción y pulsa Revisar. Después, toca Siguiente pregunta.','Read the multiplication. Choose an option and press Check. Then tap Next question.');}
     posiciones(base,c){return ['a','b'].filter(k=>(k==='a'?base.b:base.a)!==0&&(c.posicionFactor==='variado'||c.posicionFactor===(k==='a'?'primero':'segundo')));}
     bases(c){const pool=[];for(const a of c.tablas)for(let b=c.minFactor;b<=c.maxFactor;b++)pool.push({a,b,c:a*b});return pool;}
     sacar(pool,cantidad,firma){

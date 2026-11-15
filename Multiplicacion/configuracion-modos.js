@@ -13,6 +13,7 @@
    c={...c,tablas:Array.isArray(c.tablas)?[...new Set(c.tablas.map(Number).filter(n=>Number.isInteger(n)&&n>=1&&n<=12))].sort((a,b)=>a-b):[2,3,4,5],minFactor:1,maxFactor:10};
    if(!c.tablas.length)c.tablas=[2,3,4,5];
    for(const[k,min,max,fallback]of [['cantidad',1,c.modo==='pareo'?12:24,6],['cantidadSobrantes',0,6,2],['porPagina',1,4,1]])c[k]=Math.max(min,Math.min(max,Number.isFinite(+c[k])?Math.round(+c[k]):fallback));
+   if(c.modo==='seleccion')c.porPagina=1;
    c.opciones=Number(c.opciones)>=4?4:3;for(const k of ['sobrantes','sonidos'])if(typeof c[k]!=='boolean')c[k]=k==='sonidos';
    return c;
   }
@@ -30,7 +31,7 @@
     if(modo==='filas')fields+=check('ayudaConteo','Conteo animado de las figuras','Animated counting of the shapes')+check('sonidoConteo','Campanitas durante el conteo','Chimes while counting');
     else fields+=select('disposicionGrupos','Cómo se forman los grupos','How groups are formed',[['compactos','Compactos (en puños)','Compact clusters'],['hileras','En hileras','In rows'],['libre','Libre','Free']])+check('inerciaGrupos','Deslizar suavemente al soltar','Slide gently when released')+check('ayudaGrupos','Marcar y cerrar los grupos completos','Mark and close complete groups');fields+='</fieldset>';
    }else{
-    fields+='<fieldset><legend>'+t('Tu ronda','Your round')+'</legend><div class="opciones-modo-grid">'+num('cantidad',match?'Parejas por ronda':'Preguntas por ronda',match?'Pairs per round':'Questions per round',1,match?12:24)+(!match?select('porPagina','Preguntas por página','Questions per page',[[1,'1','1'],[2,'2','2'],[3,'3','3'],[4,'4','4']]):'')+(choice?select('opciones','Opciones por pregunta','Options per question',[[3,'3','3'],[4,'4','4']]):'')+'</div>';
+    fields+='<fieldset><legend>'+t('Tu ronda','Your round')+'</legend><div class="opciones-modo-grid">'+num('cantidad',match?'Parejas por ronda':'Preguntas por ronda',match?'Pairs per round':'Questions per round',1,match?12:24)+(modo==='completar'?select('porPagina','Preguntas por página','Questions per page',[[1,'1','1'],[2,'2','2'],[3,'3','3'],[4,'4','4']]):'')+(choice?select('opciones','Opciones por pregunta','Options per question',[[3,'3','3'],[4,'4','4']]):'')+'</div>';
     if(!match)fields+=select('tipo','Tipo de pregunta','Question type',[['producto','Solo el producto','Only the product'],['factor','Un factor','One factor'],['mixto','Productos y factores','Products and factors']])+select('posicionFactor','Factor que falta','Missing factor',[['variado','Variar entre los dos','Either factor'],['primero','Primer factor','First factor'],['segundo','Segundo factor','Second factor']]);fields+='</fieldset>';
     if(!choice)fields+='<fieldset><legend>'+t('Fichas sobrantes','Extra cards')+'</legend>'+check('sobrantes','Incluir sobrantes','Include extra cards')+num('cantidadSobrantes','Cantidad de sobrantes en total','Total extra cards',0,6)+(match?select('ladoSobrantes','Dónde sobran','Extra card side',[['derecha','Resultados (derecha)','Results (right)'],['izquierda','Multiplicaciones (izquierda)','Multiplications (left)'],['ambos','Ambos lados','Both sides']]):'')+'</fieldset>';
     fields+=check('sonidos','Sonidos de celebración','Celebration sounds');
