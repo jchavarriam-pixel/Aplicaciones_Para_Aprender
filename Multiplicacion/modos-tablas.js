@@ -8,9 +8,9 @@
   const defaults={cantidad:6,tablas:[2,3,4,5],minFactor:1,maxFactor:10,sobrantes:false,cantidadSobrantes:2,ladoSobrantes:'derecha',tipo:'producto',posicionFactor:'variado',opciones:3,sonidos:true};
   function sanitize(value){
     const c={...defaults,...value};
-    c.tablas=Array.isArray(c.tablas)?[...new Set(c.tablas.filter(n=>Number.isInteger(n)&&n>=0&&n<=12))].sort((a,b)=>a-b):[...defaults.tablas];
-    for(const[k,min,max]of [['cantidad',1,24],['minFactor',0,12],['maxFactor',0,12],['cantidadSobrantes',0,6],['opciones',2,6]])c[k]=clamp(Number.isFinite(Number(c[k]))?Math.round(Number(c[k])):defaults[k],min,max);
-    if(c.minFactor>c.maxFactor)[c.minFactor,c.maxFactor]=[c.maxFactor,c.minFactor];
+    c.tablas=Array.isArray(c.tablas)?[...new Set(c.tablas.filter(n=>Number.isInteger(n)&&n>=1&&n<=12))].sort((a,b)=>a-b):[...defaults.tablas];
+    for(const[k,min,max]of [['cantidad',1,24],['minFactor',0,12],['maxFactor',0,12],['cantidadSobrantes',0,6],['opciones',3,4]])c[k]=clamp(Number.isFinite(Number(c[k]))?Math.round(Number(c[k])):defaults[k],min,max);
+    c.minFactor=1;c.maxFactor=10;c.opciones=Number(c.opciones)>=4?4:3;
     for(const[k,vs]of Object.entries({ladoSobrantes:['izquierda','derecha','ambos'],tipo:['producto','factor','mixto'],posicionFactor:['primero','segundo','variado']}))if(!vs.includes(c[k]))c[k]=defaults[k];
     for(const k of ['sobrantes','sonidos'])if(typeof c[k]!=='boolean')c[k]=defaults[k];
     return c;
@@ -23,8 +23,6 @@
         let value={};try{value=JSON.parse(localStorage.getItem('multiplicacion.'+modo+'.v1')||'{}');}catch{}
         const c=sanitize(value);if(!c.tablas.length)c.tablas=[...defaults.tablas];if(modo==='pareo')c.cantidad=Math.min(12,c.cantidad);if(modo!=='pareo'&&c.tipo!=='producto'&&!this.bases(c).some(p=>this.posiciones(p,c).length))c.tipo='producto';this.guardadas[modo]=c;
       }
-      this.dialogo=document.createElement('dialog');this.dialogo.id='configuracionModo';this.dialogo.setAttribute('aria-labelledby','tituloConfigModo');document.body.append(this.dialogo);
-      this.dialogo.addEventListener('cancel',e=>{e.preventDefault();this.aplicarConfiguracion();});
       this.root.addEventListener('pointerdown',e=>this.tomar(e));
       window.addEventListener('pointermove',e=>this.mover(e),{passive:false});window.addEventListener('pointerup',e=>this.soltar(e),{passive:false});window.addEventListener('pointercancel',()=>this.cancelarArrastre());
       document.addEventListener('lostpointercapture',e=>{if(this.drag?.id===e.pointerId)this.cancelarArrastre();});
@@ -126,9 +124,10 @@
         return html+(i===0?'<span class="tablas-signo">×</span>':i===1?'<span class="tablas-signo">=</span>':'');
       }).join('');
     }
+    enunciado(q){if(q.campo==='c')return t(`La multiplicación de ${q.a} × ${q.b} = __________.`,`Calculate ${q.a} × ${q.b} = __________.`);return t(`Completa la multiplicación: ${q.campo==='a'?'_____':q.a} × ${q.campo==='b'?'_____':q.b} = ${q.c}.`,`Complete the multiplication: ${q.campo==='a'?'_____':q.a} × ${q.campo==='b'?'_____':q.b} = ${q.c}.`);}
     renderPreguntas(){
       const visibles=this.visibles(),pages=Math.max(1,Math.ceil(this.questions.length/this.porPagina));
-      this.root.innerHTML=`<div class="tablas-barra"><span id="progresoTablas">${t('Ejercicios','Questions')} ${this.pagina*this.porPagina+1}–${Math.min((this.pagina+1)*this.porPagina,this.questions.length)} / ${this.questions.length}</span><nav class="tablas-paginas" aria-label="${t('Páginas de ejercicios','Exercise pages')}" ${pages<=1?'hidden':''}><button id="tablaAnterior" aria-label="${t('Página anterior','Previous page')}">‹</button><span>${this.pagina+1} / ${pages}</span><button id="tablaSiguiente" aria-label="${t('Página siguiente','Next page')}">›</button></nav></div>${this.notaHTML()}<section id="preguntasTablas" class="preguntas-tablas" aria-label="${t('Multiplicaciones para resolver','Multiplications to solve')}">${visibles.map((q,i)=>`<article class="pregunta-tablas ${q.review&&q.respuesta===null?'sin-responder':''}" data-pregunta="${q.id}"><header><span>${t('Ejercicio','Question')} ${this.pagina*this.porPagina+i+1}</span><button class="leer-tabla" data-leer="${q.id}" ${!this.opciones().narracion?'hidden':''} aria-label="${t('Escuchar ejercicio','Listen to question')}">🔊</button></header><div class="formula-tablas" id="formula-${q.id}">${this.formula(q,this.modo==='completar')}</div>${this.modo==='seleccion'?`<div class="opciones-tablas" role="radiogroup" aria-labelledby="formula-${q.id}">${q.choices.map((v,j)=>`<button type="button" class="opcion-tabla ${q.review&&q.respuesta===v?(v===q.esperado?'bien':'mal'):''}" role="radio" aria-checked="${q.respuesta===v}" data-opcion="${v}" data-q="${q.id}"><span class="opcion-letra" aria-hidden="true">${String.fromCharCode(65+j)}</span><span>${v}</span></button>`).join('')}</div>`:''}</article>`).join('')}</section>${this.modo==='completar'?`<section class="banco-tablas"><header><h3>${t('Fichas para completar','Tiles to complete')}</h3><div class="acciones-banco-tablas"><button id="borrarFicha" class="tablas-pequeno">${t('⌫ Borrar casilla','⌫ Clear box')}</button><button id="masFichasTablas" class="tablas-pequeno" aria-label="${t('Ver más fichas','See more tiles')}" hidden>↓</button></div></header><div id="fichasTablas" class="fichas-tablas"></div></section>`:''}`;
+      this.root.innerHTML=`<div class="tablas-barra"><span id="progresoTablas">${t('Ejercicios','Questions')} ${this.pagina*this.porPagina+1}–${Math.min((this.pagina+1)*this.porPagina,this.questions.length)} / ${this.questions.length}</span><nav class="tablas-paginas" aria-label="${t('Páginas de ejercicios','Exercise pages')}" ${pages<=1?'hidden':''}><button id="tablaAnterior" aria-label="${t('Página anterior','Previous page')}">‹</button><span>${this.pagina+1} / ${pages}</span><button id="tablaSiguiente" aria-label="${t('Página siguiente','Next page')}">›</button></nav></div>${this.notaHTML()}<section id="preguntasTablas" class="preguntas-tablas" aria-label="${t('Multiplicaciones para resolver','Multiplications to solve')}">${visibles.map((q,i)=>`<article class="pregunta-tablas ${q.review&&q.respuesta===null?'sin-responder':''}" data-pregunta="${q.id}"><header><span>${t('Ejercicio','Question')} ${this.pagina*this.porPagina+i+1}</span></header><div class="formula-tablas ${this.modo==='seleccion'?'enunciado-examen':''}" id="formula-${q.id}">${this.modo==='seleccion'?this.enunciado(q):this.formula(q,true)}</div>${this.modo==='seleccion'?`<div class="opciones-tablas" role="radiogroup" aria-labelledby="formula-${q.id}">${q.choices.map((v,j)=>`<button type="button" class="opcion-tabla ${q.review&&q.respuesta===v?(v===q.esperado?'bien':'mal'):''}" role="radio" aria-checked="${q.respuesta===v}" data-opcion="${v}" data-q="${q.id}"><span class="opcion-letra" aria-hidden="true">${String.fromCharCode(65+j)}</span><span>${v}</span></button>`).join('')}</div>`:''}</article>`).join('')}</section>${this.modo==='completar'?`<section class="banco-tablas"><header><h3>${t('Fichas para completar','Tiles to complete')}</h3><div class="acciones-banco-tablas"><button id="borrarFicha" class="tablas-pequeno">${t('⌫ Borrar casilla','⌫ Clear box')}</button><button id="masFichasTablas" class="tablas-pequeno" aria-label="${t('Ver más fichas','See more tiles')}" hidden>↓</button></div></header><div id="fichasTablas" class="fichas-tablas"></div></section>`:''}`;
       if(pages>1){$('#tablaAnterior').disabled=this.pagina===0;$('#tablaSiguiente').disabled=this.pagina===pages-1;$('#tablaAnterior').onclick=()=>this.cambiarPagina(-1);$('#tablaSiguiente').onclick=()=>this.cambiarPagina(1);$('#tablaSiguiente').classList.toggle('pagina-lista',this.paginaCorrecta());}
       if(this.modo==='completar'){$('#borrarFicha').onclick=()=>this.borrar();this.renderFichas();$('#masFichasTablas').onclick=()=>{const b=$('#fichasTablas');b.scrollTo({top:b.scrollTop+b.clientHeight>=b.scrollHeight-2?0:b.scrollTop+Math.max(35,b.clientHeight-10),behavior:'smooth'});};$('#fichasTablas').onscroll=()=>this.bancoScroll();}
       this.refrescarSeleccion();
@@ -151,7 +150,7 @@
     editar(q){this.cancelarAnimacion();q.review=false;this.estado('');$('#revisar').disabled=false;}
     colocarFicha(id,qid){
       const f=this.fichas.find(f=>f.id===id),q=this.questions.find(q=>q.id===qid);if(!f||!q||this.questions.some(q=>q.token===id))return;
-      this.editar(q);q.respuesta=f.valor;q.token=id;this.seleccion=q.id;this.ficha=null;this.renderPreguntas();this.alAjustar();if(this.opciones().narracion)this.decir(String(f.valor));
+      this.editar(q);q.respuesta=f.valor;q.token=id;this.seleccion=q.id;this.ficha=null;this.renderPreguntas();this.alAjustar();
     }
     elegirFicha(id){const q=this.questions.find(q=>q.id===this.seleccion);if(q&&q.respuesta===null){this.colocarFicha(id,q.id);return;}this.ficha=this.ficha===id?null:id;this.renderFichas();}
     elegirCasilla(id){this.seleccion=id;if(this.ficha){this.colocarFicha(this.ficha,id);return;}this.refrescarSeleccion();}
@@ -160,7 +159,6 @@
     cambiarPagina(delta){const pages=Math.ceil(this.questions.length/this.porPagina),n=this.pagina+delta;if(n<0||n>=pages)return;this.cancelar();this.activo=true;this.pagina=n;this.seleccion=this.ficha=null;this.estado('');this.render();}
     click(e){
       const opcion=e.target.closest('[data-opcion]');if(opcion){const q=this.questions.find(q=>q.id===opcion.dataset.q);this.editar(q);q.respuesta=Number(opcion.dataset.opcion);this.renderPreguntas();this.alAjustar();return;}
-      const leer=e.target.closest('[data-leer]');if(leer){const q=this.questions.find(q=>q.id===leer.dataset.leer);if(q)this.decir(this.frase(q));return;}
       if(e.detail!==0)return;const m=e.target.closest('[data-match]'),f=e.target.closest('[data-ficha]:not(:disabled)'),c=e.target.closest('[data-respuesta]');if(m)this.elegirMatch(m.dataset.match,m.dataset.side);if(f)this.elegirFicha(f.dataset.ficha);if(c)this.elegirCasilla(c.dataset.respuesta);
     }
     tecla(e){
@@ -210,13 +208,13 @@
       this.revisando=true;$('#revisar').disabled=true;const round=this.ronda;this.efectos.cohetes(vuelos,this.configuracion().sonidos,()=>{if(this.activo&&this.ronda===round){this.revisando=false;this.refrescarPareo();}});
     }
     frase(q,completa=false,pareo=false){const val=k=>!completa&&!pareo&&k===q.campo?t('casilla vacía','empty box'):String(q[k]);return t(`${val('a')} por ${val('b')}${pareo?'':' es '+val('c')}.`,`${val('a')} times ${val('b')}${pareo?'':' equals '+val('c')}.`);}
-    leer(){if(!this.activo||!this.opciones().narracion)return;this.decir(this.modo==='pareo'?this.instrucciones():this.visibles().map(q=>this.frase(q)).join(' '));}
+    leer(){if(this.activo&&this.modo==='pareo'&&this.opciones().narracion)this.decir(this.instrucciones());}
     pista(){
       if(!this.opciones().pistas)return;let q;
       if(this.modo==='pareo'){q=this.left.find(p=>p.requerido&&(!this.links.has(p.id)||this.right.find(r=>r.id===this.links.get(p.id))?.valor!==p.c));if(q){this.seleccion={id:q.id,side:'left'};this.refrescarPareo();}}
       else q=this.visibles().find(q=>q.respuesta===null||Number(q.respuesta)!==q.esperado);
       if(!q){this.estado(t('Las respuestas están listas. Pulsa Revisar.','The answers are ready. Press Check.'));return;}
-      const text=q.campo&&q.campo!=='c'?t(`Busca qué número multiplicado por ${q.campo==='a'?q.b:q.a} da ${q.c}.`,`Find the number that, multiplied by ${q.campo==='a'?q.b:q.a}, gives ${q.c}.`):t(`Puedes sumar ${q.b}, ${q.a} veces.`,`You can add ${q.b}, ${q.a} times.`);this.estado(text);this.decir(text);
+      const text=q.campo&&q.campo!=='c'?t(`Busca qué número multiplicado por ${q.campo==='a'?q.b:q.a} da ${q.c}.`,`Find the number that, multiplied by ${q.campo==='a'?q.b:q.a}, gives ${q.c}.`):t(`Puedes sumar ${q.b}, ${q.a} veces.`,`You can add ${q.b}, ${q.a} times.`);this.estado(text);if(this.modo==='pareo')this.decir(text);
     }
     ajustar(){
       if(!this.activo||!this.root.getClientRects().length)return;const z=parseFloat(getComputedStyle(document.body).zoom)||1,r=$('#espacio').getBoundingClientRect(),firma=[innerWidth,innerHeight,z].join('|');
@@ -227,10 +225,10 @@
         const available=Math.max(110,rootRect.height-bar.height-note-rootGap*(note?2:1)),min=n*(compact?35:42)+(n-1)*gap+title,height=n<=4?Math.max(min,Math.min(available,n*61+(n-1)*24+title)):Math.max(min,available),row=Math.min(62,(height-title-(n-1)*gap)/n);
         this.root.style.setProperty('--match-width',width/z+'px');this.root.style.setProperty('--match-col',col/z+'px');this.root.style.setProperty('--match-height',height/z+'px');this.root.style.setProperty('--match-row',row/z+'px');this.root.style.setProperty('--match-gap',gap/z+'px');this.root.style.setProperty('--match-font',clamp((col-45)/4.5,16,24)/z+'px');this.dibujarPareo();
       }else{
-        const columns=r.width>650?2:1,rows=r.height>(this.modo==='seleccion'?470:360)?2:1,size=columns*rows;
+        const columns=this.modo==='seleccion'?1:r.width>650?2:1,rows=this.modo==='seleccion'?Math.max(1,Math.min(2,Math.floor(r.height/(innerHeight<540?190:this.configuracion().opciones===4?285:245)))):r.height>360?2:1,size=columns*rows;
         if(size!==this.porPagina){const first=this.pagina*this.porPagina;this.porPagina=size;this.pagina=Math.floor(first/size);this.seleccion=this.ficha=null;this.renderPreguntas();$('#revisar').disabled=this.paginaCorrecta();}
         const count=this.visibles().length;this.root.style.setProperty('--preguntas-cols',Math.min(count,columns));this.root.style.setProperty('--preguntas-rows',Math.ceil(count/columns));
-        const options=this.configuracion().opciones;this.root.style.setProperty('--opciones-cols',options===4?2:Math.min(3,options));if(this.modo==='completar'){
+        const options=this.configuracion().opciones;this.root.style.setProperty('--opciones-cols',1);if(this.modo==='completar'){
           const bank=this.root.querySelector('.banco-tablas'),tiles=$('#fichasTablas'),cards=[...this.root.querySelectorAll('.pregunta-tablas')],gap=parseFloat(getComputedStyle($('#preguntasTablas')).rowGap)*z;
           const minimum=cards.length?Math.max(...cards.map(card=>{const style=getComputedStyle(card),head=card.querySelector('header').getBoundingClientRect().height,formula=card.querySelector('.formula-tablas').getBoundingClientRect().height;return head+formula+(head?parseFloat(style.rowGap)*z:0)+(parseFloat(style.paddingTop)+parseFloat(style.paddingBottom)+parseFloat(style.borderTopWidth)+parseFloat(style.borderBottomWidth))*z;})):80;
           const rootRect=this.root.getBoundingClientRect(),rootGap=parseFloat(getComputedStyle(this.root).rowGap)*z,bar=this.root.querySelector('.tablas-barra').getBoundingClientRect().height,note=this.root.querySelector('.nota-tablas')?.getBoundingClientRect().height||0,overhead=bank.getBoundingClientRect().height-tiles.getBoundingClientRect().height,cardRows=Math.ceil(count/columns),needed=minimum*cardRows+Math.max(0,cardRows-1)*gap,available=rootRect.height-bar-note-rootGap*(note?3:2)-overhead-needed,minRow=parseFloat(getComputedStyle(tiles).gridAutoRows)*z;
@@ -238,24 +236,7 @@
         }
       }
     }
-    abrirConfiguracion(){
-      this.cancelarArrastre();this.cancelarAnimacion();const c=this.configuracion(),pareo=this.modo==='pareo',seleccion=this.modo==='seleccion';
-      const field=(label,id,value,min,max)=>`<label>${label}<input type="number" id="modo-${id}" value="${value}" min="${min}" max="${max}" required></label>`;
-      this.dialogo.innerHTML=`<header><h2 id="tituloConfigModo">${this.modo==='pareo'?t('3. Pareo de multiplicaciones','3. Match multiplications'):seleccion?t('5. Selección única','5. Multiple choice'):t('4. Completar multiplicaciones','4. Complete multiplications')}</h2><button id="cerrarConfigModo" type="button" aria-label="${t('Aplicar y cerrar','Apply and close')}">✕</button></header><form id="formConfigModo" method="dialog"><fieldset><legend>${t('Tu ronda','Your round')}</legend><div class="opciones-modo-grid">${field(pareo?t('Parejas por ronda','Pairs per round'):t('Preguntas por ronda','Questions per round'),'cantidad',c.cantidad,1,pareo?12:24)}${seleccion?field(t('Opciones por pregunta','Options per question'),'opciones',c.opciones,2,6):''}${field(t('Multiplicadores desde','Multipliers from'),'minFactor',c.minFactor,0,12)}${field(t('Multiplicadores hasta','Multipliers to'),'maxFactor',c.maxFactor,0,12)}</div></fieldset><fieldset><legend>${t('Tablas para practicar','Times tables to practise')}</legend><div class="acciones-tablas-config"><button type="button" id="todasTablas">${t('Todas','All')}</button><button type="button" id="ningunaTabla">${t('Ninguna','None')}</button></div><div class="elegir-tablas">${Array.from({length:13},(_,n)=>`<label><input type="checkbox" name="tabla" value="${n}" ${c.tablas.includes(n)?'checked':''}><span>${n}</span></label>`).join('')}</div></fieldset>${pareo||!seleccion?`<fieldset><legend>${t('Fichas sobrantes','Extra cards')}</legend><label class="casilla-config"><input type="checkbox" id="modo-sobrantes" ${c.sobrantes?'checked':''}> ${t('Incluir sobrantes','Include extra cards')}</label><div class="opciones-modo-grid">${field(t('Cantidad de sobrantes en total','Total extra cards'),'cantidadSobrantes',c.cantidadSobrantes,0,6)}${pareo?`<label>${t('Dónde sobran','Extra card side')}<select id="modo-ladoSobrantes"><option value="derecha">${t('Resultados (derecha)','Results (right)')}</option><option value="izquierda">${t('Multiplicaciones (izquierda)','Multiplications (left)')}</option><option value="ambos">${t('Ambos lados','Both sides')}</option></select></label>`:''}</div></fieldset>`:''}${!pareo?`<fieldset><legend>${t('Qué se completa','What to complete')}</legend><label>${t('Tipo de pregunta','Question type')}<select id="modo-tipo"><option value="producto">${t('Solo el producto','Only the product')}</option><option value="factor">${t('Un factor','One factor')}</option><option value="mixto">${t('Productos y factores','Products and factors')}</option></select></label><label id="posicionFactorCampo">${t('Factor que falta','Missing factor')}<select id="modo-posicionFactor"><option value="variado">${t('Variar entre los dos','Either factor')}</option><option value="primero">${t('Primer factor','First factor')}</option><option value="segundo">${t('Segundo factor','Second factor')}</option></select></label></fieldset>`:''}<label class="casilla-config"><input type="checkbox" id="modo-sonidos" ${c.sonidos?'checked':''}>${pareo?t('Sonidos de vuelo y explosión','Flight and explosion sounds'):t('Sonidos de celebración','Celebration sounds')}</label><p class="nota-modo-config">${t('El idioma, la voz y la velocidad se eligen en Configuración general.','Choose language, voice and speed in General settings.')}</p><p id="modoConfigError" role="alert"></p><button class="principal" type="submit">${t('Aplicar y jugar','Apply and play')}</button></form>`;
-      for(const k of ['ladoSobrantes','tipo','posicionFactor']){const e=$('#modo-'+k);if(e)e.value=c[k];}
-      $('#todasTablas').onclick=()=>this.dialogo.querySelectorAll('[name=tabla]').forEach(e=>e.checked=true);$('#ningunaTabla').onclick=()=>this.dialogo.querySelectorAll('[name=tabla]').forEach(e=>e.checked=false);
-      const update=()=>{const s=$('#modo-sobrantes');if(s)for(const k of ['cantidadSobrantes','ladoSobrantes']){const e=$('#modo-'+k);if(e)e.disabled=!s.checked;}if($('#posicionFactorCampo'))$('#posicionFactorCampo').hidden=$('#modo-tipo').value==='producto';};this.dialogo.querySelectorAll('input,select').forEach(e=>e.addEventListener('change',update));update();
-      $('#cerrarConfigModo').onclick=()=>this.aplicarConfiguracion();$('#formConfigModo').onsubmit=e=>{e.preventDefault();this.aplicarConfiguracion();};
-      this.dialogo.style.zoom=String(1/(parseFloat(getComputedStyle(document.body).zoom)||1));this.dialogo.showModal();
-    }
-    aplicarConfiguracion(){
-      const candidate={...this.configuracion()};for(const k of Object.keys(defaults)){const el=$('#modo-'+k);if(el)candidate[k]=el.type==='checkbox'?el.checked:el.value;}
-      candidate.tablas=[...this.dialogo.querySelectorAll('[name=tabla]:checked')].map(e=>Number(e.value));const c=sanitize(candidate);if(this.modo==='pareo')c.cantidad=Math.min(12,c.cantidad);
-      if(!c.tablas.length){$('#modoConfigError').textContent=t('Escoge al menos una tabla.','Choose at least one times table.');return;}
-      if(this.modo!=='pareo'&&c.tipo!=='producto'&&!this.bases(c).some(p=>this.posiciones(p,c).length)){$('#modoConfigError').textContent=t('Con estos ceros el factor no tendría una única respuesta. Cambia los multiplicadores, el factor o usa productos.','With these zeros the missing factor would not have a unique answer. Change the multipliers, the missing factor or use products.');return;}
-      this.guardadas[this.modo]=c;try{localStorage.setItem('multiplicacion.'+this.modo+'.v1',JSON.stringify(c));}catch{}
-      this.dialogo.close();this.nueva(this.modo);
-    }
+
   }
   window.ModosTablas=ModosTablas;
 })();

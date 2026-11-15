@@ -58,3 +58,24 @@
 #game.modo-pareo .pareo,#game.modo-pareo.pareo-horizontal .pareo,#game.modo-pareo:not(.pareo-horizontal) .pareo{height:100%!important;min-height:var(--alto-minimo-pareo,0px);overflow:visible}
 #game.modo-pareo .pareo .col{overflow:visible;scrollbar-gutter:auto;height:100%;max-height:none;min-height:0}
 #game.modo-pareo.pareo-horizontal.activa{grid-template-rows:minmax(100%,max-content)}
+
+/* El pareo comparte el lenguaje visual de Multiplica y agrupa. */
+#game.modo-pareo .pareo{background:#f6f9ff;border:calc(2 * var(--unidad-juego,1px)) solid #dbe4f5;border-radius:calc(20 * var(--unidad-juego,1px))}
+#game.modo-pareo .pareo .col{background:#f7faff;border:calc(1.5 * var(--unidad-juego,1px)) solid #d6e1f4;border-radius:calc(16 * var(--unidad-juego,1px));padding:calc(6 * var(--unidad-juego,1px));box-shadow:none}
+#game.modo-pareo .pareo .col:before{color:#51688d;font-size:calc(14 * var(--unidad-juego,1px))}
+#game.modo-pareo .pareo .par-row{grid-template-columns:minmax(0,1fr) calc(33 * var(--unidad-juego,1px));gap:calc(4 * var(--unidad-juego,1px));padding:calc(4 * var(--unidad-juego,1px)) calc(3 * var(--unidad-juego,1px));border:calc(1.5 * var(--unidad-juego,1px)) solid #d4dced;border-radius:calc(13 * var(--unidad-juego,1px));background:#fff;box-shadow:0 calc(2 * var(--unidad-juego,1px)) calc(5 * var(--unidad-juego,1px)) #2137690d}
+#game.modo-pareo .pareo .par-row.right{grid-template-columns:calc(33 * var(--unidad-juego,1px)) minmax(0,1fr)}
+#game.modo-pareo .pareo .caja-par{border:0;box-shadow:none;background:transparent;border-radius:0;color:#344e7a}
+#game.modo-pareo .pareo .caja-par.num{color:#3b52a6}
+#game.modo-pareo .pareo .bandera{background:transparent;border:0;border-radius:0;box-shadow:none;width:calc(33 * var(--unidad-juego,1px));height:calc(33 * var(--unidad-juego,1px));min-height:calc(33 * var(--unidad-juego,1px));font-size:calc(25 * var(--unidad-juego,1px))}
+#game.modo-pareo .pareo .bandera.activa,#game.modo-pareo .pareo .bandera.elegida{outline:none;transform:none}
+#game.modo-pareo .pareo .par-row:has(.bandera.activa,.bandera.elegida){border-color:#9771d2;box-shadow:0 0 0 calc(2 * var(--unidad-juego,1px)) #bfa5e555;background:#f5f0ff}
+#game.modo-pareo .pareo .par-row:has(.caja-par.ok){background:#e5f6e9;border-color:#70b481}
+#game.modo-pareo .pareo .par-row:has(.caja-par.mal){background:#fff0e7;border-color:#cf9478}
+#game.modo-pareo .pareo .linea{filter:none;stroke-width:calc(4 * var(--unidad-juego,1px))}
+
+#game.modo-pareo .pareo .col{height:min(100%,calc((var(--filas-pareo,6)*84 + 36) * var(--unidad-juego,1px)));align-self:center}
+#game.modo-pareo .pareo .lista-pares{flex:1 0 auto;grid-template-rows:repeat(var(--filas-pareo,6),calc(64 * var(--unidad-juego,1px)));align-content:space-between;height:auto}
+#game.modo-pareo .pareo .caja-par.nom{padding-left:calc(3 * var(--unidad-juego,1px))!important;padding-right:calc(3 * var(--unidad-juego,1px))!important}
+
+#game.modo-pareo .pareo .caja-par.num{font-size:var(--fuente-num-pareo,calc(20 * var(--unidad-juego,1px)))!important}

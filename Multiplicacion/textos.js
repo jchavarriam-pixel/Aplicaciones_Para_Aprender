@@ -77,3 +77,5 @@ Object.assign(window.TEXTOS_INGLES||(window.TEXTOS_INGLES={}),{
   "Libre": "Free arrangement",
   "Deslizar suavemente al soltar": "Glide gently when released"
 });
+
+Object.assign(window.TEXTOS_INGLES,{'Escoge cómo quieres practicar':'Choose how to practise','1. Aprende las tablas':'1. Learn times tables','2. Forma grupos':'2. Make groups','3. Pareo':'3. Match','4. Completar':'4. Complete','5. Escoger':'5. Choose','Cuenta figuras ordenadas y descubre la multiplicación.':'Count ordered shapes and discover multiplication.','Une figuras en grupos iguales y calcula el total.':'Join shapes into equal groups and calculate the total.','Une cada multiplicación con su resultado.':'Match each multiplication to its result.','Arrastra fichas para completar productos o factores.':'Drag tiles to complete products or factors.','Lee la pregunta y marca una respuesta.':'Read the question and mark one answer.','‹ Modos de juego':'‹ Game modes'});

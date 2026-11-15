@@ -360,18 +360,19 @@ function fitPareo(){
   const contexto=document.createElement('canvas').getContext('2d'),muestra=board.querySelector('.caja-par'),estilo=getComputedStyle(muestra);contexto.font=`${estilo.fontWeight} ${14/scale}px ${estilo.fontFamily}`;
   const palabraMasAncha=Math.max(...[...board.querySelectorAll('.caja-par')].flatMap(e=>e.textContent.split(/\s+/)).map(t=>contexto.measureText(t).width*scale));
   const caracter=contexto.measureText('0').width*scale,margen=(parseFloat(colCss.paddingLeft)+parseFloat(colCss.paddingRight)+parseFloat(colCss.borderLeftWidth)+parseFloat(colCss.borderRightWidth))*scale;
-  const separacion=6,cohete=30,textoConEspacio=palabraMasAncha+4*caracter+4;
-  const anchoColumna=Math.min(rect.width*.44,Math.max(105,textoConEspacio+margen+cohete+separacion));board.style.setProperty('--ancho-columna-pareo',anchoColumna/scale+'px');
+  const separacion=4,cohete=33,textoConEspacio=palabraMasAncha+4*caracter+4;
+  const anchoColumna=Math.min(174,rect.width*.44,Math.max(130,textoConEspacio+margen+cohete+separacion+12));board.style.setProperty('--ancho-columna-pareo',anchoColumna/scale+'px');
   const anchoInterior=rect.width/scale-parseFloat(css.paddingLeft)-parseFloat(css.paddingRight)-parseFloat(css.borderLeftWidth)-parseFloat(css.borderRightWidth);
   board.style.setProperty('--espacio-central-pareo',Math.max(0,Math.min(2.5*anchoColumna/scale,anchoInterior-2*anchoColumna/scale))+'px');
-  const fuente=Math.min(14,Math.max(10.5,14*(anchoColumna-margen-cohete-separacion)/textoConEspacio));board.style.setProperty('--fuente-pareo-ajustada',fuente/scale+'px');
+  const fuente=Math.min(14,Math.max(10.5,14*(anchoColumna-margen-cohete-separacion-12)/textoConEspacio));board.style.setProperty('--fuente-pareo-ajustada',fuente/scale+'px');
+  const cifras=Math.max(1,...[...board.querySelectorAll('.caja-par.num')].map(e=>e.textContent.trim().length));board.style.setProperty('--fuente-num-pareo',Math.min(22,Math.max(12,(anchoColumna-margen-cohete-separacion-12)/((cifras+4)*.7)))/scale+'px');
 
   const game=document.getElementById('game'),horizontal=game.classList.contains('pareo-horizontal'),header=game.querySelector('.encabezado');
   game.style.minHeight=innerHeight/scale+'px';
   const origin=horizontal?game.getBoundingClientRect().top+parseFloat(getComputedStyle(game).paddingTop)*scale:header.getBoundingClientRect().bottom+parseFloat(getComputedStyle(header).marginBottom)*scale;
   const rows=Math.max(state.data.left.length,state.data.right.length),gap=(rows>10?3:6)/scale;
   const boardFrame=(board.querySelector('.inst')?.offsetHeight||0)+(board.querySelector('.acciones')?.offsetHeight||0)+parseFloat(css.paddingTop)+parseFloat(css.paddingBottom)+parseFloat(css.borderTopWidth)+parseFloat(css.borderBottomWidth)+(document.getElementById('game').classList.contains('pareo-horizontal')?0:2)*parseFloat(css.rowGap);
-  board.style.setProperty('--alto-minimo-pareo',(boardFrame+(rows*66+45)/scale)+'px');
+  board.style.setProperty('--alto-minimo-pareo',(boardFrame+(rows*72+45)/scale)+'px');
   const colFrame=28+gap+parseFloat(colCss.paddingTop)+parseFloat(colCss.paddingBottom)+parseFloat(colCss.borderTopWidth)+parseFloat(colCss.borderBottomWidth);
   const sidebar=document.getElementById('pareoSidebar');if(sidebar)sidebar.style.minHeight=Math.max(0,(innerHeight-sidebar.getBoundingClientRect().top-18)/scale)+'px';
   const available=(innerHeight-Math.max(0,origin)-18)/scale-boardFrame,budget=(available-colFrame-gap*(rows-1))/rows;
