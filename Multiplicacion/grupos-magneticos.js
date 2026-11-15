@@ -54,10 +54,25 @@
         return Math.hypot(n.x-p.x-t*dx,n.y-p.y-t*dy)<radio;
       });
     }
+    cruzanEnlaces(primero,segundo,nodos=this.nodos) {
+      if(primero.some(id=>segundo.includes(id)))return false;
+      const [a,b]=primero.map(id=>nodos[id]),[c,d]=segundo.map(id=>nodos[id]);
+      const giro=(p,q,r)=>(q.x-p.x)*(r.y-p.y)-(q.y-p.y)*(r.x-p.x),eps=.01;
+      const [u,v,w,z]=[giro(a,b,c),giro(a,b,d),giro(c,d,a),giro(c,d,b)];
+      if((u>eps&&v< -eps||u< -eps&&v>eps)&&(w>eps&&z< -eps||w< -eps&&z>eps))return true;
+      const dentro=(p,q,r)=>r.x>=Math.min(p.x,q.x)-eps&&r.x<=Math.max(p.x,q.x)+eps&&r.y>=Math.min(p.y,q.y)-eps&&r.y<=Math.max(p.y,q.y)+eps;
+      return Math.abs(u)<=eps&&dentro(a,b,c)||Math.abs(v)<=eps&&dentro(a,b,d)||Math.abs(w)<=eps&&dentro(c,d,a)||Math.abs(z)<=eps&&dentro(c,d,b);
+    }
     calcularEnlaces(grupos,nodos=this.nodos,tam=this.mundo.tam) {
-      const enlaces=[];
-      for(const ids of grupos)for(let i=0;i<ids.length;i++)for(let j=i+1;j<ids.length;j++)
-        if(this.conexionLibre(ids[i],ids[j],nodos,tam))enlaces.push([ids[i],ids[j]]);
+      const candidatos=[],enlaces=[];
+      for(const ids of grupos)for(let i=0;i<ids.length;i++)for(let j=i+1;j<ids.length;j++){
+        const a=ids[i],b=ids[j];
+        if(this.conexionLibre(a,b,nodos,tam))candidatos.push({par:[a,b],largo:distancia(nodos[a],nodos[b])});
+      }
+      // Las conexiones cortas tienen prioridad. No añadir una segunda diagonal
+      // que cruce un enlace visible, aunque ambos extremos estén cerca.
+      candidatos.sort((a,b)=>Math.abs(a.largo-b.largo)>.001?a.largo-b.largo:a.par[0]-b.par[0]||a.par[1]-b.par[1]);
+      for(const {par}of candidatos)if(!enlaces.some(e=>this.cruzanEnlaces(par,e,nodos)))enlaces.push(par);
       return enlaces;
     }
     conectado(ids,enlaces) {
@@ -141,8 +156,9 @@
         const etiqueta=opciones.find(p=>p.x>=48&&p.x<=w-48&&p.y>=12&&p.y<=h-12&&this.nodos.every(n=>Math.hypot(Math.max(Math.abs(n.x-p.x)-46,0),Math.max(Math.abs(n.y-p.y)-10,0))>tam*.46))||{x:limitar(cx,49,w-49),y:limitar(minY-radio-13,13,h-13)},x=etiqueta.x,y=etiqueta.y;
         svg+=`<g class="etiqueta-completo"><rect x="${x-46}" y="${y-10}" width="92" height="20" rx="10"/><text x="${x}" y="${y+4}" text-anchor="middle">${this.t('✓ Completo','✓ Complete')}</text></g>`;
       }
-      for(const [a,b]of this.calcularEnlaces(grupos)){const p=this.nodos[a],q=this.nodos[b];svg+=`<line class="enlace" data-a="${a}" data-b="${b}" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}"/>`;}
-      if(this.candidato&&!this.candidato.bloqueado&&this.conexionLibre(this.candidato.a,this.candidato.b)){const {a,b}=this.candidato,p=this.nodos[a],q=this.nodos[b];svg+=`<line class="enlace-propuesto" data-a="${a}" data-b="${b}" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}"/>`;}
+      const visibles=this.calcularEnlaces(grupos);
+      for(const [a,b]of visibles){const p=this.nodos[a],q=this.nodos[b];svg+=`<line class="enlace" data-a="${a}" data-b="${b}" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}"/>`;}
+      if(this.candidato&&!this.candidato.bloqueado&&this.conexionLibre(this.candidato.a,this.candidato.b)&&!visibles.some(e=>this.cruzanEnlaces([this.candidato.a,this.candidato.b],e))){const {a,b}=this.candidato,p=this.nodos[a],q=this.nodos[b];svg+=`<line class="enlace-propuesto" data-a="${a}" data-b="${b}" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}"/>`;}
       this.svg.innerHTML=svg;
       this.separar.disabled=this.resuelto||this.seleccion===null||!this.enlaces.some(e=>e.includes(this.seleccion));
       this.deshacer.disabled=this.resuelto||!this.historial.length;
