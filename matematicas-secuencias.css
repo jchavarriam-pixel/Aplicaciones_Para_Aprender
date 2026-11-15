@@ -68,3 +68,24 @@ dialog .casilla-config input{accent-color:#7161ca}
 .vertical .cabecera{padding-bottom:calc(6*var(--u));padding-left:calc(10*var(--u))}
 .vertical #ejemplo>span{padding:calc(2*var(--u)) calc(6*var(--u))}
 .corta .cabecera{padding-bottom:calc(7*var(--u))}
+
+/* Toda la ronda a la vista y un único panel que acompaña al ejercicio activo. */
+.actividad{position:relative;grid-template-rows:auto minmax(0,1fr) auto auto}
+.cards{padding-right:calc(var(--bank-width,220px) + 14*var(--u));grid-template-rows:repeat(var(--cards,1),minmax(var(--card-min,70px),1fr));gap:calc(9*var(--u));align-content:stretch;overflow:auto}
+.card{max-height:none;padding:calc(8*var(--u));gap:calc(5*var(--u));align-self:stretch;transition:border-color .15s,background-color .15s}
+.cards:has(.card:only-child) .card{max-height:calc(230*var(--u));align-self:center}
+.card.is-active{border-color:#8f73dc;background:linear-gradient(125deg,#f1efff,#f8f8ff);box-shadow:inset calc(4*var(--u)) 0 #9272df,0 calc(3*var(--u)) 0 #d8d0f24d}
+.card.is-complete{border-color:#8dceb8}.card.is-locked{background:#f6f8ff}
+.card.is-locked .num-box.fixed{background:#7b86d0;border-color:#6976c2}.card.is-locked .slot:disabled{opacity:1;cursor:default}
+.sequence{gap:calc(6*var(--u))}.box-wrap{grid-template-rows:calc(12*var(--u)) auto;gap:calc(3*var(--u))}.label{font-size:calc(10*var(--u))}
+.card-head{font-size:calc(10*var(--u))}.card-head button{min-height:calc(26*var(--u));font-size:calc(11*var(--u));padding:calc(3*var(--u)) calc(6*var(--u))}
+#answerPanel{position:absolute;width:var(--bank-width,220px);z-index:8;border:calc(2*var(--u)) solid #e6c765;box-shadow:0 calc(7*var(--u)) calc(20*var(--u)) #69542624;padding:calc(8*var(--u));gap:calc(5*var(--u));overflow:visible}
+#answerPanel:before{content:'';position:absolute;left:calc(-7*var(--u));top:calc(var(--flecha-banco,30px) - 6*var(--u));width:calc(11*var(--u));height:calc(11*var(--u));background:#fff9df;border-left:calc(2*var(--u)) solid #e6c765;border-bottom:calc(2*var(--u)) solid #e6c765;transform:rotate(45deg)}
+.banco-cabecera{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:calc(4*var(--u))}.panel-secuencia{grid-column:1/-1;color:#876323;font-size:calc(11*var(--u));font-weight:800}
+.banco h2,.vertical .banco h2,.corta .banco h2{font-size:calc(13*var(--u));display:block}.banco:has(#responseTabs:not([hidden])) h2{display:none}#responseTabs{grid-column:1/-1;grid-row:2}#responseTabs button{flex:1}
+#clearBtn{grid-column:2;grid-row:2;width:calc(28*var(--u));min-height:calc(28*var(--u));padding:calc(3*var(--u));font-size:calc(17*var(--u))}.banco:has(#responseTabs:not([hidden])) #clearBtn{grid-row:3}
+#moreTiles{grid-column:3;grid-row:2}.banco:has(#responseTabs:not([hidden])) #moreTiles{grid-row:3}
+#deckHint,#selectedSlotHint{display:none}.deck{gap:calc(6*var(--u));min-height:0}.keypad{grid-template-columns:repeat(3,minmax(0,1fr));gap:calc(5*var(--u))}.key{min-height:calc(38*var(--u));font-size:calc(21*var(--u))}.key[data-key=clear]{font-size:calc(11*var(--u))}
+.corta .key{min-height:calc(30*var(--u))}.corta .card,.baja .card{padding:calc(6*var(--u));gap:calc(4*var(--u))}.corta .box-wrap,.baja .box-wrap{grid-template-rows:calc(12*var(--u)) auto;gap:calc(3*var(--u))}
+#message{min-height:0}.acciones-juego{padding-right:calc(100*var(--u))}
+@media(prefers-reduced-motion:reduce){.card{transition:none}}

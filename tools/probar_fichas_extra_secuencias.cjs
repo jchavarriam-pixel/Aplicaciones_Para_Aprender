@@ -11,7 +11,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),path
    await page.locator('#startBtn').click();await page.waitForTimeout(100);
   }
   async function verify(count,min=10,max=99){
-   const cards=await page.locator('.card').evaluateAll(es=>es.map(card=>{
+   const cards=await page.locator('.card.is-active').evaluateAll(es=>es.map(card=>{
     const id=card.dataset.seq,slots=[...card.querySelectorAll('.slot')],given=Number(card.querySelector('.fixed').textContent),answers=[given,...slots.map(e=>Number(e.dataset.answer))];
     const tiles=[...document.querySelectorAll('.tile')].filter(e=>e.dataset.tileId.startsWith(id+'x'));
     return{answers,extras:tiles.map(e=>Number(e.dataset.value))};

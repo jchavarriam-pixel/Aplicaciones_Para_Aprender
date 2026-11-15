@@ -23,13 +23,13 @@
   <section id="exerciseScreen" class="actividad" aria-label="Completar secuencias">
     <header class="encabezado-reto"><div><span class="sobre-titulo">DE UNO EN UNO</span><h2 id="retoTitulo">Encuentra los números vecinos</h2></div><span id="pageLabel" class="contador"></span></header>
     <section id="cardsArea" class="cards" aria-label="Secuencias de números"></section>
-    <section class="banco" aria-label="Opciones de respuesta">
-      <header class="banco-cabecera"><h2 id="bankTitle">Tus fichas</h2><div id="responseTabs" role="group" aria-label="Forma de responder" hidden><button data-entry="drag">Fichas</button><button data-entry="write">Teclado</button></div><button id="clearBtn" type="button" class="borrar">⌫ Borrar casilla</button><button id="moreTiles" type="button" aria-label="Ver más fichas" title="Ver más fichas" hidden>↓</button></header>
+    <section id="answerPanel" class="banco" aria-label="Respuestas del ejercicio activo">
+      <header class="banco-cabecera"><span id="bankSequence" class="panel-secuencia"></span><h2 id="bankTitle">Tus fichas</h2><div id="responseTabs" role="group" aria-label="Forma de responder" hidden><button data-entry="drag">Fichas</button><button data-entry="write">Teclado</button></div><button id="clearBtn" type="button" class="borrar" aria-label="Borrar casilla" title="Borrar casilla">⌫</button><button id="moreTiles" type="button" aria-label="Ver más fichas" title="Ver más fichas" hidden>↓</button></header>
       <div id="deckPanel"><p id="deckHint"></p><div id="deck" class="deck" aria-label="Fichas para arrastrar"></div></div>
       <div id="keypadPanel" hidden><p id="selectedSlotHint"></p><div id="keypad" class="keypad" aria-label="Teclado de números"></div></div>
     </section>
     <p id="message" role="status" aria-live="polite"></p>
-    <footer class="acciones-juego"><nav id="pager" aria-label="Páginas de ejercicios"><button id="seqPrev" aria-label="Página anterior">‹</button><span id="seqPage"></span><button id="seqNext" aria-label="Página siguiente">›</button></nav><button id="checkBtn" class="principal">✓ Revisar</button></footer>
+    <footer class="acciones-juego"><button id="checkBtn" class="principal">✓ Revisar</button></footer>
   </section>
 </main>
 <button id="plegar" type="button" aria-controls="herramientas" aria-expanded="true" aria-label="Ocultar panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16"/></svg></button>
@@ -56,7 +56,7 @@
       <label class="casilla-config"><input id="hintEnabled" type="checkbox"> Permitir pista paso a paso</label>
       <label class="casilla-config"><input id="speechEnabled" type="checkbox"> Leer instrucciones y respuestas</label>
       <label class="casilla-config"><input id="readPlacements" type="checkbox"> Leer el número al colocarlo</label>
-      <label class="casilla-config"><input id="autoReadRound" type="checkbox"> Leer la ronda al iniciar</label>
+      <label class="casilla-config"><input id="autoReadRound" type="checkbox"> Leer el ejercicio al tomar el foco</label>
     </fieldset>
     <section id="preferenciasSecuencias"></section><button id="startBtn" class="principal">Aplicar y jugar</button>
   </form>
