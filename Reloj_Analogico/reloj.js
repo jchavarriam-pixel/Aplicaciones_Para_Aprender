@@ -2,12 +2,12 @@
 'use strict';const $=s=>document.querySelector(s),key='relojAnalogico.config.v1';let config={precision:'horas',pistas:true,narracion:true,modo:'explica',aprende:'lecciones',ayudaHoras:true,ayudaMinutos:true,nombresAgujas:true};try{Object.assign(config,JSON.parse(localStorage.getItem(key)||'{}'));}catch{}if(!['horas','medias','cuartos','cinco','libre'].includes(config.precision))config.precision='horas';if(!['explica','explora','construye','lee','pareo'].includes(config.modo))config.modo='explica';
 if(typeof config.nombresAgujas!=='boolean')config.nombresAgujas=true;
 // Migrate the existing preferences into independent mode settings without losing them.
-const opcionesModo=['precision','pistas','nombresAgujas','ayudaHoras','ayudaMinutos','aprende','cantidadPareo','extrasPareo'];
+const opcionesModo=['aprende','cantidadPareo','extrasPareo'];
+if(!['relieve','plano'].includes(config.estiloAgujas))config.estiloAgujas='relieve';
 config.modos ||= {};let enInicio=true;
 for(const modo of ['explica','explora','construye','lee','pareo']){
  const anterior=config.modos[modo]||{};
  config.modos[modo]=Object.fromEntries(opcionesModo.map(k=>[k,anterior[k]??config[k]??({cantidadPareo:3,extrasPareo:0}[k])]));
- if(!['horas','medias','cuartos','cinco','libre'].includes(config.modos[modo].precision))config.modos[modo].precision='horas';
  config.modos[modo].cantidadPareo=Math.max(2,Math.min(6,Number(config.modos[modo].cantidadPareo)||3));
  config.modos[modo].extrasPareo=Math.max(0,Math.min(2,Number(config.modos[modo].extrasPareo)||0));
 }
@@ -32,6 +32,7 @@ const lecciones=[
 function leccionesActuales(){const ids={horas:[0,1],medias:[0,3],cuartos:[0,2],cinco:[0,4,1],libre:[0,1,2,3,4]}[config.precision];return ids.map(i=>lecciones[i]);}
 function actualizarAyudaAgujas(){
  $('#reloj').classList.toggle('con-nombres',config.nombresAgujas);
+ $('#reloj').classList.toggle('agujas-planas',config.estiloAgujas==='plano');
  $('#textoHoraAguja').textContent=t('Hora','Hour');$('#textoMinutosAguja').textContent=t('Minutos','Minutes');
  document.querySelectorAll('#horaria .punta-aguja,#horaria .sombra-punta').forEach(p=>p.setAttribute('d',config.nombresAgujas?'M300 161 L284 187 L316 187 Z':'M300 161 L288 184 L312 184 Z'));
  document.querySelectorAll('#minutera .punta-aguja,#minutera .sombra-punta').forEach(p=>p.setAttribute('d',config.nombresAgujas?'M300 77 L284 110 L316 110 Z':'M300 77 L289 109 L311 109 Z'));
@@ -46,10 +47,10 @@ function pintarRotulosAgujas(){
 function pintar(){total=norm(total);pintarRotulosAgujas();$('#horaria').setAttribute('transform',`rotate(${total*.5} 300 296)`);$('#minutera').setAttribute('transform',`rotate(${total*6} 300 296)`);$('#reloj').dataset.minutos=String(total);for(const el of [$('#horaria'),$('#minutera')]){el.setAttribute('aria-valuenow',String(Math.round(total)));el.setAttribute('aria-valuetext',digital(total));el.setAttribute('aria-disabled',String(!['explora','construye'].includes(config.modo)));el.tabIndex=['explora','construye'].includes(config.modo)?0:-1;}
 $('#digital').textContent=digital(total);$('#digital').hidden=!['explora','explica'].includes(config.modo);}
 function parar(){window.PareoReloj?.cancelar();cancelarCelebracion();cancelarLectura();limpiarResaltado();cancelarCifra();cancelAnimationFrame(raf);raf=0;$('#animar').textContent=t('▶ Animación','▶ Animation');if(drag)terminarAguja(true);}
-function sector(n){const m=n%60;if(!m){$('#sector').innerHTML='';return;}const a=m*Math.PI/30,x=300+191*Math.sin(a),y=296-191*Math.cos(a);$('#sector').innerHTML=`<path d="M300 296 L300 105 A191 191 0 ${m>30?1:0} 1 ${x} ${y} Z" fill="#cceff7" opacity=".55"/>`;}
+function sector(n){if(!config.ayudaMinutos){$('#sector').innerHTML='';return;}const m=n%60;if(!m){$('#sector').innerHTML='';return;}const a=m*Math.PI/30,x=300+191*Math.sin(a),y=296-191*Math.cos(a);$('#sector').innerHTML=`<path d="M300 296 L300 105 A191 191 0 ${m>30?1:0} 1 ${x} ${y} Z" fill="#cceff7" opacity=".55"/>`;}
 function explicar(animado=true){parar();const l=leccionesActuales()[leccion];$('#explicacion').textContent=t(l.es,l.en);$('#reto').textContent=t('Descubre cómo funciona','Discover how it works')+' · '+(leccion+1)+'/'+leccionesActuales().length;total=l.desde;pintar();sector(total);if(!animado)return;decir(t(l.es,l.en));let inicio,ultimoResaltado='';$('#animar').textContent=t('■ Detener','■ Stop');function paso(ms){inicio??=ms;const f=Math.min(1,(ms-inicio)/l.duracion);total=l.desde+(l.hasta-l.desde)*f;pintar();sector(total);const partesHora=partes(total),clave=partesHora.h+':'+Boolean(partesHora.m);if(clave!==ultimoResaltado){resaltar('hora',total);ultimoResaltado=clave;}if(f<1)raf=requestAnimationFrame(paso);else{raf=0;$('#animar').textContent=t('↻ Animación','↻ Animation');}}raf=requestAnimationFrame(paso);}
 function estado(texto,bien=false){$('#estado').textContent=texto;$('#estado').classList.toggle('bien',bien);programar();}
-function nueva(){parar();if(enInicio)return;if(config.modo==='pareo'){iniciarPareo();return;}$('#pareoRelojes').hidden=true;$('.escena-relojes').hidden=false;$('.leyenda').hidden=false;retrocesoMinutera=0;actualizarAyudaAgujas();actualizarBotonesExplora();document.querySelectorAll('#respuesta [data-campo].seleccionado').forEach(e=>e.classList.remove('seleccionado'));campoActivo=$('#respuestaHora');for(const [id,valor]of [['#verAnimaciones','lecciones'],['#verHoras','horas']]){$(id).classList.toggle('opcion-activa',config.aprende===valor);$(id).setAttribute('aria-pressed',String(config.aprende===valor));}window.speechSynthesis?.cancel();acertado=false;estado('');$('#sector').innerHTML='';$('#respuestaHora').value='';$('#respuestaMinuto').value='';dibujarCasillas();$('#explicacion').textContent='';$('#explicacion').hidden=config.modo!=='explica';$('#exploracion').hidden=config.modo!=='explora';$('#respuesta').hidden=config.modo!=='lee';$('#lecciones').hidden=config.modo!=='explica';$('#revisar').hidden=!['construye','lee'].includes(config.modo);$('#ayuda').hidden=!config.pistas;$('#escuchar').hidden=!config.narracion;$('#nueva').hidden=config.modo==='explica';$('#opcionesAprende').hidden=config.modo!=='explica';$('#ejemplosAprende').hidden=config.modo!=='explica'||config.aprende!=='horas';$('#lecciones').hidden=config.modo!=='explica'||config.aprende==='horas';$('#bancoCifras').hidden=config.modo!=='lee';entrada.hidden=config.modo!=='lee';$('#relojObjetivo').hidden=config.modo!=='construye';$('.actividad').dataset.actividad=config.modo;
+function nueva(){parar();if(enInicio)return;$('#configurar').hidden=!['explica','pareo'].includes(config.modo);if(config.modo==='pareo'){iniciarPareo();return;}$('#pareoRelojes').hidden=true;$('.escena-relojes').hidden=false;$('.leyenda').hidden=false;retrocesoMinutera=0;actualizarAyudaAgujas();actualizarBotonesExplora();document.querySelectorAll('#respuesta [data-campo].seleccionado').forEach(e=>e.classList.remove('seleccionado'));campoActivo=$('#respuestaHora');for(const [id,valor]of [['#verAnimaciones','lecciones'],['#verHoras','horas']]){$(id).classList.toggle('opcion-activa',config.aprende===valor);$(id).setAttribute('aria-pressed',String(config.aprende===valor));}window.speechSynthesis?.cancel();acertado=false;estado('');$('#sector').innerHTML='';$('#respuestaHora').value='';$('#respuestaMinuto').value='';dibujarCasillas();$('#explicacion').textContent='';$('#explicacion').hidden=config.modo!=='explica';$('#exploracion').hidden=config.modo!=='explora';$('#respuesta').hidden=config.modo!=='lee';$('#lecciones').hidden=config.modo!=='explica';$('#revisar').hidden=!['construye','lee'].includes(config.modo);$('#ayuda').hidden=!config.pistas;$('#escuchar').hidden=!config.narracion;$('#nueva').hidden=config.modo==='explica';$('#opcionesAprende').hidden=config.modo!=='explica';$('#ejemplosAprende').hidden=config.modo!=='explica'||config.aprende!=='horas';$('#lecciones').hidden=config.modo!=='explica'||config.aprende==='horas';$('#bancoCifras').hidden=config.modo!=='lee';entrada.hidden=config.modo!=='lee';$('#relojObjetivo').hidden=config.modo!=='construye';$('.actividad').dataset.actividad=config.modo;
 const instrucciones={explica:t('Mira las agujas y reproduce cada animación.','Watch the hands and play each animation.'),explora:t('Arrastra las agujas. La minutera avanza en sentido horario y permite corregir hasta 5 minutos hacia atrás.','Drag the hands. The minute hand moves clockwise and allows a correction of up to 5 minutes backwards.'),construye:t('Pon la hora indicada. Avanza la minutera en sentido horario; puedes corregir hasta 5 minutos hacia atrás.','Set the given time. Move the minute hand clockwise; you can correct up to 5 minutes backwards.'),lee:t('Mira las agujas y arrastra las cifras. Toca Hora o Minutos para ver su ayuda.','Read the hands and drag the digits. Touch Hour or Minutes to see its hint.')};$('#instruccion').textContent=instrucciones[config.modo];
 if(config.modo==='explica'){if(config.aprende==='horas')ejemploHora(false);else explicar(false);}else if(config.modo==='explora'){total=ajustar(total);$('#reto').textContent=t('¡Mueve el tiempo!','Move the time!');}else{objetivo=siguienteObjetivo();total=config.modo==='lee'?objetivo:ajustar(objetivo+120);$('#reto').textContent=config.modo==='construye'?t('Pon las agujas','Set the hands'):t('¿Qué hora es?','What time is it?');decir(config.modo==='construye'?t('Construye: ','Set the clock: ')+digital(objetivo):$('#reto').textContent);}$('#horaObjetivo').textContent=digital(objetivo);pintar();programar();}
 function cancelarCelebracion(){const efecto=efectoCelebracion;if(!efecto)return;efectoCelebracion=null;cancelAnimationFrame(efecto.frame);total=efecto.hora;$('#celebracion').replaceChildren();$('#celebracion').style.cssText='';$('.actividad').classList.remove('celebrando');$('#ayuda').disabled=false;$('#escuchar').disabled=false;$('#reloj').removeAttribute('data-celebrando');pintar();$('#horaObjetivo').textContent=digital(objetivo);$('#digital').removeAttribute('aria-live');$('#horaObjetivo').removeAttribute('aria-live');}
@@ -101,25 +102,30 @@ $('#animar').onclick=()=>raf?parar():explicar();$('#anteriorLeccion').onclick=()
 const pendientes=new Set();let aplicando=false;
 function abrirDialogo(id){parar();const d=$(id);d.style.zoom=String(1/(parseFloat(getComputedStyle(document.body).zoom)||1));d.showModal();}
 $('#configurar').onclick=()=>{
- for(const k of ['precision','cantidadPareo','extrasPareo'])$('#'+k).value=config[k];
- for(const k of ['pistas','nombresAgujas','ayudaHoras','ayudaMinutos'])$('#'+k).checked=config[k];
- $('#opcionesPareo').hidden=config.modo!=='pareo';
- $('#ayudaHoras').closest('label').hidden=config.modo!=='lee';$('#ayudaMinutos').closest('label').hidden=config.modo!=='lee';
- $('#nombresAgujas').closest('label').hidden=config.modo==='pareo';
+ $('#cantidadPareo').value=config.cantidadPareo;$('#extrasPareo').value=config.extrasPareo;$('#formatoAprende').value=config.aprende;
+ $('#opcionesPareo').hidden=config.modo!=='pareo';$('#opcionesAprendeConfig').hidden=config.modo!=='explica';
  $('#tituloConfigModo').textContent=t('Ajustes: ','Settings: ')+nombreModo(config.modo);
  abrirDialogo('#configuracion');
 };
 $('#cerrarConfig').onclick=()=>$('#configuracion').close();
 $('#configuracion').addEventListener('close',()=>{
- config.precision=$('#precision').value;leccion=0;
- for(const k of ['pistas','nombresAgujas','ayudaHoras','ayudaMinutos'])config[k]=$('#'+k).checked;
+ config.aprende=$('#formatoAprende').value;
  for(const k of ['cantidadPareo','extrasPareo'])config[k]=Number($('#'+k).value);
  guardar();nueva();
 });
-$('#configurarGeneral').onclick=()=>{pendientes.clear();$('#narracion').checked=config.narracion;abrirDialogo('#configuracionGeneral');};
+$('#configurarGeneral').onclick=()=>{
+ pendientes.clear();$('#precision').value=config.precision;$('#estiloAgujas').value=config.estiloAgujas;
+ for(const k of ['narracion','pistas','nombresAgujas','ayudaHoras','ayudaMinutos'])$('#'+k).checked=config[k];
+ abrirDialogo('#configuracionGeneral');
+};
 $('#cerrarGeneral').onclick=()=>$('#configuracionGeneral').close();
 $('#configuracionGeneral').addEventListener('change',e=>{if(!aplicando){e.stopImmediatePropagation();pendientes.add(e.target);}},true);
-$('#configuracionGeneral').addEventListener('close',()=>{config.narracion=$('#narracion').checked;aplicando=true;for(const el of pendientes)el.dispatchEvent(new Event('change',{bubbles:true}));aplicando=false;guardar();IdiomaVoz.localizar();programar();});
+$('#configuracionGeneral').addEventListener('close',()=>{
+ config.precision=$('#precision').value;config.estiloAgujas=$('#estiloAgujas').value;leccion=0;
+ for(const k of ['narracion','pistas','nombresAgujas','ayudaHoras','ayudaMinutos'])config[k]=$('#'+k).checked;
+ aplicando=true;for(const el of pendientes)el.dispatchEvent(new Event('change',{bubbles:true}));aplicando=false;
+ guardar();actualizarAyudaAgujas();IdiomaVoz.localizar();programar();
+});
 IdiomaVoz.instalar('#preferenciasVoz');
 const cabecera=$('.cabecera');
 function nombreModo(m){return ({explica:t('Aprende','Learn'),explora:t('Explora','Explore'),construye:t('Pon las agujas','Set the hands'),lee:t('Lee el reloj','Read the clock'),pareo:t('Carrera de relojes','Clock race')})[m];}
@@ -133,7 +139,7 @@ function iniciarPareo(){
  $('.actividad').dataset.actividad='pareo';$('#reto').textContent=t('¡Cada reloj a su meta!','Every clock to its finish line!');
  $('#instruccion').textContent=t('Arrastra un carrito hasta la meta con la misma hora. También puedes tocar el carrito y después la meta. Luego pulsa Revisar.','Drag a car to the finish line with the same time. You can also tap a car and then a finish line. Then press Check.');
  $('#ayuda').hidden=!config.pistas;$('#escuchar').hidden=!config.narracion;$('#nueva').hidden=false;estado('');
- PareoReloj.iniciar({contenedor:$('#pareoRelojes'),cantidad:config.cantidadPareo,extras:config.extrasPareo,horas:permitidos(),t,digital,estado,decir,nombre:()=>nombre});programar();
+ PareoReloj.iniciar({contenedor:$('#pareoRelojes'),cantidad:config.cantidadPareo,extras:config.extrasPareo,horas:permitidos(),nombresAgujas:config.nombresAgujas,estiloAgujas:config.estiloAgujas,t,digital,estado,decir,nombre:()=>nombre});programar();
 }
 $('#plegar').onclick=()=>{cancelarCelebracion();plegado=!plegado;programar();};
 const marcaVolver=document.createComment('Volver a las tarjetas');$('#volverModos').before(marcaVolver);
@@ -151,7 +157,7 @@ const visibles=[...act.children].filter(e=>!e.hidden),extras=visibles.filter(e=>
 function programar(){if(!pendiente){pendiente=true;requestAnimationFrame(ajustarPantalla);}}
 let lecturaId=0,esperaLectura=null,temporizadorLectura=0,cifraDrag=null,campoActivo=$('#respuestaHora');
 function limpiarResaltado(){document.querySelectorAll('.aguja.resaltada').forEach(e=>e.classList.remove('resaltada'));$('#destacados').replaceChildren();}
-function resaltar(tipo,n=total){limpiarResaltado();const {h,m}=partes(n),esHora=tipo==='hora',a=(esHora?h*30:m*6)*Math.PI/180,r=esHora?163:237,x=300+r*Math.sin(a),y=296-r*Math.cos(a);$(esHora?'#horaria':'#minutera').classList.add('resaltada');let franja='';
+function resaltar(tipo,n=total){limpiarResaltado();if(!(tipo==='hora'?config.ayudaHoras:config.ayudaMinutos))return;const {h,m}=partes(n),esHora=tipo==='hora',a=(esHora?h*30:m*6)*Math.PI/180,r=esHora?163:237,x=300+r*Math.sin(a),y=296-r*Math.cos(a);$(esHora?'#horaria':'#minutera').classList.add('resaltada');let franja='';
  if(esHora&&m){const siguiente=h%12+1,punto=(radio,grados)=>{const a=grados*Math.PI/180;return [300+radio*Math.sin(a),296-radio*Math.cos(a)];},inicio=h*30,fin=inicio+30,exteriorInicio=punto(216,inicio),exteriorFin=punto(216,fin),interiorFin=punto(127,fin),interiorInicio=punto(127,inicio);
  // La franja termina en el radio exacto de la siguiente hora, sin rodear su número.
  const contorno=`M${exteriorInicio.join(' ')} A216 216 0 0 1 ${exteriorFin.join(' ')} L${interiorFin.join(' ')} A127 127 0 0 0 ${interiorInicio.join(' ')} L${punto(130,inicio).join(' ')} A33 33 0 0 1 ${punto(196,inicio).join(' ')} L${exteriorInicio.join(' ')} Z`;

@@ -32,3 +32,5 @@ Object.assign(window.TEXTOS_INGLES,{
  'Estos ajustes se usan en todos los modos. Las horas y las ayudas se eligen dentro de cada actividad.':'These settings apply to every mode. Choose times and hints inside each activity.',
  'Aplicar y volver a los modos':'Apply and return to modes'
 });
+
+Object.assign(window.TEXTOS_INGLES,{'Tipo de agujas':'Hand style','Con relieve':'With depth','Color plano':'Flat colour','Cómo aprendemos':'How we learn','Lecciones animadas':'Animated lessons','Ejemplos de horas aleatorias':'Random time examples','Estos ajustes se aplican a todos los modos. Cada actividad conserva únicamente sus opciones exclusivas.':'These settings apply to every mode. Each activity only keeps its own specific options.'});
