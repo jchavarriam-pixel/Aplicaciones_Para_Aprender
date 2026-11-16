@@ -15,3 +15,20 @@ window.TEXTOS_INGLES["Cifra 9"]="Digit 9";
 Object.assign(window.TEXTOS_INGLES,{'Borrar hora':'Clear hours','Borrar minutos':'Clear minutes','Arrastra las cifras en orden para formar la hora y los minutos.':'Drag the digits in order to form the hour and minutes.'});
 
 Object.assign(window.TEXTOS_INGLES,{'Mostrar «Hora» y «Minutos» en las agujas':'Show “Hour” and “Minutes” on the hands'});
+
+Object.assign(window.TEXTOS_INGLES,{
+ '¡Elige tu aventura con el tiempo!':'Choose your time adventure!',
+ 'Explora, practica y une cada reloj con su hora.':'Explore, practise and match each clock to its time.',
+ '⚙ Configuración general':'⚙ General settings','Configuración general':'General settings',
+ '1. Aprende':'1. Learn','2. Explora':'2. Explore','3. Pon las agujas':'3. Set the hands','4. Lee el reloj':'4. Read the clock','5. Carrera de relojes':'5. Clock race',
+ 'Descubre las agujas con animaciones y ejemplos.':'Discover clock hands with animations and examples.',
+ 'Mueve las agujas y descubre cómo cambia la hora.':'Move the hands and discover how the time changes.',
+ 'Mira la hora digital y constrúyela en el reloj.':'Look at the digital time and set it on the clock.',
+ 'Lee las agujas y forma la hora arrastrando cifras.':'Read the hands and build the time by dragging digits.',
+ 'Une cada reloj con su hora digital. ¡Los carritos van a la meta!':'Match each clock to its digital time. The cars race to the finish!',
+ 'Ver cómo funciona →':'See how it works →','Explorar el reloj →':'Explore the clock →','Preparar las agujas →':'Set the hands →','Leer la hora →':'Read the time →','Unir las horas →':'Match the times →',
+ '⌂ Modos de juego':'⌂ Game modes','⚙ Ajustes de este modo':'⚙ Mode settings','Ajustes de este modo':'Mode settings',
+ 'Parejas por ronda':'Pairs per round','Horas digitales extra':'Extra digital times',
+ 'Estos ajustes se usan en todos los modos. Las horas y las ayudas se eligen dentro de cada actividad.':'These settings apply to every mode. Choose times and hints inside each activity.',
+ 'Aplicar y volver a los modos':'Apply and return to modes'
+});
