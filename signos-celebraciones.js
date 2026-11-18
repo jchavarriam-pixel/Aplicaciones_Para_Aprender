@@ -11,7 +11,7 @@
     if (typeof p.sonido === 'boolean') preferencias.sonido = p.sonido;
     if ([0, 8, 12, 20].includes(p.duracion)) preferencias.duracion = p.duracion;
   } catch {}
-  let opciones, dialogo, area, canvas, ctx, cohete, llama, cuenta, numero, mensaje, estado, despegar, continuar, nuevaRonda, sonidoBoton, barra, escena;
+  let opciones, dialogo, area, canvas, ctx, cohete, llama, cuenta, numero, mensaje, estado, consola, cable, despegar, continuar, nuevaRonda, sonidoBoton, barra, escena;
   let audio, ruidoMotor;
   const fuentes = new Set();
   const guardar = () => { try { localStorage.setItem(clave, JSON.stringify(preferencias)); } catch {} };
@@ -48,11 +48,13 @@
     dialogo.innerHTML = `<header class="cabecera-fiesta-signos"><h2 id="tituloFiestaSignos"></h2><button class="audio-fiesta-signos" type="button"></button></header>
       <section class="escena-fiesta-signos" aria-label="">
         <canvas aria-hidden="true"></canvas><div class="plataforma-fiesta-signos" aria-hidden="true"></div>
+        <svg class="cable-despegue-signos" aria-hidden="true"><path class="funda-cable-signos"/><path class="hilo-cable-signos"/><circle r="6"/></svg>
         <div class="cohete-fiesta-signos" aria-hidden="true">${coheteSvg()}</div>
+        <div class="consola-despegue-signos"><span class="flecha-pulsador-signos flecha-arriba" aria-hidden="true">${flechaSvg()}</span><span class="flecha-pulsador-signos flecha-izquierda" aria-hidden="true">${flechaSvg()}</span><span class="flecha-pulsador-signos flecha-derecha" aria-hidden="true">${flechaSvg()}</span><button class="despegar-fiesta-signos" type="button"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3V15M9 7A12 12 0 1 0 23 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></svg><span></span></button></div>
         <div class="cuenta-fiesta-signos" aria-hidden="true"><span></span><strong>3</strong></div>
         <div class="mensaje-fiesta-signos" hidden><span class="insignia-fiesta-signos" aria-hidden="true">★</span><h3></h3><p></p></div>
       </section>
-      <footer class="pie-fiesta-signos"><span class="estado-fiesta-signos" role="status" aria-live="polite"></span><button class="despegar-fiesta-signos" type="button"></button><button class="continuar-fiesta-signos" type="button"></button><button class="nueva-ronda-fiesta-signos" type="button"></button><div class="tiempo-fiesta-signos" aria-hidden="true"><span></span></div></footer>`;
+      <footer class="pie-fiesta-signos"><span class="estado-fiesta-signos" role="status" aria-live="polite"></span><button class="continuar-fiesta-signos" type="button"></button><button class="nueva-ronda-fiesta-signos" type="button"></button><div class="tiempo-fiesta-signos" aria-hidden="true"><span></span></div></footer>`;
     document.body.append(dialogo);
     area = dialogo.querySelector('.escena-fiesta-signos');
     canvas = area.querySelector('canvas'); ctx = canvas.getContext('2d', { alpha: true });
@@ -62,6 +64,7 @@
     continuar = dialogo.querySelector('.continuar-fiesta-signos'); sonidoBoton = dialogo.querySelector('.audio-fiesta-signos');
     nuevaRonda = dialogo.querySelector('.nueva-ronda-fiesta-signos');
     despegar = dialogo.querySelector('.despegar-fiesta-signos');
+    consola = area.querySelector('.consola-despegue-signos'); cable = area.querySelector('.cable-despegue-signos');
     barra = dialogo.querySelector('.tiempo-fiesta-signos');
     continuar.onclick = () => cerrar(true);
     despegar.onclick = iniciarDespegue;
@@ -78,6 +81,7 @@
     };
     dialogo.addEventListener('cancel', e => { e.preventDefault(); cerrar(true); });
   }
+  function flechaSvg() { return '<svg viewBox="0 0 32 44"><path d="M12 3H20V24H29L16 40L3 24H12Z" fill="#ffe69b" stroke="#a97432" stroke-width="2" stroke-linejoin="round"/></svg>'; }
   function coheteSvg() {
     return `<svg viewBox="0 0 160 300" aria-hidden="true"><defs>
       <linearGradient id="cuerpoCoheteSignos"><stop stop-color="#c2deed"/><stop offset=".35" stop-color="#fff"/><stop offset=".7" stop-color="#e9f5ff"/><stop offset="1" stop-color="#88b8d6"/></linearGradient>
@@ -111,7 +115,7 @@
     area.setAttribute('aria-label', t('Despegue de un cohete y lluvia de estrellas', 'Rocket launch and falling stars'));
     cuenta.querySelector('span').textContent = t('Despegue en', 'Launch in');
     continuar.textContent = t('Continuar →', 'Continue →');
-    despegar.textContent = t('🚀 Despegar', '🚀 Launch');
+    despegar.querySelector('span').textContent = t('Despegar', 'Launch');
     despegar.setAttribute('aria-label',t('Iniciar despegue: cuenta regresiva de tres segundos','Start launch: three-second countdown'));
     nuevaRonda.textContent = t('↻ Nueva ronda', '↻ New round'); actualizarAudio();
     mensaje.hidden = true; cohete.hidden = false; cuenta.hidden = false; barra.hidden = true;
@@ -135,9 +139,23 @@
     const r = area.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 1.5);
     escena.w = area.clientWidth; escena.h = area.clientHeight;
     escena.alto = Math.min(360, escena.h * .78, escena.w * .8);
+    const horizontal = escena.w > escena.h * 1.1;
+    escena.coheteX = escena.w * (horizontal ? .68 : .5);
     canvas.width = Math.round(r.width * dpr); canvas.height = Math.round(r.height * dpr);
     ctx?.setTransform(dpr, 0, 0, dpr, 0, 0);
     cohete.style.width = escena.alto * 160 / 300 + 'px'; cohete.style.height = escena.alto + 'px';
+    const plataforma = area.querySelector('.plataforma-fiesta-signos');
+    plataforma.style.left = escena.coheteX - escena.w * .15 + 'px'; plataforma.style.right = escena.w - escena.coheteX - escena.w * .15 + 'px';
+    const diametro = horizontal ? Math.min(116, escena.w * .16, escena.h * .43) : Math.min(120, escena.w * .32, escena.h * .28);
+    const anchoConsola = diametro + 32, x = horizontal ? Math.max(anchoConsola / 2 + 14, escena.w * .2) : escena.w * .5;
+    const y = horizontal ? Math.min(escena.h * .67, escena.h - anchoConsola / 2 - 12) : Math.max(anchoConsola / 2 + 36, escena.h * .24);
+    consola.style.setProperty('--diametro-pulsador',diametro+'px');
+    consola.style.left = x - anchoConsola / 2 + 'px'; consola.style.top = y - anchoConsola / 2 + 'px';
+    const sx = x + anchoConsola / 2 - 4, sy = y + 10, ex = escena.coheteX + (horizontal ? -1 : 1) * escena.alto * 160 / 300 * .2, ey = escena.h - escena.alto * .08 - 16;
+    const curva = horizontal ? (sx + ex) / 2 : escena.w - 14;
+    cable.setAttribute('viewBox',`0 0 ${escena.w} ${escena.h}`);
+    cable.querySelectorAll('path').forEach(p=>p.setAttribute('d',`M${sx} ${sy} C${curva} ${sy+28} ${curva} ${ey+12} ${ex} ${ey}`));
+    cable.querySelector('circle').setAttribute('cx',ex);cable.querySelector('circle').setAttribute('cy',ey);
     colocarCohete(escena.t);
     if (escena.inicio === null) pintar();
   }
@@ -147,7 +165,7 @@
     const y = base - (base + escena.alto + 20) * p * p;
     const vibracion = escena.reducido || !p || p === 1 ? 0 : Math.sin(tiempo * 50) * 1.1;
     cohete.style.transform = `translate3d(${vibracion}px,${y}px,0)`;
-    cohete.style.left = (escena.w - escena.alto * 160 / 300) / 2 + 'px';
+    cohete.style.left = escena.coheteX - escena.alto * 160 / 300 / 2 + 'px';
     llama.style.opacity = p > 0 && p < 1 ? '1' : '0';
     llama.style.transform = `scaleY(${escena.reducido ? 1 : .92 + Math.sin(tiempo * 34) * .08})`;
   }
@@ -162,7 +180,8 @@
       felicitacion: t('¡Felicidades!', 'Congratulations!')
     };
     estado.textContent = etiquetas[fase];
-    despegar.hidden = fase !== 'preparado'; continuar.hidden = fase === 'preparado';
+    consola.hidden = fase !== 'preparado'; cable.toggleAttribute('hidden',fase !== 'preparado'); despegar.disabled = fase !== 'preparado';
+    continuar.hidden = false;
     cuenta.hidden = fase !== 'cuenta'; cohete.hidden = fase === 'estrellas' || fase === 'felicitacion';
     if (fase === 'despegue') motor();
     if (fase === 'estrellas') { pararAudio(); campana(); }

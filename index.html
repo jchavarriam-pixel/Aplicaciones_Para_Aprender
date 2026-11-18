@@ -512,7 +512,7 @@
     @media(prefers-reduced-motion:reduce){.burbuja{animation:none}}
   </style>
   <link rel="stylesheet" href="creditos.css">
-  <link rel="stylesheet" href="pantalla-completa.css"><link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="indice.css"><script>window.IDIOMA_VOZ_APP='indiceAprender';</script><script src="idioma-voz-textos.js"></script><script src="indice-textos.js"></script><script src="idioma-voz.js"></script><script src="indice-catalogo.js"></script>
+  <link rel="stylesheet" href="pantalla-completa.css"><link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="indice.css?v=20261118-cabecera-1"><script>window.IDIOMA_VOZ_APP='indiceAprender';</script><script src="idioma-voz-textos.js"></script><script src="indice-textos.js?v=20261118-cabecera-1"></script><script src="idioma-voz.js"></script><script src="indice-catalogo.js?v=20261118-cabecera-1"></script>
 </head>
 
 <body>
@@ -542,18 +542,17 @@
   <main class="app">
     <aside id="panelIndice" class="panel-indice"><header>
       <section class="encabezado-intro">
-        <div class="etiqueta">🌟 Centro de juegos educativos</div>
+        <div class="marca-indice"><span class="simbolo-indice" aria-hidden="true"><img src="iconos/indice-aprender.svg" width="54" height="50" alt=""></span><div class="etiqueta">Centro de juegos educativos</div></div>
         <h1>Aplicaciones para aprender</h1>
       <aside class="panel-nino" aria-label="Configuración del nombre del niño">
         <label for="nombreNino">Nombre del niño</label>
         <input id="nombreNino" type="text" placeholder="Ej.: Gabriel" autocomplete="off" />
         <p class="ayuda-nombre">
-          Este nombre se usará automáticamente en las demás aplicaciones.
+          Tu nombre te acompaña en todas las actividades.
         </p>
       </aside>
         <p class="subtitulo">
-          Un espacio alegre para jugar, practicar y aprender paso a paso con actividades de números,
-          palabras, sonidos, ordenamiento y pensamiento lógico.
+          Elige un tema, juega y descubre algo nuevo.
         </p>
 
       </section>
@@ -562,9 +561,10 @@
     </header>
 
     <section class="toolbar" aria-label="Herramientas de búsqueda">
+      <label class="rotulo-busqueda-indice" for="buscar">Busca una actividad</label>
       <div class="busqueda">
         <span aria-hidden="true">🔎</span>
-        <input id="buscar" type="search" placeholder="Buscar una aplicación o un tema..." aria-label="Buscar una aplicación o un tema..." />
+        <input id="buscar" type="search" placeholder="Nombre o tema..." aria-label="Buscar una aplicación o un tema..." />
       </div>
       <button id="verResultados" class="boton-indice" type="button" hidden>Ver resultados</button><div class="contador" id="contador" role="status" aria-live="polite">0 aplicaciones</div>
     </section>

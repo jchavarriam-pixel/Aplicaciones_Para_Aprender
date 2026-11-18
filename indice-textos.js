@@ -1,4 +1,5 @@
 Object.assign(window.TEXTOS_INGLES||={}, {
+ 'Centro de juegos educativos':'Educational games','Tu nombre te acompaña en todas las actividades.':'Your name stays with you in every activity.','Elige un tema, juega y descubre algo nuevo.':'Pick a subject, play and discover something new.','Busca una actividad':'Find an activity','Nombre o tema...':'Name or topic...',
  'Aplicaciones para aprender':'Learning apps','🌟 Centro de juegos educativos':'🌟 Educational games',
  'Un espacio alegre para jugar, practicar y aprender paso a paso con actividades de números, palabras, sonidos, ordenamiento y pensamiento lógico.':'A cheerful place to play, practise and learn with numbers, words, sounds, sequences and logical thinking.',
  'Nombre del niño':'Child’s name','Configuración del nombre del niño':'Child’s name settings','Ej.: Gabriel':'E.g. Gabriel','Este nombre se usará automáticamente en las demás aplicaciones.':'This name is shared automatically with the other apps.',

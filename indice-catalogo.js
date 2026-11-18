@@ -30,7 +30,7 @@
    if(todas){todas.style.gridColumn='span '+span;todas.classList.toggle('materia-amplia',span>1);}
   }
   function renderizar(){
-   $('.subtitulo').textContent=tr('Un espacio alegre para jugar, practicar y aprender paso a paso con actividades de números, palabras, sonidos, ordenamiento y pensamiento lógico.');
+   $('.subtitulo').textContent=tr('Elige un tema, juega y descubre algo nuevo.');
    const resultados=buscarEn(mezcladas);inicio.hidden=actual!==null;lista.hidden=actual===null;$('#verResultados').hidden=actual!==null||!buscar.value.trim();
    $('#navegacionMaterias').replaceChildren();
    for(const ficha of fichas){
