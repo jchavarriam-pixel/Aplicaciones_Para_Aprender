@@ -1,0 +1,6 @@
+.panel-con-ancho-ajustable{position:relative}
+.panel-con-ancho-ajustable.horizontal:not(.panel-lateral-oculto),.panel-con-ancho-ajustable[data-orientacion=horizontal]:not(.panel-lateral-oculto){grid-template-columns:minmax(0,var(--ancho-panel-ajustable,26%)) minmax(0,1fr)}
+.ancho-panel-ajustable{position:absolute;z-index:70;transform:translateX(-50%);cursor:col-resize;touch-action:none;user-select:none;border-radius:10px}
+.ancho-panel-ajustable:after{content:'';position:absolute;left:50%;top:var(--alto-agarre-panel,40%);width:calc(4 * var(--unidad-agarre-panel,1px));height:calc(48 * var(--unidad-agarre-panel,1px));transform:translate(-50%,-50%);border-radius:5px;background:#8da7c5;box-shadow:0 0 0 calc(2 * var(--unidad-agarre-panel,1px)) #ffffffa6}
+.ancho-panel-ajustable:hover,.ancho-panel-ajustable:focus-visible,.ancho-panel-ajustable.arrastrando{background:#648abd33;outline:calc(2 * var(--unidad-agarre-panel,1px)) solid #648abd}
+.ancho-panel-ajustable[hidden]{display:none}

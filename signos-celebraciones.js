@@ -11,7 +11,7 @@
     if (typeof p.sonido === 'boolean') preferencias.sonido = p.sonido;
     if ([0, 8, 12, 20].includes(p.duracion)) preferencias.duracion = p.duracion;
   } catch {}
-  let opciones, dialogo, area, canvas, ctx, cohete, llama, cuenta, numero, mensaje, estado, continuar, nuevaRonda, sonidoBoton, barra, escena;
+  let opciones, dialogo, area, canvas, ctx, cohete, llama, cuenta, numero, mensaje, estado, despegar, continuar, nuevaRonda, sonidoBoton, barra, escena;
   let audio, ruidoMotor;
   const fuentes = new Set();
   const guardar = () => { try { localStorage.setItem(clave, JSON.stringify(preferencias)); } catch {} };
@@ -52,7 +52,7 @@
         <div class="cuenta-fiesta-signos" aria-hidden="true"><span></span><strong>3</strong></div>
         <div class="mensaje-fiesta-signos" hidden><span class="insignia-fiesta-signos" aria-hidden="true">★</span><h3></h3><p></p></div>
       </section>
-      <footer class="pie-fiesta-signos"><span class="estado-fiesta-signos" role="status" aria-live="polite"></span><button class="continuar-fiesta-signos" type="button"></button><button class="nueva-ronda-fiesta-signos" type="button"></button><div class="tiempo-fiesta-signos" aria-hidden="true"><span></span></div></footer>`;
+      <footer class="pie-fiesta-signos"><span class="estado-fiesta-signos" role="status" aria-live="polite"></span><button class="despegar-fiesta-signos" type="button"></button><button class="continuar-fiesta-signos" type="button"></button><button class="nueva-ronda-fiesta-signos" type="button"></button><div class="tiempo-fiesta-signos" aria-hidden="true"><span></span></div></footer>`;
     document.body.append(dialogo);
     area = dialogo.querySelector('.escena-fiesta-signos');
     canvas = area.querySelector('canvas'); ctx = canvas.getContext('2d', { alpha: true });
@@ -61,8 +61,10 @@
     mensaje = area.querySelector('.mensaje-fiesta-signos'); estado = dialogo.querySelector('.estado-fiesta-signos');
     continuar = dialogo.querySelector('.continuar-fiesta-signos'); sonidoBoton = dialogo.querySelector('.audio-fiesta-signos');
     nuevaRonda = dialogo.querySelector('.nueva-ronda-fiesta-signos');
+    despegar = dialogo.querySelector('.despegar-fiesta-signos');
     barra = dialogo.querySelector('.tiempo-fiesta-signos');
     continuar.onclick = () => cerrar(true);
+    despegar.onclick = iniciarDespegue;
     nuevaRonda.onclick = () => {
       const accion = escena?.nuevaRonda;
       cerrar(); accion?.();
@@ -100,7 +102,7 @@
     cerrar(); if (!preferencias.activa) return false;
     construir(); window.speechSynthesis?.cancel();
     escena = {
-      inicio: performance.now(), ultimo: 0, frame: 0, fase: '', numero: 0, t: 0, estrellas: [], humo: [],
+      inicio: null, ultimo: 0, frame: 0, fase: '', numero: 0, t: 0, estrellas: [], humo: [],
       w: 0, h: 0, alto: 0, emision: 0, final: 8.3, lectura: null, leyendo: false,
       reducido: matchMedia('(prefers-reduced-motion:reduce)').matches,
       nombre, nuevaRonda: iniciarRonda, texto: texto || t(`¡Felicidades, ${nombre}! Lo has hecho genial. Sigue así.`, `Congratulations, ${nombre}! You did a great job. Keep it up!`)
@@ -109,14 +111,23 @@
     area.setAttribute('aria-label', t('Despegue de un cohete y lluvia de estrellas', 'Rocket launch and falling stars'));
     cuenta.querySelector('span').textContent = t('Despegue en', 'Launch in');
     continuar.textContent = t('Continuar →', 'Continue →');
+    despegar.textContent = t('🚀 Despegar', '🚀 Launch');
+    despegar.setAttribute('aria-label',t('Iniciar despegue: cuenta regresiva de tres segundos','Start launch: three-second countdown'));
     nuevaRonda.textContent = t('↻ Nueva ronda', '↻ New round'); actualizarAudio();
     mensaje.hidden = true; cohete.hidden = false; cuenta.hidden = false; barra.hidden = true;
     mensaje.querySelector('h3').textContent = t('¡Felicidades!', 'Congratulations!');
     mensaje.querySelector('p').textContent = t(`${nombre}, ¡lo has hecho genial!`, `${nombre}, you did a great job!`);
     dialogo.style.zoom = String(1 / (parseFloat(getComputedStyle(document.body).zoom) || 1));
-    dialogo.showModal(); ajustar(); actualizar(0, 0); pintar();
-    continuar.focus({ preventScroll: true }); escena.frame = requestAnimationFrame(dibujar);
+    cambiarFase('preparado'); dialogo.showModal(); ajustar(); pintar();
+    despegar.focus({ preventScroll: true });
     return true;
+  }
+  function iniciarDespegue() {
+    if (!escena || escena.inicio !== null) return;
+    escena.inicio = performance.now();
+    actualizar(0,0); pintar();
+    continuar.focus({ preventScroll: true });
+    escena.frame = requestAnimationFrame(dibujar);
   }
   function ajustar() {
     if (!escena) return;
@@ -128,6 +139,7 @@
     ctx?.setTransform(dpr, 0, 0, dpr, 0, 0);
     cohete.style.width = escena.alto * 160 / 300 + 'px'; cohete.style.height = escena.alto + 'px';
     colocarCohete(escena.t);
+    if (escena.inicio === null) pintar();
   }
   function colocarCohete(tiempo) {
     const p = Math.max(0, Math.min(1, (tiempo - 3) / 2.8));
@@ -143,12 +155,14 @@
     if (escena.fase === fase) return;
     escena.fase = fase; dialogo.dataset.fase = fase;
     const etiquetas = {
+      preparado: t('Pulsa Despegar para iniciar la cuenta regresiva.','Press Launch to start the countdown.'),
       cuenta: t('Preparados para el despegue…', 'Ready for launch…'),
       despegue: t('¡Despegue!', 'Lift-off!'),
       estrellas: t('¡Una lluvia de estrellas para ti!', 'A shower of stars for you!'),
       felicitacion: t('¡Felicidades!', 'Congratulations!')
     };
     estado.textContent = etiquetas[fase];
+    despegar.hidden = fase !== 'preparado'; continuar.hidden = fase === 'preparado';
     cuenta.hidden = fase !== 'cuenta'; cohete.hidden = fase === 'estrellas' || fase === 'felicitacion';
     if (fase === 'despegue') motor();
     if (fase === 'estrellas') { pararAudio(); campana(); }

@@ -86,7 +86,9 @@
 <script>window.IDIOMA_VOZ_APP='signos';</script>
 <script src="idioma-voz-textos.js"></script><script src="matematicas-signos-textos.js?v=20261118-resultados-3"></script>
 <script src="idioma-voz.js"></script><script src="matematicas-base.js"></script>
-<link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-signos-panel.css?v=20261118-resultados-3"><link rel="stylesheet" href="signos-celebraciones.css?v=20261118-2">
+<script src="panel-ancho-ajustable.js?v=20261118-1" defer></script>
+<link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-signos-panel.css?v=20261118-resultados-3"><link rel="stylesheet" href="signos-celebraciones.css?v=20261118-3">
+<link rel="stylesheet" href="panel-ancho-ajustable.css?v=20261118-1">
 </head>
 <body>
   <main class="app">
@@ -153,7 +155,7 @@
     </section>
   </main>
 
-  <script src="signos-celebraciones.js?v=20261118-2"></script>
+  <script src="signos-celebraciones.js?v=20261118-3"></script>
 
 <script>
 (() => {
@@ -701,6 +703,7 @@
     }
   });
   new MutationObserver(()=>fit()).observe($('#exercisesContainer'),{childList:true});
+  addEventListener('ancho-panel-cambiado',fit);
   addEventListener('resize',()=>cleanupDrag());
   document.addEventListener('fullscreenchange',()=>cleanupDrag());
   document.addEventListener('DOMContentLoaded',()=>{const credits=$('#creditos-aplicaciones');if(credits)document.body.append(credits);fit();});
