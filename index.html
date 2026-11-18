@@ -512,7 +512,7 @@
     @media(prefers-reduced-motion:reduce){.burbuja{animation:none}}
   </style>
   <link rel="stylesheet" href="creditos.css">
-  <link rel="stylesheet" href="pantalla-completa.css">
+  <link rel="stylesheet" href="pantalla-completa.css"><link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="indice.css"><script>window.IDIOMA_VOZ_APP='indiceAprender';</script><script src="idioma-voz-textos.js"></script><script src="indice-textos.js"></script><script src="idioma-voz.js"></script><script src="indice-catalogo.js"></script>
 </head>
 
 <body>
@@ -540,43 +540,44 @@
   </div>
 
   <main class="app">
-    <header>
+    <aside id="panelIndice" class="panel-indice"><header>
       <section class="encabezado-intro">
         <div class="etiqueta">🌟 Centro de juegos educativos</div>
         <h1>Aplicaciones para aprender</h1>
-        <p class="subtitulo">
-          Un espacio alegre para jugar, practicar y aprender paso a paso con actividades de números,
-          palabras, sonidos, ordenamiento y pensamiento lógico.
-        </p>
-        <div class="encabezado-detalles" aria-hidden="true">
-          <div class="detalle-aprender"><span>123</span>Números</div>
-          <div class="detalle-aprender"><span>ABC</span>Palabras</div>
-          <div class="detalle-aprender"><span>💡</span>Ideas</div>
-        </div>
-      </section>
-
       <aside class="panel-nino" aria-label="Configuración del nombre del niño">
-        <div class="carita" aria-hidden="true">😊</div>
         <label for="nombreNino">Nombre del niño</label>
         <input id="nombreNino" type="text" placeholder="Ej.: Gabriel" autocomplete="off" />
         <p class="ayuda-nombre">
           Este nombre se usará automáticamente en las demás aplicaciones.
         </p>
       </aside>
+        <p class="subtitulo">
+          Un espacio alegre para jugar, practicar y aprender paso a paso con actividades de números,
+          palabras, sonidos, ordenamiento y pensamiento lógico.
+        </p>
+
+      </section>
+
+
     </header>
 
     <section class="toolbar" aria-label="Herramientas de búsqueda">
       <div class="busqueda">
         <span aria-hidden="true">🔎</span>
-        <input id="buscar" type="search" placeholder="Buscar una aplicación..." />
+        <input id="buscar" type="search" placeholder="Buscar una aplicación o un tema..." aria-label="Buscar una aplicación o un tema..." />
       </div>
-      <div class="contador" id="contador" role="status" aria-live="polite">0 aplicaciones</div>
+      <button id="verResultados" class="boton-indice" type="button" hidden>Ver resultados</button><div class="contador" id="contador" role="status" aria-live="polite">0 aplicaciones</div>
     </section>
 
-    <div class="materias-nav" id="navegacionMaterias" role="tablist" aria-label="Materias"></div>
-    <div id="contenedorApps" aria-label="Aplicaciones por materia"></div>
+    <div class="acciones-indice"><button id="configurarIndice" class="boton-indice" type="button">⚙ Configuración</button><button id="escucharCatalogo" class="boton-indice" type="button">🔊 Escuchar</button></div></aside>
+    <section class="catalogo-indice" aria-label="Aplicaciones">
+      <section id="inicioTemas"><div class="cabecera-temas"><h2 id="tituloTemas" tabindex="-1">¿Qué quieres practicar?</h2><p>Elige una materia o explora todas las aplicaciones juntas.</p></div><nav class="tarjetas-materias" id="navegacionMaterias" aria-label="Materias"></nav></section>
+      <section id="vistaAplicaciones" aria-labelledby="tituloListado" hidden><nav class="navegar-catalogo" aria-label="Materias"><button id="volverTemas" class="boton-indice" type="button">← Volver a los temas</button><button id="todasDesdeMateria" class="boton-indice" type="button">Todas las aplicaciones</button></nav><div class="encabezado-listado"><h2 id="tituloListado" tabindex="-1"></h2><span id="totalListado"></span></div><p id="descripcionListado" class="tema-ayuda"></p><div id="filtrosListado" class="filtros-tema" role="group"></div><div id="contenedorApps" class="grid"></div><div id="sinResultados" class="mensaje-vacio" hidden><h3>Sin coincidencias</h3><p>Prueba otra búsqueda o vuelve a los temas.</p><button id="limpiarBusqueda" class="boton-indice" type="button">Limpiar búsqueda y filtros</button></div></section>
+    </section>
   </main>
 
+  <button id="plegarIndice" type="button" aria-controls="panelIndice" aria-expanded="true" aria-label="Ocultar panel"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16"/></svg></button>
+  <dialog id="configuracionIndice" aria-labelledby="tituloConfigIndice"><div class="encabezado-config"><h2 id="tituloConfigIndice">Configuración</h2><button id="cerrarConfigIndice" type="button" aria-label="Aplicar y cerrar">✕</button></div><form method="dialog"><label class="opcion-indice"><input id="narrarTemas" type="checkbox"> Leer los temas al abrirlos</label><section id="vozIndice"></section><button class="boton-indice destacado" type="submit">Aplicar y cerrar</button></form></dialog>
   <script>
     const URL_GOOGLE_SCRIPT = "https://script.google.com/macros/s/AKfycbyENiFqFkDqiesWvdNQuBVBAiAhMtyHc2QLXYOA-rB9uCb8P1Tb6LGKMxDKrXFa8Ow3DA/exec";
     const CLAVE_NOMBRE = "nombreNinoGabrielApps";
@@ -841,12 +842,6 @@
       'RobotLab/RobotLab.html'
     ];
     const ordenAprendizaje = new Map(secuenciaAprendizaje.map((archivo, indice) => [archivo, indice]));
-    let filtrosTemas = {};
-    try { filtrosTemas = JSON.parse(localStorage.getItem('filtrosMateriasApps')) || {}; } catch (_) {}
-    if (typeof filtrosTemas !== 'object' || Array.isArray(filtrosTemas)) filtrosTemas = {};
-    let materiaActiva = materias[0].id;
-    try { const guardada = localStorage.getItem('materiaActivaApps'); if (materias.some(m => m.id === guardada)) materiaActiva = guardada; } catch (_) {}
-
     const colores = {
       azul: { suave: "#dbeafe", medio: "#93c5fd", fuerte: "#2563eb" },
       verde: { suave: "#dcfce7", medio: "#86efac", fuerte: "#16a34a" },
@@ -863,15 +858,17 @@
     const nombreVisitante = document.getElementById("nombreVisitante");
     const mensajeError = document.getElementById("mensajeError");
 
+    let nombreEnMemoria='';
     function obtenerNombreGuardado() {
-      return localStorage.getItem(CLAVE_NOMBRE) || "";
+      try { return localStorage.getItem(CLAVE_NOMBRE) || nombreEnMemoria; } catch { return nombreEnMemoria; }
     }
 
     function guardarNombre(nombre) {
       const nombreLimpio = (nombre || "").trim();
 
       if (nombreLimpio) {
-        localStorage.setItem(CLAVE_NOMBRE, nombreLimpio);
+        nombreEnMemoria=nombreLimpio;
+        try { localStorage.setItem(CLAVE_NOMBRE, nombreLimpio); } catch {}
       }
 
       return nombreLimpio;
@@ -999,99 +996,7 @@
       return tarjeta;
     }
 
-    function renderizarApps(filtro = "") {
-      const filtroLimpio = normalizar(filtro);
-      contenedorApps.innerHTML = "";
-
-      let totalVisible = 0;
-      materias.forEach(materia => {
-        const appsMateria = aplicaciones.filter(app => clasificacion[app.archivo]?.[0] === materia.id)
-          .sort((a, b) => (ordenAprendizaje.get(a.archivo) ?? Infinity) - (ordenAprendizaje.get(b.archivo) ?? Infinity));
-        const temas = [...new Set(appsMateria.flatMap(app => clasificacion[app.archivo][1]))];
-        const activo = temas.includes(filtrosTemas[materia.id]) ? filtrosTemas[materia.id] : '';
-        const coincidencias = appsMateria.filter(app => normalizar(`${app.nombre} ${app.descripcion} ${materia.nombre} ${clasificacion[app.archivo][1].join(' ')}`).includes(filtroLimpio));
-        const tab = document.getElementById(`tab-${materia.id}`);
-        tab.textContent = `${materia.icono} ${materia.nombre} (${coincidencias.length})`;
-        tab.setAttribute('aria-selected', String(materiaActiva === materia.id));
-        tab.tabIndex = materiaActiva === materia.id ? 0 : -1;
-        const visibles = coincidencias.filter(app => !activo || clasificacion[app.archivo][1].includes(activo));
-        if (materia.id === materiaActiva) totalVisible = visibles.length;
-        const seccion = document.createElement('section');
-        seccion.className = 'materia';
-        seccion.id = `materia-${materia.id}`;
-        seccion.setAttribute('role', 'tabpanel');
-        seccion.setAttribute('aria-labelledby', `tab-${materia.id}`);
-        seccion.tabIndex = 0;
-        seccion.hidden = materia.id !== materiaActiva;
-        seccion.innerHTML = `<div class="materia-cabecera"><h2 id="titulo-${materia.id}">${materia.icono} ${materia.nombre}</h2><span class="materia-total">${visibles.length} de ${appsMateria.length} ${appsMateria.length === 1 ? 'aplicación' : 'aplicaciones'}</span></div><p class="tema-ayuda">De lo más básico a actividades más completas. Puedes filtrar por tema.</p>`;
-        const filtros = document.createElement('div');
-        filtros.className = 'filtros-tema';
-        filtros.setAttribute('role', 'group');
-        filtros.setAttribute('aria-label', `Temas de ${materia.nombre}`);
-        ['', ...temas].forEach((tema, i) => {
-          const boton = document.createElement('button');
-          boton.type = 'button';
-          boton.className = 'filtro-tema';
-          boton.id = `filtro-${materia.id}-${i}`;
-          boton.setAttribute('aria-pressed', String(activo === tema));
-          const cantidad = coincidencias.filter(app => !tema || clasificacion[app.archivo][1].includes(tema)).length;
-          boton.textContent = `${tema || 'Todas'} (${cantidad})`;
-          boton.addEventListener('click', () => {
-            filtrosTemas[materia.id] = tema;
-            try { localStorage.setItem('filtrosMateriasApps', JSON.stringify(filtrosTemas)); } catch (_) {}
-            renderizarApps(buscar.value);
-            document.getElementById(boton.id)?.focus({preventScroll:true});
-          });
-          filtros.appendChild(boton);
-        });
-        seccion.appendChild(filtros);
-        const grid = document.createElement('div');
-        grid.className = 'grid';
-        visibles.forEach(app => grid.appendChild(crearTarjeta(app)));
-        if (!visibles.length) {
-          const mensaje = document.createElement('p');
-          mensaje.className = 'nota';
-          mensaje.textContent = 'No hay coincidencias en este tema. Selecciona Todas, cambia la búsqueda o elige otra pestaña.';
-          grid.appendChild(mensaje);
-        }
-        seccion.appendChild(grid);
-        contenedorApps.appendChild(seccion);
-      });
-
-      contador.textContent = totalVisible === 1
-        ? "1 aplicación"
-        : `${totalVisible} aplicaciones`;
-
-      if (!contenedorApps.children.length) {
-        const mensaje = document.createElement("div");
-        mensaje.className = "nota";
-        mensaje.style.gridColumn = "1 / -1";
-        mensaje.textContent = "No se encontró ninguna aplicación con ese nombre.";
-        contenedorApps.appendChild(mensaje);
-      }
-    }
-
-    const pestanasMaterias = document.getElementById('navegacionMaterias');
-    pestanasMaterias.innerHTML = materias.map(materia => `<button type="button" role="tab" id="tab-${materia.id}" aria-controls="materia-${materia.id}" data-materia="${materia.id}">${materia.icono} ${materia.nombre}</button>`).join('');
-    function seleccionarMateria(id) {
-      materiaActiva = id;
-      try { localStorage.setItem('materiaActivaApps', id); } catch (_) {}
-      renderizarApps(buscar.value);
-    }
-    pestanasMaterias.addEventListener('click', event => {
-      const tab = event.target.closest('[data-materia]');
-      if (tab) seleccionarMateria(tab.dataset.materia);
-    });
-    pestanasMaterias.addEventListener('keydown', event => {
-      const tab = event.target.closest('[data-materia]');
-      if (!tab || !['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
-      event.preventDefault();
-      const actual = materias.findIndex(m => m.id === tab.dataset.materia);
-      const siguiente = event.key === 'Home' ? 0 : event.key === 'End' ? materias.length - 1 : (actual + (event.key === 'ArrowRight' ? 1 : -1) + materias.length) % materias.length;
-      seleccionarMateria(materias[siguiente].id);
-      document.getElementById(`tab-${materias[siguiente].id}`).focus();
-    });
-    buscar.addEventListener("input", () => renderizarApps(buscar.value));
+    const catalogo = CatalogoAplicaciones.iniciar({aplicaciones,materias,clasificacion,ordenAprendizaje,crearTarjeta});
 
     window.addEventListener("pageshow", () => {
       cargarNombreEnCampos();
@@ -1104,7 +1009,7 @@
     });
 
     mostrarModalSiHaceFalta();
-    renderizarApps();
+    catalogo.renderizar();
   </script>
 
 <footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos">

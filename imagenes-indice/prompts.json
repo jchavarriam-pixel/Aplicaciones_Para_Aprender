@@ -1,0 +1,33 @@
+{
+  "base": "Use case: illustration-story. Asset type: an individual horizontal illustration for a subject card in a children's educational app, for ages 6–10. Create ONE coherent illustration, not a UI mockup, not a contact sheet. Consistent series style: polished colorful storybook art with soft clay-like dimensional forms, rounded shapes, clean confident edges, warm gentle light, restrained pastel colors, a very pale warm ivory background, and soft grounding shadows. Keep the main subject large, simple, immediately recognizable. Landscape composition approximately 5:3, entire main subject within the central 85% with breathing room on all sides; do not crop objects. No frame, no buttons, no category title, no logo, no watermark. ",
+  "pedidos": [
+    [
+      "todas",
+      "Subject: a welcoming cluster of learning objects: an open illustrated book at the center, colorful number blocks beside it, a small friendly blue toy robot and a small globe. Four main objects only, balanced as one joyful learning scene. This represents ALL APPS and multiple school subjects together. No words or labels; only simple digits on number blocks if needed."
+    ],
+    [
+      "matematicas",
+      "Subject: three large colorful number blocks marked 1, 2, 3, with one chunky plus sign and one multiplication sign, and a small triangle and sphere. A simple playful mathematics still life. The numbers and geometric shapes are the protagonists. No equations, no letters, no words."
+    ],
+    [
+      "espanol",
+      "Subject: a large open storybook with simple colorful picture marks on its pages, a bold pencil, and three large alphabet tiles A, B, Ñ. The open book and letters are the protagonists and clearly suggest Spanish reading and writing. Only those three letters may appear, no words, no long text."
+    ],
+    [
+      "ingles",
+      "Subject: a cheerful open beginner language book with a friendly small orange cat next to it and one large rounded speech bubble containing exactly 'Hello!' in clear readable dark lettering. Simple friendly English vocabulary learning scene. Only the word Hello!, no other writing, no flags."
+    ],
+    [
+      "sociales",
+      "Subject: a simple folded map with one river, two tiny houses, a dotted walking route and a location pin, plus one large beautiful compass rose. Maps and directions are the unmistakable focus. No flags, no place names, no written compass letters, no numbers."
+    ],
+    [
+      "ciencias",
+      "Subject: one beautiful pair of teal headphones with small colorful sound waves, alongside a large green leaf and a magnifying glass. A simple balanced science and senses learning illustration, with the headphones most prominent. Three main objects only, no text, no letters."
+    ],
+    [
+      "tecnologia",
+      "Subject: a friendly rounded blue-and-lilac educational toy robot, one small gear and three simple colorful interlocking coding puzzle blocks. The appealing robot dominates the composition, suggesting technology, coding and logical thinking. Simple, uncluttered, no text, no letters, no screens with writing."
+    ]
+  ]
+}
