@@ -43,5 +43,6 @@ for(let n=1;n<=6;n++)window.TEXTOS_INGLES['Hasta '+n+' '+(n===1?'dígito':'dígi
 Object.assign(window.TEXTOS_INGLES,{'Nombre del niño':'Child’s name','Así jugamos':'How to play','Mira los dos números.':'Look at both numbers.','Elige o arrastra el signo.':'Choose or drag the sign.','Pulsa':'Press','Revisar':'Check','Tu ronda':'Your round'});
 
 window.TEXTOS_INGLES['⟲ Reiniciar']='⟲ Reset';
+Object.assign(window.TEXTOS_INGLES,{'Respuesta correcta':'Correct answer','Respuesta incorrecta':'Incorrect answer'});
 
 Object.assign(window.TEXTOS_INGLES,{'Celebración del cohete':'Rocket celebration','Activar celebraciones':'Enable celebrations','Sonidos y voz de la celebración':'Celebration sounds and voice','Tiempo de felicitación':'Congratulations display time','8 segundos':'8 seconds','12 segundos':'12 seconds','20 segundos':'20 seconds','Hasta pulsar Continuar':'Until Continue is pressed','Cuenta regresiva, despegue, lluvia de estrellas y una felicitación. Puedes continuar cuando quieras.':'Countdown, lift-off, falling stars and congratulations. You can continue whenever you wish.'});

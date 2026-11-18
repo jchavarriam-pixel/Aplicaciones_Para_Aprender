@@ -84,9 +84,9 @@
 <link rel="stylesheet" href="idioma-voz.css">
 <link rel="stylesheet" href="matematicas-signos.css">
 <script>window.IDIOMA_VOZ_APP='signos';</script>
-<script src="idioma-voz-textos.js"></script><script src="matematicas-signos-textos.js?v=20261118-fiesta-2"></script>
+<script src="idioma-voz-textos.js"></script><script src="matematicas-signos-textos.js?v=20261118-resultados-3"></script>
 <script src="idioma-voz.js"></script><script src="matematicas-base.js"></script>
-<link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-signos-panel.css?v=20261118-numeros-2"><link rel="stylesheet" href="signos-celebraciones.css?v=20261118-1">
+<link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-signos-panel.css?v=20261118-resultados-3"><link rel="stylesheet" href="signos-celebraciones.css?v=20261118-2">
 </head>
 <body>
   <main class="app">
@@ -153,7 +153,7 @@
     </section>
   </main>
 
-  <script src="signos-celebraciones.js?v=20261118-1"></script>
+  <script src="signos-celebraciones.js?v=20261118-2"></script>
 
 <script>
 (() => {
@@ -267,7 +267,7 @@
         <div class="num-box">${ex.a}</div>
         <div class="drop-zone" id="drop${i}" data-index="${i}" aria-label="casilla ${i+1}"></div>
         <div class="num-box">${ex.b}</div>
-        <div class="feedback" id="feedback${i}"></div>`;
+        <div class="feedback" id="feedback${i}" aria-hidden="true"></div>`;
       cont.appendChild(row);
     });
     hideMessage();
@@ -307,6 +307,7 @@
     z.textContent = ans || '';
     z.classList.toggle('filled', ans !== null);
     z.classList.remove('correct','incorrect','hover');
+    delete $('#feedback'+index).dataset.respuestaRevisada;
 
     if(ans !== null && state.helpMode === 2){
       const ex = state.exercises[index];
@@ -319,18 +320,30 @@
 
   function updateAllDropZones(){ for(let i=0;i<state.exercises.length;i++) updateDropZone(i); updateLiveFeedback(); }
 
+  function mostrarResultado(index,ok){
+    const z=$('#drop'+index),f=$('#feedback'+index),fila=z.closest('.exercise-row');
+    z.classList.toggle('correct',ok);z.classList.toggle('incorrect',!ok);
+    fila.classList.toggle('resultado-correcto',ok);fila.classList.toggle('resultado-incorrecto',!ok);
+    f.textContent=ok?'✓':'✗';f.dataset.resultado=ok?'correcto':'incorrecto';
+    f.dataset.respuestaRevisada=state.answers[index];f.setAttribute('aria-hidden','false');
+    f.setAttribute('role','img');f.setAttribute('aria-label',IdiomaVoz.t(ok?'Respuesta correcta':'Respuesta incorrecta'));
+    f.classList.add('visible');
+  }
+
   function updateLiveFeedback(){
     state.exercises.forEach((ex,i)=>{
       const f = $('#feedback'+i);
       const ans = state.answers[i];
       if(!f) return;
-      if(state.helpMode === 2 && ans !== null){
+      if(ans !== null && (state.helpMode === 2 || f.dataset.respuestaRevisada===ans)){
         const ok = ans === correctSymbol(ex.a, ex.b);
-        f.innerHTML = ok ? '<span style="color:#22c55e">✓</span>' : '<span style="color:#ef4444">✗</span>';
-        f.classList.add('visible');
+        mostrarResultado(i,ok);
       }else{
         f.innerHTML = '';
         f.classList.remove('visible');
+        f.removeAttribute('aria-label');delete f.dataset.resultado;
+        f.setAttribute('aria-hidden','true');delete f.dataset.respuestaRevisada;
+        $('#drop'+i).closest('.exercise-row').classList.remove('resultado-correcto','resultado-incorrecto');
       }
     });
   }
@@ -353,13 +366,8 @@
     state.checked = true;
     let allCorrect = true;
     state.exercises.forEach((ex,i)=>{
-      const z = $('#drop'+i);
-      const f = $('#feedback'+i);
       const ok = state.answers[i] === correctSymbol(ex.a, ex.b);
-      z.classList.toggle('correct', ok);
-      z.classList.toggle('incorrect', !ok);
-      f.innerHTML = ok ? '<span style="color:#22c55e">✓</span>' : '<span style="color:#ef4444">✗</span>';
-      f.classList.add('visible');
+      mostrarResultado(i,ok);
       if(!ok) allCorrect = false;
     });
 
@@ -567,7 +575,7 @@
     window.removeEventListener('pointercancel', cancelDrag);
   }
 
-  function celebrate(texto){return FiestaSignos.abrir({nombre:state.childName||obtenerNombreGuardado()||'Gabriel',texto});}
+  function celebrate(texto){return FiestaSignos.abrir({nombre:state.childName||obtenerNombreGuardado()||'Gabriel',texto,nuevaRonda:newRound});}
 
   function attachEvents(){
     $$('.level-btn').forEach(btn => btn.addEventListener('click', () => startGame(Number(btn.dataset.digits))));
@@ -666,18 +674,18 @@
     app.classList.toggle('compacta',h<450||innerWidth/z<300);
     const grid=$('#exercisesContainer'),r=grid.getBoundingClientRect();
     grid.style.setProperty('--columnas','1');
-    const ctx=medirNumerosSignos;ctx.font='800 32px Verdana';
+    const ctx=medirNumerosSignos;ctx.font='800 32px system-ui';
     const filas=Array.from(grid.querySelectorAll('.exercise-row')),visibles=Math.max(1,Math.min(6,filas.length));
     const altoPantalla=window.visualViewport?.height||innerHeight,inicio=r.top+window.scrollY,acciones=$('#gameArea>.buttons').getBoundingClientRect().height;
     const altoPorFila=(altoPantalla-inicio-acciones-24-10*(visibles-1))/visibles;
     const objetivo=Math.max(24,Math.min(64,Math.floor((altoPorFila-32)/1.2)));
     for(const fila of filas){
       const numeros=[...fila.querySelectorAll('.num-box')],anchos=numeros.map(el=>ctx.measureText(el.textContent.trim()).width),disponible=Math.max(120,r.width-8),estrecha=disponible<360;
-      const separacion=estrecha?6:12,padding=estrecha?8:10;
+      const separacion=estrecha?4:12,padding=estrecha?4:10,paddingNumero=estrecha?2:8;
       // Measure the actual glyphs; never squeeze the type or widen the gaps.
       const dimensiones=fuente=>{
-        const numero=Math.max(64,Math.ceil(Math.max(...anchos)*fuente/32)+16),signo=Math.max(48,Math.min(72,fuente+16));
-        return {numero,signo,total:2*numero+signo+2*separacion+2*padding+2};
+        const numero=Math.max(48,Math.ceil(Math.max(...anchos)*fuente/32)+2*paddingNumero),signo=Math.max(48,Math.min(72,fuente+16)),marca=estrecha?32:Math.min(56,Math.max(40,fuente));
+        return {numero,signo,marca,total:2*numero+signo+marca+3*separacion+2*padding+2};
       };
       let fuente=objetivo;while(fuente>24&&dimensiones(fuente).total>disponible)fuente--;
       const d=dimensiones(fuente),altoNumero=Math.max(48,Math.ceil(fuente*1.2+12)),altoSigno=Math.max(48,Math.ceil(fuente*1.1+12));
@@ -685,6 +693,7 @@
         '--ancho-numero-signos':d.numero,'--ancho-signo-signos':d.signo,'--fuente-numero-signos':fuente,
         '--fuente-simbolo-signos':Math.min(64,Math.max(36,fuente+6)),'--separacion-signos':separacion,
         '--padding-fila-signos':padding,'--alto-numero-signos':altoNumero,'--alto-signo-signos':altoSigno,
+        '--ancho-marca-signos':d.marca,'--fuente-marca-signos':Math.min(52,d.marca+6),'--padding-numero-signos':paddingNumero,
         '--alto-fila-signos':Math.max(altoNumero,altoSigno)+18
       };
       for(const [clave,valor]of Object.entries(estilo))fila.style.setProperty(clave,valor/z+'px');

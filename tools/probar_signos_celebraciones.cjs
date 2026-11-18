@@ -53,6 +53,11 @@ const url=pathToFileURL(path.resolve('mayor_menor_igual.html')).href;
   await page.locator('.continuar-fiesta-signos').click();assert.ok(!await page.locator('.fiesta-signos').isVisible());
   assert.ok(await page.locator('#drop0').evaluate(e=>e.classList.contains('correct')));
   console.log('PASS actual success, 3–2–1, launch, exit, stars, then named praise and clean close');
+  await page.evaluate(()=>FiestaSignos.abrir({nombre:'Gabriel'}));
+  await page.locator('.nueva-ronda-fiesta-signos').tap();
+  assert.equal(await page.evaluate(()=>FiestaSignos.activa),false);
+  assert.equal(await page.locator('#drop0').innerText(),'');
+  assert.ok(await page.locator('#btnCheck').isDisabled());
 
   // Preferences are deferred until the settings form closes, then survive reload.
   await page.locator('.configurar-signos').click();
@@ -74,14 +79,15 @@ const url=pathToFileURL(path.resolve('mayor_menor_igual.html')).href;
     await page.locator('#zoom-aplicacion').evaluate((e,z)=>{e.value=z;e.dispatchEvent(new Event('input',{bubbles:true}));},z);
     await page.clock.runFor(100);
     await page.evaluate(()=>FiestaSignos.abrir({nombre:'Gabriel'}));await page.clock.runFor(50);
-    const cajas=await page.evaluate(()=>['.fiesta-signos','.escena-fiesta-signos','.cohete-fiesta-signos','.cuenta-fiesta-signos','.continuar-fiesta-signos','.audio-fiesta-signos'].map(s=>({s,r:document.querySelector(s).getBoundingClientRect().toJSON()})));
+    const cajas=await page.evaluate(()=>['.fiesta-signos','.escena-fiesta-signos','.cohete-fiesta-signos','.cuenta-fiesta-signos','.continuar-fiesta-signos','.nueva-ronda-fiesta-signos','.audio-fiesta-signos'].map(s=>({s,r:document.querySelector(s).getBoundingClientRect().toJSON()})));
     for(const{r,s}of cajas)assert.ok(r.left>=-1&&r.top>=-1&&r.right<=w+1&&r.bottom<=h+1,JSON.stringify({w,h,z,s,r}));
     await page.clock.fastForward(8500);await page.clock.runFor(50);
     const texto=await page.locator('.mensaje-fiesta-signos').evaluate(e=>({r:e.getBoundingClientRect().toJSON(),overflow:e.scrollHeight>e.clientHeight+1||e.scrollWidth>e.clientWidth+1}));
     assert.ok(!texto.overflow,JSON.stringify({w,h,z,texto}));
-    // Actual touch, including 50% and 200% zoom, must reach Continue.
-    await page.locator('.continuar-fiesta-signos').tap();
+    // Both exit buttons work with actual touch, including 50% and 200% zoom.
+    await page.locator(z===85||z===200?'.nueva-ronda-fiesta-signos':'.continuar-fiesta-signos').tap();
     assert.equal(await page.evaluate(()=>FiestaSignos.activa),false);
+    if(z===85||z===200)assert.equal(await page.locator('#drop0').innerText(),'');
    }
    console.log('PASS complete rocket scene, message and touch at all zooms',w,h);
   }
@@ -99,6 +105,7 @@ const url=pathToFileURL(path.resolve('mayor_menor_igual.html')).href;
   await page.waitForFunction(()=>IdiomaVoz.idioma==='en');
   await page.evaluate(()=>{lecturas=[];FiestaSignos.abrir({nombre:'Marcos'});});
   assert.equal(await page.locator('#tituloFiestaSignos').innerText(),'Mission complete!');
+  assert.equal(await page.locator('.nueva-ronda-fiesta-signos').innerText(),'↻ New round');
   await page.clock.fastForward(8400);await page.clock.runFor(100);
   assert.equal(await page.locator('.mensaje-fiesta-signos h3').innerText(),'Congratulations!');
   assert.match(await page.evaluate(()=>lecturas.at(-1).texto),/Marcos/);assert.match(await page.evaluate(()=>lecturas.at(-1).idioma),/^en/);
