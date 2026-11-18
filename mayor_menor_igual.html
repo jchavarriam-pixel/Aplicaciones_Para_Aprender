@@ -91,7 +91,7 @@
 <script>window.IDIOMA_VOZ_APP='signos';</script>
 <script src="idioma-voz-textos.js"></script><script src="matematicas-signos-textos.js?v=20261118-panel-1"></script>
 <script src="idioma-voz.js"></script><script src="matematicas-base.js"></script>
-<link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-signos-panel.css?v=20261118-panel-1">
+<link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-signos-panel.css?v=20261118-numeros-2">
 </head>
 <body>
   <main class="app">
@@ -671,7 +671,7 @@
   let digitosPendientes=1,ayudaPendiente=0,aplicando=false;const cambiosPendientes=new Set();
   function abrirConfiguracion(){cantidad.value=String(state.comparisonCount);mostrarModoSignos(state.numberMode==='rango');minimo.value=state.rangeMin;maximo.value=state.rangeMax;digitosPendientes=state.maxDigits;ayudaPendiente=state.helpMode;cambiosPendientes.clear();config.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('seleccionado',Number(b.dataset.digits)===digitosPendientes));config.style.zoom=String(1/(parseFloat(getComputedStyle(document.body).zoom)||1));config.showModal();}
   const accesos=document.createElement('nav');accesos.className='accesos-signos';accesos.setAttribute('aria-label','Aplicaciones y configuración');abrir.before(accesos);const casa=document.createElement('a');casa.className='inicio-signos';casa.href='index.html';casa.textContent='⌂';casa.setAttribute('aria-label','Volver a las aplicaciones');casa.title='Volver a las aplicaciones';accesos.append(abrir);
-  const cabecera=document.createElement('header');cabecera.className='cabecera-comparacion';tools.prepend(cabecera);const insignia=document.createElement('span');insignia.className='insignia-comparacion';insignia.innerHTML='<svg viewBox="0 0 72 64" width="44" height="42" aria-hidden="true"><rect x="4" y="23" width="20" height="31" rx="6" fill="#ffebbb" stroke="#debb72" stroke-width="2"/><rect x="26" y="11" width="20" height="43" rx="6" fill="#c9efe1" stroke="#83bda8" stroke-width="2"/><rect x="48" y="23" width="20" height="31" rx="6" fill="#ded7fb" stroke="#a89bd1" stroke-width="2"/><g font-family="system-ui,sans-serif" text-anchor="middle" dominant-baseline="central" font-size="19" font-weight="800" fill="#496281"><text x="14" y="39">&lt;</text><text x="36" y="33">=</text><text x="58" y="39">&gt;</text></g></svg>';insignia.setAttribute('aria-hidden','true');cabecera.append(insignia,tools.querySelector('.title'),nombre,tools.querySelector('.subtitle'),casa);const descripcion=cabecera.querySelector('.subtitle');descripcion.remove();
+  const cabecera=document.createElement('header');cabecera.className='cabecera-comparacion';tools.prepend(cabecera);const insignia=document.createElement('span');insignia.className='insignia-comparacion';insignia.innerHTML='<img src="iconos/mayor-menor-igual.svg" width="44" height="42" alt="">';insignia.setAttribute('aria-hidden','true');cabecera.append(insignia,tools.querySelector('.title'),nombre,tools.querySelector('.subtitle'),casa);const descripcion=cabecera.querySelector('.subtitle');descripcion.remove();
   const guia=document.createElement('section');guia.className='guia-signos';guia.setAttribute('aria-labelledby','tituloGuiaSignos');guia.innerHTML='<h2 id="tituloGuiaSignos">Así jugamos</h2><ol><li><span>Mira los dos números.</span></li><li><span>Elige o arrastra el signo.</span></li><li><span>Pulsa <strong>Revisar</strong>.</span></li></ol>';cabecera.after(guia,accesos);
   const barra=tools.querySelector('.topbar'),consejo=barra.querySelector('.help-text');contenido.append(consejo);consejo.classList.add('consejo-signos');
   barra.classList.add('resumen-signos');const rotulo=document.createElement('span');rotulo.className='rotulo-ronda-signos';rotulo.textContent='Tu ronda';barra.prepend(rotulo);const resumenCantidad=document.createElement('span');resumenCantidad.id='cantidadResumenSignos';resumenCantidad.setAttribute('aria-live','polite');barra.append(resumenCantidad);
@@ -698,11 +698,27 @@
     const grid=$('#exercisesContainer'),r=grid.getBoundingClientRect();
     grid.style.setProperty('--columnas','1');
     const ctx=medirNumerosSignos;ctx.font='800 32px Verdana';
-    for(const fila of grid.querySelectorAll('.exercise-row')){
-      const numeros=[...fila.querySelectorAll('.num-box')],anchos=numeros.map(el=>ctx.measureText(el.textContent.trim()).width),disponible=Math.max(120,r.width-8),separacion=disponible<330?8:12,signo=52,padding=10;
-      const ancho=Math.max(38,Math.min(Math.max(64,Math.ceil(Math.max(...anchos))+24),(disponible-signo-2*separacion-2*padding-2)/2));
-      const fuente=Math.min(32,...anchos.map(w=>(ancho-16)/Math.max(1,w/32)));
-      fila.style.setProperty('--ancho-numero-signos',ancho/z+'px');fila.style.setProperty('--fuente-numero-signos',fuente/z+'px');fila.style.setProperty('--separacion-signos',separacion/z+'px');
+    const filas=Array.from(grid.querySelectorAll('.exercise-row')),visibles=Math.max(1,Math.min(6,filas.length));
+    const altoPantalla=window.visualViewport?.height||innerHeight,inicio=r.top+window.scrollY,acciones=$('#gameArea>.buttons').getBoundingClientRect().height;
+    const altoPorFila=(altoPantalla-inicio-acciones-24-10*(visibles-1))/visibles;
+    const objetivo=Math.max(24,Math.min(64,Math.floor((altoPorFila-32)/1.2)));
+    for(const fila of filas){
+      const numeros=[...fila.querySelectorAll('.num-box')],anchos=numeros.map(el=>ctx.measureText(el.textContent.trim()).width),disponible=Math.max(120,r.width-8),estrecha=disponible<360;
+      const separacion=estrecha?6:12,padding=estrecha?8:10;
+      // Measure the actual glyphs; never squeeze the type or widen the gaps.
+      const dimensiones=fuente=>{
+        const numero=Math.max(64,Math.ceil(Math.max(...anchos)*fuente/32)+16),signo=Math.max(48,Math.min(72,fuente+16));
+        return {numero,signo,total:2*numero+signo+2*separacion+2*padding+2};
+      };
+      let fuente=objetivo;while(fuente>24&&dimensiones(fuente).total>disponible)fuente--;
+      const d=dimensiones(fuente),altoNumero=Math.max(48,Math.ceil(fuente*1.2+12)),altoSigno=Math.max(48,Math.ceil(fuente*1.1+12));
+      const estilo={
+        '--ancho-numero-signos':d.numero,'--ancho-signo-signos':d.signo,'--fuente-numero-signos':fuente,
+        '--fuente-simbolo-signos':Math.min(64,Math.max(36,fuente+6)),'--separacion-signos':separacion,
+        '--padding-fila-signos':padding,'--alto-numero-signos':altoNumero,'--alto-signo-signos':altoSigno,
+        '--alto-fila-signos':Math.max(altoNumero,altoSigno)+18
+      };
+      for(const [clave,valor]of Object.entries(estilo))fila.style.setProperty(clave,valor/z+'px');
       numeros.forEach(el=>el.style.fontSize=fuente/z+'px');
     }
   });
