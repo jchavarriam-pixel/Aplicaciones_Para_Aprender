@@ -38,3 +38,8 @@ window.traducirActividad=s=>{
  ];
  for(const[a,b]of templates){const [pre,post]=a.split('{name}');if(s.startsWith(pre)&&s.endsWith(post))return b.replace('{name}',s.slice(pre.length,s.length-post.length));}
 };
+
+for(let n=1;n<=6;n++)window.TEXTOS_INGLES['Hasta '+n+' '+(n===1?'dígito':'dígitos')]='Up to '+n+' '+(n===1?'digit':'digits');
+Object.assign(window.TEXTOS_INGLES,{'Nombre del niño':'Child’s name','Así jugamos':'How to play','Mira los dos números.':'Look at both numbers.','Elige o arrastra el signo.':'Choose or drag the sign.','Pulsa':'Press','Revisar':'Check','Tu ronda':'Your round'});
+
+window.TEXTOS_INGLES['⟲ Reiniciar']='⟲ Reset';

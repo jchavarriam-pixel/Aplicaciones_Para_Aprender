@@ -89,9 +89,9 @@
 <link rel="stylesheet" href="idioma-voz.css">
 <link rel="stylesheet" href="matematicas-signos.css">
 <script>window.IDIOMA_VOZ_APP='signos';</script>
-<script src="idioma-voz-textos.js"></script><script src="matematicas-signos-textos.js"></script>
+<script src="idioma-voz-textos.js"></script><script src="matematicas-signos-textos.js?v=20261118-panel-1"></script>
 <script src="idioma-voz.js"></script><script src="matematicas-base.js"></script>
-<link rel="stylesheet" href="panel-plegable.css">
+<link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-signos-panel.css?v=20261118-panel-1">
 </head>
 <body>
   <main class="app">
@@ -116,10 +116,10 @@
       <input class="name-input" id="nameInput" placeholder="Ej: Gabriel" autocomplete="off" />
       <div class="label">¿Cuántos dígitos quieres practicar?</div>
       <div class="level-grid">
-        <button class="level-btn" style="background:#fef08a;border-color:#eab308;color:#854d0e" data-digits="1">🍎 1 dígito</button>
-        <button class="level-btn" style="background:#bbf7d0;border-color:#22c55e;color:#166534" data-digits="2">🌟 2 dígitos</button>
-        <button class="level-btn" style="background:#bfdbfe;border-color:#3b82f6;color:#1e3a5f" data-digits="3">🚀 3 dígitos</button>
-        <button class="level-btn" style="background:#e9d5ff;border-color:#a855f7;color:#581c87" data-digits="4">🏆 4 dígitos</button>
+        <button class="level-btn" style="background:#fef08a;border-color:#eab308;color:#854d0e" data-digits="1">Hasta 1 dígito</button>
+        <button class="level-btn" style="background:#bbf7d0;border-color:#22c55e;color:#166534" data-digits="2">Hasta 2 dígitos</button>
+        <button class="level-btn" style="background:#bfdbfe;border-color:#3b82f6;color:#1e3a5f" data-digits="3">Hasta 3 dígitos</button>
+        <button class="level-btn" style="background:#e9d5ff;border-color:#a855f7;color:#581c87" data-digits="4">Hasta 4 dígitos</button>
       </div>
     </section>
 
@@ -411,7 +411,8 @@
     $('#startScreen').style.display = 'flex';
 
     $('#gameArea').classList.add('active');
-    $('#levelBadge').textContent = state.numberMode==='rango'?(IdiomaVoz.idioma==='en'?'Range: ':'Rango: ')+state.rangeMin+'–'+state.rangeMax:`Nivel: hasta ${digits} dígito${digits>1?'s':''}`;
+    $('#levelBadge').textContent = state.numberMode==='rango'?(IdiomaVoz.idioma==='en'?'Range: ':'Rango: ')+state.rangeMin+'–'+state.rangeMax:(IdiomaVoz.idioma==='en'?'Up to ':'Hasta ')+digits+' '+(IdiomaVoz.idioma==='en'?(digits===1?'digit':'digits'):(digits===1?'dígito':'dígitos'));
+    const resumen=$('#cantidadResumenSignos');if(resumen)resumen.textContent=state.comparisonCount+' '+(IdiomaVoz.idioma==='en'?(state.comparisonCount===1?'comparison':'comparisons'):(state.comparisonCount===1?'comparación':'comparaciones'));
     newRound();
   }
 
@@ -655,7 +656,8 @@
   const opciones=document.createElement('section');opciones.className='seleccion-signos';opciones.innerHTML='<h3>Selección de números</h3><div class="casillas-signos"><label><input type="checkbox" id="digitosSignos"> Hasta N dígitos</label><label><input type="checkbox" id="rangoSignos"> Rango definido</label></div><div id="limitesSignos"><label>Mínimo<input type="number" id="minimoSignos" min="0" max="999998" step="1" required></label><label>Máximo<input type="number" id="maximoSignos" min="1" max="999999" step="1" required></label></div>';
   contenido.prepend(opciones);
   const cantidadLabel=document.createElement('label');cantidadLabel.className='cantidad-comparaciones';cantidadLabel.textContent='Comparaciones por ronda';const cantidad=document.createElement('select');cantidad.id='cantidadComparaciones';for(let n=1;n<=12;n++)cantidad.append(new Option(String(n),String(n)));cantidadLabel.append(cantidad);opciones.append(cantidadLabel);
-  for(const n of [5,6]){const b=document.createElement('button');b.type='button';b.className='level-btn';b.dataset.digits=n;b.textContent=n+' dígitos';$('#startScreen .level-grid').append(b);}
+  for(const n of [5,6]){const b=document.createElement('button');b.type='button';b.className='level-btn';b.dataset.digits=n;b.textContent='Hasta '+n+' dígitos';$('#startScreen .level-grid').append(b);}
+  $$('.level-btn').forEach(b=>b.removeAttribute('style'));
   const casillaDigitos=$('#digitosSignos'),casillaRango=$('#rangoSignos'),minimo=$('#minimoSignos'),maximo=$('#maximoSignos');
   function mostrarModoSignos(rango){casillaRango.checked=rango;casillaDigitos.checked=!rango;$('#limitesSignos').hidden=!rango;$('#startScreen').hidden=rango;}
   casillaDigitos.oninput=()=>mostrarModoSignos(false);casillaRango.oninput=()=>mostrarModoSignos(true);
@@ -669,7 +671,11 @@
   let digitosPendientes=1,ayudaPendiente=0,aplicando=false;const cambiosPendientes=new Set();
   function abrirConfiguracion(){cantidad.value=String(state.comparisonCount);mostrarModoSignos(state.numberMode==='rango');minimo.value=state.rangeMin;maximo.value=state.rangeMax;digitosPendientes=state.maxDigits;ayudaPendiente=state.helpMode;cambiosPendientes.clear();config.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('seleccionado',Number(b.dataset.digits)===digitosPendientes));config.style.zoom=String(1/(parseFloat(getComputedStyle(document.body).zoom)||1));config.showModal();}
   const accesos=document.createElement('nav');accesos.className='accesos-signos';accesos.setAttribute('aria-label','Aplicaciones y configuración');abrir.before(accesos);const casa=document.createElement('a');casa.className='inicio-signos';casa.href='index.html';casa.textContent='⌂';casa.setAttribute('aria-label','Volver a las aplicaciones');casa.title='Volver a las aplicaciones';accesos.append(abrir);
-  const cabecera=document.createElement('header');cabecera.className='cabecera-comparacion';tools.prepend(cabecera);const insignia=document.createElement('span');insignia.className='insignia-comparacion';insignia.textContent='⚖️';insignia.setAttribute('aria-hidden','true');cabecera.append(insignia,tools.querySelector('.title'),nombre,tools.querySelector('.subtitle'),casa);cabecera.append(accesos);
+  const cabecera=document.createElement('header');cabecera.className='cabecera-comparacion';tools.prepend(cabecera);const insignia=document.createElement('span');insignia.className='insignia-comparacion';insignia.innerHTML='<svg viewBox="0 0 72 64" width="44" height="42" aria-hidden="true"><rect x="4" y="23" width="20" height="31" rx="6" fill="#ffebbb" stroke="#debb72" stroke-width="2"/><rect x="26" y="11" width="20" height="43" rx="6" fill="#c9efe1" stroke="#83bda8" stroke-width="2"/><rect x="48" y="23" width="20" height="31" rx="6" fill="#ded7fb" stroke="#a89bd1" stroke-width="2"/><g font-family="system-ui,sans-serif" text-anchor="middle" dominant-baseline="central" font-size="19" font-weight="800" fill="#496281"><text x="14" y="39">&lt;</text><text x="36" y="33">=</text><text x="58" y="39">&gt;</text></g></svg>';insignia.setAttribute('aria-hidden','true');cabecera.append(insignia,tools.querySelector('.title'),nombre,tools.querySelector('.subtitle'),casa);const descripcion=cabecera.querySelector('.subtitle');descripcion.remove();
+  const guia=document.createElement('section');guia.className='guia-signos';guia.setAttribute('aria-labelledby','tituloGuiaSignos');guia.innerHTML='<h2 id="tituloGuiaSignos">Así jugamos</h2><ol><li><span>Mira los dos números.</span></li><li><span>Elige o arrastra el signo.</span></li><li><span>Pulsa <strong>Revisar</strong>.</span></li></ol>';cabecera.after(guia,accesos);
+  const barra=tools.querySelector('.topbar'),consejo=barra.querySelector('.help-text');contenido.append(consejo);consejo.classList.add('consejo-signos');
+  barra.classList.add('resumen-signos');const rotulo=document.createElement('span');rotulo.className='rotulo-ronda-signos';rotulo.textContent='Tu ronda';barra.prepend(rotulo);const resumenCantidad=document.createElement('span');resumenCantidad.id='cantidadResumenSignos';resumenCantidad.setAttribute('aria-live','polite');barra.append(resumenCantidad);
+  const acciones=document.createElement('div');acciones.className='acciones-signos';acciones.append($('#btnNew'),$('#btnReset'));tools.append(acciones);
   abrir.onclick=abrirConfiguracion;
   config.addEventListener('click',e=>{const nivel=e.target.closest('.level-btn'),ayuda=e.target.closest('.control-btn');if(nivel||ayuda){e.preventDefault();e.stopImmediatePropagation();if(nivel){digitosPendientes=Number(nivel.dataset.digits);config.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('seleccionado',b===nivel));}else{ayudaPendiente=['helpOff','helpRead','helpLive'].indexOf(ayuda.id);config.querySelectorAll('.control-btn').forEach(b=>b.classList.toggle('active',b===ayuda));}}},true);
   config.addEventListener('change',e=>{if(!aplicando){e.stopImmediatePropagation();cambiosPendientes.add(e.target);}},true);
@@ -685,12 +691,20 @@
   setHelpMode([0,1,2].includes(saved.ayuda)?saved.ayuda:0);
   startGame(state.maxDigits);
   IdiomaVoz.instalar('#preferenciasSignos');
+  const medirNumerosSignos=document.createElement('canvas').getContext('2d');
   const fit=Matematicas.pantalla(app,(h,z)=>{
     app.style.setProperty('--unidad-signos',(1/z)+'px');app.style.setProperty('--ancho-signos',(innerWidth/z)+'px');
     app.classList.toggle('compacta',h<450||innerWidth/z<300);
     const grid=$('#exercisesContainer'),r=grid.getBoundingClientRect();
     grid.style.setProperty('--columnas','1');
-    grid.querySelectorAll('.num-box').forEach(el=>{const ancho=el.getBoundingClientRect().width/z-10;el.style.fontSize=Math.max(8,Math.min(36/z,ancho/(Math.max(1,el.textContent.trim().length)*.72)))+'px';});
+    const ctx=medirNumerosSignos;ctx.font='800 32px Verdana';
+    for(const fila of grid.querySelectorAll('.exercise-row')){
+      const numeros=[...fila.querySelectorAll('.num-box')],anchos=numeros.map(el=>ctx.measureText(el.textContent.trim()).width),disponible=Math.max(120,r.width-8),separacion=disponible<330?8:12,signo=52,padding=10;
+      const ancho=Math.max(38,Math.min(Math.max(64,Math.ceil(Math.max(...anchos))+24),(disponible-signo-2*separacion-2*padding-2)/2));
+      const fuente=Math.min(32,...anchos.map(w=>(ancho-16)/Math.max(1,w/32)));
+      fila.style.setProperty('--ancho-numero-signos',ancho/z+'px');fila.style.setProperty('--fuente-numero-signos',fuente/z+'px');fila.style.setProperty('--separacion-signos',separacion/z+'px');
+      numeros.forEach(el=>el.style.fontSize=fuente/z+'px');
+    }
   });
   new MutationObserver(()=>fit()).observe($('#exercisesContainer'),{childList:true});
   addEventListener('resize',()=>cleanupDrag());
