@@ -6,9 +6,9 @@
   <title>Caja mayor y caja menor</title>
   <link rel="stylesheet" href="idioma-voz.css?v=20261108-1">
   <script src="idioma-voz-textos.js?v=20261108-1"></script>
-  <script src="mayor-menor-textos.js?v=20261108-1"></script>
+  <script src="mayor-menor-textos.js?v=20261118-panel-1"></script>
   <script src="idioma-voz.js?v=20261108-mayor-1"></script>
-  <script src="mayor-menor-ajustes.js?v=20261108-2" defer></script>
+  <script src="mayor-menor-ajustes.js?v=20261118-panel-1" defer></script>
   <script src="mayor-menor-celebracion.js?v=20261108-1" defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
   <style>
@@ -270,7 +270,7 @@
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
   <link rel="stylesheet" href="mayor-menor-adaptable.css?v=20261108-2">
-<link rel="stylesheet" href="panel-plegable.css">
+<link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="mayor-menor-panel.css?v=20261118-panel-1">
 </head>
 <body>
   <div class="app-wrapper" id="app">
@@ -298,12 +298,12 @@
       <div class="config-card">
         <div class="section-title">🔠 ¿Cuántos dígitos quieres usar?</div>
         <div class="digit-buttons" id="digitButtons">
-          <button class="digit-btn active" data-digits="1">1 dígito</button>
-          <button class="digit-btn" data-digits="2">2 dígitos</button>
-          <button class="digit-btn" data-digits="3">3 dígitos</button>
-          <button class="digit-btn" data-digits="4">4 dígitos</button>
-          <button class="digit-btn" data-digits="5">5 dígitos</button>
-          <button class="digit-btn" data-digits="6">6 dígitos</button>
+          <button class="digit-btn active" data-digits="1">Hasta 1 dígito</button>
+          <button class="digit-btn" data-digits="2">Hasta 2 dígitos</button>
+          <button class="digit-btn" data-digits="3">Hasta 3 dígitos</button>
+          <button class="digit-btn" data-digits="4">Hasta 4 dígitos</button>
+          <button class="digit-btn" data-digits="5">Hasta 5 dígitos</button>
+          <button class="digit-btn" data-digits="6">Hasta 6 dígitos</button>
         </div>
         <div class="section-note" id="digitsRuleNote">Todos los números serán de 1 dígito.</div>
       </div>
@@ -621,7 +621,7 @@
       window.CelebracionMayor?.detener();
       exercises = generateExercises();
       isPageSolved = false;
-      document.getElementById('pageLabel').textContent = `${exercisesPerPage} ejercicio${exercisesPerPage > 1 ? 's' : ''} por página • ${window.seleccionNumerosMayor?.modo==='rango' ? (IdiomaVoz.idioma==='en'?'Range: ':'Rango: ')+window.seleccionNumerosMayor.min+'–'+window.seleccionNumerosMayor.max : selectedDigits+' '+(IdiomaVoz.idioma==='en'?'digits':'dígitos')}`;
+      document.getElementById('pageLabel').textContent = `${exercisesPerPage} ${IdiomaVoz.idioma==='en'?(exercisesPerPage===1?'exercise per round':'exercises per round'):(exercisesPerPage===1?'ejercicio por ronda':'ejercicios por ronda')} • ${window.seleccionNumerosMayor?.modo==='rango' ? (IdiomaVoz.idioma==='en'?'Range: ':'Rango: ')+window.seleccionNumerosMayor.min+'–'+window.seleccionNumerosMayor.max : (IdiomaVoz.idioma==='en'?'Up to ':'Hasta ')+selectedDigits+' '+(IdiomaVoz.idioma==='en'?(selectedDigits===1?'digit':'digits'):(selectedDigits===1?'dígito':'dígitos'))}`;
       renderExercises();
       updateHint();
       updateCheckButton();

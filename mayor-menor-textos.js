@@ -82,3 +82,7 @@ Creado para Gabriel con ayuda de la IA y su familia|Created for Gabriel with hel
   if((m=s.match(/^(.+?), (¡.+!)$/))&&dic[m[2]])return m[1]+', '+dic[m[2]];
  };
 })();
+
+// The upper limit must be explicit in both languages.
+for(let n=1;n<=6;n++)window.TEXTOS_INGLES['Hasta '+n+' '+(n===1?'dígito':'dígitos')]='Up to '+n+' '+(n===1?'digit':'digits');
+Object.assign(window.TEXTOS_INGLES,{'Nombre del niño':'Child’s name','Así jugamos':'How to play','Mira el signo.':'Look at the sign.','Arrastra los números.':'Drag the numbers.','Pulsa':'Press','Revisar':'Check','Tu ronda':'Your round'});

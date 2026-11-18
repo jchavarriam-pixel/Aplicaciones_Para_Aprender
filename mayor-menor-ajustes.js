@@ -11,13 +11,17 @@ document.addEventListener('DOMContentLoaded',()=>{
  const cambios=new Set();let aplicandoDialogo=false;const selecciones=new Map();
  function abrirConfiguracion(){cambios.clear();selecciones.clear();settings.style.zoom=String(1/(parseFloat(getComputedStyle(document.body).zoom)||1));settings.showModal();}
  const accesos=document.createElement('nav');accesos.className='accesos-mayor';accesos.setAttribute('aria-label','Aplicaciones y configuración');abrir.before(accesos);const casa=document.createElement('a');casa.className='inicio-mayor';casa.href='index.html';casa.textContent='⌂';casa.setAttribute('aria-label','Volver a las aplicaciones');casa.title='Volver a las aplicaciones';accesos.append(abrir);
- const cabecera=document.createElement('header');cabecera.className='cabecera-comparacion';tools.prepend(cabecera);const insignia=document.createElement('span');insignia.className='insignia-comparacion';insignia.textContent='⚖️';insignia.setAttribute('aria-hidden','true');cabecera.append(insignia,title,nombre,intro,casa);cabecera.append(accesos);
+ const cabecera=document.createElement('header');cabecera.className='cabecera-comparacion';tools.prepend(cabecera);const insignia=document.createElement('span');insignia.className='insignia-comparacion';insignia.innerHTML='<svg viewBox="0 0 72 64" width="48" height="44" fill="none" aria-hidden="true"><path d="M5 54H68" stroke="#cad9ed" stroke-width="3" stroke-linecap="round"/><rect x="6" y="16" width="29" height="36" rx="7" fill="#d6e9ff" stroke="#6c98d4" stroke-width="2.5"/><path d="M9 25H31" stroke="#fff" stroke-width="3" stroke-linecap="round"/><rect x="44" y="29" width="21" height="23" rx="6" fill="#ffe5a2" stroke="#d9ad50" stroke-width="2.5"/><path d="M46 36H62" stroke="#fff" stroke-width="3" stroke-linecap="round"/><path d="M27 5L39 11L27 17" stroke="#5074b4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';insignia.setAttribute('aria-hidden','true');cabecera.append(insignia,title,nombre,intro,casa);title.textContent=title.textContent.replace(/^📦\s*/, '');
+ nombre.querySelector('.section-title').outerHTML='<label class="section-title" for="nameInput">Nombre del niño</label>';
+ intro.remove();
+ const guia=document.createElement('section');guia.className='guia-comparacion';guia.setAttribute('aria-labelledby','tituloGuiaComparacion');guia.innerHTML='<h2 id="tituloGuiaComparacion">Así jugamos</h2><ol><li><span>Mira el signo.</span></li><li><span>Arrastra los números.</span></li><li><span>Pulsa <strong>Revisar</strong>.</span></li></ol>';
+ cabecera.after(guia,accesos);const lugarAccesos=document.createComment('Configuración debajo de la guía');accesos.before(lugarAccesos);
  abrir.onclick=abrirConfiguracion;aceptar.onclick=()=>settings.close();settings.querySelector('.cerrar-configuracion-mayor').onclick=()=>settings.close();
  settings.addEventListener('change',e=>{if(!aplicandoDialogo){e.stopImmediatePropagation();cambios.add(e.target);}},true);
  settings.addEventListener('click',e=>{const b=e.target.closest('.count-btn,.digit-btn');if(b&&!aplicandoDialogo){e.stopImmediatePropagation();e.preventDefault();const tipo=b.matches('.count-btn')?'count':'digit';selecciones.set(tipo,b);settings.querySelectorAll('.'+tipo+'-btn').forEach(el=>el.classList.toggle('active',el===b));}},true);
  settings.addEventListener('close',()=>{window.seleccionNumerosMayor={modo:modo.value,min:Math.floor(+minimo.value),max:Math.floor(+maximo.value)};aplicandoDialogo=true;for(const b of selecciones.values())b.click();for(const el of cambios)el.dispatchEvent(new Event('change',{bubbles:true}));aplicandoDialogo=false;guardar();if(app.classList.contains('jugando')){cancelarArrastre();newPage();}});
  const preferences=document.createElement('div');preferences.className='config-card';preferences.innerHTML='<section id="preferenciasIdiomaVoz"></section><label class="opcion-mayor"><input id="ayudaComparacion" type="checkbox"> Mostrar ayuda en las cajas</label><label class="opcion-mayor"><input id="lecturaComparacion" type="checkbox" checked> Leer comparaciones y respuestas</label>';menu.append(preferences,menu.querySelector('.start-btn'));preferences.append(document.getElementById('preferenciasIdiomaVoz'));
- const top=game.querySelector('.top-bar');top.querySelector('.menu').remove();tools.append(top);
+ const top=game.querySelector('.top-bar');top.querySelector('.menu').remove();top.classList.add('resumen-ronda-mayor');const rotuloRonda=document.createElement('span');rotuloRonda.className='rotulo-ronda-mayor';rotuloRonda.textContent='Tu ronda';top.prepend(rotuloRonda);document.getElementById('pageLabel').setAttribute('aria-live','polite');tools.append(top);
  const secondary=document.createElement('div');secondary.className='acciones-secundarias';for(const e of [...game.querySelector('.actions').children])if(e.id!=='checkBtn')secondary.append(e);tools.append(secondary);
  secondary.querySelector('.new').textContent='🔄 Nueva ronda';
  game.querySelector('.footer-credit').remove();menu.querySelector('p[style]')?.remove();document.body.append(document.getElementById('creditos-aplicaciones'));
@@ -53,7 +57,7 @@ document.addEventListener('DOMContentLoaded',()=>{
  let pending=false;
  function ajustar(){
   pending=false;const scale=app.getBoundingClientRect().width/app.offsetWidth||1,alto=(window.visualViewport?.height||innerHeight)/scale,ancho=innerWidth/scale;
-  app.style.setProperty('--alto-vista',alto+'px');const inverso=String(1/scale);if(document.body.style.getPropertyValue('--inverso-mayor')!==inverso)document.body.style.setProperty('--inverso-mayor',inverso);app.dataset.orientacion=innerWidth>innerHeight?'horizontal':'vertical';app.classList.toggle('compacta',alto<570||ancho<600);app.classList.toggle('muy-compacta',alto<330||ancho<270);
+  app.style.setProperty('--alto-vista',alto+'px');const inverso=String(1/scale);if(document.body.style.getPropertyValue('--inverso-mayor')!==inverso)document.body.style.setProperty('--inverso-mayor',inverso);app.style.setProperty('--unidad-mayor',1/scale+'px');app.dataset.orientacion=innerWidth>innerHeight?'horizontal':'vertical';app.classList.toggle('ronda-densa',app.dataset.orientacion==='vertical'&&exercises.length>=3&&(alto<760||(window.visualViewport?.height||innerHeight)<760));app.classList.toggle('compacta',alto<570||ancho<600);app.classList.toggle('muy-compacta',alto<330||ancho<270);
   if(alto<330||ancho<270){if(hint.parentElement!==tools)tools.append(hint);}else if(hint.parentElement===tools)marcaHint.after(hint);
   grid.dataset.cantidad=exercises.length;
   // Ajustar la fuente al texto real, sin comprimir ni cortar cifras.
@@ -61,13 +65,25 @@ document.addEventListener('DOMContentLoaded',()=>{
   const cards=[...grid.querySelectorAll('.exercise-card')],naturales=cards.map(card=>Math.min(260,Math.max(140,card.getBoundingClientRect().width/scale*.75)));
   if(app.dataset.orientacion==='vertical'){
    const estiloTools=getComputedStyle(tools),visibles=[...tools.children].filter(e=>getComputedStyle(e).display!=='none');
-   const natural=visibles.reduce((total,e)=>{const s=getComputedStyle(e);return total+e.getBoundingClientRect().height/scale+(parseFloat(s.marginTop)||0)+(parseFloat(s.marginBottom)||0);},0)+Math.max(0,visibles.length-1)*(parseFloat(estiloTools.rowGap)||0)+(parseFloat(estiloTools.paddingTop)||0)+(parseFloat(estiloTools.paddingBottom)||0)+4;
+   const bordeSuperior=tools.getBoundingClientRect().top;const natural=Math.max(0,...visibles.map(e=>(e.getBoundingClientRect().bottom-bordeSuperior)/scale+(parseFloat(getComputedStyle(e).marginBottom)||0)))+tools.scrollTop+(parseFloat(estiloTools.paddingBottom)||0)+4;
    // Primero ceder el aire del ejercicio; conservar una altura útil por comparación.
-   const reservaJuego=125+Math.max(1,cards.length)*100;
-   const disponible=app.clientHeight-24;
-   const altura=Math.max(90,Math.min(natural,disponible-reservaJuego));
+   const vertical=s=>['paddingTop','paddingBottom','borderTopWidth','borderBottomWidth'].reduce((n,k)=>n+(parseFloat(s[k])||0),0);
+   const altoTarjeta=Math.max(0,...cards.map(card=>{
+    const cs=getComputedStyle(card),bs=getComputedStyle(card.querySelector('.drop-box'));
+    const titulo=card.querySelector('.exercise-title-row').getBoundingClientRect().height;
+    // Each source must retain at least 24 physical pixels of height, including at 200% zoom.
+    const fila=24+2*scale+vertical(bs)*scale;
+    return titulo+vertical(cs)*scale+2*(parseFloat(cs.rowGap)||0)*scale+2*fila;
+   }));
+   const separacion=(parseFloat(getComputedStyle(grid).rowGap)||0)*scale;
+   const otrasZonas=Math.max(125,game.getBoundingClientRect().height-grid.getBoundingClientRect().height);
+   const reservaJuego=(otrasZonas+Math.max(1,cards.length)*altoTarjeta+Math.max(0,cards.length-1)*separacion)/scale;
+   const estiloApp=getComputedStyle(app),disponible=app.clientHeight-(parseFloat(estiloApp.paddingTop)||0)-(parseFloat(estiloApp.paddingBottom)||0)-(parseFloat(estiloApp.rowGap)||0);
+   const altura=Math.max(90/scale,Math.min(natural,disponible-reservaJuego));
    app.style.setProperty('--alto-herramientas-mayor',altura+'px');
   }
+  const accesoCompacto=app.dataset.orientacion==='vertical'&&cards.length>=3;app.classList.toggle('configuracion-compacta',accesoCompacto);
+  if(accesoCompacto){if(accesos.parentElement!==cabecera)cabecera.append(accesos);}else if(accesos.parentElement===cabecera)lugarAccesos.after(accesos);
   const filas=app.dataset.orientacion==='vertical'?Math.max(1,cards.length):(cards.length>2?2:1);grid.style.setProperty('--alto-conjunto',Math.max(0,...naturales)*filas+(filas-1)*parseFloat(getComputedStyle(grid).rowGap)+'px');
   for(const [i,card] of cards.entries()){
    card.style.setProperty('--altura-natural',naturales[i]+'px');
