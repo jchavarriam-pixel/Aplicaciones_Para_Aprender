@@ -9,8 +9,7 @@ const arteSituaciones={
   pajaritosCable:["cielo-pajaritos","pajarito"],
   juanMariaDulcesPlato:["dulces-mesa","confite"],
   aulaPupitresDesocupados:["aula-pasillo","pupitre"],
-  aulaEstudiantesRecreo:["aula-pasillo","alumno-aula-4"],
-  aulaLleganEstudiantes:["aula-pasillo","alumno-aula-2"]
+  aulaRecreo:["aula-pasillo","alumno-aula-4"]
 };
 
 function renderStoryThumbnail(box,problem){
@@ -26,13 +25,6 @@ function renderStoryThumbnail(box,problem){
   object.className="objeto-miniatura";
   box.replaceChildren(background,object);
   if(problem.id==="busPasajeros") problem.renderPreview(box);
-  const arrows={aulaEstudiantesRecreo:"→",aulaLleganEstudiantes:"←"};
-  if(arrows[problem.id]){
-    const arrow=document.createElement("span");
-    arrow.className="flecha-miniatura-problemas";
-    arrow.textContent=arrows[problem.id];
-    box.append(arrow);
-  }
 }
 
 (() => {
@@ -121,13 +113,17 @@ function renderStoryThumbnail(box,problem){
   busOptions.className="opciones-ayuda-problemas";
   busOptions.innerHTML='<legend>Pasajeros del autobús</legend><label for="modoAutobus">En la parada</label><select id="modoAutobus"><option value="mixto">Mixto (suben o bajan)</option><option value="addition">Solo suben</option><option value="subtraction">Solo bajan</option></select>';
   const modoAutobus=busOptions.querySelector("select");
+  const recreoOptions=document.createElement("fieldset");
+  recreoOptions.className="opciones-ayuda-problemas";
+  recreoOptions.innerHTML='<legend>El recreo en el aula</legend><label for="modoRecreo">Movimiento de estudiantes</label><select id="modoRecreo"><option value="mixto">Mixto (salen o regresan)</option><option value="subtraction">Solo salen</option><option value="addition">Solo regresan</option></select>';
+  const modoRecreo=recreoOptions.querySelector("select");
   const voice=document.createElement("div");
   voice.id="preferenciasProblemas";
   const done=document.createElement("button");
   done.type="button";
   done.className="mainBtn aplicar-ajustes-problemas";
   done.textContent="Aplicar y volver";
-  settings.append(options,busOptions,voice,done);
+  settings.append(options,busOptions,recreoOptions,voice,done);
   dialog.append(settings);
   document.body.append(dialog);
 
@@ -136,6 +132,9 @@ function renderStoryThumbnail(box,problem){
     "Cerrar":"Close","Aplicar y volver":"Apply and return","Lectura y ayudas":"Speech and hints",
     "Pasajeros del autobús":"Bus passengers","En la parada":"At the bus stop",
     "Mixto (suben o bajan)":"Mixed (get on or off)","Solo suben":"Get on only","Solo bajan":"Get off only",
+    "El recreo en el aula":"Classroom recess","Movimiento de estudiantes":"Student movement",
+    "Mixto (salen o regresan)":"Mixed (leave or return)","Solo salen":"Leave only","Solo regresan":"Return only",
+    "Ya estaban":"Already there","Llegaron":"Arrivals","Cable principal":"Main wire","Se fueron":"Left",
     "Narración y lectura":"Narration and reading","Pista de datos":"Data hint",
     "Pista de palabra clave":"Keyword hint","Pista de operación":"Operation hint"
   });
@@ -168,6 +167,7 @@ function renderStoryThumbnail(box,problem){
   openSettings.onclick=()=>{
     previousRange=JSON.stringify(readParams());
     modoAutobus.value=preferenciasProblemas.autobus;
+    modoRecreo.value=preferenciasProblemas.recreo;
     for(const input of options.querySelectorAll("input"))input.checked=preferenciasProblemas[input.name];
     IdiomaVoz.iniciarEdicion();
     dialog.showModal();
@@ -175,14 +175,17 @@ function renderStoryThumbnail(box,problem){
   function applySettings(){
     for(const input of options.querySelectorAll("input"))preferenciasProblemas[input.name]=input.checked;
     const cambioAutobus=preferenciasProblemas.autobus!==modoAutobus.value;
+    const cambioRecreo=preferenciasProblemas.recreo!==modoRecreo.value;
     preferenciasProblemas.autobus=modoAutobus.value;
+    preferenciasProblemas.recreo=modoRecreo.value;
     if(!preferenciasProblemas.narracion)window.speechSynthesis?.cancel();
     Matematicas.guardar(CLAVE_AYUDAS_PROBLEMAS,preferenciasProblemas);
     const changed=JSON.stringify(readParams())!==previousRange;
     saveParams();
     saveFontSetting();
     IdiomaVoz.aplicarEdicion();
-    if(state.currentProblem&&(changed||(cambioAutobus&&state.currentProblem.id==="busPasajeros")))newProblem();
+    const historia=state.currentProblem?.id;
+    if(historia&&(changed||(cambioAutobus&&historia==="busPasajeros")||(cambioRecreo&&historia==="aulaRecreo")))newProblem();
     actualizarAyudas();
     dialog.close();
   }

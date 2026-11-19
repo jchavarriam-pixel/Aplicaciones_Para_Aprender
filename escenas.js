@@ -101,9 +101,16 @@ if (usarIlustracionesSituaciones) {
     const numero = n => visual ? `<strong>${n}</strong>` : n;
     const palabra = itemWord(problems[id], cambio);
     const accion = resaltar ? `<span class="keyAction">${verbo(cambio)}</span>` : verbo(cambio);
-    return isEnglish()
-      ? `There are ${numero(total)} birds on two power lines. ${numero(cambio)} ${palabra}${llegan() ? " more" : ""} ${accion}. How many birds are on the lines now?`
-      : `Hay ${numero(total)} pajaritos en dos cables eléctricos. Después, ${accion} ${numero(cambio)} ${palabra}${llegan() ? " más" : ""}. ¿Cuántos pajaritos hay ahora en los cables?`;
+    if (isEnglish()) {
+      const cambioTexto = llegan()
+        ? `${numero(cambio)} more ${palabra} ${accion} on the lower wire. How many birds are there altogether?`
+        : `${numero(cambio)} ${palabra} ${accion} to another wire. How many birds stayed on the top wire?`;
+      return `There are ${numero(total)} birds on the top wire. ${cambioTexto}`;
+    }
+    const cambioTexto = llegan()
+      ? `${accion} ${numero(cambio)} ${palabra} más en el cable de abajo. ¿Cuántos pajaritos hay en total?`
+      : `${accion} ${numero(cambio)} ${palabra} a otro cable. ¿Cuántos pajaritos quedan en el cable de arriba?`;
+    return `Hay ${numero(total)} pajaritos en el cable de arriba. Después, ${cambioTexto}`;
   }
 
   function mostrarCable() {
@@ -111,21 +118,25 @@ if (usarIlustracionesSituaciones) {
     const cable = document.createElement("div");
     cable.className = "cable-pajaritos";
     cable.setAttribute("aria-hidden", "true");
-    const cantidad = llegan() ? state.answer : state.total;
-    const superior = Math.ceil(cantidad / 2);
-    const paso = Math.min(10.4, 84 / Math.max(1, superior - 1));
+    const entran = llegan();
+    cable.classList.toggle("salida-pajaritos", !entran);
+    for (const [clase, texto] of [
+      ["rotulo-cable-superior", entran ? "Ya estaban" : "Cable principal"],
+      ["rotulo-cable-inferior", entran ? "Llegaron" : "Se fueron"]
+    ]) {
+      const rotulo = document.createElement("span");
+      rotulo.className = `rotulo-cable ${clase}`;
+      rotulo.textContent = texto;
+      cable.append(rotulo);
+    }
+    const cantidad = state.total + (entran ? state.change : 0);
+    const paso = Math.min(10.4, 88 / Math.max(1, Math.max(state.total,state.change) - 1));
     cable.style.setProperty("--ancho-pajarito", Math.min(9.2, paso * .92) + "cqw");
-    const lugares = shuffle(Array.from({length:cantidad}, (_, indice) => indice));
-    const menorGrupo = llegan() ? state.total : state.answer;
-    const cambiosArriba = superior - Math.ceil(menorGrupo / 2);
-    const avesEnVuelo = new Set([
-      ...lugares.filter(indice => indice % 2 === 0).slice(0, cambiosArriba),
-      ...lugares.filter(indice => indice % 2 === 1).slice(0, state.change - cambiosArriba)
-    ]);
+    const elegidos = shuffle(Array.from({length:state.total}, (_, indice) => indice)).slice(0,state.change);
+    const posicion = (indice,total) => 50 + (indice - (total - 1) / 2) * paso;
     for (let indice = 0; indice < cantidad; indice++) {
-      const segundaHilera = indice % 2 === 1;
-      const cantidadHilera = segundaHilera ? cantidad - superior : superior;
-      const x = 50 + (Math.floor(indice / 2) - (cantidadHilera - 1) / 2) * paso;
+      const segundaHilera = indice >= state.total;
+      const x = segundaHilera ? posicion(indice - state.total,state.change) : posicion(indice,state.total);
       const ave = document.createElement("span");
       ave.className = "pajarito-cable";
       ave.classList.toggle("pajarito-cable-inferior", segundaHilera);
@@ -139,10 +150,14 @@ if (usarIlustracionesSituaciones) {
       }
       ave.style.left = x + "%";
       ave.style.setProperty("--entrada-ave", (-x - 8) + "cqw");
-      ave.style.setProperty("--salida-ave", (108 - x) + "cqw");
-      if (avesEnVuelo.has(indice)) {
+      if (segundaHilera) {
         ave.dataset.vuelo = "";
-        ave.classList.toggle("pajarito-ausente", llegan());
+        ave.classList.add("pajarito-ausente");
+      } else if (!entran && elegidos.includes(indice)) {
+        const destino = posicion(elegidos.indexOf(indice),state.change);
+        ave.dataset.vuelo = destino;
+        ave.style.setProperty("--salida-ave", (destino - x) + "cqw");
+        ave.style.setProperty("--direccion-ave", destino >= x ? 1 : -1);
       }
       cable.append(ave);
     }
@@ -156,15 +171,19 @@ if (usarIlustracionesSituaciones) {
     const reducirMovimiento = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const aves = [...scene.querySelectorAll(".pajarito-cable[data-vuelo]")];
     aves.forEach((ave, indice) => {
+      const posar = () => {
+        if (!entrada) {
+          ave.style.left = ave.dataset.vuelo + "%";
+          ave.classList.add("pajarito-cable-inferior");
+        }
+        ave.classList.remove("pajarito-llega", "pajarito-sale", "pajarito-ausente");
+      };
       if (reducirMovimiento) {
-        ave.classList.toggle("pajarito-ausente", !entrada);
+        posar();
         return;
       }
       esperarAnimacionSituacion(() => {
-        ave.addEventListener("animationend", () => {
-          ave.classList.remove("pajarito-llega", "pajarito-sale");
-          ave.classList.toggle("pajarito-ausente", !entrada);
-        }, {once:true});
+        ave.addEventListener("animationend", posar, {once:true});
         ave.classList.remove("pajarito-ausente");
         ave.classList.add(entrada ? "pajarito-llega" : "pajarito-sale");
       }, indice * 145);
@@ -244,9 +263,9 @@ const aulaCenital = (() => {
     addIndoorKitchen();
     const modo = state.currentProblem.id;
     const pupitresVacios = modo === "aulaPupitresDesocupados";
-    const salen = modo === "aulaEstudiantesRecreo";
+    const salen = !pupitresVacios && state.operation === "subtraction";
     const iniciales = pupitresVacios ? 0 : state.total;
-    const cantidadPupitres = modo === "aulaLleganEstudiantes" ? state.total + state.change : state.total;
+    const cantidadPupitres = !pupitresVacios && !salen ? state.answer : state.total;
     const imagenes = avataresEstudiantesSituaciones();
     const clase = document.createDocumentFragment();
 
@@ -320,7 +339,7 @@ const aulaCenital = (() => {
 
   function animar() {
     const modo = state.currentProblem.id;
-    const entra = modo !== "aulaEstudiantesRecreo";
+    const entra = modo === "aulaPupitresDesocupados" || state.operation === "addition";
     let pendientes = state.movingIds.length;
     state.movingIds.forEach((id,index) => {
       const alumno = scene.querySelector(`[data-alumno="${id}"]`);
@@ -341,6 +360,73 @@ const aulaCenital = (() => {
 
   return {render,animar};
 })();
+
+if (usarIlustracionesSituaciones) {
+  function datosRecreo(total, cambio, visual = false, resaltar = false) {
+    const entran = state.operation === "addition";
+    const uno = cambio === 1;
+    const cantidad = n => visual ? `<strong>${n}</strong>` : n;
+    const verbo = isEnglish()
+      ? (entran ? (uno ? "returns from recess" : "return from recess") : (uno ? "goes out to recess" : "go out to recess"))
+      : (entran ? (uno ? "regresa del recreo" : "regresan del recreo") : (uno ? "sale al recreo" : "salen al recreo"));
+    const accion = resaltar ? `<span class="keyAction">${verbo}</span>` : verbo;
+    const datos = isEnglish()
+      ? `There are ${cantidad(total)} students in the classroom. Then ${cantidad(cambio)} ${uno ? "student" : "students"} ${accion}.`
+      : `Hay ${cantidad(total)} estudiantes en el aula. Luego ${cantidad(cambio)} ${uno ? "estudiante" : "estudiantes"} ${accion}.`;
+    const pregunta = isEnglish() ? "How many students are in the classroom now?" : "¿Cuántos estudiantes hay ahora en el aula?";
+    return {datos, pregunta, verbo};
+  }
+
+  registerScene({
+    id: "aulaRecreo",
+    operation: "addition",
+    chooseOperation: () => preferenciasProblemas.recreo === "mixto"
+      ? (randInt(0, 1) ? "addition" : "subtraction") : preferenciasProblemas.recreo,
+    itemSingular: "estudiante", itemPlural: "estudiantes",
+    itemSingularEn: "student", itemPluralEn: "students",
+    texts: {
+      es: {
+        title: "El recreo en el aula",
+        short: "Los estudiantes salen al recreo o regresan. Cuenta cuántos hay en el aula.",
+        badge: "🏫 Suma y resta",
+        animateLabel: "▶ Ver el recreo",
+        sceneTitle: "Observa quiénes entran o salen del aula",
+        answerQuestion: "¿Cuántos estudiantes hay ahora en el aula?"
+      },
+      en: {
+        title: "Classroom recess",
+        short: "Students go out to recess or come back. Count how many are in the classroom.",
+        badge: "🏫 Addition and subtraction",
+        animateLabel: "▶ Watch recess",
+        sceneTitle: "Watch who leaves or returns to the classroom",
+        answerQuestion: "How many students are in the classroom now?"
+      }
+    },
+    renderPreview() {},
+    renderScene: aulaCenital.render,
+    animate() {
+      if (state.animated) return;
+      state.animated = true;
+      aulaCenital.animar();
+    },
+    story(_, total, cambio, resaltar) {
+      const {datos,pregunta} = datosRecreo(total,cambio,true,resaltar);
+      return `${datos} ${pregunta}`;
+    },
+    speak(_, total, cambio) {
+      const {datos,pregunta} = datosRecreo(total,cambio);
+      return `${datos} ${pregunta}`;
+    },
+    hintData: (total,cambio) => datosRecreo(total,cambio,true).datos,
+    hintKeyword() {
+      const {verbo} = datosRecreo(state.total,state.change);
+      return isEnglish() ? `Look for <strong>${verbo}</strong>.` : `Fíjate en <strong>${verbo}</strong>.`;
+    },
+    hintOperation: (total,cambio) => isEnglish()
+      ? `Use <strong>${state.operation}</strong>: ${total} ${getExpectedSymbol()} ${cambio}.`
+      : `Usa una <strong>${state.operation === "addition" ? "suma" : "resta"}</strong>: ${total} ${getExpectedSymbol()} ${cambio}.`
+  });
+}
 
 /*
 ============================================================
@@ -3113,7 +3199,7 @@ ImagenesSituacionesProblemas/Aula/N4.png
     speak(state.currentProblem.speak(getName(), state.total, state.change));
   }
 
-  registerScene({
+  if (!usarIlustracionesSituaciones) registerScene({
     id: "aulaEstudiantesRecreo",
     operation: "subtraction",
 
@@ -3776,7 +3862,7 @@ ImagenesSituacionesProblemas/Aula/N4.png
     speak(state.currentProblem.speak(getName(), state.total, state.change));
   }
 
-  registerScene({
+  if (!usarIlustracionesSituaciones) registerScene({
     id: "aulaLleganEstudiantes",
     operation: "addition",
 
