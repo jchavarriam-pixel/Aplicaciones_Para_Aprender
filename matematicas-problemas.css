@@ -166,23 +166,42 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 .flecha-miniatura-problemas{position:absolute;right:31%;bottom:14%;display:grid;place-items:center;width:21%;aspect-ratio:1;border-radius:50%;background:#fff6da;color:#554295;font-size:calc(24 * var(--unidad));font-weight:950}
 .scene[data-story] .danielBalloonV3{filter:hue-rotate(var(--tono-globo,0deg))}
 
-.cable-pajaritos {
-  position:absolute; inset:0; pointer-events:none;
+.cable-pajaritos,.problemCard[data-story=pajaritosCable] .miniScene {
+  --cable-superior:40%; --cable-inferior:64%;
 }
-.cable-pajaritos::before,.problemCard[data-story=pajaritosCable] .miniScene::after {
-  content:""; position:absolute; top:57%; left:0; right:0; height:max(2px,.45cqw);
+.cable-pajaritos { position:absolute; inset:0; pointer-events:none; }
+:is(.cable-pajaritos,.problemCard[data-story=pajaritosCable] .miniScene)::before,
+:is(.cable-pajaritos,.problemCard[data-story=pajaritosCable] .miniScene)::after {
+  content:""; position:absolute; left:0; right:0; height:max(2px,.45cqw);
   background:#334155; box-shadow:0 1px 1px #1423355c;
 }
+:is(.cable-pajaritos,.problemCard[data-story=pajaritosCable] .miniScene)::before { top:var(--cable-superior); }
+:is(.cable-pajaritos,.problemCard[data-story=pajaritosCable] .miniScene)::after { top:var(--cable-inferior); }
 .problemCard[data-story=pajaritosCable] .objeto-miniatura {
-  inset:auto auto 43% 36%; width:28%; height:auto;
+  inset:auto auto calc(100% - var(--cable-inferior)) 38%; width:24%; height:auto; z-index:1;
 }
 .pajarito-cable {
-  position:absolute; top:57%; z-index:1; width:var(--ancho-pajarito);
-  height:auto; translate:-50% -97%;
+  position:absolute; top:var(--cable-superior); z-index:1;
+  width:var(--ancho-pajarito); aspect-ratio:1; translate:-50% -97%;
+}
+.pajarito-cable-inferior { top:var(--cable-inferior); }
+.pajarito-cable img { display:block; width:100%; height:100%; object-fit:contain; object-position:center bottom; }
+.pajarito-cable .ave-aleteando {
+  display:none; position:absolute; bottom:0; left:50%; width:134%; height:143%;
+  translate:-50% 0; transform-origin:center 72%;
 }
 .pajarito-cable:nth-child(3n+2) { filter:hue-rotate(24deg); }
 .pajarito-cable:nth-child(3n+3) { filter:hue-rotate(-20deg); }
 .pajarito-ausente { visibility:hidden; }
+:is(.pajarito-llega,.pajarito-sale) { z-index:2; }
+:is(.pajarito-llega,.pajarito-sale) .ave-posada { visibility:hidden; }
+:is(.pajarito-llega,.pajarito-sale) .ave-aleteando {
+  display:block; animation:aleteo-pajarito .18s ease-in-out infinite alternate;
+}
+@keyframes aleteo-pajarito {
+  from { transform:scaleY(.77) rotate(-5deg); }
+  to { transform:scaleY(1.04) rotate(4deg); }
+}
 .pajarito-llega { animation:pajarito-llega 1.15s ease-out both; }
 .pajarito-sale { animation:pajarito-sale 1.15s ease-in both; }
 @keyframes pajarito-llega {

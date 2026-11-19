@@ -85,6 +85,7 @@ if (usarIlustracionesSituaciones) {
 if (usarIlustracionesSituaciones) {
   const id = "pajaritosCable";
   const imagenPajarito = "ImagenesSituacionesProblemas/Ilustraciones/pajarito.webp";
+  const imagenVuelo = "ImagenesSituacionesProblemas/Ilustraciones/pajarito-alas-abiertas.webp";
   const llegan = () => state.operation === "addition";
 
   function verbo(cantidad) {
@@ -101,8 +102,8 @@ if (usarIlustracionesSituaciones) {
     const palabra = itemWord(problems[id], cambio);
     const accion = resaltar ? `<span class="keyAction">${verbo(cambio)}</span>` : verbo(cambio);
     return isEnglish()
-      ? `There are ${numero(total)} birds on a power line. ${numero(cambio)} ${palabra}${llegan() ? " more" : ""} ${accion}. How many birds are on the line now?`
-      : `Hay ${numero(total)} pajaritos en un cable eléctrico. Después, ${accion} ${numero(cambio)} ${palabra}${llegan() ? " más" : ""}. ¿Cuántos pajaritos hay ahora en el cable?`;
+      ? `There are ${numero(total)} birds on two power lines. ${numero(cambio)} ${palabra}${llegan() ? " more" : ""} ${accion}. How many birds are on the lines now?`
+      : `Hay ${numero(total)} pajaritos en dos cables eléctricos. Después, ${accion} ${numero(cambio)} ${palabra}${llegan() ? " más" : ""}. ¿Cuántos pajaritos hay ahora en los cables?`;
   }
 
   function mostrarCable() {
@@ -111,17 +112,31 @@ if (usarIlustracionesSituaciones) {
     cable.className = "cable-pajaritos";
     cable.setAttribute("aria-hidden", "true");
     const cantidad = llegan() ? state.answer : state.total;
-    const paso = Math.min(8.4, 84 / (cantidad - 1));
-    cable.style.setProperty("--ancho-pajarito", Math.min(7.6, paso * .96) + "cqw");
+    const superior = Math.ceil(cantidad / 2);
+    const paso = Math.min(10.4, 84 / Math.max(1, superior - 1));
+    cable.style.setProperty("--ancho-pajarito", Math.min(9.2, paso * .92) + "cqw");
     const lugares = shuffle(Array.from({length:cantidad}, (_, indice) => indice));
-    const avesEnVuelo = new Set(lugares.slice(0, state.change));
+    const menorGrupo = llegan() ? state.total : state.answer;
+    const cambiosArriba = superior - Math.ceil(menorGrupo / 2);
+    const avesEnVuelo = new Set([
+      ...lugares.filter(indice => indice % 2 === 0).slice(0, cambiosArriba),
+      ...lugares.filter(indice => indice % 2 === 1).slice(0, state.change - cambiosArriba)
+    ]);
     for (let indice = 0; indice < cantidad; indice++) {
-      const x = 50 + (indice - (cantidad - 1) / 2) * paso;
-      const ave = document.createElement("img");
+      const segundaHilera = indice % 2 === 1;
+      const cantidadHilera = segundaHilera ? cantidad - superior : superior;
+      const x = 50 + (Math.floor(indice / 2) - (cantidadHilera - 1) / 2) * paso;
+      const ave = document.createElement("span");
       ave.className = "pajarito-cable";
-      ave.src = imagenPajarito;
-      ave.alt = "";
-      ave.draggable = false;
+      ave.classList.toggle("pajarito-cable-inferior", segundaHilera);
+      for (const [archivo, clase] of [[imagenPajarito, "ave-posada"], [imagenVuelo, "ave-aleteando"]]) {
+        const imagen = new Image();
+        imagen.src = archivo;
+        imagen.alt = "";
+        imagen.draggable = false;
+        imagen.className = clase;
+        ave.append(imagen);
+      }
       ave.style.left = x + "%";
       ave.style.setProperty("--entrada-ave", (-x - 8) + "cqw");
       ave.style.setProperty("--salida-ave", (108 - x) + "cqw");
@@ -145,13 +160,14 @@ if (usarIlustracionesSituaciones) {
         ave.classList.toggle("pajarito-ausente", !entrada);
         return;
       }
-      ave.style.animationDelay = indice * 145 + "ms";
-      ave.addEventListener("animationend", () => {
-        ave.classList.remove("pajarito-llega", "pajarito-sale");
-        ave.classList.toggle("pajarito-ausente", !entrada);
-      }, {once:true});
-      ave.classList.remove("pajarito-ausente");
-      ave.classList.add(entrada ? "pajarito-llega" : "pajarito-sale");
+      esperarAnimacionSituacion(() => {
+        ave.addEventListener("animationend", () => {
+          ave.classList.remove("pajarito-llega", "pajarito-sale");
+          ave.classList.toggle("pajarito-ausente", !entrada);
+        }, {once:true});
+        ave.classList.remove("pajarito-ausente");
+        ave.classList.add(entrada ? "pajarito-llega" : "pajarito-sale");
+      }, indice * 145);
     });
     speak(enunciado(state.total, state.change));
   }
@@ -166,20 +182,20 @@ if (usarIlustracionesSituaciones) {
     itemPluralEn: "birds",
     texts: {
       es: {
-        title: "Pajaritos en el cable",
-        short: "Algunos llegan y otros se van volando. Cuenta cuántos quedan en el cable.",
+        title: "Pajaritos en los cables",
+        short: "Algunos llegan y otros se van volando. Cuenta cuántos quedan en los dos cables.",
         badge: "🐦 Suma y resta",
         animateLabel: "▶ Ver el vuelo",
-        sceneTitle: "Observa los pajaritos del cable",
-        answerQuestion: "¿Cuántos pajaritos hay ahora en el cable?"
+        sceneTitle: "Observa los pajaritos de los dos cables",
+        answerQuestion: "¿Cuántos pajaritos hay ahora en los cables?"
       },
       en: {
-        title: "Birds on a wire",
-        short: "Some birds land and others fly away. Count how many are on the wire.",
+        title: "Birds on power lines",
+        short: "Some birds land and others fly away. Count how many are on the two lines.",
         badge: "🐦 Addition and subtraction",
         animateLabel: "▶ Watch the birds",
-        sceneTitle: "Watch the birds on the wire",
-        answerQuestion: "How many birds are on the wire now?"
+        sceneTitle: "Watch the birds on the two lines",
+        answerQuestion: "How many birds are on the lines now?"
       }
     },
     renderPreview(box) {
