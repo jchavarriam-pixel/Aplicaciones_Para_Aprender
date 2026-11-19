@@ -2048,7 +2048,7 @@
   </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-problemas.css?v=historias-1"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-problemas.css?v=cenital-1"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
 <body>
   <main class="app">
     <section class="hero" aria-label="Encabezado de la aplicación">
@@ -2221,12 +2221,14 @@
       { x: 30, y: 43 }, { x: 43, y: 45 }, { x: 55, y: 42 }, { x: 66, y: 46 }, { x: 50, y: 53 }
     ];
 
-    const basketPositions = [
-      { x: 24, y: 49 }, { x: 32, y: 45 }, { x: 40, y: 49 }, { x: 48, y: 45 },
-      { x: 56, y: 49 }, { x: 28, y: 57 }, { x: 36, y: 56 }, { x: 44, y: 57 },
-      { x: 52, y: 56 }, { x: 32, y: 65 }, { x: 40, y: 65 }, { x: 48, y: 65 },
-      { x: 24, y: 61 }, { x: 56, y: 61 }, { x: 40, y: 41 }
-    ];
+    const basketPositions = Array.from({length:15}, (_, index) => ({
+      x: 13.7 + (index % 5) * 7,
+      y: 46 + Math.floor(index / 5) * 10
+    }));
+    const smallBasketPositions = Array.from({length:10}, (_, index) => ({
+      x: 64.3 + (index % 5) * 5,
+      y: 51.5 + Math.floor(index / 5) * 9.8
+    }));
 
     const encouragements = [
       "¡Excelente trabajo, {name}!",
@@ -3161,47 +3163,95 @@
       restoreSceneActions(actions);
     }
 
-    const busInsidePositions = Array.from({length:25},(_,index)=>({x:8.5+Math.floor(index/3)*5.4,y:39+(index%3)*7.1}));
+    // Los puntos se expresan en porcentajes de la ilustración cenital.
+    const pasoAutobus = { x: 74, y: 41.4 };
+    const puertaAutobus = { x: 74, y: 62.5 };
+    const bordeAceraAutobus = { x: 74, y: 70.5 };
+    const filasAutobus = [30.4, 36.4, 46.4, 52.4];
+    const asientosAutobus = Array.from({length:28}, (_, index) => ({
+      x: 15 + Math.floor(index / 4) * 8.7,
+      y: filasAutobus[index % 4]
+    }));
+    const busOutsidePositions = Array.from({length:10}, (_, index) => ({
+      x: 14 + (index % 5) * 10.5,
+      y: 77 + Math.floor(index / 5) * 9.8
+    }));
 
-    const busOutsidePositions = [
-      { x: 88, y: 71 }, { x: 92, y: 74 }, { x: 84, y: 77 }, { x: 89, y: 82 }, { x: 94, y: 84 },
-      { x: 82, y: 84 }, { x: 91, y: 89 }, { x: 86, y: 91 }, { x: 96, y: 91 }, { x: 80, y: 90 }
-    ];
+    function ubicarPasajero(elemento, posicion) {
+      elemento.style.left = posicion.x + "%";
+      elemento.style.top = posicion.y + "%";
+    }
 
-    function createPassenger(id, pos, className = "") {
+    function createPassenger(id, pos, className) {
       const passenger = document.createElement("div");
-      passenger.className = `busPassenger p${(Number(id) % 5) + 1} ${className}`.trim();
+      passenger.className = `busPassenger p${(id % 5) + 1} ${className}`;
       passenger.dataset.id = id;
-      passenger.style.left = `${pos.x}%`;
-      passenger.style.top = `${pos.y}%`;
+      ubicarPasajero(passenger, pos);
       return passenger;
     }
 
     function renderBusScene() {
       addRoadScene();
-
-      state.movingIds = [];
-      const insideCount = state.currentProblem.operation === "addition" ? state.total : state.total;
-      const outsideCount = state.currentProblem.operation === "addition" ? state.change : 0;
-
-      for (let i = 0; i < insideCount; i++) {
-        const pos = busInsidePositions[i % busInsidePositions.length];
-        const p = createPassenger(i, pos, "inside");
-        scene.appendChild(p);
+      for (const posicion of asientosAutobus) {
+        const asiento = document.createElement("span");
+        asiento.className = "asiento-autobus";
+        asiento.setAttribute("aria-hidden", "true");
+        ubicarPasajero(asiento, posicion);
+        scene.append(asiento);
       }
 
-      if (state.currentProblem.operation === "addition") {
-        for (let i = 0; i < outsideCount; i++) {
-          const id = state.total + i;
-          state.movingIds.push(id);
-          const pos = busOutsidePositions[i % busOutsidePositions.length];
-          const p = createPassenger(id, pos, "waiting");
-          scene.appendChild(p);
-        }
-      } else {
-        const ids = Array.from({ length: state.total }, (_, i) => i);
-        state.movingIds = shuffle(ids).slice(0, state.change);
+      const suben = state.currentProblem.operation === "addition";
+      state.movingIds = suben
+        ? Array.from({length:state.change}, (_, index) => state.total + index)
+        : shuffle(Array.from({length:state.total}, (_, index) => index)).slice(0, state.change);
+      for (let i = 0; i < state.total; i++) {
+        scene.append(createPassenger(i, asientosAutobus[i], "inside"));
       }
+      if (suben) {
+        state.movingIds.forEach((id, index) => {
+          scene.append(createPassenger(id, busOutsidePositions[index], "waiting"));
+        });
+      }
+    }
+
+    function rutaAutobus(acera, asiento) {
+      return [
+        acera, { x: puertaAutobus.x, y: acera.y }, bordeAceraAutobus,
+        puertaAutobus, pasoAutobus, { x: asiento.x, y: pasoAutobus.y }, asiento
+      ];
+    }
+
+    function caminarPasajero(pasajero, recorrido, suben) {
+      const marcas = [0];
+      for (let i = 1; i < recorrido.length; i++) {
+        const a = recorrido[i - 1], b = recorrido[i];
+        marcas.push(marcas[i - 1] + Math.hypot((b.x - a.x) * 1.5, b.y - a.y));
+      }
+      const longitud = marcas.at(-1);
+      let giro = suben ? 0 : 90;
+      const fotogramas = recorrido.map((p, i) => {
+        const siguiente = recorrido[i + 1];
+        const direccion = siguiente
+          ? Math.atan2((siguiente.x - p.x) * 1.5, p.y - siguiente.y) * 180 / Math.PI
+          : suben ? 90 : 0;
+        giro += (direccion - giro + 540) % 360 - 180;
+        return {
+          left: p.x + "%", top: p.y + "%",
+          transform: `translate(-50%, -50%) rotate(${giro}deg)`,
+          offset: marcas[i] / longitud
+        };
+      });
+      pasajero.classList.add("caminando");
+      const animacion = pasajero.animate(fotogramas, {
+        duration: Math.min(2200, 850 + longitud * 8), fill: "forwards"
+      });
+      animacion.onfinish = () => {
+        ubicarPasajero(pasajero, recorrido.at(-1));
+        pasajero.classList.toggle("inside", suben);
+        pasajero.classList.toggle("waiting", !suben);
+        pasajero.classList.remove("caminando");
+        animacion.cancel();
+      };
     }
 
     function animateBusChange() {
@@ -3217,55 +3267,13 @@
           : `Mira cómo ${state.change === 1 ? "una persona se baja" : "algunas personas se bajan"} del bus. Las personas que quedan en el bus son la respuesta.`);
       updateText();
 
-      if (state.currentProblem.operation === "addition") {
-        state.movingIds.forEach((id, index) => {
-          const passenger = scene.querySelector(`.busPassenger[data-id="${id}"]`);
-          const target = busInsidePositions[(state.total + index) % busInsidePositions.length];
-          const delay = index * 260;
-          esperarEnEscena(() => {
-            const anim = passenger.animate([
-              { left: passenger.style.left, top: passenger.style.top, transform: "translate(-50%, -50%) scale(1)", opacity: 1, offset: 0 },
-              { left: "65%", top: "62%", transform: "translate(-50%, -50%) scale(.95)", opacity: 1, offset: .45 },
-              { left: `${target.x}%`, top: `${target.y}%`, transform: "translate(-50%, -50%) scale(.58)", opacity: 1, offset: 1 }
-            ], { duration: 1250, easing: "cubic-bezier(.2,.82,.25,1)", fill: "forwards" });
-            anim.onfinish = () => {
-              passenger.style.left = `${target.x}%`;
-              passenger.style.top = `${target.y}%`;
-              passenger.classList.add("inside");
-              passenger.classList.remove("waiting");
-            };
-          }, delay + 70);
-        });
-      } else {
-        state.movingIds.forEach((id, index) => {
-          const passenger = scene.querySelector(`.busPassenger[data-id="${id}"]`);
-          const target = busOutsidePositions[index % busOutsidePositions.length];
-          const delay = index * 260;
-          esperarEnEscena(() => {
-            passenger.classList.remove("inside");
-            passenger.classList.add("waiting");
-            const anim = passenger.animate([
-              { left: passenger.style.left, top: passenger.style.top, transform: "translate(-50%, -50%) scale(.58)", opacity: 1, offset: 0 },
-              { left: "65%", top: "62%", transform: "translate(-50%, -50%) scale(.9)", opacity: 1, offset: .45 },
-              { left: `${target.x}%`, top: `${target.y}%`, transform: "translate(-50%, -50%) scale(1)", opacity: 1, offset: 1 }
-            ], { duration: 1250, easing: "cubic-bezier(.2,.82,.25,1)", fill: "forwards" });
-            anim.onfinish = () => {
-              passenger.style.left = `${target.x}%`;
-              passenger.style.top = `${target.y}%`;
-            };
-          }, delay + 70);
-        });
-
-        scene.querySelectorAll(".busPassenger.inside").forEach(passenger => {
-          if (!state.movingIds.includes(Number(passenger.dataset.id))) {
-            passenger.animate([
-              { transform: "translate(-50%, -50%) scale(.58)" },
-              { transform: "translate(-50%, -50%) scale(.68)" },
-              { transform: "translate(-50%, -50%) scale(.58)" }
-            ], { duration: 850, delay: 1100, easing: "ease-in-out" });
-          }
-        });
-      }
+      const suben = state.currentProblem.operation === "addition";
+      state.movingIds.forEach((id, index) => {
+        const pasajero = scene.querySelector(`.busPassenger[data-id="${id}"]`);
+        const recorrido = rutaAutobus(busOutsidePositions[index], asientosAutobus[id]);
+        if (!suben) recorrido.reverse();
+        esperarEnEscena(() => caminarPasajero(pasajero, recorrido, suben), 75 + index * 360);
+      });
 
       speak(state.currentProblem.speak(getName(), state.total, state.change));
     }
@@ -3724,7 +3732,7 @@
       const movingSet = new Set(state.movingIds);
       state.movingIds.forEach((id, index) => {
         const pos = basketPositions[id];
-        const target = { x: 78 + (index % 3) * 3.2, y: 66 + Math.floor(index / 3) * 2.8 };
+        const target = smallBasketPositions[index];
         const delay = index * 290;
         const fruit = scene.querySelector(`.fruit[data-id="${id}"]`);
         const ghost = createFruit("pear", `ghost-${id}`, pos, "fruitGhost");
@@ -3734,17 +3742,18 @@
           ghost.classList.add("show");
           const take = fruit.animate([
             { left: `${pos.x}%`, top: `${pos.y}%`, transform: "translate(-50%, -50%) rotate(0deg) scale(1)", offset: 0 },
-            { left: "63%", top: "50%", transform: "translate(-50%, -50%) rotate(-8deg) scale(1.08)", offset: .42 },
-            { left: `${target.x}%`, top: `${target.y}%`, transform: `translate(-50%, -50%) rotate(${index % 2 === 0 ? 16 : -14}deg) scale(.88)`, offset: 1 }
+            { left: "57%", top: "39%", transform: "translate(-50%, -50%) rotate(-8deg) scale(1.08)", offset: .55 },
+            { left: `${target.x}%`, top: `${target.y}%`, transform: `translate(-50%, -50%) rotate(${index % 2 === 0 ? 12 : -10}deg) scale(.80)`, offset: 1 }
           ], {
             duration: 1350,
             easing: "cubic-bezier(.2,.85,.25,1)",
             fill: "forwards"
           });
           take.onfinish = () => {
+            ghost.remove();
             fruit.style.left = `${target.x}%`;
             fruit.style.top = `${target.y}%`;
-            fruit.style.transform = `translate(-50%, -50%) rotate(${index % 2 === 0 ? 16 : -14}deg) scale(.88)`;
+            fruit.style.transform = `translate(-50%, -50%) rotate(${index % 2 === 0 ? 12 : -10}deg) scale(.80)`;
             fruit.style.zIndex = 11;
           };
         }, delay + 80);
@@ -3945,7 +3954,7 @@
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="matematicas-problemas.js?v=historias-1"></script><script src="pantalla-completa.js"></script>
+<script src="matematicas-problemas.js?v=cenital-1"></script><script src="pantalla-completa.js"></script>
 <script src="panel-plegable.js?v=historias-1"></script>
 <script src="nombre-compartido.js"></script>
 </body>

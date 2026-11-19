@@ -3,9 +3,9 @@
 const rutaIlustracionesProblemas="ImagenesSituacionesProblemas/Ilustraciones/";
 const arteSituaciones={
   applesTree:["manzano","manzana"],
-  pearsBasket:["peras","pera"],
-  busBoard:["autobus","pasajero"],
-  busLeave:["autobus","pasajero"],
+  pearsBasket:["peras-cenital","pera"],
+  busBoard:["autobus-cenital","pasajero-cenital"],
+  busLeave:["autobus-cenital","pasajero-cenital"],
   danielGlobosParque:["parque","globo"],
   juanMariaDulcesPlato:["dulces","confite"],
   aulaPupitresDesocupados:["aula","pupitre"],
@@ -25,7 +25,7 @@ function renderStoryThumbnail(box,problem){
   object.alt="";
   object.className="objeto-miniatura";
   box.replaceChildren(background,object);
-  const arrows={busBoard:"←",busLeave:"→",aulaEstudiantesRecreo:"→",aulaLleganEstudiantes:"←"};
+  const arrows={busBoard:"↑",busLeave:"↓",aulaEstudiantesRecreo:"→",aulaLleganEstudiantes:"←"};
   if(arrows[problem.id]){
     const arrow=document.createElement("span");
     arrow.className="flecha-miniatura-problemas";
