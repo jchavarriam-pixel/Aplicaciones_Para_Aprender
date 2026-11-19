@@ -2048,7 +2048,7 @@
   </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-problemas.css?v=aula-pasillo-1"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-problemas.css?v=autobus-2"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
 <body>
   <main class="app">
     <section class="hero" aria-label="Encabezado de la aplicación">
@@ -3167,7 +3167,7 @@
     const pasoAutobus = { x: 74, y: 41.4 };
     const puertaAutobus = { x: 74, y: 62.5 };
     const bordeAceraAutobus = { x: 74, y: 70.5 };
-    const filasAutobus = [30.4, 36.4, 46.4, 52.4];
+    const filasAutobus = [29.5, 36.7, 46.1, 53.3];
     const asientosAutobus = Array.from({length:28}, (_, index) => ({
       x: 15 + Math.floor(index / 4) * 8.7,
       y: filasAutobus[index % 4]
@@ -3192,12 +3192,15 @@
 
     function renderBusScene() {
       addRoadScene();
+      // En vertical se gira el plano completo para conservar los recorridos y la escala.
+      const plano = document.createElement("div");
+      plano.className = "plano-autobus";
       for (const posicion of asientosAutobus) {
         const asiento = document.createElement("span");
         asiento.className = "asiento-autobus";
         asiento.setAttribute("aria-hidden", "true");
         ubicarPasajero(asiento, posicion);
-        scene.append(asiento);
+        plano.append(asiento);
       }
 
       const suben = state.currentProblem.operation === "addition";
@@ -3205,13 +3208,14 @@
         ? Array.from({length:state.change}, (_, index) => state.total + index)
         : shuffle(Array.from({length:state.total}, (_, index) => index)).slice(0, state.change);
       for (let i = 0; i < state.total; i++) {
-        scene.append(createPassenger(i, asientosAutobus[i], "inside"));
+        plano.append(createPassenger(i, asientosAutobus[i], "inside"));
       }
       if (suben) {
         state.movingIds.forEach((id, index) => {
-          scene.append(createPassenger(id, busOutsidePositions[index], "waiting"));
+          plano.append(createPassenger(id, busOutsidePositions[index], "waiting"));
         });
       }
+      scene.append(plano);
     }
 
     function rutaAutobus(acera, asiento) {
