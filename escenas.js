@@ -1,6 +1,128 @@
 const usarIlustracionesSituaciones = typeof esperarEnEscena === "function";
 const esperarAnimacionSituacion = usarIlustracionesSituaciones ? esperarEnEscena : setTimeout.bind(window);
 
+if (usarIlustracionesSituaciones) {
+  const id = "pajaritosCable";
+  const imagenPajarito = "ImagenesSituacionesProblemas/Ilustraciones/pajarito.webp";
+  const llegan = () => state.operation === "addition";
+
+  function verbo(cantidad) {
+    if (isEnglish()) {
+      if (llegan()) return cantidad === 1 ? "lands" : "land";
+      return cantidad === 1 ? "flies away" : "fly away";
+    }
+    if (llegan()) return cantidad === 1 ? "se posa" : "se posan";
+    return cantidad === 1 ? "se va volando" : "se van volando";
+  }
+
+  function enunciado(total, cambio, visual = false, resaltar = false) {
+    const numero = n => visual ? `<strong>${n}</strong>` : n;
+    const palabra = itemWord(problems[id], cambio);
+    const accion = resaltar ? `<span class="keyAction">${verbo(cambio)}</span>` : verbo(cambio);
+    return isEnglish()
+      ? `There are ${numero(total)} birds on a power line. ${numero(cambio)} ${palabra}${llegan() ? " more" : ""} ${accion}. How many birds are on the line now?`
+      : `Hay ${numero(total)} pajaritos en un cable eléctrico. Después, ${accion} ${numero(cambio)} ${palabra}${llegan() ? " más" : ""}. ¿Cuántos pajaritos hay ahora en el cable?`;
+  }
+
+  function mostrarCable() {
+    clearIllustratedScene();
+    const cable = document.createElement("div");
+    cable.className = "cable-pajaritos";
+    cable.setAttribute("aria-hidden", "true");
+    const cantidad = llegan() ? state.answer : state.total;
+    const paso = Math.min(8.4, 84 / (cantidad - 1));
+    cable.style.setProperty("--ancho-pajarito", Math.min(7.6, paso * .96) + "cqw");
+    const lugares = shuffle(Array.from({length:cantidad}, (_, indice) => indice));
+    const avesEnVuelo = new Set(lugares.slice(0, state.change));
+    for (let indice = 0; indice < cantidad; indice++) {
+      const x = 50 + (indice - (cantidad - 1) / 2) * paso;
+      const ave = document.createElement("img");
+      ave.className = "pajarito-cable";
+      ave.src = imagenPajarito;
+      ave.alt = "";
+      ave.draggable = false;
+      ave.style.left = x + "%";
+      ave.style.setProperty("--entrada-ave", (-x - 8) + "cqw");
+      ave.style.setProperty("--salida-ave", (108 - x) + "cqw");
+      if (avesEnVuelo.has(indice)) {
+        ave.dataset.vuelo = "";
+        ave.classList.toggle("pajarito-ausente", llegan());
+      }
+      cable.append(ave);
+    }
+    scene.append(cable);
+  }
+
+  function mostrarVuelo() {
+    if (state.animated) return;
+    state.animated = true;
+    const entrada = llegan();
+    const reducirMovimiento = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const aves = [...scene.querySelectorAll(".pajarito-cable[data-vuelo]")];
+    aves.forEach((ave, indice) => {
+      if (reducirMovimiento) {
+        ave.classList.toggle("pajarito-ausente", !entrada);
+        return;
+      }
+      ave.style.animationDelay = indice * 145 + "ms";
+      ave.addEventListener("animationend", () => {
+        ave.classList.remove("pajarito-llega", "pajarito-sale");
+        ave.classList.toggle("pajarito-ausente", !entrada);
+      }, {once:true});
+      ave.classList.remove("pajarito-ausente");
+      ave.classList.add(entrada ? "pajarito-llega" : "pajarito-sale");
+    });
+    speak(enunciado(state.total, state.change));
+  }
+
+  registerScene({
+    id,
+    operation: "addition",
+    chooseOperation: anterior => anterior === "addition" || (!anterior && randInt(0, 1) === 0)
+      ? "subtraction" : "addition",
+    itemSingular: "pajarito",
+    itemPlural: "pajaritos",
+    itemSingularEn: "bird",
+    itemPluralEn: "birds",
+    texts: {
+      es: {
+        title: "Pajaritos en el cable",
+        short: "Algunos llegan y otros se van volando. Cuenta cuántos quedan en el cable.",
+        badge: "🐦 Suma y resta",
+        animateLabel: "▶ Ver el vuelo",
+        sceneTitle: "Observa los pajaritos del cable",
+        answerQuestion: "¿Cuántos pajaritos hay ahora en el cable?"
+      },
+      en: {
+        title: "Birds on a wire",
+        short: "Some birds land and others fly away. Count how many are on the wire.",
+        badge: "🐦 Addition and subtraction",
+        animateLabel: "▶ Watch the birds",
+        sceneTitle: "Watch the birds on the wire",
+        answerQuestion: "How many birds are on the wire now?"
+      }
+    },
+    renderPreview(box) {
+      const ave = new Image();
+      ave.src = imagenPajarito;
+      ave.alt = "";
+      box.replaceChildren(ave);
+    },
+    renderScene: mostrarCable,
+    animate: mostrarVuelo,
+    story: (_, total, cambio, resaltar) => enunciado(total, cambio, true, resaltar),
+    speak: (_, total, cambio) => enunciado(total, cambio),
+    hintData: (total, cambio) => isEnglish()
+      ? `At the start: <strong>${total}</strong> birds. Then <strong>${cambio}</strong> ${itemWord(problems[id], cambio)} ${verbo(cambio)}.`
+      : `Al inicio: <strong>${total}</strong> pajaritos. Luego ${verbo(cambio)} <strong>${cambio}</strong> ${itemWord(problems[id], cambio)}.`,
+    hintKeyword: () => isEnglish()
+      ? `Look for <strong>${verbo(state.change)}</strong> to see whether the number goes up or down.`
+      : `Fíjate en <strong>${verbo(state.change)}</strong> para saber si la cantidad aumenta o disminuye.`,
+    hintOperation: (total, cambio) => isEnglish()
+      ? `Use <strong>${llegan() ? "addition" : "subtraction"}</strong>: ${total} ${getExpectedSymbol()} ${cambio}.`
+      : `Usa una <strong>${llegan() ? "suma" : "resta"}</strong>: ${total} ${getExpectedSymbol()} ${cambio}.`
+  });
+}
 
 const aulaCenital = (() => {
   // Coordenadas relativas al plano. Las tres historias comparten puerta, pasillo y sillas.

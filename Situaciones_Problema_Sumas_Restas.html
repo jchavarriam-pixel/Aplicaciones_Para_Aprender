@@ -2048,7 +2048,7 @@
   </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-problemas.css?v=autobus-2"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-problemas.css?v=pajaritos-1"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
 <body>
   <main class="app">
     <section class="hero" aria-label="Encabezado de la aplicación">
@@ -2427,6 +2427,7 @@
 
     const state = {
       currentProblem: null,
+      operation: null,
       total: 8,
       change: 3,
       answer: 5,
@@ -2718,6 +2719,7 @@
         short: config.texts.es.short,
         badge: config.texts.es.badge,
         operation: config.operation,
+        chooseOperation: config.chooseOperation,
         itemSingular: config.itemSingular,
         itemPlural: config.itemPlural,
         itemSingularEn: config.itemSingularEn,
@@ -3028,6 +3030,7 @@
 
     function openProblem(problemId) {
       state.currentProblem = problems[problemId];
+      state.operation = null;
       readParams();
       scene.dataset.story = state.currentProblem.id;
       mainSubtitle.textContent = t("problemSubtitle");
@@ -3071,15 +3074,16 @@
       if (!problem) return;
       cancelarAnimacionesEscena();
       const p = readParams();
+      state.operation = problem.chooseOperation?.(state.operation) ?? problem.operation;
       state.total = randInt(p.minT, p.maxT);
       let realMaxChange = p.maxC;
       let realMinChange = p.minC;
-      if (problem.operation === "subtraction") {
+      if (state.operation === "subtraction") {
         realMaxChange = Math.min(p.maxC, state.total - 1);
         realMinChange = Math.min(p.minC, realMaxChange);
       }
       state.change = randInt(realMinChange, realMaxChange);
-      state.answer = problem.operation === "addition" ? state.total + state.change : state.total - state.change;
+      state.answer = state.operation === "addition" ? state.total + state.change : state.total - state.change;
       state.selected = null;
       state.animated = false;
       state.highlightKeyword = false;
@@ -3646,7 +3650,7 @@
     y su animate.
     */
     function getExpectedSymbol() {
-      return state.currentProblem?.operation === "addition" ? "+" : "−";
+      return state.operation === "addition" ? "+" : "−";
     }
 
     function operationWord(symbol) {
@@ -3946,7 +3950,7 @@
     }
   window.addEventListener('nombre-estudiante-cambiado',e=>{if(state.currentProblem)updateText();});
 </script>
-  <script src="escenas.js?v=aula-pasillo-1"></script>
+  <script src="escenas.js?v=pajaritos-1"></script>
 
 <footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos">
   <div class="creditos-dedicatoria">
@@ -3958,7 +3962,7 @@
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="matematicas-problemas.js?v=aula-pasillo-1"></script><script src="pantalla-completa.js"></script>
+<script src="matematicas-problemas.js?v=pajaritos-1"></script><script src="pantalla-completa.js"></script>
 <script src="panel-plegable.js?v=historias-1"></script>
 <script src="nombre-compartido.js"></script>
 </body>
