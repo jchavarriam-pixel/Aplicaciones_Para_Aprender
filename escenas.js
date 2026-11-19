@@ -1,6 +1,87 @@
 const usarIlustracionesSituaciones = typeof esperarEnEscena === "function";
 const esperarAnimacionSituacion = usarIlustracionesSituaciones ? esperarEnEscena : setTimeout.bind(window);
 
+function avataresEstudiantesSituaciones() {
+  const imagenes = Array.from({length:6}, (_, indice) =>
+    `ImagenesSituacionesProblemas/Ilustraciones/alumno-aula-${indice + 1}.webp`);
+  const chicas = shuffle(imagenes.slice(3));
+  return shuffle(imagenes.slice(0, 3)).flatMap((chico, indice) => [chico, chicas[indice]]);
+}
+
+function alternarOperacionSituaciones(anterior) {
+  if (!anterior) return randInt(0, 1) ? "addition" : "subtraction";
+  return anterior === "addition" ? "subtraction" : "addition";
+}
+
+if (usarIlustracionesSituaciones) {
+  const id = "busPasajeros";
+
+  function datosAutobus(total, cambio, visual = false, resaltar = false) {
+    const suben = state.operation === "addition";
+    const plural = cambio !== 1;
+    const cantidad = n => visual ? `<strong>${n}</strong>` : n;
+    const persona = itemWord(problems[id], cambio);
+    const accion = isEnglish() ? (suben ? "get on" : "get off") : (suben ? "se sube" : "se baja") + (plural ? "n" : "");
+    const verbo = isEnglish() && !plural ? accion.replace("get", "gets") : accion;
+    const frase = resaltar ? `<span class="keyAction">${verbo}</span>` : verbo;
+    const pregunta = isEnglish()
+      ? (suben ? "How many people are on the bus now?" : "How many people are left on the bus?")
+      : (suben ? "¿Cuántas personas van ahora en el autobús?" : "¿Cuántas personas quedan en el autobús?");
+    const datos = isEnglish()
+      ? `There are ${cantidad(total)} people on the bus. Then ${cantidad(cambio)} ${persona} ${frase}.`
+      : `En un autobús hay ${cantidad(total)} personas. Luego ${frase} ${cantidad(cambio)} ${persona}.`;
+    return {datos, pregunta, verbo};
+  }
+
+  registerScene({
+    id,
+    operation: "addition",
+    chooseOperation: anterior => preferenciasProblemas.autobus === "mixto"
+      ? alternarOperacionSituaciones(anterior) : preferenciasProblemas.autobus,
+    itemSingular: "persona",
+    itemPlural: "personas",
+    itemSingularEn: "person",
+    itemPluralEn: "people",
+    texts: {
+      es: {
+        title: "Pasajeros del autobús",
+        short: "En la parada suben o bajan pasajeros. Cuenta cuántos quedan dentro.",
+        badge: "🚌 Suma y resta",
+        animateLabel: "▶ Ver la parada",
+        sceneTitle: "Observa a los pasajeros",
+        answerQuestion: "¿Cuántas personas hay ahora en el autobús?"
+      },
+      en: {
+        title: "Bus passengers",
+        short: "People get on or off at the stop. Count how many are on the bus now.",
+        badge: "🚌 Addition and subtraction",
+        animateLabel: "▶ Watch the bus stop",
+        sceneTitle: "Watch the passengers",
+        answerQuestion: "How many people are on the bus now?"
+      }
+    },
+    renderPreview: renderBusSeats,
+    renderScene: renderBusScene,
+    animate: animateBusChange,
+    story(_, total, cambio, resaltar) {
+      const {datos, pregunta} = datosAutobus(total, cambio, true, resaltar);
+      return `${datos} ${pregunta}`;
+    },
+    speak(_, total, cambio) {
+      const {datos, pregunta} = datosAutobus(total, cambio);
+      return `${datos} ${pregunta}`;
+    },
+    hintData: (total, cambio) => datosAutobus(total, cambio, true).datos,
+    hintKeyword() {
+      const {verbo} = datosAutobus(state.total, state.change);
+      return isEnglish() ? `Look for <strong>${verbo}</strong>.` : `Fíjate en <strong>${verbo}</strong>.`;
+    },
+    hintOperation: (total, cambio) => isEnglish()
+      ? `Use <strong>${state.operation}</strong>: ${total} ${getExpectedSymbol()} ${cambio}.`
+      : `Usa una <strong>${state.operation === "addition" ? "suma" : "resta"}</strong>: ${total} ${getExpectedSymbol()} ${cambio}.`
+  });
+}
+
 if (usarIlustracionesSituaciones) {
   const id = "pajaritosCable";
   const imagenPajarito = "ImagenesSituacionesProblemas/Ilustraciones/pajarito.webp";
@@ -78,8 +159,7 @@ if (usarIlustracionesSituaciones) {
   registerScene({
     id,
     operation: "addition",
-    chooseOperation: anterior => anterior === "addition" || (!anterior && randInt(0, 1) === 0)
-      ? "subtraction" : "addition",
+    chooseOperation: alternarOperacionSituaciones,
     itemSingular: "pajarito",
     itemPlural: "pajaritos",
     itemSingularEn: "bird",
@@ -137,8 +217,6 @@ const aulaCenital = (() => {
     x: index % 2 ? 95.5 : 85,
     y: [16,31,66,78,90][Math.floor(index / 2)]
   }));
-  const avatares = Array.from({length:6}, (_, index) =>
-    `ImagenesSituacionesProblemas/Ilustraciones/alumno-aula-${index+1}.webp`);
   const silla = pupitre => ({x:pupitre.x,y:pupitre.y+2.2});
 
   function posicionar(elemento, punto) {
@@ -153,8 +231,7 @@ const aulaCenital = (() => {
     const salen = modo === "aulaEstudiantesRecreo";
     const iniciales = pupitresVacios ? 0 : state.total;
     const cantidadPupitres = modo === "aulaLleganEstudiantes" ? state.total + state.change : state.total;
-    const chicas = shuffle(avatares.slice(3));
-    const imagenes = shuffle(avatares.slice(0,3)).flatMap((chico,index) => [chico,chicas[index]]);
+    const imagenes = avataresEstudiantesSituaciones();
     const clase = document.createDocumentFragment();
 
     for (const [id, punto] of pupitres.slice(0,cantidadPupitres).entries()) {

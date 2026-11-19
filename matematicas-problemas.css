@@ -44,6 +44,8 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 .miniatura-ilustrada img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
 .miniatura-ilustrada .objeto-miniatura { inset:auto 6% 7% auto; width:28%; height:47%; object-fit:contain; filter:drop-shadow(0 3px 3px #231b5450); }
 .problemCard[data-story=danielGlobosParque] .objeto-miniatura { bottom:25%; right:28%; }
+.problemCard[data-story=busPasajeros] .miniScene { container-type:size; }
+.problemCard[data-story=busPasajeros] .objeto-miniatura { bottom:7%; right:10%; width:16%; height:21%; z-index:4; }
 .app:not(.horizontal) .problemGrid { grid-template-columns:repeat(auto-fit,minmax(min(100%,calc(145 * var(--unidad))),1fr)); }
 
 .app .layout { height:100%; min-height:0; margin:0; display:grid; grid-template-columns:minmax(0,1fr); grid-template-rows:auto minmax(0,1fr) auto; align-items:stretch; gap:calc(5 * var(--unidad)); }
@@ -59,24 +61,47 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 .sceneCornerActions:empty,.headerActions:empty { display:none; }
 .marco-escena-problemas { min-width:0; min-height:0; display:grid; place-items:center; container-type:size; background:linear-gradient(150deg,#e6f4fb,#eef0ff); }
 .app .scene { position:relative; width:min(100cqw,150cqh); height:min(100cqh,66.6667cqw); container-type:size; aspect-ratio:3/2; min-height:0; max-height:none; margin:0; border:0; overflow:hidden; border-radius:calc(6 * var(--unidad)); background:#e5f2f8 var(--fondo-escena,none) center / 100% 100% no-repeat; }
-.app.horizontal .layout>article.card { grid-template-columns:minmax(0,1fr) minmax(calc(170 * var(--unidad)),33%); grid-template-rows:auto minmax(0,1fr); }
+.app.horizontal .layout>article.card { grid-template-columns:minmax(0,1fr) minmax(calc(190 * var(--unidad)),33%); grid-template-rows:auto minmax(0,1fr); }
 .app.horizontal .sceneHeader { grid-column:1/-1; }
 .app.horizontal .operationDock { grid-column:2; grid-row:2; border-top:0; border-left:1px solid #c9dafa; }
-.app .operationDock { display:grid; grid-template-rows:auto auto; align-content:center; min-width:0; padding:calc(4 * var(--unidad)); gap:calc(4 * var(--unidad)); margin:0; background:#f2edff; }
-.operationBuilder,.operationWork { margin:0; padding:0; min-width:0; min-height:0; }
-.operationBuilder { border:0; background:none; box-shadow:none; }
-.app .operationRow { display:grid; grid-template-columns:minmax(0,1fr) minmax(calc(28 * var(--unidad)),.7fr) minmax(0,1fr) auto minmax(0,1fr); gap:calc(4 * var(--unidad)); padding:0; max-width:none; }
-.app.horizontal .operationRow { grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
-.app.horizontal .equalsFixed { display:none; }
-.opField { min-width:0; gap:calc(2 * var(--unidad)); }
-.opField label { margin:0; font-size:calc(11 * var(--unidad)); line-height:1.12; }
-.app .digitSlot,.app .numberDrop,.app .numberBox,.app .operatorZone { min-width:0; min-height:calc(31 * var(--unidad)); height:auto; font-size:calc(20 * var(--unidad)); padding:calc(2 * var(--unidad)); border-width:2px; }
-.app .numberBox { height:auto; }
-.keypadPanel,.keypadTwoLine { padding:0; margin:0; gap:calc(3 * var(--unidad)); }
+.app .operationDock {
+  display:grid; grid-template-rows:auto auto; align-content:center; min-width:0;
+  padding:calc(6 * var(--unidad)); gap:calc(6 * var(--unidad)); margin:0;
+  background:linear-gradient(145deg,#f0eaff,#e5edfb);
+}
+.operationBuilder { width:100%; margin:0; padding:0; min-width:0; border:0; background:none; box-shadow:none; }
+.app .operationRow {
+  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.78fr) minmax(0,1fr) auto minmax(0,1fr);
+  align-items:end; gap:calc(4 * var(--unidad)); padding:0; width:min(100%,600px); margin:auto;
+}
+.opField { --tinta-caja:#23447f; --fondo-caja:#e5f3ff; --borde-caja:#81a9df; min-width:0; gap:calc(3 * var(--unidad)); }
+.opField[data-field=operator] { --tinta-caja:#664505; --fondo-caja:#fff0bf; --borde-caja:#ce9f43; }
+.opField[data-field=change] { --tinta-caja:#6e3e1c; --fondo-caja:#ffecdc; --borde-caja:#dd9c64; }
+.opField[data-field=answer] { --tinta-caja:#553183; --fondo-caja:#efe1ff; --borde-caja:#ab88dc; }
+.opField label { margin:0; font-size:calc(11 * var(--unidad)); line-height:1.1; color:var(--tinta-caja); }
+.app .opField .dropZone {
+  min-width:0; min-height:calc(37 * var(--unidad)); padding:0;
+  background:var(--fondo-caja); color:var(--tinta-caja); border:2px solid var(--borde-caja);
+  border-radius:calc(8 * var(--unidad)); box-shadow:none; font-size:calc(22 * var(--unidad)); line-height:1;
+}
+.app .opField .dropZone.filled { background:#fff; }
+.app .opField .dropZone.opActive { border-color:#38247f; box-shadow:0 0 0 2px #8476bd69; }
+.app .opField .dropZone.dropTarget { color:#0b5033; background:#d8f9e6; border-color:#14764d; transform:none; }
+.app .opField.opError .dropZone { color:#7e2f17; border-color:#b54a2b; background:#fff1e7; }
+.keypadPanel {
+  margin:0 auto; padding:calc(4 * var(--unidad)); min-height:0; width:min(100%,600px);
+  background:#fafbff; border:1px solid #d6def5; border-radius:calc(9 * var(--unidad));
+}
 .app .keypadGrid.numberBank { grid-template-columns:repeat(7,minmax(0,1fr)); gap:calc(4 * var(--unidad)); padding:0; }
-.app .dragChip { min-width:0; min-height:calc(29 * var(--unidad)); height:calc(29 * var(--unidad)); font-size:calc(17 * var(--unidad)); padding:0; border-width:2px; border-radius:calc(7 * var(--unidad)); touch-action:none; }
-.app .dragChip.operatorChip { background:#e1e9ff; color:#362988; }
-.app .equalsFixed { font-size:calc(19 * var(--unidad)); min-width:0; }
+.app .dragChip {
+  min-width:0; min-height:calc(32 * var(--unidad)); height:calc(32 * var(--unidad));
+  color:#24417a; background:#eef5ff; font-size:calc(18 * var(--unidad)); padding:0;
+  border:1px solid #adc5ed; border-radius:calc(7 * var(--unidad)); box-shadow:0 2px 0 #d2def4; touch-action:none;
+}
+.app .dragChip.operatorChip { background:#fff0c6; color:#664505; border-color:#d6b264; box-shadow:0 2px 0 #e0cea5; }
+.app .dragChip.clearChip { grid-column:span 2; width:100%; background:#eee6fa; color:#50317e; border-color:#c4a9e4; box-shadow:0 2px 0 #dbcaed; }
+.app :is(.dragChip,.dropZone):focus-visible { outline:2px solid #29195f; outline-offset:2px; }
+.app .equalsFixed { min-width:0; min-height:calc(37 * var(--unidad)); font-size:calc(18 * var(--unidad)); }
 .sceneOperationPreview { font-size:calc(12 * var(--unidad)); padding:calc(3 * var(--unidad)) calc(5 * var(--unidad)); border-width:1px; }
 .revision-problemas { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:calc(4 * var(--unidad)); padding-right:calc(88 * var(--unidad)); }
 .revision-problemas .feedback { flex:1 1 calc(135 * var(--unidad)); min-height:0; max-height:calc(48 * var(--unidad)); overflow:auto; margin:0; padding:calc(4 * var(--unidad)); border-width:1px; border-radius:calc(8 * var(--unidad)); font-size:calc(11 * var(--unidad)); line-height:1.2; }
@@ -109,12 +134,7 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 .scene[data-story] .pear .fruitShape { --fruta:url("ImagenesSituacionesProblemas/Ilustraciones/pera.webp"); }
 .scene[data-story] .fruitGhost .fruitShape { filter:grayscale(.88) opacity(.28); }
 .scene[data-story] .fruitShape::before,.scene[data-story] .fruitShape::after { display:none; }
-.scene[data-story] .busPassenger { width:4.8cqw; height:7.2cqh; border:0; border-radius:0; box-shadow:none; background:url("ImagenesSituacionesProblemas/Ilustraciones/pasajero-cenital.webp") center / contain no-repeat; }
-.scene[data-story] .busPassenger::before,.scene[data-story] .busPassenger::after { display:none; }
-.scene[data-story] .busPassenger.p2 { filter:hue-rotate(50deg); }
-.scene[data-story] .busPassenger.p3 { filter:brightness(.94) saturate(.82); }
-.scene[data-story] .busPassenger.p4 { filter:hue-rotate(-34deg); }
-.scene[data-story] .busPassenger.p5 { filter:brightness(1.04) saturate(.65); }
+.scene[data-story] .busPassenger { width:4.9cqw; height:7.35cqh; object-fit:contain; border:0; border-radius:0; box-shadow:none; background:none; pointer-events:none; }
 .scene[data-story] :is(.danielParkGroundV3,.danielParkBushV3) { display:none; }
 .scene[data-story] .danielBoyImgV3 { left:4%; top:40%; width:25%; height:54%; max-height:none; object-fit:contain; }
 .scene[data-story] .danielBalloonV3 { width:8cqw; height:13.5cqh; border:0; border-radius:0; box-shadow:none; background:url("ImagenesSituacionesProblemas/Ilustraciones/globo.webp") center / contain no-repeat; }
@@ -188,7 +208,7 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
   position:absolute; top:50%; left:50%; width:100%; height:100%;
   transform:translate(-50%,-50%);
   container-type:size;
-  background:url("ImagenesSituacionesProblemas/Ilustraciones/autobus-cenital.webp") center / 100% 100% no-repeat;
+  background:url("ImagenesSituacionesProblemas/Ilustraciones/autobus-pasillo-amplio.webp") center / 100% 100% no-repeat;
 }
 .app:not(.horizontal) #problemScreen .layout:has(.plano-autobus) { height:100%; }
 .app:not(.horizontal) .scene[data-story^=bus] {
@@ -198,7 +218,7 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
   width:100cqh; height:100cqw;
   transform:translate(-50%,-50%) rotate(-90deg);
 }
-.scene[data-story^=bus] .asiento-autobus {
+.asiento-autobus {
   position:absolute; width:7.3cqw; height:6.35cqh; transform:translate(-50%,-50%); z-index:3;
   border:.38cqw solid #263e75; border-radius:.9cqw;
   background:linear-gradient(140deg,#cae9ff,#6ca9f3);
@@ -219,9 +239,7 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
   .app:not(.horizontal) .layout>.storyBox:not(:has(~ .card .plano-autobus)) {
     font-size:calc(16 * var(--unidad));
   }
-  .app:not(.horizontal) .dragChip {
-    height:calc(27 * var(--unidad)); min-height:calc(27 * var(--unidad));
-  }
+  .app:not(.horizontal) .dragChip { height:calc(28 * var(--unidad)); min-height:calc(28 * var(--unidad)); }
 }
 
 .problemCard[data-story=juanMariaDulcesPlato] .objeto-miniatura {

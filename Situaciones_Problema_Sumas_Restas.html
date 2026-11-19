@@ -2048,7 +2048,7 @@
   </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-problemas.css?v=pajaritos-1"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-problemas.css?v=bus-operacion-1"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
 <body>
   <main class="app">
     <section class="hero" aria-label="Encabezado de la aplicación">
@@ -2178,7 +2178,8 @@
     const VOICE_KEY = "gabrielAppsVoiceURI";
     const PARAMS_KEY = "situacionesProblemaParametros";
     const CLAVE_AYUDAS_PROBLEMAS = "situacionesProblemaAyudas";
-    let preferenciasProblemas = {narracion:true,data:true,keyword:true,operation:true,...Matematicas.leer(CLAVE_AYUDAS_PROBLEMAS)};
+    const preferenciasProblemas = {narracion:true,data:true,keyword:true,operation:true,autobus:"mixto",...Matematicas.leer(CLAVE_AYUDAS_PROBLEMAS)};
+    if (!["mixto", "addition", "subtraction"].includes(preferenciasProblemas.autobus)) preferenciasProblemas.autobus = "mixto";
 
     const scene = document.getElementById("scene");
     const sceneOperationPreview = document.getElementById("sceneOperationPreview");
@@ -2343,86 +2344,6 @@
           ? `Because the amount decreases, use <strong>subtraction</strong>: <strong>${total} − ${change}</strong>.`
           : `Como la cantidad disminuye, se usa una <strong>resta</strong>: <strong>${total} − ${change}</strong>.`
       },
-      busBoard: {
-        id: "busBoard",
-        title: "Bus: se suben personas",
-        short: "Algunas personas se suben al bus. Hay que contar cuántas personas van ahora.",
-        badge: "🚌 Suma",
-        operation: "addition",
-        itemSingular: "persona",
-        itemPlural: "personas",
-        itemSingularEn: "person",
-        itemPluralEn: "people",
-        animateLabel: "🚌 Ver cómo suben",
-        minTotal: 4,
-        maxTotal: 12,
-        minChange: 1,
-        maxChange: 8,
-        renderPreview: renderBusPreview,
-        renderScene: renderBusScene,
-        animate: animateBusChange,
-        story: (name, total, change, highlight = false) => {
-          if (isEnglish()) {
-            return `On a bus ${thereIs(total)} <strong>${total}</strong> ${itemWord(problems.busBoard, total)}, and <strong>${change}</strong> ${itemWord(problems.busBoard, change)} <span class="${highlight ? 'keyAction' : ''}">get on</span>. How many people are on the bus now?`;
-          }
-          return `En un bus hay <strong>${total}</strong> ${itemWord(problems.busBoard, total)} y <span class="${highlight ? 'keyAction' : ''}">se suben</span> <strong>${change}</strong> ${itemWord(problems.busBoard, change)}. ¿Cuántas personas van ahora en el bus?`;
-        },
-        speak: (name, total, change) => {
-          if (isEnglish()) {
-            return `On a bus ${thereIs(total)} ${total} ${itemWord(problems.busBoard, total)}, and ${change} ${itemWord(problems.busBoard, change)} get on. How many people are on the bus now?`;
-          }
-          return `En un bus hay ${total} ${itemWord(problems.busBoard, total)} y se suben ${change} ${itemWord(problems.busBoard, change)}. ¿Cuántas personas van ahora en el bus?`;
-        },
-        hintData: (total, change) => isEnglish()
-          ? `Start amount: ${thereIs(total)} <strong>${total}</strong> ${itemWord(problems.busBoard, total)} on the bus. Change: <strong>${change}</strong> ${itemWord(problems.busBoard, change)} get on.`
-          : `Dato inicial: hay <strong>${total}</strong> ${itemWord(problems.busBoard, total)} en el bus. Cambio: se suben <strong>${change}</strong> ${itemWord(problems.busBoard, change)}.`,
-        hintKeyword: () => isEnglish()
-          ? `The key words are <strong>get on</strong>. When people get on the bus, the amount increases.`
-          : `La palabra clave es <strong>se suben</strong>. Si se suben personas al bus, la cantidad aumenta.`,
-        hintOperation: (total, change) => isEnglish()
-          ? `Because the amount increases, use <strong>addition</strong>: <strong>${total} + ${change}</strong>.`
-          : `Como la cantidad aumenta, se usa una <strong>suma</strong>: <strong>${total} + ${change}</strong>.`
-      },
-      busLeave: {
-        id: "busLeave",
-        title: "Bus: se bajan personas",
-        short: "Algunas personas se bajan del bus. Hay que contar cuántas personas quedan.",
-        badge: "🚌 Resta",
-        operation: "subtraction",
-        itemSingular: "persona",
-        itemPlural: "personas",
-        itemSingularEn: "person",
-        itemPluralEn: "people",
-        animateLabel: "🚌 Ver cómo bajan",
-        minTotal: 5,
-        maxTotal: 14,
-        minChange: 1,
-        maxChange: 8,
-        renderPreview: renderBusPreview,
-        renderScene: renderBusScene,
-        animate: animateBusChange,
-        story: (name, total, change, highlight = false) => {
-          if (isEnglish()) {
-            return `On a bus ${thereIs(total)} <strong>${total}</strong> ${itemWord(problems.busLeave, total)}, and <strong>${change}</strong> ${itemWord(problems.busLeave, change)} <span class="${highlight ? 'keyAction' : ''}">get off</span>. How many people are left on the bus?`;
-          }
-          return `En un bus hay <strong>${total}</strong> ${itemWord(problems.busLeave, total)} y <span class="${highlight ? 'keyAction' : ''}">se bajan</span> <strong>${change}</strong> ${itemWord(problems.busLeave, change)}. ¿Cuántas personas quedan en el bus?`;
-        },
-        speak: (name, total, change) => {
-          if (isEnglish()) {
-            return `On a bus ${thereIs(total)} ${total} ${itemWord(problems.busLeave, total)}, and ${change} ${itemWord(problems.busLeave, change)} get off. How many people are left on the bus?`;
-          }
-          return `En un bus hay ${total} ${itemWord(problems.busLeave, total)} y se bajan ${change} ${itemWord(problems.busLeave, change)}. ¿Cuántas personas quedan en el bus?`;
-        },
-        hintData: (total, change) => isEnglish()
-          ? `Start amount: ${thereIs(total)} <strong>${total}</strong> ${itemWord(problems.busLeave, total)} on the bus. Change: <strong>${change}</strong> ${itemWord(problems.busLeave, change)} get off.`
-          : `Dato inicial: hay <strong>${total}</strong> ${itemWord(problems.busLeave, total)} en el bus. Cambio: se bajan <strong>${change}</strong> ${itemWord(problems.busLeave, change)}.`,
-        hintKeyword: () => isEnglish()
-          ? `The key words are <strong>get off</strong>. When people get off the bus, the amount decreases.`
-          : `La palabra clave es <strong>se bajan</strong>. Si se bajan personas del bus, la cantidad disminuye.`,
-        hintOperation: (total, change) => isEnglish()
-          ? `Because the amount decreases, use <strong>subtraction</strong>: <strong>${total} − ${change}</strong>.`
-          : `Como la cantidad disminuye, se usa una <strong>resta</strong>: <strong>${total} − ${change}</strong>.`
-      }
     };
 
     const state = {
@@ -2492,11 +2413,12 @@
         readButton: "🔊 Leer",
         viewButton: "▶ Ver",
         checkButton: "✅ Revisar",
-        answerTitle: "Construye la operación en la escena y luego revisa.",
-        initialLabel: "Cantidad inicial",
-        operationLabel: "Operación",
+        answerTitle: "Planteamiento de la operación",
+        emptyField: "vacío", keypadLabel: "Teclado de la operación", plusKey: "Más", minusKey: "Menos", eraseKey: "Borrar último carácter",
+        initialLabel: "Inicio",
+        operationLabel: "Signo",
         changeLabel: "Cambio",
-        answerLabel: "Respuesta",
+        answerLabel: "Total",
         defaultFeedback: "Mira la animación y completa la operación.",
         defaultHint: "Usa una pista si necesitas ayuda para decidir si se suma o se resta.",
         hintData: "💡 Datos",
@@ -2523,19 +2445,7 @@
         pearsBadge: "🍐 Resta",
         pearsAnimate: "🍐 Ver cómo Ana toma peras",
         pearsSceneTitle: "Observa cuántas peras quedan en la canasta",
-        pearsQuestion: "¿Cuántas peras quedan en la canasta?",
-        busBoardTitle: "Bus: se suben personas",
-        busBoardShort: "Algunas personas se suben al bus. Hay que contar cuántas personas van ahora.",
-        busBoardBadge: "🚌 Suma",
-        busBoardAnimate: "🚌 Ver cómo suben",
-        busBoardSceneTitle: "Observa cuántas personas van en el bus",
-        busBoardQuestion: "¿Cuántas personas van ahora en el bus?",
-        busLeaveTitle: "Bus: se bajan personas",
-        busLeaveShort: "Algunas personas se bajan del bus. Hay que contar cuántas personas quedan.",
-        busLeaveBadge: "🚌 Resta",
-        busLeaveAnimate: "🚌 Ver cómo bajan",
-        busLeaveSceneTitle: "Observa cuántas personas quedan en el bus",
-        busLeaveQuestion: "¿Cuántas personas quedan en el bus?"
+        pearsQuestion: "¿Cuántas peras quedan en la canasta?"
       },
       en: {
         mainTitle: "Word problems",
@@ -2557,11 +2467,12 @@
         readButton: "🔊 Read",
         viewButton: "▶ Watch",
         checkButton: "✅ Check",
-        answerTitle: "Build the operation and then check.",
-        initialLabel: "Start amount",
-        operationLabel: "Operation",
+        answerTitle: "Set up the equation",
+        emptyField: "empty", keypadLabel: "Equation keypad", plusKey: "Plus", minusKey: "Minus", eraseKey: "Backspace",
+        initialLabel: "Start",
+        operationLabel: "Sign",
         changeLabel: "Change",
-        answerLabel: "Answer",
+        answerLabel: "Total",
         defaultFeedback: "Watch the animation and complete the calculation.",
         defaultHint: "Use a hint if you need help deciding whether to add or subtract.",
         hintData: "💡 Data",
@@ -2588,19 +2499,7 @@
         pearsBadge: "🍐 Subtraction",
         pearsAnimate: "🍐 Watch Ana take pears",
         pearsSceneTitle: "Watch how many pears are left in the basket",
-        pearsQuestion: "How many pears are left in the basket?",
-        busBoardTitle: "Bus: people get on",
-        busBoardShort: "Some people get on the bus. Count how many people are on the bus now.",
-        busBoardBadge: "🚌 Addition",
-        busBoardAnimate: "🚌 Watch people get on",
-        busBoardSceneTitle: "Watch how many people are on the bus",
-        busBoardQuestion: "How many people are on the bus now?",
-        busLeaveTitle: "Bus: people get off",
-        busLeaveShort: "Some people get off the bus. Count how many people are left.",
-        busLeaveBadge: "🚌 Subtraction",
-        busLeaveAnimate: "🚌 Watch people get off",
-        busLeaveSceneTitle: "Watch how many people are left on the bus",
-        busLeaveQuestion: "How many people are left on the bus?"
+        pearsQuestion: "How many pears are left in the basket?"
       }
     };
 
@@ -2625,22 +2524,6 @@
         sceneTitle: "pearsSceneTitle",
         answerQuestion: "pearsQuestion"
       },
-      busBoard: {
-        title: "busBoardTitle",
-        short: "busBoardShort",
-        badge: "busBoardBadge",
-        animateLabel: "busBoardAnimate",
-        sceneTitle: "busBoardSceneTitle",
-        answerQuestion: "busBoardQuestion"
-      },
-      busLeave: {
-        title: "busLeaveTitle",
-        short: "busLeaveShort",
-        badge: "busLeaveBadge",
-        animateLabel: "busLeaveAnimate",
-        sceneTitle: "busLeaveSceneTitle",
-        answerQuestion: "busLeaveQuestion"
-      }
     };
 
     function problemText(problem, key) {
@@ -3018,16 +2901,6 @@
     }
 
 
-    function renderBusPreview(box) {
-      box.innerHTML = `
-        <div class="miniRoad"></div>
-        <div class="miniBus"></div>
-        <div class="miniStop"></div>
-        <div class="miniPassenger" style="left:118px;top:112px"></div>
-        <div class="miniPassenger" style="left:94px;top:116px;background:#f9a8d4;border-color:#be185d"></div>
-      `;
-    }
-
     function openProblem(problemId) {
       state.currentProblem = problems[problemId];
       state.operation = null;
@@ -3168,10 +3041,10 @@
     }
 
     // Los puntos se expresan en porcentajes de la ilustración cenital.
-    const pasoAutobus = { x: 74, y: 41.4 };
-    const puertaAutobus = { x: 74, y: 62.5 };
-    const bordeAceraAutobus = { x: 74, y: 70.5 };
-    const filasAutobus = [29.5, 36.7, 46.1, 53.3];
+    const pasoAutobus = { x: 74, y: 40.8 };
+    const puertaAutobus = { x: 74, y: 63.5 };
+    const bordeAceraAutobus = { x: 74, y: 71 };
+    const filasAutobus = [27.4, 34.5, 47.1, 54.2];
     const asientosAutobus = Array.from({length:28}, (_, index) => ({
       x: 15 + Math.floor(index / 4) * 8.7,
       y: filasAutobus[index % 4]
@@ -3186,19 +3059,18 @@
       elemento.style.top = posicion.y + "%";
     }
 
-    function createPassenger(id, pos, className) {
-      const passenger = document.createElement("div");
-      passenger.className = `busPassenger p${(id % 5) + 1} ${className}`;
+    function createPassenger(id, pos, className, avatares) {
+      const passenger = document.createElement("img");
+      passenger.className = `busPassenger ${className}`;
+      passenger.src = avatares[id % avatares.length];
+      passenger.alt = "";
+      passenger.draggable = false;
       passenger.dataset.id = id;
       ubicarPasajero(passenger, pos);
       return passenger;
     }
 
-    function renderBusScene() {
-      addRoadScene();
-      // En vertical se gira el plano completo para conservar los recorridos y la escala.
-      const plano = document.createElement("div");
-      plano.className = "plano-autobus";
+    function renderBusSeats(plano) {
       for (const posicion of asientosAutobus) {
         const asiento = document.createElement("span");
         asiento.className = "asiento-autobus";
@@ -3206,17 +3078,25 @@
         ubicarPasajero(asiento, posicion);
         plano.append(asiento);
       }
+    }
 
-      const suben = state.currentProblem.operation === "addition";
+    function renderBusScene() {
+      addRoadScene();
+      // En vertical se gira el plano completo para conservar los recorridos y la escala.
+      const plano = document.createElement("div");
+      plano.className = "plano-autobus";
+      renderBusSeats(plano);
+      const suben = state.operation === "addition";
+      const avatares = avataresEstudiantesSituaciones();
       state.movingIds = suben
         ? Array.from({length:state.change}, (_, index) => state.total + index)
         : shuffle(Array.from({length:state.total}, (_, index) => index)).slice(0, state.change);
       for (let i = 0; i < state.total; i++) {
-        plano.append(createPassenger(i, asientosAutobus[i], "inside"));
+        plano.append(createPassenger(i, asientosAutobus[i], "inside", avatares));
       }
       if (suben) {
         state.movingIds.forEach((id, index) => {
-          plano.append(createPassenger(id, busOutsidePositions[index], "waiting"));
+          plano.append(createPassenger(id, busOutsidePositions[index], "waiting", avatares));
         });
       }
       scene.append(plano);
@@ -3266,7 +3146,7 @@
       if (state.animated) return;
       state.animated = true;
       feedback.className = "feedback";
-      feedback.textContent = state.currentProblem.operation === "addition"
+      feedback.textContent = state.operation === "addition"
         ? (isEnglish()
           ? `Watch how ${state.change === 1 ? "one person gets" : "some people get"} on the bus. The people inside are the answer.`
           : `Mira cómo ${state.change === 1 ? "una persona se sube" : "algunas personas se suben"} al bus. Las personas que van en el bus son la respuesta.`)
@@ -3275,7 +3155,7 @@
           : `Mira cómo ${state.change === 1 ? "una persona se baja" : "algunas personas se bajan"} del bus. Las personas que quedan en el bus son la respuesta.`);
       updateText();
 
-      const suben = state.currentProblem.operation === "addition";
+      const suben = state.operation === "addition";
       state.movingIds.forEach((id, index) => {
         const pasajero = scene.querySelector(`.busPassenger[data-id="${id}"]`);
         const recorrido = rutaAutobus(busOutsidePositions[index], asientosAutobus[id]);
@@ -3310,90 +3190,69 @@
       return shadow;
     }
 
-    function buildDigitChips() {
-      let html = "";
-      for (let i = 0; i <= 9; i++) {
-        html += `<button class="dragChip numberChip" type="button" data-kind="number" data-value="${i}" aria-label="Dígito ${i}">${i}</button>`;
-      }
-      return html;
+    const operationLabels = {
+      initial: "initialLabel", operator: "operationLabel", change: "changeLabel", answer: "answerLabel"
+    };
+    let activeOperationZone = null;
+
+    function digitChip(value) {
+      return `<button class="dragChip numberChip" type="button" data-kind="number" data-value="${value}">${value}</button>`;
     }
 
-    function digitCountFor(value) {
-      return Number(value) >= 10 ? 2 : 1;
-    }
-
-    function digitBoxHtml(slot, value, colorClass) {
-      const count = digitCountFor(value);
-      const placeholder = count === 2 ? "__ __" : "__";
-      return `<div class="numberBox ${colorClass}">
-        <div class="dropZone numberDrop" data-accept="number" data-slot="${slot}" data-max-digits="${count}" data-placeholder="${placeholder}">${placeholder}</div>
+    function operationField(slot, value) {
+      const operator = slot === "operator";
+      const count = value >= 10 ? 2 : 1;
+      return `<div class="opField" data-field="${slot}">
+        <label for="op-${slot}">${t(operationLabels[slot])}</label>
+        <button type="button" id="op-${slot}" class="dropZone ${operator ? "operatorZone" : "numberDrop"}"
+          data-accept="${operator ? "operator" : "number"}" data-slot="${slot}" data-max-digits="${count}"></button>
       </div>`;
     }
 
-    function renderNumberDrop(zone) {
-      const value = zone.dataset.value || "";
-      const maxDigits = Number(zone.dataset.maxDigits || 1);
-
-      if (!value) {
-        zone.textContent = zone.dataset.placeholder || (maxDigits === 2 ? "__ __" : "__");
-        zone.classList.remove("filled");
-        return;
-      }
-
-      if (value.length < maxDigits) {
-        zone.textContent = maxDigits === 2 ? `${value} __` : value;
-        zone.classList.remove("filled");
-        return;
-      }
-
-      zone.textContent = value;
-      zone.classList.add("filled");
+    function renderOperationZone(zone) {
+      const value = zone.dataset.value;
+      const label = t(operationLabels[zone.dataset.slot]);
+      zone.textContent = value || (zone.dataset.slot === "operator" ? "?" : "—");
+      zone.classList.toggle("filled", Boolean(value));
+      zone.setAttribute("aria-label", `${label}: ${value || t("emptyField")}`);
     }
 
+    function updateOperationLabels() {
+      operationDock.setAttribute("aria-label", t("answerTitle"));
+      keypadPanel.setAttribute("aria-label", t("keypadLabel"));
+      for (const zone of operationDock.querySelectorAll(".dropZone")) {
+        zone.previousElementSibling.textContent = t(operationLabels[zone.dataset.slot]);
+        renderOperationZone(zone);
+      }
+      for (const chip of operationDock.querySelectorAll("[data-key-label]")) {
+        chip.setAttribute("aria-label", t(chip.dataset.keyLabel));
+      }
+    }
 
     function addOperationBuilder() {
-      document.querySelector(".operationBuilder")?.remove();
-      keypadPanel.innerHTML = "";
-
+      operationDock.querySelector(".operationBuilder")?.remove();
       const builder = document.createElement("div");
       builder.className = "operationBuilder";
-      builder.innerHTML = `
-        <div class="operationWork">
-          <div class="operationRow">
-            <div class="opField initialField" data-field="initial">
-              <label>${t("initialLabel")}</label>
-              ${digitBoxHtml("initial", state.total, "initialBox")}
-            </div>
-            <div class="opField" data-field="operator">
-              <label>${t("operationLabel")}</label>
-              <div class="dropZone operatorZone" data-accept="operator" data-slot="operator">?</div>
-            </div>
-            <div class="opField changeField" data-field="change">
-              <label>${t("changeLabel")}</label>
-              ${digitBoxHtml("change", state.change, "changeBox")}
-            </div>
-            <div class="equalsFixed">=</div>
-            <div class="opField answerField" data-field="answer">
-              <label>${t("answerLabel")}</label>
-              ${digitBoxHtml("answer", state.answer, "answerBox")}
-            </div>
-          </div>
-        </div>
-      `;
+      builder.innerHTML = `<div class="operationRow">
+        ${operationField("initial", state.total)}
+        ${operationField("operator")}
+        ${operationField("change", state.change)}
+        <div class="equalsFixed">=</div>
+        ${operationField("answer", state.answer)}
+      </div>`;
       operationDock.insertBefore(builder, keypadPanel);
-
       keypadPanel.innerHTML = `
-        <div class="keypadTwoLine">
-          <div class="keypadGrid numberBank">
-            ${buildDigitChips()}
-            <button class="dragChip operatorChip" type="button" data-kind="operator" data-value="+" aria-label="Más">+</button>
-            <button class="dragChip operatorChip" type="button" data-kind="operator" data-value="−" aria-label="Menos">−</button>
-            <button class="dragChip clearChip" type="button" data-kind="clear" data-value="clear" aria-label="Retroceder">⌫</button>
-          </div>
-        </div>
-      `;
+        <div class="keypadGrid numberBank">
+          ${[1,2,3,4,5].map(digitChip).join("")}
+          <button class="dragChip operatorChip" type="button" data-kind="operator" data-value="+" data-key-label="plusKey">+</button>
+          <button class="dragChip operatorChip" type="button" data-kind="operator" data-value="−" data-key-label="minusKey">−</button>
+          ${[6,7,8,9,0].map(digitChip).join("")}
+          <button class="dragChip clearChip" type="button" data-kind="clear" data-value="clear" data-key-label="eraseKey">⌫</button>
+        </div>`;
+      updateOperationLabels();
       setupDragAndDrop(builder);
       setupDragAndDrop(keypadPanel);
+      activateOperationZone(builder.querySelector(".dropZone"));
       updateSceneOperationPreview();
     }
 
@@ -3459,58 +3318,47 @@
       });
     }
 
+    function activateOperationZone(zone, focus = false) {
+      activeOperationZone?.classList.remove("opActive");
+      activeOperationZone = zone;
+      zone.classList.add("opActive");
+      if (focus) zone.focus({preventScroll:true});
+    }
+
     function fillDropZone(zone, value, kind = "number") {
-      if (zone.classList.contains("numberDrop")) {
-        const maxDigits = Number(zone.dataset.maxDigits || 1);
-        let current = zone.dataset.value || "";
-
-        if (kind === "clear") {
-          current = current.slice(0, -1);
-          zone.dataset.value = current;
-          renderNumberDrop(zone);
-          zone.closest(".opField")?.classList.remove("opError");
-          updateSceneOperationPreview();
-          return;
-        }
-
-        if (current.length >= maxDigits) current = "";
-        current += value;
-
-        zone.dataset.value = current;
-        renderNumberDrop(zone);
-        zone.closest(".opField")?.classList.remove("opError");
-        zone.animate([
-          { transform: "scale(1)" },
-          { transform: "scale(1.08)" },
-          { transform: "scale(1)" }
-        ], { duration: 220, easing: "ease-out" });
-        updateSceneOperationPreview();
-        return;
-      }
-
-      const placeholder = zone.classList.contains("digitSlot") ? "___" : "?";
-      if (kind === "clear") {
-        zone.dataset.value = "";
-        zone.textContent = placeholder;
-        zone.classList.remove("filled");
-        zone.closest(".opField")?.classList.remove("opError");
-        updateSceneOperationPreview();
-        return;
-      }
-
-      zone.dataset.value = value;
-      zone.textContent = value;
-      zone.classList.add("filled");
-      zone.closest(".opField")?.classList.remove("opError");
-      zone.animate([
-        { transform: "scale(1)" },
-        { transform: "scale(1.08)" },
-        { transform: "scale(1)" }
-      ], { duration: 220, easing: "ease-out" });
+      const current = zone.dataset.value || "";
+      const maxDigits = Number(zone.dataset.maxDigits);
+      const next = kind === "clear" ? current.slice(0,-1)
+        : kind === "number" && current.length < maxDigits ? current + value : value;
+      zone.dataset.value = next;
+      zone.closest(".opField").classList.remove("opError");
+      renderOperationZone(zone);
       updateSceneOperationPreview();
     }
 
-    let selectedChip = null;
+    function writeOperationValue(kind, value, target) {
+      const fields = [...operationDock.querySelectorAll(".dropZone")];
+      let zone = target || (kind === "operator" ? document.getElementById("op-operator") : activeOperationZone);
+      if (!isCompatibleDropZone(zone, kind)) return;
+      if (kind === "clear" && !target && !zone.dataset.value) {
+        zone = fields[fields.indexOf(zone) - 1] || zone;
+      }
+      fillDropZone(zone, value, kind);
+      const next = fields[fields.indexOf(zone) + 1];
+      const complete = zone.dataset.value.length >= Number(zone.dataset.maxDigits);
+      activateOperationZone(kind !== "clear" && complete && next ? next : zone, true);
+    }
+
+    operationDock.addEventListener("keydown", event => {
+      if (event.ctrlKey || event.altKey || event.metaKey) return;
+      const key = event.key;
+      if (/^[0-9]$/.test(key)) writeOperationValue("number", key);
+      else if (key === "+" || key === "-") writeOperationValue("operator", key === "-" ? "−" : key);
+      else if (key === "Backspace" || key === "Delete") writeOperationValue("clear");
+      else if (key === "=") activateOperationZone(document.getElementById("op-answer"), true);
+      else return;
+      event.preventDefault();
+    });
 
     function isCompatibleDropZone(zone, kind) {
       return Boolean(zone && (kind === "clear" || zone.dataset.accept === kind));
@@ -3555,82 +3403,60 @@
       return target;
     }
 
-    function selectChip(chip, root = document) {
-      selectedChip = { kind: chip.dataset.kind, value: chip.dataset.value };
-      document.querySelectorAll(".dragChip").forEach(c => c.classList.remove("selectedChip"));
-      chip.classList.add("selectedChip");
-      markCompatibleDropZones(selectedChip.kind, true);
-    }
-
     function setupDragAndDrop(root) {
-      const chips = root.querySelectorAll(".dragChip");
-      const zones = root.querySelectorAll(".dropZone");
-
-      chips.forEach(chip => {
-        chip.addEventListener("click", () => selectChip(chip, document));
-        chip.addEventListener("pointerdown", startDrag, { passive: false });
-      });
-
-      zones.forEach(zone => {
-        zone.addEventListener("click", () => {
-          if (!selectedChip) return;
-          if (!isCompatibleDropZone(zone, selectedChip.kind)) return;
-          fillDropZone(zone, selectedChip.value, selectedChip.kind);
-          highlightDropTarget(-9999, -9999, selectedChip.kind);
+      for (const zone of root.querySelectorAll(".dropZone")) {
+        zone.addEventListener("focus", () => activateOperationZone(zone));
+        zone.addEventListener("click", () => activateOperationZone(zone));
+      }
+      for (const chip of root.querySelectorAll(".dragChip")) {
+        chip.addEventListener("click", () => {
+          if (chip.dataset.dragged) return;
+          writeOperationValue(chip.dataset.kind, chip.dataset.value);
         });
-      });
+        chip.addEventListener("pointerdown", startDrag);
+      }
     }
 
     function startDrag(event) {
-      event.preventDefault();
+      if (!event.isPrimary || event.button !== 0) return;
       const chip = event.currentTarget;
-      const payload = { kind: chip.dataset.kind, value: chip.dataset.value };
-      const startX = event.clientX;
-      const startY = event.clientY;
+      const {kind, value} = chip.dataset;
+      const startX = event.clientX, startY = event.clientY;
       let ghost = null;
-      let didDrag = false;
-
-      selectChip(chip, document);
+      delete chip.dataset.dragged;
       chip.setPointerCapture?.(event.pointerId);
 
-      const beginRealDrag = e => {
-        if (ghost) return;
-        didDrag = true;
-        document.body.classList.add("isDragging");
-        ghost = chip.cloneNode(true);
-        ghost.classList.add("dragGhost");
-        document.body.appendChild(ghost);
-        moveGhost(ghost, e.clientX, e.clientY);
-        markCompatibleDropZones(payload.kind, true);
-      };
-
       const move = e => {
-        const distance = Math.hypot(e.clientX - startX, e.clientY - startY);
-        if (!ghost && distance < 8) return;
-        e.preventDefault();
-        beginRealDrag(e);
+        if (e.pointerId !== event.pointerId) return;
+        if (!ghost && Math.hypot(e.clientX - startX, e.clientY - startY) < 8) return;
+        if (!ghost) {
+          chip.dataset.dragged = "true";
+          document.body.classList.add("isDragging");
+          ghost = chip.cloneNode(true);
+          ghost.classList.add("dragGhost");
+          document.body.appendChild(ghost);
+          markCompatibleDropZones(kind, true);
+        }
         moveGhost(ghost, e.clientX, e.clientY);
-        highlightDropTarget(e.clientX, e.clientY, payload.kind);
+        highlightDropTarget(e.clientX, e.clientY, kind);
       };
 
       const finish = e => {
-        chip.releasePointerCapture?.(event.pointerId);
+        if (e.pointerId !== event.pointerId) return;
         document.removeEventListener("pointermove", move);
         document.removeEventListener("pointerup", finish);
         document.removeEventListener("pointercancel", finish);
         document.body.classList.remove("isDragging");
-
-        if (didDrag && e.type === "pointerup") {
-          const target = findDropZoneAtPoint(e.clientX, e.clientY, payload.kind);
-          if (target) fillDropZone(target, payload.value, payload.kind);
+        if (ghost && e.type === "pointerup") {
+          const target = findDropZoneAtPoint(e.clientX, e.clientY, kind);
+          if (target) writeOperationValue(kind, value, target);
         }
-
-        markCompatibleDropZones(payload.kind, Boolean(selectedChip));
-        document.querySelectorAll(".dropZone").forEach(zone => zone.classList.remove("dropTarget"));
+        markCompatibleDropZones(kind, false);
         ghost?.remove();
+        setTimeout(() => delete chip.dataset.dragged, 0);
       };
 
-      document.addEventListener("pointermove", move, { passive: false });
+      document.addEventListener("pointermove", move);
       document.addEventListener("pointerup", finish);
       document.addEventListener("pointercancel", finish);
     }
@@ -3950,7 +3776,7 @@
     }
   window.addEventListener('nombre-estudiante-cambiado',e=>{if(state.currentProblem)updateText();});
 </script>
-  <script src="escenas.js?v=pajaritos-1"></script>
+  <script src="escenas.js?v=bus-operacion-1"></script>
 
 <footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos">
   <div class="creditos-dedicatoria">
@@ -3962,7 +3788,7 @@
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="matematicas-problemas.js?v=pajaritos-1"></script><script src="pantalla-completa.js"></script>
+<script src="matematicas-problemas.js?v=bus-operacion-1"></script><script src="pantalla-completa.js"></script>
 <script src="panel-plegable.js?v=historias-1"></script>
 <script src="nombre-compartido.js"></script>
 </body>

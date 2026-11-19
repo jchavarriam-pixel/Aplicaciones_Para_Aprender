@@ -4,8 +4,7 @@ const rutaIlustracionesProblemas="ImagenesSituacionesProblemas/Ilustraciones/";
 const arteSituaciones={
   applesTree:["manzano","manzana"],
   pearsBasket:["peras-cenital","pera"],
-  busBoard:["autobus-cenital","pasajero-cenital"],
-  busLeave:["autobus-cenital","pasajero-cenital"],
+  busPasajeros:["autobus-pasillo-amplio","alumno-aula-4"],
   danielGlobosParque:["parque","globo"],
   pajaritosCable:["cielo-pajaritos","pajarito"],
   juanMariaDulcesPlato:["dulces-mesa","confite"],
@@ -26,7 +25,8 @@ function renderStoryThumbnail(box,problem){
   object.alt="";
   object.className="objeto-miniatura";
   box.replaceChildren(background,object);
-  const arrows={busBoard:"↑",busLeave:"↓",aulaEstudiantesRecreo:"→",aulaLleganEstudiantes:"←"};
+  if(problem.id==="busPasajeros") problem.renderPreview(box);
+  const arrows={aulaEstudiantesRecreo:"→",aulaLleganEstudiantes:"←"};
   if(arrows[problem.id]){
     const arrow=document.createElement("span");
     arrow.className="flecha-miniatura-problemas";
@@ -117,19 +117,25 @@ function renderStoryThumbnail(box,problem){
   const options=document.createElement("fieldset");
   options.className="opciones-ayuda-problemas";
   options.innerHTML='<legend>Lectura y ayudas</legend><label><input type="checkbox" name="narracion"> Narración y lectura</label><label><input type="checkbox" name="data"> Pista de datos</label><label><input type="checkbox" name="keyword"> Pista de palabra clave</label><label><input type="checkbox" name="operation"> Pista de operación</label>';
+  const busOptions=document.createElement("fieldset");
+  busOptions.className="opciones-ayuda-problemas";
+  busOptions.innerHTML='<legend>Pasajeros del autobús</legend><label for="modoAutobus">En la parada</label><select id="modoAutobus"><option value="mixto">Mixto (suben o bajan)</option><option value="addition">Solo suben</option><option value="subtraction">Solo bajan</option></select>';
+  const modoAutobus=busOptions.querySelector("select");
   const voice=document.createElement("div");
   voice.id="preferenciasProblemas";
   const done=document.createElement("button");
   done.type="button";
   done.className="mainBtn aplicar-ajustes-problemas";
   done.textContent="Aplicar y volver";
-  settings.append(options,voice,done);
+  settings.append(options,busOptions,voice,done);
   dialog.append(settings);
   document.body.append(dialog);
 
   Object.assign(window.TEXTOS_INGLES,{
     "Así jugamos":"How to play","Aplicaciones":"Applications","Configuración":"Settings",
     "Cerrar":"Close","Aplicar y volver":"Apply and return","Lectura y ayudas":"Speech and hints",
+    "Pasajeros del autobús":"Bus passengers","En la parada":"At the bus stop",
+    "Mixto (suben o bajan)":"Mixed (get on or off)","Solo suben":"Get on only","Solo bajan":"Get off only",
     "Narración y lectura":"Narration and reading","Pista de datos":"Data hint",
     "Pista de palabra clave":"Keyword hint","Pista de operación":"Operation hint"
   });
@@ -152,11 +158,7 @@ function renderStoryThumbnail(box,problem){
     languageSelect.value=IdiomaVoz.idioma;
     applyStaticLanguage();
     if(!state.currentProblem)return;
-    for(const field of ["initial","operator","change","answer"]){
-      const key={initial:"initialLabel",operator:"operationLabel",change:"changeLabel",answer:"answerLabel"}[field];
-      const label=operationDock.querySelector('[data-field="'+field+'"] label');
-      if(label)label.textContent=t(key);
-    }
+    updateOperationLabels();
     feedback.textContent=t("defaultFeedback");
     if(state.activeHint)showHint(state.activeHint);
     else hintBox.innerHTML=t("defaultHint");
@@ -165,19 +167,22 @@ function renderStoryThumbnail(box,problem){
   let previousRange;
   openSettings.onclick=()=>{
     previousRange=JSON.stringify(readParams());
+    modoAutobus.value=preferenciasProblemas.autobus;
     for(const input of options.querySelectorAll("input"))input.checked=preferenciasProblemas[input.name];
     IdiomaVoz.iniciarEdicion();
     dialog.showModal();
   };
   function applySettings(){
     for(const input of options.querySelectorAll("input"))preferenciasProblemas[input.name]=input.checked;
+    const cambioAutobus=preferenciasProblemas.autobus!==modoAutobus.value;
+    preferenciasProblemas.autobus=modoAutobus.value;
     if(!preferenciasProblemas.narracion)window.speechSynthesis?.cancel();
     Matematicas.guardar(CLAVE_AYUDAS_PROBLEMAS,preferenciasProblemas);
     const changed=JSON.stringify(readParams())!==previousRange;
     saveParams();
     saveFontSetting();
     IdiomaVoz.aplicarEdicion();
-    if(changed&&state.currentProblem)newProblem();
+    if(state.currentProblem&&(changed||(cambioAutobus&&state.currentProblem.id==="busPasajeros")))newProblem();
     actualizarAyudas();
     dialog.close();
   }
