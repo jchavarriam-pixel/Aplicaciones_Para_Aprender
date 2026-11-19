@@ -26,9 +26,11 @@
       plano.addEventListener('keydown',e=>this.tecla(e));
       separar.onclick=()=>this.separarSeleccion();deshacer.onclick=()=>this.deshacerUltimo();
     }
-    iniciar(figuras,cantidad,{ayuda=true,nombreFigura='figura',disposicion='compactos',inercia=false}={}) {
+    iniciar(figuras,cantidad,{ayuda=true,nombreFigura='figura',disposicion='compactos',inercia=false,metodo='soltar'}={}) {
       this.cancelar();this.nodos=figuras.map(f=>({...f,x:0,y:0}));this.enlaces=[];
       this.cantidad=cantidad;this.ayuda=ayuda;this.nombreFigura=nombreFigura;this.disposicion=['compactos','hileras','libre'].includes(disposicion)?disposicion:'compactos';this.inercia=inercia===true;this.plano.dataset.disposicion=this.disposicion;this.plano.dataset.movimiento='reposo';
+      this.metodo=metodo==='barrido'?'barrido':'soltar';
+      this.plano.dataset.metodo=this.metodo;
       this.historial=[];this.seleccion=null;this.resuelto=false;this.mundo={w:0,h:0,tam:50};
       this.capa.replaceChildren();this.botones=new Map();
       for(const n of this.nodos){const b=document.createElement('button');b.type='button';b.className='figura nodo-magnetico';b.dataset.nodo=n.id;b.setAttribute('aria-label',nombreFigura+' '+(n.id+1));b.innerHTML=this.svgFigura(n);this.capa.append(b);this.botones.set(n.id,b);}
@@ -143,7 +145,7 @@
     }
     pintar() {
       if(!this.nodos.length)return;
-      const {w,h,tam}=this.mundo,grupos=this.componentes();if(!w)return;
+      const {w,h,tam}=this.mundo,grupos=this.gruposVisibles();if(!w)return;
       const porId=new Map();for(const g of grupos)for(const id of g)porId.set(id,g);
       for(const n of this.nodos){const b=this.botones.get(n.id),g=porId.get(n.id);b.style.left=(n.x/w*100)+'%';b.style.top=(n.y/h*100)+'%';b.classList.toggle('elegida',n.id===this.seleccion);b.classList.toggle('moviendo',!!this.arrastre?.movido&&this.arrastre.ids.includes(n.id));b.classList.toggle('grupo-cerrado',this.ayuda&&g.length===this.cantidad);b.classList.toggle('atraccion',!!this.candidato&&!this.candidato.bloqueado&&this.candidato.destino.includes(n.id));b.dataset.grupo=String(g[0]);b.dataset.cantidad=String(g.length);b.setAttribute('aria-pressed',String(n.id===this.seleccion));b.setAttribute('aria-label',this.nombreFigura+' '+(n.id+1)+(this.ayuda&&g.length===this.cantidad?this.t(', grupo completo',', complete group'):''));b.disabled=this.resuelto||this.movimiento?.tipo==='ajuste';}
       let svg='';
@@ -165,10 +167,21 @@
     }
     programar(){if(!this.raf)this.raf=requestAnimationFrame(()=>{this.raf=0;this.pintar();});}
     posicion(e){const r=this.plano.getBoundingClientRect();return {x:e.clientX-r.left,y:e.clientY-r.top};}
+    gruposVisibles() {
+      const grupos=this.componentes(), d=this.arrastre;
+      if(!d?.recogidos?.length)return grupos;
+      const unidos=new Set(d.ids);
+      return grupos.filter(g=>!g.some(id=>unidos.has(id))).concat([d.ids]);
+    }
     tomar(e) {
       const b=e.target.closest('[data-nodo]');if(!b||this.resuelto||this.movimiento?.tipo==='ajuste'||e.button>0||e.isPrimary===false||this.arrastre)return;this.detenerMovimiento();
       e.preventDefault();const id=+b.dataset.nodo,ids=this.componentes().find(g=>g.includes(id)),p=this.posicion(e);
       this.arrastre={id:e.pointerId,nodo:id,ids,origen:b,inicio:p,antes:this.captura(),movido:false,clienteX:e.clientX,clienteY:e.clientY,muestras:[{x:e.clientX,y:e.clientY,t:performance.now()}]};
+      if(this.metodo==='barrido')Object.assign(this.arrastre,{
+        anterior:p, recogidos:[], relativos:ids.map(i=>({
+          id:i, x:this.nodos[i].x-this.nodos[id].x, y:this.nodos[i].y-this.nodos[id].y
+        }))
+      });
       b.setPointerCapture(e.pointerId);this.programar();
     }
     mover(e) {
@@ -176,11 +189,95 @@
       const p=this.posicion(e),dx=p.x-d.inicio.x,dy=p.y-d.inicio.y;
       if(!d.movido&&Math.hypot(dx,dy)<5)return;
       if(!d.movido){d.movido=true;this.seleccion=d.nodo;this.autoDesplazar();}
+      if(this.metodo==='barrido'){
+        this.recogerBarrido(d,p);
+        this.moverBarrido(d,p);
+        this.programar();
+        return;
+      }
       const ns=d.ids.map(id=>d.antes.nodos[id]),m=this.mundo.tam*.55;
       const x=limitar(dx,m-Math.min(...ns.map(n=>n.x)),this.mundo.w-m-Math.max(...ns.map(n=>n.x)));
       const y=limitar(dy,m-Math.min(...ns.map(n=>n.y)),this.mundo.h-m-Math.max(...ns.map(n=>n.y)));
       for(const n of ns){this.nodos[n.id].x=n.x+x;this.nodos[n.id].y=n.y+y;}
       this.candidato=this.buscar(d.ids);this.programar();
+    }
+    recogerBarrido(d,p) {
+      const inicio=d.anterior;
+      d.anterior=p;
+      if(this.ayuda&&d.ids.length>=this.cantidad)return;
+      const dx=p.x-inicio.x,dy=p.y-inicio.y,largo=dx*dx+dy*dy;
+      if(largo<.01)return;
+      const propios=new Set(d.ids), radio=this.mundo.tam*.67, encuentros=[];
+      for(const grupo of this.componentes()){
+        if(grupo.some(id=>propios.has(id)))continue;
+        let primero=Infinity;
+        for(const id of grupo){
+          const n=this.nodos[id], t=limitar(((n.x-inicio.x)*dx+(n.y-inicio.y)*dy)/largo,0,1);
+          if(Math.hypot(n.x-inicio.x-dx*t,n.y-inicio.y-dy*t)<=radio)primero=Math.min(primero,t);
+        }
+        if(primero<Infinity)encuentros.push({grupo,primero});
+      }
+      encuentros.sort((a,b)=>a.primero-b.primero);
+      for(const {grupo} of encuentros){
+        if(this.ayuda&&d.ids.length+grupo.length>this.cantidad)continue;
+        const ids=[d.nodo,...d.ids.filter(id=>id!==d.nodo),...grupo];
+        const puntos=this.disposicion==='libre'
+          ? this.plantillaBarridoLibre(d,ids,p)
+          : this.plantilla(ids.length);
+        if(puntos.length!==ids.length)continue;
+        const {w,h,tam}=this.mundo, margen=tam*1.1;
+        const cabe=ps=>Math.max(...ps.map(q=>q.x))-Math.min(...ps.map(q=>q.x))<=w-margen&&
+          Math.max(...ps.map(q=>q.y))-Math.min(...ps.map(q=>q.y))<=h-margen;
+        const orden=cabe(puntos)?puntos:puntos.map(q=>({x:-q.y,y:q.x}));
+        if(!cabe(orden))continue;
+        const ancla=orden[0];
+        d.relativos=ids.map((id,i)=>({id,x:orden[i].x-ancla.x,y:orden[i].y-ancla.y}));
+        d.ids=ids;
+        d.recogidos.push(...grupo);
+      }
+    }
+    plantillaBarridoLibre(d,ids,p) {
+      const puntos=d.relativos.map(q=>({...q})), paso=this.mundo.tam*1.18;
+      for(const id of ids.filter(i=>!d.ids.includes(i))){
+        const destino={x:this.nodos[id].x-p.x,y:this.nodos[id].y-p.y};
+        let mejor=null;
+        for(const base of puntos)for(let i=0;i<12;i++){
+          const a=i*Math.PI/6, q={id,x:base.x+paso*Math.cos(a),y:base.y+paso*Math.sin(a)};
+          if(puntos.some(otro=>distancia(q,otro)<paso*.94))continue;
+          const coste=distancia(q,destino);
+          if(!mejor||coste<mejor.coste)mejor={...q,coste};
+        }
+        if(!mejor)return [];
+        puntos.push(mejor);
+      }
+      return ids.map(id=>puntos.find(q=>q.id===id));
+    }
+    moverBarrido(d,p) {
+      const m=this.mundo.tam*.55, ns=d.relativos, n=d.antes.nodos[d.nodo];
+      const x=limitar(n.x+p.x-d.inicio.x,m-Math.min(...ns.map(q=>q.x)),this.mundo.w-m-Math.max(...ns.map(q=>q.x)));
+      const y=limitar(n.y+p.y-d.inicio.y,m-Math.min(...ns.map(q=>q.y)),this.mundo.h-m-Math.max(...ns.map(q=>q.y)));
+      for(const q of ns)Object.assign(this.nodos[q.id],{x:x+q.x,y:y+q.y});
+    }
+    soltarBarrido(d) {
+      const unidos=new Set(d.ids), grupos=this.componentes().filter(g=>!g.some(id=>unidos.has(id))).concat([d.ids]);
+      const enlaces=this.calcularEnlaces(grupos);
+      const colision=this.nodos.some(n=>!unidos.has(n.id)&&d.ids.some(id=>distancia(n,this.nodos[id])<this.mundo.tam*1.04));
+      let unido=false;
+      if(d.recogidos.length&&!colision&&grupos.every(g=>this.conectado(g,enlaces))){
+        this.enlaces=enlaces;
+        unido=true;
+      }else if(d.recogidos.length){
+        const recogidos=new Set(d.recogidos);
+        unido=this.formarGrupo(d.ids.filter(id=>!recogidos.has(id)),{destino:d.recogidos});
+        if(!unido)this.restaurarPosiciones(d.antes);
+      }else if(colision){
+        this.restaurarPosiciones(d.antes);
+      }
+      const cambio=unido||d.ids.some(id=>distancia(this.nodos[id],d.antes.nodos[id])>.1);
+      if(cambio)this.recordar(d.antes);
+      this.actualizar(unido);
+      if(unido)this.notificarGrupo(d.nodo);
+      else if(cambio)this.deslizar(d);
     }
     autoDesplazar() {
       cancelAnimationFrame(this.scrollRaf);
@@ -296,7 +393,7 @@
         let dx=v.x*tiempo,dy=v.y*tiempo;
         if(antes.some(n=>n.x+dx<m||n.x+dx>this.mundo.w-m)){dx=0;v.x=0;}if(antes.some(n=>n.y+dy<m||n.y+dy>this.mundo.h-m)){dy=0;v.y=0;}
         for(const n of antes)Object.assign(this.nodos[n.id],{x:n.x+dx,y:n.y+dy});
-        const candidato=this.buscar(d.ids);
+        const candidato=this.metodo==='soltar'?this.buscar(d.ids):null;
         if(candidato&&!candidato.bloqueado){this.movimiento=null;this.plano.dataset.movimiento='reposo';if(this.encajar(d.ids,candidato)){this.actualizar(true);this.notificarGrupo(d.nodo);return;}this.movimiento=movimiento;this.plano.dataset.movimiento='inercia';}
         const choque=this.nodos.some(n=>!d.ids.includes(n.id)&&d.ids.some(id=>distancia(n,this.nodos[id])<this.mundo.tam*1.04));
         if(choque){for(const n of antes)Object.assign(this.nodos[n.id],{x:n.x,y:n.y});v.x=0;v.y=0;}
@@ -309,6 +406,7 @@
       const d=this.arrastre;if(!d||d.id!==e.pointerId)return;e.preventDefault();
       if(d.movido)this.mover(e);const candidato=this.candidato;this.liberar();
       if(!d.movido){this.tocar(d.nodo);return;}
+      if(this.metodo==='barrido'){this.soltarBarrido(d);return;}
       let unido=false;
       if(candidato?.bloqueado){this.restaurarPosiciones(d.antes);this.alAvisar?.(d.ids.length>=this.cantidad||candidato.destino.length>=this.cantidad?this.t('Este grupo está completo. Forma otro grupo.','This group is complete. Start another group.'):this.t(`Juntos tendrían más de ${this.cantidad}. Separa alguna figura o busca otro grupo.`,`Together they would have more than ${this.cantidad}. Separate a shape or find another group.`));}
       else if(candidato){unido=this.encajar(d.ids,candidato);if(!unido){this.restaurarPosiciones(d.antes);this.alAvisar?.(this.t('Busca un espacio libre junto al grupo.','Find some free space next to the group.'));}}
@@ -357,7 +455,9 @@
       if(unido||JSON.stringify(antes.nodos)!==JSON.stringify(this.captura().nodos))this.recordar(antes);this.seleccion=id;this.actualizar(unido);if(unido&&ids.length+c.destino.length===this.cantidad)this.notificarGrupo(id);
     }
     bloquear(){this.detenerMovimiento();this.resuelto=true;this.actualizar();}
-    pista(){const g=this.componentes().find(g=>g.length<this.cantidad);if(g){this.seleccion=g[0];this.actualizar();}return this.t(`Acerca las figuras hasta unir ${this.cantidad}. Los enlaces muestran cada grupo.`,`Bring the shapes together until you have ${this.cantidad}. The links show each group.`);}
+    pista(){const g=this.componentes().find(g=>g.length<this.cantidad);if(g){this.seleccion=g[0];this.actualizar();}return this.metodo==='barrido'
+      ? this.t(`Pasa sobre las fichas hasta recoger ${this.cantidad}. Luego suelta el grupo.`,`Sweep over the shapes until you have ${this.cantidad}. Then release the group.`)
+      : this.t(`Acerca las figuras hasta unir ${this.cantidad}. Los enlaces muestran cada grupo.`,`Bring the shapes together until you have ${this.cantidad}. The links show each group.`);}
   }
   window.GruposMagneticos=GruposMagneticos;
 })();

@@ -1,7 +1,7 @@
 (() => {
 'use strict';
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],key='multiplicacion.config.v1';
-const defaults={modo:'filas',filasMin:1,filasMax:4,columnasMin:1,columnasMax:5,porGrupoMin:2,porGrupoMax:5,gruposMin:2,gruposMax:5,ayudaConteo:true,sonidoConteo:true,ayudaGrupos:true,disposicionGrupos:'compactos',inerciaGrupos:false,permitirPistas:true,narracion:true,tipoRespuesta:'multiplicacion',forma:'azar'};
+const defaults={modo:'filas',filasMin:1,filasMax:4,columnasMin:1,columnasMax:5,porGrupoMin:2,porGrupoMax:5,gruposMin:2,gruposMax:5,ayudaConteo:true,sonidoConteo:true,ayudaGrupos:true,disposicionGrupos:'compactos',metodoGrupos:'soltar',inerciaGrupos:false,permitirPistas:true,narracion:true,tipoRespuesta:'multiplicacion',forma:'azar'};
 let config={...defaults};try{const v=JSON.parse(localStorage.getItem(key)||'{}');for(const k of Object.keys(defaults))if(typeof v[k]===typeof defaults[k])config[k]=v[k];}catch{}
 function sanear(){for(const [base,max]of [['filas',6],['columnas',8],['porGrupo',8],['grupos',6]]){for(const s of ['Min','Max'])config[base+s]=Math.max(1,Math.min(max,Math.round(config[base+s])||defaults[base+s]));if(config[base+'Min']>config[base+'Max'])[config[base+'Min'],config[base+'Max']]=[config[base+'Max'],config[base+'Min']];}if(!['multiplicacion','producto'].includes(config.tipoRespuesta))config.tipoRespuesta='multiplicacion';if(!['compactos','hileras','libre'].includes(config.disposicionGrupos))config.disposicionGrupos='compactos';if(!['filas','grupos','pareo','completar','seleccion'].includes(config.modo))config.modo='filas';if(config.forma==='mixto')config.forma='azar';if(!['azar','circulo','cuadrado','triangulo','pentagono','estrella','rombo','hexagono','rectangulo'].includes(config.forma))config.forma='azar';}sanear();
 const t=(es,en)=>IdiomaVoz.idioma==='en'?en:es;
@@ -25,18 +25,49 @@ const formas={
 let formaRonda='estrella',bolsaFormas=[],ultimaForma='',svgId=0;
 function elegirForma(){if(config.forma!=='azar')return config.forma;if(!bolsaFormas.length){bolsaFormas=Object.keys(formas);for(let i=bolsaFormas.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[bolsaFormas[i],bolsaFormas[j]]=[bolsaFormas[j],bolsaFormas[i]];}if(bolsaFormas.at(-1)===ultimaForma)[bolsaFormas[0],bolsaFormas[bolsaFormas.length-1]]=[bolsaFormas.at(-1),bolsaFormas[0]];}ultimaForma=bolsaFormas.pop();return ultimaForma;}
 function nombreFiguras(){const f=formas[formaRonda];return t(f.plural,f.plEn);}
-function gradiente(id,i){const [color]=colores[i];return `<defs><linearGradient id="${id}" x1="0" y1="0" x2=".65" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".22" stop-color="${color}"/><stop offset="1" stop-color="${color}"/></linearGradient></defs>`;}
-function dibujo(forma,i=0,id='figura'){const [,stroke]=colores[i],attrs=`class="forma-geometrica" data-forma="${forma}" fill="url(#${id})" stroke="${stroke}" stroke-width="2.5" stroke-linejoin="round"`;
+function gradiente(id,i){const [color,sombra]=colores[i];return `<defs><linearGradient id="${id}" x1="0" y1="0" x2=".65" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset=".30" stop-color="${color}"/><stop offset=".72" stop-color="${color}"/><stop offset="1" stop-color="${sombra}"/></linearGradient></defs>`;}
+function dibujo(forma,i=0,id='figura'){
+ const [color,stroke]=colores[i],attrs=`class="forma-geometrica" data-forma="${forma}" fill="url(#${id}) ${color}" stroke="${stroke}" stroke-width="2.2" stroke-linejoin="round"`;
  const caminos={triangulo:'M25 4L47 44H3Z',pentagono:'M25 3L47 19L39 45H11L3 19Z',estrella:'M25 3L31.5 17L47 19L35.5 30L38.5 46L25 38.5L11.5 46L14.5 30L3 19L18.5 17Z',rombo:'M25 3L44 25L25 47L6 25Z',hexagono:'M14 5H36L48 25L36 45H14L2 25Z'};
- if(forma==='circulo')return `<circle cx="25" cy="25" r="20" ${attrs}/>`;
- if(forma==='cuadrado')return `<rect x="6" y="6" width="38" height="38" rx="2" ${attrs}/>`;
- if(forma==='rectangulo')return `<rect x="3" y="11" width="44" height="28" rx="2" ${attrs}/>`;
- return `<path d="${caminos[forma]}" ${attrs}/>`;
+ const formaSvg=atributos=>{
+  if(forma==='circulo')return `<circle cx="25" cy="25" r="20" ${atributos}/>`;
+  if(forma==='cuadrado')return `<rect x="6" y="6" width="38" height="38" rx="3" ${atributos}/>`;
+  if(forma==='rectangulo')return `<rect x="3" y="11" width="44" height="28" rx="3" ${atributos}/>`;
+  return `<path d="${caminos[forma]}" ${atributos}/>`;
+ };
+ return formaSvg(`fill="${stroke}" opacity=".26" transform="translate(0 2.2)"`)+formaSvg(attrs)+
+  '<path d="M20 22Q25 18 30 22" fill="none" stroke="white" stroke-opacity=".76" stroke-width="2.3" stroke-linecap="round"/>';
 }
 function svgFigura(f){const id='figura-'+(++svgId);return `<svg viewBox="0 0 50 50" aria-hidden="true">${gradiente(id,f.color)}${dibujo(f.forma,f.color,id)}</svg>`;}
+function prepararIlustraciones(){
+ const ficha=(forma,color,x,y,s=.44)=>{
+  const id='modo-'+(++svgId);
+  return `<g transform="translate(${x} ${y}) scale(${s})">${gradiente(id,color)}${dibujo(forma,color,id)}</g>`;
+ };
+ const cuadricula=[0,1,2,3,4,5].map(i=>ficha('cuadrado',2,i%3*23+14,Math.floor(i/3)*23+9,.41)).join('');
+ const arte={
+  filas:cuadricula,
+  grupos:`<path d="M14 16H32L23 37Z M61 20H78L70 41Z" fill="none" stroke="#62aa98" stroke-width="3"/>${
+   [[2,5],[21,5],[12,26],[50,9],[69,9],[60,30]].map(([x,y])=>ficha('circulo',1,x,y,.42)).join('')}`,
+  pareo:`<path d="M27 24C45 24 48 40 67 36" fill="none" stroke="#b47a35" stroke-width="3" stroke-dasharray="4 3"/>${ficha('estrella',0,4,9,.62)}${ficha('circulo',5,58,22,.64)}`,
+  completar:`<rect x="52" y="15" width="31" height="29" rx="7" fill="#f4edff" stroke="#8c71c6" stroke-width="3" stroke-dasharray="4 3"/><path d="M33 30H47m-6-6 6 6-6 6" fill="none" stroke="#6951a2" stroke-width="3" stroke-linecap="round"/>${ficha('rombo',4,0,11,.62)}`,
+  seleccion:'<rect x="10" y="7" width="69" height="48" rx="12" fill="#ffe5f0" stroke="#b95a89" stroke-width="2"/><path d="M25 22h5m11 0h24M23 38l4 4 7-8m7 5h24" fill="none" stroke="#a34979" stroke-width="3.4" stroke-linecap="round"/>'
+ };
+ const imagen=contenido=>`<svg viewBox="0 0 94 62" aria-hidden="true" focusable="false">${contenido}</svg>`;
+ for(const icono of $$('.tarjetas-modos .icono-modo'))icono.innerHTML=imagen(arte[icono.closest('button').dataset.modo]);
+ $('#emblemaMultiplicacion').innerHTML=imagen(ficha('estrella',0,2,15,.65)+ficha('cuadrado',4,32,11,.68)+ficha('triangulo',1,61,16,.62));
+}
 function estado(s,bien=false){$('#estado').textContent=s;$('#estado').classList.toggle('bien',bien);}
 function soloProducto(){return config.tipoRespuesta==='producto';}
-function instrucciones(){if(soloProducto())return config.modo==='filas'?t('Cuenta las filas y las columnas para descubrir cuántas figuras hay. Escribe solo el total.','Count the rows and columns to find how many shapes there are. Enter only the total.'):t('Arrastra las figuras para formar grupos iguales. Después escribe solo el total de figuras.','Drag the shapes to make equal groups. Then enter only the total number of shapes.');return config.modo==='filas'?t('Cuenta las filas y las columnas. Completa la multiplicación para saber cuántas figuras hay.','Count the rows and columns. Complete the multiplication to find how many shapes there are.'):t('Arrastra una figura cerca de otra: se unirán. Forma grupos iguales y luego completa la multiplicación.','Drag a shape close to another: they will join. Make equal groups, then complete the multiplication.');}
+function instrucciones(){
+ const paso=config.modo==='filas'
+  ? t('Cuenta las filas y las columnas.','Count the rows and columns.')
+  : config.metodoGrupos==='barrido'
+   ? t('Recoge fichas al pasar sobre ellas. Forma grupos iguales.','Collect shapes by dragging over them. Make equal groups.')
+   : t('Acerca una ficha a otra y suéltala. Forma grupos iguales.','Drag one shape close to another and release it. Make equal groups.');
+ const respuesta=soloProducto()?t('Escribe solo el total.','Enter only the total.'):t('Completa la multiplicación.','Complete the multiplication.');
+ return paso+' '+respuesta;
+}
 function pregunta(){const f=formas[formaRonda];return config.modo==='filas'?t(`¿Cuánt${f.femenina?'as':'os'} ${f.plural} hay?`,`How many ${f.plEn} are there?`):t(`Vamos a hacer grupos de ${reto.b} ${f.plural}`,`Let’s make groups of ${reto.b} ${f.plEn}`);}
 function esModoTablas(){return ['pareo','completar','seleccion'].includes(config.modo);}
 function nueva(){conteo.detener();cancelarArrastre();magneticos.cancelar();cancelarCelebracion();modosTablas.cancelar();window.speechSynthesis?.cancel();
@@ -46,7 +77,7 @@ if(esModoTablas()){
   $('#contarArreglo').hidden=true;$('#pista').hidden=!config.permitirPistas;$('#pista').textContent=t('💡 Pista','💡 Hint');$('#escuchar').hidden=!config.narracion||['completar','seleccion'].includes(config.modo);$('#ayudas').hidden=!config.permitirPistas&&$('#escuchar').hidden;
   modosTablas.nueva(config.modo);$('#instruccion').textContent=modosTablas.instrucciones();$('#pregunta').textContent=modosTablas.titulo();programar();return;
 }
-$('#configurar').textContent=t('⚙ Configuración','⚙ Settings');$('#modosTablas').hidden=true;$('.resolucion').hidden=false;$('#configurarModo').hidden=false;[reto.a,reto.b]=objetivo();acertado=false;respuestas={a:'',b:'',total:''};campo=soloProducto()?'total':'a';formaRonda=elegirForma();ultimaForma=formaRonda;figuras=Array.from({length:reto.a*reto.b},(_,id)=>({id,forma:formaRonda,color:formas[formaRonda].color}));estado('');$('#instruccion').textContent=instrucciones();$('#pregunta').textContent=pregunta();$('.actividad').dataset.actividad=config.modo;$('#arreglo').hidden=config.modo!=='filas';$('#agrupacion').hidden=config.modo!=='grupos';ordenarEcuacion();$('#etiquetaA').textContent=t(config.modo==='filas'?'Tabla':'Grupos',config.modo==='filas'?'Table':'Groups');$('#etiquetaB').textContent=t(config.modo==='filas'?'Multiplicador':'En cada grupo',config.modo==='filas'?'Multiplier':'In each group');$('#factorB').hidden=config.modo==='grupos';$('#tamanoDado').hidden=config.modo!=='grupos';$('#tamanoDado').textContent=reto.b;$$('[data-modo]').forEach(b=>{b.classList.toggle('activo',b.dataset.modo===config.modo);b.setAttribute('aria-pressed',String(b.dataset.modo===config.modo));});$('#pista').textContent=config.modo==='filas'?t('💡 Pista 1','💡 Hint 1'):t('💡 Pista','💡 Hint');$('#pista').hidden=!config.permitirPistas;$('#contarArreglo').hidden=config.modo!=='filas'||!config.ayudaConteo;$('#escuchar').hidden=!config.narracion;$('#ayudas').hidden=!config.permitirPistas&&!config.narracion&&(config.modo!=='filas'||!config.ayudaConteo);$('#revisar').disabled=false;if(config.modo==='grupos')magneticos.iniciar(figuras,reto.b,{ayuda:config.ayudaGrupos,disposicion:config.disposicionGrupos,inercia:config.inerciaGrupos,nombreFigura:t(formas[formaRonda].es,formas[formaRonda].en)});pintarArreglo();pintarGrupos();pintarRespuesta();programar();decir(pregunta());}
+$('#configurar').textContent=t('⚙ Configuración','⚙ Settings');$('#modosTablas').hidden=true;$('.resolucion').hidden=false;$('#configurarModo').hidden=false;[reto.a,reto.b]=objetivo();acertado=false;respuestas={a:'',b:'',total:''};campo=soloProducto()?'total':'a';formaRonda=elegirForma();ultimaForma=formaRonda;figuras=Array.from({length:reto.a*reto.b},(_,id)=>({id,forma:formaRonda,color:formas[formaRonda].color}));estado('');$('#instruccion').textContent=instrucciones();$('#pregunta').textContent=pregunta();$('.actividad').dataset.actividad=config.modo;$('#arreglo').hidden=config.modo!=='filas';$('#agrupacion').hidden=config.modo!=='grupos';ordenarEcuacion();$('#etiquetaA').textContent=t(config.modo==='filas'?'Tabla':'Grupos',config.modo==='filas'?'Table':'Groups');$('#etiquetaB').textContent=t(config.modo==='filas'?'Multiplicador':'En cada grupo',config.modo==='filas'?'Multiplier':'In each group');$('#factorB').hidden=config.modo==='grupos';$('#tamanoDado').hidden=config.modo!=='grupos';$('#tamanoDado').textContent=reto.b;$$('[data-modo]').forEach(b=>{b.classList.toggle('activo',b.dataset.modo===config.modo);b.setAttribute('aria-pressed',String(b.dataset.modo===config.modo));});$('#pista').textContent=config.modo==='filas'?t('💡 Pista 1','💡 Hint 1'):t('💡 Pista','💡 Hint');$('#pista').hidden=!config.permitirPistas;$('#contarArreglo').hidden=config.modo!=='filas'||!config.ayudaConteo;$('#escuchar').hidden=!config.narracion;$('#ayudas').hidden=!config.permitirPistas&&!config.narracion&&(config.modo!=='filas'||!config.ayudaConteo);$('#revisar').disabled=false;if(config.modo==='grupos')magneticos.iniciar(figuras,reto.b,{ayuda:config.ayudaGrupos,disposicion:config.disposicionGrupos,inercia:config.inerciaGrupos,metodo:config.metodoGrupos,nombreFigura:t(formas[formaRonda].es,formas[formaRonda].en)});pintarArreglo();pintarGrupos();pintarRespuesta();programar();decir(pregunta());}
 function pintarArreglo(){if(config.modo!=='filas')return;const a=reto.a,b=reto.b,izq=64,arriba=54,w=b*62+izq+12,h=a*62+arriba+12;let svg=gradiente('grad-arreglo',formas[formaRonda].color);
 for(let r=0;r<a;r++)for(let c=0;c<b;c++){const f=figuras[r*b+c];svg+=`<g class="celda" data-fila="${r+1}" data-columna="${c+1}" transform="translate(${izq+c*62+4} ${arriba+r*62+2})"><g class="pieza">${dibujo(f.forma,f.color,'grad-arreglo')}</g></g>`;}
 svg+='<g class="marcas-conteo" aria-hidden="true">';
@@ -63,7 +94,7 @@ const conteo=new ConteoArreglo({arreglo:$('#arreglo'),boton:$('#contarArreglo'),
 const modosTablas=new ModosTablas({root:$('#modosTablas'),efectosRoot:$('#celebracion'),estado,decir,nombre:()=>nombre,opciones:()=>({narracion:config.narracion,pistas:config.permitirPistas}),alAjustar:programar});
 $('#configurarModo').onclick=()=>abrirOpciones(false);
 function completos(){return magneticos.completos();}
-function pintarGrupos(){if(config.modo!=='grupos')return;$('#guiaGrupos').textContent=config.disposicionGrupos==='compactos'?t('Une las figuras en un puño. Arrastra el grupo para moverlo.','Join shapes into a compact cluster. Drag the group to move it.'):config.disposicionGrupos==='hileras'?t('Une las figuras en una hilera. Arrastra el grupo para moverlo.','Join shapes into a row. Drag the group to move it.'):t('Acerca las figuras para unirlas donde tú decidas.','Bring shapes together to join them wherever you choose.');$('#pasoRespuesta').textContent=completos()?t('¡Grupos listos! Cuenta los grupos y calcula el total.','Groups ready! Count the groups and work out the total.'):t(`Une ${reto.b} ${nombreFiguras()} en cada grupo.`,`Join ${reto.b} ${nombreFiguras()} in each group.`);if(acertado)magneticos.bloquear();pintarRespuesta();programar();}
+function pintarGrupos(){if(config.modo!=='grupos')return;$('#guiaGrupos').textContent=config.metodoGrupos==='barrido'?t('Arrastra una ficha y pásala sobre las demás para recogerlas.','Drag a shape over the others to collect them.'):config.disposicionGrupos==='compactos'?t('Une las figuras en un puño. Arrastra el grupo para moverlo.','Join shapes into a compact cluster. Drag the group to move it.'):config.disposicionGrupos==='hileras'?t('Une las figuras en una hilera. Arrastra el grupo para moverlo.','Join shapes into a row. Drag the group to move it.'):t('Acerca las figuras para unirlas donde tú decidas.','Bring shapes together to join them wherever you choose.');$('#pasoRespuesta').textContent=completos()?t('¡Grupos listos! Cuenta los grupos y calcula el total.','Groups ready! Count the groups and work out the total.'):t(`Une ${reto.b} ${nombreFiguras()} en cada grupo.`,`Join ${reto.b} ${nombreFiguras()} in each group.`);if(acertado)magneticos.bloquear();pintarRespuesta();programar();}
 const partesEcuacion={a:$('#factorA').parentElement,b:$('#factorB').parentElement,total:$('#total').parentElement,multi:$$('#ecuacion .signo')[0],igual:$$('#ecuacion .signo')[1]};
 function ordenarEcuacion(){const p=partesEcuacion;$('#ecuacion').append(...(config.modo==='grupos'?[p.b,p.multi,p.a,p.igual,p.total]:[p.a,p.multi,p.b,p.igual,p.total]));}
 function pintarRespuesta(){const solo=soloProducto();if(solo)campo='total';$('#ecuacion').dataset.respuesta=config.tipoRespuesta;$$('#ecuacion .respuesta').slice(0,2).forEach(e=>e.hidden=solo);$$('#ecuacion .signo').forEach(e=>e.hidden=solo);$('.resolucion').setAttribute('aria-label',solo?t('Escribe el total','Enter the total'):t('Construye la multiplicación','Build the multiplication'));const lista=[['a','#factorA'],['b','#factorB'],['total','#total']];for(const [k,id]of lista){const b=$(id);b.textContent=respuestas[k];b.classList.toggle('activa',campo===k);b.setAttribute('aria-label',t(k==='a'?(config.modo==='filas'?'Tabla':'Grupos'):k==='b'?(config.modo==='filas'?'Multiplicador':'En cada grupo'):'Total',k==='a'?(config.modo==='filas'?'Table':'Groups'):k==='b'?(config.modo==='filas'?'Multiplier':'In each group'):'Total')+': '+(respuestas[k]||t('sin responder','unanswered')));b.disabled=acertado||(solo&&k!=='total')||(config.modo==='grupos'&&!completos());}
@@ -86,6 +117,7 @@ function detenerJuego(){conteo.detener();cancelarArrastre();magneticos.cancelar(
 function mostrarInicio(){detenerJuego();$('#juegoMultiplicacion').hidden=true;$('#inicioMultiplicacion').hidden=false;$('#cabeceraInicio').append($('#cabeceraApp'));$('#plegar').hidden=true;$('#flotantes').hidden=true;programar();}
 function iniciarModo(c){config={...defaults,...c};sanear();guardar();modosTablas.guardadas[config.modo]={...c,minFactor:1,maxFactor:10};$('#inicioMultiplicacion').hidden=true;$('#juegoMultiplicacion').hidden=false;$('#herramientas').prepend($('#cabeceraApp'));plegado=false;document.body.classList.remove('plegado');$('#plegar').hidden=false;$('#plegar').setAttribute('aria-expanded','true');$('#flotantes').hidden=true;$('#configurar').after($('#nueva'));$('#herramientas').append($('#ayudas'));nueva();}
 function abrirOpciones(desdeInicio=false){detenerJuego();ajustes.abrir(config.modo,desdeInicio);}
+prepararIlustraciones();
 IdiomaVoz.instalar('#voz');
 const ajustes=new ConfiguracionMultiplicacion({base:config,tablas:modosTablas,aplicar:iniciarModo,cancelar:mostrarInicio});
 $('#configurar').onclick=()=>abrirOpciones(false);$('#volverModos').onclick=mostrarInicio;

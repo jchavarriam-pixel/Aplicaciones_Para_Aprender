@@ -68,6 +68,38 @@
 @media(max-height:360px) and (orientation:landscape){.corta .tarjetas-modos button{min-height:calc(100*var(--u));padding:calc(8*var(--u));gap:calc(4*var(--u))}.corta .tarjetas-modos strong{font-size:calc(13*var(--u))}.corta .tarjetas-modos button>span:last-child{font-size:calc(10*var(--u));line-height:1.25}.corta .icono-modo{font-size:calc(22*var(--u))}}
 .vertical.baja .tarjetas-modos button>span:last-child{display:none}.vertical.baja .tarjetas-modos button{min-height:calc(88*var(--u))}.baja:not(.vertical) .tarjetas-modos{grid-template-columns:repeat(3,minmax(0,1fr))}@media(max-height:360px) and (orientation:landscape){.corta .tarjetas-modos button>span:last-child{display:none}}
 
+.tarjetas-modos button {
+  position: relative; border-bottom-width: calc(4 * var(--u)); min-width: 0;
+}
+.tarjetas-modos button:hover { border-color: #8775cb; box-shadow: 0 calc(6 * var(--u)) calc(18 * var(--u)) #6652a329; }
+.tarjetas-modos .icono-modo {
+  display: grid; place-items: center; width: calc(96 * var(--u)); height: calc(62 * var(--u));
+  max-width: 100%; border-radius: calc(12 * var(--u));
+  background: #ffffffb0; border: calc(1 * var(--u)) solid #a9b6e157;
+}
+.tarjetas-modos .icono-modo svg, #emblemaMultiplicacion svg { width: 100%; height: 100%; display: block; }
+#herramientas {
+  background: linear-gradient(155deg,#eff2ff 0%,#f5efff 48%,#e9f8f6);
+  border-color: #c6c6ee;
+}
+#herramientas>.cabecera {
+  background: #fff9; border: calc(1 * var(--u)) solid #ebe5fb;
+  border-radius: calc(16 * var(--u)); padding-inline: calc(11 * var(--u));
+}
+.marca-multiplicacion { display: flex; align-items: center; gap: calc(7 * var(--u)); margin-bottom: calc(8 * var(--u)); }
+.marca-multiplicacion h1 { color: #41347e; line-height: 1.1; margin: 0; text-wrap: balance; }
+#emblemaMultiplicacion { width: calc(65 * var(--u)); height: calc(43 * var(--u)); flex: none; }
+#herramientas .guia { background: #fff4d9; border-color: #e8cd89; color: #604817; }
+#herramientas .guia h2 { color: #62451d; }
+#herramientas #configurar { color: #4e398b; background: #f5ebff; border-color: #d2bdf2; }
+#herramientas #nueva { color: white; background: #6151ba; border-color: #5345a6; }
+#herramientas .casa { color: #4e398b; }
+.vertical #herramientas .marca-multiplicacion { display: block; }
+.vertical #herramientas .marca-multiplicacion h1 { font-size: calc(18 * var(--u)); }
+.vertical #herramientas #emblemaMultiplicacion { width: calc(45 * var(--u)); height: calc(28 * var(--u)); display: block; }
+.corta .tarjetas-modos .icono-modo,.vertical.baja .tarjetas-modos .icono-modo { width: calc(72 * var(--u)); height: calc(45 * var(--u)); }
+.corta #herramientas #emblemaMultiplicacion { width: calc(43 * var(--u)); height: calc(32 * var(--u)); }
+
 /* Una pregunta por defecto; navegación explícita y cantidad elegida por el adulto. */
 .tablas-paginas #tablaSiguiente{width:auto;max-width:calc(174*var(--u));min-height:calc(36*var(--u));padding:calc(6*var(--u)) calc(9*var(--u));font-size:calc(13*var(--u));line-height:1.25;white-space:normal;background:#f2f0ff;border-color:#c2b2e4;color:#675297}
 .tablas-paginas #tablaSiguiente.pagina-lista{background:#218767;color:#fff;border-color:#176b52;box-shadow:0 calc(3*var(--u)) 0 #176b5226}
