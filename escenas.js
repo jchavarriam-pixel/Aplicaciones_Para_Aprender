@@ -334,12 +334,10 @@ Los globos y los cordeles se dibujan desde el código.
   ];
 
   const danielBalloonFlyTargetsV3 = [
-    { x: 88, y: 10, r: 20 },
-    { x: 96, y: 22, r: -15 },
-    { x: 83, y: 6, r: 18 },
-    { x: 99, y: 13, r: -20 },
-    { x: 90, y: 33, r: 16 },
-    { x: 78, y: 9, r: -18 }
+    { x: 121, y: -10, r: 37 },
+    { x: 126, y: 4, r: -23 },
+    { x: 116, y: -18, r: 27 },
+    { x: 131, y: 10, r: -33 }
   ];
 
   function createDanielBalloonV3(id, pos) {
@@ -482,30 +480,35 @@ Los globos y los cordeles se dibujan desde el código.
             offset: 0
           },
           {
-            left: `${(start.x + target.x) / 2}%`,
-            top: `${Math.max(5, start.y - 13)}%`,
-            transform: "translate(-50%, -50%) rotate(16deg) scale(1.04)",
+            left: `${start.x + (target.x - start.x) * .35}%`,
+            top: `${Math.max(5, start.y - 9)}%`,
+            transform: "translate(-50%, -50%) rotate(16deg) scale(.90)",
             opacity: 1,
-            offset: .45
+            offset: .4
+          },
+          {
+            left: `${start.x + (target.x - start.x) * .78}%`,
+            top: `${target.y + 8}%`,
+            transform: "translate(-50%, -50%) rotate(-8deg) scale(.46)",
+            opacity: .85,
+            offset: .76
           },
           {
             left: `${target.x}%`,
             top: `${target.y}%`,
-            transform: `translate(-50%, -50%) rotate(${target.r}deg) scale(.9)`,
-            opacity: .82,
+            transform: `translate(-50%, -50%) rotate(${target.r}deg) scale(.22)`,
+            opacity: 0,
             offset: 1
           }
         ], {
-          duration: 1500,
-          easing: "cubic-bezier(.2,.82,.25,1)",
+          duration: 1730,
+          easing: "ease-in-out",
           fill: "forwards"
         });
 
         anim.onfinish = () => {
-          balloon.style.left = `${target.x}%`;
-          balloon.style.top = `${target.y}%`;
-          balloon.style.transform = `translate(-50%, -50%) rotate(${target.r}deg) scale(.9)`;
-          balloon.style.opacity = ".82";
+          balloon.remove();
+          stringLine?.remove();
         };
       }, delay + 90);
     });
@@ -1145,12 +1148,15 @@ Versión ajustada:
       };
     }
     const first=owner==="juan";
-    return {x:(first?6:81)+(index%3)*6.4,y:54+Math.floor(index/3)*8,r:first?-7:7};
+    return {x:(first?4.8:83)+(index%3)*4.7,y:55+Math.floor(index/3)*7,r:first?-5:5};
   }
 
-  const candyPlatePositionsJM3= usarIlustracionesSituaciones ? Array.from({length:25},(_,index)=>({
-    x:34+(index%5)*7.8,y:32+Math.floor(index/5)*10,r:index%2?8:-8
-  })) : [
+  // Dejar espacio junto al borde ovalado del plato, incluso con 25 dulces.
+  const candyPlatePositionsJM3 = usarIlustracionesSituaciones ? [4,5,7,5,4].flatMap((count,row)=>
+    Array.from({length:count},(_,column)=>({
+      x:48.6+(column-(count-1)/2)*5.8,y:56+row*7.5,r:(row+column)%2?7:-7
+    }))
+  ) : [
     { x: 42, y: 61, r: -12 }, { x: 48, y: 60, r: 9 },  { x: 54, y: 60, r: -6 }, { x: 60, y: 61, r: 13 },
     { x: 45, y: 64, r: -18 }, { x: 51, y: 64, r: 6 }, { x: 57, y: 64, r: -9 }, { x: 63, y: 64, r: 15 },
     { x: 39, y: 66, r: 10 },  { x: 66, y: 66, r: -15 }, { x: 44, y: 68, r: 4 }, { x: 50, y: 68, r: -8 },
@@ -1188,10 +1194,7 @@ Versión ajustada:
     }, delay);
   }
 
-  function renderJuanMariaDulcesSceneV3() {
-    addJuanMariaCandySceneStylesV3();
-    addIndoorKitchen();
-
+  function agregarMesaClasicaJM3() {
     const wall = document.createElement("div");
     wall.className = "candyRoomWallJM3";
 
@@ -1252,6 +1255,19 @@ Versión ajustada:
     handCandyMaria.dataset.owner = "maria";
 
     scene.append(wall, floor, windowHome, table, plate, juan, maria, handCandyJuan, handCandyMaria);
+  }
+
+  function renderJuanMariaDulcesSceneV3() {
+    addJuanMariaCandySceneStylesV3();
+    addIndoorKitchen();
+    if (usarIlustracionesSituaciones) {
+      for (const [owner, name] of [["juan","Juan"],["maria","María"]]) {
+        const label = document.createElement("span");
+        label.className = "nombre-mesa-dulces " + owner;
+        label.textContent = name;
+        scene.append(label);
+      }
+    } else agregarMesaClasicaJM3();
 
     state.movingIds = [];
 
@@ -1302,13 +1318,13 @@ Versión ajustada:
           {
             left: `${start.x}%`,
             top: `${start.y}%`,
-            transform: `translate(-50%, -50%) rotate(${start.r || 0}deg) scale(.72)`,
+            transform: `translate(-50%, -50%) rotate(${start.r || 0}deg) scale(${usarIlustracionesSituaciones ? 1 : .72})`,
             opacity: 1,
             offset: 0
           },
           {
-            left: "38%",
-            top: "52%",
+            left: usarIlustracionesSituaciones ? "27%" : "38%",
+            top: usarIlustracionesSituaciones ? "51%" : "52%",
             transform: "translate(-50%, -50%) rotate(-12deg) scale(.82)",
             opacity: 1,
             offset: .55
@@ -1360,13 +1376,13 @@ Versión ajustada:
           {
             left: `${start.x}%`,
             top: `${start.y}%`,
-            transform: `translate(-50%, -50%) rotate(${start.r || 0}deg) scale(.72)`,
+            transform: `translate(-50%, -50%) rotate(${start.r || 0}deg) scale(${usarIlustracionesSituaciones ? 1 : .72})`,
             opacity: 1,
             offset: 0
           },
           {
-            left: "62%",
-            top: "52%",
+            left: usarIlustracionesSituaciones ? "74%" : "62%",
+            top: usarIlustracionesSituaciones ? "51%" : "52%",
             transform: "translate(-50%, -50%) rotate(12deg) scale(.82)",
             opacity: 1,
             offset: .55

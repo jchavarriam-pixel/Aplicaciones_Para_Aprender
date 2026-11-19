@@ -101,7 +101,7 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 .scene[data-story=pearsBasket] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/peras-cenital.webp"); }
 .scene[data-story^=bus] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/autobus-cenital.webp"); }
 .scene[data-story=danielGlobosParque] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/parque.webp"); }
-.scene[data-story=juanMariaDulcesPlato] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/dulces.webp"); }
+.scene[data-story=juanMariaDulcesPlato] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/dulces-mesa.webp"); }
 .scene[data-story^=aula] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/aula.webp"); }
 .scene[data-story] :is(.fruit,.fruitGhost,.fruitShadow) { width:6.7cqw; height:9.1cqh; }
 .scene[data-story] .fruitShape { border:0; border-radius:0; box-shadow:none; background:var(--fruta) center / contain no-repeat; filter:drop-shadow(0 2px 2px #2518325e); }
@@ -119,13 +119,7 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 .scene[data-story] .danielBoyImgV3 { left:4%; top:40%; width:25%; height:54%; max-height:none; object-fit:contain; }
 .scene[data-story] .danielBalloonV3 { width:8cqw; height:13.5cqh; border:0; border-radius:0; box-shadow:none; background:url("ImagenesSituacionesProblemas/Ilustraciones/globo.webp") center / contain no-repeat; }
 .scene[data-story] .danielBalloonV3::before { display:none; }
-.scene[data-story] :is(.candyRoomWallJM3,.candyRoomFloorJM3,.candyWindowJM3,.candyMainTableJM3,.candyPlateJM3,.handCandyJM3) { display:none; }
-.scene[data-story] .candyChildJM3 { top:8%; width:23%; height:45%; background:var(--personaje) center / contain no-repeat; }
-.scene[data-story] .candyChildJM3.juan { left:0; --personaje:url("ImagenesSituacionesProblemas/Ilustraciones/pasajero.webp"); }
-.scene[data-story] .candyChildJM3.maria { right:0; --personaje:url("ImagenesSituacionesProblemas/Ilustraciones/maria.webp"); }
-.scene[data-story] .candyChildJM3 > :not(.candyNameLabelJM3) { display:none; }
-.scene[data-story] .candyNameLabelJM3 { font-size:5.7cqh; padding:1px 3px; border:0; }
-.scene[data-story] .candyPieceJM3 { width:5.9cqw; height:5.7cqh; border:0; border-radius:0; box-shadow:none; background:url("ImagenesSituacionesProblemas/Ilustraciones/confite.webp") center / contain no-repeat; }
+.scene[data-story] .candyPieceJM3 { width:4.4cqw; height:4.7cqh; border:0; border-radius:0; box-shadow:none; background:url("ImagenesSituacionesProblemas/Ilustraciones/confite.webp") center / contain no-repeat; }
 .scene[data-story] .candyPieceJM3.candy-maria { filter:hue-rotate(303deg); }
 .scene[data-story] .candyPieceJM3::before,.scene[data-story] .candyPieceJM3::after { display:none; }
 .scene[data-story] .candyPieceJM3.inHand { opacity:1; }
@@ -166,3 +160,15 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 }
 .scene[data-story^=bus] .busPassenger.inside { transform:translate(-50%,-50%) rotate(90deg); z-index:9; }
 .scene[data-story^=bus] .busPassenger.caminando { z-index:20; }
+
+.problemCard[data-story=juanMariaDulcesPlato] .objeto-miniatura {
+  inset:auto 44% 23% auto; width:12%; height:12%;
+}
+.scene[data-story=juanMariaDulcesPlato] .nombre-mesa-dulces {
+  position:absolute; top:47.5%; left:9.5%; transform:translateX(-50%);
+  z-index:20; padding:.5cqh 1.25cqw; border-radius:8px;
+  background:#ecf6ff; color:#194b85; font-size:3.8cqh; line-height:1.1; font-weight:850;
+}
+.scene[data-story=juanMariaDulcesPlato] .nombre-mesa-dulces.maria {
+  left:87.7%; background:#f9eaff; color:#713384;
+}

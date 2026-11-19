@@ -7,7 +7,7 @@ const arteSituaciones={
   busBoard:["autobus-cenital","pasajero-cenital"],
   busLeave:["autobus-cenital","pasajero-cenital"],
   danielGlobosParque:["parque","globo"],
-  juanMariaDulcesPlato:["dulces","confite"],
+  juanMariaDulcesPlato:["dulces-mesa","confite"],
   aulaPupitresDesocupados:["aula","pupitre"],
   aulaEstudiantesRecreo:["aula","estudiante"],
   aulaLleganEstudiantes:["aula","estudiante"]
