@@ -6,7 +6,13 @@ const url=pathToFileURL(path.resolve('mayor_menor_igual.html')).href;
   if(!localStorage.getItem('signos.celebracion.v1'))localStorage.setItem('signos.celebracion.v1',JSON.stringify({activa:true,sonido:false,duracion:0,tipo:'rotar'}));
   if(!localStorage.getItem('nombreNinoGabrielApps'))localStorage.setItem('nombreNinoGabrielApps','Gabriel');
   window.lecturas=[];speechSynthesis.cancel=()=>{};speechSynthesis.speak=u=>{lecturas.push({texto:u.text,idioma:u.lang});setTimeout(()=>u.onend?.(),20);};
-  window.contextosAudio=0;const Original=window.AudioContext;window.AudioContext=class extends Original{constructor(...a){super(...a);window.contextosAudio++;}};
+  window.contextosAudio=0;window.ruidos=0;window.tonos=0;
+  const Original=window.AudioContext;
+  window.AudioContext=class extends Original{
+   constructor(...a){super(...a);window.contextosAudio++;}
+   createBufferSource(){ruidos++;return super.createBufferSource();}
+   createOscillator(){tonos++;return super.createOscillator();}
+  };
  });
  await p.goto(url);await p.locator('#gameArea.active').waitFor();await p.locator('.configurar-signos').click();await p.selectOption('#cantidadComparaciones','1');await p.locator('#aplicarConfiguracionSignos').click();await p.waitForTimeout(100);await p.clock.install();
  // Actual exercise wins rotate through all four scenes without any console preview.
@@ -35,7 +41,12 @@ const url=pathToFileURL(path.resolve('mayor_menor_igual.html')).href;
     const controles=await p.evaluate(()=>['.activar-escena-signos','.continuar-fiesta-signos','.nueva-ronda-fiesta-signos'].map(s=>({s,...document.querySelector(s).getBoundingClientRect().toJSON()})));
     for(const r of controles)assert.ok(r.left>=0&&r.top>=0&&r.right<=w+1&&r.bottom<=h+1&&r.width>=44&&r.height>=44,JSON.stringify({w,h,zoom,tipo,r}));
     const geometria=await p.locator('.actor-adicional-signos>svg').evaluate(e=>{const b=e.getBBox(),m=e.getScreenCTM(),points=[[b.x,b.y],[b.x+b.width,b.y+b.height]].map(([x,y])=>new DOMPoint(x,y).matrixTransform(m)),r=e.closest('.escena-fiesta-signos').getBoundingClientRect();return {left:points[0].x,top:points[0].y,right:points[1].x,bottom:points[1].y,stage:r.toJSON()};});
-    const g=geometria;assert.ok(g.left>=g.stage.left-2&&g.top>=g.stage.top-2&&g.right<=g.stage.right+2&&g.bottom<=g.stage.bottom+2,JSON.stringify({w,h,zoom,tipo,g}));
+    const g=geometria;
+    assert.ok(g.top>=g.stage.top-2&&g.right<=g.stage.right+2&&g.bottom<=g.stage.bottom+2,JSON.stringify({w,h,zoom,tipo,g}));
+    if(tipo==='tren'){
+     const visible=g.right-g.stage.left;
+     assert.ok(g.left<g.stage.left&&visible>=35&&visible<=g.stage.width*.20&&visible<=(g.right-g.left)*.26,JSON.stringify({w,h,zoom,g}));
+    }else assert.ok(g.left>=g.stage.left-2,JSON.stringify({w,h,zoom,tipo,g}));
     if(zoom===100&&(w===390||w===740))await p.screenshot({path:`.qa-${tipo}-${w===390?'vertical':'horizontal'}.png`});
     if(tipo==='tren'){
      const a=await p.locator('.activar-escena-signos').boundingBox(),inicio={x:a.x+a.width/2,y:a.y+a.height*.3},fin={x:inicio.x,y:inicio.y+a.height*.35};
@@ -43,6 +54,11 @@ const url=pathToFileURL(path.resolve('mayor_menor_igual.html')).href;
      assert.notEqual(await p.locator('.brazo-palanca-fiesta').getAttribute('transform'),'rotate(-28 55 82)');await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await p.clock.runFor(50);
     }else await p.locator('.activar-escena-signos').click();
     assert.equal(await p.locator('.fiesta-signos').getAttribute('data-fase'),'animacion');
+    if(tipo==='tren'){
+     await p.clock.fastForward(3500);await p.clock.runFor(50);
+     const frente=await p.locator('.actor-adicional-signos>svg').evaluate(e=>new DOMPoint(570,0).matrixTransform(e.getScreenCTM()).x);
+     assert.ok(frente>g.stage.left+g.stage.width*.4&&frente<g.stage.right,JSON.stringify({w,h,zoom,frente}));
+    }
     await p.clock.fastForward(9000);await p.clock.runFor(50);assert.ok(await p.locator('.mensaje-fiesta-signos').isVisible());assert.ok(await p.locator('.mensaje-fiesta-signos').evaluate(e=>e.scrollWidth<=e.clientWidth+1&&e.scrollHeight<=e.clientHeight+1));
     // Chromium's native post-drag tap timing uses real time, unlike the animation clock.
     // Check that touch sequence separately below without virtual time.
@@ -54,7 +70,11 @@ const url=pathToFileURL(path.resolve('mayor_menor_igual.html')).href;
  await p.locator('.configurar-signos').click();await p.selectOption('#tipoFiestaSignos','globo');assert.equal(await p.evaluate(()=>JSON.parse(localStorage.getItem('signos.celebracion.v1')).tipo),'rotar');await p.locator('#sonidoFiestaSignos').check();await p.selectOption('#idiomaAplicacion','en');await p.locator('#aplicarConfiguracionSignos').click();await p.waitForFunction(()=>IdiomaVoz.idioma==='en');await p.clock.runFor(100);
  await p.evaluate(()=>FiestaSignos.abrir());assert.equal(await p.locator('.fiesta-signos').getAttribute('data-tipo'),'globo');await p.locator('.continuar-fiesta-signos').click();await p.reload();assert.equal(await p.locator('#tipoFiestaSignos').inputValue(),'globo');
  for(const[tipo,titulo]of[['volcan','Number volcano'],['tren','Happy train'],['globo','Hot-air balloon']]){
-  await p.evaluate(tipo=>{lecturas=[];FiestaSignos.abrir({tipo,nombre:'Marcos'});},tipo);assert.equal(await p.locator('#tituloFiestaSignos').innerText(),titulo);await p.locator('.activar-escena-signos').focus();await p.keyboard.press('Enter');await p.clock.fastForward(9000);await p.clock.runFor(100);assert.equal(await p.evaluate(()=>lecturas.length),1);assert.match(await p.evaluate(()=>lecturas[0].texto),/Marcos/);assert.match(await p.evaluate(()=>lecturas[0].idioma),/^en/);await p.locator('.continuar-fiesta-signos').click();
+  await p.evaluate(tipo=>{lecturas=[];ruidos=0;tonos=0;FiestaSignos.abrir({tipo,nombre:'Marcos'});},tipo);assert.equal(await p.locator('#tituloFiestaSignos').innerText(),titulo);await p.locator('.activar-escena-signos').focus();await p.keyboard.press('Enter');
+  await p.clock.runFor(tipo==='globo'?2250:1650);
+  const [ruidos,tonos]=await p.evaluate(()=>[window.ruidos,window.tonos]);
+  assert.ok(ruidos>=(tipo==='volcan'?6:1)&&tonos>=(tipo==='volcan'?1:4),JSON.stringify({tipo,ruidos,tonos}));
+  await p.clock.fastForward(9000);await p.clock.runFor(100);assert.equal(await p.evaluate(()=>lecturas.length),1);assert.match(await p.evaluate(()=>lecturas[0].texto),/Marcos/);assert.match(await p.evaluate(()=>lecturas[0].idioma),/^en/);await p.locator('.continuar-fiesta-signos').click();
  }
  await p.locator('#boton-pantalla-completa').click();await p.evaluate(()=>FiestaSignos.abrir({tipo:'tren'}));await p.locator('.activar-escena-signos').tap();await p.clock.runFor(1500);await p.setViewportSize({width:768,height:1024});await p.clock.runFor(100);assert.equal(await p.locator('.fiesta-signos').getAttribute('data-fase'),'animacion');await p.keyboard.press('Escape');assert.equal(await p.evaluate(()=>FiestaSignos.activa),false);await p.locator('#boton-pantalla-completa').click();assert.deepEqual(errors,[]);
  const bloqueado=await browser.newPage({viewport:{width:740,height:320},reducedMotion:'reduce'});await bloqueado.route('https://**',r=>r.abort());await bloqueado.addInitScript(()=>{Storage.prototype.getItem=()=>{throw Error('blocked');};Storage.prototype.setItem=()=>{throw Error('blocked');};speechSynthesis.speak=()=>{};speechSynthesis.cancel=()=>{};});await bloqueado.goto(url);

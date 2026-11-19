@@ -15,7 +15,7 @@
     const u=localStorage.getItem(claveUltima);if(tipos.includes(u))ultima=u;
   } catch {}
   let opciones, dialogo, area, canvas, ctx, cohete, llama, cuenta, numero, mensaje, estado, consola, cable, despegar, continuar, nuevaRonda, sonidoBoton, barra, escena;
-  let audio, ruidoMotor;
+  let audio, ruidoMotor, bufferRuido;
   const fuentes = new Set();
   const guardar = () => { try { localStorage.setItem(clave, JSON.stringify(preferencias)); } catch {} };
 
@@ -141,6 +141,7 @@
   }
   function iniciarAnimacion() {
     if (!escena || escena.inicio !== null) return;
+    contextoAudio();
     escena.inicio = performance.now();
     actualizar(0,0); pintar();
     continuar.focus({ preventScroll: true });
@@ -273,32 +274,92 @@
     if (!preferencias.sonido || !escena) return null;
     try { audio ||= new (window.AudioContext || window.webkitAudioContext)(); audio.resume().catch(() => {}); return audio; } catch { return null; }
   }
-  function motor(duracion=3,frecuencia=600) {
+  function reproducirFuente(fuente, destino, { demora=0, duracion, ataque, volumen }) {
+    const inicio = audio.currentTime + demora;
+    const ganancia = audio.createGain();
+    destino.connect(ganancia).connect(audio.destination);
+    ganancia.gain.setValueAtTime(.0001, inicio);
+    ganancia.gain.exponentialRampToValueAtTime(volumen, inicio + ataque);
+    ganancia.gain.exponentialRampToValueAtTime(.0001, inicio + duracion);
+    fuentes.add(fuente);
+    fuente.onended = () => {
+      fuentes.delete(fuente);
+      if (ruidoMotor === fuente) ruidoMotor = null;
+      fuente.disconnect();
+      if (destino !== fuente) destino.disconnect();
+      ganancia.disconnect();
+    };
+    fuente.start(inicio);
+    fuente.stop(inicio + duracion + .02);
+    return fuente;
+  }
+  function ruido(frecuencia, envolvente, frecuenciaFinal=frecuencia) {
+    if (!bufferRuido) {
+      bufferRuido = audio.createBuffer(1, audio.sampleRate, audio.sampleRate);
+      const muestras = bufferRuido.getChannelData(0);
+      for (let i=0; i<muestras.length; i++) muestras[i] = Math.random()*2-1;
+    }
+    const fuente = audio.createBufferSource();
+    const filtro = audio.createBiquadFilter();
+    const inicio = audio.currentTime + (envolvente.demora || 0);
+    fuente.buffer = bufferRuido;
+    fuente.loop = true;
+    filtro.type = 'lowpass';
+    filtro.frequency.setValueAtTime(frecuencia, inicio);
+    filtro.frequency.exponentialRampToValueAtTime(frecuenciaFinal, inicio + envolvente.duracion);
+    fuente.connect(filtro);
+    return reproducirFuente(fuente, filtro, envolvente);
+  }
+  function tono(desde, hasta, envolvente, tipo='sine') {
+    const fuente = audio.createOscillator();
+    const inicio = audio.currentTime + (envolvente.demora || 0);
+    fuente.type = tipo;
+    fuente.frequency.setValueAtTime(desde, inicio);
+    fuente.frequency.exponentialRampToValueAtTime(hasta, inicio + envolvente.duracion);
+    reproducirFuente(fuente, fuente, envolvente);
+  }
+  function motor() {
     if (!contextoAudio() || ruidoMotor) return;
-    // One noise buffer, faded at both ends. No audio nodes are created per frame.
-    const buffer = audio.createBuffer(1, audio.sampleRate, audio.sampleRate), datos = buffer.getChannelData(0);
-    for (let i = 0; i < datos.length; i++) datos[i] = Math.random() * 2 - 1;
-    const s = audio.createBufferSource(), filtro = audio.createBiquadFilter(), g = audio.createGain(), ahora = audio.currentTime;
-    s.buffer = buffer; s.loop = true; filtro.type = 'lowpass'; filtro.frequency.value = frecuencia;
-    s.connect(filtro).connect(g).connect(audio.destination); g.gain.setValueAtTime(.0001, ahora); g.gain.exponentialRampToValueAtTime(.045, ahora + .3); g.gain.exponentialRampToValueAtTime(.0001, ahora + duracion);
-    s.start(); s.stop(ahora + duracion+.05); ruidoMotor = s; fuentes.add(s);
-    s.onended = () => { fuentes.delete(s); if (ruidoMotor === s) ruidoMotor = null; s.disconnect(); filtro.disconnect(); g.disconnect(); };
+    ruidoMotor = ruido(330, {duracion:3, ataque:.24, volumen:.09}, 1600);
+    tono(56, 104, {duracion:2.6, ataque:.2, volumen:.035});
   }
   function campana() {
     if (!contextoAudio()) return;
-    [660, 880, 1100].forEach((f, i) => {
-      const o = audio.createOscillator(), g = audio.createGain(), inicio = audio.currentTime + i * .13;
-      o.connect(g).connect(audio.destination); o.frequency.value = f; g.gain.setValueAtTime(.0001, inicio); g.gain.exponentialRampToValueAtTime(.035, inicio + .02); g.gain.exponentialRampToValueAtTime(.0001, inicio + .55);
-      o.start(inicio); o.stop(inicio + .6); fuentes.add(o); o.onended = () => { fuentes.delete(o); o.disconnect(); g.disconnect(); };
-    });
+    [660, 880, 1100, 1320].forEach((f, i) =>
+      tono(f, f, {demora:i*.12, duracion:.55, ataque:.025, volumen:.035}));
   }
   function pararAudio() { for (const f of fuentes) { try { f.stop(); } catch {} } fuentes.clear(); ruidoMotor = null; }
   function sonarEscena(tipo){
-    if(tipo==='volcan'){motor(1.6,230);return;}if(tipo==='globo'){motor(2,1000);return;}if(tipo==='estrellas'){campana();return;}
-    if(!contextoAudio())return;
-    const o=audio.createOscillator(),g=audio.createGain(),ahora=audio.currentTime,corto=tipo==='ruedas',duracion=corto?.09:.65;
-    o.type='sine';o.frequency.setValueAtTime(corto?100:660,ahora);o.frequency.exponentialRampToValueAtTime(corto?60:920,ahora+duracion);
-    o.connect(g).connect(audio.destination);g.gain.setValueAtTime(.0001,ahora);g.gain.exponentialRampToValueAtTime(corto?.015:.035,ahora+.015);g.gain.exponentialRampToValueAtTime(.0001,ahora+duracion);o.start();o.stop(ahora+duracion+.02);fuentes.add(o);o.onended=()=>{fuentes.delete(o);o.disconnect();g.disconnect();};
+    if (!contextoAudio()) return;
+    switch (tipo) {
+      case 'volcan':
+        ruido(170, {duracion:1.4, ataque:.72, volumen:.11}, 450);
+        break;
+      case 'erupcion':
+        ruido(1750, {duracion:1.8, ataque:.035, volumen:.21}, 160);
+        tono(112, 44, {duracion:.85, ataque:.018, volumen:.12});
+        for (const demora of [.26,.53,.78,1.02]) {
+          ruido(2300, {demora, duracion:.22, ataque:.012, volumen:.075}, 480);
+        }
+        break;
+      case 'tren':
+        for (const [demora, duracion] of [[0,.27],[.36,.59]]) {
+          tono(440, 392, {demora, duracion, ataque:.055, volumen:.05}, 'triangle');
+          tono(554, 494, {demora, duracion, ataque:.055, volumen:.03});
+        }
+        break;
+      case 'ruedas':
+        ruido(700, {duracion:.16, ataque:.018, volumen:.065}, 210);
+        tono(100, 62, {duracion:.12, ataque:.012, volumen:.027});
+        break;
+      case 'globo':
+        ruido(1050, {duracion:1.9, ataque:.3, volumen:.09}, 2200);
+        break;
+      case 'ascenso':
+        [523, 659, 784, 1047].forEach((f, i) =>
+          tono(f, f, {demora:i*.17, duracion:.62, ataque:.045, volumen:.038}, 'triangle'));
+        break;
+    }
   }
   function detenerLectura() { if (escena?.lectura) { window.speechSynthesis?.cancel(); escena.lectura = null; escena.leyendo = false; } }
   function cerrar(enfocar = false) {

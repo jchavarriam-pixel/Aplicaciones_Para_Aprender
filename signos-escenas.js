@@ -64,7 +64,14 @@
    function ajustar(nw,nh){
     w=nw;h=nh;const horizontal=w>h*1.1;
     if(tipo==='volcan'){ancho=Math.min(w*(horizontal?.68:.86),h*1.35,560);alto=ancho*.75;x0=w*(horizontal?.66:.5)-ancho/2;y0=h-alto*.98-8;}
-    else if(tipo==='tren'){ancho=Math.min(w*(horizontal?.6:.94),h*2.1,700);alto=ancho*.4;x0=horizontal?w-ancho-16:(w-ancho)/2;y0=h-alto*.86-17;}
+    else if(tipo==='tren'){
+     ancho=Math.min(w*(horizontal?.6:.94),h*2.1,700);
+     alto=ancho*.4;
+     // The nose ends at x=570 in the 600-unit drawing.
+     const visible=Math.min(w*.19,ancho*.22);
+     x0=visible-ancho*(570/600);
+     y0=h-alto*.86-17;
+    }
     else{alto=Math.min(420,h*.82,w*1.23);ancho=alto*2/3;x0=w*(horizontal?.67:.5)-ancho/2;y0=h-alto*.93-8;}
     actor.style.width=ancho+'px';actor.style.height=alto+'px';
     const d=tipo==='globo'?Math.min(76,Math.max(56,h*.15)):Math.min(106,w*.27,h*.43);
@@ -80,7 +87,8 @@
      if(t>=0&&t<1.4&&!reducido)x+=Math.sin(t*35)*2;
      actor.querySelector('.lava-fiesta').style.opacity=t>=1.4?'1':'.3';
     }else if(tipo==='tren'){
-     const p=limitar((t-.5)/5.8,0,1);x+=p*p*(w+ancho-x0);
+     const p=limitar((t-.5)/5.8,0,1);
+     x+=p*(.45+.55*p)*(w-x0);
      if(!reducido)for(const rueda of actor.querySelectorAll('.rueda-tren-fiesta'))rueda.setAttribute('transform',`rotate(${p*1800} ${rueda.dataset.x} 183)`);
     }else{
      const inflado=t<0?0:limitar(t/2,0,1),sy=.58+.42*inflado,sx=.78+.22*inflado;
@@ -105,9 +113,12 @@
     colocar(t);
     const emite=tipo==='volcan'?t>=1.4&&t<6:tipo==='tren'?t>.5&&t<5.8:t>=2&&t<6.8;
     if(emite){emision+=dt*(reducido?12:tipo==='volcan'?48:35);while(emision>=1){emitir();emision--;}}
-    if(tipo==='volcan'&&t>=1.4&&anteriorSonido<0){anteriorSonido=0;sonar('estrellas');}
-    if(tipo==='tren'&&t<6.3&&Math.floor(t*2)>anteriorSonido){anteriorSonido=Math.floor(t*2);sonar('ruedas');}
-    if(tipo==='globo'&&t>=2&&anteriorSonido<0){anteriorSonido=0;sonar('estrellas');}
+    if(tipo==='volcan'&&t>=1.4&&anteriorSonido<0){anteriorSonido=0;sonar('erupcion');}
+    if(tipo==='tren'&&t>.5&&t<6.3){
+     const pulso=Math.floor((t-.5)*(.9+.42*t));
+     if(pulso>anteriorSonido){anteriorSonido=pulso;sonar('ruedas');}
+    }
+    if(tipo==='globo'&&t>=2&&anteriorSonido<0){anteriorSonido=0;sonar('ascenso');}
     for(const p of particulas){p.vida+=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=p.gravedad*dt;if(!reducido)p.giro+=dt;}
     particulas=particulas.filter(p=>p.vida<p.duracion&&p.y<1.2&&p.x>-.2&&p.x<1.2);
    }
