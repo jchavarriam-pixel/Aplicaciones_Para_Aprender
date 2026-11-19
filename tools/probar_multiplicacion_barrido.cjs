@@ -6,7 +6,7 @@ const path=require('node:path');
 (async()=>{
  const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe'});
  try {
-  const page=await browser.newPage({viewport:{width:1024,height:768},hasTouch:true});
+  const page=await browser.newPage({viewport:{width:1024,height:768},hasTouch:true,isMobile:true});
   const errors=[];
   page.on('pageerror',e=>errors.push(e.message));
   await page.route('https://**',r=>r.abort());
@@ -57,6 +57,10 @@ const path=require('node:path');
     await evento('touchStart',p[0]);await evento('touchMove',p[2]);
     await page.waitForFunction(()=>document.querySelector('[data-nodo="0"]').dataset.cantidad==='3');
     assert.equal(await tamano(1),3);
+    assert.equal(await page.locator('.ficha-barrido').count(),3);
+    const ficha=await page.locator('.ficha-barrido').first().boundingBox();
+    assert.ok(Math.abs(ficha.x+ficha.width/2-p[2].x)<2 && Math.abs(ficha.y+ficha.height/2-p[2].y)<2,
+     'the leading shape remains under the touch even when more shapes are picked up');
     await evento('touchMove',p[3]);
     assert.equal(await tamano(3),1);
     await evento('touchEnd');
@@ -76,6 +80,7 @@ const path=require('node:path');
   await evento('touchStart',p[0]);await evento('touchMove',p[1]);
   await page.waitForFunction(()=>document.querySelector('[data-nodo="0"]').dataset.cantidad==='2');
   await evento('touchCancel');
+  assert.equal(await page.locator('.fantasma-barrido').count(),0);
   await page.waitForFunction(()=>document.querySelector('[data-nodo="0"]').dataset.cantidad==='1');
   await page.evaluate(()=>document.exitFullscreen());
   await page.reload();

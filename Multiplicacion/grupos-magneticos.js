@@ -3,6 +3,15 @@
   'use strict';
   const distancia = (a,b) => Math.hypot(a.x-b.x,a.y-b.y);
   const limitar = (n,a,b) => Math.max(a,Math.min(b,n));
+  function entradaBarrido(punto,inicio,dx,dy,largo,radio) {
+    const x=punto.x-inicio.x,y=punto.y-inicio.y;
+    const proyeccion=(x*dx+y*dy)/largo;
+    const perpendicular2=(x*dy-y*dx)**2/largo;
+    if(perpendicular2>radio*radio)return Infinity;
+    const margen=Math.sqrt((radio*radio-perpendicular2)/largo);
+    const entrada=proyeccion-margen;
+    return proyeccion+margen>=0&&entrada<=1?Math.max(0,entrada):Infinity;
+  }
   function envolvente(puntos) {
     const p=puntos.slice().sort((a,b)=>a.x-b.x||a.y-b.y);
     const giro=(o,a,b)=>(a.x-o.x)*(b.y-o.y)-(a.y-o.y)*(b.x-o.x);
@@ -148,8 +157,9 @@
       const {w,h,tam}=this.mundo,grupos=this.gruposVisibles();if(!w)return;
       const porId=new Map();for(const g of grupos)for(const id of g)porId.set(id,g);
       for(const n of this.nodos){const b=this.botones.get(n.id),g=porId.get(n.id);b.style.left=(n.x/w*100)+'%';b.style.top=(n.y/h*100)+'%';b.classList.toggle('elegida',n.id===this.seleccion);b.classList.toggle('moviendo',!!this.arrastre?.movido&&this.arrastre.ids.includes(n.id));b.classList.toggle('grupo-cerrado',this.ayuda&&g.length===this.cantidad);b.classList.toggle('atraccion',!!this.candidato&&!this.candidato.bloqueado&&this.candidato.destino.includes(n.id));b.dataset.grupo=String(g[0]);b.dataset.cantidad=String(g.length);b.setAttribute('aria-pressed',String(n.id===this.seleccion));b.setAttribute('aria-label',this.nombreFigura+' '+(n.id+1)+(this.ayuda&&g.length===this.cantidad?this.t(', grupo completo',', complete group'):''));b.disabled=this.resuelto||this.movimiento?.tipo==='ajuste';}
+      const d=this.arrastre,levantados=d?.fantasma?new Set(d.ids):null;
       let svg='';
-      if(this.ayuda)for(const g of grupos.filter(g=>g.length===this.cantidad&&!(this.movimiento?.tipo==='ajuste'&&g.some(id=>this.movimiento.ids.includes(id))))){
+      if(this.ayuda)for(const g of grupos.filter(g=>g.length===this.cantidad&&!levantados?.has(g[0])&&!(this.movimiento?.tipo==='ajuste'&&g.some(id=>this.movimiento.ids.includes(id))))){
         const ns=g.map(id=>this.nodos[id]),radio=tam*.64;
         const puntos=ns.flatMap(n=>Array.from({length:12},(_,i)=>({x:limitar(n.x+radio*Math.cos(i*Math.PI/6),2,w-2),y:limitar(n.y+radio*Math.sin(i*Math.PI/6),2,h-2)})));
         const casco=envolvente(puntos);svg+=`<polygon class="marco-completo" points="${casco.map(p=>p.x+','+p.y).join(' ')}"/>`;
@@ -159,7 +169,7 @@
         svg+=`<g class="etiqueta-completo"><rect x="${x-46}" y="${y-10}" width="92" height="20" rx="10"/><text x="${x}" y="${y+4}" text-anchor="middle">${this.t('✓ Completo','✓ Complete')}</text></g>`;
       }
       const visibles=this.calcularEnlaces(grupos);
-      for(const [a,b]of visibles){const p=this.nodos[a],q=this.nodos[b];svg+=`<line class="enlace" data-a="${a}" data-b="${b}" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}"/>`;}
+      for(const [a,b]of visibles){if(levantados?.has(a)||levantados?.has(b))continue;const p=this.nodos[a],q=this.nodos[b];svg+=`<line class="enlace" data-a="${a}" data-b="${b}" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}"/>`;}
       if(this.candidato&&!this.candidato.bloqueado&&this.conexionLibre(this.candidato.a,this.candidato.b)&&!visibles.some(e=>this.cruzanEnlaces([this.candidato.a,this.candidato.b],e))){const {a,b}=this.candidato,p=this.nodos[a],q=this.nodos[b];svg+=`<line class="enlace-propuesto" data-a="${a}" data-b="${b}" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}"/>`;}
       this.svg.innerHTML=svg;
       this.separar.disabled=this.resuelto||this.seleccion===null||!this.enlaces.some(e=>e.includes(this.seleccion));
@@ -190,8 +200,10 @@
       if(!d.movido&&Math.hypot(dx,dy)<5)return;
       if(!d.movido){d.movido=true;this.seleccion=d.nodo;this.autoDesplazar();}
       if(this.metodo==='barrido'){
+        if(!d.fantasma)this.levantarBarrido(d,p);
         this.recogerBarrido(d,p);
         this.moverBarrido(d,p);
+        this.posicionarFantasma(d);
         this.programar();
         return;
       }
@@ -207,13 +219,16 @@
       if(this.ayuda&&d.ids.length>=this.cantidad)return;
       const dx=p.x-inicio.x,dy=p.y-inicio.y,largo=dx*dx+dy*dy;
       if(largo<.01)return;
-      const propios=new Set(d.ids), radio=this.mundo.tam*.67, encuentros=[];
+      const {tam}=this.mundo, radio=tam*.52+Math.min(12,tam*.18);
+      const propios=new Set(d.ids), encuentros=[];
+      const plano=this.plano.getBoundingClientRect(),vista=this.plano.closest('.espacio').getBoundingClientRect();
       for(const grupo of this.componentes()){
         if(grupo.some(id=>propios.has(id)))continue;
         let primero=Infinity;
         for(const id of grupo){
-          const n=this.nodos[id], t=limitar(((n.x-inicio.x)*dx+(n.y-inicio.y)*dy)/largo,0,1);
-          if(Math.hypot(n.x-inicio.x-dx*t,n.y-inicio.y-dy*t)<=radio)primero=Math.min(primero,t);
+          const n=this.nodos[id],x=plano.left+n.x,y=plano.top+n.y;
+          if(x<vista.left||x>vista.right||y<vista.top||y>vista.bottom)continue;
+          primero=Math.min(primero,entradaBarrido(n,inicio,dx,dy,largo,radio));
         }
         if(primero<Infinity)encuentros.push({grupo,primero});
       }
@@ -235,6 +250,7 @@
         d.ids=ids;
         d.recogidos.push(...grupo);
       }
+      if(d.ids.length!==propios.size)this.pintarFantasma(d,p);
     }
     plantillaBarridoLibre(d,ids,p) {
       const puntos=d.relativos.map(q=>({...q})), paso=this.mundo.tam*1.18;
@@ -252,13 +268,66 @@
       }
       return ids.map(id=>puntos.find(q=>q.id===id));
     }
-    moverBarrido(d,p) {
-      const m=this.mundo.tam*.55, ns=d.relativos, n=d.antes.nodos[d.nodo];
-      const x=limitar(n.x+p.x-d.inicio.x,m-Math.min(...ns.map(q=>q.x)),this.mundo.w-m-Math.max(...ns.map(q=>q.x)));
-      const y=limitar(n.y+p.y-d.inicio.y,m-Math.min(...ns.map(q=>q.y)),this.mundo.h-m-Math.max(...ns.map(q=>q.y)));
+    levantarBarrido(d,p) {
+      const fantasma=document.createElement('div');
+      fantasma.className='fantasma-barrido';
+      fantasma.setAttribute('aria-hidden','true');
+      fantasma.style.setProperty('--tam-ficha',this.mundo.tam+'px');
+      d.fantasma=fantasma;
+      d.enlacesFantasma=document.createElementNS('http://www.w3.org/2000/svg','svg');
+      d.clones=new Map();
+      fantasma.append(d.enlacesFantasma);
+      document.body.append(fantasma);
+      this.posicionarFantasma(d);
+      this.pintarFantasma(d,p,true);
+    }
+    posicionarFantasma(d) {
+      d.fantasma.style.left=d.clienteX+'px';
+      d.fantasma.style.top=d.clienteY+'px';
+    }
+    pintarFantasma(d,p,inicial=false) {
+      const nodos=[];
+      for(const q of d.relativos){
+        nodos[q.id]=q;
+        let ficha=d.clones.get(q.id);
+        if(!ficha){
+          ficha=document.createElement('span');
+          ficha.className='ficha-barrido';
+          ficha.innerHTML=this.svgFigura(this.nodos[q.id]);
+          ficha.style.left=(inicial?q.x:this.nodos[q.id].x-p.x)+'px';
+          ficha.style.top=(inicial?q.y:this.nodos[q.id].y-p.y)+'px';
+          d.fantasma.append(ficha);
+          d.clones.set(q.id,ficha);
+        }
+      }
+      if(!inicial){
+        cancelAnimationFrame(d.acomodarFantasma);
+        // El primer fotograma muestra la ficha en su sitio y el siguiente la
+        // atrae hacia el grupo, como en la recogida de Restar quitando.
+        d.acomodarFantasma=requestAnimationFrame(()=>{
+          d.acomodarFantasma=requestAnimationFrame(()=>{
+            for(const {id,x,y} of d.relativos)Object.assign(d.clones.get(id).style,{left:x+'px',top:y+'px'});
+          });
+        });
+      }
+      const enlaces=this.calcularEnlaces([d.ids],nodos);
+      d.enlacesFantasma.innerHTML=enlaces.map(([i,j])=>{
+        const a=nodos[i],b=nodos[j];
+        return `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}"/>`;
+      }).join('');
+      d.fantasma.classList.toggle('completo',this.ayuda&&d.ids.length===this.cantidad);
+    }
+    moverBarrido(d,{x,y},ajustar=false) {
+      const ns=d.relativos;
+      if(ajustar){
+        const m=this.mundo.tam*.55;
+        x=limitar(x,m-Math.min(...ns.map(q=>q.x)),this.mundo.w-m-Math.max(...ns.map(q=>q.x)));
+        y=limitar(y,m-Math.min(...ns.map(q=>q.y)),this.mundo.h-m-Math.max(...ns.map(q=>q.y)));
+      }
       for(const q of ns)Object.assign(this.nodos[q.id],{x:x+q.x,y:y+q.y});
     }
     soltarBarrido(d) {
+      this.moverBarrido(d,d.anterior,true);
       const unidos=new Set(d.ids), grupos=this.componentes().filter(g=>!g.some(id=>unidos.has(id))).concat([d.ids]);
       const enlaces=this.calcularEnlaces(grupos);
       const colision=this.nodos.some(n=>!unidos.has(n.id)&&d.ids.some(id=>distancia(n,this.nodos[id])<this.mundo.tam*1.04));
@@ -282,7 +351,7 @@
     autoDesplazar() {
       cancelAnimationFrame(this.scrollRaf);
       const paso=()=>{const d=this.arrastre;if(!d?.movido)return;const s=this.plano.closest('.espacio'),r=s.getBoundingClientRect();
-        if(d.clienteX>=r.left&&d.clienteX<=r.right){const v=d.clienteY>r.bottom-35?Math.min(11,(d.clienteY-r.bottom+35)/3):d.clienteY<r.top+35?-Math.min(11,(r.top+35-d.clienteY)/3):0;if(v){s.scrollTop+=v/(parseFloat(getComputedStyle(document.body).zoom)||1);this.mover({pointerId:d.id,clientX:d.clienteX,clientY:d.clienteY,preventDefault(){}});}}
+        if(d.clienteX>=r.left&&d.clienteX<=r.right){const v=d.clienteY>r.bottom-35?Math.min(11,(d.clienteY-r.bottom+35)/3):d.clienteY<r.top+35?-Math.min(11,(r.top+35-d.clienteY)/3):0;if(v){const anterior=s.scrollTop;s.scrollTop+=v/(parseFloat(getComputedStyle(document.body).zoom)||1);if(s.scrollTop!==anterior)this.mover({pointerId:d.id,clientX:d.clienteX,clientY:d.clienteY,preventDefault(){}});}}
         this.scrollRaf=requestAnimationFrame(paso);};this.scrollRaf=requestAnimationFrame(paso);
     }
     buscar(ids) {
@@ -415,7 +484,7 @@
       if(cambio)this.recordar(d.antes);this.actualizar(unido);
       if(unido)this.notificarGrupo(d.nodo);else if(cambio&&!candidato?.bloqueado)this.deslizar(d);
     }
-    liberar(){const d=this.arrastre;this.arrastre=null;this.candidato=null;cancelAnimationFrame(this.scrollRaf);if(d)try{d.origen.releasePointerCapture(d.id);}catch{};}
+    liberar(){const d=this.arrastre;this.arrastre=null;this.candidato=null;cancelAnimationFrame(this.scrollRaf);if(!d)return;cancelAnimationFrame(d.acomodarFantasma);d.fantasma?.remove();try{d.origen.releasePointerCapture(d.id);}catch{}}
     cancelar(){this.detenerMovimiento();if(this.arrastre){const antes=this.arrastre.antes;this.liberar();this.restaurarPosiciones(antes);this.programar();}}
     restaurarPosiciones(antes){for(const n of antes.nodos)if(this.nodos[n.id])Object.assign(this.nodos[n.id],{x:n.x,y:n.y});}
     tocar(id) {

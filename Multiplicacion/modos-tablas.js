@@ -5,6 +5,11 @@
   const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
   const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
   const t=(es,en)=>IdiomaVoz.idioma==='en'?en:es;
+  const coloresPareo=[
+    '#304ac0','#b62959','#21865c','#a2520c','#7436a8','#0f7188',
+    '#ac342d','#427bd0','#677015','#9d3498','#006f63','#955a2d',
+    '#7f2854','#284b83','#428636','#943d65','#4d547c','#8e4c06'
+  ];
   const defaults={cantidad:6,porPagina:1,tablas:[2,3,4,5],minFactor:1,maxFactor:10,sobrantes:false,cantidadSobrantes:2,ladoSobrantes:'derecha',tipo:'producto',posicionFactor:'variado',opciones:3,sonidos:true};
   function sanitize(value){
     const c={...defaults,...value};
@@ -95,15 +100,27 @@
     }
     refrescarPareo(){
       for(const b of this.root.querySelectorAll('[data-match]')){b.classList.toggle('match-elegida',this.seleccion?.id===b.dataset.match);b.setAttribute('aria-pressed',String(this.seleccion?.id===b.dataset.match));b.classList.remove('match-bien','match-mal','match-unida');b.disabled=this.resuelto;
-        const l=b.dataset.side==='left'?(this.links.has(b.dataset.match)?b.dataset.match:null):[...this.links].find(([,r])=>r===b.dataset.match)?.[0];if(l){b.classList.add('match-unida');if(this.estados[l])b.classList.add(this.estados[l]==='bien'?'match-bien':'match-mal');}
+        const l=b.dataset.side==='left'?(this.links.has(b.dataset.match)?b.dataset.match:null):[...this.links].find(([,r])=>r===b.dataset.match)?.[0];
+        const idColor=b.dataset.side==='left'?b.dataset.match:l;
+        b.style.setProperty('--color-pareo',idColor?this.colorPareo(idColor):'');
+        if(l){b.classList.add('match-unida');if(this.estados[l])b.classList.add(this.estados[l]==='bien'?'match-bien':'match-mal');}
       }
       $('#progresoTablas').textContent=this.links.size+' / '+this.necesarios;$('#deshacerPareo').disabled=!this.historial.length||this.revisando||this.resuelto;this.dibujarPareo();$('#revisar').disabled=this.revisando||this.resuelto;
+    }
+    colorPareo(id) {
+      const index=this.left.findIndex(p=>p.id===id);
+      return index<0?'#625bb4':coloresPareo[index%coloresPareo.length];
     }
     punto(id,viewport=false){const r=this.root.querySelector(`[data-match="${id}"] .punto-vuelo`)?.getBoundingClientRect(),b=$('#pareoTablas')?.getBoundingClientRect();if(!r||!b)return null;return{x:r.x+r.width/2-(viewport?0:b.x),y:r.y+r.height/2-(viewport?0:b.y)};}
     dibujarPareo(){
       const board=$('#pareoTablas'),svg=$('#lineasTablas');if(!this.activo||this.modo!=='pareo'||!board||!svg)return;const rect=board.getBoundingClientRect();svg.setAttribute('viewBox',`0 0 ${rect.width} ${rect.height}`);let html='';
-      for(const[l,r]of this.links){const a=this.punto(l),b=this.punto(r),mid=(a.x+b.x)/2;html+=`<path data-link="${l}" class="match-linea ${this.estados[l]||''}" d="M${a.x},${a.y} C${mid},${a.y} ${mid},${b.y} ${b.x},${b.y}"/>`;}
-      if(this.drag?.tipo==='match'&&this.drag.movido){const a=this.punto(this.drag.key),b={x:this.drag.x-rect.x,y:this.drag.y-rect.y},mid=(a.x+b.x)/2;html+=`<path class="match-temporal" d="M${a.x},${a.y} C${mid},${a.y} ${mid},${b.y} ${b.x},${b.y}"/>`;}
+      for(const[l,r]of this.links){const a=this.punto(l),b=this.punto(r),mid=(a.x+b.x)/2;html+=`<path data-link="${l}" class="match-linea ${this.estados[l]||''}" style="--color-pareo:${this.colorPareo(l)}" d="M${a.x},${a.y} C${mid},${a.y} ${mid},${b.y} ${b.x},${b.y}"/>`;}
+      const d=this.drag;
+      if(d?.tipo==='match'&&d.movido){
+        const a=this.punto(d.key),b={x:d.x-rect.x,y:d.y-rect.y},mid=(a.x+b.x)/2;
+        const origen=d.side==='left'?d.key:document.elementFromPoint(d.x,d.y)?.closest('[data-side="left"]')?.dataset.match;
+        html+=`<path class="match-temporal" style="--color-pareo:${this.colorPareo(origen)}" d="M${a.x},${a.y} C${mid},${a.y} ${mid},${b.y} ${b.x},${b.y}"/>`;
+      }
       svg.innerHTML=html;
     }
     elegirMatch(id,side){
