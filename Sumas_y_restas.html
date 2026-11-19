@@ -223,7 +223,7 @@
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
   <link rel="stylesheet" href="panel-ancho-ajustable.css?v=20261118-1">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-operaciones.css?v=casillas-1"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="signos-celebraciones.css?v=20261118-5"><link rel="stylesheet" href="signos-escenas.css?v=20261118-1"><script>window.IDIOMA_VOZ_APP='operaciones';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-operaciones-textos.js?v=globos-1"></script><script src="idioma-voz.js"></script><script src="matematicas-base.js"></script></head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-operaciones.css?v=paleta-1"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="signos-celebraciones.css?v=20261118-5"><link rel="stylesheet" href="signos-escenas.css?v=20261118-1"><script>window.IDIOMA_VOZ_APP='operaciones';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-operaciones-textos.js?v=globos-1"></script><script src="idioma-voz.js"></script><script src="matematicas-base.js"></script></head>
 <body>
   <div class="app-wrapper" id="app">
     <audio id="bgMusic" loop preload="auto"><source src="data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQIAAAAAAAA=" type="audio/wav"></audio>
@@ -415,16 +415,16 @@
 
     const defaultConfig = {
       game_title: 'Sumas y restas',
-      background_color: '#d6f5ee',
-      surface_color: '#f3fcfa',
-      text_color: '#193c4c',
-      primary_color: '#08786b',
+      background_color: '#e9e5ff',
+      surface_color: '#f7f8ff',
+      text_color: '#24335c',
+      primary_color: '#4b54c6',
       accent_color: '#f59e0b'
     };
 
     function applyConfig(c) {
       document.getElementById('gameTitle').textContent = c.game_title || defaultConfig.game_title;
-      document.body.style.background = `linear-gradient(135deg, ${c.background_color || defaultConfig.background_color}, #deedff 62%, #fff1d5)`;
+      document.body.style.background = `linear-gradient(135deg, ${c.background_color || defaultConfig.background_color}, #e3efff 62%, #fff2d9)`;
       document.querySelectorAll('.board').forEach(el => el.style.background = c.surface_color || defaultConfig.surface_color);
       document.querySelectorAll('.digit-cell').forEach(el => el.style.color = c.text_color || defaultConfig.text_color);
     }
