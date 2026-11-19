@@ -110,3 +110,133 @@
 @media(max-height:360px) and (orientation:landscape){.corta [data-modo=seleccion] .enunciado-examen{font-size:calc(15*var(--u));line-height:1.25}.corta [data-modo=seleccion] .opcion-tabla{font-size:calc(17*var(--u));padding-top:calc(3*var(--u));padding-bottom:calc(3*var(--u));min-height:calc(30*var(--u))}}
 .vertical.baja .actividad[data-actividad=seleccion]>.reto h2{display:none}.vertical.baja .actividad[data-actividad=seleccion]>.reto:has(#configurarModo[hidden]){min-height:0}.vertical.baja [data-modo=seleccion] .pregunta-tablas>header{display:none}.vertical.baja [data-modo=seleccion] .enunciado-examen{font-size:calc(18*var(--u));line-height:1.3}.vertical.baja [data-modo=seleccion] .opcion-tabla{font-size:calc(20*var(--u));padding:calc(3*var(--u)) calc(6*var(--u));min-height:calc(36*var(--u))}.vertical.baja [data-modo=seleccion] .opciones-tablas{gap:calc(5*var(--u))}
 @media(max-height:360px) and (orientation:landscape){.corta [data-modo=seleccion] .pregunta-tablas{gap:calc(4*var(--u));padding:calc(4*var(--u))}}
+
+/* Colores del catálogo y de los cinco tableros. */
+:root {
+  --tinta: #26235c;
+  --violeta-marca: #5734bc;
+  --azul-accion: #304ed0;
+  --miel: #ffd473;
+  --acierto-fondo: #b9f1d3;
+  --acierto-borde: #25865a;
+  --error-fondo: #ffe1d7;
+  --error-borde: #b9543a;
+  color: var(--tinta);
+  background: #e1e8ff;
+}
+body {
+  background:
+    radial-gradient(ellipse at 92% 10%, #ffd36e75, transparent 37%),
+    linear-gradient(138deg, #b1e4ff, #d9d1ff 56%, #ffe0ec);
+}
+:is([data-modo="filas"], [data-actividad="filas"]) {
+  --tema: #235cb2; --tema-luz: #b5e3ff; --tema-fondo: #e0f3ff; --tema-borde: #6799e0;
+}
+:is([data-modo="grupos"], [data-actividad="grupos"]) {
+  --tema: #116d62; --tema-luz: #a4ead7; --tema-fondo: #dffaf0; --tema-borde: #4bbba7;
+}
+:is([data-modo="pareo"], [data-actividad="pareo"]) {
+  --tema: #905111; --tema-luz: #ffdc8b; --tema-fondo: #fff0ca; --tema-borde: #dca042;
+}
+:is([data-modo="completar"], [data-actividad="completar"]) {
+  --tema: #6133ab; --tema-luz: #ddc2ff; --tema-fondo: #f0e4ff; --tema-borde: #a479d8;
+}
+:is([data-modo="seleccion"], [data-actividad="seleccion"]) {
+  --tema: #982760; --tema-luz: #ffc2dc; --tema-fondo: #ffe8f4; --tema-borde: #df77ab;
+}
+.elegir-modo > h2 { color: #32247d; }
+.tarjetas-modos > button[data-modo] {
+  background:
+    radial-gradient(circle at 100% 0%, #fff8 0 12%, transparent 12.4%),
+    linear-gradient(140deg,var(--tema-luz),var(--tema-fondo) 78%);
+  border-color: var(--tema-borde);
+  box-shadow: 0 calc(4 * var(--u)) 0 color-mix(in srgb,var(--tema) 23%,transparent);
+}
+.tarjetas-modos > button[data-modo]:hover { border-color: var(--tema); }
+.tarjetas-modos strong { color: var(--tema); }
+.tarjetas-modos button > span:last-child { color: #383458; }
+.tarjetas-modos .icono-modo { border-color: var(--tema-borde); background: #fff9; }
+
+#cabeceraInicio, #herramientas {
+  background:
+    radial-gradient(circle at 95% 4%, #ffffff23 0 10%, transparent 10.5%),
+    radial-gradient(circle at 8% 94%, #51dded61 0 13%, transparent 13.5%),
+    linear-gradient(153deg,#342789,#6241c5 53%,#2663bc);
+  border-color: #4a42aa;
+}
+#cabeceraInicio .marca-multiplicacion h1, #cabeceraInicio .nombre { color: #fff; }
+#cabeceraInicio #emblemaMultiplicacion { background: #f9f2ff; border-radius: calc(12 * var(--u)); }
+#cabeceraInicio .casa, #herramientas .casa { background: #fff3c9; color: #5b3685; }
+#cabeceraInicio .nombre input, #herramientas .nombre input {
+  background: #fff; color: #352479; border-color: #ad9ce4;
+}
+#herramientas > .cabecera { background: #eee7ff; border-color: #c5b0fb; }
+#herramientas .guia { background: #ffe6a1; border-color: #e0a948; color: #614114; }
+#herramientas .guia h2 { color: #63360b; }
+#volverModos { background: #dce9ff; border-color: #8cb4f4; color: #2c4287; }
+#herramientas #configurar, #configurarModo { background: #fae5ff; border-color: #d1a8ed; color: #63368a; }
+#herramientas #nueva, #flotantes #nueva { background: var(--miel); border-color: #e4a53e; color: #52340e; }
+#ayudas button { background: #eee5fe; border-color: #c1aeec; color: #473382; }
+#ayudas #contarArreglo { background: #cef1ff; border-color: #82bfdc; color: #205489; }
+
+.actividad {
+  border-color: var(--tema-borde,#94a8ed);
+  background: linear-gradient(160deg,var(--tema-fondo,#edf0ff),#fff 56%);
+}
+.reto h2 { color: var(--tema,#3d2f86); }
+.espacio { background: var(--tema-fondo,#eef1ff); }
+#arreglo {
+  background: linear-gradient(150deg,#effaff,#d7ecff);
+  border-color: #81aade;
+}
+.barra-magnetica { background: #c8f1e5; }
+.barra-magnetica p { color: #175f58; }
+.acciones-magneticas button { color: #195f6b; border-color: #79c8bb; }
+.plano-magnetico {
+  border-color: #69b9ad;
+  background-color: #effdf6;
+  background-image: radial-gradient(#60a99e85 calc(.8 * var(--u)), transparent calc(1 * var(--u)));
+}
+.enlace { stroke: #227e77; }
+.enlace-propuesto { stroke: #673bc2; }
+.marco-completo { fill: #a3edc47a; stroke: #21845e; }
+.etiqueta-completo rect { fill: #b4f0ce; stroke: #27845c; }
+.etiqueta-completo text { fill: #155735; }
+.nodo-magnetico.moviendo { background: #f2e6ffcf; border-color: #784bd1; }
+.resolucion { background: linear-gradient(130deg,#dfd5ff,#e1eeff); }
+.ecuacion .casilla { color: #302674; border-color: #9584ce; }
+.ecuacion .casilla.activa { border-color: #6142c5; box-shadow: 0 0 0 calc(3 * var(--u)) #a388ff65; }
+#tamanoDado { background: #c2e6ff; border-color: #6d9fdf; color: #244995; }
+.entrada-respuesta .cifra { background: #ffe3a2; border-color: #d7aa55; color: #5b3d14; }
+.entrada-respuesta .cifra:nth-child(3n+2) { background: #d3e7ff; border-color: #87aef0; color: #2c4584; }
+.entrada-respuesta .cifra:nth-child(3n) { background: #ecd8ff; border-color: #c1a2e5; color: #603d93; }
+.borrar-numero { background: #ffe5ed; border-color: #edb8d0; color: #803655; }
+.principal { background: var(--azul-accion); color: #fff; border-color: #283eb0; }
+.principal:hover { background: #243ab5; border-color: #243ab5; }
+
+.match-left { background: #dceaff; border-color: #7fa5e7; }
+.match-right { background: #ffedbd; border-color: #e0ad54; }
+.match-left .match-celda:not(.match-bien,.match-mal) { border-color: #7c9ddd; }
+.match-right .match-celda:not(.match-bien,.match-mal) { border-color: #d2a24b; }
+.match-linea { stroke: #625bb4; }
+.pregunta-tablas { background: #ffffffd9; border-color: var(--tema-borde,#ab9ed9); }
+.pregunta-tablas > header { color: #4a4973; }
+.tablas-casilla:not(.bien,.mal,.vacia) { background: #f3e6ff; border-color: #8463c9; color: #563095; }
+.banco-tablas { background: #ffefc8; border-color: #d9a655; }
+.ficha-tabla:not(.usada) { background: #ffe2a0; border-color: #c9953d; color: #66400c; }
+.ficha-tabla:not(.usada):nth-child(2n) { background: #e5d7ff; border-color: #ad8fda; color: #50377f; }
+.ficha-tabla.elegida:not(.usada) { background: #ffc95d; border-color: #9b641b; }
+.opcion-tabla:not(.bien,.mal) { background: #fff1f8; border-color: #e1a1c0; color: #78335e; }
+.opcion-tabla[aria-checked=true]:not(.bien,.mal) { background: #f6afd4; border-color: #a83f7b; }
+.opcion-letra { background: #edc5ed; color: #752a67; }
+.opcion-tabla[aria-checked=true] .opcion-letra { background: #863975; }
+:is(.match-bien,.tablas-casilla.bien,.opcion-tabla.bien) { background: var(--acierto-fondo); border-color: var(--acierto-borde); color: #185437; }
+:is(.match-mal,.tablas-casilla.mal,.opcion-tabla.mal) { background: var(--error-fondo); border-color: var(--error-borde); color: #813c28; }
+.match-linea.bien { stroke: var(--acierto-borde); }
+.match-linea.mal { stroke: var(--error-borde); }
+#configuracion { background: #f5f0ff; border-color: #7957c9; }
+#configuracion header h2 { color: #46278b; }
+#configuracion fieldset { background: #fff; border-color: #b7a4e6; }
+#configuracion fieldset legend { color: #59359e; }
+.elegir-tablas label:has(input:checked) { color: #432784; background: #e0cbff; border-color: #8e5fc9; }
+#configuracion input[type="checkbox"] { accent-color: #673ab7; }
