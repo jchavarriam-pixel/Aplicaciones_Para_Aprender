@@ -72,33 +72,41 @@ footer{text-align:center;color:#59667c;padding:28px 10px 8px;font-weight:700;fon
 </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-solidos.css"><script>window.IDIOMA_VOZ_APP='solidos';try{if(!localStorage.getItem('idiomaVoz.solidos.v1')){let pref;const c=JSON.parse(localStorage.getItem('configModeladorSolidos3D_v1')||'null');if(c)pref={idioma:c.language,voces:{[c.language||'es']:c.voice||''}};if(pref)localStorage.setItem('idiomaVoz.solidos.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js"></script><script src="matematicas-base.js"></script></head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-solidos.css?v=tarjetas-1"><script>window.IDIOMA_VOZ_APP='solidos';try{if(!localStorage.getItem('idiomaVoz.solidos.v1')){let pref;const c=JSON.parse(localStorage.getItem('configModeladorSolidos3D_v1')||'null');if(c)pref={idioma:c.language,voces:{[c.language||'es']:c.voice||''}};if(pref)localStorage.setItem('idiomaVoz.solidos.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
 <body>
-<div class="app-shell">
+<div class="app-shell" data-modo="menu">
   <header class="topbar">
     <div class="brand">
-      <div class="brand-logo">◆</div>
-      <div><h1>Laboratorio de sólidos 3D</h1><small>Explorar, clasificar y aprender</small></div>
+      <h1>Laboratorio de sólidos 3D</h1>
     </div>
-    <div class="student-pill" id="studentPill">👋 ¡Hola!</div>
+    <label class="student-field" for="studentName">Nombre del estudiante
+      <input class="text-full" id="studentName" type="text" maxlength="40" placeholder="Ej.: Gabriel">
+    </label>
     <div class="top-actions">
-      <button class="icon-btn" id="homeBtn" title="Volver al menú">🏠 <span class="home-label">Menú</span></button>
-      <button class="icon-btn" id="settingsBtn" title="Configuración">⚙️</button>
+      <a class="icon-btn" id="homeBtn" href="index.html" title="Aplicaciones" aria-label="Aplicaciones">⌂</a>
     </div>
   </header>
 
-  <nav class="mode-nav" aria-label="Modos de la aplicación">
-    <button class="mode-tab active" data-mode="presentation">🔍 Modo 1: Explorar</button>
-    <button class="mode-tab" data-mode="classification">🧺 Modo 2: Clasificar</button>
-    <button class="mode-tab" data-mode="evaluation">⭐ Modo 3: Evaluación</button>
-  </nav>
-
   <main>
-    <section class="mode-view active" id="mode-presentation">
-      <div class="hero-card">
-        <div><h2>Explorador de sólidos</h2><p>Gire el sólido, cambie sus medidas y descubra sus caras, aristas y vértices.</p></div>
-        <div class="hero-emoji">🧊</div>
-      </div>
+    <div class="encabezado-actividad-solidos" hidden>
+      <span id="nombreModoSolidos"></span>
+      <div id="accionesPlegadasSolidos"></div>
+    </div>
+    <nav class="mode-nav" aria-label="Modos de la aplicación">
+      <button class="mode-tab" data-mode="presentation">
+        <span class="ilustracion-modo ilustracion-explorar" aria-hidden="true"><i class="cubo-ilustrado"></i><i class="giro-ilustrado">⤾</i></span>
+        <span class="texto-modo"><strong>Explorar</strong><span>Gira sólidos y descubre sus partes.</span></span>
+      </button>
+      <button class="mode-tab" data-mode="classification">
+        <span class="ilustracion-modo ilustracion-clasificar" aria-hidden="true"><i class="cilindro-ilustrado"></i><i class="conexion-ilustrada"></i><i class="respuesta-ilustrada">✓</i></span>
+        <span class="texto-modo"><strong>Clasificar</strong><span>Une cada sólido con su nombre.</span></span>
+      </button>
+      <button class="mode-tab" data-mode="evaluation">
+        <span class="ilustracion-modo ilustracion-evaluar" aria-hidden="true"><i class="piramide-ilustrada"></i><i class="vertice-ilustrado"></i><i class="respuesta-ilustrada">5</i></span>
+        <span class="texto-modo"><strong>Evaluación</strong><span>Cuenta caras, aristas o vértices.</span></span>
+      </button>
+    </nav>
+    <section class="mode-view" id="mode-presentation">
       <div class="solid-strip" id="solidStrip"></div>
       <div class="presentation-grid">
         <section class="panel viewer-panel">
@@ -128,7 +136,7 @@ footer{text-align:center;color:#59667c;padding:28px 10px 8px;font-weight:700;fon
     </section>
 
     <section class="mode-view" id="mode-classification">
-      <div class="hero-card"><div><h2>Clasifiquemos los sólidos</h2><p id="classInstruction">Arrastre cada sólido hasta la caja que corresponda.</p></div><div class="hero-emoji">🧺</div></div>
+      <p class="instruccion-pareo-solidos">Arrastre el cohete o toque el cohete y su destino.</p>
       <div class="panel challenge-toolbar"><h3 id="classCriterionTitle">Clasificación por familias</h3><span class="progress-pill" id="classProgress">0 de 0 colocados</span><div class="action-row"><label class="class-satin-toggle"><input type="checkbox" id="classSolidMode"> Sólido satinado</label><button class="secondary" id="newClassBtn">🔄 Nuevo reto</button><button class="success" id="checkClassBtn">✓ Revisar</button><button class="primary hidden" id="nextClassBtn">Siguiente reto ➜</button></div></div>
       <div class="panel matching-board" id="matchingBoard" aria-label="Actividad de pareo de sólidos">
         <svg class="matching-lines" id="matchingLines" aria-hidden="true"></svg>
@@ -138,7 +146,7 @@ footer{text-align:center;color:#59667c;padding:28px 10px 8px;font-weight:700;fon
     </section>
 
     <section class="mode-view" id="mode-evaluation">
-      <div class="hero-card"><div><h2>Reto de caras, aristas y vértices</h2><p id="evalInstruction">Una las figuras con la cantidad correcta.</p></div><div class="hero-emoji">⭐</div></div>
+      <p id="evalInstruction" class="instruccion-pareo-solidos"></p>
       <div class="panel challenge-toolbar"><h3 id="evalCriterionTitle">Cantidad de caras</h3><span class="progress-pill" id="evalProgress">0 de 0 emparejados</span><div class="action-row"><select class="select-full eval-quick-select" id="evalPropertyQuick" aria-label="Propiedad"><option value="faces">Caras</option><option value="edges">Aristas</option><option value="vertices">Vértices</option></select><select class="select-full eval-quick-select" id="evalAnswerModeQuick" aria-label="Tipo de respuesta"><option value="numbers">Números</option><option value="visual">Objetos</option></select><button class="secondary" id="readQuestionBtn">🔊 Leer reto</button><button class="secondary" id="newEvalBtn">🔄 Nuevo reto</button><button class="success" id="checkEvalBtn">✓ Revisar</button><button class="primary hidden" id="nextEvalBtn">Siguiente reto ➜</button></div></div>
       <div class="panel matching-board eval-matching-board" id="evalMatchingBoard" aria-label="Pareo de cantidades">
         <svg class="matching-lines" id="evalMatchingLines" aria-hidden="true"></svg>
@@ -149,25 +157,20 @@ footer{text-align:center;color:#59667c;padding:28px 10px 8px;font-weight:700;fon
     </section>
   </main>
 
-  <footer>Aplicación creada para Gabriel por parte de su familia, con ayuda de la IA.</footer>
 </div>
 
-<button class="corner-control read" id="cornerRead">🔊 Leer</button>
 <button class="corner-control animate" id="cornerAnimate">▶ Animación</button>
 <div class="toast" id="toast"></div>
 
-<div class="modal-backdrop hidden" id="settingsBackdrop" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+<dialog id="settingsBackdrop" aria-labelledby="settingsTitle">
   <div class="settings-modal">
     <div class="settings-head"><div><h2 id="settingsTitle">⚙️ Configuración general</h2><p>Elija los sólidos y la forma de practicar.</p></div><button class="icon-btn" id="closeSettingsBtn" aria-label="Cerrar">✕</button></div>
     <div class="settings-grid">
       <section class="settings-card">
-        <h3>👦 Estudiante y presentación</h3>
-        <div class="field"><label for="studentName">Nombre del estudiante</label><input class="text-full" id="studentName" type="text" maxlength="40" placeholder="Ej.: Gabriel"><small>Se comparte automáticamente con el archivo index.</small></div>
-        <div class="field"><label for="languageSelect">Idioma de la aplicación</label><select class="select-full" id="languageSelect"><option value="es">Español</option><option value="en">English</option></select></div>
+        <h3>Presentación y ayudas</h3>
         <div class="field"><label for="fontSelect">Tipo de letra</label><select class="select-full" id="fontSelect"><option value="rounded">Redondeada y clara</option><option value="comic">Comic Sans</option><option value="hand1">Manuscrita: Segoe Print</option><option value="hand2">Manuscrita: Bradley Hand</option><option value="accessible">Alta legibilidad</option></select></div>
-        <div class="field"><label for="voiceSelect">Voz de lectura</label><select class="select-full" id="voiceSelect"><option value="auto">Automática en español</option></select></div>
-        <div class="toggle-row"><span><strong>Lectura y retroalimentación</strong><small>Usar voz al leer y celebrar.</small></span><label class="switch"><input type="checkbox" id="speechEnabled" checked><span class="slider"></span></label></div>
-        <div class="toggle-row"><span><strong>Mostrar nombre en evaluación</strong><small>Facilita reconocer cada sólido.</small></span><label class="switch"><input type="checkbox" id="showEvalName" checked><span class="slider"></span></label></div>
+        <div class="toggle-row"><span><strong>Lectura y retroalimentación</strong><small>Usar voz al leer y celebrar.</small></span><label class="switch"><input type="checkbox" id="speechEnabled" aria-label="Lectura y retroalimentación" checked><span class="slider"></span></label></div>
+        <div class="toggle-row"><span><strong>Mostrar nombre en evaluación</strong><small>Facilita reconocer cada sólido.</small></span><label class="switch"><input type="checkbox" id="showEvalName" aria-label="Mostrar nombre en evaluación" checked><span class="slider"></span></label></div>
       </section>
       <section class="settings-card">
         <h3>◆ Sólidos que se estudiarán</h3>
@@ -176,7 +179,6 @@ footer{text-align:center;color:#59667c;padding:28px 10px 8px;font-weight:700;fon
       </section>
       <section class="settings-card">
         <h3>🧺 Modo 2: Clasificación</h3>
-        <div class="field"><label for="classCriterion">Criterio de clasificación</label><select class="select-full" id="classCriterion"><option value="family">Familias de sólidos</option><option value="surface">Caras planas o superficie curva</option><option value="vertices">Con vértices o sin vértices</option></select></div>
         <div class="field"><label for="classCount">Cantidad de sólidos: <strong id="classCountLabel">6</strong></label><input id="classCount" type="range" min="3" max="10" value="6" style="width:100%;accent-color:var(--purple)"></div>
       </section>
       <section class="settings-card">
@@ -187,12 +189,14 @@ footer{text-align:center;color:#59667c;padding:28px 10px 8px;font-weight:700;fon
       </section>
     </div>
     <div class="info-note" style="margin-top:14px"><strong>Nota didáctica:</strong> para esta actividad, las superficies curvas del cilindro, cono y esfera se cuentan como caras. Así, el cilindro tiene 3 caras o superficies, el cono 2 y la esfera 1.</div>
-    <div class="settings-footer"><button class="danger" id="resetConfigBtn">Restablecer</button><button class="primary" id="saveSettingsBtn">Guardar y comenzar</button></div>
+    <div id="preferenciasSolidos"></div>
+    <p id="errorAjustesSolidos" role="alert" hidden></p>
+    <div class="settings-footer"><button class="danger" id="resetConfigBtn">Restablecer</button><button class="primary" id="saveSettingsBtn">Aplicar y volver</button></div>
   </div>
-</div>
+</dialog>
 
 <div class="celebration" id="celebration">
-  <div class="celebrate-panel" id="celebratePanel"><canvas id="celebrateCanvas"></canvas><div class="celebrate-copy"><h2>¡Excelente!</h2><p id="celebrateMessage">¡Muy buen trabajo!</p></div><button class="celebrate-close" id="celebrateClose">✕</button></div>
+  <div class="celebrate-panel" id="celebratePanel"><canvas id="celebrateCanvas"></canvas><div class="celebrate-copy"><h2>¡Excelente!</h2><p id="celebrateMessage">¡Muy buen trabajo!</p></div><button class="celebrate-close" id="celebrateClose" aria-label="Cerrar">✕</button></div>
 </div>
 
 <script>
@@ -245,14 +249,10 @@ const ES_EN={
 Object.assign(ES_EN,{"Apariencia del sólido":"Solid appearance","Transparente":"Transparent","Sólido satinado":"Satin solid"});
 function isEnglish(){return state?.config?.language==="en"}
 function tr(es,en=null){return isEnglish()?(en||ES_EN[es]||es):es}
-function translateTree(root=document.body){
-  const lang=state.config.language||"es",pairs=Object.entries(ES_EN).sort((a,b)=>b[0].length-a[0].length),reverse=pairs.map(([es,en])=>[en,es]).sort((a,b)=>b[0].length-a[0].length),walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let node;
-  while(node=walker.nextNode()){let value=node.nodeValue;for(const [from,to] of (lang==="en"?pairs:reverse))value=value.split(from).join(to);node.nodeValue=value}
-}
 function applyLanguage(){
-  const lang=state.config.language||"es";document.documentElement.lang=lang;const data=lang==="en"?SOLIDS_EN:SOLIDS_ES;for(const id of SOLID_ORDER)Object.assign(SOLIDS[id],data[id]);
-  translateTree();
-  $("#languageSelect")&&($("#languageSelect").value=lang);$("#studentName")?.setAttribute("placeholder",lang==="en"?"E.g., Gabriel":"Ej.: Gabriel");fillVoiceSelect();
+  const data=isEnglish()?SOLIDS_EN:SOLIDS_ES;
+  for(const id of SOLID_ORDER)Object.assign(SOLIDS[id],data[id]);
+  IdiomaVoz.localizar();
 }
 const SUCCESS_MESSAGES = [
   "¡Excelente, {name}! Los sólidos quedaron muy bien clasificados.",
@@ -270,7 +270,7 @@ const SUCCESS_MESSAGES = [
 ];
 
 let state = {
-  config:loadConfig(), name:resolveName(), mode:"presentation", currentSolid:"cube",
+  config:loadConfig(), name:resolveName(), mode:"menu", currentSolid:"cube",
   dimensions:{}, showVertices:false, showEdges:false, showFaces:false, autoRotate:false,
   classItems:[], selectedDrag:null, evalQueue:[], evalIndex:0, evalScore:0, evalSelected:null, evalLocked:false
 };
@@ -283,21 +283,10 @@ function loadConfig(){
   }catch{return {...DEFAULT_CONFIG};}
 }
 function resolveName(){
-  const p=new URLSearchParams(location.search);
-  const urlName=["nombre","name","studentName","estudiante","nombreEstudiante"].map(k=>p.get(k)).find(Boolean);
-  const saved=urlName||Matematicas.almacen.getItem(NAME_KEY)||Matematicas.almacen.getItem("nombre_estudiante")||Matematicas.almacen.getItem("studentName")||"";
-  if(urlName) saveName(urlName);
-  return saved.trim();
+  const params=new URLSearchParams(location.search);
+  return (Matematicas.almacen.getItem(NAME_KEY)||params.get("nombre")||"").trim();
 }
-function saveName(name){
-  const clean=(name||"").trim();
-  state && (state.name=clean);
-  Matematicas.almacen.setItem(NAME_KEY,clean);
-  Matematicas.almacen.setItem("nombre_estudiante",clean);
-  Matematicas.almacen.setItem("studentName",clean);
-  Matematicas.almacen.setItem("nombreGabriel",clean);
-}
-function displayName(){return state.name||"estudiante";}
+function displayName(){return state.name||tr("estudiante","student");}
 function personalized(template){return template.replaceAll("{name}",displayName());}
 function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
 function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
@@ -576,36 +565,83 @@ function thumbnailFor(id,params=null){const key=id+JSON.stringify(params||SOLIDS
    UI general y configuración
 ================================================================ */
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-let viewerRenderer,voices=[];
+let viewerRenderer;
 function applyFont(){
   const map={rounded:'"Trebuchet MS",Arial,sans-serif',comic:'"Comic Sans MS","Trebuchet MS",cursive',hand1:'"Segoe Print","Comic Sans MS",cursive',hand2:'"Bradley Hand","Comic Sans MS",cursive',accessible:'Verdana,Arial,sans-serif'};
   document.documentElement.style.setProperty("--app-font",map[state.config.font]||map.rounded);
 }
-function updateStudentUI(){$("#studentPill").textContent=state.name?(isEnglish()?`👋 Hello, ${state.name}!`:`👋 ¡Hola, ${state.name}!`):(isEnglish()?"👋 Hello!":"👋 ¡Hola!");$("#studentName").value=state.name}
-function openSettings(first=false){populateSettings();$("#settingsBackdrop").classList.remove("hidden");$("#closeSettingsBtn").classList.toggle("hidden",first)}
-function closeSettings(){$("#settingsBackdrop").classList.add("hidden");$("#closeSettingsBtn").classList.remove("hidden")}
-function populateSettings(){
-  $("#studentName").value=state.name;$("#languageSelect").value=state.config.language||"es";$("#fontSelect").value=state.config.font;$("#speechEnabled").checked=state.config.speech;$("#showEvalName").checked=state.config.showEvalName;
-  $("#classCriterion").value=state.config.classCriterion;$("#classCount").value=state.config.classCount;$("#classCountLabel").textContent=state.config.classCount;
-  $("#evalProperty").value=state.config.evalProperty||"faces";$("#evalAnswerMode").value=state.config.evalAnswerMode||"numbers";$("#evalCount").value=Math.min(7,state.config.evalCount||5);$("#evalCountLabel").textContent=$("#evalCount").value;
-  $("#solidChecks").innerHTML=SOLID_ORDER.map(id=>`<label class="check-item"><input type="checkbox" value="${id}" ${state.config.selectedSolids.includes(id)?"checked":""}> ${SOLIDS[id].emoji} ${SOLIDS[id].short}</label>`).join("");
-  fillVoiceSelect();
+function updateStudentUI(){if($("#studentName")!==document.activeElement)$("#studentName").value=state.name}
+function populateSettings(config=state.config){
+  for(const [field,key] of Object.entries({fontSelect:"font",classCount:"classCount",evalProperty:"evalProperty",evalAnswerMode:"evalAnswerMode",evalCount:"evalCount"})){
+    $("#"+field).value=config[key];
+  }
+  $("#speechEnabled").checked=config.speech;
+  $("#showEvalName").checked=config.showEvalName;
+  $("#classCountLabel").textContent=$("#classCount").value;
+  $("#evalCountLabel").textContent=$("#evalCount").value;
+  $("#solidChecks").innerHTML=SOLID_ORDER.map(id=>`<label class="check-item"><input type="checkbox" value="${id}" ${config.selectedSolids.includes(id)?"checked":""}> ${SOLIDS[id].emoji} ${SOLIDS[id].short}</label>`).join("");
 }
 function saveSettings(){
-  const selected=$$("#solidChecks input:checked").map(i=>i.value);if(!selected.length){toast("Seleccione al menos un sólido.");return}
-  saveName($("#studentName").value);
-  state.config={selectedSolids:selected,font:$("#fontSelect").value,language:$("#languageSelect").value,voice:$("#voiceSelect").value,speech:$("#speechEnabled").checked,showEvalName:$("#showEvalName").checked,classCriterion:$("#classCriterion").value,classCount:Number($("#classCount").value),classSolidMode:state.config.classSolidMode||false,evalProperty:$("#evalProperty").value,evalAnswerMode:$("#evalAnswerMode").value,evalCount:Number($("#evalCount").value)};
-  Matematicas.almacen.setItem(CONFIG_KEY,JSON.stringify(state.config));applyLanguage();applyFont();updateStudentUI();buildSolidStrip();if(!state.config.selectedSolids.includes(state.currentSolid))state.currentSolid=state.config.selectedSolids[0];selectSolid(state.currentSolid);newClassification();startEvaluation();closeSettings();toast(tr("Configuración guardada.","Settings saved."))
+  const selectedSolids=$$("#solidChecks input:checked").map(input=>input.value);
+  const error=$("#errorAjustesSolidos");
+  if(!selectedSolids.length){
+    error.textContent=tr("Seleccione al menos un sólido.");
+    error.hidden=false;
+    $("#solidChecks input").focus();
+    return;
+  }
+  const previous=state.config;
+  state.config={...previous,selectedSolids,font:$("#fontSelect").value,speech:$("#speechEnabled").checked,
+    showEvalName:$("#showEvalName").checked,classCount:Number($("#classCount").value),
+    evalProperty:$("#evalProperty").value,evalAnswerMode:$("#evalAnswerMode").value,evalCount:Number($("#evalCount").value)};
+  const selectionChanged=previous.selectedSolids.join()!==selectedSolids.join();
+  applyFont();
+  if(selectionChanged){
+    buildSolidStrip();
+    if(!selectedSolids.includes(state.currentSolid))selectSolid(selectedSolids[0]);
+    else buildDimensionControls();
+  }
+  if(state.classItems.length&&(selectionChanged||previous.classCount!==state.config.classCount))newClassification();
+  if(state.evalItems?.length){
+    if(selectionChanged||previous.evalCount!==state.config.evalCount||previous.evalProperty!==state.config.evalProperty)startEvaluation();
+    else if(previous.evalAnswerMode!==state.config.evalAnswerMode)renderEvalAnswers();
+    updateEvaluationNames();
+  }
+  $("#readSolidBtn").hidden=$("#readQuestionBtn").hidden=!state.config.speech;
+  IdiomaVoz.aplicarEdicion();
+  Matematicas.guardar(CONFIG_KEY,state.config);
+  $("#settingsBackdrop").close();
 }
-function resetConfig(){Matematicas.almacen.removeItem(CONFIG_KEY);state.config={...DEFAULT_CONFIG,selectedSolids:[...DEFAULT_CONFIG.selectedSolids]};populateSettings();toast("Configuración restablecida.")}
-function fillVoiceSelect(){
-  voices=speechSynthesis.getVoices().filter(v=>/^(es|en)(-|_)/i.test(v.lang));const sel=$("#voiceSelect"),current=state.config.voice,lang=state.config.language||"es";sel.innerHTML=`<option value="auto">${lang==="en"?"Automatic in English":"Automática en español"}</option>`+voices.map(v=>`<option value="${escapeHtml(v.name)}">${escapeHtml(v.name)} · ${v.lang}</option>`).join("");if([...sel.options].some(o=>o.value===current))sel.value=current;
-}
-function escapeHtml(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
 function speak(text){if(state.config.speech)return IdiomaVoz.hablar(text)}
 function speakReview(text){return new Promise(resolve=>{if(!state.config.speech){resolve();return}const u=IdiomaVoz.hablar(text);if(u)u.onend=u.onerror=resolve;else resolve();});}
-function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("show");clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove("show"),2400)}
-function setMode(mode){state.mode=mode;$$('.mode-tab').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));$$('.mode-view').forEach(v=>v.classList.toggle('active',v.id===`mode-${mode}`));if(mode==='classification'&&!classRenderers.length)buildClassificationRenderers();if(mode==='evaluation'&&!state.evalItems?.length)startEvaluation();setTimeout(()=>{if(mode==='presentation')viewerRenderer?.render(0);if(mode==='evaluation')evalMatchRenderers.forEach(renderer=>renderer.render(0))},30)}
+function toast(msg){const t=$("#toast");t.textContent=tr(msg);t.classList.add("show");clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove("show"),2400)}
+function setMode(mode){
+  if(mode!=="classification"&&classRenderers.length){releaseRenderers(classRenderers);classRenderers=[];}
+  if(mode!=="evaluation"&&evalMatchRenderers.length){releaseRenderers(evalMatchRenderers);evalMatchRenderers=[];}
+  if(mode==="menu")$$(".final-rocket").forEach(rocket=>rocket.remove());
+  state.mode=mode;
+  $(".app-shell").dataset.modo=mode;
+  $(".mode-nav").hidden=mode!=="menu";
+  $$(".mode-view").forEach(view=>view.classList.toggle("active",view.id==="mode-"+mode));
+  if(mode==="classification"){
+    if(!state.classItems.length)newClassification();
+    else if(!classRenderers.length)buildClassificationRenderers();
+  }
+  if(mode==="evaluation"){
+    if(!state.evalItems?.length)startEvaluation();
+    else if(!evalMatchRenderers.length)buildEvalRenderers();
+  }
+}
+function releaseRenderers(renderers){
+  for(const renderer of renderers){
+    renderer.gl?.getExtension("WEBGL_lose_context")?.loseContext();
+    renderer.labelCanvas.remove();
+    renderer.canvas.parentElement?.querySelector(".webgl-fallback")?.remove();
+    const freshCanvas=renderer.canvas.cloneNode(false);
+    freshCanvas.style.removeProperty("display");
+    renderer.canvas.replaceWith(freshCanvas);
+  }
+}
 function spokenSubject(id,params){const name=solidDisplayName(id,params).toLowerCase();if(isEnglish())return `The ${name}`;return `${["sphere","pyramid"].includes(id)?"La":"El"} ${name}`}
 function quantityPhrase(count,feature){if(isEnglish()){const singular={faces:"face or surface",edges:"edge",vertices:"vertex"}[feature],plural={faces:"faces or surfaces",edges:"edges",vertices:"vertices"}[feature];return count===1?`only one ${singular}`:`${count} ${plural}`}const singular={faces:"cara o superficie",edges:"arista",vertices:"vértice"}[feature],plural={faces:"caras o superficies",edges:"aristas",vertices:"vértices"}[feature],article=feature==="vertices"?"un":"una";return count===1?`solo ${article} ${singular}`:`${count} ${plural}`}
 function joinNatural(parts,connector){if(parts.length<2)return parts[0]||"";return parts.slice(0,-1).join(", ")+` ${connector} `+parts[parts.length-1]}
@@ -620,11 +656,12 @@ function screenText(){
    Modo 1: Presentación
 ================================================================ */
 function buildSolidStrip(){
-  const strip=$("#solidStrip");strip.innerHTML=state.config.selectedSolids.map(id=>`<button class="solid-chip ${id===state.currentSolid?"active":""}" data-solid="${id}">${SOLIDS[id].emoji} ${SOLIDS[id].short}</button>`).join("");
-  $$(".solid-chip").forEach(b=>b.onclick=()=>selectSolid(b.dataset.solid));
+  const select=$("#solidStrip");
+  select.replaceChildren(...state.config.selectedSolids.map(id=>new Option(SOLIDS[id].short,id)));
+  select.value=state.currentSolid;
 }
 function selectSolid(id){
-  state.currentSolid=id;$$(".solid-chip").forEach(b=>b.classList.toggle("active",b.dataset.solid===id));$("#viewerTitle").textContent=solidDisplayName(id,state.dimensions[id]);buildDimensionControls();updateViewerMesh();resetFeatureCounts();
+  state.currentSolid=id;$("#solidStrip").value=id;$("#viewerTitle").textContent=solidDisplayName(id,state.dimensions[id]);buildDimensionControls();updateViewerMesh();resetFeatureCounts();
 }
 function updateViewerMesh(){const mesh=createSolidMesh(state.currentSolid,state.dimensions[state.currentSolid]);$("#viewerTitle").textContent=solidDisplayName(state.currentSolid,state.dimensions[state.currentSolid]);viewerRenderer.setMesh(mesh,SOLIDS[state.currentSolid].color);viewerRenderer.show={vertices:state.showVertices,edges:state.showEdges,faces:state.showFaces};updateCounts(mesh);updateSolidInfo(mesh)}
 function resetFeatureCounts(){state.showVertices=state.showEdges=state.showFaces=false;$$(".feature-btn").forEach(b=>b.classList.remove("active"));viewerRenderer.show={vertices:false,edges:false,faces:false};updateCounts(viewerRenderer.mesh)}
@@ -658,8 +695,9 @@ function buildDimensionControls(){
   if(id==="triPrism"||id==="pentPrism")html+=controlRange("Tamaño de la base","radius",.8,1.8,.1,p.radius," u")+controlRange("Longitud","height",1.3,3.5,.1,p.height," u");
   if(id==="octahedron"||id==="dodecahedron")html+=controlRange("Tamaño","size",.9,2.2,.1,p.size," u");
   html+='</div>';const dimensionDock=$("#dimensionControls");dimensionDock.innerHTML=html;dimensionDock.dataset.ranges=dimensionDock.querySelectorAll(".dim-range").length;dimensionDock.dataset.hasSelect=dimensionDock.querySelector("select")?"true":"false";
-  translateTree(dimensionDock);
+  IdiomaVoz.localizar();
   if($("#pyramidSides"))$("#pyramidSides").value=p.sides;
+  for(const option of $$("#prismType option"))option.disabled=!state.config.selectedSolids.includes(option.value);
   $$(".dim-range").forEach(r=>r.oninput=()=>{const key=r.dataset.key;state.dimensions[id][key]=Number(r.value);if(id==="box"){enforceRectangularPrism(state.dimensions.box);$$('.dim-range').forEach(input=>{const value=state.dimensions.box[input.dataset.key];input.value=value;$("#out-"+input.dataset.key).textContent=value.toFixed(1)+" u"})}else $("#out-"+key).textContent=Number(r.value).toFixed(Number(r.step)<1?1:0)+" u";updateViewerMesh()});
   $("#pyramidSides")?.addEventListener("change",e=>{state.dimensions.pyramid.sides=Number(e.target.value);updateViewerMesh()});
   $("#prismType")?.addEventListener("change",e=>selectSolid(e.target.value));
@@ -705,7 +743,7 @@ function randomParams(id){const p={...SOLIDS[id].defaults},vary=(min,max)=>Math.
 function solidDisplayName(id,params){if(id==="pyramid"){const names=isEnglish()?{3:"Pyramid with a triangular base",4:"Pyramid with a square base",5:"Pyramid with a pentagonal base",6:"Pyramid with a hexagonal base"}:{3:"Pirámide de base triangular",4:"Pirámide de base cuadrada",5:"Pirámide de base pentagonal",6:"Pirámide de base hexagonal"};return names[params.sides]}return SOLIDS[id].short}
 function buildClassificationRenderers(){classRenderers=[];$$(".classification-card .mini-solid").forEach(canvas=>{const card=canvas.closest(".classification-card"),id=card.dataset.solid,params=JSON.parse(card.dataset.params),renderer=new GLShapeRenderer(canvas);renderer.setMesh(createSolidMesh(id,params),SOLIDS[id].color);renderer.rotation={x:deg(-18),y:deg(28),z:0};renderer.zoom=1.22;renderer.transparent=!state.config.classSolidMode;renderer.show={vertices:false,edges:false,faces:false};classRenderers.push(renderer)})}
 function setClassificationAppearance(solid){state.config.classSolidMode=solid;classRenderers.forEach(renderer=>renderer.transparent=!solid);Matematicas.almacen.setItem(CONFIG_KEY,JSON.stringify(state.config));requestAnimationFrame(renderMatchLines)}
-function pointCenter(el,board){const a=el.getBoundingClientRect(),b=board.getBoundingClientRect();const z=b.width/board.offsetWidth;return {x:(a.left-b.left+a.width/2)/z,y:(a.top-b.top+a.height/2)/z}}
+function pointCenter(el,board){const a=el.getBoundingClientRect(),b=board.querySelector(".matching-lines").getBoundingClientRect();const z=Matematicas.escala();return {x:(a.left-b.left+a.width/2)/z,y:(a.top-b.top+a.height/2)/z}}
 function curvePath(a,b){const bend=Math.max(45,Math.abs(b.x-a.x)*.42);return `M ${a.x} ${a.y} C ${a.x+bend} ${a.y}, ${b.x-bend} ${b.y}, ${b.x} ${b.y}`}
 function renderMatchLines(preview=null){const board=$("#matchingBoard"),svg=$("#matchingLines");if(!board||!svg)return;const w=board.clientWidth,h=board.clientHeight;svg.setAttribute("viewBox",`0 0 ${w} ${h}`);let paths="";Object.entries(state.classMatches||{}).forEach(([targetId,sourceId])=>{const source=$(`.match-source[data-solid="${sourceId}"]`),target=$(`.match-dot[data-solid="${targetId}"]`);if(!source||!target)return;const color=source.dataset.color;paths+=`<path d="${curvePath(pointCenter(source,board),pointCenter(target,board))}" stroke="${color}"/>`});(state.cutMatches||[]).forEach(({targetId,sourceId})=>{const source=$(`.match-source[data-solid="${sourceId}"]`),target=$(`.match-dot[data-solid="${targetId}"]`);if(source&&target)paths+=`<path class="cut" d="${curvePath(pointCenter(source,board),pointCenter(target,board))}"/>`});if(preview){const source=$(`.match-source[data-solid="${preview.sourceId}"]`);if(source)paths+=`<path class="preview" d="${curvePath(pointCenter(source,board),preview)}" stroke="${source.dataset.color}"/>`}svg.innerHTML=paths}
 let flyingRocket=null,lastRocketTrail=0;
@@ -717,15 +755,16 @@ function prepareFireworkAudio(){try{const AudioCtx=window.AudioContext||window.w
 function playFireworkSound(){try{const AudioCtx=window.AudioContext||window.webkitAudioContext;fireworkAudio??=new AudioCtx();const now=fireworkAudio.currentTime,gain=fireworkAudio.createGain(),thump=fireworkAudio.createOscillator(),noise=fireworkAudio.createBufferSource(),filter=fireworkAudio.createBiquadFilter(),buffer=fireworkAudio.createBuffer(1,fireworkAudio.sampleRate*.95,fireworkAudio.sampleRate),data=buffer.getChannelData(0);for(let i=0;i<data.length;i++)data[i]=(Math.random()*2-1)*(1-i/data.length)**.25;thump.type="sine";thump.frequency.setValueAtTime(62,now);thump.frequency.exponentialRampToValueAtTime(18,now+.7);filter.type="lowpass";filter.frequency.value=620;gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.64,now+.018);gain.gain.exponentialRampToValueAtTime(.0001,now+.98);thump.connect(gain);noise.buffer=buffer;noise.playbackRate.value=.62;noise.connect(filter).connect(gain);gain.connect(fireworkAudio.destination);thump.start(now);noise.start(now);thump.stop(now+1);noise.stop(now+.96)}catch{}}
 function playRocketWhistle(){try{const AudioCtx=window.AudioContext||window.webkitAudioContext;fireworkAudio??=new AudioCtx();const now=fireworkAudio.currentTime,osc=fireworkAudio.createOscillator(),gain=fireworkAudio.createGain();osc.type="sine";osc.frequency.setValueAtTime(320,now);osc.frequency.exponentialRampToValueAtTime(940,now+.85);gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.10,now+.08);gain.gain.exponentialRampToValueAtTime(.0001,now+.92);osc.connect(gain).connect(fireworkAudio.destination);osc.start(now);osc.stop(now+.95)}catch{}}
 function matchBurst(target,color,solidId){const box=target.getBoundingClientRect(),x=box.left+box.width/2,y=box.top+box.height/2,colors=[color,"#fff6a8","#ff8ed1","#8de9ff","#ffffff"],shapeMap={sphere:["●"],cube:["■"],box:["▲"],cone:["▲"],pyramid:["▲"]},shapes=shapeMap[solidId]||["◆","▲","●","■","⬟"],sphere=solidId==="sphere",shapeCount=sphere?110:72;playFireworkSound();target.classList.remove("docking");void target.offsetWidth;target.classList.add("docking");setTimeout(()=>target.classList.remove("docking"),650);for(let ring=0;ring<4;ring++){const circle=document.createElement("span");circle.className=ring>1?"firework-wave":"firework-ring";circle.style.left=(x-6)+"px";circle.style.top=(y-6)+"px";circle.style.setProperty("--spark-color",colors[ring%colors.length]);document.body.appendChild(circle);setTimeout(()=>circle.remove(),1400)}for(let i=0;i<(sphere?110:78);i++){const spark=document.createElement("span"),angle=Math.PI*2*i/(sphere?110:78)+Math.random()*.15,distance=60+Math.random()*220;spark.className="match-spark";spark.style.left=x+"px";spark.style.top=y+"px";spark.style.setProperty("--spark-color",colors[i%colors.length]);spark.style.setProperty("--spark-x",Math.cos(angle)*distance+"px");spark.style.setProperty("--spark-y",Math.sin(angle)*distance+"px");document.body.appendChild(spark);setTimeout(()=>spark.remove(),1400)}for(let i=0;i<shapeCount;i++){const shape=document.createElement("span"),angle=Math.random()*Math.PI*2,distance=90+Math.random()*(sphere?360:290);shape.className="firework-shape";shape.textContent=shapes[i%shapes.length];shape.style.left=x+"px";shape.style.top=y+"px";shape.style.setProperty("--spark-color",colors[Math.floor(Math.random()*colors.length)]);shape.style.setProperty("--shape-size",(sphere?12+Math.random()*42:14+Math.random()*31)+"px");shape.style.setProperty("--shape-x",Math.cos(angle)*distance+"px");shape.style.setProperty("--shape-y",Math.sin(angle)*distance+"px");shape.style.setProperty("--shape-drop",(sphere?170+Math.random()*460:90+Math.random()*300)+"px");shape.style.setProperty("--shape-rotate",(-720+Math.random()*1440)+"deg");document.body.appendChild(shape);setTimeout(()=>shape.remove(),2500)}}
-function flyMatchedRocket(source,target,color,delay=0){return new Promise(resolve=>setTimeout(()=>{const a=source.getBoundingClientRect(),b=target.querySelector(".match-dot").getBoundingClientRect(),from={x:a.left+a.width/2,y:a.top+a.height/2},to={x:b.left+b.width/2,y:b.top+b.height/2},solidId=source.dataset.solid,bend=Math.max(55,Math.abs(to.x-from.x)*.42),point=t=>{const u=1-t,x=u*u*u*from.x+3*u*u*t*(from.x+bend)+3*u*t*t*(to.x-bend)+t*t*t*to.x,y=u*u*u*from.y+3*u*u*t*from.y+3*u*t*t*to.y+t*t*t*to.y;return{x,y}},rocket=document.createElement("span");source.classList.add("launched");rocket.className="flight-rocket";rocket.textContent="🚀";document.body.appendChild(rocket);playRocketWhistle();let lastTrail=0,start=performance.now();const frame=now=>{const elapsed=now-start,t=clamp(elapsed/1050,0,1),p=point(t);rocket.style.left=p.x+"px";rocket.style.top=p.y+"px";if(now-lastTrail>52){lastTrail=now;const smoke=document.createElement("span");smoke.className="rocket-trail";smoke.style.left=(p.x-10)+"px";smoke.style.top=(p.y+9)+"px";smoke.style.setProperty("--trail-color",color);smoke.style.setProperty("--smoke-x",(-8+Math.random()*16)+"px");smoke.style.setProperty("--smoke-y",(8+Math.random()*14)+"px");document.body.appendChild(smoke);setTimeout(()=>smoke.remove(),650)}if(t<1)requestAnimationFrame(frame);else{rocket.remove();matchBurst(target,color,solidId);setTimeout(resolve,2500)}};requestAnimationFrame(frame)},delay))}
+function flyMatchedRocket(source,target,color,delay=0){return new Promise(resolve=>setTimeout(()=>{const a=source.getBoundingClientRect(),b=target.querySelector(".match-dot").getBoundingClientRect(),from={x:a.left+a.width/2,y:a.top+a.height/2},to={x:b.left+b.width/2,y:b.top+b.height/2},solidId=source.dataset.solid,bend=Math.max(55,Math.abs(to.x-from.x)*.42),point=t=>{const u=1-t,x=u*u*u*from.x+3*u*u*t*(from.x+bend)+3*u*t*t*(to.x-bend)+t*t*t*to.x,y=u*u*u*from.y+3*u*u*t*from.y+3*u*t*t*to.y+t*t*t*to.y;return{x,y}},rocket=document.createElement("span");source.classList.add("launched");rocket.className="flight-rocket";rocket.textContent="🚀";document.body.appendChild(rocket);playRocketWhistle();let lastTrail=0,start=performance.now();const frame=now=>{const elapsed=now-start,t=clamp(elapsed/1050,0,1),p=point(t);rocket.style.left=p.x+"px";rocket.style.top=p.y+"px";if(now-lastTrail>52){lastTrail=now;const smoke=document.createElement("span");smoke.className="rocket-trail";smoke.style.left=(p.x-10)+"px";smoke.style.top=(p.y+9)+"px";smoke.style.setProperty("--trail-color",color);smoke.style.setProperty("--smoke-x",(-8+Math.random()*16)+"px");smoke.style.setProperty("--smoke-y",(8+Math.random()*14)+"px");document.body.appendChild(smoke);setTimeout(()=>smoke.remove(),650)}if(t<1)requestAnimationFrame(frame);else{rocket.remove();matchBurst(target,color,solidId);setTimeout(resolve,800)}};requestAnimationFrame(frame)},delay))}
 function launchFinalRocket(){ $$(".final-rocket").forEach(item=>item.remove());const launches=[{left:"25vw",top:"38vh",size:".8",duration:"3.9s",delay:0},{left:"50vw",top:"22vh",size:"1.12",duration:"3.1s",delay:620},{left:"75vw",top:"42vh",size:".88",duration:"4.5s",delay:1280}];launches.forEach(launch=>{const rocket=document.createElement("button");rocket.className="final-rocket";rocket.type="button";rocket.setAttribute("aria-label","Cohete de celebración: tocar para explotar");rocket.textContent="🚀";rocket.style.setProperty("--rocket-left",launch.left);rocket.style.setProperty("--rocket-top",launch.top);rocket.style.setProperty("--rocket-duration",launch.duration);rocket.style.scale=launch.size;rocket.style.animationDelay=`${launch.delay}ms`;document.body.appendChild(rocket);rocket.onclick=()=>{if(rocket.dataset.launched)return;rocket.dataset.launched="true";rocket.style.pointerEvents="none";const box=rocket.getBoundingClientRect(),x=box.left+box.width/2,y=box.top+box.height/2,colors=["#ff5c89","#ffbf4c","#63d8ff","#7be495","#a782ff","#ff91d5","#ffffff"],shapes=["●","■","▲","◆","⬟","⬢"],dim=document.createElement("span");dim.className="firework-dim";document.body.appendChild(dim);setTimeout(()=>dim.remove(),2850);for(let ring=0;ring<4;ring++){const wave=document.createElement("span");wave.className="mega-wave";wave.style.left=(x-11)+"px";wave.style.top=(y-11)+"px";wave.style.setProperty("--spark-color",colors[ring]);wave.style.animationDelay=`${ring*110}ms`;document.body.appendChild(wave);setTimeout(()=>wave.remove(),2200)}matchBurst(rocket,"#ff6a9b","dodecahedron");for(let i=0;i<170;i++){const piece=document.createElement("span"),angle=Math.random()*Math.PI*2,distance=130+Math.random()*Math.max(innerWidth,innerHeight)*.52;piece.className="firework-shape";piece.textContent=shapes[i%shapes.length];piece.style.left=x+"px";piece.style.top=y+"px";piece.style.setProperty("--spark-color",colors[i%colors.length]);piece.style.setProperty("--shape-size",(11+Math.random()*27)+"px");piece.style.setProperty("--shape-x",Math.cos(angle)*distance+"px");piece.style.setProperty("--shape-y",Math.sin(angle)*distance+"px");piece.style.setProperty("--shape-drop",(150+Math.random()*520)+"px");piece.style.setProperty("--shape-rotate",(-900+Math.random()*1800)+"deg");document.body.appendChild(piece);setTimeout(()=>piece.remove(),2500)}rocket.animate([{transform:"translate(-50%,0) rotate(-45deg) scale(1)"},{transform:"translate(-50%,0) rotate(-45deg) scale(1.8)",opacity:0}],{duration:180,easing:"ease-out"});setTimeout(()=>rocket.remove(),180)}})}
-function setMatch(sourceId,targetId){state.classMatches??={};Object.keys(state.classMatches).forEach(id=>{if(state.classMatches[id]===sourceId)delete state.classMatches[id]});state.classMatches[targetId]=sourceId;const source=$(`.match-source[data-solid="${sourceId}"]`),target=$(`.match-target[data-solid="${targetId}"]`);if(source&&target){target.classList.add("matched");target.style.setProperty("--match-color",source.dataset.color);target.querySelector(".match-dot").style.background=source.dataset.color}$$('.match-target').forEach(item=>{if(!state.classMatches[item.dataset.solid]){item.classList.remove("matched");item.style.removeProperty("--match-color");item.querySelector(".match-dot").style.background=""}});renderMatchLines();updateClassProgress()}
-function installMatchPoints(){ $$(".match-source").forEach(source=>{let active=false;source.addEventListener("pointerdown",e=>{if(state.classLocked)return;e.preventDefault();e.stopPropagation();active=true;source.setPointerCapture(e.pointerId);startRocketFlight(e.clientX,e.clientY);const board=$("#matchingBoard"),box=board.getBoundingClientRect();renderMatchLines({sourceId:source.dataset.solid,x:(e.clientX-box.left)/Matematicas.escala(),y:(e.clientY-box.top)/Matematicas.escala()})});source.addEventListener("pointermove",e=>{if(!active)return;moveRocketFlight(e.clientX,e.clientY,source.dataset.color);const box=$("#matchingBoard").getBoundingClientRect();renderMatchLines({sourceId:source.dataset.solid,x:(e.clientX-box.left)/Matematicas.escala(),y:(e.clientY-box.top)/Matematicas.escala()})});source.addEventListener("pointerup",e=>{if(!active)return;active=false;endRocketFlight();const target=document.elementFromPoint(e.clientX,e.clientY)?.closest(".match-target");if(target)setMatch(source.dataset.solid,target.dataset.solid);else renderMatchLines()});source.addEventListener("pointercancel",()=>{active=false;endRocketFlight();renderMatchLines()})})}
+function setMatch(sourceId,targetId){state.classMatches??={};Object.keys(state.classMatches).forEach(id=>{if(state.classMatches[id]===sourceId)delete state.classMatches[id]});state.classMatches[targetId]=sourceId;const source=$(`.match-source[data-solid="${sourceId}"]`),target=$(`.match-target[data-solid="${targetId}"]`);if(source&&target){target.classList.add("matched");target.style.setProperty("--match-color",source.dataset.color);target.querySelector(".match-dot").style.background=source.dataset.color}$$('#matchingBoard .match-target').forEach(item=>{if(!state.classMatches[item.dataset.solid]){item.classList.remove("matched");item.style.removeProperty("--match-color");item.querySelector(".match-dot").style.background=""}});renderMatchLines();updateClassProgress()}
+
 function newClassification(){
-  $$(".final-rocket").forEach(item=>item.remove());const ids=shuffle([...state.config.selectedSolids]).slice(0,5),items=ids.map((id,i)=>({uid:`c-${Date.now()}-${i}`,id,params:randomParams(id)}));shuffle(items);shuffle([...COLORS]).forEach((color,index)=>{if(items[index])items[index].matchColor=color});state.classItems=items;$("#classSolidMode").checked=!!state.config.classSolidMode;
-  $("#classCriterionTitle").textContent=isEnglish()?"Identify each solid":"Identifique cada sólido";$("#classInstruction").textContent=isEnglish()?"Drag each figure to the box with its name. You can also tap a figure and then tap a box.":"Arrastre cada figura a la celda que tiene su nombre. También puede tocar una figura y luego tocar una celda.";
+  releaseRenderers(classRenderers);classRenderers=[];
+  $$(".final-rocket").forEach(item=>item.remove());const ids=shuffle([...state.config.selectedSolids]).slice(0,Number(state.config.classCount)||6),items=ids.map((id,i)=>({uid:`c-${Date.now()}-${i}`,id,params:randomParams(id)}));shuffle(items);shuffle([...COLORS]).forEach((color,index)=>{if(items[index])items[index].matchColor=color});state.classItems=items;$("#classSolidMode").checked=!!state.config.classSolidMode;
+  $("#classCriterionTitle").textContent=isEnglish()?"Identify each solid":"Identifique cada sólido";
   state.classLocked=false;$("#nextClassBtn").classList.add("hidden");state.classMatches={};state.cutMatches=[];$("#solidPool").innerHTML=items.map(cardHTML).join("");$("#dropGrid").innerHTML=shuffle([...ids]).map(id=>`<div class="match-target-row"><article class="match-target" data-solid="${id}"><span class="match-dot" data-solid="${id}"></span><span>${SOLIDS[id].short}</span></article></div>`).join("");
-  if(state.mode==="classification")buildClassificationRenderers();installMatchPoints();requestAnimationFrame(renderMatchLines);updateClassProgress();
+  if(state.mode==="classification")buildClassificationRenderers();installSolidMatching("classification");requestAnimationFrame(renderMatchLines);updateClassProgress();
 }
 function cardHTML(item){const color=item.matchColor||SOLIDS[item.id].color;return `<article class="matching-figure classification-card" data-solid="${item.id}" data-params='${JSON.stringify(item.params)}'><div class="mini-solid-wrap"><canvas class="mini-solid" aria-label="Sólido 3D: arrastre aquí para girar"></canvas></div><span class="match-source" data-solid="${item.id}" data-color="${color}" style="background:${color}"></span><span class="card-name">${solidDisplayName(item.id,item.params)}</span></article>`}
 function categoryEmoji(c){if(c.includes("Prisma"))return"📦";if(c.includes("Pirám"))return"🔺";if(c.includes("redond"))return"⚪";if(c.includes("regulares"))return"💎";if(c.includes("curva"))return"🌈";if(c.includes("planas"))return"🔷";if(c.includes("Sin"))return"⭕";return"🔴"}
@@ -735,7 +774,7 @@ async function checkClassification(){
   if(state.classLocked)return;const total=state.classItems.length;if(Object.keys(state.classMatches||{}).length<total){toast("Empareje todas las figuras antes de revisar.");speak("Primero empareje todas las figuras.");return}
   prepareFireworkAudio();state.classLocked=true;$("#nextClassBtn").classList.add("hidden");state.cutMatches=[];const review=state.classItems.map(item=>{const actualTarget=Object.keys(state.classMatches).find(targetId=>state.classMatches[targetId]===item.id),ok=actualTarget===item.id;return {item,actualTarget,ok}}),good=review.filter(entry=>entry.ok).length;
   for(const entry of review){const {item,actualTarget,ok}=entry,figure=$(`.matching-figure[data-solid="${item.id}"]`),name=solidDisplayName(item.id,item.params);if(ok){const target=$(`.match-target[data-solid="${item.id}"]`),source=$(`.match-source[data-solid="${item.id}"]`),feminine=["sphere","pyramid"].includes(item.id);target.classList.add("correct");figure.classList.add("correct");await speakReview(isEnglish()?`${name} is correct.`:`${name} es ${feminine?"correcta":"correcto"}.`);await flyMatchedRocket(source,target,source?.dataset.color||"#35b96e")}else{const wrongTarget=$(`.match-target[data-solid="${actualTarget}"]`);figure.classList.add("wrong");wrongTarget?.classList.add("wrong");if(actualTarget){state.cutMatches.push({targetId:actualTarget,sourceId:item.id});delete state.classMatches[actualTarget];renderMatchLines()}await speakReview(isEnglish()?`This is ${name}.`:`Es ${name}.`);await new Promise(resolve=>setTimeout(resolve,450))}}
-  $("#nextClassBtn").classList.remove("hidden");const message=good===total?"¡Todos los pareos están correctos! Toque el gran cohete para celebrar.":`${good} de ${total} están correctos. Observe los cables grises y las marcas antes de continuar.`;toast(message);if(good===total)launchFinalRocket()
+  $("#nextClassBtn").classList.remove("hidden");const message=good===total?tr("¡Todos los pareos están correctos! Toque el gran cohete para celebrar.","All matches are correct! Tap the big rocket to celebrate."):isEnglish()?`${good} of ${total} are correct. Look at the gray lines and marks before continuing.`:`${good} de ${total} están correctos. Observe los cables grises y las marcas antes de continuar.`;toast(message);if(good===total)launchFinalRocket()
 }
 
 /* ================================================================
@@ -753,11 +792,11 @@ function evalVisual(value,prop,item){const id=item.id,number=`<strong class="eva
 function buildEvalRenderers(){evalMatchRenderers=[];$$(".eval-figure .mini-solid").forEach(canvas=>{const card=canvas.closest(".eval-figure"),item=state.evalItems.find(x=>x.uid===card.dataset.evalUid),renderer=new GLShapeRenderer(canvas);renderer.setMesh(createSolidMesh(item.id,item.params),SOLIDS[item.id].color);renderer.rotation={x:deg(-18),y:deg(28),z:0};renderer.zoom=1.22;renderer.transparent=true;renderer.show={vertices:false,edges:false,faces:false};evalMatchRenderers.push(renderer)})}
 function renderEvalMatchLines(preview=null){const board=$("#evalMatchingBoard"),svg=$("#evalMatchingLines");if(!board||!svg)return;const w=board.clientWidth,h=board.clientHeight;svg.setAttribute("viewBox",`0 0 ${w} ${h}`);let paths="";Object.entries(state.evalMatches||{}).forEach(([uid,targetId])=>{const source=$(`.eval-source[data-eval-uid="${uid}"]`),target=$(`.eval-dot[data-eval-target="${targetId}"]`);if(source&&target)paths+=`<path d="${curvePath(pointCenter(source,board),pointCenter(target,board))}" stroke="${source.dataset.color}"/>`});if(preview){const source=$(`.eval-source[data-eval-uid="${preview.uid}"]`);if(source)paths+=`<path class="preview" d="${curvePath(pointCenter(source,board),preview)}" stroke="${source.dataset.color}"/>`}svg.innerHTML=paths}
 function setEvalMatch(uid,targetId){state.evalMatches??={};Object.keys(state.evalMatches).forEach(key=>{if(state.evalMatches[key]===targetId)delete state.evalMatches[key]});state.evalMatches[uid]=targetId;const source=$(`.eval-source[data-eval-uid="${uid}"]`),target=$(`.eval-target[data-eval-target="${targetId}"]`);if(source&&target){target.classList.add("matched");target.style.setProperty("--match-color",source.dataset.color);target.querySelector(".eval-dot").style.background=source.dataset.color}$$('.eval-target').forEach(item=>{if(!Object.values(state.evalMatches).includes(item.dataset.evalTarget)){item.classList.remove("matched");item.style.removeProperty("--match-color");item.querySelector(".eval-dot").style.background=""}});renderEvalMatchLines();updateEvalProgress()}
-function installEvalPoints(){$$(".eval-source").forEach(source=>{let active=false;source.addEventListener("pointerdown",e=>{if(state.evalLocked)return;e.preventDefault();active=true;source.setPointerCapture(e.pointerId);startRocketFlight(e.clientX,e.clientY);const box=$("#evalMatchingBoard").getBoundingClientRect();renderEvalMatchLines({uid:source.dataset.evalUid,x:(e.clientX-box.left)/Matematicas.escala(),y:(e.clientY-box.top)/Matematicas.escala()})});source.addEventListener("pointermove",e=>{if(!active)return;moveRocketFlight(e.clientX,e.clientY,source.dataset.color);const box=$("#evalMatchingBoard").getBoundingClientRect();renderEvalMatchLines({uid:source.dataset.evalUid,x:(e.clientX-box.left)/Matematicas.escala(),y:(e.clientY-box.top)/Matematicas.escala()})});source.addEventListener("pointerup",e=>{if(!active)return;active=false;endRocketFlight();const target=document.elementFromPoint(e.clientX,e.clientY)?.closest(".eval-target");if(target)setEvalMatch(source.dataset.evalUid,target.dataset.evalTarget);else renderEvalMatchLines()});source.addEventListener("pointercancel",()=>{active=false;endRocketFlight();renderEvalMatchLines()})})}
+
 function updateEvalProgress(){const total=state.evalItems.length,placed=Object.keys(state.evalMatches||{}).length;$("#evalProgress").textContent=isEnglish()?`${placed} of ${total} matched`:`${placed} de ${total} emparejados`}
-function renderEvalAnswers(){const prop=state.config.evalProperty||"faces";$("#evalAnswerHeading").textContent=state.config.evalAnswerMode==="visual"?(isEnglish()?"Elements":"Elementos"):(isEnglish()?"Numbers":"Números");$("#evalMatchingBoard").classList.toggle("face-pairing",prop==="faces");$("#evalAnswerGrid").innerHTML=(state.evalAnswers||[]).map(answer=>{const description=prop==="faces"?faceDescription(answer.item):prop==="edges"?edgeDescription(answer.item):"";return `<div class="match-target-row"><article class="match-target eval-target ${prop==="faces"?"face-answer":""}" data-eval-target="${answer.id}" data-value="${answer.value}"><span class="match-dot eval-dot" data-eval-target="${answer.id}"></span>${state.config.evalAnswerMode==="visual"?evalVisual(answer.value,prop,answer.item):`<span class="property-number-answer"><strong>${answer.value}</strong>${description?`<small>${description}</small>`:""}</span>`}</article></div>`}).join("");Object.entries(state.evalMatches||{}).forEach(([uid,targetId])=>{const source=$(`.eval-source[data-eval-uid="${uid}"]`),target=$(`.eval-target[data-eval-target="${targetId}"]`);if(source&&target){target.classList.add("matched");target.style.setProperty("--match-color",source.dataset.color);target.querySelector(".eval-dot").style.background=source.dataset.color}});requestAnimationFrame(renderEvalMatchLines)}
-function startEvaluation(){const prop=state.config.evalProperty||"faces",count=Math.min(Number(state.config.evalCount)||5,state.config.selectedSolids.length),items=shuffle([...state.config.selectedSolids]).slice(0,count).map((id,index)=>({uid:`e-${Date.now()}-${index}`,id,params:randomParams(id),color:COLORS[index%COLORS.length]}));state.evalItems=items;state.evalMatches={};state.evalLocked=false;$("#evalPropertyQuick").value=prop;$("#evalAnswerModeQuick").value=state.config.evalAnswerMode||"numbers";$("#evalCriterionTitle").textContent=isEnglish()?`Match the number of ${propertyLabel(prop)}`:`Pareo: número de ${propertyLabel(prop)}`;$("#evalInstruction").textContent=isEnglish()?`Connect each solid with its number of ${propertyLabel(prop)}.`:`Una cada sólido con su cantidad de ${propertyLabel(prop)}.`;$("#evalSolidPool").innerHTML=items.map(item=>`<article class="matching-figure eval-figure" data-eval-uid="${item.uid}"><div class="mini-solid-wrap"><canvas class="mini-solid"></canvas></div><span class="match-source eval-source" data-eval-uid="${item.uid}" data-solid="${item.id}" data-color="${item.color}" style="background:${item.color}"></span></article>`).join("");state.evalAnswers=shuffle(items.map((item,index)=>({id:`a-${index}`,value:countsFor(item.id,item.params)[prop],item})));renderEvalAnswers();$("#evalFeedback").className="feedback-box";$("#evalFeedback").textContent=tr("Una todas las figuras antes de revisar.","Match all figures before checking.");$("#checkEvalBtn").classList.remove("hidden");$("#nextEvalBtn").classList.add("hidden");buildEvalRenderers();installEvalPoints();updateEvalProgress()}
-async function checkEvaluation(){if(state.evalLocked)return;const total=state.evalItems.length;if(Object.keys(state.evalMatches||{}).length<total){toast("Empareje todas las figuras antes de revisar.");return}state.evalLocked=true;const prop=state.config.evalProperty||"faces";let good=0;for(const item of state.evalItems){const targetId=state.evalMatches[item.uid],target=$(`.eval-target[data-eval-target="${targetId}"]`),figure=$(`.eval-figure[data-eval-uid="${item.uid}"]`),correct=countsFor(item.id,item.params)[prop],ok=Number(target?.dataset.value)===correct;figure.classList.add(ok?"correct":"wrong");target?.classList.add(ok?"correct":"wrong");if(ok){good++;await speakReview(isEnglish()?`${solidDisplayName(item.id,item.params)} is correct.`:`${solidDisplayName(item.id,item.params)} es correcto.`);await flyMatchedRocket($(`.eval-source[data-eval-uid="${item.uid}"]`),target,$(`.eval-source[data-eval-uid="${item.uid}"]`)?.dataset.color||"#35b96e")}else await speakReview(isEnglish()?`${solidDisplayName(item.id,item.params)} has ${correct} ${propertyLabel(prop)}.`:`${solidDisplayName(item.id,item.params)} tiene ${correct} ${propertyLabel(prop)}.`)}$("#evalFeedback").className=good===total?"feedback-box good":"feedback-box bad";$("#evalFeedback").textContent=good===total?"¡Excelente! Todos los pareos son correctos.":`${good} de ${total} pareos son correctos.`;$("#nextEvalBtn").classList.remove("hidden")}
+function renderEvalAnswers(){const marks=new Map($$("#evalAnswerGrid .eval-target").map(target=>[target.dataset.evalTarget,target.classList.contains("correct")?"correct":target.classList.contains("wrong")?"wrong":""]));const prop=state.config.evalProperty||"faces";$("#evalAnswerHeading").textContent=state.config.evalAnswerMode==="visual"?(isEnglish()?"Elements":"Elementos"):(isEnglish()?"Numbers":"Números");$("#evalMatchingBoard").classList.toggle("face-pairing",prop==="faces");$("#evalAnswerGrid").innerHTML=(state.evalAnswers||[]).map(answer=>{const description=prop==="faces"?faceDescription(answer.item):prop==="edges"?edgeDescription(answer.item):"";return `<div class="match-target-row"><article class="match-target eval-target ${prop==="faces"?"face-answer":""} ${state.evalResult?marks.get(answer.id)||"":""}" data-eval-target="${answer.id}" data-value="${answer.value}" role="button" tabindex="0"><span class="match-dot eval-dot" data-eval-target="${answer.id}"></span>${state.config.evalAnswerMode==="visual"?evalVisual(answer.value,prop,answer.item):`<span class="property-number-answer"><strong>${answer.value}</strong>${description?`<small>${description}</small>`:""}</span>`}</article></div>`}).join("");Object.entries(state.evalMatches||{}).forEach(([uid,targetId])=>{const source=$(`.eval-source[data-eval-uid="${uid}"]`),target=$(`.eval-target[data-eval-target="${targetId}"]`);if(source&&target){target.classList.add("matched");target.style.setProperty("--match-color",source.dataset.color);target.querySelector(".eval-dot").style.background=source.dataset.color}});requestAnimationFrame(renderEvalMatchLines)}
+function startEvaluation(){releaseRenderers(evalMatchRenderers);evalMatchRenderers=[];const prop=state.config.evalProperty||"faces",count=Math.min(Number(state.config.evalCount)||5,state.config.selectedSolids.length),items=shuffle([...state.config.selectedSolids]).slice(0,count).map((id,index)=>({uid:`e-${Date.now()}-${index}`,id,params:randomParams(id),color:COLORS[index%COLORS.length]}));state.evalItems=items;state.evalMatches={};state.evalLocked=false;$("#evalPropertyQuick").value=prop;$("#evalAnswerModeQuick").value=state.config.evalAnswerMode||"numbers";updateEvaluationInstruction();$("#evalSolidPool").innerHTML=items.map(item=>`<article class="matching-figure eval-figure" data-eval-uid="${item.uid}"><div class="mini-solid-wrap"><canvas class="mini-solid" aria-label="Sólido 3D: arrastre aquí para girar"></canvas></div><span class="match-source eval-source" data-eval-uid="${item.uid}" data-solid="${item.id}" data-color="${item.color}" style="background:${item.color}"></span></article>`).join("");state.evalAnswers=shuffle(items.map((item,index)=>({id:`a-${index}`,value:countsFor(item.id,item.params)[prop],item})));renderEvalAnswers();state.evalResult=null;$("#evalFeedback").className="feedback-box";$("#evalFeedback").textContent=tr("Una todas las figuras antes de revisar.","Match all figures before checking.");$("#checkEvalBtn").classList.remove("hidden");$("#nextEvalBtn").classList.add("hidden");if(state.mode==="evaluation")buildEvalRenderers();installSolidMatching("evaluation");updateEvalProgress();updateEvaluationNames()}
+async function checkEvaluation(){if(state.evalLocked)return;const total=state.evalItems.length;if(Object.keys(state.evalMatches||{}).length<total){toast("Empareje todas las figuras antes de revisar.");return}state.evalLocked=true;const prop=state.config.evalProperty||"faces";let good=0;for(const item of state.evalItems){const targetId=state.evalMatches[item.uid],target=$(`.eval-target[data-eval-target="${targetId}"]`),figure=$(`.eval-figure[data-eval-uid="${item.uid}"]`),correct=countsFor(item.id,item.params)[prop],ok=Number(target?.dataset.value)===correct;figure.classList.add(ok?"correct":"wrong");target?.classList.add(ok?"correct":"wrong");if(ok){good++;await speakReview(isEnglish()?`${solidDisplayName(item.id,item.params)} is correct.`:`${solidDisplayName(item.id,item.params)} es correcto.`);await flyMatchedRocket($(`.eval-source[data-eval-uid="${item.uid}"]`),target,$(`.eval-source[data-eval-uid="${item.uid}"]`)?.dataset.color||"#35b96e")}else await speakReview(isEnglish()?`${solidDisplayName(item.id,item.params)} has ${correct} ${propertyLabel(prop)}.`:`${solidDisplayName(item.id,item.params)} tiene ${correct} ${propertyLabel(prop)}.`)}$("#evalFeedback").className=good===total?"feedback-box good":"feedback-box bad";state.evalResult={good,total};updateEvalFeedback();$("#nextEvalBtn").classList.remove("hidden")}
 function nextEvaluation(){startEvaluation()}
 
 /* ================================================================
@@ -790,21 +829,43 @@ function closeCelebration(){$("#celebration").classList.remove("show");cancelAni
    Inicialización y eventos
 ================================================================ */
 function init(){
-  state.config.language=IdiomaVoz.idioma;applyLanguage();applyFont();updateStudentUI();viewerRenderer=new GLShapeRenderer($("#viewerCanvas"));buildSolidStrip();selectSolid(state.currentSolid);newClassification();
-  window.addEventListener("resize",()=>{requestAnimationFrame(renderMatchLines);requestAnimationFrame(renderEvalMatchLines)});let last=performance.now();function loop(now){const dt=now-last;last=now;if(state.mode==="presentation")viewerRenderer?.render(dt);if(state.mode==="classification")classRenderers.forEach(renderer=>renderer.render(dt));if(state.mode==="evaluation")evalMatchRenderers.forEach(renderer=>renderer.render(dt));requestAnimationFrame(loop)}requestAnimationFrame(loop);
+  state.config.language=IdiomaVoz.idioma;applyLanguage();applyFont();updateStudentUI();viewerRenderer=new GLShapeRenderer($("#viewerCanvas"));buildSolidStrip();selectSolid(state.config.selectedSolids.includes(state.currentSolid)?state.currentSolid:state.config.selectedSolids[0]);
+  window.addEventListener("resize",()=>{requestAnimationFrame(renderMatchLines);requestAnimationFrame(renderEvalMatchLines)});let last=performance.now(),lastMatchingFrame=last;
+  function loop(now){
+    const elapsed=now-last;
+    last=now;
+    if(state.mode==="presentation")viewerRenderer?.render(elapsed);
+    if(now-lastMatchingFrame>=30){
+      const renderers=state.mode==="classification"?classRenderers:state.mode==="evaluation"?evalMatchRenderers:[];
+      const delta=Math.min(now-lastMatchingFrame,70);
+      for(const renderer of renderers)renderer.render(delta);
+      lastMatchingFrame=now;
+    }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
   $$(".mode-tab").forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
   $$(".feature-btn").forEach(b=>b.onclick=()=>{const f=b.dataset.feature;state.showVertices=state.showEdges=state.showFaces=false;viewerRenderer.show={vertices:false,edges:false,faces:false};state["show"+f[0].toUpperCase()+f.slice(1)]=true;viewerRenderer.show[f]=true;$$(".feature-btn").forEach(x=>x.classList.toggle("active",x===b));updateCounts(viewerRenderer.mesh);viewerRenderer.startFeatureAnimation(f)});
   const setAppearance=transparent=>{viewerRenderer.transparent=transparent;$("#transparentModeBtn").classList.toggle("active",transparent);$("#solidModeBtn").classList.toggle("active",!transparent)};$("#transparentModeBtn").onclick=()=>setAppearance(true);$("#solidModeBtn").onclick=()=>setAppearance(false);
   $("#resetViewBtn").onclick=resetView;$("#autoRotateBtn").onclick=()=>{viewerRenderer.auto=!viewerRenderer.auto;state.autoRotate=viewerRenderer.auto;$("#autoRotateBtn").textContent=viewerRenderer.auto?"⏸ Detener giro":"▶ Giro automático"};$("#readSolidBtn").onclick=()=>speak(screenText());
   $("#returnFeatureBtn").onclick=()=>viewerRenderer.returnFeature();
   $("#newClassBtn").onclick=newClassification;$("#nextClassBtn").onclick=newClassification;$("#checkClassBtn").onclick=checkClassification;$("#classSolidMode").onchange=e=>setClassificationAppearance(e.target.checked);$("#readQuestionBtn").onclick=()=>speak($("#evalInstruction").textContent);$("#newEvalBtn").onclick=startEvaluation;$("#evalPropertyQuick").onchange=e=>{state.config.evalProperty=e.target.value;Matematicas.almacen.setItem(CONFIG_KEY,JSON.stringify(state.config));startEvaluation()};$("#evalAnswerModeQuick").onchange=e=>{state.config.evalAnswerMode=e.target.value;Matematicas.almacen.setItem(CONFIG_KEY,JSON.stringify(state.config));renderEvalAnswers()};$("#checkEvalBtn").onclick=checkEvaluation;$("#nextEvalBtn").onclick=nextEvaluation;
-  $("#settingsBtn").onclick=()=>openSettings(false);$("#closeSettingsBtn").onclick=closeSettings;$("#saveSettingsBtn").onclick=saveSettings;$("#resetConfigBtn").onclick=resetConfig;$("#homeBtn").onclick=()=>{saveName(state.name);window.AppsFullscreen.navigate("index.html")};
+
   $("#selectAllSolids").onclick=()=>$$('#solidChecks input').forEach(i=>i.checked=true);$("#clearSolids").onclick=()=>$$('#solidChecks input').forEach(i=>i.checked=false);$("#classCount").oninput=e=>$("#classCountLabel").textContent=e.target.value;$("#evalCount").oninput=e=>$("#evalCountLabel").textContent=e.target.value;
-  $("#languageSelect").onchange=e=>{state.config.language=e.target.value;state.config.voice="auto";applyLanguage();updateStudentUI();populateSettings();buildSolidStrip();selectSolid(state.currentSolid);newClassification();startEvaluation()};
-  $("#cornerRead").onclick=()=>speak(screenText());$("#cornerAnimate").onclick=()=>{if(state.mode==="presentation"){viewerRenderer.spinBoost=1800;toast("El sólido girará para mostrar sus lados.")}else if(state.mode==="evaluation"){evalMatchRenderers.forEach(renderer=>renderer.spinBoost=1200);toast("Observe los sólidos desde varios lados.")}else{$$(".solid-card").forEach((c,i)=>setTimeout(()=>{c.animate([{transform:"translateY(0)"},{transform:"translateY(-14px) rotate(-2deg)"},{transform:"translateY(0)"}],{duration:550})},i*75))}};
+
+  $("#cornerAnimate").onclick=()=>{
+    if(state.mode==="presentation"){
+      viewerRenderer.spinBoost=1800;
+      toast("El sólido girará para mostrar sus lados.");
+    }else{
+      const renderers=state.mode==="classification"?classRenderers:evalMatchRenderers;
+      for(const renderer of renderers)renderer.spinBoost=1200;
+      toast("Observe los sólidos desde varios lados.");
+    }
+  };
   $("#celebrateClose").onclick=closeCelebration;$("#celebration").addEventListener("click",e=>{if(e.target===$("#celebration"))closeCelebration()});
-  speechSynthesis.onvoiceschanged=fillVoiceSelect;fillVoiceSelect();
-  const first=!Matematicas.almacen.getItem(CONFIG_KEY);openSettings(first);
+
+  setMode("menu");
 }
 window.addEventListener("DOMContentLoaded",init);
 window.addEventListener('nombre-estudiante-cambiado',e=>{state.name=e.detail.nombre;updateStudentUI();});
@@ -820,7 +881,8 @@ window.addEventListener('nombre-estudiante-cambiado',e=>{state.name=e.detail.nom
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="matematicas-solidos.js"></script><script src="pantalla-completa.js"></script>
+<script src="matematicas-solidos.js?v=tarjetas-1"></script><script src="pantalla-completa.js"></script>
+<script src="panel-plegable.js?v=solidos-1"></script>
 <script src="nombre-compartido.js"></script>
 </body>
 </html>
