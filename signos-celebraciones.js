@@ -1,8 +1,11 @@
 /* One animation loop and canvas, with a manual start and rotating scenes. */
 (() => {
   'use strict';
-  const clave = 'signos.celebracion.v1';
-  const tipos=['cohete','volcan','tren','globo'],claveUltima='signos.celebracion.ultima.v1';let ultima='';
+  const actividad = document.documentElement.dataset.celebracion || 'signos';
+  const clave = actividad + '.celebracion.v1';
+  const claveUltima = actividad + '.celebracion.ultima.v1';
+  const tipos = ['cohete','volcan','tren','globo'];
+  let ultima = '';
   const colores = ['#ffe481', '#fff4c7', '#93d9ff', '#ffaabd', '#c6b5ff', '#a1ebd4'];
   const t = (es, en) => window.IdiomaVoz?.idioma === 'en' ? en : es;
   let preferencias = { activa: true, sonido: true, duracion: 8, tipo:'rotar' };
@@ -21,6 +24,17 @@
 
   function instalarConfiguracion() {
     if (opciones) return opciones;
+    Object.assign(window.TEXTOS_INGLES, {
+      'Celebraciones':'Celebrations', 'Activar celebraciones':'Enable celebrations',
+      'Escena':'Scene', 'Alternar las cuatro':'Rotate all four', 'Cohete':'Rocket',
+      'Volcán de números':'Number volcano', 'Tren de la alegría':'Happy train', 'Globo aerostático':'Hot-air balloon',
+      'Sonidos y voz de la celebración':'Celebration sounds and voice',
+      'Tiempo de felicitación':'Congratulations display time',
+      '8 segundos':'8 seconds', '12 segundos':'12 seconds', '20 segundos':'20 seconds',
+      'Hasta pulsar Continuar':'Until Continue is pressed',
+      'Activa cada escena tocando su botón, palanca o quemador. Puedes iniciar otra ronda cuando quieras.':
+        'Start each scene with its button, lever or burner. You can start another round whenever you wish.'
+    });
     opciones = document.createElement('fieldset');
     opciones.className = 'opciones-fiesta-signos';
     opciones.innerHTML = '<legend>Celebraciones</legend><label><input type="checkbox" id="activarFiestaSignos"> Activar celebraciones</label><label class="duracion-fiesta-signos">Escena<select id="tipoFiestaSignos"><option value="rotar">Alternar las cuatro</option><option value="cohete">Cohete</option><option value="volcan">Volcán de números</option><option value="tren">Tren de la alegría</option><option value="globo">Globo aerostático</option></select></label><label><input type="checkbox" id="sonidoFiestaSignos"> Sonidos y voz de la celebración</label><label class="duracion-fiesta-signos">Tiempo de felicitación<select id="duracionFiestaSignos"><option value="8">8 segundos</option><option value="12">12 segundos</option><option value="20">20 segundos</option><option value="0">Hasta pulsar Continuar</option></select></label><p>Activa cada escena tocando su botón, palanca o quemador. Puedes iniciar otra ronda cuando quieras.</p>';
@@ -74,10 +88,9 @@
     continuar.onclick = () => cerrar(true);
     despegar.onclick = iniciarAnimacion;
     nuevaRonda.onclick = () => {
-      const accion = escena?.nuevaRonda;
+      const accion = escena?.nuevaRonda, enfocarRonda = escena?.enfocarRonda;
       cerrar(); accion?.();
-      document.getElementById('drop0')?.scrollIntoView({ block: 'nearest' });
-      document.querySelector('.symbol-card')?.focus({ preventScroll: true });
+      enfocarRonda?.();
     };
     sonidoBoton.onclick = () => {
       preferencias.sonido = !preferencias.sonido; guardar(); actualizarAudio();
@@ -107,7 +120,15 @@
     sonidoBoton.title = sonidoBoton.getAttribute('aria-label');
     sonidoBoton.setAttribute('aria-pressed', String(preferencias.sonido));
   }
-  function abrir({ nombre = 'Gabriel', texto, tipo:seleccion, nuevaRonda: iniciarRonda = () => document.getElementById('btnNew')?.click() } = {}) {
+  function abrir({
+    nombre = 'Gabriel', texto, tipo:seleccion,
+    nuevaRonda: iniciarRonda = () => document.getElementById('btnNew')?.click(),
+    enfocarAlCerrar = () => document.getElementById('btnNew')?.focus({ preventScroll: true }),
+    enfocarRonda = () => {
+      document.getElementById('drop0')?.scrollIntoView({ block: 'nearest' });
+      document.querySelector('.symbol-card')?.focus({ preventScroll: true });
+    }
+  } = {}) {
     cerrar(); if (!preferencias.activa) return false;
     construir(); window.speechSynthesis?.cancel();
     const tipo=tipos.includes(seleccion)?seleccion:preferencias.tipo==='rotar'?tipos[(tipos.indexOf(ultima)+1)%tipos.length]:preferencias.tipo;
@@ -116,7 +137,8 @@
       inicio: null, ultimo: 0, frame: 0, fase: '', numero: 0, t: 0, estrellas: [], humo: [],tipo,extra:null,
       w: 0, h: 0, alto: 0, emision: 0, final: 8.3, lectura: null, leyendo: false,
       reducido: matchMedia('(prefers-reduced-motion:reduce)').matches,
-      nombre, nuevaRonda: iniciarRonda, texto: texto || t(`¡Felicidades, ${nombre}! Lo has hecho genial. Sigue así.`, `Congratulations, ${nombre}! You did a great job. Keep it up!`)
+      nombre, nuevaRonda: iniciarRonda, enfocarAlCerrar, enfocarRonda,
+      texto: texto || t(`¡Felicidades, ${nombre}! Lo has hecho genial. Sigue así.`, `Congratulations, ${nombre}! You did a great job. Keep it up!`)
     };
     dialogo.dataset.tipo=tipo;
     if(tipo!=='cohete'){
@@ -363,9 +385,10 @@
   }
   function detenerLectura() { if (escena?.lectura) { window.speechSynthesis?.cancel(); escena.lectura = null; escena.leyendo = false; } }
   function cerrar(enfocar = false) {
+    const enfocarAlCerrar = escena?.enfocarAlCerrar;
     detenerLectura(); if (escena) {cancelAnimationFrame(escena.frame);escena.extra?.destruir();} escena = null; pararAudio();
     if (dialogo) { if (dialogo.open) dialogo.close(); ctx?.clearRect(0, 0, canvas.width, canvas.height); delete dialogo.dataset.fase;delete dialogo.dataset.tipo; }
-    if (enfocar) document.getElementById('btnNew')?.focus({ preventScroll: true });
+    if (enfocar) enfocarAlCerrar?.();
   }
   addEventListener('resize', ajustar); window.visualViewport?.addEventListener('resize', ajustar);
   document.addEventListener('fullscreenchange', ajustar);

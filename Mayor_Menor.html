@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es" class="h-full">
+<html lang="es" class="h-full" data-celebracion="cajaMayorMenor">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,9 +8,12 @@
   <script src="idioma-voz-textos.js?v=20261108-1"></script>
   <script src="mayor-menor-textos.js?v=20261118-panel-1"></script>
   <script src="idioma-voz.js?v=20261108-mayor-1"></script>
-  <script src="mayor-menor-ajustes.js?v=20261118-panel-1" defer></script>
+  <link rel="stylesheet" href="signos-celebraciones.css?v=20261118-5">
+  <link rel="stylesheet" href="signos-escenas.css?v=20261118-1">
+  <script src="signos-escenas.js?v=20261118-2" defer></script>
+  <script src="signos-celebraciones.js?v=20261118-7" defer></script>
+  <script src="mayor-menor-ajustes.js?v=20261118-fiesta-1" defer></script>
   <script src="panel-ancho-ajustable.js?v=20261118-1" defer></script>
-  <script src="mayor-menor-celebracion.js?v=20261108-1" defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -620,7 +623,7 @@
     }
 
     function newPage() {
-      window.CelebracionMayor?.detener();
+      window.FiestaSignos.cerrar();
       exercises = generateExercises();
       isPageSolved = false;
       document.getElementById('pageLabel').textContent = `${exercisesPerPage} ${IdiomaVoz.idioma==='en'?(exercisesPerPage===1?'exercise per round':'exercises per round'):(exercisesPerPage===1?'ejercicio por ronda':'ejercicios por ronda')} • ${window.seleccionNumerosMayor?.modo==='rango' ? (IdiomaVoz.idioma==='en'?'Range: ':'Rango: ')+window.seleccionNumerosMayor.min+'–'+window.seleccionNumerosMayor.max : (IdiomaVoz.idioma==='en'?'Up to ':'Hasta ')+selectedDigits+' '+(IdiomaVoz.idioma==='en'?(selectedDigits===1?'digit':'digits'):(selectedDigits===1?'dígito':'dígitos'))}`;
@@ -632,7 +635,7 @@
     }
 
     function resetPage() {
-      window.CelebracionMayor?.detener();
+      window.FiestaSignos.cerrar();
       exercises = exercises.map(ex => ({
         ...ex,
         slots: [null, null],
@@ -1016,8 +1019,16 @@
         score += exercises.length;
         updateScore();
         updateCheckButton();
-        triggerSuccessAnimation();
-        showFeedback('🎉', '¡Excelente trabajo!', getRandomMotivationalMessage(), true);
+        const texto = getRandomMotivationalMessage();
+        const enfocarRonda = () => document.querySelector('.acciones-secundarias .new')?.focus({ preventScroll: true });
+        const celebracion = FiestaSignos.abrir({
+          nombre: studentName || obtenerNombreGuardado() || 'Gabriel',
+          texto,
+          nuevaRonda: newPage,
+          enfocarAlCerrar: enfocarRonda,
+          enfocarRonda
+        });
+        if (!celebracion) showFeedback('🎉', '¡Excelente trabajo!', texto, true);
       } else {
         updateCheckButton();
         speakText('Revisa las cajas rojas y vuelve a intentarlo.');
@@ -1053,31 +1064,6 @@
 
     function closeFeedback() {
       document.getElementById('feedback').classList.remove('show');
-    }
-
-    function triggerSuccessAnimation() {
-      window.CelebracionMayor?.iniciar();
-    }
-
-    function playCelebrationSound() {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return;
-      const audioCtx = new AudioCtx();
-      const melody = [523.25, 659.25, 783.99, 1046.50, 783.99, 1174.66];
-      melody.forEach((freq, i) => {
-        const now = audioCtx.currentTime + i * 0.13;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.type = i % 2 === 0 ? 'sine' : 'triangle';
-        osc.frequency.value = freq;
-        gain.gain.setValueAtTime(0.0001, now);
-        gain.gain.exponentialRampToValueAtTime(0.08, now + 0.02);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.28);
-        osc.start(now);
-        osc.stop(now + 0.3);
-      });
     }
 
     function clearSpeech() {

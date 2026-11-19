@@ -14,11 +14,11 @@ En vertical, título y herramientas quedan arriba. En horizontal quedan en una c
 
 Las tarjetas tienen altura natural limitada y el conjunto se centra cuando sobra espacio. Las fichas son rectángulos horizontales compactos, limitados por el tamaño interior real de sus destinos; no se estiran para llenar sus filas. La ayuda se muestra en las cajas vacías y deja espacio al número cuando se completa la caja. Con poco espacio, el mensaje auxiliar pasa al panel de herramientas.
 
-La celebración utiliza un trofeo y tres explosiones de números y estrellas en un único canvas transparente, a unos 30 cuadros por segundo, con 90 partículas en pantallas pequeñas o 120 en grandes y una resolución máxima de 1.5×. Dura 2.6 segundos y se elimina al cambiar de ronda, girar o esconder la aplicación. Respeta la preferencia de movimiento reducido y reutiliza un único contexto de audio.
+La celebración comparte las escenas de cohete, volcán, tren y globo con «Mayor, Menor o Igual». Se inicia con el control propio de cada escena y ofrece «Nueva ronda» en todo momento. La configuración de Caja mayor y caja menor guarda de forma independiente la escena elegida, el sonido y la duración de la felicitación.
 
 Las preferencias se guardan en `mayorMenor.config.v1` (cantidad, cifras, ayuda y lectura) e `idiomaVoz.mayorMenor.v1` (idioma, velocidad y voz por idioma). El nombre utiliza `nombreNinoGabrielApps`. Se tolera el bloqueo del almacenamiento y se limitan valores inválidos a los rangos permitidos.
 
-Archivos auxiliares: `mayor-menor-ajustes.js`, `mayor-menor-adaptable.css`, `mayor-menor-panel.css`, `mayor-menor-textos.js` y `mayor-menor-celebracion.js`; reutiliza el módulo compartido de idioma y voz.
+Archivos auxiliares: `mayor-menor-ajustes.js`, `mayor-menor-adaptable.css`, `mayor-menor-panel.css` y `mayor-menor-textos.js`. Reutiliza los módulos compartidos de idioma, voz y celebraciones.
 
 `tools/probar_mayor_menor.cjs` comprueba cuatro ejercicios de seis cifras con ayuda en nueve tamaños de pantalla, siete valores de zoom (50–200%), arrastre táctil, generación numérica, validación, lecturas inglesas, preferencias tras recarga y almacenamiento bloqueado. También entra y sale de pantalla completa en tres tamaños con cuatro valores de zoom y abre/desplaza la configuración sin sacar el juego de la vista. La prueba compartida de idioma/voz comprueba que la ampliación del módulo no altera las otras tres aplicaciones.
 
