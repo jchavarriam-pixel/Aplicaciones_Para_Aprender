@@ -1,3 +1,6 @@
+const usarIlustracionesSituaciones = typeof esperarEnEscena === "function";
+const esperarAnimacionSituacion = usarIlustracionesSituaciones ? esperarEnEscena : setTimeout.bind(window);
+
 /*
 ============================================================
 ESCENAS EXTERNAS PARA Situaciones_Problema_Sumas_Restas.html
@@ -30,7 +33,7 @@ Los globos y los cordeles se dibujan desde el código.
 */
 
 (function () {
-  const danielBoyImage = "ImagenesSituacionesProblemas/Globos/NGlobos.png";
+  const danielBoyImage = usarIlustracionesSituaciones ? "ImagenesSituacionesProblemas/Ilustraciones/daniel.webp" : "ImagenesSituacionesProblemas/Globos/NGlobos.png";
 
   function addDanielBalloonSceneStylesV3() {
     if (document.getElementById("danielBalloonSceneStylesV3")) return;
@@ -297,7 +300,7 @@ Los globos y los cordeles se dibujan desde el código.
   Si la cuerda no cae exactamente sobre la mano, ajuste estos dos valores.
   x aumenta hacia la derecha; y aumenta hacia abajo.
   */
-  const danielHandPointV3 = { x: 24.8, y: 28.8 };
+  const danielHandPointV3 = usarIlustracionesSituaciones ? { x: 26, y: 49 } : { x: 24.8, y: 28.8 };
 
   const danielBalloonColorsV3 = [
     "#ef4444",
@@ -313,7 +316,9 @@ Los globos y los cordeles se dibujan desde el código.
   /*
   Los globos quedan agrupados sobre la mano levantada.
   */
-  const danielBalloonPositionsV3 = [
+  const danielBalloonPositionsV3= usarIlustracionesSituaciones ? Array.from({length:15},(_,index)=>({
+    x:34+(index%5)*11.5,y:13+Math.floor(index/5)*13
+  })) : [
     { x: 34, y: 13 },
     { x: 42, y: 8 },
     { x: 50, y: 13 },
@@ -341,6 +346,7 @@ Los globos y los cordeles se dibujan desde el código.
     const balloon = document.createElement("div");
     balloon.className = "danielBalloonV3";
     balloon.dataset.id = id;
+    balloon.style.setProperty("--tono-globo", [0, 166, 220, 310, 78][Number(id)%5]+"deg");
     balloon.style.left = `${pos.x}%`;
     balloon.style.top = `${pos.y}%`;
     balloon.style.setProperty("--x", `${pos.x}%`);
@@ -385,7 +391,7 @@ Los globos y los cordeles se dibujan desde el código.
       wind.style.setProperty("--wr", line.r);
       wind.style.animationDelay = `${index * 180}ms`;
       scene.appendChild(wind);
-      setTimeout(() => wind.remove(), 2500);
+      esperarAnimacionSituacion(() => wind.remove(), 2500);
     });
   }
 
@@ -452,7 +458,7 @@ Los globos y los cordeles se dibujan desde el código.
       const target = danielBalloonFlyTargetsV3[index % danielBalloonFlyTargetsV3.length];
       const delay = index * 240;
 
-      setTimeout(() => {
+      esperarAnimacionSituacion(() => {
         balloon.classList.add("flown");
 
         if (stringLine) {
@@ -1128,20 +1134,23 @@ Versión ajustada:
     `;
   }
 
-  const candyJuanHandPointJM3 = { x: 27.3, y: 57.3, r: -8 };
-  const candyMariaHandPointJM3 = { x: 72.7, y: 57.3, r: 8 };
+  function candyHandStackPositionJM3(owner,index){
+    if(!usarIlustracionesSituaciones){
+      const base = owner === "juan" ? { x: 27.3, y: 57.3, r: -8 } : { x: 72.7, y: 57.3, r: 8 };
 
-  function candyHandStackPositionJM3(owner, index) {
-    const base = owner === "juan" ? candyJuanHandPointJM3 : candyMariaHandPointJM3;
-
-    return {
-      x: base.x + (index % 3) * 0.10,
-      y: base.y + (index % 3) * 0.08,
-      r: base.r + (index % 2 === 0 ? -3 : 3)
-    };
+      return {
+        x: base.x + (index % 3) * 0.10,
+        y: base.y + (index % 3) * 0.08,
+        r: base.r + (index % 2 === 0 ? -3 : 3)
+      };
+    }
+    const first=owner==="juan";
+    return {x:(first?6:81)+(index%3)*6.4,y:54+Math.floor(index/3)*8,r:first?-7:7};
   }
 
-  const candyPlatePositionsJM3 = [
+  const candyPlatePositionsJM3= usarIlustracionesSituaciones ? Array.from({length:25},(_,index)=>({
+    x:34+(index%5)*7.8,y:32+Math.floor(index/5)*10,r:index%2?8:-8
+  })) : [
     { x: 42, y: 61, r: -12 }, { x: 48, y: 60, r: 9 },  { x: 54, y: 60, r: -6 }, { x: 60, y: 61, r: 13 },
     { x: 45, y: 64, r: -18 }, { x: 51, y: 64, r: 6 }, { x: 57, y: 64, r: -9 }, { x: 63, y: 64, r: 15 },
     { x: 39, y: 66, r: 10 },  { x: 66, y: 66, r: -15 }, { x: 44, y: 68, r: 4 }, { x: 50, y: 68, r: -8 },
@@ -1168,14 +1177,14 @@ Versión ajustada:
   }
 
   function addCandySparkleJM3(x, y, delay = 0) {
-    setTimeout(() => {
+    esperarAnimacionSituacion(() => {
       const sparkle = document.createElement("div");
       sparkle.className = "candySparkleJM3";
       sparkle.textContent = "✨";
       sparkle.style.setProperty("--sx", `${x}%`);
       sparkle.style.setProperty("--sy", `${y}%`);
       scene.appendChild(sparkle);
-      setTimeout(() => sparkle.remove(), 1000);
+      esperarAnimacionSituacion(() => sparkle.remove(), 1000);
     }, delay);
   }
 
@@ -1288,7 +1297,7 @@ Versión ajustada:
       const target = candyPlatePositionsJM3[i % candyPlatePositionsJM3.length];
       const delay = i * 210;
 
-      setTimeout(() => {
+      esperarAnimacionSituacion(() => {
         const anim = candy.animate([
           {
             left: `${start.x}%`,
@@ -1331,7 +1340,7 @@ Versión ajustada:
     }
 
     const juanHandCandy = scene.querySelector(".handCandyJM3.juanCandy");
-    setTimeout(() => {
+    esperarAnimacionSituacion(() => {
       juanHandCandy?.classList.add("isEmpty");
     }, state.total * 210 + 220);
 
@@ -1346,7 +1355,7 @@ Versión ajustada:
       const target = candyPlatePositionsJM3[targetIndex % candyPlatePositionsJM3.length];
       const delay = mariaStartDelay + i * 210;
 
-      setTimeout(() => {
+      esperarAnimacionSituacion(() => {
         const anim = candy.animate([
           {
             left: `${start.x}%`,
@@ -1389,11 +1398,11 @@ Versión ajustada:
     }
 
     const mariaHandCandy = scene.querySelector(".handCandyJM3.mariaCandy");
-    setTimeout(() => {
+    esperarAnimacionSituacion(() => {
       mariaHandCandy?.classList.add("isEmpty");
     }, mariaStartDelay + state.change * 210 + 220);
 
-    setTimeout(() => {
+    esperarAnimacionSituacion(() => {
       scene.querySelectorAll(".candyPieceJM3.onPlate").forEach(candy => {
         candy.animate([
           { transform: candy.style.transform || "translate(-50%, -50%) scale(.92)" },
@@ -1506,7 +1515,9 @@ ImagenesSituacionesProblemas/Aula/N4.png
 */
 
 (function () {
-  const aulaStudentImagesV6 = [
+  const aulaStudentImagesV6 = usarIlustracionesSituaciones ? [
+    "ImagenesSituacionesProblemas/Ilustraciones/estudiante.webp"
+  ] : [
     "ImagenesSituacionesProblemas/Aula/N1.png",
     "ImagenesSituacionesProblemas/Aula/N2.png",
     "ImagenesSituacionesProblemas/Aula/N3.png",
@@ -1863,9 +1874,9 @@ ImagenesSituacionesProblemas/Aula/N4.png
       <span class="miniAulaChairV6" style="left:89px;top:94px"></span>
       <span class="miniAulaDeskV6" style="left:89px;top:84px"></span>
 
-      <img class="miniAulaStudentImgV6" src="${aulaStudentImagesV6[0]}" style="right:3px;top:43px">
-      <img class="miniAulaStudentImgV6" src="${aulaStudentImagesV6[1]}" style="right:12px;top:74px">
-      <img class="miniAulaStudentImgV6" src="${aulaStudentImagesV6[2]}" style="right:4px;top:104px">
+      <img class="miniAulaStudentImgV6" src="${aulaStudentImagesV6[usarIlustracionesSituaciones ? 0 : 0]}" style="right:3px;top:43px">
+      <img class="miniAulaStudentImgV6" src="${aulaStudentImagesV6[usarIlustracionesSituaciones ? 0 : 1]}" style="right:12px;top:74px">
+      <img class="miniAulaStudentImgV6" src="${aulaStudentImagesV6[usarIlustracionesSituaciones ? 0 : 2]}" style="right:4px;top:104px">
     `;
   }
 
@@ -1948,14 +1959,14 @@ ImagenesSituacionesProblemas/Aula/N4.png
   }
 
   function addAulaSparkV6(x, y, delay = 0) {
-    setTimeout(() => {
+    esperarAnimacionSituacion(() => {
       const spark = document.createElement("div");
       spark.className = "aulaAereaSparkV6";
       spark.textContent = "✨";
       spark.style.setProperty("--sx", `${x}%`);
       spark.style.setProperty("--sy", `${y}%`);
       scene.appendChild(spark);
-      setTimeout(() => spark.remove(), 1000);
+      esperarAnimacionSituacion(() => spark.remove(), 1000);
     }, delay);
   }
 
@@ -2010,7 +2021,7 @@ ImagenesSituacionesProblemas/Aula/N4.png
 
       const delay = index * 280;
 
-      setTimeout(() => {
+      esperarAnimacionSituacion(() => {
         const anim = student.animate([
           {
             left: student.style.left,
@@ -2065,7 +2076,7 @@ ImagenesSituacionesProblemas/Aula/N4.png
     });
 
     const finalDelay = state.change * 280 + 1700;
-    setTimeout(() => {
+    esperarAnimacionSituacion(() => {
       for (let i = state.change; i < state.total; i++) {
         const desk = scene.querySelector(`.aulaAereaDeskV6[data-id="${i}"]`);
         if (desk) desk.classList.add("availablePulse");
@@ -2195,7 +2206,9 @@ ImagenesSituacionesProblemas/Aula/N4.png
 */
 
 (function () {
-  const aulaRecreoStudentImages = [
+  const aulaRecreoStudentImages = usarIlustracionesSituaciones ? [
+    "ImagenesSituacionesProblemas/Ilustraciones/estudiante.webp"
+  ] : [
     "ImagenesSituacionesProblemas/Aula/N1.png",
     "ImagenesSituacionesProblemas/Aula/N2.png",
     "ImagenesSituacionesProblemas/Aula/N3.png",
@@ -2536,9 +2549,9 @@ ImagenesSituacionesProblemas/Aula/N4.png
       <span class="miniAulaRecreoChair" style="left:89px;top:59px"></span>
       <span class="miniAulaRecreoDesk" style="left:89px;top:49px"></span>
 
-      <img class="miniAulaRecreoStudent" src="${aulaRecreoStudentImages[0]}" style="left:29px;top:59px">
-      <img class="miniAulaRecreoStudent" src="${aulaRecreoStudentImages[1]}" style="left:59px;top:59px">
-      <img class="miniAulaRecreoStudent" src="${aulaRecreoStudentImages[2]}" style="right:7px;top:92px">
+      <img class="miniAulaRecreoStudent" src="${aulaRecreoStudentImages[usarIlustracionesSituaciones ? 0 : 0]}" style="left:29px;top:59px">
+      <img class="miniAulaRecreoStudent" src="${aulaRecreoStudentImages[usarIlustracionesSituaciones ? 0 : 1]}" style="left:59px;top:59px">
+      <img class="miniAulaRecreoStudent" src="${aulaRecreoStudentImages[usarIlustracionesSituaciones ? 0 : 2]}" style="right:7px;top:92px">
     `;
   }
 
@@ -2605,14 +2618,14 @@ ImagenesSituacionesProblemas/Aula/N4.png
   }
 
   function addAulaRecreoSpark(x, y, delay = 0) {
-    setTimeout(() => {
+    esperarAnimacionSituacion(() => {
       const spark = document.createElement("div");
       spark.className = "aulaRecreoSpark";
       spark.textContent = "✨";
       spark.style.setProperty("--sx", `${x}%`);
       spark.style.setProperty("--sy", `${y}%`);
       scene.appendChild(spark);
-      setTimeout(() => spark.remove(), 1000);
+      esperarAnimacionSituacion(() => spark.remove(), 1000);
     }, delay);
   }
 
@@ -2665,7 +2678,7 @@ ImagenesSituacionesProblemas/Aula/N4.png
 
       const delay = index * 280;
 
-      setTimeout(() => {
+      esperarAnimacionSituacion(() => {
         student.classList.add("leaving");
 
         const anim = student.animate([
@@ -2717,7 +2730,7 @@ ImagenesSituacionesProblemas/Aula/N4.png
       }, delay + 80);
     });
 
-    setTimeout(() => {
+    esperarAnimacionSituacion(() => {
       const stayingIds = Array.from({ length: state.total }, (_, i) => i)
         .filter(id => !state.movingIds.includes(id));
 
@@ -2850,7 +2863,9 @@ ImagenesSituacionesProblemas/Aula/N4.png
 */
 
 (function () {
-  const aulaLleganStudentImages = [
+  const aulaLleganStudentImages = usarIlustracionesSituaciones ? [
+    "ImagenesSituacionesProblemas/Ilustraciones/estudiante.webp"
+  ] : [
     "ImagenesSituacionesProblemas/Aula/N1.png",
     "ImagenesSituacionesProblemas/Aula/N2.png",
     "ImagenesSituacionesProblemas/Aula/N3.png",
@@ -3181,13 +3196,15 @@ ImagenesSituacionesProblemas/Aula/N4.png
       <span class="miniAulaLleganChair" style="left:89px;top:59px"></span>
       <span class="miniAulaLleganDesk" style="left:89px;top:49px"></span>
 
-      <img class="miniAulaLleganStudent" src="${aulaLleganStudentImages[0]}" style="left:29px;top:59px">
-      <img class="miniAulaLleganStudent" src="${aulaLleganStudentImages[1]}" style="left:59px;top:59px">
-      <img class="miniAulaLleganStudent" src="${aulaLleganStudentImages[2]}" style="right:5px;top:75px">
+      <img class="miniAulaLleganStudent" src="${aulaLleganStudentImages[usarIlustracionesSituaciones ? 0 : 0]}" style="left:29px;top:59px">
+      <img class="miniAulaLleganStudent" src="${aulaLleganStudentImages[usarIlustracionesSituaciones ? 0 : 1]}" style="left:59px;top:59px">
+      <img class="miniAulaLleganStudent" src="${aulaLleganStudentImages[usarIlustracionesSituaciones ? 0 : 2]}" style="right:5px;top:75px">
     `;
   }
 
-  const aulaLleganDeskPositions = [
+  const aulaLleganDeskPositions= usarIlustracionesSituaciones ? Array.from({length:25},(_,index)=>({
+    x:13+(index%5)*13.7,y:15+Math.floor(index/5)*16.6
+  })) : [
     { x: 17, y: 25 }, { x: 34, y: 25 }, { x: 51, y: 25 }, { x: 68, y: 25 },
     { x: 17, y: 45 }, { x: 34, y: 45 }, { x: 51, y: 45 }, { x: 68, y: 45 },
     { x: 17, y: 65 }, { x: 34, y: 65 }, { x: 51, y: 65 }, { x: 68, y: 65 },
@@ -3254,14 +3271,14 @@ ImagenesSituacionesProblemas/Aula/N4.png
   }
 
   function addAulaLleganSpark(x, y, delay = 0) {
-    setTimeout(() => {
+    esperarAnimacionSituacion(() => {
       const spark = document.createElement("div");
       spark.className = "aulaLleganSpark";
       spark.textContent = "✨";
       spark.style.setProperty("--sx", `${x}%`);
       spark.style.setProperty("--sy", `${y}%`);
       scene.appendChild(spark);
-      setTimeout(() => spark.remove(), 1000);
+      esperarAnimacionSituacion(() => spark.remove(), 1000);
     }, delay);
   }
 
@@ -3325,7 +3342,7 @@ ImagenesSituacionesProblemas/Aula/N4.png
 
       const delay = index * 280;
 
-      setTimeout(() => {
+      esperarAnimacionSituacion(() => {
         const anim = student.animate([
           {
             left: student.style.left,
@@ -3380,7 +3397,7 @@ ImagenesSituacionesProblemas/Aula/N4.png
       }, delay + 80);
     });
 
-    setTimeout(() => {
+    esperarAnimacionSituacion(() => {
       scene.querySelectorAll(".aulaLleganStudentImg.seated").forEach(student => {
         student.animate([
           { transform: "translate(-50%, -50%) scale(1)" },

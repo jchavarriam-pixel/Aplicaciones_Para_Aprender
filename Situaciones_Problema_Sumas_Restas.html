@@ -2048,7 +2048,7 @@
   </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-problemas.css"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js"></script><script src="matematicas-base.js"></script></head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-problemas.css?v=historias-1"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
 <body>
   <main class="app">
     <section class="hero" aria-label="Encabezado de la aplicación">
@@ -2177,6 +2177,8 @@
     const LANG_KEY = "gabrielAppsLanguage";
     const VOICE_KEY = "gabrielAppsVoiceURI";
     const PARAMS_KEY = "situacionesProblemaParametros";
+    const CLAVE_AYUDAS_PROBLEMAS = "situacionesProblemaAyudas";
+    let preferenciasProblemas = {narracion:true,data:true,keyword:true,operation:true,...Matematicas.leer(CLAVE_AYUDAS_PROBLEMAS)};
 
     const scene = document.getElementById("scene");
     const sceneOperationPreview = document.getElementById("sceneOperationPreview");
@@ -2298,8 +2300,8 @@
       },
       pearsBasket: {
         id: "pearsBasket",
-        title: "Peras en el plato",
-        short: "Ana toma algunas peras de un plato. Hay que contar cuántas quedan.",
+        title: "Peras en la canasta",
+        short: "Ana toma algunas peras de una canasta. Hay que contar cuántas quedan.",
         badge: "🍐 Resta",
         operation: "subtraction",
         fruit: "pear",
@@ -2317,24 +2319,24 @@
         animate: animatePearsTaken,
         story: (name, total, change, highlight = false) => {
           if (isEnglish()) {
-            return `On a plate ${thereIs(total)} <strong>${total}</strong> ${itemWord(problems.pearsBasket, total)}, and Ana <span class="${highlight ? 'keyAction' : ''}">takes</span> <strong>${change}</strong> ${itemWord(problems.pearsBasket, change)}. How many pears are left on the plate?`;
+            return `In a basket ${thereIs(total)} <strong>${total}</strong> ${itemWord(problems.pearsBasket, total)}, and Ana <span class="${highlight ? 'keyAction' : ''}">takes</span> <strong>${change}</strong> ${itemWord(problems.pearsBasket, change)}. How many pears are left in the basket?`;
           }
-          return `En un plato hay <strong>${total}</strong> ${itemWord(problems.pearsBasket, total)} y Ana <span class="${highlight ? 'keyAction' : ''}">toma</span> <strong>${change}</strong> ${itemWord(problems.pearsBasket, change)}. ¿Cuántas peras quedan en el plato?`;
+          return `En una canasta hay <strong>${total}</strong> ${itemWord(problems.pearsBasket, total)} y Ana <span class="${highlight ? 'keyAction' : ''}">toma</span> <strong>${change}</strong> ${itemWord(problems.pearsBasket, change)}. ¿Cuántas peras quedan en la canasta?`;
         },
         speak: (name, total, change) => {
           if (isEnglish()) {
-            return `On a plate ${thereIs(total)} ${total} ${itemWord(problems.pearsBasket, total)}, and Ana takes ${change} ${itemWord(problems.pearsBasket, change)}. How many pears are left on the plate?`;
+            return `In a basket ${thereIs(total)} ${total} ${itemWord(problems.pearsBasket, total)}, and Ana takes ${change} ${itemWord(problems.pearsBasket, change)}. How many pears are left in the basket?`;
           }
-          return `En un plato hay ${total} ${itemWord(problems.pearsBasket, total)} y Ana toma ${change} ${itemWord(problems.pearsBasket, change)}. ¿Cuántas peras quedan en el plato?`;
+          return `En una canasta hay ${total} ${itemWord(problems.pearsBasket, total)} y Ana toma ${change} ${itemWord(problems.pearsBasket, change)}. ¿Cuántas peras quedan en la canasta?`;
         },
-        answerQuestion: "¿Cuántas peras quedan en el plato?",
-        sceneTitle: "Observa cuántas peras quedan en el plato",
+        answerQuestion: "¿Cuántas peras quedan en la canasta?",
+        sceneTitle: "Observa cuántas peras quedan en la canasta",
         hintData: (total, change) => isEnglish()
-          ? `Start amount: ${thereIs(total)} <strong>${total}</strong> ${itemWord(problems.pearsBasket, total)} on the plate. Change: Ana takes <strong>${change}</strong> ${itemWord(problems.pearsBasket, change)}.`
-          : `Dato inicial: hay <strong>${total}</strong> ${itemWord(problems.pearsBasket, total)} en el plato. Cambio: Ana toma <strong>${change}</strong> ${itemWord(problems.pearsBasket, change)}.`,
+          ? `Start amount: ${thereIs(total)} <strong>${total}</strong> ${itemWord(problems.pearsBasket, total)} in the basket. Change: Ana takes <strong>${change}</strong> ${itemWord(problems.pearsBasket, change)}.`
+          : `Dato inicial: hay <strong>${total}</strong> ${itemWord(problems.pearsBasket, total)} en la canasta. Cambio: Ana toma <strong>${change}</strong> ${itemWord(problems.pearsBasket, change)}.`,
         hintKeyword: () => isEnglish()
-          ? `The key word is <strong>takes</strong>. If Ana takes pears from the plate, fewer pears are left.`
-          : `La palabra clave es <strong>toma</strong>. Si Ana toma peras del plato, quedan menos peras.`,
+          ? `The key word is <strong>takes</strong>. If Ana takes pears from the basket, fewer pears are left.`
+          : `La palabra clave es <strong>toma</strong>. Si Ana toma peras de la canasta, quedan menos peras.`,
         hintOperation: (total, change) => isEnglish()
           ? `Because the amount decreases, use <strong>subtraction</strong>: <strong>${total} − ${change}</strong>.`
           : `Como la cantidad disminuye, se usa una <strong>resta</strong>: <strong>${total} − ${change}</strong>.`
@@ -2470,7 +2472,7 @@
       es: {
         mainTitle: "Situaciones problema",
         mainSubtitle: "Escoge una historia, observa la animación y resuelve con sumas o restas.",
-        menuIntro: "Elige una ficha para practicar. Cada historia cambia los números para que se pueda resolver muchas veces.",
+        menuIntro: "Elige una historia para resolver.",
         settingsTitle: "Configuración general",
         settingsNote: "La letra, la voz y los parámetros se guardan para la próxima vez.",
         fontLabel: "Tipo de letra",
@@ -2492,7 +2494,7 @@
         operationLabel: "Operación",
         changeLabel: "Cambio",
         answerLabel: "Respuesta",
-        defaultFeedback: "Primero mira la animación y luego escoge la respuesta.",
+        defaultFeedback: "Mira la animación y completa la operación.",
         defaultHint: "Usa una pista si necesitas ayuda para decidir si se suma o se resta.",
         hintData: "💡 Datos",
         hintKeyword: "🔎 Clave",
@@ -2513,12 +2515,12 @@
         applesAnimate: "🍎 Ver caída",
         applesSceneTitle: "Observa cuántas manzanas quedan en el árbol",
         applesQuestion: "¿Cuántas manzanas quedan en el árbol?",
-        pearsTitle: "Peras en el plato",
-        pearsShort: "Ana toma algunas peras de un plato. Hay que contar cuántas quedan.",
+        pearsTitle: "Peras en la canasta",
+        pearsShort: "Ana toma algunas peras de una canasta. Hay que contar cuántas quedan.",
         pearsBadge: "🍐 Resta",
         pearsAnimate: "🍐 Ver cómo Ana toma peras",
-        pearsSceneTitle: "Observa cuántas peras quedan en el plato",
-        pearsQuestion: "¿Cuántas peras quedan en el plato?",
+        pearsSceneTitle: "Observa cuántas peras quedan en la canasta",
+        pearsQuestion: "¿Cuántas peras quedan en la canasta?",
         busBoardTitle: "Bus: se suben personas",
         busBoardShort: "Algunas personas se suben al bus. Hay que contar cuántas personas van ahora.",
         busBoardBadge: "🚌 Suma",
@@ -2535,7 +2537,7 @@
       en: {
         mainTitle: "Word problems",
         mainSubtitle: "Choose a story, watch the animation, and solve with addition or subtraction.",
-        menuIntro: "Choose a card to practice. Each story changes the numbers so it can be solved many times.",
+        menuIntro: "Choose a story to solve.",
         settingsTitle: "General settings",
         settingsNote: "The font, voice, and parameters are saved for next time.",
         fontLabel: "Font",
@@ -2557,7 +2559,7 @@
         operationLabel: "Operation",
         changeLabel: "Change",
         answerLabel: "Answer",
-        defaultFeedback: "First watch the animation and then solve the problem.",
+        defaultFeedback: "Watch the animation and complete the calculation.",
         defaultHint: "Use a hint if you need help deciding whether to add or subtract.",
         hintData: "💡 Data",
         hintKeyword: "🔎 Key",
@@ -2578,12 +2580,12 @@
         applesAnimate: "🍎 Watch the fall",
         applesSceneTitle: "Watch how many apples are left on the tree",
         applesQuestion: "How many apples are left on the tree?",
-        pearsTitle: "Pears on the plate",
-        pearsShort: "Ana takes some pears from a plate. Count how many are left.",
+        pearsTitle: "Pears in the basket",
+        pearsShort: "Ana takes some pears from a basket. Count how many are left.",
         pearsBadge: "🍐 Subtraction",
         pearsAnimate: "🍐 Watch Ana take pears",
-        pearsSceneTitle: "Watch how many pears are left on the plate",
-        pearsQuestion: "How many pears are left on the plate?",
+        pearsSceneTitle: "Watch how many pears are left in the basket",
+        pearsQuestion: "How many pears are left in the basket?",
         busBoardTitle: "Bus: people get on",
         busBoardShort: "Some people get on the bus. Count how many people are on the bus now.",
         busBoardBadge: "🚌 Addition",
@@ -2876,7 +2878,7 @@
       if (state.currentProblem) updateText();
     }
 
-    function speak(text){return IdiomaVoz.hablar(text)}
+    function speak(text){if(preferenciasProblemas.narracion)return IdiomaVoz.hablar(text)}
 
     function applyFontSetting() {
       const savedFont = Matematicas.almacen.getItem(FONT_KEY) || fontSelect.value;
@@ -2889,41 +2891,9 @@
       applyFontSetting();
     }
 
-    function getVoicesList() {
-      return ("speechSynthesis" in window) ? window.speechSynthesis.getVoices() : [];
-    }
-
-    function getSelectedVoice() {
-      const selectedURI = Matematicas.almacen.getItem(VOICE_KEY) || voiceSelect.value;
-      return getVoicesList().find(voice => voice.voiceURI === selectedURI) || null;
-    }
-
-    function populateVoiceSelect() {
-      const voices = getVoicesList();
-      const saved = Matematicas.almacen.getItem(VOICE_KEY) || "";
-      const sorted = [...voices].sort((a, b) => {
-        const preferred = isEnglish() ? "en" : "es";
-        const aPreferred = a.lang?.toLowerCase().startsWith(preferred) ? 0 : 1;
-        const bPreferred = b.lang?.toLowerCase().startsWith(preferred) ? 0 : 1;
-        return aPreferred - bPreferred || a.name.localeCompare(b.name);
-      });
-      voiceSelect.innerHTML = `<option value="">${t("automaticVoice")}</option>`;
-      sorted.forEach(voice => {
-        const option = document.createElement("option");
-        option.value = voice.voiceURI;
-        option.textContent = `${voice.name} (${voice.lang})`;
-        voiceSelect.appendChild(option);
-      });
-      voiceSelect.value = sorted.some(voice => voice.voiceURI === saved) ? saved : "";
-    }
-
-    function saveVoiceSetting() {
-      Matematicas.almacen.setItem(VOICE_KEY, voiceSelect.value);
-    }
-
     function applyStaticLanguage() {
       document.documentElement.lang = getLang();
-      mainTitle.textContent = state.currentProblem ? problemText(state.currentProblem, "title") : t("mainTitle");
+      mainTitle.textContent = t("mainTitle");
       mainSubtitle.textContent = state.currentProblem ? t("problemSubtitle") : t("mainSubtitle");
       document.querySelector(".menuIntro").textContent = t("menuIntro");
       document.querySelector(".settingsHeader h2").textContent = t("settingsTitle");
@@ -2936,7 +2906,6 @@
       paramLabels.forEach((label, index) => {
         label.childNodes[0].textContent = `${t(paramKeys[index])}\n            `;
       });
-      document.querySelector(".panelHeader strong").textContent = t("solveTitle");
       backBtn.textContent = t("menuButton");
       newBtn.textContent = t("newButton");
       resetAnimationBtn.textContent = t("resetButton");
@@ -2955,19 +2924,11 @@
         updateText();
       }
       renderMenu();
-      populateVoiceSelect();
     }
 
     function applyLanguageSetting() {
       const savedLang = IdiomaVoz.idioma;
       languageSelect.value = savedLang;
-      applyStaticLanguage();
-    }
-
-    function saveLanguageSetting() {
-      Matematicas.almacen.setItem(LANG_KEY, languageSelect.value);
-      Matematicas.almacen.removeItem(VOICE_KEY);
-      voiceSelect.value = "";
       applyStaticLanguage();
     }
 
@@ -2995,6 +2956,7 @@
     }
 
     function showScreen(which) {
+      document.querySelector(".app").dataset.pantalla = which;
       menuScreen.classList.toggle("active", which === "menu");
       problemScreen.classList.toggle("active", which === "problem");
     }
@@ -3005,6 +2967,7 @@
         const card = document.createElement("button");
         card.type = "button";
         card.className = "problemCard";
+        card.dataset.story = problem.id;
         card.innerHTML = `
           <div>
             <h2>${problemText(problem, "title")}</h2>
@@ -3013,7 +2976,7 @@
           </div>
           <div class="miniScene" aria-hidden="true"></div>
         `;
-        problem.renderPreview(card.querySelector(".miniScene"));
+        renderStoryThumbnail(card.querySelector(".miniScene"),problem);
         card.addEventListener("click", () => openProblem(problem.id));
         problemGrid.appendChild(card);
       });
@@ -3064,7 +3027,7 @@
     function openProblem(problemId) {
       state.currentProblem = problems[problemId];
       readParams();
-      mainTitle.textContent = problemText(state.currentProblem, "title");
+      scene.dataset.story = state.currentProblem.id;
       mainSubtitle.textContent = t("problemSubtitle");
       sceneTitle.textContent = problemText(state.currentProblem, "sceneTitle");
       animateBtn.textContent = problemText(state.currentProblem, "animateLabel");
@@ -3074,8 +3037,10 @@
     }
 
     function backToMenu() {
+      cancelarAnimacionesEscena();
       window.speechSynthesis?.cancel?.();
       state.currentProblem = null;
+      delete scene.dataset.story;
       const actions = preserveSceneActions();
       scene.innerHTML = "";
       restoreSceneActions(actions);
@@ -3102,6 +3067,7 @@
     function newProblem() {
       const problem = state.currentProblem;
       if (!problem) return;
+      cancelarAnimacionesEscena();
       const p = readParams();
       state.total = randInt(p.minT, p.maxT);
       let realMaxChange = p.maxC;
@@ -3116,6 +3082,8 @@
       state.animated = false;
       state.highlightKeyword = false;
       state.showOperation = false;
+      state.activeHint = null;
+      delete hintBox.dataset.hintActive;
       feedback.className = "feedback";
       feedback.textContent = t("defaultFeedback");
       hintBox.innerHTML = t("defaultHint");
@@ -3132,7 +3100,7 @@
       const name = getName();
       storyBox.innerHTML = problem.story(name, state.total, state.change, state.highlightKeyword);
       equationBox.classList.toggle("isHidden", !state.showOperation);
-      equationBox.textContent = `${state.total} − ${state.change} = ?`;
+      equationBox.textContent = `${state.total} ${getExpectedSymbol()} ${state.change} = ?`;
     }
 
     function buildNumberGrid() {
@@ -3174,45 +3142,26 @@
       restoreSceneChrome(actions);
     }
 
-    function addSkyAndGround() {
+    function addSkyAndGround() { clearIllustratedScene(); }
+    function addIndoorKitchen() { clearIllustratedScene(); }
+    function addRoadScene() { clearIllustratedScene(); }
+    let versionEscena=0;
+    function cancelarAnimacionesEscena(){
+      versionEscena++;
+      celebrationLayer.replaceChildren();
+      for(const animation of scene.getAnimations({subtree:true}))animation.cancel();
+    }
+    function esperarEnEscena(action,delay){
+      const version=versionEscena;
+      return setTimeout(()=>{if(version===versionEscena)action();},delay);
+    }
+    function clearIllustratedScene() {
       const actions = preserveSceneActions();
-      scene.innerHTML = `
-        <div class="sun"></div>
-        <div class="cloud"></div>
-        <div class="ground"></div>
-      `;
+      scene.replaceChildren();
       restoreSceneActions(actions);
     }
 
-    function addIndoorKitchen() {
-      const actions = preserveSceneActions();
-      scene.innerHTML = `
-        <div class="indoorWall"></div>
-        <div class="windowHome"></div>
-        <div class="wallShelf"></div>
-        <div class="indoorFloor"></div>
-      `;
-      restoreSceneActions(actions);
-    }
-
-
-    function addRoadScene() {
-      const actions = preserveSceneActions();
-      scene.innerHTML = `
-        <div class="sun"></div>
-        <div class="cloud"></div>
-        <div class="busRoad"></div>
-        <div class="busStopPole"></div>
-      `;
-      restoreSceneActions(actions);
-    }
-
-    const busInsidePositions = [
-      { x: 19, y: 49 }, { x: 24, y: 49 }, { x: 29, y: 49 }, { x: 34, y: 49 }, { x: 39, y: 49 },
-      { x: 44, y: 49 }, { x: 49, y: 49 }, { x: 54, y: 49 }, { x: 59, y: 49 }, { x: 64, y: 49 },
-      { x: 21, y: 58 }, { x: 27, y: 58 }, { x: 33, y: 58 }, { x: 39, y: 58 }, { x: 45, y: 58 },
-      { x: 51, y: 58 }, { x: 57, y: 58 }, { x: 63, y: 58 }, { x: 68, y: 58 }
-    ];
+    const busInsidePositions = Array.from({length:25},(_,index)=>({x:8.5+Math.floor(index/3)*5.4,y:39+(index%3)*7.1}));
 
     const busOutsidePositions = [
       { x: 88, y: 71 }, { x: 92, y: 74 }, { x: 84, y: 77 }, { x: 89, y: 82 }, { x: 94, y: 84 },
@@ -3230,16 +3179,6 @@
 
     function renderBusScene() {
       addRoadScene();
-
-      const bus = document.createElement("div");
-      bus.className = "bigBus";
-      bus.innerHTML = `
-        <div class="busStripe"></div>
-        <div class="busDoor"></div>
-        <div class="busWheel back"></div>
-        <div class="busWheel front"></div>
-      `;
-      scene.appendChild(bus);
 
       state.movingIds = [];
       const insideCount = state.currentProblem.operation === "addition" ? state.total : state.total;
@@ -3283,10 +3222,10 @@
           const passenger = scene.querySelector(`.busPassenger[data-id="${id}"]`);
           const target = busInsidePositions[(state.total + index) % busInsidePositions.length];
           const delay = index * 260;
-          setTimeout(() => {
+          esperarEnEscena(() => {
             const anim = passenger.animate([
               { left: passenger.style.left, top: passenger.style.top, transform: "translate(-50%, -50%) scale(1)", opacity: 1, offset: 0 },
-              { left: "72%", top: "65%", transform: "translate(-50%, -50%) scale(.95)", opacity: 1, offset: .45 },
+              { left: "65%", top: "62%", transform: "translate(-50%, -50%) scale(.95)", opacity: 1, offset: .45 },
               { left: `${target.x}%`, top: `${target.y}%`, transform: "translate(-50%, -50%) scale(.58)", opacity: 1, offset: 1 }
             ], { duration: 1250, easing: "cubic-bezier(.2,.82,.25,1)", fill: "forwards" });
             anim.onfinish = () => {
@@ -3302,12 +3241,12 @@
           const passenger = scene.querySelector(`.busPassenger[data-id="${id}"]`);
           const target = busOutsidePositions[index % busOutsidePositions.length];
           const delay = index * 260;
-          setTimeout(() => {
+          esperarEnEscena(() => {
             passenger.classList.remove("inside");
             passenger.classList.add("waiting");
             const anim = passenger.animate([
               { left: passenger.style.left, top: passenger.style.top, transform: "translate(-50%, -50%) scale(.58)", opacity: 1, offset: 0 },
-              { left: "72%", top: "65%", transform: "translate(-50%, -50%) scale(.9)", opacity: 1, offset: .45 },
+              { left: "65%", top: "62%", transform: "translate(-50%, -50%) scale(.9)", opacity: 1, offset: .45 },
               { left: `${target.x}%`, top: `${target.y}%`, transform: "translate(-50%, -50%) scale(1)", opacity: 1, offset: 1 }
             ], { duration: 1250, easing: "cubic-bezier(.2,.82,.25,1)", fill: "forwards" });
             anim.onfinish = () => {
@@ -3665,7 +3604,7 @@
         document.removeEventListener("pointercancel", finish);
         document.body.classList.remove("isDragging");
 
-        if (didDrag) {
+        if (didDrag && e.type === "pointerup") {
           const target = findDropZoneAtPoint(e.clientX, e.clientY, payload.kind);
           if (target) fillDropZone(target, payload.value, payload.kind);
         }
@@ -3705,21 +3644,6 @@
 
     function renderTreeScene() {
       addSkyAndGround();
-      const trunk = document.createElement("div");
-      trunk.className = "treeTrunk";
-      const canopy = document.createElement("div");
-      canopy.className = "canopy";
-      canopy.innerHTML = `
-        <div class="leafOval l1"></div>
-        <div class="leafOval l2"></div>
-        <div class="leafOval l3"></div>
-        <div class="leafOval l4"></div>
-        <div class="leafOval l5"></div>
-        <div class="leafOval l6"></div>
-        <div class="leafHighlight"></div>
-      `;
-      scene.append(trunk, canopy);
-
       const ids = Array.from({ length: state.total }, (_, i) => i);
       state.movingIds = shuffle(ids).slice(0, state.change);
       for (let i = 0; i < state.total; i++) {
@@ -3729,46 +3653,6 @@
 
     function renderBasketScene() {
       addIndoorKitchen();
-      const table = document.createElement("div");
-      table.className = "topTable";
-
-      const basket = document.createElement("div");
-      basket.className = "topBasket";
-      basket.innerHTML = `<div class="topBasketRim"></div><div class="topBasketWeave"></div>`;
-
-      const person = document.createElement("div");
-      person.className = "topPerson";
-      person.innerHTML = `
-        <svg class="anaSvg" viewBox="0 0 220 320" aria-hidden="true">
-          <ellipse cx="138" cy="310" rx="58" ry="9" fill="rgba(15,23,42,.16)"/>
-          <path d="M118 224 C112 250 108 276 104 304" stroke="#1d4ed8" stroke-width="17" stroke-linecap="round" fill="none"/>
-          <path d="M154 224 C162 250 166 276 172 304" stroke="#1d4ed8" stroke-width="17" stroke-linecap="round" fill="none"/>
-          <path d="M104 112 Q137 94 172 112 L178 210 Q138 232 96 210 Z" fill="#60a5fa" stroke="#1d4ed8" stroke-width="7" stroke-linejoin="round"/>
-          <path d="M108 126 C91 140 80 158 67 184" stroke="#fed7aa" stroke-width="18" stroke-linecap="round" fill="none"/>
-          <path d="M67 184 C57 192 48 200 38 209" stroke="#fed7aa" stroke-width="17" stroke-linecap="round" fill="none"/>
-          <circle cx="37" cy="209" r="13" fill="#fed7aa" stroke="#c2410c" stroke-width="5"/>
-          <path d="M104 126 C91 140 80 158 67 184" stroke="#c2410c" stroke-width="4" stroke-linecap="round" fill="none" opacity=".55"/>
-          <path d="M67 184 C57 192 48 200 38 209" stroke="#c2410c" stroke-width="4" stroke-linecap="round" fill="none" opacity=".55"/>
-          <path d="M170 129 C184 146 190 165 194 189" stroke="#fed7aa" stroke-width="17" stroke-linecap="round" fill="none"/>
-          <circle cx="196" cy="193" r="11" fill="#fed7aa" stroke="#c2410c" stroke-width="5"/>
-          <path d="M95 208 C112 224 161 224 180 208 L164 263 C144 273 119 273 99 263 Z" fill="#f9a8d4" stroke="#be185d" stroke-width="7" stroke-linejoin="round"/>
-          <path d="M111 221 C124 229 151 229 165 221" stroke="#fce7f3" stroke-width="5" stroke-linecap="round" fill="none" opacity=".95"/>
-          <circle cx="121" cy="241" r="4" fill="#fce7f3"/>
-          <circle cx="142" cy="248" r="4" fill="#fce7f3"/>
-          <circle cx="155" cy="234" r="4" fill="#fce7f3"/>
-          <circle cx="137" cy="62" r="43" fill="#fed7aa" stroke="#c2410c" stroke-width="7"/>
-          <path d="M96 55 C98 22 124 9 151 18 C176 26 184 52 176 75 C159 55 129 50 96 55 Z" fill="#7c2d12"/>
-          <path d="M104 67 C94 87 100 105 114 114" stroke="#7c2d12" stroke-width="12" stroke-linecap="round" fill="none"/>
-          <path d="M169 68 C180 88 174 106 160 115" stroke="#7c2d12" stroke-width="12" stroke-linecap="round" fill="none"/>
-          <circle cx="123" cy="62" r="4" fill="#1f2937"/>
-          <circle cx="151" cy="62" r="4" fill="#1f2937"/>
-          <path d="M126 80 Q137 91 151 80" stroke="#9a3412" stroke-width="5" stroke-linecap="round" fill="none"/>
-        </svg>
-        <div class="smallCarryBasket"></div>
-      `;
-
-      scene.append(table, basket, person);
-
       const ids = Array.from({ length: state.total }, (_, i) => i);
       state.movingIds = shuffle(ids).slice(0, state.change);
       for (let i = 0; i < state.total; i++) {
@@ -3795,7 +3679,7 @@
         const shadow = createShadow(id, target, delay);
         scene.append(ghost, shadow);
 
-        setTimeout(() => {
+        esperarEnEscena(() => {
           ghost.classList.add("show");
           shadow.classList.add("show");
           const fall = fruit.animate([
@@ -3833,20 +3717,20 @@
       state.animated = true;
       feedback.className = "feedback";
       feedback.textContent = isEnglish()
-        ? `Watch how Ana takes ${state.change === 1 ? "one pear" : "some pears"} and puts ${state.change === 1 ? "it" : "them"} in her small basket. The pears left on the plate are the answer.`
-        : `Mira cómo Ana toma ${state.change === 1 ? "una pera" : "algunas peras"} y ${state.change === 1 ? "la pone" : "las pone"} en su canasta pequeña. Las que quedan en el plato son la respuesta.`;
+        ? `Watch how Ana takes ${state.change === 1 ? "one pear" : "some pears"} and puts ${state.change === 1 ? "it" : "them"} in her small basket. The pears left in the large basket are the answer.`
+        : `Mira cómo Ana toma ${state.change === 1 ? "una pera" : "algunas peras"} y ${state.change === 1 ? "la pone" : "las pone"} en su canasta pequeña. Las que quedan en la canasta grande son la respuesta.`;
       updateText();
 
       const movingSet = new Set(state.movingIds);
       state.movingIds.forEach((id, index) => {
         const pos = basketPositions[id];
-        const target = { x: 65 + (index % 3) * 4.2, y: 63 + Math.floor(index / 3) * 4.6 };
+        const target = { x: 78 + (index % 3) * 3.2, y: 66 + Math.floor(index / 3) * 2.8 };
         const delay = index * 290;
         const fruit = scene.querySelector(`.fruit[data-id="${id}"]`);
         const ghost = createFruit("pear", `ghost-${id}`, pos, "fruitGhost");
         scene.appendChild(ghost);
 
-        setTimeout(() => {
+        esperarEnEscena(() => {
           ghost.classList.add("show");
           const take = fruit.animate([
             { left: `${pos.x}%`, top: `${pos.y}%`, transform: "translate(-50%, -50%) rotate(0deg) scale(1)", offset: 0 },
@@ -3885,7 +3769,9 @@
 
     function showHint(kind) {
       const problem = state.currentProblem;
-      if (!problem) return;
+      if (!problem || !preferenciasProblemas[kind]) return;
+      state.activeHint = kind;
+      hintBox.dataset.hintActive = kind;
       if (kind === "data") {
         hintBox.innerHTML = problem.hintData(state.total, state.change);
       }
@@ -3904,6 +3790,7 @@
 
     function resetAnimation() {
       if (!state.currentProblem) return;
+      cancelarAnimacionesEscena();
       window.speechSynthesis?.cancel?.();
       state.animated = false;
       state.currentProblem.renderScene();
@@ -4037,31 +3924,16 @@
       if (!state.currentProblem) return;
       speak(state.currentProblem.speak(getName(), state.total, state.change));
     });
-    [minTotal, maxTotal, minChange, maxChange].forEach(input => input.addEventListener("change", () => {
-      saveParams();
-      if (state.currentProblem) newProblem();
-    }));
-    languageSelect.addEventListener("change", saveLanguageSetting);
-    fontSelect.addEventListener("change", saveFontSetting);
-    voiceSelect.addEventListener("change", saveVoiceSetting);
-    if ("speechSynthesis" in window) {
-      window.speechSynthesis.addEventListener?.("voiceschanged", populateVoiceSelect);
-    }
-
     function startApp() {
       syncNameFromStorage();
       applyFontSetting();
       loadSavedParams();
       applyLanguageSetting();
-      populateVoiceSelect();
-      renderMenu();
+      showScreen("menu");
     }
   window.addEventListener('nombre-estudiante-cambiado',e=>{if(state.currentProblem)updateText();});
 </script>
-  <script src="escenas.js"></script>
-  <script>
-    startApp();
-  </script>
+  <script src="escenas.js?v=historias-1"></script>
 
 <footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos">
   <div class="creditos-dedicatoria">
@@ -4073,7 +3945,8 @@
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="matematicas-problemas.js"></script><script src="pantalla-completa.js"></script>
+<script src="matematicas-problemas.js?v=historias-1"></script><script src="pantalla-completa.js"></script>
+<script src="panel-plegable.js?v=historias-1"></script>
 <script src="nombre-compartido.js"></script>
 </body>
 </html>
