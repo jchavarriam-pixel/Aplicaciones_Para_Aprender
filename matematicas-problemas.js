@@ -2,6 +2,7 @@
 
 const rutaIlustracionesProblemas="ImagenesSituacionesProblemas/Ilustraciones/";
 const arteSituaciones={
+  estacionamiento:["estacionamiento","carro-estacionamiento"],
   applesTree:["manzano","manzana"],
   pearsBasket:["peras-cenital","pera"],
   busPasajeros:["autobus-pasillo-amplio","alumno-aula-4"],
@@ -117,13 +118,17 @@ function renderStoryThumbnail(box,problem){
   recreoOptions.className="opciones-ayuda-problemas";
   recreoOptions.innerHTML='<legend>El recreo en el aula</legend><label for="modoRecreo">Movimiento de estudiantes</label><select id="modoRecreo"><option value="mixto">Mixto (salen o regresan)</option><option value="subtraction">Solo salen</option><option value="addition">Solo regresan</option></select>';
   const modoRecreo=recreoOptions.querySelector("select");
+  const parkingOptions=document.createElement("fieldset");
+  parkingOptions.className="opciones-ayuda-problemas";
+  parkingOptions.innerHTML='<legend>Estacionamiento</legend><label for="modoEstacionamiento">Movimiento de carros</label><select id="modoEstacionamiento"><option value="alternado">Alternan: llegan y se van</option><option value="azar">Al azar en cada ronda</option><option value="addition">Solo llegan</option><option value="subtraction">Solo se van</option></select>';
+  const modoEstacionamiento=parkingOptions.querySelector("select");
   const voice=document.createElement("div");
   voice.id="preferenciasProblemas";
   const done=document.createElement("button");
   done.type="button";
   done.className="mainBtn aplicar-ajustes-problemas";
   done.textContent="Aplicar y volver";
-  settings.append(options,busOptions,recreoOptions,voice,done);
+  settings.append(options,busOptions,recreoOptions,parkingOptions,voice,done);
   dialog.append(settings);
   document.body.append(dialog);
 
@@ -134,6 +139,8 @@ function renderStoryThumbnail(box,problem){
     "Mixto (suben o bajan)":"Mixed (get on or off)","Solo suben":"Get on only","Solo bajan":"Get off only",
     "El recreo en el aula":"Classroom recess","Movimiento de estudiantes":"Student movement",
     "Mixto (salen o regresan)":"Mixed (leave or return)","Solo salen":"Leave only","Solo regresan":"Return only",
+    "Estacionamiento":"Parking lot","Movimiento de carros":"Car movement","Alternan: llegan y se van":"Alternate arrivals and departures",
+    "Al azar en cada ronda":"Random each round","Solo llegan":"Arrivals only","Solo se van":"Departures only",
     "Ya estaban":"Already there","Llegaron":"Arrivals","Cable principal":"Main wire","Se fueron":"Left",
     "Narración y lectura":"Narration and reading","Pista de datos":"Data hint",
     "Pista de palabra clave":"Keyword hint","Pista de operación":"Operation hint"
@@ -168,6 +175,7 @@ function renderStoryThumbnail(box,problem){
     previousRange=JSON.stringify(readParams());
     modoAutobus.value=preferenciasProblemas.autobus;
     modoRecreo.value=preferenciasProblemas.recreo;
+    modoEstacionamiento.value=preferenciasProblemas.estacionamiento;
     for(const input of options.querySelectorAll("input"))input.checked=preferenciasProblemas[input.name];
     IdiomaVoz.iniciarEdicion();
     dialog.showModal();
@@ -176,16 +184,18 @@ function renderStoryThumbnail(box,problem){
     for(const input of options.querySelectorAll("input"))preferenciasProblemas[input.name]=input.checked;
     const cambioAutobus=preferenciasProblemas.autobus!==modoAutobus.value;
     const cambioRecreo=preferenciasProblemas.recreo!==modoRecreo.value;
+    const cambioEstacionamiento=preferenciasProblemas.estacionamiento!==modoEstacionamiento.value;
     preferenciasProblemas.autobus=modoAutobus.value;
     preferenciasProblemas.recreo=modoRecreo.value;
+    preferenciasProblemas.estacionamiento=modoEstacionamiento.value;
     if(!preferenciasProblemas.narracion)window.speechSynthesis?.cancel();
     Matematicas.guardar(CLAVE_AYUDAS_PROBLEMAS,preferenciasProblemas);
     const changed=JSON.stringify(readParams())!==previousRange;
     saveParams();
     saveFontSetting();
     IdiomaVoz.aplicarEdicion();
-    const historia=state.currentProblem?.id;
-    if(historia&&(changed||(cambioAutobus&&historia==="busPasajeros")||(cambioRecreo&&historia==="aulaRecreo")))newProblem();
+    const cambiosPorHistoria={busPasajeros:cambioAutobus,aulaRecreo:cambioRecreo,estacionamiento:cambioEstacionamiento};
+    if(state.currentProblem&&(changed||cambiosPorHistoria[state.currentProblem.id]))newProblem();
     actualizarAyudas();
     dialog.close();
   }
@@ -203,6 +213,7 @@ function renderStoryThumbnail(box,problem){
     if(actions.parentElement!==host)host.append(actions,hints);
   }
   startApp();
+  if(new URLSearchParams(location.search).get("actividad")==="estacionamiento")openProblem("estacionamiento");
   actualizarAyudas();
   const fit=Matematicas.pantalla(app,(_,zoom)=>{
     const width=document.documentElement.clientWidth, height=document.documentElement.clientHeight;

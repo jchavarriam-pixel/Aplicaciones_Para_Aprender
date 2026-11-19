@@ -46,6 +46,7 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 .problemCard[data-story=danielGlobosParque] .objeto-miniatura { bottom:25%; right:28%; }
 .problemCard[data-story=busPasajeros] .miniScene { container-type:size; }
 .problemCard[data-story=busPasajeros] .objeto-miniatura { bottom:7%; right:10%; width:16%; height:21%; z-index:4; }
+.problemCard[data-story=estacionamiento] .objeto-miniatura { inset:auto 38% 20% auto; width:24%; height:60%; }
 .app:not(.horizontal) .problemGrid { grid-template-columns:repeat(auto-fit,minmax(min(100%,calc(145 * var(--unidad))),1fr)); }
 
 .app .layout { height:100%; min-height:0; margin:0; display:grid; grid-template-columns:minmax(0,1fr); grid-template-rows:auto minmax(0,1fr) auto; align-items:stretch; gap:calc(5 * var(--unidad)); }
@@ -124,6 +125,7 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 
 .scene[data-story=applesTree] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/manzano.webp"); }
 .scene[data-story=pearsBasket] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/peras-cenital.webp"); }
+.scene[data-story=estacionamiento] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/estacionamiento.webp"); }
 .scene[data-story=danielGlobosParque] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/parque-cielo-abierto.webp"); }
 .scene[data-story=pajaritosCable] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/cielo-pajaritos.webp"); }
 .scene[data-story=juanMariaDulcesPlato] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/dulces-mesa.webp"); }
@@ -241,6 +243,28 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 
 .scene[data-story=applesTree] :is(.fruit,.fruitGhost,.fruitShadow) { width:5.025cqw; height:6.825cqh; }
 .scene[data-story=pearsBasket] :is(.fruit,.fruitGhost) { width:7.08cqw; height:10.32cqh; }
+.estacionamiento-plano {
+  position:absolute; inset:0;
+}
+.estacionamiento-plano::before {
+  content:""; position:absolute; left:0; right:0; top:50%; height:.6cqh;
+  background:repeating-linear-gradient(90deg,#fff3bcbe 0 4cqw,transparent 4cqw 8cqw);
+}
+.estacionamiento-plaza,.estacionamiento-carro {
+  position:absolute; transform:translate(-50%,-50%); pointer-events:none;
+}
+.estacionamiento-plaza {
+  width:6.4cqw; height:24cqh; border:.29cqw solid #fff7dcde; border-bottom:0;
+  border-radius:.65cqw .65cqw 0 0;
+  background:#283c5b18;
+}
+.estacionamiento-plaza-inferior { transform:translate(-50%,-50%) rotate(180deg); }
+.estacionamiento-carro {
+  width:5.5cqw; height:20cqh; object-fit:contain; z-index:2;
+  filter:hue-rotate(var(--tono-carro)) drop-shadow(.18cqw .35cqh .25cqw #16203385);
+}
+.estacionamiento-carro-movil { z-index:3; }
+
 .plano-autobus {
   position:absolute; top:50%; left:50%; width:100%; height:100%;
   transform:translate(-50%,-50%);

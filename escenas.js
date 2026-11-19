@@ -14,6 +14,169 @@ function alternarOperacionSituaciones(anterior) {
 }
 
 if (usarIlustracionesSituaciones) {
+  const id = "estacionamiento";
+  const imagenCarro = "ImagenesSituacionesProblemas/Ilustraciones/carro-estacionamiento.webp";
+  const puestos = Array.from({length:25}, (_, indice) => ({
+    x:8 + Math.floor(indice / 2) * 7,
+    y:indice % 2 ? 75 : 25,
+    giro:indice % 2 ? 180 : 0
+  }));
+  const tonos = [0,195,85,310,245,40];
+  const llegan = () => state.operation === "addition";
+
+  function datosEstacionamiento(total, cambio, visual = false, resaltar = false) {
+    const numero = n => visual ? `<strong>${n}</strong>` : n;
+    const cantidad = itemWord(problems[id], cambio);
+    const verbo = isEnglish()
+      ? (llegan() ? (cambio === 1 ? "arrives" : "arrive") : (cambio === 1 ? "leaves" : "leave"))
+      : (llegan() ? (cambio === 1 ? "llega" : "llegan") : (cambio === 1 ? "se va" : "se van"));
+    const accion = resaltar ? `<span class="keyAction">${verbo}</span>` : verbo;
+    const datos = isEnglish()
+      ? `There are ${numero(total)} cars in the parking lot. Then ${numero(cambio)} ${cantidad} ${accion}.`
+      : `Hay ${numero(total)} carros en el estacionamiento. Después, ${accion} ${numero(cambio)} ${cantidad}.`;
+    const pregunta = isEnglish() ? "How many cars are in the parking lot now?" : "¿Cuántos carros hay ahora en el estacionamiento?";
+    return { datos, pregunta, verbo };
+  }
+
+  function colocarCarro(carro, punto) {
+    carro.style.left = punto.x + "%";
+    carro.style.top = punto.y + "%";
+    carro.style.transform = `translate(-50%, -50%) rotate(${punto.giro}deg)`;
+  }
+
+  function pintarEstacionamiento() {
+    clearIllustratedScene();
+    const plano = document.createElement("div");
+    plano.className = "estacionamiento-plano";
+    plano.setAttribute("aria-hidden", "true");
+    const entrada = llegan();
+    state.movingIds = entrada
+      ? Array.from({length:state.change}, (_, indice) => state.total + indice)
+      : shuffle(Array.from({length:state.total}, (_, indice) => indice)).slice(0,state.change).sort((a,b) => b-a);
+
+    for (const [indice, puesto] of puestos.entries()) {
+      const plaza = document.createElement("span");
+      plaza.className = "estacionamiento-plaza";
+      plaza.classList.toggle("estacionamiento-plaza-inferior", puesto.giro === 180);
+      plaza.style.left = puesto.x + "%";
+      plaza.style.top = puesto.y + "%";
+      plano.append(plaza);
+      if (indice >= state.total + (entrada ? state.change : 0)) continue;
+      const carro = new Image();
+      carro.className = "estacionamiento-carro";
+      carro.src = imagenCarro;
+      carro.alt = "";
+      carro.dataset.puesto = indice;
+      carro.hidden = indice >= state.total;
+      carro.style.setProperty("--tono-carro", tonos[(indice * 5) % tonos.length] + "deg");
+      colocarCarro(carro, puesto);
+      plano.append(carro);
+    }
+    scene.append(plano);
+  }
+
+  function recorrer(carro, puntos, entrada) {
+    const distancias = [0];
+    for (let i = 1; i < puntos.length; i++) {
+      const a = puntos[i - 1], b = puntos[i];
+      distancias.push(distancias[i - 1] + Math.hypot((b.x - a.x) * 1.5,b.y - a.y));
+    }
+    const total = distancias.at(-1);
+    const animacion = carro.animate(puntos.map((punto, indice) => ({
+      left:punto.x + "%", top:punto.y + "%",
+      transform:`translate(-50%,-50%) rotate(${punto.giro}deg)`,
+      offset:distancias[indice] / total
+    })), {duration:total * 19, fill:"forwards"});
+    carro.classList.add("estacionamiento-carro-movil");
+    carro.hidden = false;
+    animacion.onfinish = () => {
+      colocarCarro(carro, puntos.at(-1));
+      carro.classList.remove("estacionamiento-carro-movil");
+      carro.hidden = !entrada;
+      animacion.cancel();
+    };
+  }
+
+  function moverCarros() {
+    if (state.animated) return;
+    state.animated = true;
+    const entrada = llegan();
+    const reducir = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    for (const [indice, idPuesto] of state.movingIds.entries()) {
+      const carro = scene.querySelector(`.estacionamiento-carro[data-puesto="${idPuesto}"]`);
+      const puesto = puestos[idPuesto];
+      if (reducir) {
+        carro.hidden = !entrada;
+        continue;
+      }
+      const recto = {x:puesto.x,y:50,giro:90};
+      const puntos = entrada
+        ? [{x:-8,y:50,giro:90}, {...recto,x:puesto.x-4}, {...recto,giro:puesto.giro}, puesto]
+        : [puesto, {...recto,giro:puesto.giro}, {...recto,x:puesto.x+4}, {x:108,y:50,giro:90}];
+      esperarAnimacionSituacion(() => recorrer(carro,puntos,entrada), 65 + indice * 400);
+    }
+    feedback.className = "feedback";
+    feedback.textContent = isEnglish() ? "Count the cars in the parking spaces." : "Cuenta los carros en los espacios de estacionamiento.";
+    speak(state.currentProblem.speak(getName(),state.total,state.change));
+  }
+
+  registerScene({
+    id,
+    operation: "addition",
+    chooseOperation(anterior) {
+      const modo = preferenciasProblemas.estacionamiento;
+      if (modo === "alternado") return alternarOperacionSituaciones(anterior);
+      if (modo === "azar") return randInt(0, 1) ? "addition" : "subtraction";
+      return modo;
+    },
+    itemSingular: "carro", itemPlural: "carros",
+    itemSingularEn: "car", itemPluralEn: "cars",
+    texts: {
+      es: {
+        title:"Estacionamiento",
+        short:"Mira cómo llegan o se van los carros. Cuenta cuántos quedan estacionados.",
+        badge:"🚗 Suma y resta",
+        animateLabel:"▶ Mover carros",
+        sceneTitle:"Observa los carros del estacionamiento",
+        answerQuestion:"¿Cuántos carros hay ahora en el estacionamiento?"
+      },
+      en: {
+        title:"Parking lot",
+        short:"Watch cars arrive or leave. Count how many are parked.",
+        badge:"🚗 Addition and subtraction",
+        animateLabel:"▶ Move the cars",
+        sceneTitle:"Watch the cars in the parking lot",
+        answerQuestion:"How many cars are in the parking lot now?"
+      }
+    },
+    renderPreview(box) {
+      const carro = new Image();
+      carro.src = imagenCarro;
+      carro.alt = "";
+      box.replaceChildren(carro);
+    },
+    renderScene:pintarEstacionamiento,
+    animate:moverCarros,
+    story(_,total,cambio,resaltar) {
+      const {datos,pregunta} = datosEstacionamiento(total,cambio,true,resaltar);
+      return `${datos} ${pregunta}`;
+    },
+    speak(_,total,cambio) {
+      const {datos,pregunta} = datosEstacionamiento(total,cambio);
+      return `${datos} ${pregunta}`;
+    },
+    hintData:(total,cambio) => datosEstacionamiento(total,cambio,true).datos,
+    hintKeyword() {
+      const {verbo} = datosEstacionamiento(state.total,state.change);
+      return isEnglish() ? `Look for <strong>${verbo}</strong>.` : `Fíjate en <strong>${verbo}</strong>.`;
+    },
+    hintOperation:(total,cambio) => isEnglish()
+      ? `Use <strong>${state.operation}</strong>: ${total} ${getExpectedSymbol()} ${cambio}.`
+      : `Usa una <strong>${llegan() ? "suma" : "resta"}</strong>: ${total} ${getExpectedSymbol()} ${cambio}.`
+  });
+}
+
+if (usarIlustracionesSituaciones) {
   const id = "busPasajeros";
 
   function datosAutobus(total, cambio, visual = false, resaltar = false) {
