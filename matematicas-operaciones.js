@@ -39,13 +39,25 @@ document.addEventListener('DOMContentLoaded', () => {
   tools.append(botones);
 
   const top = game.querySelector('.top-bar');
+  top.setAttribute('aria-label', 'Resumen de la ronda');
   tools.append(top);
+  const cabeceraTablero = document.createElement('header');
+  cabeceraTablero.className = 'cabecera-tablero-operaciones';
   const instruccion = document.createElement('h2');
   instruccion.className = 'instruccion-operaciones';
   instruccion.textContent = 'Completa la operación.';
   const hint = document.getElementById('hintBar');
   hint.setAttribute('role','status');
-  game.prepend(instruccion, hint);
+  cabeceraTablero.append(instruccion);
+  game.prepend(cabeceraTablero, hint);
+  const lugarAcciones = document.createComment('Acciones junto al panel');
+  botones.before(lugarAcciones);
+  function situarAcciones() {
+    if (app.classList.contains('panel-lateral-oculto')) {
+      if (botones.parentElement !== cabeceraTablero) cabeceraTablero.prepend(botones);
+    } else if (botones.previousSibling !== lugarAcciones) lugarAcciones.after(botones);
+  }
+  new MutationObserver(situarAcciones).observe(app, {attributes:true,attributeFilter:['class']});
 
   const ajustes = document.createElement('dialog');
   ajustes.className = 'ajustes-operaciones';
@@ -112,8 +124,8 @@ document.addEventListener('DOMContentLoaded', () => {
   function guardar() {
     Matematicas.guardar(clave, {digits,operationMode,additionMode,subtractionMode,helpOn,audioHelpOn,animarPasos,narrarPasos,allowLeadingSum,speakAudioResult,currentMusicMode});
   }
-  const pendientes = new Set();
-  let aplicando = false;
+  const practicaActual = () => JSON.stringify([digits,operationMode,additionMode,subtractionMode,allowLeadingSum]);
+  let practicaAlAbrir = '';
   const abrir = botones.querySelector('.boton-ajustes-operaciones');
   abrir.onclick = () => {
     if (PasosOperaciones.activo) {
@@ -122,30 +134,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     cancelarArrastre();
     clearAudioGuide();
+    practicaAlAbrir = practicaActual();
+    IdiomaVoz.iniciarEdicion();
     FiestaSignos.prepararConfiguracion();
     ajustes.style.zoom = String(1 / Matematicas.escala());
     ajustes.showModal();
     ajustes.scrollTop = 0;
   };
   aplicar.onclick = cierre.onclick = () => ajustes.close();
-  ajustes.addEventListener('change', e => {
-    if (!ajustes.open || aplicando || !e.target.closest('#preferenciasOperaciones')) return;
-    e.stopImmediatePropagation();
-    pendientes.add(e.target);
-  }, true);
   ajustes.addEventListener('close', () => {
+    const cambioAyuda = helpOn !== ayudaVisual.checked;
     helpOn = ayudaVisual.checked;
     audioHelpOn = ayudaVerbal.checked;
     animarPasos = mostrarPasos.checked;
     narrarPasos = leerPasos.checked;
     FiestaSignos.aplicarConfiguracion();
-    aplicando = true;
-    for (const control of pendientes) control.dispatchEvent(new Event('change', {bubbles:true}));
-    aplicando = false;
-    pendientes.clear();
+    IdiomaVoz.aplicarEdicion();
     guardar();
     initBackgroundMusic();
-    newProblem();
+    if (practicaActual() !== practicaAlAbrir) newProblem();
+    else {
+      if (cambioAyuda && !isAnswerCorrect) renderBoard();
+      updateHint();
+      if (audioHelpOn && !isAnswerCorrect) startAudioGuide();
+    }
   });
   modos.addEventListener('click', e => {
     if (!e.target.closest('[data-group="operation"]')) return;

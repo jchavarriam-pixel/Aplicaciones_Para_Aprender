@@ -109,16 +109,18 @@
  const masculinas=/\b(jorge|[aá]lvaro|diego|alonso|pablo|marcelo|manuel|andres|andr[eé]s|tomas|tom[aá]s|carlos|miguel|andrew|brian|guy|ryan|david|mark|daniel|alex|fred|oliver|lee|tom|george|arthur|male)\b/i;
  const preferidas={es:{f:['Dalia','Elvira','María'],m:['Jorge','Álvaro','Diego']},en:{f:['Ava','Jenny','Sonia'],m:['Andrew','Guy','Ryan']}};
  const genero=v=>femeninas.test(v.name)?'f':masculinas.test(v.name)?'m':'otro';
- const puntuacion=v=>(/natural|neural|premium|enhanced|online/i.test(v.name)?100:0)+(estado.idioma==='es'&&/es-(CR|MX|US)/i.test(v.lang)?15:0)+(estado.idioma==='en'&&/^en-US/i.test(v.lang)?15:0)+(/Dalia|Ava/i.test(v.name)?30:/Elvira|Jenny/i.test(v.name)?22:/Maria|María|Sonia|Laura/i.test(v.name)?18:0);
+ const puntuacion=(v,idioma)=>(/natural|neural|premium|enhanced|online/i.test(v.name)?100:0)+(idioma==='es'&&/es-(CR|MX|US)/i.test(v.lang)?15:0)+(idioma==='en'&&/^en-US/i.test(v.lang)?15:0)+(/Dalia|Ava/i.test(v.name)?30:/Elvira|Jenny/i.test(v.name)?22:/Maria|María|Sonia|Laura/i.test(v.name)?18:0);
  const idVoz=v=>v.voiceURI||v.name+'|'+v.lang;
- function voces(){const vistos=new Set();return ('speechSynthesis'in window?speechSynthesis.getVoices():[]).filter(v=>v.lang&&new RegExp('^'+estado.idioma+'(?:-|$)').test(v.lang.toLowerCase().replace('_','-'))).filter(v=>{const id=idVoz(v);if(vistos.has(id))return false;vistos.add(id);return true;}).sort((a,b)=>puntuacion(b)-puntuacion(a)||a.name.localeCompare(b.name));}
- function elegida(){const vs=voces();return vs.find(v=>idVoz(v)===estado.voces[estado.idioma])||vs.find(v=>genero(v)==='f')||vs[0]||null;}
+ function voces(idioma){const vistos=new Set();return ('speechSynthesis'in window?speechSynthesis.getVoices():[]).filter(v=>v.lang&&new RegExp('^'+idioma+'(?:-|$)').test(v.lang.toLowerCase().replace('_','-'))).filter(v=>{const id=idVoz(v);if(vistos.has(id))return false;vistos.add(id);return true;}).sort((a,b)=>puntuacion(b,idioma)-puntuacion(a,idioma)||a.name.localeCompare(b.name));}
+ function elegida(ajustes=estado){const vs=voces(ajustes.idioma);return vs.find(v=>idVoz(v)===ajustes.voces[ajustes.idioma])||vs.find(v=>genero(v)==='f')||vs[0]||null;}
  function nombreVoz(v){return v.name.replace(/^Microsoft\s+/i,'').replace(/\s+(Online|Desktop).*$/i,'').replace(/\s+-\s+.*$/,'')+' ('+v.lang+')'+(/natural|neural|premium|enhanced/i.test(v.name)?' · Natural':'');}
- let contenedor=null,onIdioma=null,observer=null;
+ let contenedor=null,onIdioma=null,observer=null,edicion=null;
  function opcionesVoz(){
-  if(!contenedor)return;const select=contenedor.querySelector('#vozElegida'),status=contenedor.querySelector('#disponibilidadVoces'),vs=voces(),actual=elegida();select.replaceChildren();
+  if(!contenedor)return;
+  const ajustes=edicion||estado;
+  const select=contenedor.querySelector('#vozElegida'),status=contenedor.querySelector('#disponibilidadVoces'),vs=voces(ajustes.idioma),actual=elegida(ajustes);select.replaceChildren();
   for(const g of ['f','m']){const group=document.createElement('optgroup');group.label=g==='f'?'Femeninas':'Masculinas';const available=vs.filter(v=>genero(v)===g).slice(0,3);for(const v of available)group.append(new Option(nombreVoz(v),idVoz(v)));
-   for(const name of preferidas[estado.idioma][g]){if(group.children.length>=3)break;if(available.some(v=>v.name.toLowerCase().includes(name.toLowerCase())))continue;const option=new Option(name+' · No disponible en este navegador','no-'+g+'-'+name);option.disabled=true;group.append(option);}select.append(group);
+   for(const name of preferidas[ajustes.idioma][g]){if(group.children.length>=3)break;if(available.some(v=>v.name.toLowerCase().includes(name.toLowerCase())))continue;const option=new Option(name+' · No disponible en este navegador','no-'+g+'-'+name);option.disabled=true;group.append(option);}select.append(group);
   }
   const desconocidas=vs.filter(v=>genero(v)==='otro').slice(0,4);if(desconocidas.length){const group=document.createElement('optgroup');group.label='Otras voces disponibles';for(const v of desconocidas)group.append(new Option(nombreVoz(v),idVoz(v)));select.append(group);}
   if(actual&&!Array.from(select.options).some(o=>o.value===idVoz(actual))){const opt=new Option(nombreVoz(actual),idVoz(actual));select.append(opt);}
@@ -127,19 +129,61 @@
   status.textContent=`Este navegador ofrece ${f} ${f===1?'voz femenina':'voces femeninas'} y ${m} ${m===1?'voz masculina':'voces masculinas'} para este idioma.`;
   localizado(contenedor);
  }
- function hablar(texto,{interrumpir=true}={}){if(!('speechSynthesis'in window))return null;if(interrumpir)speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t(texto)),v=elegida();u.lang=v?.lang||(estado.idioma==='es'?'es-ES':'en-US');u.voice=v;u.rate=estado.velocidad;u.pitch=1;speechSynthesis.speak(u);return u;}
+ function emitir(texto,ajustes,interrumpir=true){
+  if(!('speechSynthesis'in window))return null;
+  if(interrumpir)speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(texto),v=elegida(ajustes);
+  u.lang=v?.lang||(ajustes.idioma==='es'?'es-ES':'en-US');u.voice=v;u.rate=ajustes.velocidad;u.pitch=1;
+  speechSynthesis.speak(u);return u;
+ }
+ function hablar(texto,{interrumpir=true}={}){return emitir(t(texto),estado,interrumpir);}
+ function actualizarIdioma(){
+  document.documentElement.lang=estado.idioma;
+  opcionesVoz();
+  onIdioma?.();
+  localizado(document.body);
+  document.title=t(tituloOriginal);
+ }
+ function iniciarEdicion(){
+  edicion={...estado,voces:{...estado.voces}};
+ }
+ function aplicarEdicion(){
+  if(!edicion)return;
+  const cambioIdioma=edicion.idioma!==estado.idioma;
+  Object.assign(estado,edicion);
+  edicion=null;
+  window.speechSynthesis?.cancel();
+  guardar();
+  if(cambioIdioma)actualizarIdioma();
+ }
  function instalar(selector,{cambioIdioma}={}){
   contenedor=document.querySelector(selector);if(!contenedor)return;onIdioma=cambioIdioma;
   contenedor.classList.add('idioma-voz');contenedor.innerHTML='<h3>Idioma y voz</h3><label>Idioma<select id="idiomaAplicacion"><option value="es">Español</option><option value="en">Inglés</option></select></label><label>Voz<select id="vozElegida"></select></label><p class="iv-nota">Se priorizan las voces naturales. La primera voz femenina disponible se usa de forma predeterminada.</p><p class="iv-nota" id="disponibilidadVoces" role="status"></p><label>Velocidad de la voz<select id="velocidadVoz">'+Array.from({length:9},(_,i)=>`<option value="${(i+7)/10}">${((i+7)/10).toFixed(1)}x</option>`).join('')+'</select></label><button type="button" id="probarIdiomaVoz">🔊 Escuchar esta voz</button><p class="iv-nota">Idioma, voz y velocidad se guardan en este navegador. Cada idioma recuerda su voz.</p>';
   contenedor.querySelector('#idiomaAplicacion').value=estado.idioma;contenedor.querySelector('#velocidadVoz').value=estado.velocidad;
-  contenedor.querySelector('#idiomaAplicacion').addEventListener('change',e=>{estado.idioma=e.target.value;if('speechSynthesis'in window)speechSynthesis.cancel();guardar();document.documentElement.lang=estado.idioma;opcionesVoz();onIdioma?.();localizado(document.body);document.title=t(tituloOriginal);});
-  contenedor.querySelector('#vozElegida').addEventListener('change',e=>{estado.voces[estado.idioma]=e.target.value;guardar();if('speechSynthesis'in window)speechSynthesis.cancel();});
-  contenedor.querySelector('#velocidadVoz').addEventListener('change',e=>{estado.velocidad=+e.target.value;guardar();if('speechSynthesis'in window)speechSynthesis.cancel();});
-  contenedor.querySelector('#probarIdiomaVoz').addEventListener('click',()=>hablar('Hola. Vamos a aprender y jugar juntos.'));
+  contenedor.querySelector('#idiomaAplicacion').addEventListener('change',e=>{
+   if(edicion){edicion.idioma=e.target.value;window.speechSynthesis?.cancel();opcionesVoz();return;}
+   estado.idioma=e.target.value;window.speechSynthesis?.cancel();guardar();actualizarIdioma();
+  });
+  contenedor.querySelector('#vozElegida').addEventListener('change',e=>{
+   const ajustes=edicion||estado;
+   ajustes.voces[ajustes.idioma]=e.target.value;
+   if(!edicion)guardar();
+   window.speechSynthesis?.cancel();
+  });
+  contenedor.querySelector('#velocidadVoz').addEventListener('change',e=>{
+   (edicion||estado).velocidad=+e.target.value;
+   if(!edicion)guardar();
+   window.speechSynthesis?.cancel();
+  });
+  contenedor.querySelector('#probarIdiomaVoz').addEventListener('click',()=>{
+   const texto='Hola. Vamos a aprender y jugar juntos.';
+   if(!edicion)hablar(texto);
+   else emitir(edicion.idioma==='en'?'Hello. Let’s learn and play together.':texto,edicion);
+  });
   opcionesVoz();document.documentElement.lang=estado.idioma;document.title=t(tituloOriginal);
   observer?.disconnect();observer=new MutationObserver(changes=>{const pendientes=new Set();for(const c of changes){if(c.type==='childList')for(const n of c.addedNodes)pendientes.add(n);else pendientes.add(c.target);}for(const n of pendientes)localizado(n);});observer.observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['aria-label','title','alt','placeholder','label']});localizado(document.body);
  }
  const tituloOriginal=document.title;
  if('speechSynthesis'in window)speechSynthesis.addEventListener('voiceschanged',opcionesVoz);
- window.IdiomaVoz={instalar,hablar,t,ingles,localizar:()=>localizado(document.body),get idioma(){return estado.idioma;},get velocidad(){return estado.velocidad;},get estado(){return JSON.parse(JSON.stringify(estado));},get voz(){return elegida();},faltantes:()=>[...faltantes]};
+ window.IdiomaVoz={instalar,iniciarEdicion,aplicarEdicion,hablar,t,ingles,localizar:()=>localizado(document.body),get idioma(){return estado.idioma;},get velocidad(){return estado.velocidad;},get estado(){return JSON.parse(JSON.stringify(estado));},get voz(){return elegida();},faltantes:()=>[...faltantes]};
 })();

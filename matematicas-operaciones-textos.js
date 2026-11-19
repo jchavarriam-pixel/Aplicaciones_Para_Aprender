@@ -18,6 +18,7 @@ window.traducirActividad=s=>{
 
 Object.assign(window.TEXTOS_INGLES,{'Signo':'Sign','Pedir prestado':'Borrow','Revisa los espacios en rojo y vuelve a intentarlo.':'Check the red boxes and try again.'});
 Object.assign(window.TEXTOS_INGLES, {
+ 'Resumen de la ronda':'Round summary',
  'Ayudas':'Hints', 'Mostrar ayuda visual':'Show visual hints',
  'Activar ayuda verbal':'Enable spoken hints', 'Animar préstamos y llevadas':'Animate borrowing and carrying',
  'Narrar los pasos de la animación':'Narrate the animation steps',
