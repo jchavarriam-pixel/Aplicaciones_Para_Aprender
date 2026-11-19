@@ -13,3 +13,28 @@ window.traducirActividad=s=>{
 Object.assign(window.TEXTOS_INGLES,{
  'Une cada fracción con su nombre.':'Match each fraction to its name.','Une cada nombre con la figura que representa esa fracción.':'Match each name to the shape representing that fraction.','Une las representaciones que corresponden a la misma fracción.':'Match representations of the same fraction.','Recuerda: puede haber opciones sin pareja.':'Remember: some items may have no match.','Puedes cambiar estas opciones.':'You can change these options.','figuras con fracciones':'shapes with fractions','fracciones con nombres':'fractions with names','nombres con figuras':'names with shapes','contenido mixto':'mixed content','sin sobrantes':'no extra items','sobrantes en figuras':'extra shapes','sobrantes en fracciones':'extra fractions','sobrantes en ambos lados':'extra items on both sides'
 });
+
+Object.assign(window.TEXTOS_INGLES,{
+  'Aplicaciones':'Applications','Actividades':'Activities','Así jugamos':'How to play','Aplicar y volver':'Apply and return','Cerrar':'Close',
+  'Elige una actividad y practica con fracciones propias.':'Choose an activity and practise proper fractions.',
+  'Cuenta las partes pintadas y las partes del entero.':'Count the coloured parts and all the parts of the whole.',
+  'Elige el color indicado y toca las partes.':'Choose the indicated colour and tap the parts.',
+  'Une las representaciones de la misma fracción.':'Match representations of the same fraction.',
+  'Divide el entero y después colorea las partes.':'Divide the whole and then colour the parts.',
+  'Valores iniciales':'Defaults','Modo examen: no habrá voz, instrucciones, conteos ni explicaciones para corregir.':'Test mode turns off speech, instructions, counting and explanations.',
+  'Colorea las partes necesarias en azul.':'Colour the required parts blue.'
+});
+const traducirFraccionAnterior=window.traducirActividad;
+window.traducirActividad=text=>{
+  const patterns=[
+    [/^Figura dividida en (\d+) partes$/,(_,n)=>'Shape divided into '+n+(n==='1'?' part':' parts')],
+    [/^Parte (\d+) de (\d+)$/,(_,n,d)=>'Part '+n+' of '+d],
+    [/^Número (\d+)$/,(_,n)=>'Number '+n],
+    [/^La figura tiene (\d+) regiones en total y (\d+) regi[oó]n(?:es)? pintadas?\.$/,(_,d,n)=>'The shape has '+d+' parts in total, and '+n+(n==='1'?' is coloured.':' are coloured.')],
+    [/^Colorea (\d+) partes? de color (.+)\.$/,(_,n,c)=>'Colour '+n+(n==='1'?' part ':' parts ')+IdiomaVoz.t(c)+'.'],
+    [/^Colorea las partes necesarias en (.+)\.$/,(_,c)=>'Colour the required parts '+IdiomaVoz.t(c)+'.'],
+    [/^Esta configuración necesita (\d+) fracciones distintas, pero los denominadores elegidos solo permiten (\d+)\. Selecciona más denominadores o reduce las parejas y sobrantes\.$/,(_,a,b)=>'These settings require '+a+' distinct fractions, but the chosen denominators only allow '+b+'. Choose more denominators or reduce pairs and extras.']
+  ];
+  for(const [pattern,replacement] of patterns)if(pattern.test(text))return text.replace(pattern,replacement);
+  return traducirFraccionAnterior(text);
+};

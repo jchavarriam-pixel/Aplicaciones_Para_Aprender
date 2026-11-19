@@ -6,6 +6,7 @@
    'mayor_menor_objetos.html':['.app','.herramientas','.actividad'],
    'ordenar_objetos_tamano.html':['.app','.herramientas','.juego'],
    'mayor_menor.html':['#app','.herramientas-mayor','#gameScreen'],
+   'fracciones_propias_1.html':['#app','.herramientas-fracciones','#app>main'],
    'situaciones_problema_sumas_restas.html':['.app','.herramientas-problemas','.contenido-problemas'],
    'modelador_de_solidos_3d.html':['.app-shell','.herramientas-solidos','.app-shell>main'],
    'sumas_y_restas.html':['#app','.herramientas-operaciones','#gameScreen'],

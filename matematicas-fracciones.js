@@ -1,18 +1,104 @@
-(()=>{
- const app=document.getElementById('app'),tools=document.createElement('aside');tools.className='herramientas-fracciones';app.prepend(tools);tools.append(document.querySelector('.topbar'));
- const config=document.createElement('details');config.className='ajustes-fracciones';config.innerHTML='<summary>⚙️ Configuración</summary><div id="preferenciasFracciones"></div>';tools.append(config);
- const dialog=document.getElementById('settingsDialog');config.append(dialog);dialog.showModal=()=>{config.open=true;dialog.setAttribute('open','');};dialog.addEventListener('close',()=>config.open=false);document.getElementById('voiceSelect').closest('label').hidden=true;
- config.addEventListener('toggle',()=>{if(config.open&&!dialog.open)FraccionesAPI.openSettings();});
- for(const id of ['a1','a2','a3','a4']){const section=document.createElement('section');section.dataset.fraccionesTools=id;tools.append(section);const screen=document.getElementById(id+'Screen');section.append(screen.querySelector('.instruction'));const feedback=screen.querySelector('.feedback');section.append(feedback);if(id==='a3')section.append(document.querySelector('.match-customize'));}
- document.body.append(document.getElementById('creditos-aplicaciones'));
- IdiomaVoz.instalar('#preferenciasFracciones',{cambioIdioma:()=>{if(FraccionesAPI.current)FraccionesAPI.startActivity(FraccionesAPI.current);}});
- const fit=Matematicas.pantalla(app,(h,z)=>{
-  app.style.setProperty('--unidad',1/z+'px');app.classList.toggle('compacta',h<500||innerWidth/z<300);
-  tools.querySelectorAll('[data-fracciones-tools]').forEach(e=>e.hidden=e.dataset.fraccionesTools!==FraccionesAPI.current);
-  const screen=document.querySelector('.screen.active');if(screen){const r=screen.getBoundingClientRect();app.style.setProperty('--figura',Math.min(r.width/z*.55,(r.height/z-110/z))+'px');}
-  const n=Math.max(document.getElementById('leftMatchCol').children.length,document.getElementById('rightMatchCol').children.length)-1;document.getElementById('matchBoard').style.setProperty('--filas',Math.max(1,n));
-  if(FraccionesAPI.current==='a3')FraccionesAPI.redrawConnections();
- });
- new MutationObserver(fit).observe(app.querySelector('main'),{subtree:true,attributes:true,attributeFilter:['class']});
- new MutationObserver(fit).observe(document.getElementById('leftMatchCol'),{childList:true});
+(() => {
+  "use strict";
+  const app=document.getElementById("app");
+  const main=app.querySelector("main");
+  const topbar=app.querySelector(".topbar");
+  const panel=document.createElement("aside");
+  panel.className="herramientas-fracciones";
+  app.prepend(panel);
+  panel.append(topbar);
+
+  const guide=document.createElement("section");
+  guide.className="guia-fracciones";
+  guide.innerHTML='<h2>Así jugamos</h2><p>Elige una actividad y practica con fracciones propias.</p>';
+  panel.append(guide);
+  const navigation=document.createElement("div");
+  navigation.className="navegacion-fracciones";
+  const back=document.getElementById("backBtn");
+  const mode=document.getElementById("modeBtn");
+  const config=document.getElementById("settingsBtn");
+  config.textContent="⚙ Configuración";
+  back.textContent="← Actividades";
+  navigation.append(back,config,mode);
+  panel.append(navigation);
+  const repeat=document.getElementById("repeatBtn");
+  navigation.append(repeat);
+  topbar.querySelector(".top-actions").remove();
+
+  const home=document.getElementById("homeLink");
+  home.onclick=event=>{
+    if(event.ctrlKey||event.metaKey||event.shiftKey||event.altKey||!window.AppsFullscreen)return;
+    event.preventDefault();
+    window.AppsFullscreen.navigate("index.html");
+  };
+
+  const delegated=document.createElement("div");
+  delegated.className="herramientas-actividad-fracciones";
+  panel.append(delegated);
+  for(const id of ["a1","a2","a3","a4"]){
+    const screen=document.getElementById(id+"Screen");
+    const group=document.createElement("div");
+    group.className="opciones-actividad-fracciones";
+    group.dataset.herramientas=id;
+    group.append(screen.querySelector("[data-settings-scope]"));
+    if(id==="a1")group.append(document.getElementById("a1CountHelp"));
+    if(id==="a3"){
+      group.append(document.getElementById("customizeMatch"),document.getElementById("matchCustomizeSummary"));
+      document.querySelector(".match-customize").remove();
+    }
+    delegated.append(group);
+  }
+  const foldedBar=document.createElement("div");
+  foldedBar.className="controles-plegados-fracciones";
+  foldedBar.hidden=true;
+  main.prepend(foldedBar);
+  const board=document.getElementById("matchBoard");
+  const matchArea=document.createElement("div");
+  matchArea.className="marco-pareo-fracciones";
+  board.before(matchArea);
+  matchArea.append(board);
+
+  const voice=document.createElement("section");
+  voice.id="preferenciasFracciones";
+  document.querySelector("#settingsDialog .settings-body").append(voice);
+  IdiomaVoz.instalar("#preferenciasFracciones",{cambioIdioma:FraccionesAPI.refreshActivityLanguage});
+  FraccionesAPI.renderActivityCards();
+
+  const guideText={
+    a1:"Cuenta las partes pintadas y las partes del entero.",
+    a2:"Elige el color indicado y toca las partes.",
+    a3:"Une las representaciones de la misma fracción.",
+    a4:"Divide el entero y después colorea las partes."
+  };
+  function updateLayout(){
+    const activity=FraccionesAPI.current;
+    const folded=app.classList.contains("panel-lateral-oculto");
+    foldedBar.hidden=!folded;
+    back.hidden=!activity;repeat.hidden=!!activity;
+    for(const group of delegated.children)group.hidden=group.dataset.herramientas!==activity;
+    const message=guideText[activity]||"Elige una actividad y practica con fracciones propias.";
+    const guideLine=guide.querySelector("p");
+    if(guideLine.dataset.message!==message){
+      guideLine.dataset.message=message;
+      guideLine.textContent=message;
+    }
+    const host=folded?foldedBar:panel;
+    if(navigation.parentElement!==host)host.append(navigation,delegated);
+  }
+  const fit=Matematicas.pantalla(app,(_,zoom)=>{
+    const width=document.documentElement.clientWidth,height=document.documentElement.clientHeight;
+    const available=width/zoom+"px";
+    if(document.body.style.getPropertyValue("--ancho-fracciones")!==available)document.body.style.setProperty("--ancho-fracciones",available);
+    app.style.setProperty("--alto-util",height/zoom+"px");
+    app.style.setProperty("--unidad",1/zoom+"px");
+    app.classList.toggle("horizontal",width>height);
+    app.classList.toggle("compacta",height<540);
+    updateLayout();
+    const rows=Math.max(document.getElementById("leftMatchCol").children.length,document.getElementById("rightMatchCol").children.length)-1;
+    board.style.setProperty("--filas",Math.max(1,rows));
+    if(FraccionesAPI.current==="a3")FraccionesAPI.redrawConnections();
+  });
+  new MutationObserver(fit).observe(app,{attributes:true,attributeFilter:["class","data-actividad"]});
+  for(const id of ["leftMatchCol","rightMatchCol"])new MutationObserver(fit).observe(document.getElementById(id),{childList:true});
+  new ResizeObserver(fit).observe(board);
 })();
