@@ -17,3 +17,9 @@ window.traducirActividad=s=>{
 };
 
 Object.assign(window.TEXTOS_INGLES,{'Signo':'Sign','Pedir prestado':'Borrow','Revisa los espacios en rojo y vuelve a intentarlo.':'Check the red boxes and try again.'});
+Object.assign(window.TEXTOS_INGLES, {
+ 'Empieza por la columna de la derecha. Completa las casillas y pulsa Revisar.':'Start with the rightmost column. Fill the boxes and press Check.',
+ 'Sumar':'Add', 'Restar':'Take away', 'Ambas':'Both',
+ 'Completa la operación.':'Complete the calculation.', 'Aplicar y cerrar':'Apply and close', '↻ Nueva ronda':'↻ New round',
+ 'Volver a las aplicaciones':'Back to the apps', 'Reiniciar':'Reset'
+});

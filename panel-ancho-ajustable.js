@@ -4,6 +4,7 @@
     const archivo = decodeURIComponent(location.pathname).split('/').pop().toLowerCase();
     const opciones = {
       'mayor_menor.html': ['#app', '.herramientas-mayor', 'cajasMayorMenor.anchoHerramientas.v1', .25],
+      'sumas_y_restas.html': ['#app', '.herramientas-operaciones', 'operaciones.anchoHerramientas.v1', .26],
       'mayor_menor_igual.html': ['.app', '.herramientas-signos', 'signos.anchoHerramientas.v1', .26]
     }[archivo];
     if (!opciones) return;

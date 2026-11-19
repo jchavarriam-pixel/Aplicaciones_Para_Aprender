@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es" class="h-full">
+<html lang="es" class="h-full" data-celebracion="operaciones">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -179,8 +179,6 @@
       text-align: center;
     }
 
-    .feedback { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 100; pointer-events: none; opacity: 0; transition: opacity 0.3s; }
-    .feedback.show { opacity: 1; pointer-events: auto; }
     .feedback-card { background: #fff; border-radius: 28px; padding: 36px 28px; text-align: center; box-shadow: 0 12px 40px rgba(0,0,0,0.2); max-width: 360px; width: 90%; }
     .feedback-card h3 { font-size: 2rem; margin-bottom: 8px; }
     .feedback-card p { font-size: 1.15rem; color: #555; margin-bottom: 20px; font-weight: 700; }
@@ -190,15 +188,10 @@
 
     .drag-ghost { position: fixed; pointer-events: none; z-index: 200; width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 900; color: #fff; opacity: 0.9; transform: translate(-50%, -50%); }
 
-    @keyframes stars-explode {
-      0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
-      100% { transform: translate(var(--tx), var(--ty)) rotate(360deg) scale(0); opacity: 0; }
-    }
     @keyframes pulse-highlight {
       0%, 100% { background: #ede9fe; }
       50% { background: #ddd6fe; }
     }
-    .success-animation { position: fixed; pointer-events: none; z-index: 300; font-size: 3rem; }
     .footer-credit { text-align: center; padding: 16px; font-size: 0.85rem; color: #9333ea; font-weight: 600; margin-top: 20px; }
 
     .col.audio-highlight, .carry-cell.audio-highlight, .answer-cell.audio-highlight { background: #ede9fe !important; border-radius: 12px !important; }
@@ -229,7 +222,8 @@
   </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-operaciones.css"><script>window.IDIOMA_VOZ_APP='operaciones';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-operaciones-textos.js"></script><script src="idioma-voz.js"></script><script src="matematicas-base.js"></script></head>
+  <link rel="stylesheet" href="panel-ancho-ajustable.css?v=20261118-1">
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-operaciones.css?v=panel-1"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="signos-celebraciones.css?v=20261118-5"><link rel="stylesheet" href="signos-escenas.css?v=20261118-1"><script>window.IDIOMA_VOZ_APP='operaciones';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-operaciones-textos.js?v=panel-1"></script><script src="idioma-voz.js"></script><script src="matematicas-base.js"></script></head>
 <body>
   <div class="app-wrapper" id="app">
     <audio id="bgMusic" loop preload="auto"><source src="data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQIAAAAAAAA=" type="audio/wav"></audio>
@@ -245,15 +239,15 @@
           <div class="mode-buttons">
             <button class="mode-btn" data-group="operation" onclick="setOperationMode('solo_suma', this)">
               <span class="mode-btn-emoji">➕</span>
-              <span class="mode-btn-text">Solo<br>sumas</span>
+              <span class="mode-btn-text">Sumar</span>
             </button>
             <button class="mode-btn active" data-group="operation" onclick="setOperationMode('solo_resta', this)">
               <span class="mode-btn-emoji">➖</span>
-              <span class="mode-btn-text">Solo<br>restas</span>
+              <span class="mode-btn-text">Restar</span>
             </button>
             <button class="mode-btn" data-group="operation" onclick="setOperationMode('mixto', this)">
               <span class="mode-btn-emoji">🎲</span>
-              <span class="mode-btn-text">Mixto<br>(ambas)</span>
+              <span class="mode-btn-text">Ambas</span>
             </button>
           </div>
         </div>
@@ -326,7 +320,6 @@
 
     <div class="game-screen" id="gameScreen" style="display:none;">
       <div class="top-bar">
-        <button class="act-btn back" onclick="goMenu()">⬅ Menú</button>
         <h2 id="levelLabel"></h2>
         <span class="score-badge" id="scoreBadge">⭐ 0</span>
       </div>
@@ -362,9 +355,9 @@
     </div>
   </div>
 
-  <div class="feedback" id="feedback">
+  <dialog class="feedback" id="feedback" aria-labelledby="tituloRespuestaOperacion">
     <div class="feedback-card" id="feedbackCard"></div>
-  </div>
+  </dialog>
 
   <div class="drag-ghost" id="dragGhost" style="display:none;"></div>
 
@@ -372,7 +365,7 @@
     let digits = 2, score = 0, helpOn = false, audioHelpOn = false;
     let topDigits = [], bottomDigits = [], currentTop = [], borrowed = [], answers = [];
     let carrySlots = [], expectedCarryIn = [];
-    let dragValue = -1, studentName = '', isAnswerCorrect = false;
+    let dragValue = -1, dragPointer = null, studentName = '', isAnswerCorrect = false;
     let currentOperation = '-';
     let operationMode = 'solo_resta';
     let additionMode = 'con_llevada';
@@ -383,7 +376,7 @@
     let leadingAnswer = null;
     let audioGuideTimeout = null;
     let currentMusicMode = 0;
-    let backgroundMusicTimeout = null;
+    let backgroundMusicTimeout = null, musicContext = null, musicGeneration = 0;
     const musicModes = ['sin música', 'alegre', 'energética', 'tranquila', 'clásica', 'moderna'];
     const ghost = document.getElementById('dragGhost');
 
@@ -455,13 +448,14 @@
     }
 
     function initBackgroundMusic() {
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      clearTimeout(backgroundMusicTimeout);
+      backgroundMusicTimeout = null;
+      const generation = ++musicGeneration;
+      const Audio = window.AudioContext || window.webkitAudioContext;
+      if (!Audio || !currentMusicMode) return;
+      const audioCtx = musicContext ||= new Audio();
       function playBackgroundMusic() {
-        if (currentMusicMode === 0) {
-          if (backgroundMusicTimeout) clearTimeout(backgroundMusicTimeout);
-          backgroundMusicTimeout = null;
-          return;
-        }
+        if (generation !== musicGeneration || !currentMusicMode) return;
 
         let sequence = [];
         if (currentMusicMode === 1) {
@@ -512,21 +506,25 @@
           gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
           osc.start(now);
           osc.stop(now + duration);
+          osc.onended = () => { osc.disconnect(); gain.disconnect(); };
         }
 
         let time = 0;
         sequence.forEach(note => {
           setTimeout(() => {
-            if (document.getElementById('bgMusic')) playNote(note.freq, note.dur);
+            if (generation === musicGeneration) playNote(note.freq, note.dur);
           }, time * 1000);
           time += note.dur + 0.1;
         });
 
-        if (document.getElementById('bgMusic')) backgroundMusicTimeout = setTimeout(playBackgroundMusic, time * 1000 + 500);
+        backgroundMusicTimeout = setTimeout(playBackgroundMusic, time * 1000 + 500);
       }
 
       if (audioCtx.state === 'suspended') {
-        document.addEventListener('click', () => audioCtx.resume().then(() => playBackgroundMusic()), { once: true });
+        if (navigator.userActivation?.hasBeenActive) audioCtx.resume().then(playBackgroundMusic).catch(() => {});
+        else document.addEventListener('click', () => {
+          if (generation === musicGeneration) audioCtx.resume().then(playBackgroundMusic).catch(() => {});
+        }, { once: true });
       } else {
         playBackgroundMusic();
       }
@@ -537,16 +535,14 @@
       const musicBtn = document.getElementById('musicBtn');
       const modeName = musicModes[currentMusicMode];
       musicBtn.textContent = `🎵 ${modeName.charAt(0).toUpperCase() + modeName.slice(1)}`;
-      if (backgroundMusicTimeout) {
-        clearTimeout(backgroundMusicTimeout);
-        backgroundMusicTimeout = null;
-      }
-      initBackgroundMusic();
+      if (!document.querySelector('.ajustes-operaciones')?.open) initBackgroundMusic();
     }
 
     function setActiveButton(group, button) {
-      document.querySelectorAll(`[data-group="${group}"]`).forEach(btn => btn.classList.remove('active'));
-      button.classList.add('active');
+      document.querySelectorAll(`[data-group="${group}"]`).forEach(btn => {
+        btn.classList.toggle('active', btn === button);
+        btn.setAttribute('aria-pressed', btn === button);
+      });
     }
 
     function setOperationMode(mode, button) {
@@ -578,13 +574,11 @@
 
       if (checked && additionMode === 'sin_llevada') {
         additionMode = 'con_llevada';
-        const additionButtons = document.querySelectorAll('.mode-btn[data-group="addition"]');
-        additionButtons.forEach(btn => btn.classList.remove('active'));
         const carryBtn = document.querySelector('.mode-btn[data-group="addition"][onclick*="con_llevada"]');
-        if (carryBtn) carryBtn.classList.add('active');
+        if (carryBtn) setActiveButton('addition', carryBtn);
       }
 
-      if (document.getElementById('gameScreen').style.display !== 'none' && currentOperation === '+') {
+      if (!document.querySelector('.ajustes-operaciones')?.open && document.getElementById('gameScreen').style.display !== 'none' && currentOperation === '+') {
         newProblem();
       }
     }
@@ -593,7 +587,7 @@
       speakAudioResult = checked;
       const checkbox = document.getElementById('speakResultCheckbox');
       if (checkbox) checkbox.checked = checked;
-      if (audioHelpOn) startAudioGuide();
+      if (audioHelpOn && !document.querySelector('.ajustes-operaciones')?.open) startAudioGuide();
     }
 
     function updateModeVisibility() {
@@ -610,15 +604,6 @@
         additionSection.style.opacity = '1';
         subtractionSection.style.opacity = '1';
       }
-    }
-
-    function goMenu() {
-      document.getElementById('menuScreen').style.display = '';
-      document.querySelector('.ajustes-operaciones').open=true;
-      document.getElementById('levelScreen').style.display = 'flex';
-      const nombre = studentName || obtenerNombreGuardado();
-      if (nombre) document.getElementById('nameInput').value = nombre;
-      clearAudioGuide();
     }
 
     function startGameValidated() {
@@ -639,9 +624,8 @@
       studentName = name;
       score = 0;
       updateScore();
-      document.querySelector('.ajustes-operaciones').open=false;
+
       document.getElementById('gameScreen').style.display = '';
-      document.getElementById('levelLabel').textContent = `${getOperationModeText()} de ${digits} dígitos`;
       newProblem();
     }
 
@@ -793,6 +777,9 @@
     }
 
     function newProblem() {
+      cancelarArrastre();
+      FiestaSignos.cerrar();
+      document.getElementById('levelLabel').textContent = getOperationModeText() + ' de ' + digits + ' dígitos';
       genProblem();
       isAnswerCorrect = false;
       clearAudioGuide();
@@ -803,6 +790,8 @@
     }
 
     function resetProblem() {
+      cancelarArrastre();
+      FiestaSignos.cerrar();
       currentTop = [...topDigits];
       borrowed = new Array(digits).fill(false);
       answers = new Array(digits).fill(null);
@@ -968,48 +957,64 @@
     }
 
     function startDrag(e) {
+      if (isAnswerCorrect || dragPointer !== null || e.button !== 0 || e.isPrimary === false) return;
       e.preventDefault();
-      const val = parseInt(e.target.dataset.val, 10);
+      const chip = e.currentTarget;
+      const val = Number(chip.dataset.val);
+      dragPointer = e.pointerId;
       dragValue = val;
+      try { chip.setPointerCapture(e.pointerId); } catch {}
       ghost.style.display = 'flex';
       ghost.textContent = val;
       ghost.className = `drag-ghost c${val}`;
-      ghost.style.background = getComputedStyle(e.target).background;
+      ghost.style.background = getComputedStyle(chip).background;
       moveGhost(e);
       document.addEventListener('pointermove', moveGhost);
       document.addEventListener('pointerup', endDrag);
+      document.addEventListener('pointercancel', cancelarPuntero);
     }
 
     function moveGhost(e) {
+      if (e.pointerId !== dragPointer) return;
       Matematicas.fantasma(ghost,e.clientX,e.clientY);
     }
 
-    function endDrag(e) {
+    function cancelarPuntero(e) {
+      if (e.pointerId === dragPointer) cancelarArrastre();
+    }
+
+    function cancelarArrastre() {
       document.removeEventListener('pointermove', moveGhost);
       document.removeEventListener('pointerup', endDrag);
+      document.removeEventListener('pointercancel', cancelarPuntero);
       ghost.style.display = 'none';
+      document.querySelectorAll('.drop-hover').forEach(c => c.classList.remove('drop-hover'));
+      dragPointer = null;
+      dragValue = -1;
+    }
 
+    function endDrag(e) {
+      if (e.pointerId !== dragPointer) return;
+      const valor = dragValue;
+      cancelarArrastre();
       const el = document.elementFromPoint(e.clientX, e.clientY);
       if (el && (el.classList.contains('answer-cell') || el.classList.contains('carry-cell'))) {
         const type = el.dataset.type;
         const col = el.dataset.col !== undefined ? parseInt(el.dataset.col, 10) : NaN;
         if (type === 'answer') {
-          answers[col] = dragValue;
+          answers[col] = valor;
         } else if (type === 'carry') {
-          carrySlots[col] = dragValue;
+          carrySlots[col] = valor;
         } else if (type === 'leading') {
-          leadingAnswer = dragValue;
+          leadingAnswer = valor;
         }
-        el.textContent = dragValue;
+        el.textContent = valor;
         el.classList.add('filled');
         el.classList.remove('correct', 'wrong', 'drop-hover');
         updateCheckButtonState();
         updateHint();
         if (audioHelpOn) startAudioGuide();
       }
-
-      document.querySelectorAll('.drop-hover').forEach(c => c.classList.remove('drop-hover'));
-      dragValue = -1;
     }
 
     function doBorrow() {
@@ -1133,9 +1138,9 @@
       const col = task.col;
       if (currentOperation === '-') {
         if (currentTop[col] < bottomDigits[col]) {
-          bar.textContent = `👉 En esta columna ${currentTop[col]} es menor que ${bottomDigits[col]}. ¡Pide prestado!`;
+          bar.textContent = `En esta columna ${currentTop[col]} es menor que ${bottomDigits[col]}. ¡Pide prestado!`;
         } else {
-          bar.textContent = `👉 Ahora resta: ${currentTop[col]} − ${bottomDigits[col]} = ? Arrastra el número correcto.`;
+          bar.textContent = IdiomaVoz.t(`Ahora resta: ${currentTop[col]} − ${bottomDigits[col]} = ? Arrastra el número correcto.`);
         }
         return;
       }
@@ -1146,10 +1151,10 @@
         const total = topDigits[source] + bottomDigits[source] + carryFromRight;
         bar.textContent = `👉 ${topDigits[source]} + ${bottomDigits[source]}${carryFromRight ? ' + ' + carryFromRight : ''} = ${total}. Arrastra el 1 arriba para llevarlo a la siguiente columna.`;
       } else if (task.type === 'leading') {
-        bar.textContent = `👉 La última suma dio 10 o más. Arrastra el nuevo dígito al inicio del resultado.`;
+        bar.textContent = 'La última suma dio 10 o más. Arrastra el nuevo dígito al inicio del resultado.';
       } else {
         const carryIn = col < digits - 1 ? (carrySlots[col] || 0) : 0;
-        bar.textContent = `👉 Ahora suma: ${topDigits[col]} + ${bottomDigits[col]}${carryIn ? ' + ' + carryIn : ''} = ? Arrastra el número correcto.`;
+        bar.textContent = IdiomaVoz.t(`Ahora suma: ${topDigits[col]} + ${bottomDigits[col]}${carryIn ? ' + ' + carryIn : ''} = ? Arrastra el número correcto.`);
       }
     }
 
@@ -1322,107 +1327,21 @@
         updateCheckButtonState();
         score++;
         updateScore();
-        triggerSuccessAnimation();
+        clearAudioGuide();
         const expressionText = `${A} ${currentOperation} ${B} = ${expectedResult}`;
-        showFeedback('🎉', '¡Excelente trabajo!', '¡Eres genial!', true, expressionText);
+        const operacion = `${A} ${currentOperation === '+' ? 'más' : 'menos'} ${B} es igual a ${expectedResult}`;
+        const enfocarRonda = () => document.getElementById('nuevaOperacion').focus({preventScroll:true});
+        const celebracion = FiestaSignos.abrir({
+          nombre: studentName || obtenerNombreGuardado() || 'Gabriel',
+          resultado: expressionText,
+          texto: IdiomaVoz.t(operacion) + '. ' + IdiomaVoz.t(getRandomMotivationalMessage()),
+          nuevaRonda: newProblem,
+          enfocarAlCerrar: enfocarRonda
+        });
+        if (!celebracion) showFeedback('🎉', '¡Excelente trabajo!', '¡Eres genial!', true, expressionText);
       } else {
         showFeedback('💪', '¡Casi! Inténtalo de nuevo', 'Revisa los espacios en rojo y corrígelos.', false);
       }
-    }
-
-    function triggerSuccessAnimation() {
-      const explosionShapes = ['stars', 'rainbows', 'hearts', 'fireworks', 'confetti', 'crowns', 'flowers'];
-      const shapeEmojis = { stars: '⭐', rainbows: '🌈', hearts: '❤️', fireworks: '✨', confetti: '🎉', crowns: '👑', flowers: '🌟' };
-      const centerX = window.innerWidth / 2;
-      const centerY = window.innerHeight / 2;
-      const duration = 2;
-      const count = 72;
-
-      for (let rep = 0; rep < 3; rep++) {
-        setTimeout(() => {
-          const selected = [...explosionShapes].sort(() => Math.random() - 0.5).slice(0, 3);
-          const shape = selected[rep % selected.length];
-          const emoji = shapeEmojis[shape];
-          for (let i = 0; i < count; i++) {
-            const elem = document.createElement('div');
-            elem.className = 'success-animation';
-            elem.textContent = emoji;
-            let tx, ty;
-            if (shape === 'stars') {
-              const angle = (i / count) * Math.PI * 2;
-              const distance = 600 + Math.random() * 300;
-              tx = Math.cos(angle) * distance;
-              ty = Math.sin(angle) * distance;
-            } else if (shape === 'rainbows') {
-              const angle = (i / count) * Math.PI * 8;
-              const distance = 200 + (i / count) * 800;
-              tx = Math.cos(angle) * distance;
-              ty = Math.sin(angle) * distance;
-            } else if (shape === 'hearts') {
-              const angle = Math.random() * Math.PI * 2;
-              const distance = 500 + Math.random() * 600;
-              tx = Math.cos(angle) * distance;
-              ty = Math.sin(angle) * distance;
-            } else if (shape === 'fireworks') {
-              const angle = Math.random() * Math.PI * 2;
-              const distance = 400 + Math.random() * 500;
-              tx = Math.cos(angle) * distance;
-              ty = Math.sin(angle) * distance - 600;
-            } else if (shape === 'confetti') {
-              const angle = (i / count) * Math.PI * 2;
-              tx = Math.cos(angle) * 700;
-              ty = Math.sin(angle) * 400 + (Math.random() - 0.5) * 400;
-            } else if (shape === 'crowns') {
-              const angle = (i / count) * Math.PI * 2;
-              const distance = 550 + (i % 2) * 150;
-              tx = Math.cos(angle) * distance;
-              ty = Math.sin(angle) * distance - 400;
-            } else {
-              const petalAngle = Math.floor(i / (count / 6)) * (Math.PI * 2 / 6);
-              const offsetAngle = (i % (count / 6)) * (Math.PI * 2 / (count / 6));
-              const distance = 400 + Math.random() * 400;
-              tx = Math.cos(petalAngle + offsetAngle) * distance;
-              ty = Math.sin(petalAngle + offsetAngle) * distance;
-            }
-            elem.style.left = centerX + 'px';
-            elem.style.top = centerY + 'px';
-            elem.style.setProperty('--tx', tx + 'px');
-            elem.style.setProperty('--ty', ty + 'px');
-            elem.style.animation = `stars-explode ${duration}s ease-out forwards`;
-            elem.style.animationDelay = (i * 0.015) + 's';
-            elem.style.fontSize = (2 + Math.random() * 1.5) + 'rem';
-            document.body.appendChild(elem);
-            setTimeout(() => elem.remove(), (duration + i * 0.015) * 1000);
-          }
-        }, rep * (duration * 1000 + 300));
-      }
-    }
-
-    function playCelebrationSound() {
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const celebrationNotes = [
-        { freq: 523.25, dur: 0.2 },
-        { freq: 659.25, dur: 0.2 },
-        { freq: 783.99, dur: 0.4 }
-      ];
-      function playNote(frequency, duration, delay = 0) {
-        const now = audioCtx.currentTime + delay;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.type = 'sine';
-        osc.frequency.value = frequency;
-        gain.gain.setValueAtTime(0.08, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
-        osc.start(now);
-        osc.stop(now + duration);
-      }
-      let delay = 0;
-      celebrationNotes.forEach(note => {
-        playNote(note.freq, note.dur, delay);
-        delay += note.dur + 0.1;
-      });
     }
 
     function getRandomMotivationalMessage() {
@@ -1447,15 +1366,15 @@
       const card = document.getElementById('feedbackCard');
       const personalMsg = isSuccess ? getRandomMotivationalMessage() : 'No te preocupes. ¡Tú puedes!';
       card.innerHTML = `
-        <h3>${emoji} ${title}</h3>
+        <h3 id="tituloRespuestaOperacion">${emoji} ${title}</h3>
         ${expressionText ? `<div class="feedback-expression">${expressionText}</div>` : ''}
         <p class="feedback-note">${msg}</p>
-        <button onclick="${isSuccess ? 'newProblem()' : 'closeFeedback()'}">${isSuccess ? '➡️ Siguiente' : '🔄 Seguir intentando'}</button>
+        <button onclick="${isSuccess ? 'newProblem()' : 'closeFeedback()'}">${isSuccess ? '↻ Nueva ronda' : '🔄 Seguir intentando'}</button>
       `;
-      fb.classList.add('show');
+      fb.style.zoom = String(1 / Matematicas.escala());
+      fb.showModal();
 
       if (isSuccess) {
-        playCelebrationSound();
         const A = digitsToNumber(topDigits);
         const B = digitsToNumber(bottomDigits);
         const result = currentOperation === '+' ? A + B : A - B;
@@ -1468,7 +1387,8 @@
     }
 
     function closeFeedback() {
-      document.getElementById('feedback').classList.remove('show');
+      const feedback = document.getElementById('feedback');
+      if (feedback.open) feedback.close();
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -1479,7 +1399,6 @@
       if (allowLeadingCheckbox) allowLeadingCheckbox.checked = allowLeadingSum;
       const speakResultCheckbox = document.getElementById('speakResultCheckbox');
       if (speakResultCheckbox) speakResultCheckbox.checked = speakAudioResult;
-      initBackgroundMusic();
     });
   window.addEventListener('nombre-estudiante-cambiado',e=>{studentName=e.detail.nombre;});
 </script>
@@ -1494,7 +1413,8 @@
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="matematicas-operaciones.js"></script><script src="pantalla-completa.js"></script>
+<script src="signos-escenas.js?v=20261118-2"></script><script src="signos-celebraciones.js?v=operaciones-1"></script><script src="matematicas-operaciones.js?v=panel-1"></script><script src="pantalla-completa.js"></script><script src="panel-plegable.js?v=operaciones-1"></script>
 <script src="nombre-compartido.js"></script>
+<script src="panel-ancho-ajustable.js?v=operaciones-1"></script>
 </body>
 </html>

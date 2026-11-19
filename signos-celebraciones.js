@@ -71,7 +71,7 @@
         <div class="cohete-fiesta-signos" aria-hidden="true">${coheteSvg()}</div>
         <div class="consola-despegue-signos"><span class="flecha-pulsador-signos flecha-arriba" aria-hidden="true">${flechaSvg()}</span><span class="flecha-pulsador-signos flecha-izquierda" aria-hidden="true">${flechaSvg()}</span><span class="flecha-pulsador-signos flecha-derecha" aria-hidden="true">${flechaSvg()}</span><button class="despegar-fiesta-signos" type="button"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3V15M9 7A12 12 0 1 0 23 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></svg><span></span></button></div>
         <div class="cuenta-fiesta-signos" aria-hidden="true"><span></span><strong>3</strong></div>
-        <div class="mensaje-fiesta-signos" hidden><span class="insignia-fiesta-signos" aria-hidden="true">★</span><h3></h3><p></p></div>
+        <div class="mensaje-fiesta-signos" hidden><span class="insignia-fiesta-signos" aria-hidden="true">★</span><h3></h3><p></p><strong class="resultado-fiesta-signos" hidden></strong></div>
       </section>
       <footer class="pie-fiesta-signos"><span class="estado-fiesta-signos" role="status" aria-live="polite"></span><button class="continuar-fiesta-signos" type="button"></button><button class="nueva-ronda-fiesta-signos" type="button"></button><div class="tiempo-fiesta-signos" aria-hidden="true"><span></span></div></footer>`;
     document.body.append(dialogo);
@@ -121,7 +121,7 @@
     sonidoBoton.setAttribute('aria-pressed', String(preferencias.sonido));
   }
   function abrir({
-    nombre = 'Gabriel', texto, tipo:seleccion,
+    nombre = 'Gabriel', texto, resultado = '', tipo:seleccion,
     nuevaRonda: iniciarRonda = () => document.getElementById('btnNew')?.click(),
     enfocarAlCerrar = () => document.getElementById('btnNew')?.focus({ preventScroll: true }),
     enfocarRonda = () => {
@@ -156,6 +156,9 @@
     mensaje.hidden = true; cohete.hidden = false; cuenta.hidden = false; barra.hidden = true;
     mensaje.querySelector('h3').textContent = t('¡Felicidades!', 'Congratulations!');
     mensaje.querySelector('p').textContent = t(`${nombre}, ¡lo has hecho genial!`, `${nombre}, you did a great job!`);
+    const operacion = mensaje.querySelector('.resultado-fiesta-signos');
+    operacion.textContent = resultado;
+    operacion.hidden = !resultado;
     dialogo.style.zoom = String(1 / (parseFloat(getComputedStyle(document.body).zoom) || 1));
     cambiarFase('preparado'); dialogo.showModal(); ajustar(); pintar();
     (escena.extra?.boton||despegar).focus({ preventScroll: true });

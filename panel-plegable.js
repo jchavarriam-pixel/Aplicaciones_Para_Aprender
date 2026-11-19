@@ -6,6 +6,7 @@
    'mayor_menor_objetos.html':['.app','.herramientas','.actividad'],
    'ordenar_objetos_tamano.html':['.app','.herramientas','.juego'],
    'mayor_menor.html':['#app','.herramientas-mayor','#gameScreen'],
+   'sumas_y_restas.html':['#app','.herramientas-operaciones','#gameScreen'],
    'mayor_menor_igual.html':['.app','.herramientas-signos','#gameArea'],
    'reconocer_numeros.html':['#game','#pareoSidebar,#herramientasJuego','#gameContent']
   }[archivo];if(!opciones)return;
