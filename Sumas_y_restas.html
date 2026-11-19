@@ -223,7 +223,7 @@
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
   <link rel="stylesheet" href="panel-ancho-ajustable.css?v=20261118-1">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-operaciones.css?v=panel-1"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="signos-celebraciones.css?v=20261118-5"><link rel="stylesheet" href="signos-escenas.css?v=20261118-1"><script>window.IDIOMA_VOZ_APP='operaciones';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-operaciones-textos.js?v=panel-1"></script><script src="idioma-voz.js"></script><script src="matematicas-base.js"></script></head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-operaciones.css?v=panel-2"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="signos-celebraciones.css?v=20261118-5"><link rel="stylesheet" href="signos-escenas.css?v=20261118-1"><script>window.IDIOMA_VOZ_APP='operaciones';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-operaciones-textos.js?v=panel-1"></script><script src="idioma-voz.js"></script><script src="matematicas-base.js"></script></head>
 <body>
   <div class="app-wrapper" id="app">
     <audio id="bgMusic" loop preload="auto"><source src="data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQIAAAAAAAA=" type="audio/wav"></audio>
@@ -1226,7 +1226,7 @@
         }
       }
 
-      highlightAudioStep(task);
+      highlightAudioStep(task, true);
       speakText(mainMessage);
 
       audioGuideTimeout = setTimeout(() => {
@@ -1246,7 +1246,7 @@
             audioGuideTimeout = setTimeout(() => performAudioCycle(task, iteration + 1), 3000);
           } else {
             audioGuideTimeout = setTimeout(() => {
-              highlightAudioStep(task);
+              highlightAudioStep(task, currentOperation === '-' && currentTop[col] < bottomDigits[col]);
               speakText(followMessage);
               audioGuideTimeout = setTimeout(() => {
                 clearAudioHighlight();
@@ -1258,7 +1258,7 @@
       }, 3000);
     }
 
-    function highlightAudioStep(task) {
+    function highlightAudioStep(task, resaltarOperandos = false) {
       clearAudioHighlight();
       const colsContainer = document.getElementById('colsContainer');
       const signDiv = colsContainer.querySelector('.sign-col');
@@ -1266,6 +1266,16 @@
 
       const activeCol = colsContainer.querySelector(`.col[data-col="${task.col}"]`);
       if (activeCol) activeCol.classList.add('audio-highlight');
+
+      if (activeCol && task.type === 'answer' && resaltarOperandos) {
+        const [superior, inferior] = activeCol.querySelectorAll(':scope > .digit-cell');
+        // Tras pedir prestado, la voz usa la cifra nueva y la original queda tachada.
+        (superior.querySelector('.digit-new') || superior).classList.add('audio-operando-superior');
+        inferior.classList.add('audio-operando-inferior');
+        if (currentOperation === '+' && carrySlots[task.col] > 0) {
+          activeCol.querySelector('.carry-cell')?.classList.add('audio-operando-superior');
+        }
+      }
 
       if (task.type === 'carry') {
         const carry = document.querySelector(`.carry-cell[data-col="${task.col}"]`);
@@ -1280,7 +1290,8 @@
     }
 
     function clearAudioHighlight() {
-      document.querySelectorAll('.audio-highlight').forEach(el => el.classList.remove('audio-highlight'));
+      document.querySelectorAll('.audio-highlight, .audio-operando-superior, .audio-operando-inferior')
+        .forEach(el => el.classList.remove('audio-highlight', 'audio-operando-superior', 'audio-operando-inferior'));
     }
 
     function speakText(text){return IdiomaVoz.hablar(text)}
