@@ -1,15 +1,18 @@
-/* One animation loop, a bounded star canvas and one reusable SVG rocket. */
+/* One animation loop and canvas, with a manual start and rotating scenes. */
 (() => {
   'use strict';
   const clave = 'signos.celebracion.v1';
+  const tipos=['cohete','volcan','tren','globo'],claveUltima='signos.celebracion.ultima.v1';let ultima='';
   const colores = ['#ffe481', '#fff4c7', '#93d9ff', '#ffaabd', '#c6b5ff', '#a1ebd4'];
   const t = (es, en) => window.IdiomaVoz?.idioma === 'en' ? en : es;
-  let preferencias = { activa: true, sonido: true, duracion: 8 };
+  let preferencias = { activa: true, sonido: true, duracion: 8, tipo:'rotar' };
   try {
     const p = JSON.parse(localStorage.getItem(clave) || '{}');
     if (typeof p.activa === 'boolean') preferencias.activa = p.activa;
     if (typeof p.sonido === 'boolean') preferencias.sonido = p.sonido;
     if ([0, 8, 12, 20].includes(p.duracion)) preferencias.duracion = p.duracion;
+    if (['rotar',...tipos].includes(p.tipo)) preferencias.tipo=p.tipo;
+    const u=localStorage.getItem(claveUltima);if(tipos.includes(u))ultima=u;
   } catch {}
   let opciones, dialogo, area, canvas, ctx, cohete, llama, cuenta, numero, mensaje, estado, consola, cable, despegar, continuar, nuevaRonda, sonidoBoton, barra, escena;
   let audio, ruidoMotor;
@@ -20,7 +23,7 @@
     if (opciones) return opciones;
     opciones = document.createElement('fieldset');
     opciones.className = 'opciones-fiesta-signos';
-    opciones.innerHTML = '<legend>Celebración del cohete</legend><label><input type="checkbox" id="activarFiestaSignos"> Activar celebraciones</label><label><input type="checkbox" id="sonidoFiestaSignos"> Sonidos y voz de la celebración</label><label class="duracion-fiesta-signos">Tiempo de felicitación<select id="duracionFiestaSignos"><option value="8">8 segundos</option><option value="12">12 segundos</option><option value="20">20 segundos</option><option value="0">Hasta pulsar Continuar</option></select></label><p>Cuenta regresiva, despegue, lluvia de estrellas y una felicitación. Puedes continuar cuando quieras.</p>';
+    opciones.innerHTML = '<legend>Celebraciones</legend><label><input type="checkbox" id="activarFiestaSignos"> Activar celebraciones</label><label class="duracion-fiesta-signos">Escena<select id="tipoFiestaSignos"><option value="rotar">Alternar las cuatro</option><option value="cohete">Cohete</option><option value="volcan">Volcán de números</option><option value="tren">Tren de la alegría</option><option value="globo">Globo aerostático</option></select></label><label><input type="checkbox" id="sonidoFiestaSignos"> Sonidos y voz de la celebración</label><label class="duracion-fiesta-signos">Tiempo de felicitación<select id="duracionFiestaSignos"><option value="8">8 segundos</option><option value="12">12 segundos</option><option value="20">20 segundos</option><option value="0">Hasta pulsar Continuar</option></select></label><p>Activa cada escena tocando su botón, palanca o quemador. Puedes iniciar otra ronda cuando quieras.</p>';
     prepararConfiguracion();
     return opciones;
   }
@@ -29,13 +32,15 @@
     opciones.querySelector('#activarFiestaSignos').checked = preferencias.activa;
     opciones.querySelector('#sonidoFiestaSignos').checked = preferencias.sonido;
     opciones.querySelector('#duracionFiestaSignos').value = String(preferencias.duracion);
+    opciones.querySelector('#tipoFiestaSignos').value=preferencias.tipo;
   }
   function aplicarConfiguracion() {
     if (!opciones) return;
     preferencias = {
       activa: opciones.querySelector('#activarFiestaSignos').checked,
       sonido: opciones.querySelector('#sonidoFiestaSignos').checked,
-      duracion: Number(opciones.querySelector('#duracionFiestaSignos').value)
+      duracion: Number(opciones.querySelector('#duracionFiestaSignos').value),
+      tipo: opciones.querySelector('#tipoFiestaSignos').value
     };
     guardar();
   }
@@ -67,7 +72,7 @@
     consola = area.querySelector('.consola-despegue-signos'); cable = area.querySelector('.cable-despegue-signos');
     barra = dialogo.querySelector('.tiempo-fiesta-signos');
     continuar.onclick = () => cerrar(true);
-    despegar.onclick = iniciarDespegue;
+    despegar.onclick = iniciarAnimacion;
     nuevaRonda.onclick = () => {
       const accion = escena?.nuevaRonda;
       cerrar(); accion?.();
@@ -102,17 +107,25 @@
     sonidoBoton.title = sonidoBoton.getAttribute('aria-label');
     sonidoBoton.setAttribute('aria-pressed', String(preferencias.sonido));
   }
-  function abrir({ nombre = 'Gabriel', texto, nuevaRonda: iniciarRonda = () => document.getElementById('btnNew')?.click() } = {}) {
+  function abrir({ nombre = 'Gabriel', texto, tipo:seleccion, nuevaRonda: iniciarRonda = () => document.getElementById('btnNew')?.click() } = {}) {
     cerrar(); if (!preferencias.activa) return false;
     construir(); window.speechSynthesis?.cancel();
+    const tipo=tipos.includes(seleccion)?seleccion:preferencias.tipo==='rotar'?tipos[(tipos.indexOf(ultima)+1)%tipos.length]:preferencias.tipo;
+    if(!tipos.includes(seleccion)){ultima=tipo;try{localStorage.setItem(claveUltima,tipo);}catch{}}
     escena = {
-      inicio: null, ultimo: 0, frame: 0, fase: '', numero: 0, t: 0, estrellas: [], humo: [],
+      inicio: null, ultimo: 0, frame: 0, fase: '', numero: 0, t: 0, estrellas: [], humo: [],tipo,extra:null,
       w: 0, h: 0, alto: 0, emision: 0, final: 8.3, lectura: null, leyendo: false,
       reducido: matchMedia('(prefers-reduced-motion:reduce)').matches,
       nombre, nuevaRonda: iniciarRonda, texto: texto || t(`¡Felicidades, ${nombre}! Lo has hecho genial. Sigue así.`, `Congratulations, ${nombre}! You did a great job. Keep it up!`)
     };
-    dialogo.querySelector('h2').textContent = t('¡Misión cumplida!', 'Mission complete!');
-    area.setAttribute('aria-label', t('Despegue de un cohete y lluvia de estrellas', 'Rocket launch and falling stars'));
+    dialogo.dataset.tipo=tipo;
+    if(tipo!=='cohete'){
+      escena.extra=EscenasFiestaSignos.crear(tipo,area,{t,activar:iniciarAnimacion,sonar:sonarEscena,reducido:escena.reducido});
+      escena.final=escena.extra.final;
+    }
+    const titulos={cohete:t('¡Misión cumplida!','Mission complete!'),volcan:t('Volcán de números','Number volcano'),tren:t('Tren de la alegría','Happy train'),globo:t('Globo aerostático','Hot-air balloon')};
+    dialogo.querySelector('h2').textContent = titulos[tipo];
+    area.setAttribute('aria-label',tipo==='cohete'?t('Despegue de un cohete y lluvia de estrellas','Rocket launch and falling stars'):titulos[tipo]);
     cuenta.querySelector('span').textContent = t('Despegue en', 'Launch in');
     continuar.textContent = t('Continuar →', 'Continue →');
     despegar.querySelector('span').textContent = t('Despegar', 'Launch');
@@ -123,10 +136,10 @@
     mensaje.querySelector('p').textContent = t(`${nombre}, ¡lo has hecho genial!`, `${nombre}, you did a great job!`);
     dialogo.style.zoom = String(1 / (parseFloat(getComputedStyle(document.body).zoom) || 1));
     cambiarFase('preparado'); dialogo.showModal(); ajustar(); pintar();
-    despegar.focus({ preventScroll: true });
+    (escena.extra?.boton||despegar).focus({ preventScroll: true });
     return true;
   }
-  function iniciarDespegue() {
+  function iniciarAnimacion() {
     if (!escena || escena.inicio !== null) return;
     escena.inicio = performance.now();
     actualizar(0,0); pintar();
@@ -157,6 +170,7 @@
     cable.querySelectorAll('path').forEach(p=>p.setAttribute('d',`M${sx} ${sy} C${curva} ${sy+28} ${curva} ${ey+12} ${ex} ${ey}`));
     cable.querySelector('circle').setAttribute('cx',ex);cable.querySelector('circle').setAttribute('cy',ey);
     colocarCohete(escena.t);
+    escena.extra?.ajustar(escena.w,escena.h);
     if (escena.inicio === null) pintar();
   }
   function colocarCohete(tiempo) {
@@ -173,16 +187,19 @@
     if (escena.fase === fase) return;
     escena.fase = fase; dialogo.dataset.fase = fase;
     const etiquetas = {
-      preparado: t('Pulsa Despegar para iniciar la cuenta regresiva.','Press Launch to start the countdown.'),
+      preparado: escena.extra?.instruccion||t('Pulsa Despegar para iniciar la cuenta regresiva.','Press Launch to start the countdown.'),
+      animacion: escena.tipo==='volcan'?t('¡Mira los números que salen del volcán!','Look at the numbers coming out of the volcano!'):escena.tipo==='tren'?t('¡El tren de la alegría está en marcha!','The happy train is on its way!'):t('¡El globo se infla y sube al cielo!','The balloon inflates and rises into the sky!'),
       cuenta: t('Preparados para el despegue…', 'Ready for launch…'),
       despegue: t('¡Despegue!', 'Lift-off!'),
       estrellas: t('¡Una lluvia de estrellas para ti!', 'A shower of stars for you!'),
       felicitacion: t('¡Felicidades!', 'Congratulations!')
     };
     estado.textContent = etiquetas[fase];
-    consola.hidden = fase !== 'preparado'; cable.toggleAttribute('hidden',fase !== 'preparado'); despegar.disabled = fase !== 'preparado';
+    const esCohete=escena.tipo==='cohete';
+    consola.hidden = !esCohete||fase !== 'preparado'; cable.toggleAttribute('hidden',!esCohete||fase !== 'preparado'); despegar.disabled = !esCohete||fase !== 'preparado';
+    area.querySelector('.plataforma-fiesta-signos').hidden=!esCohete;
     continuar.hidden = false;
-    cuenta.hidden = fase !== 'cuenta'; cohete.hidden = fase === 'estrellas' || fase === 'felicitacion';
+    cuenta.hidden = !esCohete||fase !== 'cuenta'; cohete.hidden = !esCohete||fase === 'estrellas' || fase === 'felicitacion';
     if (fase === 'despegue') motor();
     if (fase === 'estrellas') { pararAudio(); campana(); }
     if (fase === 'felicitacion') {
@@ -205,6 +222,7 @@
   }
   function actualizar(dt, tiempo) {
     escena.t = tiempo;
+    if(escena.extra){cambiarFase(tiempo<escena.final?'animacion':'felicitacion');escena.extra.actualizar(dt,tiempo);return;}
     cambiarFase(tiempo < 3 ? 'cuenta' : tiempo < 6 ? 'despegue' : tiempo < escena.final ? 'estrellas' : 'felicitacion');
     if (escena.fase === 'cuenta') {
       const n = 3 - Math.floor(tiempo);
@@ -226,6 +244,7 @@
   function pintar() {
     if (!ctx || !escena) return;
     const { w, h } = escena; ctx.clearRect(0, 0, w, h);
+    if(escena.extra){escena.extra.pintar(ctx);return;}
     for (let i = 0; i < 35; i++) {
       ctx.fillStyle = i % 3 ? '#ffffff66' : '#fff8cc99'; ctx.beginPath();
       const x = Math.sin(i * 127.1 + 23) * 43758.5453, y = Math.sin(i * 311.7 + 31) * 19642.349;
@@ -254,15 +273,15 @@
     if (!preferencias.sonido || !escena) return null;
     try { audio ||= new (window.AudioContext || window.webkitAudioContext)(); audio.resume().catch(() => {}); return audio; } catch { return null; }
   }
-  function motor() {
+  function motor(duracion=3,frecuencia=600) {
     if (!contextoAudio() || ruidoMotor) return;
     // One noise buffer, faded at both ends. No audio nodes are created per frame.
     const buffer = audio.createBuffer(1, audio.sampleRate, audio.sampleRate), datos = buffer.getChannelData(0);
     for (let i = 0; i < datos.length; i++) datos[i] = Math.random() * 2 - 1;
     const s = audio.createBufferSource(), filtro = audio.createBiquadFilter(), g = audio.createGain(), ahora = audio.currentTime;
-    s.buffer = buffer; s.loop = true; filtro.type = 'lowpass'; filtro.frequency.value = 600;
-    s.connect(filtro).connect(g).connect(audio.destination); g.gain.setValueAtTime(.0001, ahora); g.gain.exponentialRampToValueAtTime(.045, ahora + .45); g.gain.exponentialRampToValueAtTime(.0001, ahora + 3);
-    s.start(); s.stop(ahora + 3.05); ruidoMotor = s; fuentes.add(s);
+    s.buffer = buffer; s.loop = true; filtro.type = 'lowpass'; filtro.frequency.value = frecuencia;
+    s.connect(filtro).connect(g).connect(audio.destination); g.gain.setValueAtTime(.0001, ahora); g.gain.exponentialRampToValueAtTime(.045, ahora + .3); g.gain.exponentialRampToValueAtTime(.0001, ahora + duracion);
+    s.start(); s.stop(ahora + duracion+.05); ruidoMotor = s; fuentes.add(s);
     s.onended = () => { fuentes.delete(s); if (ruidoMotor === s) ruidoMotor = null; s.disconnect(); filtro.disconnect(); g.disconnect(); };
   }
   function campana() {
@@ -274,10 +293,17 @@
     });
   }
   function pararAudio() { for (const f of fuentes) { try { f.stop(); } catch {} } fuentes.clear(); ruidoMotor = null; }
+  function sonarEscena(tipo){
+    if(tipo==='volcan'){motor(1.6,230);return;}if(tipo==='globo'){motor(2,1000);return;}if(tipo==='estrellas'){campana();return;}
+    if(!contextoAudio())return;
+    const o=audio.createOscillator(),g=audio.createGain(),ahora=audio.currentTime,corto=tipo==='ruedas',duracion=corto?.09:.65;
+    o.type='sine';o.frequency.setValueAtTime(corto?100:660,ahora);o.frequency.exponentialRampToValueAtTime(corto?60:920,ahora+duracion);
+    o.connect(g).connect(audio.destination);g.gain.setValueAtTime(.0001,ahora);g.gain.exponentialRampToValueAtTime(corto?.015:.035,ahora+.015);g.gain.exponentialRampToValueAtTime(.0001,ahora+duracion);o.start();o.stop(ahora+duracion+.02);fuentes.add(o);o.onended=()=>{fuentes.delete(o);o.disconnect();g.disconnect();};
+  }
   function detenerLectura() { if (escena?.lectura) { window.speechSynthesis?.cancel(); escena.lectura = null; escena.leyendo = false; } }
   function cerrar(enfocar = false) {
-    detenerLectura(); if (escena) cancelAnimationFrame(escena.frame); escena = null; pararAudio();
-    if (dialogo) { if (dialogo.open) dialogo.close(); ctx?.clearRect(0, 0, canvas.width, canvas.height); delete dialogo.dataset.fase; }
+    detenerLectura(); if (escena) {cancelAnimationFrame(escena.frame);escena.extra?.destruir();} escena = null; pararAudio();
+    if (dialogo) { if (dialogo.open) dialogo.close(); ctx?.clearRect(0, 0, canvas.width, canvas.height); delete dialogo.dataset.fase;delete dialogo.dataset.tipo; }
     if (enfocar) document.getElementById('btnNew')?.focus({ preventScroll: true });
   }
   addEventListener('resize', ajustar); window.visualViewport?.addEventListener('resize', ajustar);
