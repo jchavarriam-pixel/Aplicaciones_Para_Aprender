@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sumas y Restas</title>
+  <title>Sumas y restas</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
   <style>
@@ -223,13 +223,13 @@
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
   <link rel="stylesheet" href="panel-ancho-ajustable.css?v=20261118-1">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-operaciones.css?v=panel-2"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="signos-celebraciones.css?v=20261118-5"><link rel="stylesheet" href="signos-escenas.css?v=20261118-1"><script>window.IDIOMA_VOZ_APP='operaciones';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-operaciones-textos.js?v=panel-1"></script><script src="idioma-voz.js"></script><script src="matematicas-base.js"></script></head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-operaciones.css?v=globos-1"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="signos-celebraciones.css?v=20261118-5"><link rel="stylesheet" href="signos-escenas.css?v=20261118-1"><script>window.IDIOMA_VOZ_APP='operaciones';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-operaciones-textos.js?v=globos-1"></script><script src="idioma-voz.js"></script><script src="matematicas-base.js"></script></head>
 <body>
   <div class="app-wrapper" id="app">
     <audio id="bgMusic" loop preload="auto"><source src="data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQIAAAAAAAA=" type="audio/wav"></audio>
 
     <div class="menu-screen" id="menuScreen">
-      <h1 id="gameTitle">🧮 Sumas y Restas</h1>
+      <h1 id="gameTitle">Sumas y restas</h1>
       <div id="levelScreen" style="display:flex; flex-direction:column; gap:20px; align-items:center; width:100%; padding:20px;">
         <p style="font-size: 1.15rem; color: #6b21a8; font-weight: 700;">¿Cuál es tu nombre?</p>
         <input type="text" id="nameInput" placeholder="Escribe tu nombre aquí" style="width:100%; max-width:300px; padding:14px 16px; border:3px solid #c4b5fd; border-radius:14px; font-family:'Nunito', sans-serif; font-size:1.1rem; font-weight:700; text-align:center; color:#1e1b4b;">
@@ -326,9 +326,11 @@
 
       <div class="board" id="board">
         <div class="hint-bar" id="hintBar"></div>
-        <div class="columns-container" id="colsContainer"></div>
-        <div class="line-sep"></div>
-        <div class="columns-container" id="ansContainer"></div>
+        <div class="cuenta-operaciones">
+          <div class="columns-container" id="colsContainer"></div>
+          <div class="line-sep"></div>
+          <div class="columns-container" id="ansContainer"></div>
+        </div>
         <div class="borrow-btn-container">
           <button class="act-btn borrow" id="borrowBtn" onclick="doBorrow()">Pedir prestado</button>
         </div>
@@ -412,17 +414,17 @@
     }
 
     const defaultConfig = {
-      game_title: '🧮 Sumas y Restas',
-      background_color: '#fef9c3',
-      surface_color: '#ffffff',
-      text_color: '#1e1b4b',
-      primary_color: '#7c3aed',
+      game_title: 'Sumas y restas',
+      background_color: '#d6f5ee',
+      surface_color: '#f3fcfa',
+      text_color: '#193c4c',
+      primary_color: '#08786b',
       accent_color: '#f59e0b'
     };
 
     function applyConfig(c) {
       document.getElementById('gameTitle').textContent = c.game_title || defaultConfig.game_title;
-      document.body.style.background = `linear-gradient(135deg, ${c.background_color || defaultConfig.background_color} 0%, #fbcfe8 50%, #c4b5fd 100%)`;
+      document.body.style.background = `linear-gradient(135deg, ${c.background_color || defaultConfig.background_color}, #deedff 62%, #fff1d5)`;
       document.querySelectorAll('.board').forEach(el => el.style.background = c.surface_color || defaultConfig.surface_color);
       document.querySelectorAll('.digit-cell').forEach(el => el.style.color = c.text_color || defaultConfig.text_color);
     }
@@ -938,6 +940,7 @@
       }
 
       borrowBtn.style.display = currentOperation === '-' ? 'flex' : 'none';
+      borrowBtn.parentElement.hidden = currentOperation !== '-';
       buildBank();
       updateBorrowBtn();
       updateCheckButtonState();
@@ -1113,14 +1116,18 @@
 
     function toggleHelp() {
       helpOn = !helpOn;
-      document.getElementById('helpBtn').textContent = helpOn ? '💡 Ayuda: ON' : '💡 Ayuda';
+      const boton = document.getElementById('helpBtn');
+      boton.textContent = helpOn ? '💡 Ayuda: ON' : '💡 Ayuda';
+      boton.setAttribute('aria-pressed', helpOn);
       renderBoard();
       updateHint();
     }
 
     function toggleAudioHelp() {
       audioHelpOn = !audioHelpOn;
-      document.getElementById('audioHelpBtn').textContent = audioHelpOn ? '🔊 Audio: ON' : '🔊 Audio';
+      const boton = document.getElementById('audioHelpBtn');
+      boton.textContent = audioHelpOn ? '🔊 Audio: ON' : '🔊 Audio';
+      boton.setAttribute('aria-pressed', audioHelpOn);
       if (audioHelpOn) startAudioGuide();
       else clearAudioGuide();
     }
@@ -1424,7 +1431,7 @@
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="signos-escenas.js?v=20261118-2"></script><script src="signos-celebraciones.js?v=operaciones-1"></script><script src="matematicas-operaciones.js?v=panel-1"></script><script src="pantalla-completa.js"></script><script src="panel-plegable.js?v=operaciones-1"></script>
+<script src="signos-escenas.js?v=20261118-2"></script><script src="operaciones-globos.js?v=1"></script><script src="signos-celebraciones.js?v=operaciones-2"></script><script src="matematicas-operaciones.js?v=globos-1"></script><script src="pantalla-completa.js"></script><script src="panel-plegable.js?v=operaciones-1"></script>
 <script src="nombre-compartido.js"></script>
 <script src="panel-ancho-ajustable.js?v=operaciones-1"></script>
 </body>

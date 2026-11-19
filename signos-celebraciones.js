@@ -2,19 +2,23 @@
 (() => {
   'use strict';
   const actividad = document.documentElement.dataset.celebracion || 'signos';
-  const clave = actividad + '.celebracion.v1';
+  const claveAnterior = actividad + '.celebracion.v1';
+  const tieneGlobos = actividad === 'operaciones' && !!window.FiestaGlobos;
+  const clave = tieneGlobos ? actividad + '.celebracion.v2' : claveAnterior;
   const claveUltima = actividad + '.celebracion.ultima.v1';
   const tipos = ['cohete','volcan','tren','globo'];
+  const escenasDisponibles = tieneGlobos ? ['globos', ...tipos] : tipos;
   let ultima = '';
   const colores = ['#ffe481', '#fff4c7', '#93d9ff', '#ffaabd', '#c6b5ff', '#a1ebd4'];
   const t = (es, en) => window.IdiomaVoz?.idioma === 'en' ? en : es;
-  let preferencias = { activa: true, sonido: true, duracion: 8, tipo:'rotar' };
+  let preferencias = { activa: true, sonido: true, duracion: 8, tipo:tieneGlobos ? 'globos' : 'rotar' };
   try {
-    const p = JSON.parse(localStorage.getItem(clave) || '{}');
+    const actual = localStorage.getItem(clave);
+    const p = JSON.parse(actual || localStorage.getItem(claveAnterior) || '{}');
     if (typeof p.activa === 'boolean') preferencias.activa = p.activa;
     if (typeof p.sonido === 'boolean') preferencias.sonido = p.sonido;
     if ([0, 8, 12, 20].includes(p.duracion)) preferencias.duracion = p.duracion;
-    if (['rotar',...tipos].includes(p.tipo)) preferencias.tipo=p.tipo;
+    if ((!tieneGlobos || actual) && ['rotar',...escenasDisponibles].includes(p.tipo)) preferencias.tipo=p.tipo;
     const u=localStorage.getItem(claveUltima);if(tipos.includes(u))ultima=u;
   } catch {}
   let opciones, dialogo, area, canvas, ctx, cohete, llama, cuenta, numero, mensaje, estado, consola, cable, despegar, continuar, nuevaRonda, sonidoBoton, barra, escena;
@@ -28,6 +32,7 @@
       'Celebraciones':'Celebrations', 'Activar celebraciones':'Enable celebrations',
       'Escena':'Scene', 'Alternar las cuatro':'Rotate all four', 'Cohete':'Rocket',
       'Volcán de números':'Number volcano', 'Tren de la alegría':'Happy train', 'Globo aerostático':'Hot-air balloon',
+      'Globos de números':'Number balloons',
       'Sonidos y voz de la celebración':'Celebration sounds and voice',
       'Tiempo de felicitación':'Congratulations display time',
       '8 segundos':'8 seconds', '12 segundos':'12 seconds', '20 segundos':'20 seconds',
@@ -38,6 +43,12 @@
     opciones = document.createElement('fieldset');
     opciones.className = 'opciones-fiesta-signos';
     opciones.innerHTML = '<legend>Celebraciones</legend><label><input type="checkbox" id="activarFiestaSignos"> Activar celebraciones</label><label class="duracion-fiesta-signos">Escena<select id="tipoFiestaSignos"><option value="rotar">Alternar las cuatro</option><option value="cohete">Cohete</option><option value="volcan">Volcán de números</option><option value="tren">Tren de la alegría</option><option value="globo">Globo aerostático</option></select></label><label><input type="checkbox" id="sonidoFiestaSignos"> Sonidos y voz de la celebración</label><label class="duracion-fiesta-signos">Tiempo de felicitación<select id="duracionFiestaSignos"><option value="8">8 segundos</option><option value="12">12 segundos</option><option value="20">20 segundos</option><option value="0">Hasta pulsar Continuar</option></select></label><p>Activa cada escena tocando su botón, palanca o quemador. Puedes iniciar otra ronda cuando quieras.</p>';
+    if (tieneGlobos) {
+      const opcion = document.createElement('option');
+      opcion.value = 'globos';
+      opcion.textContent = 'Globos de números';
+      opciones.querySelector('select').prepend(opcion);
+    }
     prepararConfiguracion();
     return opciones;
   }
@@ -131,8 +142,8 @@
   } = {}) {
     cerrar(); if (!preferencias.activa) return false;
     construir(); window.speechSynthesis?.cancel();
-    const tipo=tipos.includes(seleccion)?seleccion:preferencias.tipo==='rotar'?tipos[(tipos.indexOf(ultima)+1)%tipos.length]:preferencias.tipo;
-    if(!tipos.includes(seleccion)){ultima=tipo;try{localStorage.setItem(claveUltima,tipo);}catch{}}
+    const tipo=escenasDisponibles.includes(seleccion)?seleccion:preferencias.tipo==='rotar'?tipos[(tipos.indexOf(ultima)+1)%tipos.length]:preferencias.tipo;
+    if(!escenasDisponibles.includes(seleccion)){ultima=tipo;try{localStorage.setItem(claveUltima,tipo);}catch{}}
     escena = {
       inicio: null, ultimo: 0, frame: 0, fase: '', numero: 0, t: 0, estrellas: [], humo: [],tipo,extra:null,
       w: 0, h: 0, alto: 0, emision: 0, final: 8.3, lectura: null, leyendo: false,
@@ -142,10 +153,11 @@
     };
     dialogo.dataset.tipo=tipo;
     if(tipo!=='cohete'){
-      escena.extra=EscenasFiestaSignos.crear(tipo,area,{t,activar:iniciarAnimacion,sonar:sonarEscena,reducido:escena.reducido});
+      const opciones = {t,activar:iniciarAnimacion,sonar:sonarEscena,reducido:escena.reducido};
+      escena.extra=tipo==='globos' ? FiestaGlobos.crear(area, opciones) : EscenasFiestaSignos.crear(tipo,area,opciones);
       escena.final=escena.extra.final;
     }
-    const titulos={cohete:t('¡Misión cumplida!','Mission complete!'),volcan:t('Volcán de números','Number volcano'),tren:t('Tren de la alegría','Happy train'),globo:t('Globo aerostático','Hot-air balloon')};
+    const titulos={cohete:t('¡Misión cumplida!','Mission complete!'),volcan:t('Volcán de números','Number volcano'),tren:t('Tren de la alegría','Happy train'),globo:t('Globo aerostático','Hot-air balloon'),globos:t('Globos de números','Number balloons')};
     dialogo.querySelector('h2').textContent = titulos[tipo];
     area.setAttribute('aria-label',tipo==='cohete'?t('Despegue de un cohete y lluvia de estrellas','Rocket launch and falling stars'):titulos[tipo]);
     cuenta.querySelector('span').textContent = t('Despegue en', 'Launch in');
@@ -162,14 +174,15 @@
     dialogo.style.zoom = String(1 / (parseFloat(getComputedStyle(document.body).zoom) || 1));
     cambiarFase('preparado'); dialogo.showModal(); ajustar(); pintar();
     (escena.extra?.boton||despegar).focus({ preventScroll: true });
+    if (escena.extra?.automatica) iniciarAnimacion({automatica:true});
     return true;
   }
-  function iniciarAnimacion() {
+  function iniciarAnimacion({automatica = false} = {}) {
     if (!escena || escena.inicio !== null) return;
-    contextoAudio();
+    if (!automatica) contextoAudio();
     escena.inicio = performance.now();
     actualizar(0,0); pintar();
-    continuar.focus({ preventScroll: true });
+    if (!automatica) continuar.focus({ preventScroll: true });
     escena.frame = requestAnimationFrame(dibujar);
   }
   function ajustar() {
@@ -197,7 +210,7 @@
     cable.querySelector('circle').setAttribute('cx',ex);cable.querySelector('circle').setAttribute('cy',ey);
     colocarCohete(escena.t);
     escena.extra?.ajustar(escena.w,escena.h);
-    if (escena.inicio === null) pintar();
+    pintar();
   }
   function colocarCohete(tiempo) {
     const p = Math.max(0, Math.min(1, (tiempo - 3) / 2.8));
@@ -214,7 +227,7 @@
     escena.fase = fase; dialogo.dataset.fase = fase;
     const etiquetas = {
       preparado: escena.extra?.instruccion||t('Pulsa Despegar para iniciar la cuenta regresiva.','Press Launch to start the countdown.'),
-      animacion: escena.tipo==='volcan'?t('¡Mira los números que salen del volcán!','Look at the numbers coming out of the volcano!'):escena.tipo==='tren'?t('¡El tren de la alegría está en marcha!','The happy train is on its way!'):t('¡El globo se infla y sube al cielo!','The balloon inflates and rises into the sky!'),
+      animacion: escena.extra?.instruccionActiva ?? (escena.tipo==='volcan'?t('¡Mira los números que salen del volcán!','Look at the numbers coming out of the volcano!'):escena.tipo==='tren'?t('¡El tren de la alegría está en marcha!','The happy train is on its way!'):t('¡El globo se infla y sube al cielo!','The balloon inflates and rises into the sky!')),
       cuenta: t('Preparados para el despegue…', 'Ready for launch…'),
       despegue: t('¡Despegue!', 'Lift-off!'),
       estrellas: t('¡Una lluvia de estrellas para ti!', 'A shower of stars for you!'),
@@ -248,7 +261,12 @@
   }
   function actualizar(dt, tiempo) {
     escena.t = tiempo;
-    if(escena.extra){cambiarFase(tiempo<escena.final?'animacion':'felicitacion');escena.extra.actualizar(dt,tiempo);return;}
+    if(escena.extra){
+      escena.extra.actualizar(dt,tiempo);
+      escena.final=escena.extra.final;
+      cambiarFase(tiempo<escena.final?'animacion':'felicitacion');
+      return;
+    }
     cambiarFase(tiempo < 3 ? 'cuenta' : tiempo < 6 ? 'despegue' : tiempo < escena.final ? 'estrellas' : 'felicitacion');
     if (escena.fase === 'cuenta') {
       const n = 3 - Math.floor(tiempo);
@@ -288,12 +306,12 @@
     if (!escena) return;
     const tiempo = (ms - escena.inicio) / 1000;
     if (preferencias.duracion && tiempo >= escena.final + preferencias.duracion && (!escena.leyendo || tiempo >= escena.final + 30)) { cerrar(true); return; }
-    if (!escena.ultimo || ms - escena.ultimo >= 1000 / 30) {
+    if (!escena.ultimo || ms - escena.ultimo >= (escena.extra?.intervalo || 1000 / 30)) {
       const dt = Math.min(.075, escena.ultimo ? (ms - escena.ultimo) / 1000 : 0); escena.ultimo = ms;
       actualizar(dt, tiempo); pintar();
       if (tiempo >= escena.final && preferencias.duracion) barra.firstElementChild.style.transform = `scaleX(${Math.max(0, 1 - (tiempo - escena.final) / preferencias.duracion)})`;
     }
-    escena.frame = requestAnimationFrame(dibujar);
+    if (preferencias.duracion || !escena.extra?.enReposo) escena.frame = requestAnimationFrame(dibujar);
   }
   function contextoAudio() {
     if (!preferencias.sonido || !escena) return null;
@@ -367,6 +385,16 @@
           ruido(2300, {demora, duracion:.22, ataque:.012, volumen:.075}, 480);
         }
         break;
+      case 'estallido-globo': {
+        const mezcla = fuentes.size > 7 ? .58 : 1;
+        ruido(5200, {duracion:.17, ataque:.008, volumen:.29*mezcla}, 420);
+        tono(158, 49, {duracion:.48, ataque:.014, volumen:.19*mezcla});
+        ruido(1450, {demora:.05, duracion:.55, ataque:.04, volumen:.15*mezcla}, 125);
+        for (const demora of [.12,.20,.28]) {
+          ruido(4600, {demora, duracion:.09, ataque:.009, volumen:.07*mezcla}, 700);
+        }
+        break;
+      }
       case 'tren':
         for (const [demora, duracion] of [[0,.27],[.36,.59]]) {
           tono(440, 392, {demora, duracion, ataque:.055, volumen:.05}, 'triangle');

@@ -17,7 +17,11 @@ document.addEventListener('DOMContentLoaded', () => {
   <section class="guia-operaciones"><h2>Así jugamos</h2><p>Empieza por la columna de la derecha. Completa las casillas y pulsa Revisar.</p></section>`;
   app.prepend(tools);
   const header = tools.querySelector('header');
-  header.prepend(title);
+  const marca = document.createElement('div');
+  marca.className = 'marca-operaciones';
+  marca.innerHTML = '<img src="iconos/sumas-y-restas.webp" width="64" height="64" alt="">';
+  marca.append(title);
+  header.prepend(marca);
   header.append(name);
 
   const modos = menu.querySelector('[data-group="operation"]').closest('.mode-section');
@@ -88,6 +92,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('speakResultCheckbox').checked = speakAudioResult;
   document.getElementById('helpBtn').textContent = helpOn ? '💡 Ayuda: ON' : '💡 Ayuda';
   document.getElementById('audioHelpBtn').textContent = audioHelpOn ? '🔊 Audio: ON' : '🔊 Audio';
+  document.getElementById('helpBtn').setAttribute('aria-pressed', helpOn);
+  document.getElementById('audioHelpBtn').setAttribute('aria-pressed', audioHelpOn);
   const musicName = musicModes[currentMusicMode];
   document.getElementById('musicBtn').textContent = '🎵 ' + musicName[0].toUpperCase() + musicName.slice(1);
   name.value ||= 'Gabriel';
@@ -138,9 +144,9 @@ document.addEventListener('DOMContentLoaded', () => {
     app.style.setProperty('--unidad', 1/zoom + 'px');
     app.classList.toggle('compacta', alto*zoom < 460);
     const espacio = board.getBoundingClientRect();
-    const reservaPrestamo = document.getElementById('borrowBtn').style.display === 'none' ? 0 : 36;
+    const reservaPrestamo = document.getElementById('borrowBtn').parentElement.getBoundingClientRect().width;
     const columnas = digits + 1 + Number(shouldShowLeadingAnswerCell());
-    const celda = Math.max(16, Math.min(118, (espacio.width - 24)/columnas - 5, (espacio.height - 20 - reservaPrestamo)/3.7));
+    const celda = Math.max(16, Math.min(118, (espacio.width - 24 - reservaPrestamo)/columnas - 5, (espacio.height - 20)/3.7));
     app.style.setProperty('--celda', celda/zoom + 'px');
   });
   new ResizeObserver(fit).observe(board);
