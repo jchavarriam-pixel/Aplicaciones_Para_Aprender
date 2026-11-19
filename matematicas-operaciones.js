@@ -38,12 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
   botones.append(nuevo, game.querySelector('.reset'));
   tools.append(botones);
 
-  const pistas = document.createElement('div');
-  pistas.className = 'pistas-operaciones';
-  pistas.dataset.pistasPanel = '';
-  pistas.append(document.getElementById('helpBtn'), document.getElementById('audioHelpBtn'));
-  tools.append(pistas);
-
   const top = game.querySelector('.top-bar');
   tools.append(top);
   const instruccion = document.createElement('h2');
@@ -64,7 +58,14 @@ document.addEventListener('DOMContentLoaded', () => {
   aplicar.type = 'button';
   aplicar.className = 'aplicar-operaciones';
   aplicar.textContent = 'Aplicar y cerrar';
-  ajustes.append(menu, game.querySelector('.audio-settings'), document.getElementById('musicBtn'),
+  const ayudas = document.createElement('fieldset');
+  ayudas.className = 'ayudas-configuracion-operaciones';
+  ayudas.innerHTML = `<legend>Ayudas</legend>
+    <label class="option-check"><input type="checkbox" id="ayudaVisualOperaciones"> Mostrar ayuda visual</label>
+    <label class="option-check"><input type="checkbox" id="ayudaVerbalOperaciones"> Activar ayuda verbal</label>
+    <label class="option-check"><input type="checkbox" id="animarPasosOperaciones"> Animar préstamos y llevadas</label>`;
+  ayudas.insertBefore(game.querySelector('.audio-settings'), ayudas.lastElementChild);
+  ajustes.append(menu, ayudas, document.getElementById('musicBtn'),
     FiestaSignos.instalarConfiguracion(), preferencias, aplicar);
   document.body.append(ajustes);
   menu.querySelectorAll('#levelScreen>p:last-child,[onclick="startGameValidated()"]').forEach(el => el.remove());
@@ -79,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (musicModes[saved.currentMusicMode]) currentMusicMode = saved.currentMusicMode;
   helpOn = saved.helpOn === true;
   audioHelpOn = saved.audioHelpOn === true;
+  animarPasos = saved.animarPasos !== false;
   allowLeadingSum = saved.allowLeadingSum === true;
   speakAudioResult = saved.speakAudioResult === true;
   for (const [grupo, valor] of [['operation',operationMode],['addition',additionMode],['subtraction',subtractionMode],['digits',digits]]) {
@@ -90,21 +92,28 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   document.getElementById('allowLeadingSumCheckbox').checked = allowLeadingSum;
   document.getElementById('speakResultCheckbox').checked = speakAudioResult;
-  document.getElementById('helpBtn').textContent = helpOn ? '💡 Ayuda: ON' : '💡 Ayuda';
-  document.getElementById('audioHelpBtn').textContent = audioHelpOn ? '🔊 Audio: ON' : '🔊 Audio';
-  document.getElementById('helpBtn').setAttribute('aria-pressed', helpOn);
-  document.getElementById('audioHelpBtn').setAttribute('aria-pressed', audioHelpOn);
+  const ayudaVisual = document.getElementById('ayudaVisualOperaciones');
+  const ayudaVerbal = document.getElementById('ayudaVerbalOperaciones');
+  const mostrarPasos = document.getElementById('animarPasosOperaciones');
+  ayudaVisual.checked = helpOn;
+  ayudaVerbal.checked = audioHelpOn;
+  mostrarPasos.checked = animarPasos;
   const musicName = musicModes[currentMusicMode];
   document.getElementById('musicBtn').textContent = '🎵 ' + musicName[0].toUpperCase() + musicName.slice(1);
   name.value ||= 'Gabriel';
 
   function guardar() {
-    Matematicas.guardar(clave, {digits,operationMode,additionMode,subtractionMode,helpOn,audioHelpOn,allowLeadingSum,speakAudioResult,currentMusicMode});
+    Matematicas.guardar(clave, {digits,operationMode,additionMode,subtractionMode,helpOn,audioHelpOn,animarPasos,allowLeadingSum,speakAudioResult,currentMusicMode});
   }
   const pendientes = new Set();
   let aplicando = false;
   const abrir = botones.querySelector('.boton-ajustes-operaciones');
   abrir.onclick = () => {
+    if (PasosOperaciones.activo) {
+      PasosOperaciones.limpiar();
+      updateBorrowBtn();
+      updateCheckButtonState();
+    }
     cancelarArrastre();
     clearAudioGuide();
     FiestaSignos.prepararConfiguracion();
@@ -119,6 +128,9 @@ document.addEventListener('DOMContentLoaded', () => {
     pendientes.add(e.target);
   }, true);
   ajustes.addEventListener('close', () => {
+    helpOn = ayudaVisual.checked;
+    audioHelpOn = ayudaVerbal.checked;
+    animarPasos = mostrarPasos.checked;
     FiestaSignos.aplicarConfiguracion();
     aplicando = true;
     for (const control of pendientes) control.dispatchEvent(new Event('change', {bubbles:true}));
@@ -133,7 +145,6 @@ document.addEventListener('DOMContentLoaded', () => {
     guardar();
     newProblem();
   });
-  pistas.addEventListener('click', guardar);
   IdiomaVoz.instalar('#preferenciasOperaciones');
   startGameValidated();
   updateModeVisibility();

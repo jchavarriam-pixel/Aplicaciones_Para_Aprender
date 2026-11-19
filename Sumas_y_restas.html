@@ -223,7 +223,7 @@
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
   <link rel="stylesheet" href="panel-ancho-ajustable.css?v=20261118-1">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-operaciones.css?v=paleta-1"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="signos-celebraciones.css?v=20261118-5"><link rel="stylesheet" href="signos-escenas.css?v=20261118-1"><script>window.IDIOMA_VOZ_APP='operaciones';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-operaciones-textos.js?v=globos-1"></script><script src="idioma-voz.js"></script><script src="matematicas-base.js"></script></head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-operaciones.css?v=pasos-1"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="signos-celebraciones.css?v=20261118-5"><link rel="stylesheet" href="signos-escenas.css?v=20261118-1"><script>window.IDIOMA_VOZ_APP='operaciones';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-operaciones-textos.js?v=pasos-1"></script><script src="idioma-voz.js"></script><script src="matematicas-base.js"></script></head>
 <body>
   <div class="app-wrapper" id="app">
     <audio id="bgMusic" loop preload="auto"><source src="data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQIAAAAAAAA=" type="audio/wav"></audio>
@@ -342,8 +342,6 @@
         <button class="act-btn check" id="checkBtn" onclick="checkAnswer()" disabled>✅ Revisar</button>
         <button class="act-btn new-game" onclick="newProblem()">🆕 Nueva cuenta</button>
         <button class="act-btn reset" onclick="resetProblem()">🔁 Reiniciar</button>
-        <button class="act-btn help-toggle" id="helpBtn" onclick="toggleHelp()">💡 Ayuda</button>
-        <button class="act-btn help-toggle" id="audioHelpBtn" onclick="toggleAudioHelp()">🔊 Audio</button>
         <button class="act-btn help-toggle" id="musicBtn" onclick="cycleMusicMode()">🎵 Alegre</button>
       </div>
       <div class="audio-settings">
@@ -364,7 +362,7 @@
   <div class="drag-ghost" id="dragGhost" style="display:none;"></div>
 
   <script>
-    let digits = 2, score = 0, helpOn = false, audioHelpOn = false;
+    let digits = 2, score = 0, helpOn = false, audioHelpOn = false, animarPasos = true;
     let topDigits = [], bottomDigits = [], currentTop = [], borrowed = [], answers = [];
     let carrySlots = [], expectedCarryIn = [];
     let dragValue = -1, dragPointer = null, studentName = '', isAnswerCorrect = false;
@@ -779,6 +777,7 @@
     }
 
     function newProblem() {
+      PasosOperaciones.limpiar();
       cancelarArrastre();
       FiestaSignos.cerrar();
       document.getElementById('levelLabel').textContent = getOperationModeText() + ' de ' + digits + ' dígitos';
@@ -792,6 +791,7 @@
     }
 
     function resetProblem() {
+      PasosOperaciones.limpiar();
       cancelarArrastre();
       FiestaSignos.cerrar();
       currentTop = [...topDigits];
@@ -960,7 +960,7 @@
     }
 
     function startDrag(e) {
-      if (isAnswerCorrect || dragPointer !== null || e.button !== 0 || e.isPrimary === false) return;
+      if (isAnswerCorrect || PasosOperaciones.activo || dragPointer !== null || e.button !== 0 || e.isPrimary === false) return;
       e.preventDefault();
       const chip = e.currentTarget;
       const val = Number(chip.dataset.val);
@@ -1004,24 +1004,50 @@
       if (el && (el.classList.contains('answer-cell') || el.classList.contains('carry-cell'))) {
         const type = el.dataset.type;
         const col = el.dataset.col !== undefined ? parseInt(el.dataset.col, 10) : NaN;
-        if (type === 'answer') {
-          answers[col] = valor;
-        } else if (type === 'carry') {
-          carrySlots[col] = valor;
-        } else if (type === 'leading') {
-          leadingAnswer = valor;
-        }
-        el.textContent = valor;
-        el.classList.add('filled');
-        el.classList.remove('correct', 'wrong', 'drop-hover');
-        updateCheckButtonState();
-        updateHint();
-        if (audioHelpOn) startAudioGuide();
+        const colocar = () => {
+          if (type === 'answer') answers[col] = valor;
+          else if (type === 'carry') carrySlots[col] = valor;
+          else if (type === 'leading') leadingAnswer = valor;
+          el.textContent = valor;
+          el.classList.add('filled');
+          el.classList.remove('correct', 'wrong', 'drop-hover');
+          updateCheckButtonState();
+          updateHint();
+          if (audioHelpOn) startAudioGuide();
+        };
+        const esLlevada = (type === 'carry' && carrySlots[col] !== 1) ||
+          (type === 'leading' && expectedLeadingDigit === 1 && leadingAnswer !== 1);
+        if (animarPasos && valor === 1 && esLlevada) {
+          mostrarLlevada(type === 'leading' ? 0 : col+1, el, colocar);
+        } else colocar();
       }
     }
 
+    function mostrarPasos(pasos, completar) {
+      clearAudioGuide();
+      PasosOperaciones.mostrar(pasos, completar);
+      updateBorrowBtn();
+      updateCheckButtonState();
+    }
+
+    function mostrarLlevada(origen, destino, colocar) {
+      const total = topDigits[origen] + bottomDigits[origen] + expectedCarryIn[origen];
+      const resto = total - 10;
+      const en = IdiomaVoz.idioma === 'en';
+      mostrarPasos([
+        {
+          texto: en ? `Separate one group of ten from the ${total}.` : `Separa un grupo de diez del ${total}.`,
+          ecuacion: `${total} = 10 + ${resto}`
+        },
+        {
+          texto: en ? `The 1 goes to the left. The ${resto} stays in this column.` : `El 1 pasa a la izquierda. El ${resto} se queda en esta columna.`,
+          destino
+        }
+      ], colocar);
+    }
+
     function doBorrow() {
-      if (currentOperation !== '-') return;
+      if (currentOperation !== '-' || isAnswerCorrect || PasosOperaciones.activo) return;
       let col = -1;
       for (let i = digits - 1; i >= 0; i--) {
         if (currentTop[i] < bottomDigits[i] && i > 0) {
@@ -1035,22 +1061,47 @@
       while (lender >= 0 && currentTop[lender] === 0) lender--;
       if (lender < 0) return;
 
-      currentTop[lender] -= 1;
-      borrowed[lender] = true;
+      const receptor = {col, antes:currentTop[col], despues:currentTop[col]+10, subir:true};
+      const origen = {col:lender, antes:currentTop[lender], despues:currentTop[lender]-1};
+      const intermedias = [];
       for (let z = lender + 1; z < col; z++) {
-        currentTop[z] = 9;
-        borrowed[z] = true;
+        intermedias.push({col:z, antes:0, despues:9});
       }
-      currentTop[col] += 10;
-      borrowed[col] = true;
-      renderBoard();
-      updateHint();
-      if (audioHelpOn) startAudioGuide();
+      const aplicar = () => {
+        for (const cambio of [origen,...intermedias,receptor]) {
+          currentTop[cambio.col] = cambio.despues;
+          borrowed[cambio.col] = true;
+        }
+        renderBoard();
+        updateHint();
+        if (audioHelpOn) startAudioGuide();
+      };
+      if (!animarPasos) { aplicar(); return; }
+
+      const en = IdiomaVoz.idioma === 'en';
+      const pasos = [
+        {
+          texto: en ? `Add ten to ${receptor.antes}. It becomes ${receptor.despues}.`
+            : `Suma diez al ${receptor.antes}. Ahora tienes ${receptor.despues}.`,
+          ecuacion: `${receptor.antes} + 10 = ${receptor.despues}`, cambios:[receptor]
+        },
+        {
+          texto: en ? `${origen.antes} lends one. Go back to ${origen.despues}, the previous number.`
+            : `El ${origen.antes} presta uno. Retrocede al ${origen.despues}, su antecesor.`,
+          recta:origen.antes, cambios:[origen], duracion:3400
+        }
+      ];
+      if (intermedias.length) pasos.push({
+        texto: en ? 'Each zero in between receives ten and passes one to the right. That leaves nine.'
+          : 'Cada cero intermedio recibe diez y pasa uno a la derecha. Le quedan nueve.',
+        ecuacion:'10 − 1 = 9', cambios:intermedias, duracion:3400
+      });
+      mostrarPasos(pasos, aplicar);
     }
 
     function updateBorrowBtn() {
       const borrowBtn = document.getElementById('borrowBtn');
-      if (currentOperation !== '-') {
+      if (currentOperation !== '-' || isAnswerCorrect || PasosOperaciones.activo) {
         borrowBtn.disabled = true;
         return;
       }
@@ -1094,7 +1145,7 @@
 
     function updateCheckButtonState() {
       const checkBtn = document.getElementById('checkBtn');
-      if (isAnswerCorrect) {
+      if (isAnswerCorrect || PasosOperaciones.activo) {
         checkBtn.disabled = true;
         return;
       }
@@ -1112,24 +1163,6 @@
         if (shouldShowLeadingAnswerCell() && leadingAnswer === null) leadingReady = false;
       }
       checkBtn.disabled = !(allAnswersFilled && carriesReady && leadingReady);
-    }
-
-    function toggleHelp() {
-      helpOn = !helpOn;
-      const boton = document.getElementById('helpBtn');
-      boton.textContent = helpOn ? '💡 Ayuda: ON' : '💡 Ayuda';
-      boton.setAttribute('aria-pressed', helpOn);
-      renderBoard();
-      updateHint();
-    }
-
-    function toggleAudioHelp() {
-      audioHelpOn = !audioHelpOn;
-      const boton = document.getElementById('audioHelpBtn');
-      boton.textContent = audioHelpOn ? '🔊 Audio: ON' : '🔊 Audio';
-      boton.setAttribute('aria-pressed', audioHelpOn);
-      if (audioHelpOn) startAudioGuide();
-      else clearAudioGuide();
     }
 
     function updateHint() {
@@ -1304,7 +1337,7 @@
     function speakText(text){return IdiomaVoz.hablar(text)}
 
     function checkAnswer() {
-      if (isAnswerCorrect) return;
+      if (isAnswerCorrect || PasosOperaciones.activo) return;
 
       const A = digitsToNumber(topDigits);
       const B = digitsToNumber(bottomDigits);
@@ -1431,7 +1464,7 @@
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="signos-escenas.js?v=20261118-2"></script><script src="operaciones-globos.js?v=1"></script><script src="signos-celebraciones.js?v=operaciones-2"></script><script src="matematicas-operaciones.js?v=globos-1"></script><script src="pantalla-completa.js"></script><script src="panel-plegable.js?v=operaciones-1"></script>
+<script src="signos-escenas.js?v=20261118-2"></script><script src="operaciones-globos.js?v=1"></script><script src="signos-celebraciones.js?v=operaciones-2"></script><script src="operaciones-pasos.js?v=1"></script><script src="matematicas-operaciones.js?v=pasos-1"></script><script src="pantalla-completa.js"></script><script src="panel-plegable.js?v=operaciones-1"></script>
 <script src="nombre-compartido.js"></script>
 <script src="panel-ancho-ajustable.js?v=operaciones-1"></script>
 </body>

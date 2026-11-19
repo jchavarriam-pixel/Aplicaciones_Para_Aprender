@@ -80,6 +80,7 @@ const {pathToFileURL} = require('node:url');
       digits=2; currentOperation='-'; topDigits=[5,6]; bottomDigits=[2,8]; resetProblem();
     });
     await page.locator('#borrowBtn').tap();
+    await page.locator('.saltar-pasos-operacion').tap();
     assert.equal(await page.evaluate(() => currentTop[1]),16);
     await page.evaluate(() => { answers=[2,8]; checkAnswer(); });
     assert.equal(await page.locator('.fiesta-signos').getAttribute('data-tipo'),'globos');
