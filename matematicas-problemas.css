@@ -124,7 +124,7 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 
 .scene[data-story=applesTree] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/manzano.webp"); }
 .scene[data-story=pearsBasket] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/peras-cenital.webp"); }
-.scene[data-story=danielGlobosParque] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/parque.webp"); }
+.scene[data-story=danielGlobosParque] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/parque-cielo-abierto.webp"); }
 .scene[data-story=pajaritosCable] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/cielo-pajaritos.webp"); }
 .scene[data-story=juanMariaDulcesPlato] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/dulces-mesa.webp"); }
 .scene[data-story^=aula] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/aula-pasillo.webp"); }
@@ -136,8 +136,8 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 .scene[data-story] .fruitShape::before,.scene[data-story] .fruitShape::after { display:none; }
 .scene[data-story] .busPassenger { width:4.9cqw; height:7.35cqh; object-fit:contain; border:0; border-radius:0; box-shadow:none; background:none; pointer-events:none; }
 .scene[data-story] :is(.danielParkGroundV3,.danielParkBushV3) { display:none; }
-.scene[data-story] .danielBoyImgV3 { left:4%; top:40%; width:25%; height:54%; max-height:none; object-fit:contain; }
-.scene[data-story] .danielBalloonV3 { width:8cqw; height:13.5cqh; border:0; border-radius:0; box-shadow:none; background:url("ImagenesSituacionesProblemas/Ilustraciones/globo.webp") center / contain no-repeat; }
+.scene[data-story] .danielBoyImgV3 { left:3%; top:46%; width:24%; height:51%; max-height:none; object-fit:contain; }
+.scene[data-story] .danielBalloonV3 { width:7cqw; height:11.8cqh; border:0; border-radius:0; box-shadow:none; background:url("ImagenesSituacionesProblemas/Ilustraciones/globo.webp") center / contain no-repeat; }
 .scene[data-story] .danielBalloonV3::before { display:none; }
 .scene[data-story] .candyPieceJM3 { width:4.4cqw; height:4.7cqh; border:0; border-radius:0; box-shadow:none; background:url("ImagenesSituacionesProblemas/Ilustraciones/confite.webp") center / contain no-repeat; }
 .scene[data-story] .candyPieceJM3.candy-maria { filter:hue-rotate(303deg); }
@@ -164,6 +164,11 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 .app:not(.horizontal)[data-pantalla=menu] .herramientas-problemas{max-height:min(calc(var(--alto-util,100dvh) * .30),calc(150 * var(--unidad)))}
 .controles-plegados-problemas .equationBox:not(.isHidden){display:block}
 .scene[data-story] .danielBalloonV3{filter:hue-rotate(var(--tono-globo,0deg))}
+.scene[data-story] .danielBalloonV3.danielGloboLejano {
+  filter:hue-rotate(var(--tono-globo,0deg)) grayscale(1) brightness(.92);
+  transform:translate(-50%,-50%) rotate(var(--giro-globo-lejano)) scale(.79);
+  opacity:.9;
+}
 
 .cable-pajaritos,.problemCard[data-story=pajaritosCable] .miniScene {
   --cable-superior:39%;

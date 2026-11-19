@@ -727,7 +727,7 @@ Los globos y los cordeles se dibujan desde el código.
   Si la cuerda no cae exactamente sobre la mano, ajuste estos dos valores.
   x aumenta hacia la derecha; y aumenta hacia abajo.
   */
-  const danielHandPointV3 = usarIlustracionesSituaciones ? { x: 26, y: 49 } : { x: 24.8, y: 28.8 };
+  const danielHandPointV3 = usarIlustracionesSituaciones ? { x: 24, y: 54 } : { x: 24.8, y: 28.8 };
 
   const danielBalloonColorsV3 = [
     "#ef4444",
@@ -744,7 +744,7 @@ Los globos y los cordeles se dibujan desde el código.
   Los globos quedan agrupados sobre la mano levantada.
   */
   const danielBalloonPositionsV3= usarIlustracionesSituaciones ? Array.from({length:15},(_,index)=>({
-    x:34+(index%5)*11.5,y:13+Math.floor(index/5)*13
+    x:24.5+(index%5)*7.5,y:19+Math.floor(index/5)*15
   })) : [
     { x: 34, y: 13 },
     { x: 42, y: 8 },
@@ -760,7 +760,10 @@ Los globos y los cordeles se dibujan desde el código.
     { x: 53, y: 33 }
   ];
 
-  const danielBalloonFlyTargetsV3 = [
+  // El cielo de la derecha reserva un lugar distinto para cada globo llevado por el viento.
+  const danielBalloonFlyTargetsV3 = usarIlustracionesSituaciones ? Array.from({length:10},(_,index)=>({
+    x:62+(index%5)*8, y:12+Math.floor(index/5)*15, r:index%2 ? -7 : 9
+  })) : [
     { x: 121, y: -10, r: 37 },
     { x: 126, y: 4, r: -23 },
     { x: 116, y: -18, r: 27 },
@@ -793,7 +796,7 @@ Los globos y los cordeles se dibujan desde el código.
       line.setAttribute("x1", String(danielHandPointV3.x));
       line.setAttribute("y1", String(danielHandPointV3.y));
       line.setAttribute("x2", String(pos.x));
-      line.setAttribute("y2", String(pos.y + 6));
+      line.setAttribute("y2", String(pos.y + (usarIlustracionesSituaciones ? 5.6 : 6)));
       svg.appendChild(line);
     }
 
@@ -866,11 +869,12 @@ Los globos y los cordeles se dibujan desde el código.
 
     feedback.className = "feedback";
     feedback.textContent = isEnglish()
-      ? `Watch how the strong wind carries away ${state.change === 1 ? "one balloon" : "some balloons"}. The balloons Daniel keeps are the answer.`
-      : `Observa cómo el fuerte viento se lleva ${state.change === 1 ? "un globo" : "algunos globos"}. Los globos que conserva Daniel son la respuesta.`;
+      ? "Count the colorful balloons Daniel still has."
+      : "Cuenta los globos de color que conserva Daniel.";
 
     updateText();
-    addDanielWindLinesV3();
+    const reducirMovimiento = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!reducirMovimiento) addDanielWindLinesV3();
 
     const movingSet = new Set(state.movingIds);
 
@@ -882,9 +886,25 @@ Los globos y los cordeles se dibujan desde el código.
       const start = danielBalloonPositionsV3[id % danielBalloonPositionsV3.length];
       const target = danielBalloonFlyTargetsV3[index % danielBalloonFlyTargetsV3.length];
       const delay = index * 240;
+      const finalizar = () => {
+        if (usarIlustracionesSituaciones) {
+          balloon.style.left = `${target.x}%`;
+          balloon.style.top = `${target.y}%`;
+          balloon.style.setProperty("--giro-globo-lejano", `${target.r}deg`);
+          balloon.classList.add("danielGloboLejano");
+        } else {
+          balloon.remove();
+        }
+        stringLine?.remove();
+      };
+      if (reducirMovimiento) {
+        finalizar();
+        return;
+      }
 
       esperarAnimacionSituacion(() => {
         balloon.classList.add("flown");
+        const tono = balloon.style.getPropertyValue("--tono-globo");
 
         if (stringLine) {
           stringLine.animate([
@@ -904,11 +924,12 @@ Los globos y los cordeles se dibujan desde el código.
             top: `${start.y}%`,
             transform: "translate(-50%, -50%) rotate(0deg) scale(1)",
             opacity: 1,
+            ...(usarIlustracionesSituaciones && {filter:`hue-rotate(${tono}) grayscale(0) brightness(1)`}),
             offset: 0
           },
           {
             left: `${start.x + (target.x - start.x) * .35}%`,
-            top: `${Math.max(5, start.y - 9)}%`,
+            top: `${Math.max(usarIlustracionesSituaciones ? 8 : 5, start.y - 9)}%`,
             transform: "translate(-50%, -50%) rotate(16deg) scale(.90)",
             opacity: 1,
             offset: .4
@@ -916,15 +937,16 @@ Los globos y los cordeles se dibujan desde el código.
           {
             left: `${start.x + (target.x - start.x) * .78}%`,
             top: `${target.y + 8}%`,
-            transform: "translate(-50%, -50%) rotate(-8deg) scale(.46)",
-            opacity: .85,
+            transform: `translate(-50%, -50%) rotate(-8deg) scale(${usarIlustracionesSituaciones ? .82 : .46})`,
+            opacity: usarIlustracionesSituaciones ? .95 : .85,
             offset: .76
           },
           {
             left: `${target.x}%`,
             top: `${target.y}%`,
-            transform: `translate(-50%, -50%) rotate(${target.r}deg) scale(.22)`,
-            opacity: 0,
+            transform: `translate(-50%, -50%) rotate(${target.r}deg) scale(${usarIlustracionesSituaciones ? .79 : .22})`,
+            opacity: usarIlustracionesSituaciones ? .90 : 0,
+            ...(usarIlustracionesSituaciones && {filter:`hue-rotate(${tono}) grayscale(1) brightness(.92)`}),
             offset: 1
           }
         ], {
@@ -934,14 +956,14 @@ Los globos y los cordeles se dibujan desde el código.
         });
 
         anim.onfinish = () => {
-          balloon.remove();
-          stringLine?.remove();
+          finalizar();
+          anim.cancel();
         };
       }, delay + 90);
     });
 
     scene.querySelectorAll(".danielBalloonV3").forEach(balloon => {
-      if (!movingSet.has(Number(balloon.dataset.id))) {
+      if (!reducirMovimiento && !movingSet.has(Number(balloon.dataset.id))) {
         balloon.animate([
           { transform: "translate(-50%, -50%) rotate(-2deg) scale(1)" },
           { transform: "translate(-50%, -52%) rotate(3deg) scale(1.04)" },

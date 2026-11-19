@@ -5,7 +5,7 @@ const arteSituaciones={
   applesTree:["manzano","manzana"],
   pearsBasket:["peras-cenital","pera"],
   busPasajeros:["autobus-pasillo-amplio","alumno-aula-4"],
-  danielGlobosParque:["parque","globo"],
+  danielGlobosParque:["parque-cielo-abierto","globo"],
   pajaritosCable:["cielo-pajaritos","pajarito"],
   juanMariaDulcesPlato:["dulces-mesa","confite"],
   aulaPupitresDesocupados:["aula-pasillo","pupitre"],
