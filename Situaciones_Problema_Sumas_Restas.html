@@ -2048,7 +2048,7 @@
   </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-problemas.css?v=globos-visibles-1"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-problemas.css?v=fila-autobus-1"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
 <body>
   <main class="app">
     <section class="hero" aria-label="Encabezado de la aplicación">
@@ -3051,7 +3051,10 @@
       x: 15 + Math.floor(index / 4) * 8.7,
       y: filasAutobus[index % 4]
     }));
-    const busOutsidePositions = Array.from({length:10}, (_, index) => ({
+    const filaAutobus = Array.from({length:10}, (_, index) => ({
+      x: 71 - index * 6.65, y: 82
+    }));
+    const salidasAutobus = Array.from({length:10}, (_, index) => ({
       x: 14 + (index % 5) * 10.5,
       y: 77 + Math.floor(index / 5) * 9.8
     }));
@@ -3098,7 +3101,7 @@
       }
       if (suben) {
         state.movingIds.forEach((id, index) => {
-          plano.append(createPassenger(id, busOutsidePositions[index], "waiting", avatares));
+          plano.append(createPassenger(id, filaAutobus[index], "waiting en-fila", avatares));
         });
       }
       scene.append(plano);
@@ -3118,7 +3121,7 @@
         marcas.push(marcas[i - 1] + Math.hypot((b.x - a.x) * 1.5, b.y - a.y));
       }
       const longitud = marcas.at(-1);
-      let giro = suben ? 0 : 90;
+      let giro = 90;
       const fotogramas = recorrido.map((p, i) => {
         const siguiente = recorrido[i + 1];
         const direccion = siguiente
@@ -3133,13 +3136,14 @@
       });
       pasajero.classList.add("caminando");
       const animacion = pasajero.animate(fotogramas, {
-        duration: Math.min(2200, 850 + longitud * 8), fill: "forwards"
+        // La subida tiene una velocidad común para que quienes vienen detrás no alcancen al de delante.
+        duration: suben ? longitud * 18 : Math.min(2200, 850 + longitud * 8), fill: "forwards"
       });
       animacion.onfinish = () => {
         ubicarPasajero(pasajero, recorrido.at(-1));
         pasajero.classList.toggle("inside", suben);
         pasajero.classList.toggle("waiting", !suben);
-        pasajero.classList.remove("caminando");
+        pasajero.classList.remove("caminando", "en-fila");
         animacion.cancel();
       };
     }
@@ -3160,9 +3164,9 @@
       const suben = state.operation === "addition";
       state.movingIds.forEach((id, index) => {
         const pasajero = scene.querySelector(`.busPassenger[data-id="${id}"]`);
-        const recorrido = rutaAutobus(busOutsidePositions[index], asientosAutobus[id]);
+        const recorrido = rutaAutobus(suben ? filaAutobus[index] : salidasAutobus[index], asientosAutobus[id]);
         if (!suben) recorrido.reverse();
-        esperarEnEscena(() => caminarPasajero(pasajero, recorrido, suben), 75 + index * 360);
+        esperarEnEscena(() => caminarPasajero(pasajero, recorrido, suben), 75 + index * (suben ? 170 : 360));
       });
 
       speak(state.currentProblem.speak(getName(), state.total, state.change));
