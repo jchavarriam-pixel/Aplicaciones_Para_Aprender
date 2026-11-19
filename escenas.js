@@ -1,6 +1,132 @@
 const usarIlustracionesSituaciones = typeof esperarEnEscena === "function";
 const esperarAnimacionSituacion = usarIlustracionesSituaciones ? esperarEnEscena : setTimeout.bind(window);
 
+
+const aulaCenital = (() => {
+  // Coordenadas relativas al plano. Las tres historias comparten puerta, pasillo y sillas.
+  const puerta = { x: 78.5, y: 51 };
+  const pasillo = { x: 90, y: puerta.y };
+  const pasoInterior = { x: 71, y: puerta.y };
+  const pupitres = Array.from({length:25}, (_, index) => ({
+    x: 13 + 12.55 * (index % 5),
+    y: 21 + 15.5 * Math.floor(index / 5)
+  }));
+  const espera = Array.from({length:10}, (_, index) => ({
+    x: index % 2 ? 95.5 : 85,
+    y: [16,31,66,78,90][Math.floor(index / 2)]
+  }));
+  const avatares = Array.from({length:6}, (_, index) =>
+    `ImagenesSituacionesProblemas/Ilustraciones/alumno-aula-${index+1}.webp`);
+  const silla = pupitre => ({x:pupitre.x,y:pupitre.y+2.2});
+
+  function posicionar(elemento, punto) {
+    elemento.style.left = punto.x + "%";
+    elemento.style.top = punto.y + "%";
+  }
+
+  function render() {
+    addIndoorKitchen();
+    const modo = state.currentProblem.id;
+    const pupitresVacios = modo === "aulaPupitresDesocupados";
+    const salen = modo === "aulaEstudiantesRecreo";
+    const iniciales = pupitresVacios ? 0 : state.total;
+    const cantidadPupitres = modo === "aulaLleganEstudiantes" ? state.total + state.change : state.total;
+    const chicas = shuffle(avatares.slice(3));
+    const imagenes = shuffle(avatares.slice(0,3)).flatMap((chico,index) => [chico,chicas[index]]);
+    const clase = document.createDocumentFragment();
+
+    for (const [id, punto] of pupitres.slice(0,cantidadPupitres).entries()) {
+      const mesa = document.createElement("div");
+      mesa.className = "pupitre-aula-cenital";
+      mesa.dataset.pupitre = id;
+      mesa.classList.toggle("ocupado", id < iniciales);
+      posicionar(mesa,punto);
+      clase.append(mesa);
+    }
+    for (let id = 0; id < iniciales + (salen ? 0 : state.change); id++) {
+      const sentado = id < iniciales;
+      const alumno = document.createElement("img");
+      alumno.className = "alumno-aula-cenital";
+      alumno.classList.add(sentado ? "sentado" : "en-pasillo");
+      alumno.dataset.alumno = id;
+      alumno.alt = "";
+      alumno.src = imagenes[id % imagenes.length];
+      if (sentado) alumno.dataset.pupitre = id;
+      posicionar(alumno,sentado ? silla(pupitres[id]) : espera[id-iniciales]);
+      clase.append(alumno);
+    }
+    scene.append(clase);
+    state.movingIds = salen
+      ? shuffle(Array.from({length:state.total}, (_, id) => id)).slice(0,state.change)
+      : Array.from({length:state.change}, (_, index) => iniciales + index);
+  }
+
+  function ruta(entrada, pupitre) {
+    const asiento = silla(pupitre);
+    const yPaso = pupitre.y + 8;
+    return [
+      entrada, {x:pasillo.x,y:entrada.y}, pasillo, puerta, pasoInterior,
+      {x:pasoInterior.x,y:yPaso}, {x:asiento.x,y:yPaso}, asiento
+    ];
+  }
+
+  function caminar(alumno, recorrido, entra, mesa, asiento, terminada) {
+    const distancias = [0];
+    for (let i = 1; i < recorrido.length; i++) {
+      const a = recorrido[i-1], b = recorrido[i];
+      distancias.push(distancias[i-1] + Math.hypot((b.x-a.x)*1.5,b.y-a.y));
+    }
+    const distancia = distancias.at(-1);
+    let giro = 0;
+    const cuadros = recorrido.map((p, i) => {
+      const siguiente = recorrido[i+1];
+      const direccion = siguiente ? Math.atan2((siguiente.x-p.x)*1.5,p.y-siguiente.y)*180/Math.PI : 0;
+      giro += (direccion-giro+540)%360-180;
+      return {
+        left:p.x+"%",top:p.y+"%",transform:`translate(-50%, -50%) rotate(${giro}deg)`,
+        offset:distancias[i]/distancia
+      };
+    });
+    alumno.classList.add("caminando");
+    if (!entra) mesa.classList.remove("ocupado");
+    const animacion = alumno.animate(cuadros,{duration:Math.min(2550,950+distancia*8),fill:"forwards"});
+    animacion.onfinish = () => {
+      posicionar(alumno,recorrido.at(-1));
+      alumno.classList.toggle("sentado",entra);
+      alumno.classList.toggle("en-pasillo",!entra);
+      alumno.classList.remove("caminando");
+      if (entra) alumno.dataset.pupitre = asiento;
+      else delete alumno.dataset.pupitre;
+      mesa.classList.toggle("ocupado",entra);
+      animacion.cancel();
+      terminada();
+    };
+  }
+
+  function animar() {
+    const modo = state.currentProblem.id;
+    const entra = modo !== "aulaEstudiantesRecreo";
+    let pendientes = state.movingIds.length;
+    state.movingIds.forEach((id,index) => {
+      const alumno = scene.querySelector(`[data-alumno="${id}"]`);
+      const mesa = scene.querySelector(`.pupitre-aula-cenital[data-pupitre="${id}"]`);
+      const recorrido = ruta(espera[index],pupitres[id]);
+      if (!entra) recorrido.reverse();
+      esperarAnimacionSituacion(() => caminar(alumno,recorrido,entra,mesa,id,() => {
+        pendientes--;
+        if (pendientes === 0 && modo === "aulaPupitresDesocupados") {
+          for (const libre of scene.querySelectorAll(".pupitre-aula-cenital:not(.ocupado)")) {
+            libre.classList.add("pupitre-libre");
+          }
+        }
+      }),80+360*index);
+    });
+    speak(state.currentProblem.speak(getName(),state.total,state.change));
+  }
+
+  return {render,animar};
+})();
+
 /*
 ============================================================
 ESCENAS EXTERNAS PARA Situaciones_Problema_Sumas_Restas.html
@@ -1987,6 +2113,7 @@ ImagenesSituacionesProblemas/Aula/N4.png
   }
 
   function renderAulaAereaSceneV6() {
+    if (usarIlustracionesSituaciones) return aulaCenital.render();
     addAulaAereaSceneStylesV6();
 
     const chrome = preserveSceneActions();
@@ -2026,6 +2153,7 @@ ImagenesSituacionesProblemas/Aula/N4.png
       : `Observa cómo ${state.change === 1 ? "un estudiante entra por la puerta y se sienta" : "algunos estudiantes entran por la puerta y se sientan"}. Los pupitres sin estudiantes son la respuesta.`;
 
     updateText();
+    if (usarIlustracionesSituaciones) return aulaCenital.animar();
 
     state.movingIds.forEach((id, index) => {
       const student = scene.querySelector(`.aulaAereaStudentImgV6[data-id="${id}"], .aulaAereaStudentFallbackV6[data-id="${id}"]`);
@@ -2646,6 +2774,7 @@ ImagenesSituacionesProblemas/Aula/N4.png
   }
 
   function renderAulaRecreoScene() {
+    if (usarIlustracionesSituaciones) return aulaCenital.render();
     addAulaRecreoSceneStyles();
 
     const chrome = preserveSceneActions();
@@ -2683,6 +2812,7 @@ ImagenesSituacionesProblemas/Aula/N4.png
       : `Observa cómo ${state.change === 1 ? "un estudiante se va al recreo" : "algunos estudiantes se van al recreo"}. Los estudiantes que quedan en el aula son la respuesta.`;
 
     updateText();
+    if (usarIlustracionesSituaciones) return aulaCenital.animar();
 
     state.movingIds.forEach((id, index) => {
       const student = scene.querySelector(`.aulaRecreoStudentImg[data-id="${id}"]`);
@@ -3299,6 +3429,7 @@ ImagenesSituacionesProblemas/Aula/N4.png
   }
 
   function renderAulaLleganScene() {
+    if (usarIlustracionesSituaciones) return aulaCenital.render();
     addAulaLleganSceneStyles();
 
     const chrome = preserveSceneActions();
@@ -3346,6 +3477,7 @@ ImagenesSituacionesProblemas/Aula/N4.png
       : `Observa cómo ${state.change === 1 ? "llega un estudiante" : "llegan algunos estudiantes"} y se sientan. Los estudiantes que hay ahora en el aula son la respuesta.`;
 
     updateText();
+    if (usarIlustracionesSituaciones) return aulaCenital.animar();
 
     state.movingIds.forEach((id, index) => {
       const student = scene.querySelector(`.aulaLleganStudentImg[data-id="new-${id}"]`);

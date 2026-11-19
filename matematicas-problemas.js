@@ -8,9 +8,9 @@ const arteSituaciones={
   busLeave:["autobus-cenital","pasajero-cenital"],
   danielGlobosParque:["parque","globo"],
   juanMariaDulcesPlato:["dulces-mesa","confite"],
-  aulaPupitresDesocupados:["aula","pupitre"],
-  aulaEstudiantesRecreo:["aula","estudiante"],
-  aulaLleganEstudiantes:["aula","estudiante"]
+  aulaPupitresDesocupados:["aula-pasillo","pupitre"],
+  aulaEstudiantesRecreo:["aula-pasillo","alumno-aula-4"],
+  aulaLleganEstudiantes:["aula-pasillo","alumno-aula-2"]
 };
 
 function renderStoryThumbnail(box,problem){
