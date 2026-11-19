@@ -246,7 +246,7 @@ const aulaCenital = (() => {
   const pasoInterior = { x: 71, y: puerta.y };
   const pupitres = Array.from({length:25}, (_, index) => ({
     x: 13 + 12.55 * (index % 5),
-    y: 21 + 15.5 * Math.floor(index / 5)
+    y: 27 + 14.25 * Math.floor(index / 5)
   }));
   const espera = Array.from({length:10}, (_, index) => ({
     x: index % 2 ? 95.5 : 85,
@@ -297,7 +297,7 @@ const aulaCenital = (() => {
 
   function ruta(entrada, pupitre) {
     const asiento = silla(pupitre);
-    const yPaso = pupitre.y + 8;
+    const yPaso = pupitre.y + 7.3;
     return [
       entrada, {x:pasillo.x,y:entrada.y}, pasillo, puerta, pasoInterior,
       {x:pasoInterior.x,y:yPaso}, {x:asiento.x,y:yPaso}, asiento
