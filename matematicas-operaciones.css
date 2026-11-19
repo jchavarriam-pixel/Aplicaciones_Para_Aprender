@@ -167,12 +167,15 @@ body { background: linear-gradient(135deg,#e9e5ff,#e3efff 62%,#fff2d9); color: #
   border-radius: calc(6 * var(--unidad)); background: #f9faff; font-size: calc(14 * var(--unidad));
 }
 .recta-prestamo .recta-origen { color: white; background: #5447ad; }
-.recta-prestamo .recta-antecesor { color: #623900; background: #ffdc85; }
-.recta-origen::before {
-  content: '←'; display: block; position: absolute; right: 90%; top: 50%; transform: translateY(-50%);
-  color: #704007; font-size: calc(17 * var(--unidad)); animation: retroceso-prestamo 800ms ease-out both;
+.recta-en-retroceso .recta-antecesor {
+  animation: marcar-antecesor 380ms 1100ms both;
 }
-@keyframes retroceso-prestamo { from { opacity: 0; transform: translate(42%,-50%); } }
+.recta-en-retroceso .recta-origen::before {
+  content: '←'; display: block; position: absolute; right: 90%; top: 50%; transform: translateY(-50%);
+  color: #704007; font-size: calc(17 * var(--unidad)); animation: retroceso-prestamo 1500ms ease-in-out both;
+}
+@keyframes retroceso-prestamo { from { opacity: .35; transform: translate(85%,-50%); } }
+@keyframes marcar-antecesor { to { color: #623900; background: #ffdc85; } }
 .mostrando-pasos :is(.number-bank,.answer-cell,.carry-cell) { pointer-events: none; }
 .borrow-zone, .carry-cell, .answer-cell { position: relative; }
 .cifra-en-transformacion { opacity: .42; }
@@ -182,13 +185,14 @@ body { background: linear-gradient(135deg,#e9e5ff,#e3efff 62%,#fff2d9); color: #
   padding: 0 calc(4 * var(--unidad)); font-size: calc(var(--celda)*.46); font-weight: 900;
   line-height: 1.12; background: #ffe5a5; color: #5f3507;
 }
-.cifra-sube { animation: subir-prestamo 650ms cubic-bezier(.2,.8,.25,1) both; }
+.cifra-sube { animation: subir-prestamo 1600ms ease-in-out both; }
 .prefijo-prestado { display: inline-block; color: #a34022; }
-.cifra-sube .prefijo-prestado { animation: aparecer-prefijo 260ms 570ms both; }
+.cifra-sube:not(.muestra-prefijo) .prefijo-prestado { width: 0; opacity: 0; }
+.cifra-sube.muestra-prefijo .prefijo-prestado { animation: aparecer-prefijo 950ms ease-out both; }
 @keyframes subir-prestamo { from { transform: translateY(calc(var(--celda)*.75)); } }
 @keyframes aparecer-prefijo { from { opacity: 0; transform: translateX(calc(-6 * var(--unidad))); } }
 .ficha-llevada-animada {
-  animation: volar-llevada 890ms cubic-bezier(.2,.75,.2,1) both;
+  animation: volar-llevada 1750ms ease-in-out both;
   --origen-llevada-y: 0px;
 }
 .carry-cell .ficha-llevada-animada { --origen-llevada-y: calc(var(--celda)*2.75); }
@@ -394,4 +398,5 @@ dialog.feedback { width: min(92vw, 400px); height: fit-content; opacity: 1; poin
 .hilo-globo-operaciones { position: absolute; top: 89%; left: 48%; width: 17%; height: 20%; border-left: 2px solid #e8deffbb; border-radius: 50%; transform: rotate(-12deg); pointer-events: none; }
 @media (prefers-reduced-motion:reduce) {
   .app-wrapper *, .ajustes-operaciones * { animation: none !important; transition: none !important; }
+  .recta-en-retroceso .recta-antecesor { color: #623900; background: #ffdc85; }
 }

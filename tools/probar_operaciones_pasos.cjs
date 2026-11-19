@@ -13,7 +13,11 @@ const {pathToFileURL} = require('node:url');
     p.on('pageerror', e => errors.push(e.message));
     await p.route('https://**', r => r.abort());
     await p.addInitScript(() => {
-      speechSynthesis.speak = () => {};
+      window.locucionesPasos = [];
+      speechSynthesis.speak = voz => {
+        locucionesPasos.push({texto:voz.text, idioma:voz.lang});
+        setTimeout(() => voz.onend?.(), 45);
+      };
       speechSynthesis.cancel = () => {};
     });
     await p.goto(pathToFileURL(path.resolve('Sumas_y_restas.html')).href);
@@ -36,6 +40,7 @@ const {pathToFileURL} = require('node:url');
         await pedir.tap();
         assert.match(await pasos.innerText(),/2 \+ 10 = 12/);
         assert.equal(await p.locator('#colsContainer .col[data-col="1"] .cifra-sube').innerText(),'12');
+        assert.equal(await p.locator('.cifra-sube.muestra-prefijo').count(),0);
         assert.deepEqual(await p.evaluate(()=>currentTop),[9,2]);
         await avanzar.tap();
         assert.equal(await p.locator('.recta-origen').innerText(),'9');
@@ -76,17 +81,27 @@ const {pathToFileURL} = require('node:url');
 
     await preparar([9,2],[1,7]);
     await pedir.tap();
-    await p.locator('.recta-origen').waitFor({state:'visible',timeout:4500});
+    assert.match(await p.evaluate(()=>locucionesPasos.at(-1).texto),/Tomemos el 2\. Lo subimos/);
+    await p.locator('.cifra-sube.muestra-prefijo').waitFor({state:'visible',timeout:5000});
+    assert.match(await p.evaluate(()=>locucionesPasos.at(-1).texto),/para formar el 12/);
+    await p.locator('.recta-origen').waitFor({state:'visible',timeout:6500});
+    assert.match(await p.evaluate(()=>locucionesPasos.at(-1).texto),/Busquemos el 9 en la recta/);
+    await p.locator('.recta-en-retroceso').waitFor({state:'visible',timeout:5500});
+    assert.match(await p.evaluate(()=>locucionesPasos.at(-1).texto),/Llegamos al 8, el antecesor del 9/);
     await p.locator('.saltar-pasos-operacion').tap();
     assert.deepEqual(await p.evaluate(()=>currentTop),[8,12]);
 
     await p.locator('.boton-ajustes-operaciones').click();
     assert.ok(await p.locator('.ajustes-operaciones #ayudaVisualOperaciones').isVisible());
     assert.ok(await p.locator('.ajustes-operaciones #ayudaVerbalOperaciones').isVisible());
+    await p.locator('#narrarPasosOperaciones').uncheck();
     await p.locator('#animarPasosOperaciones').uncheck();
     await p.locator('#ayudaVisualOperaciones').check();
     await p.locator('.aplicar-operaciones').click();
-    await p.waitForFunction(()=>JSON.parse(localStorage.getItem('operaciones.config.v1'))?.animarPasos===false);
+    await p.waitForFunction(()=>{
+      const preferencias=JSON.parse(localStorage.getItem('operaciones.config.v1'));
+      return preferencias?.animarPasos===false && preferencias?.narrarPasos===false;
+    });
     await p.reload();
     await preparar([9,2],[1,7]);
     await pedir.tap();

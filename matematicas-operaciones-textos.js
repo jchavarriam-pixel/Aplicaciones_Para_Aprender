@@ -20,6 +20,7 @@ Object.assign(window.TEXTOS_INGLES,{'Signo':'Sign','Pedir prestado':'Borrow','Re
 Object.assign(window.TEXTOS_INGLES, {
  'Ayudas':'Hints', 'Mostrar ayuda visual':'Show visual hints',
  'Activar ayuda verbal':'Enable spoken hints', 'Animar préstamos y llevadas':'Animate borrowing and carrying',
+ 'Narrar los pasos de la animación':'Narrate the animation steps',
  'Empieza por la columna de la derecha. Completa las casillas y pulsa Revisar.':'Start with the rightmost column. Fill the boxes and press Check.',
  'Sumar':'Add', 'Restar':'Take away', 'Ambas':'Both', 'Sumas y restas':'Addition and subtraction',
  'Completa la operación.':'Complete the calculation.', 'Aplicar y cerrar':'Apply and close', '↻ Nueva ronda':'↻ New round',

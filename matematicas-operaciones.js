@@ -63,8 +63,9 @@ document.addEventListener('DOMContentLoaded', () => {
   ayudas.innerHTML = `<legend>Ayudas</legend>
     <label class="option-check"><input type="checkbox" id="ayudaVisualOperaciones"> Mostrar ayuda visual</label>
     <label class="option-check"><input type="checkbox" id="ayudaVerbalOperaciones"> Activar ayuda verbal</label>
-    <label class="option-check"><input type="checkbox" id="animarPasosOperaciones"> Animar préstamos y llevadas</label>`;
-  ayudas.insertBefore(game.querySelector('.audio-settings'), ayudas.lastElementChild);
+    <label class="option-check"><input type="checkbox" id="animarPasosOperaciones"> Animar préstamos y llevadas</label>
+    <label class="option-check"><input type="checkbox" id="narrarPasosOperaciones"> Narrar los pasos de la animación</label>`;
+  ayudas.insertBefore(game.querySelector('.audio-settings'), ayudas.querySelector('#animarPasosOperaciones').closest('label'));
   ajustes.append(menu, ayudas, document.getElementById('musicBtn'),
     FiestaSignos.instalarConfiguracion(), preferencias, aplicar);
   document.body.append(ajustes);
@@ -81,6 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
   helpOn = saved.helpOn === true;
   audioHelpOn = saved.audioHelpOn === true;
   animarPasos = saved.animarPasos !== false;
+  narrarPasos = saved.narrarPasos !== false;
   allowLeadingSum = saved.allowLeadingSum === true;
   speakAudioResult = saved.speakAudioResult === true;
   for (const [grupo, valor] of [['operation',operationMode],['addition',additionMode],['subtraction',subtractionMode],['digits',digits]]) {
@@ -95,15 +97,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const ayudaVisual = document.getElementById('ayudaVisualOperaciones');
   const ayudaVerbal = document.getElementById('ayudaVerbalOperaciones');
   const mostrarPasos = document.getElementById('animarPasosOperaciones');
+  const leerPasos = document.getElementById('narrarPasosOperaciones');
   ayudaVisual.checked = helpOn;
   ayudaVerbal.checked = audioHelpOn;
   mostrarPasos.checked = animarPasos;
+  leerPasos.checked = narrarPasos;
+  const actualizarOpcionNarracion = () => { leerPasos.disabled = !mostrarPasos.checked; };
+  mostrarPasos.addEventListener('change', actualizarOpcionNarracion);
+  actualizarOpcionNarracion();
   const musicName = musicModes[currentMusicMode];
   document.getElementById('musicBtn').textContent = '🎵 ' + musicName[0].toUpperCase() + musicName.slice(1);
   name.value ||= 'Gabriel';
 
   function guardar() {
-    Matematicas.guardar(clave, {digits,operationMode,additionMode,subtractionMode,helpOn,audioHelpOn,animarPasos,allowLeadingSum,speakAudioResult,currentMusicMode});
+    Matematicas.guardar(clave, {digits,operationMode,additionMode,subtractionMode,helpOn,audioHelpOn,animarPasos,narrarPasos,allowLeadingSum,speakAudioResult,currentMusicMode});
   }
   const pendientes = new Set();
   let aplicando = false;
@@ -131,6 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     helpOn = ayudaVisual.checked;
     audioHelpOn = ayudaVerbal.checked;
     animarPasos = mostrarPasos.checked;
+    narrarPasos = leerPasos.checked;
     FiestaSignos.aplicarConfiguracion();
     aplicando = true;
     for (const control of pendientes) control.dispatchEvent(new Event('change', {bubbles:true}));

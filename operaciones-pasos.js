@@ -3,9 +3,18 @@ window.PasosOperaciones = (() => {
   let sesion = null;
   const t = (es, en) => IdiomaVoz.idioma === 'en' ? en : es;
 
+  function detenerNarracion() {
+    clearTimeout(sesion.timer);
+    if (!sesion.voz) return;
+    sesion.voz.onend = null;
+    sesion.voz.onerror = null;
+    sesion.voz = null;
+    window.speechSynthesis?.cancel();
+  }
+
   function limpiar() {
     if (!sesion) return;
-    clearTimeout(sesion.timer);
+    detenerNarracion();
     sesion.panel.remove();
     sesion.tablero.classList.remove('mostrando-pasos');
     sesion.tablero.querySelectorAll('.cifra-del-paso').forEach(el => el.remove());
@@ -55,9 +64,53 @@ window.PasosOperaciones = (() => {
     zona.append(cifra);
   }
 
+  function mostrarEfecto(efecto, paso) {
+    if (efecto === 'prefijo') {
+      sesion.tablero.querySelector('.cifra-sube')?.classList.add('muestra-prefijo');
+    } else if (efecto === 'retroceso') {
+      sesion.detalle.querySelector('.recta-prestamo')?.classList.add('recta-en-retroceso');
+      for (const cambio of paso.cambios) cifraPrestada(cambio);
+    } else if (efecto === 'llevada') {
+      const ficha = document.createElement('span');
+      ficha.className = 'cifra-del-paso ficha-llevada-animada';
+      ficha.textContent = '1';
+      ficha.setAttribute('aria-hidden','true');
+      paso.destino.append(ficha);
+    }
+  }
+
+  function presentarFragmento(paso, indice) {
+    const fragmento = paso.narracion[indice];
+    if (!fragmento) { avanzar(); return; }
+    if (fragmento.cambio) cifraPrestada(fragmento.cambio);
+    mostrarEfecto(fragmento.efecto, paso);
+    const actual = sesion;
+    const siguiente = () => { if (sesion === actual) presentarFragmento(paso, indice+1); };
+    const minimo = fragmento.minimo || 2900;
+    const inicio = performance.now();
+    let voz = null;
+    if (actual.narrar) {
+      try { voz = IdiomaVoz.hablar(fragmento.texto); } catch {}
+    }
+    actual.voz = voz;
+    if (!voz) {
+      actual.timer = setTimeout(siguiente, minimo);
+      return;
+    }
+    const alTerminar = () => {
+      if (sesion !== actual || actual.voz !== voz) return;
+      detenerNarracion();
+      actual.timer = setTimeout(siguiente, Math.max(520, minimo - (performance.now() - inicio)));
+    };
+    voz.onend = alTerminar;
+    voz.onerror = alTerminar;
+    // Algunos navegadores no notifican el final cuando la voz no está disponible.
+    actual.timer = setTimeout(alTerminar, Math.max(10000, 1600 + fragmento.texto.length * 118 / IdiomaVoz.velocidad));
+  }
+
   function avanzar() {
     if (!sesion) return;
-    clearTimeout(sesion.timer);
+    detenerNarracion();
     const siguiente = sesion.pasos[++sesion.indice];
     if (!siguiente) { terminar(); return; }
     sesion.tablero.querySelectorAll('.cifra-sube').forEach(el => el.classList.remove('cifra-sube'));
@@ -70,20 +123,13 @@ window.PasosOperaciones = (() => {
     detalle.replaceChildren();
     if (siguiente.recta !== undefined) detalle.append(rectaNumerica(siguiente.recta));
     if (siguiente.ecuacion) detalle.textContent = siguiente.ecuacion;
-    for (const cambio of siguiente.cambios || []) cifraPrestada(cambio);
-    if (siguiente.destino) {
-      const ficha = document.createElement('span');
-      ficha.className = 'cifra-del-paso ficha-llevada-animada';
-      ficha.textContent = '1';
-      ficha.setAttribute('aria-hidden','true');
-      siguiente.destino.append(ficha);
-    }
+    if (siguiente.recta === undefined) for (const cambio of siguiente.cambios || []) cifraPrestada(cambio);
     panel.querySelector('.avanzar-paso-operacion').textContent = sesion.indice < sesion.pasos.length-1
       ? t('Siguiente paso','Next step') : t('Terminar','Finish');
-    sesion.timer = setTimeout(avanzar, siguiente.duracion || 2700);
+    presentarFragmento(siguiente, 0);
   }
 
-  function mostrar(pasos, completar) {
+  function mostrar(pasos, completar, { narrar = true } = {}) {
     limpiar();
     const tablero = document.getElementById('gameScreen');
     const panel = document.createElement('section');
@@ -103,7 +149,7 @@ window.PasosOperaciones = (() => {
     tablero.classList.add('mostrando-pasos');
     document.getElementById('hintBar').after(panel);
     sesion = {
-      tablero, panel, pasos, completar, indice:-1,
+      tablero, panel, pasos, completar, narrar, indice:-1,
       mensaje:panel.querySelector('.mensaje-paso-operacion'),
       detalle:panel.querySelector('.detalle-paso-operacion')
     };
