@@ -174,9 +174,24 @@ body { background: linear-gradient(125deg,#d6f5ee,#deedff 62%,#fff1d5); color: #
 .audio-operando-superior { --borde-operando: #3b78c5; --fondo-operando: #d7ebff; --texto-operando: #173f73; }
 .audio-operando-inferior { --borde-operando: #b77521; --fondo-operando: #ffebbd; --texto-operando: #683b0c; }
 .digit-new.audio-operando-superior { padding: 0 calc(4 * var(--unidad)); }
-.answer-cell { border-width: calc(2 * var(--unidad)); border-radius: calc(10 * var(--unidad)); }
-.answer-cell:not(.filled) { background: #f5fffd; border-color: #70bcb2; }
-.answer-cell.filled:not(.correct):not(.wrong) { background: #d5f1eb; color: #15595d; border-color: #238d82; }
+.answer-cell {
+  border: calc(3 * var(--unidad)) solid #26786f;
+  border-radius: calc(10 * var(--unidad));
+  background: #f9fffe;
+}
+.carry-cell {
+  border: calc(2.5 * var(--unidad)) solid #91601c;
+  border-radius: calc(7 * var(--unidad));
+  background: #fff8e9;
+}
+.answer-cell.filled:not(.correct):not(.wrong) { background: #d5f1eb; color: #15595d; border-color: #26786f; }
+.carry-cell.filled:not(.correct):not(.wrong) { border-color: #91601c; }
+:is(.answer-cell,.carry-cell).correct { border-color: #16784f; }
+:is(.answer-cell,.carry-cell).wrong { border-color: #a52f46; }
+:is(.answer-cell,.carry-cell).drop-hover {
+  border-color: #1953ae;
+  box-shadow: 0 0 0 calc(2 * var(--unidad)) #a8d4ff;
+}
 .line-sep { margin: calc(3 * var(--unidad)) auto; width: 100%; height: calc(3 * var(--unidad)); background: #21837e; }
 .board .borrow-btn-container { position: static; transform: none; display: flex; flex: none; margin: 0; }
 .board .borrow-btn-container[hidden] { display: none; }
