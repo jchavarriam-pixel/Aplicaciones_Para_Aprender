@@ -223,7 +223,7 @@
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
   <link rel="stylesheet" href="panel-ancho-ajustable.css?v=20261118-1">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-operaciones.css?v=pasos-2"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="signos-celebraciones.css?v=20261118-5"><link rel="stylesheet" href="signos-escenas.css?v=20261118-1"><script>window.IDIOMA_VOZ_APP='operaciones';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-operaciones-textos.js?v=pasos-2"></script><script src="idioma-voz.js"></script><script src="matematicas-base.js"></script></head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-operaciones.css?v=recta-1"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="signos-celebraciones.css?v=20261118-5"><link rel="stylesheet" href="signos-escenas.css?v=20261118-1"><script>window.IDIOMA_VOZ_APP='operaciones';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-operaciones-textos.js?v=pasos-2"></script><script src="idioma-voz.js"></script><script src="matematicas-base.js"></script></head>
 <body>
   <div class="app-wrapper" id="app">
     <audio id="bgMusic" loop preload="auto"><source src="data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQIAAAAAAAA=" type="audio/wav"></audio>
@@ -1001,26 +1001,43 @@
       const valor = dragValue;
       cancelarArrastre();
       const el = document.elementFromPoint(e.clientX, e.clientY);
-      if (el && (el.classList.contains('answer-cell') || el.classList.contains('carry-cell'))) {
-        const type = el.dataset.type;
-        const col = el.dataset.col !== undefined ? parseInt(el.dataset.col, 10) : NaN;
-        const colocar = () => {
-          if (type === 'answer') answers[col] = valor;
-          else if (type === 'carry') carrySlots[col] = valor;
-          else if (type === 'leading') leadingAnswer = valor;
-          el.textContent = valor;
-          el.classList.add('filled');
-          el.classList.remove('correct', 'wrong', 'drop-hover');
-          updateCheckButtonState();
-          updateHint();
-          if (audioHelpOn) startAudioGuide();
-        };
-        const esLlevada = (type === 'carry' && carrySlots[col] !== 1) ||
-          (type === 'leading' && expectedLeadingDigit === 1 && leadingAnswer !== 1);
-        if (animarPasos && valor === 1 && esLlevada) {
-          mostrarLlevada(type === 'leading' ? 0 : col+1, el, colocar);
-        } else colocar();
+      if (!el?.matches('.answer-cell, .carry-cell')) return;
+      const col = Number(el.dataset.col);
+      const total = topDigits[col] + bottomDigits[col] + expectedCarryIn[col];
+      if (currentOperation === '+' && el.dataset.type === 'answer' &&
+          answers[col] === 1 && total === 10 + valor) {
+        const destino = col === 0
+          ? document.querySelector('.answer-cell[data-type="leading"]')
+          : document.querySelector(`.carry-cell[data-col="${col-1}"]`);
+        if (destino) {
+          const separar = () => {
+            colocarFicha(el, valor);
+            colocarFicha(destino, 1);
+            actualizarTrasFicha();
+          };
+          if (animarPasos) mostrarLlevada(total, el, destino, separar);
+          else separar();
+          return;
+        }
       }
+      colocarFicha(el, valor);
+      actualizarTrasFicha();
+    }
+
+    function colocarFicha(casilla, valor) {
+      const col = Number(casilla.dataset.col);
+      if (casilla.dataset.type === 'answer') answers[col] = valor;
+      else if (casilla.dataset.type === 'carry') carrySlots[col] = valor;
+      else leadingAnswer = valor;
+      casilla.textContent = valor;
+      casilla.classList.add('filled');
+      casilla.classList.remove('correct', 'wrong', 'drop-hover');
+    }
+
+    function actualizarTrasFicha() {
+      updateCheckButtonState();
+      updateHint();
+      if (audioHelpOn) startAudioGuide();
     }
 
     function mostrarPasos(pasos, completar) {
@@ -1030,10 +1047,10 @@
       updateCheckButtonState();
     }
 
-    function mostrarLlevada(origen, destino, colocar) {
-      const total = topDigits[origen] + bottomDigits[origen] + expectedCarryIn[origen];
+    function mostrarLlevada(total, origen, destino, colocar) {
       const resto = total - 10;
       const en = IdiomaVoz.idioma === 'en';
+      origen.textContent = total;
       mostrarPasos([
         {
           texto: en ? `Separate one group of ten from the ${total}.` : `Separa un grupo de diez del ${total}.`,
@@ -1045,7 +1062,7 @@
         },
         {
           texto: en ? `The 1 goes to the left. The ${resto} stays in this column.` : `El 1 pasa a la izquierda. El ${resto} se queda en esta columna.`,
-          destino,
+          origen, destino, resto,
           narracion: [
             {texto: en ? 'We carry the 1 to the box on the left. That 1 stands for one ten.'
               : 'Llevamos el 1 a la casilla de la izquierda. Ese 1 representa una decena.', efecto:'llevada', minimo:3600},
@@ -1492,7 +1509,7 @@
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="signos-escenas.js?v=20261118-2"></script><script src="operaciones-globos.js?v=1"></script><script src="signos-celebraciones.js?v=operaciones-2"></script><script src="operaciones-pasos.js?v=2"></script><script src="matematicas-operaciones.js?v=pasos-2"></script><script src="pantalla-completa.js"></script><script src="panel-plegable.js?v=operaciones-1"></script>
+<script src="signos-escenas.js?v=20261118-2"></script><script src="operaciones-globos.js?v=1"></script><script src="signos-celebraciones.js?v=operaciones-2"></script><script src="operaciones-pasos.js?v=recta-1"></script><script src="matematicas-operaciones.js?v=recta-1"></script><script src="pantalla-completa.js"></script><script src="panel-plegable.js?v=operaciones-1"></script>
 <script src="nombre-compartido.js"></script>
 <script src="panel-ancho-ajustable.js?v=operaciones-1"></script>
 </body>

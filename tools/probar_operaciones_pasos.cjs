@@ -27,7 +27,7 @@ const {pathToFileURL} = require('node:url');
     const preparar = (a,b,op='-') => p.evaluate(({a,b,op}) => {
       currentOperation=op; digits=a.length; topDigits=a; bottomDigits=b;
       expectedCarryIn=op==='+' ? calculateAdditionCarryIn(a,b) : new Array(digits).fill(0);
-      expectedLeadingDigit=0;
+      expectedLeadingDigit=op==='+' ? Math.floor((digitsToNumber(a)+digitsToNumber(b))/10**digits) : 0;
       resetProblem();
     },{a,b,op});
     for (const [width,height] of [[320,568],[390,844],[640,360],[740,320],[1024,768]]) {
@@ -67,16 +67,35 @@ const {pathToFileURL} = require('node:url');
     assert.match(await pasos.innerText(),/10 − 1 = 9/);
     await avanzar.tap();
     assert.deepEqual(await p.evaluate(()=>currentTop),[7,9,9,12]);
-    await preparar([2,8],[1,7],'+');
-    const ficha=await p.locator('.bank-chip[data-val="1"]').boundingBox();
-    const casilla=await p.locator('.carry-cell').boundingBox();
-    await p.mouse.move(ficha.x+ficha.width/2,ficha.y+ficha.height/2);
-    await p.mouse.down(); await p.mouse.move(casilla.x+casilla.width/2,casilla.y+casilla.height/2,{steps:5}); await p.mouse.up();
-    assert.match(await pasos.innerText(),/15 = 10 \+ 5/);
+    async function arrastrar(n, selector) {
+      const ficha=await p.locator(`.bank-chip[data-val="${n}"]`).boundingBox();
+      const casilla=await p.locator(selector).boundingBox();
+      await p.mouse.move(ficha.x+ficha.width/2,ficha.y+ficha.height/2);
+      await p.mouse.down();
+      await p.mouse.move(casilla.x+casilla.width/2,casilla.y+casilla.height/2,{steps:5});
+      await p.mouse.up();
+    }
+    const unidades = '.answer-cell[data-col="1"]';
+    await preparar([2,6],[1,4],'+');
+    await arrastrar(0, unidades);
+    await arrastrar(1,'.carry-cell');
+    assert.equal(await pasos.count(),0);
+    assert.equal(await p.locator(unidades).innerText(),'0');
+    await preparar([2,6],[1,4],'+');
+    await arrastrar(1, unidades);
+    await arrastrar(0, unidades);
+    assert.equal(await p.locator(unidades).innerText(),'10');
+    assert.match(await pasos.innerText(),/10 = 10 \+ 0/);
     await avanzar.tap();
     assert.equal(await p.locator('.carry-cell .ficha-llevada-animada').innerText(),'1');
+    assert.equal(await p.locator(unidades).innerText(),'0');
     await avanzar.tap();
     assert.equal(await p.locator('.carry-cell').innerText(),'1');
+    await preparar([6,2],[4,1],'+');
+    await arrastrar(1,'.answer-cell[data-col="0"]');
+    await arrastrar(0,'.answer-cell[data-col="0"]');
+    await p.locator('.saltar-pasos-operacion').tap();
+    assert.equal(await p.locator('.answer-cell[data-type="leading"]').innerText(),'1');
     await p.evaluate(()=>document.exitFullscreen());
 
     await preparar([9,2],[1,7]);
@@ -86,8 +105,16 @@ const {pathToFileURL} = require('node:url');
     assert.match(await p.evaluate(()=>locucionesPasos.at(-1).texto),/para formar el 12/);
     await p.locator('.recta-origen').waitFor({state:'visible',timeout:6500});
     assert.match(await p.evaluate(()=>locucionesPasos.at(-1).texto),/Busquemos el 9 en la recta/);
+    const centroX = async selector => {
+      const {x,width} = await p.locator(selector).boundingBox();
+      return x + width/2;
+    };
+    assert.ok(Math.abs(await centroX('.marcador-recta-prestamo') - await centroX('.recta-origen')) < 2);
     await p.locator('.recta-en-retroceso').waitFor({state:'visible',timeout:5500});
     assert.match(await p.evaluate(()=>locucionesPasos.at(-1).texto),/Llegamos al 8, el antecesor del 9/);
+    await p.locator('.marcador-recta-prestamo').evaluate(el =>
+      Promise.all(el.getAnimations().map(animacion => animacion.finished)));
+    assert.ok(Math.abs(await centroX('.marcador-recta-prestamo') - await centroX('.recta-antecesor')) < 2);
     await p.locator('.saltar-pasos-operacion').tap();
     assert.deepEqual(await p.evaluate(()=>currentTop),[8,12]);
 

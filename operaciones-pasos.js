@@ -41,7 +41,12 @@ window.PasosOperaciones = (() => {
       const marca = document.createElement('span');
       marca.textContent = n;
       if (n === antes-1) marca.className = 'recta-antecesor';
-      if (n === antes) marca.className = 'recta-origen';
+      if (n === antes) {
+        marca.className = 'recta-origen';
+        const marcador = document.createElement('i');
+        marcador.className = 'marcador-recta-prestamo';
+        marca.append(marcador);
+      }
       linea.append(marca);
     }
     return linea;
@@ -71,10 +76,16 @@ window.PasosOperaciones = (() => {
       sesion.detalle.querySelector('.recta-prestamo')?.classList.add('recta-en-retroceso');
       for (const cambio of paso.cambios) cifraPrestada(cambio);
     } else if (efecto === 'llevada') {
+      const salida = paso.origen.getBoundingClientRect();
+      const llegada = paso.destino.getBoundingClientRect();
+      const escala = Matematicas.escala();
       const ficha = document.createElement('span');
       ficha.className = 'cifra-del-paso ficha-llevada-animada';
       ficha.textContent = '1';
       ficha.setAttribute('aria-hidden','true');
+      ficha.style.setProperty('--origen-llevada-x', (salida.left + salida.width*.32 - llegada.left - llegada.width/2)/escala+'px');
+      ficha.style.setProperty('--origen-llevada-y', (salida.top + salida.height/2 - llegada.top - llegada.height/2)/escala+'px');
+      paso.origen.textContent = paso.resto;
       paso.destino.append(ficha);
     }
   }

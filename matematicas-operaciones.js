@@ -118,8 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
   abrir.onclick = () => {
     if (PasosOperaciones.activo) {
       PasosOperaciones.limpiar();
-      updateBorrowBtn();
-      updateCheckButtonState();
+      renderBoard();
     }
     cancelarArrastre();
     clearAudioGuide();
