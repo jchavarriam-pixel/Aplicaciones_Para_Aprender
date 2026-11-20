@@ -15,6 +15,17 @@ const fichasSituaciones={
   ninosPiscina:"piscina"
 };
 
+const ajusteOperacionPorSituacion = {
+  busPasajeros: {clave:"autobus", etiqueta:"En la parada", opciones:{mixto:"Mixto (suben o bajan)", addition:"Solo suben", subtraction:"Solo bajan"}},
+  aulaRecreo: {clave:"recreo", etiqueta:"Movimiento de estudiantes", opciones:{mixto:"Mixto (salen o regresan)", subtraction:"Solo salen", addition:"Solo regresan"}},
+  estacionamiento: {clave:"estacionamiento", etiqueta:"Movimiento de carros", opciones:{alternado:"Alternan: llegan y se van", azar:"Al azar en cada ronda", addition:"Solo llegan", subtraction:"Solo se van"}},
+  andresMariaDulcesPlato: {clave:"dulces", etiqueta:"Operación con dulces", opciones:{addition:"Solo suma", subtraction:"Resta con ambos turnos", restaAndres:"Resta: María le quita a Andrés", restaMaria:"Resta: Andrés le quita a María", mixto:"Mixto (suma y resta)"}},
+  pajaritosCable: {clave:"pajaritosCable", etiqueta:"Movimiento de pajaritos", opciones:{alternado:"Alternan: llegan y se van", azar:"Al azar en cada ronda", addition:"Solo llegan", subtraction:"Solo se van"}},
+  patosEstanque: {clave:"patosEstanque", etiqueta:"Movimiento de patos", opciones:{alternado:"Alternar suma y resta", azar:"Al azar en cada ronda", addition:"Solo aterrizan", subtraction:"Solo despegan"}},
+  frutasNevera: {clave:"frutasNevera", etiqueta:"Movimiento de frutas", opciones:{alternado:"Alternar suma y resta", azar:"Al azar en cada ronda", addition:"Solo se guardan frutas", subtraction:"Solo se sacan frutas"}},
+  ninosPiscina: {clave:"ninosPiscina", etiqueta:"Movimiento de nadadores", opciones:{alternado:"Alternar suma y resta", azar:"Al azar en cada ronda", addition:"Solo entran", subtraction:"Solo salen"}}
+};
+
 function renderStoryThumbnail(box,problem){
   const archivo=fichasSituaciones[problem.id];
   if(!archivo){problem.renderPreview(box);return;}
@@ -86,67 +97,60 @@ function renderStoryThumbnail(box,problem){
   layout.append(answerBar);
   layout.querySelector("aside.card").remove();
 
-  const dialog=document.createElement("dialog");
-  dialog.className="dialogo-problemas";
   const settings=menuScreen.querySelector(".globalSettings");
-  const title=settings.querySelector(".settingsHeader h2");
-  title.id="tituloAjustesProblemas";
-  dialog.setAttribute("aria-labelledby",title.id);
-  const close=document.createElement("button");
-  close.type="button";
-  close.className="cerrar-ajustes-problemas";
-  close.textContent="✕";
-  close.setAttribute("aria-label","Cerrar");
-  settings.querySelector(".settingsHeader").append(close);
+  const rangos=settings.querySelector(".generalParamsGrid");
+  const opcionesGenerales=document.createElement("fieldset");
+  opcionesGenerales.className="opciones-ayuda-problemas";
+  opcionesGenerales.innerHTML='<legend>Lectura y ayudas</legend><label><input type="checkbox" name="narracion"> Narración y lectura</label><label><input type="checkbox" name="data"> Pista de datos</label><label><input type="checkbox" name="keyword"> Pista de palabra clave</label><label><input type="checkbox" name="operation"> Pista de operación</label>';
   languageSelect.closest("label").hidden=true;
   voiceSelect.closest("label").hidden=true;
-  const options=document.createElement("fieldset");
-  options.className="opciones-ayuda-problemas";
-  options.innerHTML='<legend>Lectura y ayudas</legend><label><input type="checkbox" name="narracion"> Narración y lectura</label><label><input type="checkbox" name="data"> Pista de datos</label><label><input type="checkbox" name="keyword"> Pista de palabra clave</label><label><input type="checkbox" name="operation"> Pista de operación</label>';
-  const busOptions=document.createElement("fieldset");
-  busOptions.className="opciones-ayuda-problemas";
-  busOptions.innerHTML='<legend>Pasajeros del autobús</legend><label for="modoAutobus">En la parada</label><select id="modoAutobus"><option value="mixto">Mixto (suben o bajan)</option><option value="addition">Solo suben</option><option value="subtraction">Solo bajan</option></select>';
-  const modoAutobus=busOptions.querySelector("select");
-  const recreoOptions=document.createElement("fieldset");
-  recreoOptions.className="opciones-ayuda-problemas";
-  recreoOptions.innerHTML='<legend>El recreo en el aula</legend><label for="modoRecreo">Movimiento de estudiantes</label><select id="modoRecreo"><option value="mixto">Mixto (salen o regresan)</option><option value="subtraction">Solo salen</option><option value="addition">Solo regresan</option></select>';
-  const modoRecreo=recreoOptions.querySelector("select");
-  const parkingOptions=document.createElement("fieldset");
-  parkingOptions.className="opciones-ayuda-problemas";
-  parkingOptions.innerHTML='<legend>Estacionamiento</legend><label for="modoEstacionamiento">Movimiento de carros</label><select id="modoEstacionamiento"><option value="alternado">Alternan: llegan y se van</option><option value="azar">Al azar en cada ronda</option><option value="addition">Solo llegan</option><option value="subtraction">Solo se van</option></select>';
-  const modoEstacionamiento=parkingOptions.querySelector("select");
-  const dulcesOptions=document.createElement("fieldset");
-  dulcesOptions.className="opciones-ayuda-problemas";
-  dulcesOptions.innerHTML='<legend>Dulces de Andrés y María</legend><label for="modoDulces">Operación con dulces</label><select id="modoDulces"><option value="addition">Solo suma</option><option value="subtraction">Resta con ambos turnos</option><option value="restaAndres">Resta: María le quita a Andrés</option><option value="restaMaria">Resta: Andrés le quita a María</option><option value="mixto">Mixto (suma y resta)</option></select>';
-  const modoDulces=dulcesOptions.querySelector("select");
-  const opcionesNuevas=document.createElement("fieldset");
-  opcionesNuevas.className="opciones-ayuda-problemas";
-  opcionesNuevas.innerHTML='<legend>Estanque, nevera y piscina</legend>';
-  const modosNuevos=Object.entries({
-    patosEstanque:"Patos en el estanque",
-    frutasNevera:"Frutas en la nevera",
-    ninosPiscina:"Niños en la piscina"
-  }).map(([id,titulo])=>{
-    const campo=document.createElement("div");
-    const label=document.createElement("label");
-    const select=document.createElement("select");
-    select.id="modo-"+id;
-    label.htmlFor=select.id;
-    label.textContent=titulo;
-    select.innerHTML='<option value="alternado">Alternar suma y resta</option><option value="azar">Al azar en cada ronda</option><option value="addition">Solo suma</option><option value="subtraction">Solo resta</option>';
-    campo.append(label,select);
-    opcionesNuevas.append(campo);
-    return [id,select];
-  });
   const voice=document.createElement("div");
   voice.id="preferenciasProblemas";
-  const done=document.createElement("button");
-  done.type="button";
-  done.className="mainBtn aplicar-ajustes-problemas";
-  done.textContent="Aplicar y volver";
-  settings.append(options,busOptions,recreoOptions,parkingOptions,dulcesOptions,opcionesNuevas,voice,done);
-  dialog.append(settings);
-  document.body.append(dialog);
+  settings.append(opcionesGenerales,voice);
+
+  const ajustesSituacion=document.createElement("div");
+  ajustesSituacion.className="globalSettings";
+  ajustesSituacion.innerHTML='<div class="cabecera-ajustes-situacion"><div><h2></h2><p>Ajustes de esta situación</p></div></div>';
+  const tituloSituacion=ajustesSituacion.querySelector("h2");
+  const cantidades=document.createElement("fieldset");
+  cantidades.className="cantidades-situacion";
+  cantidades.innerHTML="<legend>Cantidades del ejercicio</legend>";
+  cantidades.append(rangos);
+  const campoOperacion=document.createElement("div");
+  campoOperacion.className="settingsGrid";
+  ajustesSituacion.append(cantidades,campoOperacion);
+
+  function crearDialogo(contenido, encabezado, aplicar) {
+    const dialog=document.createElement("dialog");
+    dialog.className="dialogo-problemas";
+    const titulo=encabezado.querySelector("h2");
+    dialog.setAttribute("aria-labelledby",titulo.id);
+    const close=document.createElement("button");
+    close.type="button";
+    close.className="cerrar-ajustes-problemas";
+    close.textContent="✕";
+    close.setAttribute("aria-label","Cerrar");
+    encabezado.append(close);
+    const done=document.createElement("button");
+    done.type="button";
+    done.className="mainBtn aplicar-ajustes-problemas";
+    done.textContent="Aplicar y volver";
+    contenido.append(done);
+    dialog.append(contenido);
+    document.body.append(dialog);
+    const guardarYCerrar=()=>{aplicar();dialog.close();};
+    close.onclick=done.onclick=guardarYCerrar;
+    dialog.addEventListener("cancel",event=>{event.preventDefault();guardarYCerrar();});
+    dialog.addEventListener("click",event=>{if(event.target===dialog)guardarYCerrar();});
+    dialog.addEventListener("close",updateLayout);
+    return dialog;
+  }
+
+  const cabeceraGeneral=settings.querySelector(".settingsHeader");
+  cabeceraGeneral.querySelector("h2").id="tituloAjustesProblemas";
+  tituloSituacion.id="tituloAjustesSituacion";
+  const dialogoGeneral=crearDialogo(settings,cabeceraGeneral,aplicarGenerales);
+  const dialogoSituacion=crearDialogo(ajustesSituacion,ajustesSituacion.firstElementChild,aplicarSituacion);
 
   Object.assign(window.TEXTOS_INGLES,{
     "Así jugamos":"How to play","Aplicaciones":"Applications","Configuración":"Settings",
@@ -162,10 +166,12 @@ function renderStoryThumbnail(box,problem){
     "Resta: María le quita a Andrés":"Subtraction: María takes from Andrés",
     "Resta: Andrés le quita a María":"Subtraction: Andrés takes from María",
     "Mixto (suma y resta)":"Mixed (addition and subtraction)",
-    "Estanque, nevera y piscina":"Pond, fridge and pool",
-    "Patos en el estanque":"Ducks in the pond","Frutas en la nevera":"Fruit in the fridge",
-    "Niños en la piscina":"Children in the pool","Alternar suma y resta":"Alternate addition and subtraction",
-    "Solo resta":"Subtraction only",
+    "Configuración general":"General settings","Ajustes de esta situación":"Story settings",
+    "Cantidades del ejercicio":"Exercise quantities","Alternar suma y resta":"Alternate addition and subtraction",
+    "Movimiento de pajaritos":"Bird movement","Movimiento de patos":"Duck movement",
+    "Movimiento de frutas":"Fruit movement","Movimiento de nadadores":"Swimmer movement",
+    "Solo aterrizan":"Land only","Solo despegan":"Take off only",
+    "Solo se guardan frutas":"Put fruit in only","Solo se sacan frutas":"Take fruit out only","Solo entran":"Get in only",
     "Ya estaban":"Already there","Llegaron":"Arrivals",
     "Narración y lectura":"Narration and reading","Pista de datos":"Data hint",
     "Pista de palabra clave":"Keyword hint","Pista de operación":"Operation hint"
@@ -195,50 +201,68 @@ function renderStoryThumbnail(box,problem){
     else hintBox.innerHTML=t("defaultHint");
   }});
 
-  let previousRange;
+  const camposRango={minTotal,maxTotal,minChange,maxChange};
+  let idConfigurado;
   openSettings.onclick=()=>{
-    previousRange=JSON.stringify(readParams());
-    modoAutobus.value=preferenciasProblemas.autobus;
-    modoRecreo.value=preferenciasProblemas.recreo;
-    modoEstacionamiento.value=preferenciasProblemas.estacionamiento;
-    modoDulces.value=preferenciasProblemas.dulces;
-    for(const [id,select] of modosNuevos)select.value=preferenciasProblemas[id];
-    for(const input of options.querySelectorAll("input"))input.checked=preferenciasProblemas[input.name];
-    IdiomaVoz.iniciarEdicion();
-    dialog.showModal();
-  };
-  function applySettings(){
-    for(const input of options.querySelectorAll("input"))preferenciasProblemas[input.name]=input.checked;
-    const cambioAutobus=preferenciasProblemas.autobus!==modoAutobus.value;
-    const cambioRecreo=preferenciasProblemas.recreo!==modoRecreo.value;
-    const cambioEstacionamiento=preferenciasProblemas.estacionamiento!==modoEstacionamiento.value;
-    const cambioDulces=preferenciasProblemas.dulces!==modoDulces.value;
-    preferenciasProblemas.autobus=modoAutobus.value;
-    preferenciasProblemas.recreo=modoRecreo.value;
-    preferenciasProblemas.estacionamiento=modoEstacionamiento.value;
-    preferenciasProblemas.dulces=modoDulces.value;
-    const cambiosPorHistoria={busPasajeros:cambioAutobus,aulaRecreo:cambioRecreo,estacionamiento:cambioEstacionamiento,andresMariaDulcesPlato:cambioDulces};
-    for(const [id,select] of modosNuevos){
-      cambiosPorHistoria[id]=preferenciasProblemas[id]!==select.value;
-      preferenciasProblemas[id]=select.value;
+    const problema=state.currentProblem;
+    if(!problema){
+      for(const input of opcionesGenerales.querySelectorAll("input"))input.checked=preferenciasProblemas[input.name];
+      IdiomaVoz.iniciarEdicion();
+      dialogoGeneral.showModal();
+      return;
     }
+    idConfigurado=problema.id;
+    tituloSituacion.textContent=problemText(problema,"title");
+    const rango=rangoDeSituacion(idConfigurado);
+    for(const [clave,input] of Object.entries(camposRango))input.value=rango[clave];
+    const operacion=ajusteOperacionPorSituacion[idConfigurado];
+    campoOperacion.replaceChildren();
+    campoOperacion.hidden=!operacion;
+    if(operacion){
+      const label=document.createElement("label");
+      label.textContent=operacion.etiqueta;
+      const select=document.createElement("select");
+      select.id="modoSituacion";
+      for(const [valor,texto] of Object.entries(operacion.opciones))select.add(new Option(texto,valor));
+      const guardado=preferenciasProblemas[operacion.clave];
+      select.value=Object.hasOwn(operacion.opciones,guardado)?guardado:select.options[0].value;
+      label.append(select);
+      campoOperacion.append(label);
+    }
+    IdiomaVoz.localizar();
+    dialogoSituacion.showModal();
+  };
+
+  function aplicarGenerales(){
+    for(const input of opcionesGenerales.querySelectorAll("input"))preferenciasProblemas[input.name]=input.checked;
     if(!preferenciasProblemas.narracion)window.speechSynthesis?.cancel();
     Matematicas.guardar(CLAVE_AYUDAS_PROBLEMAS,preferenciasProblemas);
-    const changed=JSON.stringify(readParams())!==previousRange;
-    saveParams();
     saveFontSetting();
     IdiomaVoz.aplicarEdicion();
-    if(state.currentProblem&&(changed||cambiosPorHistoria[state.currentProblem.id]))newProblem();
     actualizarAyudas();
-    dialog.close();
   }
-  close.onclick=done.onclick=applySettings;
-  dialog.addEventListener("cancel",event=>{event.preventDefault();applySettings();});
-  dialog.addEventListener("click",event=>{if(event.target===dialog)applySettings();});
+
+  function aplicarSituacion(){
+    const anterior=rangoDeSituacion(idConfigurado);
+    const rango=normalizarRango(Object.fromEntries(Object.entries(camposRango).map(([clave,input])=>[clave,input.value])));
+    const cambioRango=Object.keys(rango).some(clave=>rango[clave]!==anterior[clave]);
+    if(cambioRango)guardarRangoDeSituacion(idConfigurado,rango);
+    const operacion=ajusteOperacionPorSituacion[idConfigurado];
+    const nuevaOperacion=campoOperacion.querySelector("select")?.value;
+    const anteriorOperacion=operacion&&(preferenciasProblemas[operacion.clave]??Object.keys(operacion.opciones)[0]);
+    const cambioOperacion=operacion&&nuevaOperacion!==anteriorOperacion;
+    if(cambioOperacion){
+      preferenciasProblemas[operacion.clave]=nuevaOperacion;
+      Matematicas.guardar(CLAVE_AYUDAS_PROBLEMAS,preferenciasProblemas);
+    }
+    if(state.currentProblem?.id===idConfigurado&&(cambioRango||cambioOperacion))newProblem();
+  }
 
   function updateLayout(){
     const folded=app.classList.contains("panel-lateral-oculto");
     const playing=app.dataset.pantalla==="problem";
+    const etiqueta=IdiomaVoz.t(playing?"Ajustes de esta situación":"Configuración general");
+    if(openSettings.textContent!=="⚙ "+etiqueta)openSettings.textContent="⚙ "+etiqueta;
     foldedBar.hidden=!folded;
     newBtn.hidden=backBtn.hidden=!playing;
     hints.hidden=!playing||![preferenciasProblemas.data,preferenciasProblemas.keyword,preferenciasProblemas.operation].some(Boolean);
@@ -259,5 +283,4 @@ function renderStoryThumbnail(box,problem){
     updateLayout();
   });
   new MutationObserver(fit).observe(app,{attributes:true,attributeFilter:["class","data-pantalla"]});
-  dialog.addEventListener("close",updateLayout);
 })();

@@ -124,11 +124,14 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 .dialogo-problemas { zoom:var(--inverso-panel-compartido,1); width:min(690px,calc(100% - 18px)); max-height:calc(100dvh - 18px); background:white; border:0; padding:0; border-radius:19px; color:#273553; }
 .dialogo-problemas::backdrop { background:#231e4994; }
 .dialogo-problemas .globalSettings { margin:0; padding:14px; background:white; border:0; box-shadow:none; }
-.dialogo-problemas .settingsHeader { display:flex; justify-content:space-between; gap:8px; align-items:start; }
+.dialogo-problemas :is(.settingsHeader,.cabecera-ajustes-situacion) { display:flex; justify-content:space-between; gap:8px; align-items:start; }
+.dialogo-problemas .cabecera-ajustes-situacion h2 { color:#50348c; font-size:1.25rem; margin:0; }
+.dialogo-problemas .cabecera-ajustes-situacion p { margin:.35rem 0 .65rem; }
 .cerrar-ajustes-problemas { min-width:36px; min-height:36px; border:0; border-radius:8px; background:#eee7ff; color:#45327a; cursor:pointer; }
 .dialogo-problemas .settingsGrid,.dialogo-problemas .generalParamsGrid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,135px),1fr)); gap:7px; }
 .opciones-ayuda-problemas { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr)); gap:6px; border:1px solid #ded6f4; border-radius:11px; margin:10px 0; padding:8px; }
-.opciones-ayuda-problemas legend { font-weight:800; }
+.cantidades-situacion { min-width:0; border:1px solid #ded6f4; border-radius:11px; margin:10px 0; padding:8px; }
+:is(.opciones-ayuda-problemas,.cantidades-situacion) legend { font-weight:800; }
 .globalSettings .opciones-ayuda-problemas label { display:flex; align-items:center; gap:5px; }
 .globalSettings .opciones-ayuda-problemas input { width:19px; height:19px; accent-color:#6846b7; }
 .aplicar-ajustes-problemas { position:sticky; bottom:0; width:100%; margin-top:8px; background:#5740ad; }

@@ -376,7 +376,12 @@ if (usarIlustracionesSituaciones) {
   registerScene({
     id,
     operation: "addition",
-    chooseOperation: alternarOperacionSituaciones,
+    chooseOperation(anterior) {
+      const modo = preferenciasProblemas.pajaritosCable;
+      if (modo === "addition" || modo === "subtraction") return modo;
+      if (modo === "azar") return randInt(0, 1) ? "addition" : "subtraction";
+      return alternarOperacionSituaciones(anterior);
+    },
     itemSingular: "pajarito",
     itemPlural: "pajaritos",
     itemSingularEn: "bird",

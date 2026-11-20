@@ -2048,7 +2048,7 @@
   </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-problemas.css?v=tres-situaciones-1"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script><link rel="stylesheet" href="iconos/cabeceras.css"></head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-problemas.css?v=ajustes-por-situacion-1"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script><link rel="stylesheet" href="iconos/cabeceras.css"></head>
 <body>
   <main class="app">
     <section class="hero" aria-label="Encabezado de la aplicación">
@@ -2068,7 +2068,7 @@
         <div class="settingsHeader">
           <div>
             <h2>Configuración general</h2>
-            <p>La letra, la voz y los parámetros se guardan para la próxima vez.</p>
+            <p>Estos ajustes se aplican a todas las situaciones.</p>
           </div>
         </div>
         <div class="settingsGrid">
@@ -2103,7 +2103,7 @@
           </label>
           <label>
             Inicial máxima
-            <input id="maxTotal" type="number" min="3" max="15" value="12" />
+            <input id="maxTotal" type="number" min="2" max="15" value="12" />
           </label>
           <label>
             Cambio mínimo
@@ -2183,6 +2183,9 @@
     const LANG_KEY = "gabrielAppsLanguage";
     const VOICE_KEY = "gabrielAppsVoiceURI";
     const PARAMS_KEY = "situacionesProblemaParametros";
+    const RANGOS_POR_SITUACION = "situacionesProblemaRangos.v1";
+    const rangosPorSituacion = Matematicas.leer(RANGOS_POR_SITUACION);
+    const rangoAnterior = Matematicas.leer(PARAMS_KEY);
     const CLAVE_AYUDAS_PROBLEMAS = "situacionesProblemaAyudas";
     const preferenciasProblemas = {narracion:true,data:true,keyword:true,operation:true,...Matematicas.leer(CLAVE_AYUDAS_PROBLEMAS)};
     for (const actividad of ["autobus", "recreo"]) {
@@ -2412,7 +2415,7 @@
         mainSubtitle: "Escoge una historia, observa la animación y resuelve con sumas o restas.",
         menuIntro: "Elige una historia para resolver.",
         settingsTitle: "Configuración general",
-        settingsNote: "La letra, la voz y los parámetros se guardan para la próxima vez.",
+        settingsNote: "Estos ajustes se aplican a todas las situaciones.",
         fontLabel: "Tipo de letra",
         voiceLabel: "Voz de lectura",
         minTotalLabel: "Inicial mínima",
@@ -2467,7 +2470,7 @@
         mainSubtitle: "Choose a story, watch the animation, and solve with addition or subtraction.",
         menuIntro: "Choose a story to solve.",
         settingsTitle: "General settings",
-        settingsNote: "The font, voice, and parameters are saved for next time.",
+        settingsNote: "These settings apply to every story.",
         fontLabel: "Font",
         voiceLabel: "Reading voice",
         minTotalLabel: "Minimum start",
@@ -2843,27 +2846,23 @@
       applyStaticLanguage();
     }
 
-    function loadSavedParams() {
-      try {
-        const saved = JSON.parse(Matematicas.almacen.getItem(PARAMS_KEY) || "{}");
-        if (saved.minTotal) minTotal.value = saved.minTotal;
-        if (saved.maxTotal) maxTotal.value = saved.maxTotal;
-        if (saved.minChange) minChange.value = saved.minChange;
-        if (saved.maxChange) maxChange.value = saved.maxChange;
-      } catch (error) {
-        Matematicas.almacen.removeItem(PARAMS_KEY);
-      }
-      readParams();
+    function normalizarRango({minTotal, maxTotal, minChange, maxChange}) {
+      const entero = (valor, defecto, minimo, maximo) =>
+        clamp(Math.round(Number(valor) || defecto), minimo, maximo);
+      const a = entero(minTotal, 6, 2, 15);
+      const b = entero(maxTotal, 12, 2, 15);
+      const c = entero(minChange, 1, 1, 10);
+      const d = entero(maxChange, 6, 1, 10);
+      return {minTotal:Math.min(a,b), maxTotal:Math.max(a,b), minChange:Math.min(c,d), maxChange:Math.max(c,d)};
     }
 
-    function saveParams() {
-      const params = readParams();
-      Matematicas.almacen.setItem(PARAMS_KEY, JSON.stringify({
-        minTotal: params.minT,
-        maxTotal: params.maxT,
-        minChange: params.minC,
-        maxChange: params.maxC
-      }));
+    function rangoDeSituacion(id) {
+      return normalizarRango(rangosPorSituacion[id] ?? rangoAnterior);
+    }
+
+    function guardarRangoDeSituacion(id, rango) {
+      rangosPorSituacion[id] = rango;
+      Matematicas.guardar(RANGOS_POR_SITUACION, rangosPorSituacion);
     }
 
     function showScreen(which) {
@@ -2928,7 +2927,6 @@
     function openProblem(problemId) {
       state.currentProblem = problems[problemId];
       state.operation = null;
-      readParams();
       scene.dataset.story = state.currentProblem.id;
       mainSubtitle.textContent = t("problemSubtitle");
       sceneTitle.textContent = problemText(state.currentProblem, "sceneTitle");
@@ -2953,32 +2951,18 @@
       showScreen("menu");
     }
 
-    function readParams() {
-      let a = clamp(Number(minTotal.value || 6), 2, 15);
-      let b = clamp(Number(maxTotal.value || 12), 3, 15);
-      let c = clamp(Number(minChange.value || 1), 1, 10);
-      let d = clamp(Number(maxChange.value || 6), 1, 10);
-      if (a > b) [a, b] = [b, a];
-      if (c > d) [c, d] = [d, c];
-      minTotal.value = a;
-      maxTotal.value = b;
-      minChange.value = c;
-      maxChange.value = d;
-      return { minT: a, maxT: b, minC: c, maxC: d };
-    }
-
     function newProblem() {
       const problem = state.currentProblem;
       if (!problem) return;
       cancelarAnimacionesEscena();
-      const p = readParams();
+      const p = rangoDeSituacion(problem.id);
       state.operation = problem.chooseOperation?.(state.operation) ?? problem.operation;
-      state.total = randInt(p.minT, p.maxT);
-      let realMaxChange = p.maxC;
-      let realMinChange = p.minC;
+      state.total = randInt(p.minTotal, p.maxTotal);
+      let realMaxChange = p.maxChange;
+      let realMinChange = p.minChange;
       if (state.operation === "subtraction") {
-        realMaxChange = Math.min(p.maxC, state.total - 1);
-        realMinChange = Math.min(p.minC, realMaxChange);
+        realMaxChange = Math.min(p.maxChange, state.total - 1);
+        realMinChange = Math.min(p.minChange, realMaxChange);
       }
       state.change = randInt(realMinChange, realMaxChange);
       state.answer = state.operation === "addition" ? state.total + state.change : state.total - state.change;
@@ -3009,7 +2993,8 @@
 
     function buildNumberGrid() {
       numberGrid.innerHTML = "";
-      const maxOption = Math.max(12, Number(maxTotal.value || 12) + Number(maxChange.value || 6));
+      const rango = rangoDeSituacion(state.currentProblem.id);
+      const maxOption = Math.max(12, rango.maxTotal + rango.maxChange);
       for (let n = 0; n <= maxOption; n++) {
         const btn = document.createElement("button");
         btn.type = "button";
@@ -3798,13 +3783,12 @@
     function startApp() {
       syncNameFromStorage();
       applyFontSetting();
-      loadSavedParams();
       applyLanguageSetting();
       showScreen("menu");
     }
   window.addEventListener('nombre-estudiante-cambiado',e=>{if(state.currentProblem)updateText();});
 </script>
-  <script src="escenas.js?v=rastros-visibles-1"></script>
+  <script src="escenas.js?v=ajustes-pajaritos-1"></script>
   <script src="escenas-estanque-nevera-piscina.js?v=1"></script>
 
 <footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos">
@@ -3817,7 +3801,7 @@
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="matematicas-problemas.js?v=tres-situaciones-1"></script><script src="pantalla-completa.js"></script>
+<script src="matematicas-problemas.js?v=ajustes-por-situacion-1"></script><script src="pantalla-completa.js"></script>
 <script src="panel-plegable.js?v=historias-1"></script>
 <script src="nombre-compartido.js"></script>
 </body>
