@@ -16,14 +16,19 @@
     }))
   ];
 
-  function lugarTerraza(indice, cantidad) {
+  function lugarTerraza(indice, cantidad, entrada = false) {
     const filas = cantidad > 6 ? [50,32,68,14,86] : [52,31,73];
-    return {x:indice % 2 ? 84.8 : 94.2, y:filas[Math.floor(indice / 2)]};
+    const cercaDeLaPiscina = entrada ? indice % 2 === 0 : indice % 2 === 1;
+    return {x:cercaDeLaPiscina ? 84.8 : 94.2, y:filas[Math.floor(indice / 2)]};
   }
 
   function posicionarFigura(figura, punto) {
     figura.style.left = punto.x + "%";
     figura.style.top = punto.y + "%";
+  }
+
+  function trayectoEnAgua(punto) {
+    return [escalera, {x:Math.min(60,punto.x + 17), y:punto.y}, punto];
   }
 
   function lugaresAgua(inicioX, pasoX, filas) {
@@ -76,10 +81,12 @@
       id:"ninosPiscina", clase:"piscina", emoji:"🏊", lugares:lugaresAgua(13, 12.1, [19,33,47,61,75]),
       es:{title:"Niños en la piscina", lugar:"en la piscina", plural:"niños", singular:"niño",
         entra:["entra","entran"], sale:["sale","salen"],
+        avisoEntrada:"Mira cómo bajan por la escalera uno por uno.", avisoSalida:"Cuenta solo a los niños que siguen en el agua.",
         short:"Mira cómo nadan los niños y usan las escaleras para entrar o salir.", animateLabel:"▶ Mover nadadores",
         sceneTitle:"Observa los niños en la piscina", answerQuestion:"¿Cuántos niños hay ahora en la piscina?"},
       en:{title:"Children in the pool", lugar:"in the pool", plural:"children", singular:"child",
         entra:["gets in","get in"], sale:["gets out","get out"],
+        avisoEntrada:"Watch them use the steps one at a time.", avisoSalida:"Count only the children still in the water.",
         short:"Watch the children swim and use the steps to get in or out.", animateLabel:"▶ Move the swimmers",
         sceneTitle:"Watch the children in the pool", answerQuestion:"How many children are in the pool now?"}
     }
@@ -143,8 +150,11 @@
         const figura = document.createElement("span");
         figura.className = "figura-situacion-nueva";
         figura.dataset.lugar = i;
-        figura.hidden = i >= state.total;
-        posicionarFigura(figura, punto);
+        const porEntrar = i >= state.total;
+        const esperaEnTerraza = piscina && porEntrar;
+        figura.hidden = porEntrar && !esperaEnTerraza;
+        figura.classList.toggle("fuera-piscina", esperaEnTerraza);
+        posicionarFigura(figura, esperaEnTerraza ? lugarTerraza(i - state.total, state.change, true) : punto);
         figura.style.setProperty("--fase-nado", -(i * 313 % 3950) + "ms");
         figura.style.setProperty("--direccion-nado", (i % 2 ? -1 : 1));
         const personaje = piscina ? elenco[i % elenco.length] : null;
@@ -174,7 +184,7 @@
     }
 
     function recorrer(figura, base, ruta, duracion, listo) {
-      // Solo se anima la traslación. La posición final sigue anclada al dibujo.
+      // Se anima desde el ancla actual, sin depender del tamaño de la pantalla.
       const animacion = figura.animate(ruta.map(punto => ({
         translate:`${punto.x - base.x}cqw ${punto.y - base.y}cqh`,
         scale:punto.escala ?? 1,
@@ -184,6 +194,33 @@
         listo();
         animacion.cancel();
       };
+    }
+
+    function formarEntradaPiscina(figuras, orden = 0) {
+      const indice = state.movingIds[orden];
+      if (indice === undefined) return;
+      const figura = figuras[indice];
+      const punto = lugaresRonda[indice];
+      const origen = lugarTerraza(orden, state.change, true);
+      const siguiente = () => formarEntradaPiscina(figuras, orden + 1);
+      const llegarAlAgua = () => {
+        posicionarFigura(figura, punto);
+        figura.classList.remove("fuera-piscina","usando-escalera");
+        figura.classList.add("agregado-situacion");
+      };
+      if (reducirMovimiento.matches) {
+        llegarAlAgua();
+        esperarEnEscena(siguiente, 300);
+        return;
+      }
+      figura.classList.add("en-transito","usando-escalera");
+      const caminar = [origen, {x:accesoTerraza.x,y:origen.y}, accesoTerraza, bordePiscina, escalera];
+      recorrer(figura, origen, caminar, 820, () => {
+        llegarAlAgua();
+        onda(figura.parentElement, escalera);
+        recorrer(figura, punto, trayectoEnAgua(punto), 810, () => figura.classList.remove("en-transito"));
+        esperarEnEscena(siguiente, 190);
+      });
     }
 
     function mover(figura, punto, orden, entrada) {
@@ -209,23 +246,12 @@
       figura.classList.add("en-transito");
 
       if (piscina) {
-        const nadar = [escalera, {x:Math.min(60,punto.x + 17), y:punto.y}, punto];
-        if (entrada) {
-          const caminar = [{x:94.2, y:57}, bordePiscina, escalera];
+        recorrer(figura, punto, trayectoEnAgua(punto).reverse(), 950, () => {
           figura.classList.add("usando-escalera");
-          recorrer(figura, punto, caminar, 720, () => {
-            figura.classList.remove("usando-escalera");
-            onda(plano, escalera);
-            recorrer(figura, punto, nadar, 900, finalizar);
-          });
-        } else {
-          recorrer(figura, punto, nadar.reverse(), 950, () => {
-            figura.classList.add("usando-escalera");
-            onda(plano, escalera);
-            const caminar = [escalera, bordePiscina, accesoTerraza, {x:accesoTerraza.x, y:destino.y}, destino];
-            recorrer(figura, punto, caminar, 990, finalizar);
-          });
-        }
+          onda(plano, escalera);
+          const caminar = [escalera, bordePiscina, accesoTerraza, {x:accesoTerraza.x, y:destino.y}, destino];
+          recorrer(figura, punto, caminar, 990, finalizar);
+        });
         return;
       }
 
@@ -252,17 +278,20 @@
       state.animated = true;
       const entrada = recienLlegan();
       const figuras = scene.querySelectorAll(selector);
-      for (const [orden, indice] of state.movingIds.entries()) {
-        const empezar = () => mover(figuras[indice], lugaresRonda[indice], orden, entrada);
-        if (reducirMovimiento.matches) empezar();
-        else esperarEnEscena(empezar, 55 + orden * (piscina ? 390 : 165));
+      if (piscina && entrada) {
+        formarEntradaPiscina(figuras);
+      } else {
+        for (const [orden, indice] of state.movingIds.entries()) {
+          const empezar = () => mover(figuras[indice], lugaresRonda[indice], orden, entrada);
+          if (reducirMovimiento.matches) empezar();
+          else esperarEnEscena(empezar, 55 + orden * (piscina ? 390 : 165));
+        }
       }
       feedback.className = "feedback";
+      const {avisoEntrada, avisoSalida} = texto();
       feedback.textContent = entrada
-        ? (isEnglish() ? "Find the new arrivals with the yellow glow." : "Fíjate en los que llegaron con brillo amarillo.")
-        : piscina
-          ? (isEnglish() ? "Count only the children still in the water." : "Cuenta solo a los niños que siguen en el agua.")
-        : (isEnglish() ? "Count only the objects in color." : "Cuenta solo los que quedaron en color.");
+        ? avisoEntrada ?? (isEnglish() ? "Find the new arrivals with the yellow glow." : "Fíjate en los que llegaron con brillo amarillo.")
+        : avisoSalida ?? (isEnglish() ? "Count only the objects in color." : "Cuenta solo los que quedaron en color.");
       speak(enunciado(state.total, state.change));
     }
 
