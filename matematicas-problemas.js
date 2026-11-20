@@ -31,7 +31,6 @@ function renderStoryThumbnail(box,problem){
 (() => {
   const app=document.querySelector(".app");
   const layout=document.querySelector("#problemScreen .layout");
-  const artCard=layout.querySelector("article.card");
   const panel=document.createElement("aside");
   const content=document.createElement("div");
   panel.className="herramientas-problemas";
@@ -82,10 +81,6 @@ function renderStoryThumbnail(box,problem){
   stage.className="marco-escena-problemas";
   scene.before(stage);
   stage.append(scene);
-  const storyTools=document.createElement("div");
-  storyTools.className="acciones-escena-problemas";
-  storyTools.append(speakBtn,animateBtn,resetAnimationBtn);
-  artCard.querySelector(".sceneHeader").append(storyTools);
   const answerBar=document.createElement("div");
   answerBar.className="revision-problemas";
   answerBar.append(feedback,checkBtn);

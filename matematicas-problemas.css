@@ -18,7 +18,7 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 .guia-problemas p { margin:0; font-size:calc(12 * var(--unidad)); line-height:1.24; color:#504269; }
 .controles-problemas,.hintTools { display:flex; flex-wrap:wrap; gap:calc(4 * var(--unidad)); }
 .controles-problemas,.pistas-problemas { grid-column:1/-1; }
-.controles-problemas button,.acciones-escena-problemas button,.hintTools button { position:static; flex:1 1 auto; min-height:calc(31 * var(--unidad)); padding:calc(4 * var(--unidad)) calc(7 * var(--unidad)); font-size:calc(12 * var(--unidad)); line-height:1.15; border-radius:calc(8 * var(--unidad)); box-shadow:none; }
+.controles-problemas button,.hintTools button { position:static; flex:1 1 auto; min-height:calc(31 * var(--unidad)); padding:calc(4 * var(--unidad)) calc(7 * var(--unidad)); font-size:calc(12 * var(--unidad)); line-height:1.15; border-radius:calc(8 * var(--unidad)); box-shadow:none; }
 .controles-problemas .mainBtn { background:#e9e2ff; color:#443176; }
 #newBtn.smallBtn { background:#ffe4a3; color:#593a11; }
 .pistas-problemas { margin:0; padding:calc(4 * var(--unidad)); border:0; background:#f3f2ff; border-radius:calc(10 * var(--unidad)); }
@@ -54,8 +54,22 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 .app .layout>article.card { display:grid; grid-template-columns:minmax(0,1fr); grid-template-rows:auto minmax(0,1fr) auto; min-height:0; min-width:0; height:100%; margin:0; overflow:hidden; background:#f4f8ff; border:1px solid #c9dafa; border-radius:calc(15 * var(--unidad)); box-shadow:none; }
 .sceneHeader { display:flex; align-items:center; justify-content:space-between; padding:calc(3 * var(--unidad)) calc(6 * var(--unidad)); gap:calc(4 * var(--unidad)); margin:0; flex-wrap:wrap; background:#e0ebff; border:0; }
 .sceneHeader strong { font-size:calc(13 * var(--unidad)); line-height:1.1; margin:0; color:#354980; }
-.acciones-escena-problemas { display:flex; flex-wrap:wrap; gap:calc(3 * var(--unidad)); }
-.acciones-escena-problemas button { min-height:calc(26 * var(--unidad)); font-size:calc(11 * var(--unidad)); }
+.acciones-escena-problemas {
+  inset:auto calc(5 * var(--unidad)) calc(5 * var(--unidad));
+  display:flex; align-items:center; gap:calc(4 * var(--unidad));
+}
+.acciones-escena-problemas button {
+  position:static; display:inline-flex; align-items:center; justify-content:center; gap:calc(4 * var(--unidad));
+  flex:0 1 auto; min-width:calc(30 * var(--unidad)); min-height:calc(32 * var(--unidad));
+  padding:calc(4 * var(--unidad)) calc(6 * var(--unidad)); border:1px solid #ffffffc9;
+  border-radius:calc(8 * var(--unidad)); box-shadow:0 1px 4px #111c3c73;
+  font-size:calc(11 * var(--unidad)); line-height:1.1; white-space:nowrap;
+}
+.texto-accion-escena { min-width:0; overflow:hidden; }
+.acciones-escena-problemas #animateBtn { margin-left:auto; }
+@container (width < 190px) {
+  .texto-accion-escena { display:none; }
+}
 #speakBtn.sceneActionBtn { background:#5a42aa; }
 #animateBtn.sceneActionBtn { background:#245aae; }
 #resetAnimationBtn { background:#e5dcff; color:#463075; }
@@ -103,7 +117,12 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 .app .dragChip.clearChip { grid-column:span 2; width:100%; background:#eee6fa; color:#50317e; border-color:#c4a9e4; box-shadow:0 2px 0 #dbcaed; }
 .app :is(.dragChip,.dropZone):focus-visible { outline:2px solid #29195f; outline-offset:2px; }
 .app .equalsFixed { min-width:0; min-height:calc(37 * var(--unidad)); font-size:calc(18 * var(--unidad)); }
-.sceneOperationPreview { font-size:calc(12 * var(--unidad)); padding:calc(3 * var(--unidad)) calc(5 * var(--unidad)); border-width:1px; }
+.sceneHeader .sceneOperationPreview {
+  position:static; transform:none; max-width:100%; min-height:0; margin-left:auto;
+  padding:calc(2 * var(--unidad)) calc(5 * var(--unidad)); border-radius:calc(5 * var(--unidad));
+  font-size:calc(12 * var(--unidad)); line-height:1.1; background:#f5f8ff;
+}
+.sceneHeader .sceneOperationPreview.isEmpty { display:none; }
 .revision-problemas { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:calc(4 * var(--unidad)); padding-right:calc(88 * var(--unidad)); }
 .revision-problemas .feedback { flex:1 1 calc(135 * var(--unidad)); min-height:0; max-height:calc(48 * var(--unidad)); overflow:auto; margin:0; padding:calc(4 * var(--unidad)); border-width:1px; border-radius:calc(8 * var(--unidad)); font-size:calc(11 * var(--unidad)); line-height:1.2; }
 #checkBtn.mainBtn { display:block; flex:1 1 calc(88 * var(--unidad)); max-width:calc(285 * var(--unidad)); min-height:calc(37 * var(--unidad)); height:auto; padding:calc(4 * var(--unidad)); background:linear-gradient(140deg,#5740ba,#235aac); border-radius:calc(10 * var(--unidad)); font-size:calc(15 * var(--unidad)); }
@@ -149,6 +168,7 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 .app:not(.horizontal) .herramientas-problemas { padding:calc(6 * var(--unidad)) calc(6 * var(--unidad)) calc(6 * var(--unidad)) calc(43 * var(--unidad)); max-height:min(calc(var(--alto-util,100dvh) * .27),calc(130 * var(--unidad))); }
 .app:not(.horizontal) .herramientas-problemas .hero { padding:calc(6 * var(--unidad)); }
 .app:not(.horizontal) .sceneHeader strong { display:none; }
+.app:not(.horizontal) .sceneHeader { padding-block:0; }
 .app:not(.horizontal)[data-pantalla=problem] .herramientas-problemas .guia-problemas p { font-size:calc(11 * var(--unidad)); }
 .app .layout>.storyBox {
   font-size:clamp(calc(17 * var(--unidad)),2.45cqw,calc(24 * var(--unidad)));

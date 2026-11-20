@@ -2048,7 +2048,7 @@
   </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-problemas.css?v=rastros-estacionamiento-1"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-problemas.css?v=controles-en-escena-1"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
 <body>
   <main class="app">
     <section class="hero" aria-label="Encabezado de la aplicación">
@@ -2126,13 +2126,20 @@
             <div class="headerActions">
               <button class="backBtn" id="backBtn" type="button">⬅ Menú</button>
             </div>
+            <div class="sceneOperationPreview isEmpty" id="sceneOperationPreview" aria-live="polite"></div>
           </div>
           <div class="scene" id="scene" aria-label="Animación de la situación problema">
-            <div class="sceneCornerActions" id="sceneCornerActions">
-              <button class="sceneActionBtn sceneReadBtn sceneActionLeft" id="speakBtn" type="button">🔊 Leer</button>
-              <button class="sceneActionBtn sceneAnimateBtn sceneActionRight" id="animateBtn" type="button">▶ Ver</button>
+            <div class="sceneCornerActions acciones-escena-problemas" id="sceneCornerActions">
+              <button class="sceneActionBtn sceneReadBtn" id="speakBtn" type="button">
+                <span aria-hidden="true">🔊</span><span class="texto-accion-escena">Leer</span>
+              </button>
+              <button class="sceneActionBtn sceneAnimateBtn" id="animateBtn" type="button">
+                <span aria-hidden="true">▶</span><span class="texto-accion-escena">Animación</span>
+              </button>
+              <button class="sceneActionBtn resetBtn" id="resetAnimationBtn" type="button">
+                <span aria-hidden="true">↩</span><span class="texto-accion-escena">Reiniciar</span>
+              </button>
             </div>
-            <div class="sceneOperationPreview isEmpty" id="sceneOperationPreview" aria-live="polite"></div>
           </div>
           <div class="operationDock" id="operationDock" aria-label="Planteamiento de la operación">
             <div class="keypadPanel dockKeypadPanel" id="keypadPanel" aria-label="Teclado para arrastrar"></div>
@@ -2159,7 +2166,6 @@
               <div class="equationBox isHidden" id="equationBox"></div>
               <div class="actionButtonsBelowHints" aria-label="Acciones del problema">
                 <button class="smallBtn gray" id="newBtn" type="button">🔄 Nuevo</button>
-                <button class="smallBtn resetBtn" id="resetAnimationBtn" type="button">↩ Reiniciar</button>
                 <button class="mainBtn check" id="checkBtn" type="button">✅ Revisar</button>
               </div>
             </div>
@@ -2414,8 +2420,9 @@
         solveTitle: "Resuelve",
         menuButton: "⬅ Menú",
         newButton: "🔄 Nuevo",
-        resetButton: "↩ Reiniciar",
-        readButton: "🔊 Leer",
+        resetButton: "Reiniciar",
+        readButton: "Leer",
+        animationButton: "Animación",
         viewButton: "▶ Ver",
         checkButton: "✅ Revisar",
         answerTitle: "Planteamiento de la operación",
@@ -2468,8 +2475,9 @@
         solveTitle: "Solve",
         menuButton: "⬅ Menu",
         newButton: "🔄 New",
-        resetButton: "↩ Reset",
-        readButton: "🔊 Read",
+        resetButton: "Reset",
+        readButton: "Read",
+        animationButton: "Animation",
         viewButton: "▶ Watch",
         checkButton: "✅ Check",
         answerTitle: "Set up the equation",
@@ -2800,8 +2808,7 @@
       });
       backBtn.textContent = t("menuButton");
       newBtn.textContent = t("newButton");
-      resetAnimationBtn.textContent = t("resetButton");
-      speakBtn.textContent = t("readButton");
+      updateSceneActionLabels(state.currentProblem);
       checkBtn.textContent = t("checkButton");
       hintDataBtn.textContent = t("hintData");
       hintKeywordBtn.textContent = t("hintKeyword");
@@ -2812,10 +2819,19 @@
         hintBox.innerHTML = t("defaultHint");
       } else {
         sceneTitle.textContent = problemText(state.currentProblem, "sceneTitle");
-        animateBtn.textContent = problemText(state.currentProblem, "animateLabel");
         updateText();
       }
       renderMenu();
+    }
+
+    function updateSceneActionLabels(problem) {
+      for (const [button, key] of [[speakBtn,"readButton"], [animateBtn,"animationButton"], [resetAnimationBtn,"resetButton"]]) {
+        const label = t(key);
+        const detail = button === animateBtn && problem ? problemText(problem,"animateLabel") : label;
+        button.querySelector(".texto-accion-escena").textContent = label;
+        button.title = detail;
+        button.setAttribute("aria-label", detail);
+      }
     }
 
     function applyLanguageSetting() {
@@ -2913,7 +2929,7 @@
       scene.dataset.story = state.currentProblem.id;
       mainSubtitle.textContent = t("problemSubtitle");
       sceneTitle.textContent = problemText(state.currentProblem, "sceneTitle");
-      animateBtn.textContent = problemText(state.currentProblem, "animateLabel");
+      updateSceneActionLabels(state.currentProblem);
       answerTitle.textContent = t("answerTitle");
       showScreen("problem");
       newProblem();
@@ -3006,24 +3022,12 @@
       }
     }
 
-    function preserveSceneChrome() {
-      return {
-        actions: scene.querySelector("#sceneCornerActions"),
-        operationPreview: scene.querySelector("#sceneOperationPreview")
-      };
-    }
-
-    function restoreSceneChrome(chrome) {
-      if (chrome?.actions) scene.appendChild(chrome.actions);
-      if (chrome?.operationPreview) scene.appendChild(chrome.operationPreview);
-    }
-
     function preserveSceneActions() {
-      return preserveSceneChrome();
+      return scene.querySelector("#sceneCornerActions");
     }
 
     function restoreSceneActions(actions) {
-      restoreSceneChrome(actions);
+      if (actions) scene.append(actions);
     }
 
     function addSkyAndGround() { clearIllustratedScene(); }
@@ -3803,7 +3807,7 @@
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="matematicas-problemas.js?v=peras-servilleta-1"></script><script src="pantalla-completa.js"></script>
+<script src="matematicas-problemas.js?v=controles-en-escena-1"></script><script src="pantalla-completa.js"></script>
 <script src="panel-plegable.js?v=historias-1"></script>
 <script src="nombre-compartido.js"></script>
 </body>
