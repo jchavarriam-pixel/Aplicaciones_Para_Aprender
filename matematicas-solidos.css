@@ -128,7 +128,8 @@ body{width:var(--ancho-solidos,100%)!important;min-height:0!important}
 .app-shell :is(#matchingBoard,#evalMatchingBoard) {
   --separacion-filas:calc(5 * var(--unidad));
   --alto-minimo-ficha:calc(48 * var(--unidad));
-  --alto-ficha:clamp(var(--alto-minimo-ficha),calc((100cqh - 44 * var(--unidad) - (var(--filas) - 1) * var(--separacion-filas)) / var(--filas)),calc(100 * var(--unidad)));
+  --alto-maximo-ficha:calc(100 * var(--unidad));
+  --alto-ficha:clamp(var(--alto-minimo-ficha),calc((100cqh - 44 * var(--unidad) - (var(--filas) - 1) * var(--separacion-filas)) / var(--filas)),var(--alto-maximo-ficha));
   width:100%;
   height:auto;
   min-height:0;
@@ -137,9 +138,11 @@ body{width:var(--ancho-solidos,100%)!important;min-height:0!important}
   column-gap:clamp(calc(46 * var(--unidad)),35%,calc(478 * var(--unidad)));
 }
 .app-shell #evalMatchingBoard {
-  grid-template-columns:minmax(0,min(calc(142 * var(--unidad)),25%)) minmax(0,calc(230 * var(--unidad)));
+  --alto-maximo-ficha:calc(165 * var(--unidad));
+  grid-template-columns:minmax(0,min(calc(198 * var(--unidad)),28%)) minmax(0,calc(230 * var(--unidad)));
   column-gap:clamp(calc(46 * var(--unidad)),29%,calc(440 * var(--unidad)));
   margin:0;
+  padding-inline:clamp(calc(16 * var(--unidad)),4cqw,calc(27 * var(--unidad)));
 }
 .app-shell #evalMatchingBoard[data-answer-mode=visual] { --alto-minimo-ficha:calc(76 * var(--unidad)); }
 :is(#matchingBoard,#evalMatchingBoard) .matching-list {
