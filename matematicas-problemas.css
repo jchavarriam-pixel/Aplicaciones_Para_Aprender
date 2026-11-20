@@ -147,27 +147,28 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 .scene[data-story=estacionamiento] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/estacionamiento.webp"); }
 .scene[data-story=danielGlobosParque] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/parque-cielo-abierto.webp"); }
 .scene[data-story=pajaritosCable] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/cielo-pajaritos.webp"); }
-.scene[data-story=juanMariaDulcesPlato] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/dulces-mesa.webp"); }
-.app .scene[data-story^=aula] {
-  --banda-aula:calc(39 * var(--unidad));
-  height:min(100cqh,calc(66.6667cqw + var(--banda-aula)));
+.app .scene:is([data-story^=aula],[data-story=juanMariaDulcesPlato]) {
+  --banda-controles-escena:calc(39 * var(--unidad));
+  height:min(100cqh,calc(66.6667cqw + var(--banda-controles-escena)));
   background:#eaf1fb;
 }
-.scene[data-story^=aula] .sceneActionBtn { min-height:calc(var(--banda-aula) - 7 * var(--unidad)); }
-.scene[data-story^=aula] .sceneActionBtn:hover { transform:none; }
+.scene:is([data-story^=aula],[data-story=juanMariaDulcesPlato]) .sceneActionBtn { min-height:calc(var(--banda-controles-escena) - 7 * var(--unidad)); }
+.scene:is([data-story^=aula],[data-story=juanMariaDulcesPlato]) .sceneActionBtn:hover { transform:none; }
 @container (width < 325px) {
-  .app .scene[data-story^=aula] { --banda-aula:calc(32 * var(--unidad)); }
+  .app .scene:is([data-story^=aula],[data-story=juanMariaDulcesPlato]) { --banda-controles-escena:calc(32 * var(--unidad)); }
 }
 @container (width < 235px) {
-  .scene[data-story^=aula] .texto-accion-escena { display:none; }
+  .scene:is([data-story^=aula],[data-story=juanMariaDulcesPlato]) .texto-accion-escena { display:none; }
 }
-.plano-aula-situacion {
+.plano-aula-situacion,.plano-dulces-situacion {
   position:absolute; top:0; left:50%; transform:translateX(-50%);
-  width:min(100cqw,calc((100cqh - var(--banda-aula)) * 1.5));
-  height:min(66.6667cqw,calc(100cqh - var(--banda-aula)));
+  width:min(100cqw,calc((100cqh - var(--banda-controles-escena)) * 1.5));
+  height:min(66.6667cqw,calc(100cqh - var(--banda-controles-escena)));
   container-type:size;
-  background:url("ImagenesSituacionesProblemas/Ilustraciones/aula-pasillo.webp") center / 100% 100% no-repeat;
+  background:var(--fondo-plano) center / 100% 100% no-repeat;
 }
+.plano-aula-situacion { --fondo-plano:url("ImagenesSituacionesProblemas/Ilustraciones/aula-pasillo.webp"); }
+.plano-dulces-situacion { --fondo-plano:url("ImagenesSituacionesProblemas/Ilustraciones/dulces-mesa.webp"); }
 .scene[data-story] :is(.fruit,.fruitGhost,.fruitShadow) { width:6.7cqw; height:9.1cqh; }
 .scene[data-story] .fruitShape { border:0; border-radius:0; box-shadow:none; background:var(--fruta) center / contain no-repeat; filter:drop-shadow(0 2px 2px #2518325e); }
 .scene[data-story] .apple .fruitShape { --fruta:url("ImagenesSituacionesProblemas/Ilustraciones/manzana.webp"); }
@@ -179,7 +180,7 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 .scene[data-story] .danielBoyImgV3 { left:3%; top:46%; width:24%; height:51%; max-height:none; object-fit:contain; }
 .scene[data-story] .danielBalloonV3 { width:7cqw; height:11.8cqh; border:0; border-radius:0; box-shadow:none; background:url("ImagenesSituacionesProblemas/Ilustraciones/globo.webp") center / contain no-repeat; }
 .scene[data-story] .danielBalloonV3::before { display:none; }
-.scene[data-story] .candyPieceJM3 { width:4.4cqw; height:4.7cqh; border:0; border-radius:0; box-shadow:none; background:url("ImagenesSituacionesProblemas/Ilustraciones/confite.webp") center / contain no-repeat; filter:var(--filtro-objeto,none); }
+.scene[data-story] .candyPieceJM3 { width:8.8cqw; height:9.4cqh; border:0; border-radius:0; box-shadow:none; background:url("ImagenesSituacionesProblemas/Ilustraciones/confite.webp") center / contain no-repeat; filter:var(--filtro-objeto,none); }
 .scene[data-story] .candyPieceJM3.candy-maria { --filtro-objeto:hue-rotate(303deg); }
 .scene[data-story] .candyPieceJM3::before,.scene[data-story] .candyPieceJM3::after { display:none; }
 .scene[data-story] .candyPieceJM3.inHand { opacity:1; }
@@ -349,7 +350,7 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
   inset:auto 44% 23% auto; width:12%; height:12%;
 }
 .scene[data-story=juanMariaDulcesPlato] .nombre-mesa-dulces {
-  position:absolute; top:47.5%; left:9.5%; transform:translateX(-50%);
+  position:absolute; top:38%; left:9.5%; transform:translateX(-50%);
   z-index:20; padding:.5cqh 1.25cqw; border-radius:8px;
   background:#ecf6ff; color:#194b85; font-size:3.8cqh; line-height:1.1; font-weight:850;
 }

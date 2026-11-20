@@ -1798,13 +1798,13 @@ Versión ajustada:
       };
     }
     const first=owner==="juan";
-    return {x:(first?4.8:83)+(index%3)*4.7,y:55+Math.floor(index/3)*7,r:first?-5:5};
+    return {x:(first?3.5:81)+(index%5)*3.8,y:49+Math.floor(index/5)*14,r:first?-90:90};
   }
 
   // Dejar espacio junto al borde ovalado del plato, incluso con 25 dulces.
-  const candyPlatePositionsJM3 = usarIlustracionesSituaciones ? [4,5,7,5,4].flatMap((count,row)=>
+  const candyPlatePositionsJM3 = usarIlustracionesSituaciones ? [3,4,5,5,5,3].flatMap((count,row)=>
     Array.from({length:count},(_,column)=>({
-      x:48.6+(column-(count-1)/2)*5.8,y:56+row*7.5,r:(row+column)%2?7:-7
+      x:48.6+(column-(count-1)/2)*9.7,y:52+row*7.6,r:(row+column)%2?7:-7
     }))
   ) : [
     { x: 42, y: 61, r: -12 }, { x: 48, y: 60, r: 9 },  { x: 54, y: 60, r: -6 }, { x: 60, y: 61, r: 13 },
@@ -1839,7 +1839,7 @@ Versión ajustada:
       sparkle.textContent = "✨";
       sparkle.style.setProperty("--sx", `${x}%`);
       sparkle.style.setProperty("--sy", `${y}%`);
-      scene.appendChild(sparkle);
+      (scene.querySelector(".plano-dulces-situacion") ?? scene).append(sparkle);
       esperarAnimacionSituacion(() => sparkle.remove(), 1000);
     }, delay);
   }
@@ -1910,12 +1910,17 @@ Versión ajustada:
   function renderJuanMariaDulcesSceneV3() {
     addJuanMariaCandySceneStylesV3();
     addIndoorKitchen();
+    let plano = scene;
     if (usarIlustracionesSituaciones) {
+      plano = document.createElement("div");
+      plano.className = "plano-dulces-situacion";
+      plano.setAttribute("aria-hidden", "true");
+      scene.append(plano);
       for (const [owner, name] of [["juan","Juan"],["maria","María"]]) {
         const label = document.createElement("span");
         label.className = "nombre-mesa-dulces " + owner;
         label.textContent = name;
-        scene.append(label);
+        plano.append(label);
       }
     } else agregarMesaClasicaJM3();
 
@@ -1929,7 +1934,7 @@ Versión ajustada:
         i
       );
       state.movingIds.push(`juan-${i}`);
-      scene.appendChild(candy);
+      plano.append(candy);
     }
 
     for (let i = 0; i < state.change; i++) {
@@ -1940,7 +1945,7 @@ Versión ajustada:
         state.total + i
       );
       state.movingIds.push(`maria-${i}`);
-      scene.appendChild(candy);
+      plano.append(candy);
     }
   }
 
