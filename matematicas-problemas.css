@@ -329,6 +329,24 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
   border:.24cqw solid #253963; border-radius:.63cqw;
   background:linear-gradient(90deg,#3e5c9c,#7097ce);
 }
+.asiento-autobus-llegada {
+  border-color:#11733f;
+  background:linear-gradient(140deg,#c2ff97,#43ce6e);
+  box-shadow:0 0 .50cqw .14cqw #156b42, inset 0 .3cqh #e6ffca;
+}
+.asiento-autobus-llegada::before {
+  border-color:#0e5935;
+  background:linear-gradient(90deg,#197a45,#50ac60);
+}
+.asiento-autobus-desocupado {
+  border-color:#465367;
+  background:#47566a;
+  box-shadow:inset 0 .3cqh #8190a2;
+}
+.asiento-autobus-desocupado::before {
+  border-color:#394556;
+  background:#526276;
+}
 .scene[data-story^=bus] .busPassenger.inside { transform:translate(-50%,-50%) rotate(90deg); z-index:9; }
 .scene[data-story^=bus] .busPassenger.en-fila { transform:translate(-50%,-50%) rotate(90deg); }
 .scene[data-story^=bus] .busPassenger.caminando { z-index:20; }
@@ -375,6 +393,10 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
   filter:grayscale(1) brightness(0) invert(.94) blur(.13cqw) drop-shadow(0 0 .28cqw #243124);
 }
 .scene[data-story=applesTree] .rastro-situacion.apple .fruitShape { filter:none; }
+.scene[data-story=busPasajeros] .busPassenger.rastro-situacion {
+  opacity:.68;
+  filter:grayscale(1) brightness(0) invert(.92) drop-shadow(0 0 .26cqw #1b2430);
+}
 .scene[data-story] .agregado-situacion {
   filter:var(--filtro-objeto,brightness(1))
     drop-shadow(0 0 .28cqw #087339) drop-shadow(0 0 .55cqw #5cff85);

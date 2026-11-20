@@ -2048,7 +2048,7 @@
   </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-problemas.css?v=rastros-visibles-1"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-problemas.css?v=asientos-autobus-1"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
 <body>
   <main class="app">
     <section class="hero" aria-label="Encabezado de la aplicación">
@@ -3086,9 +3086,10 @@
     }
 
     function renderBusSeats(plano) {
-      for (const posicion of asientosAutobus) {
+      for (const [id, posicion] of asientosAutobus.entries()) {
         const asiento = document.createElement("span");
         asiento.className = "asiento-autobus";
+        asiento.dataset.asiento = id;
         asiento.setAttribute("aria-hidden", "true");
         ubicarPasajero(asiento, posicion);
         plano.append(asiento);
@@ -3124,7 +3125,7 @@
       ];
     }
 
-    function caminarPasajero(pasajero, recorrido, suben) {
+    function caminarPasajero(pasajero, recorrido, suben, asiento) {
       const marcas = [0];
       for (let i = 1; i < recorrido.length; i++) {
         const a = recorrido[i - 1], b = recorrido[i];
@@ -3144,7 +3145,10 @@
           offset: marcas[i] / longitud
         };
       });
-      if (!suben) dejarRastroSituacion(pasajero);
+      if (!suben) {
+        dejarRastroSituacion(pasajero);
+        asiento.classList.add("asiento-autobus-desocupado");
+      }
       pasajero.classList.add("caminando");
       const animacion = pasajero.animate(fotogramas, {
         // La subida tiene una velocidad común para que quienes vienen detrás no alcancen al de delante.
@@ -3155,7 +3159,10 @@
         pasajero.classList.toggle("inside", suben);
         pasajero.classList.toggle("waiting", !suben);
         pasajero.classList.remove("caminando", "en-fila");
-        if (suben) pasajero.classList.add("agregado-situacion");
+        if (suben) {
+          pasajero.classList.add("agregado-situacion");
+          asiento.classList.add("asiento-autobus-llegada");
+        }
         animacion.cancel();
       };
     }
@@ -3165,18 +3172,17 @@
       state.animated = true;
       feedback.className = "feedback";
       feedback.textContent = state.operation === "addition"
-        ? (isEnglish()
-          ? `Watch how ${state.change === 1 ? "one person gets" : "some people get"} on the bus. The people inside are the answer.`
-          : `Mira cómo ${state.change === 1 ? "una persona se sube" : "algunas personas se suben"} al bus. Las personas que van en el bus son la respuesta.`)
+        ? (isEnglish() ? "Passengers who get on sit in green seats." : "Quienes suben se sientan en los asientos verdes.")
         : (isEnglish() ? "Count the people in color inside the bus." : "Cuenta las personas de color dentro del autobús.");
       updateText();
 
       const suben = state.operation === "addition";
       state.movingIds.forEach((id, index) => {
         const pasajero = scene.querySelector(`.busPassenger[data-id="${id}"]`);
+        const asiento = scene.querySelector(`.asiento-autobus[data-asiento="${id}"]`);
         const recorrido = rutaAutobus(suben ? filaAutobus[index] : salidasAutobus[index], asientosAutobus[id]);
         if (!suben) recorrido.reverse();
-        esperarEnEscena(() => caminarPasajero(pasajero, recorrido, suben), 75 + index * (suben ? 170 : 360));
+        esperarEnEscena(() => caminarPasajero(pasajero, recorrido, suben, asiento), 75 + index * (suben ? 170 : 360));
       });
 
       speak(state.currentProblem.speak(getName(), state.total, state.change));
