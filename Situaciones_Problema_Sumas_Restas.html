@@ -2048,7 +2048,7 @@
   </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-problemas.css?v=controles-en-escena-1"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-problemas.css?v=rastros-y-halos-1"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
 <body>
   <main class="app">
     <section class="hero" aria-label="Encabezado de la aplicación">
@@ -3141,6 +3141,7 @@
           offset: marcas[i] / longitud
         };
       });
+      if (!suben) dejarRastroSituacion(pasajero);
       pasajero.classList.add("caminando");
       const animacion = pasajero.animate(fotogramas, {
         // La subida tiene una velocidad común para que quienes vienen detrás no alcancen al de delante.
@@ -3151,6 +3152,7 @@
         pasajero.classList.toggle("inside", suben);
         pasajero.classList.toggle("waiting", !suben);
         pasajero.classList.remove("caminando", "en-fila");
+        if (suben) pasajero.classList.add("agregado-situacion");
         animacion.cancel();
       };
     }
@@ -3163,9 +3165,7 @@
         ? (isEnglish()
           ? `Watch how ${state.change === 1 ? "one person gets" : "some people get"} on the bus. The people inside are the answer.`
           : `Mira cómo ${state.change === 1 ? "una persona se sube" : "algunas personas se suben"} al bus. Las personas que van en el bus son la respuesta.`)
-        : (isEnglish()
-          ? `Watch how ${state.change === 1 ? "one person gets" : "some people get"} off the bus. The people left inside are the answer.`
-          : `Mira cómo ${state.change === 1 ? "una persona se baja" : "algunas personas se bajan"} del bus. Las personas que quedan en el bus son la respuesta.`);
+        : (isEnglish() ? "Count the people in color inside the bus." : "Cuenta las personas de color dentro del autobús.");
       updateText();
 
       const suben = state.operation === "addition";
@@ -3519,9 +3519,7 @@
       if (state.animated) return;
       state.animated = true;
       feedback.className = "feedback";
-      feedback.textContent = isEnglish()
-        ? `Watch how ${state.change === 1 ? "the apple falls" : "the apples fall"} to the ground. The apples left up in the tree are the answer.`
-        : `Mira cómo ${state.change === 1 ? "cae la manzana" : "caen las manzanas"} hasta el suelo. Las que quedan arriba son la respuesta.`;
+      feedback.textContent = isEnglish() ? "Count the apples in color on the tree." : "Cuenta las manzanas de color que siguen en el árbol.";
       updateText();
 
       const movingSet = new Set(state.movingIds);
@@ -3530,12 +3528,11 @@
         const target = { x: pos.x, y: 80 + (index % 3) * 2 };
         const delay = index * 260;
         const fruit = scene.querySelector(`.fruit[data-id="${id}"]`);
-        const ghost = createFruit("apple", `ghost-${id}`, pos, "fruitGhost");
         const shadow = createShadow(id, target, delay);
-        scene.append(ghost, shadow);
+        scene.append(shadow);
 
         esperarEnEscena(() => {
-          ghost.classList.add("show");
+          dejarRastroSituacion(fruit);
           shadow.classList.add("show");
           const fall = fruit.animate([
             { left: `${pos.x}%`, top: `${pos.y}%`, transform: "translate(-50%, -50%) rotate(0deg) scale(1)", offset: 0 },
@@ -3571,7 +3568,7 @@
       if (state.animated) return;
       state.animated = true;
       feedback.className = "feedback";
-      feedback.textContent = isEnglish() ? "Count the pears inside the basket." : "Cuenta las peras dentro de la canasta.";
+      feedback.textContent = isEnglish() ? "Count the pears in color inside the basket." : "Cuenta las peras de color dentro de la canasta.";
       updateText();
 
       const movingSet = new Set(state.movingIds);
@@ -3589,11 +3586,13 @@
           fruit.classList.add("pera-en-servilleta");
         };
         if (reducirMovimiento) {
+          dejarRastroSituacion(fruit);
           dejarEnServilleta();
           return;
         }
 
         esperarEnEscena(() => {
+          dejarRastroSituacion(fruit);
           fruit.classList.add("pera-en-movimiento");
           const take = fruit.animate([
             { left: `${pos.x}%`, top: `${pos.y}%`, transform: "translate(-50%, -50%) rotate(0deg) scale(1)", offset: 0 },
@@ -3795,7 +3794,7 @@
     }
   window.addEventListener('nombre-estudiante-cambiado',e=>{if(state.currentProblem)updateText();});
 </script>
-  <script src="escenas.js?v=rastros-estacionamiento-1"></script>
+  <script src="escenas.js?v=rastros-y-halos-1"></script>
 
 <footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos">
   <div class="creditos-dedicatoria">

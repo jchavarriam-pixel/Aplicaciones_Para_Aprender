@@ -1,6 +1,14 @@
 const usarIlustracionesSituaciones = typeof esperarEnEscena === "function";
 const esperarAnimacionSituacion = usarIlustracionesSituaciones ? esperarEnEscena : setTimeout.bind(window);
 
+function dejarRastroSituacion(objeto) {
+  const rastro = objeto.cloneNode(true);
+  rastro.classList.add("rastro-situacion");
+  rastro.setAttribute("aria-hidden", "true");
+  for (const clave of Object.keys(rastro.dataset)) delete rastro.dataset[clave];
+  objeto.parentElement.append(rastro);
+}
+
 function avataresEstudiantesSituaciones() {
   const imagenes = Array.from({length:6}, (_, indice) =>
     `ImagenesSituacionesProblemas/Ilustraciones/alumno-aula-${indice + 1}.webp`);
@@ -93,6 +101,7 @@ if (usarIlustracionesSituaciones) {
       colocarCarro(carro, puntos.at(-1));
       carro.classList.remove("estacionamiento-carro-movil");
       carro.hidden = !entrada;
+      if (entrada) carro.classList.add("agregado-situacion");
       animacion.cancel();
     };
   }
@@ -105,13 +114,10 @@ if (usarIlustracionesSituaciones) {
     for (const [indice, idPuesto] of state.movingIds.entries()) {
       const carro = scene.querySelector(`.estacionamiento-carro[data-puesto="${idPuesto}"]`);
       const mover = () => {
-        if (!entrada) {
-          const rastro = carro.cloneNode();
-          rastro.className = "estacionamiento-rastro";
-          carro.before(rastro);
-        }
+        if (!entrada) dejarRastroSituacion(carro);
         if (reducir) {
           carro.hidden = !entrada;
+          if (entrada) carro.classList.add("agregado-situacion");
           return;
         }
         const puesto = puestos[idPuesto];
@@ -349,19 +355,25 @@ if (usarIlustracionesSituaciones) {
         if (!entrada) {
           ave.style.left = ave.dataset.vuelo + "%";
           ave.classList.add("pajarito-cable-inferior");
-        }
+        } else ave.classList.add("agregado-situacion");
         ave.classList.remove("pajarito-llega", "pajarito-sale", "pajarito-ausente");
       };
       if (reducirMovimiento) {
+        if (!entrada) dejarRastroSituacion(ave);
         posar();
         return;
       }
       esperarAnimacionSituacion(() => {
+        if (!entrada) dejarRastroSituacion(ave);
         ave.addEventListener("animationend", posar, {once:true});
         ave.classList.remove("pajarito-ausente");
         ave.classList.add(entrada ? "pajarito-llega" : "pajarito-sale");
       }, indice * 145);
     });
+    feedback.className = "feedback";
+    feedback.textContent = entrada
+      ? (isEnglish() ? "Count the birds on both wires." : "Cuenta los pajaritos de ambos cables.")
+      : (isEnglish() ? "Count the birds in color on the top wire." : "Cuenta los pajaritos de color del cable de arriba.");
     speak(enunciado(state.total, state.change));
   }
 
@@ -495,16 +507,21 @@ const aulaCenital = (() => {
         offset:distancias[i]/distancia
       };
     });
+    if (!entra) {
+      dejarRastroSituacion(alumno);
+      mesa.classList.remove("ocupado");
+    }
     alumno.classList.add("caminando");
-    if (!entra) mesa.classList.remove("ocupado");
     const animacion = alumno.animate(cuadros,{duration:Math.min(2550,950+distancia*8),fill:"forwards"});
     animacion.onfinish = () => {
       posicionar(alumno,recorrido.at(-1));
       alumno.classList.toggle("sentado",entra);
       alumno.classList.toggle("en-pasillo",!entra);
       alumno.classList.remove("caminando");
-      if (entra) alumno.dataset.pupitre = asiento;
-      else delete alumno.dataset.pupitre;
+      if (entra) {
+        alumno.dataset.pupitre = asiento;
+        alumno.classList.add("agregado-situacion");
+      } else delete alumno.dataset.pupitre;
       mesa.classList.toggle("ocupado",entra);
       animacion.cancel();
       terminada();
@@ -514,6 +531,10 @@ const aulaCenital = (() => {
   function animar() {
     const modo = state.currentProblem.id;
     const entra = modo === "aulaPupitresDesocupados" || state.operation === "addition";
+    if (!entra) {
+      feedback.className = "feedback";
+      feedback.textContent = isEnglish() ? "Count the students in color inside the classroom." : "Cuenta los estudiantes de color dentro del aula.";
+    }
     let pendientes = state.movingIds.length;
     state.movingIds.forEach((id,index) => {
       const alumno = scene.querySelector(`[data-alumno="${id}"]`);
@@ -917,9 +938,11 @@ Los globos y los cordeles se dibujan desde el código.
   /*
   Los globos quedan agrupados sobre la mano levantada.
   */
-  const danielBalloonPositionsV3= usarIlustracionesSituaciones ? Array.from({length:15},(_,index)=>({
-    x:24.5+(index%5)*7.5,y:19+Math.floor(index/5)*15
-  })) : [
+  const danielBalloonPositionsV3 = usarIlustracionesSituaciones ? [
+    [25,15], [33,10], [41,15], [49,9], [55,20],
+    [20,28], [29,29], [37,25], [45,31], [53,35],
+    [24,43], [33,41], [41,46], [49,49], [56,51]
+  ].map(([x,y]) => ({x,y})) : [
     { x: 34, y: 13 },
     { x: 42, y: 8 },
     { x: 50, y: 13 },
@@ -935,9 +958,10 @@ Los globos y los cordeles se dibujan desde el código.
   ];
 
   // El cielo de la derecha reserva un lugar distinto para cada globo llevado por el viento.
-  const danielBalloonFlyTargetsV3 = usarIlustracionesSituaciones ? Array.from({length:10},(_,index)=>({
-    x:62+(index%5)*8, y:12+Math.floor(index/5)*15, r:index%2 ? -7 : 9
-  })) : [
+  const danielBalloonFlyTargetsV3 = usarIlustracionesSituaciones ? [
+    [73,12], [86,9], [94,15], [79,21], [89,22],
+    [72,28], [95,29], [81,34], [90,37], [74,42]
+  ].map(([x,y],indice) => ({x,y,r:indice % 2 ? -7 : 9})) : [
     { x: 121, y: -10, r: 37 },
     { x: 126, y: 4, r: -23 },
     { x: 116, y: -18, r: 27 },
@@ -1112,15 +1136,15 @@ Los globos y los cordeles se dibujan desde el código.
             left: `${start.x + (target.x - start.x) * .78}%`,
             top: `${target.y + 8}%`,
             transform: `translate(-50%, -50%) rotate(-8deg) scale(${usarIlustracionesSituaciones ? .82 : .46})`,
-            opacity: usarIlustracionesSituaciones ? .95 : .85,
+            opacity: .85,
             offset: .76
           },
           {
             left: `${target.x}%`,
             top: `${target.y}%`,
             transform: `translate(-50%, -50%) rotate(${target.r}deg) scale(${usarIlustracionesSituaciones ? .79 : .22})`,
-            opacity: usarIlustracionesSituaciones ? .90 : 0,
-            ...(usarIlustracionesSituaciones && {filter:`hue-rotate(${tono}) grayscale(1) brightness(.92)`}),
+            opacity: usarIlustracionesSituaciones ? .65 : 0,
+            ...(usarIlustracionesSituaciones && {filter:`hue-rotate(${tono}) grayscale(1) brightness(1.05) blur(.12cqw)`}),
             offset: 1
           }
         ], {
@@ -2026,6 +2050,7 @@ Versión ajustada:
         anim.onfinish = () => {
           candy.classList.remove("inHand");
           candy.classList.add("onPlate");
+          if (usarIlustracionesSituaciones) candy.classList.add("agregado-situacion");
           candy.style.left = `${target.x}%`;
           candy.style.top = `${target.y}%`;
           candy.style.opacity = "1";

@@ -160,8 +160,8 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 .scene[data-story] .danielBoyImgV3 { left:3%; top:46%; width:24%; height:51%; max-height:none; object-fit:contain; }
 .scene[data-story] .danielBalloonV3 { width:7cqw; height:11.8cqh; border:0; border-radius:0; box-shadow:none; background:url("ImagenesSituacionesProblemas/Ilustraciones/globo.webp") center / contain no-repeat; }
 .scene[data-story] .danielBalloonV3::before { display:none; }
-.scene[data-story] .candyPieceJM3 { width:4.4cqw; height:4.7cqh; border:0; border-radius:0; box-shadow:none; background:url("ImagenesSituacionesProblemas/Ilustraciones/confite.webp") center / contain no-repeat; }
-.scene[data-story] .candyPieceJM3.candy-maria { filter:hue-rotate(303deg); }
+.scene[data-story] .candyPieceJM3 { width:4.4cqw; height:4.7cqh; border:0; border-radius:0; box-shadow:none; background:url("ImagenesSituacionesProblemas/Ilustraciones/confite.webp") center / contain no-repeat; filter:var(--filtro-objeto,none); }
+.scene[data-story] .candyPieceJM3.candy-maria { --filtro-objeto:hue-rotate(303deg); }
 .scene[data-story] .candyPieceJM3::before,.scene[data-story] .candyPieceJM3::after { display:none; }
 .scene[data-story] .candyPieceJM3.inHand { opacity:1; }
 
@@ -187,9 +187,9 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 .controles-plegados-problemas .equationBox:not(.isHidden){display:block}
 .scene[data-story] .danielBalloonV3{filter:hue-rotate(var(--tono-globo,0deg))}
 .scene[data-story] .danielBalloonV3.danielGloboLejano {
-  filter:hue-rotate(var(--tono-globo,0deg)) grayscale(1) brightness(.92);
+  filter:grayscale(1) brightness(1.05) blur(.12cqw);
   transform:translate(-50%,-50%) rotate(var(--giro-globo-lejano)) scale(.79);
-  opacity:.9;
+  opacity:.65;
 }
 
 .cable-pajaritos,.problemCard[data-story=pajaritosCable] .miniScene {
@@ -230,8 +230,8 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
   translate:-50% 0; transform-origin:center 72%;
 }
 .pajarito-sale .ave-aleteando { scale:var(--direccion-ave) 1; }
-.pajarito-cable:nth-child(3n+2) { filter:hue-rotate(24deg); }
-.pajarito-cable:nth-child(3n+3) { filter:hue-rotate(-20deg); }
+.pajarito-cable:nth-child(3n+2) { --filtro-objeto:hue-rotate(24deg); filter:var(--filtro-objeto); }
+.pajarito-cable:nth-child(3n+3) { --filtro-objeto:hue-rotate(-20deg); filter:var(--filtro-objeto); }
 .pajarito-ausente { visibility:hidden; }
 :is(.pajarito-llega,.pajarito-sale) { z-index:2; }
 :is(.pajarito-llega,.pajarito-sale) .ave-posada { visibility:hidden; }
@@ -271,7 +271,7 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
   content:""; position:absolute; left:0; right:0; top:50%; height:.6cqh;
   background:repeating-linear-gradient(90deg,#fff3bcbe 0 4cqw,transparent 4cqw 8cqw);
 }
-.estacionamiento-plaza,.estacionamiento-carro,.estacionamiento-rastro {
+.estacionamiento-plaza,.estacionamiento-carro {
   position:absolute; transform:translate(-50%,-50%); pointer-events:none;
 }
 .estacionamiento-plaza {
@@ -280,15 +280,12 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
   background:#283c5b18;
 }
 .estacionamiento-plaza-inferior { transform:translate(-50%,-50%) rotate(180deg); }
-.estacionamiento-carro,.estacionamiento-rastro { width:5.5cqw; height:20cqh; object-fit:contain; }
 .estacionamiento-carro {
-  z-index:2;
-  filter:hue-rotate(var(--tono-carro)) drop-shadow(.18cqw .35cqh .25cqw #16203385);
+  width:5.5cqw; height:20cqh; object-fit:contain; z-index:2;
+  --filtro-objeto:hue-rotate(var(--tono-carro)) drop-shadow(.18cqw .35cqh .25cqw #16203385);
+  filter:var(--filtro-objeto);
 }
 .estacionamiento-carro-movil { z-index:3; }
-.estacionamiento-rastro {
-  z-index:1; opacity:.38; filter:grayscale(1) brightness(1.55);
-}
 
 .plano-autobus {
   position:absolute; top:50%; left:50%; width:100%; height:100%;
@@ -351,7 +348,15 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 }
 .alumno-aula-cenital {
   width:5.5cqw; height:8.25cqh; object-fit:contain; z-index:7;
-  filter:drop-shadow(0 .25cqh .25cqh #21394b5c);
+  --filtro-objeto:drop-shadow(0 .25cqh .25cqh #21394b5c);
+  filter:var(--filtro-objeto);
+}
+.scene[data-story] .rastro-situacion {
+  opacity:.25; filter:grayscale(1) brightness(1.16) blur(.19cqw); pointer-events:none;
+}
+.scene[data-story] .agregado-situacion {
+  filter:var(--filtro-objeto,brightness(1))
+    drop-shadow(0 0 .28cqw #087339) drop-shadow(0 0 .55cqw #5cff85);
 }
 .alumno-aula-cenital.caminando { z-index:10; }
 .pupitre-libre { animation:resaltar-pupitre-libre .7s ease-in-out 2; }
