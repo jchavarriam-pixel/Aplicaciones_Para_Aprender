@@ -421,16 +421,21 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 .plano-situacion-nueva .rastro-situacion { z-index:1; }
 .plano-situacion-nueva .en-transito { z-index:3; }
 :is(.plano-estanque,.plano-piscina) .pose-principal { scale:var(--direccion-nado) 1; }
-:is(.plano-estanque,.plano-piscina) .figura-situacion-nueva:not(.en-transito,.rastro-situacion) .pose-principal {
+:is(.plano-estanque,.plano-piscina) .figura-situacion-nueva:not(.en-transito,.rastro-situacion,.fuera-piscina) .pose-principal {
   animation:nado-situacion 4.2s var(--fase-nado) ease-in-out infinite;
 }
-.plano-estanque .en-transito .pose-principal,.usando-escalera .pose-principal { visibility:hidden; }
-.plano-estanque .en-transito .pose-transito,.usando-escalera .pose-transito { visibility:visible; }
+.plano-estanque .en-transito .pose-principal,:is(.usando-escalera,.fuera-piscina) .pose-principal { visibility:hidden; }
+.plano-estanque .en-transito .pose-transito,:is(.usando-escalera,.fuera-piscina) .pose-transito { visibility:visible; }
 .plano-estanque .en-transito .pose-transito { animation:aleteo-situacion .22s ease-in-out infinite alternate; }
 .plano-piscina .en-transito .pose-principal { scale:-1 1; animation:brazada-situacion .6s ease-in-out infinite alternate; }
 .plano-piscina .se-retira.en-transito .pose-principal { scale:1 1; }
+.plano-piscina .pose-transito {
+  --alto-de-pie:calc(1.45 * var(--ancho-figura));
+  top:50%; left:50%; width:var(--ancho-figura); height:var(--alto-de-pie);
+  translate:-50% -50%; scale:calc(-1 * var(--direccion-pie,1)) 1;
+}
 .plano-piscina .usando-escalera .pose-transito { animation:pasos-situacion .24s ease-in-out infinite alternate; }
-.plano-piscina .se-retira .pose-transito { scale:-1 1; }
+.plano-piscina .se-retira .pose-transito { scale:var(--direccion-pie,1) 1; }
 .onda-situacion-nueva {
   position:absolute; width:6cqw; height:2.4cqw; border:.4cqw solid #edffff;
   border-radius:50%; transform:translate(-50%,-50%); animation:onda-situacion .8s ease-out both;

@@ -2048,7 +2048,7 @@
   </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-problemas.css?v=nevera-2"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script><link rel="stylesheet" href="iconos/cabeceras.css"></head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-problemas.css?v=nadadores-1"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script><link rel="stylesheet" href="iconos/cabeceras.css"></head>
 <body>
   <main class="app">
     <section class="hero" aria-label="Encabezado de la aplicación">
@@ -3649,7 +3649,7 @@
       cancelarAnimacionesEscena();
       window.speechSynthesis?.cancel?.();
       state.animated = false;
-      state.currentProblem.renderScene();
+      state.currentProblem.renderScene({repetir:true});
       updateSceneOperationPreview();
       feedback.className = "feedback";
       feedback.textContent = t("defaultFeedback");
@@ -3789,7 +3789,7 @@
   window.addEventListener('nombre-estudiante-cambiado',e=>{if(state.currentProblem)updateText();});
 </script>
   <script src="escenas.js?v=ajustes-pajaritos-1"></script>
-  <script src="escenas-estanque-nevera-piscina.js?v=nevera-2"></script>
+  <script src="escenas-estanque-nevera-piscina.js?v=nadadores-1"></script>
 
 <footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos">
   <div class="creditos-dedicatoria">
