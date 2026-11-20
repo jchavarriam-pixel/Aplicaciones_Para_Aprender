@@ -399,7 +399,7 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 }
 .scene[data-story] .agregado-situacion {
   filter:var(--filtro-objeto,brightness(1))
-    drop-shadow(0 0 .28cqw #087339) drop-shadow(0 0 .55cqw #5cff85);
+    drop-shadow(0 0 .28cqw #a47200) drop-shadow(0 0 .55cqw #fff000);
 }
 .alumno-aula-cenital.caminando { z-index:10; }
 .pupitre-libre { animation:resaltar-pupitre-libre .7s ease-in-out 2; }
