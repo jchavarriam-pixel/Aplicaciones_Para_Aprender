@@ -55,7 +55,6 @@ function prepararIlustraciones(){
  };
  const imagen=contenido=>`<svg viewBox="0 0 94 62" aria-hidden="true" focusable="false">${contenido}</svg>`;
  for(const icono of $$('.tarjetas-modos .icono-modo'))icono.innerHTML=imagen(arte[icono.closest('button').dataset.modo]);
- $('#emblemaMultiplicacion').innerHTML=imagen(ficha('estrella',0,2,15,.65)+ficha('cuadrado',4,32,11,.68)+ficha('triangulo',1,61,16,.62));
 }
 function estado(s,bien=false){$('#estado').textContent=s;$('#estado').classList.toggle('bien',bien);}
 function soloProducto(){return config.tipoRespuesta==='producto';}

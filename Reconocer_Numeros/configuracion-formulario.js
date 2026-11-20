@@ -4,7 +4,7 @@
  const general=home.querySelector('.home-grid>.tarjeta'),modos=general.nextElementSibling;
  const nombre=document.getElementById('childName'),filaNombre=nombre.closest('.fila');filaNombre.classList.add('nombre-bajo-titulo');
  home.querySelector('h1').after(filaNombre);
- const cabeceraInicio=home.querySelector('.titulo'),titulo=home.querySelector('h1');titulo.textContent='Reconocer números';const icono=document.createElement('span');icono.className='icono-titulo-numeros';icono.textContent='🔢';icono.setAttribute('aria-hidden','true');titulo.prepend(icono);
+ const cabeceraInicio=home.querySelector('.titulo'),titulo=home.querySelector('h1');titulo.textContent='Reconocer números';const icono=document.createElement('span');icono.className='icono-titulo-numeros';icono.innerHTML='<img class="icono-actividad-en-soporte" src="../iconos/reconocer-numeros.webp" width="64" height="64" alt="">';icono.setAttribute('aria-hidden','true');titulo.prepend(icono);
  const instruccion=cabeceraInicio.querySelector('.sub');instruccion.textContent='Elige los números que quieres practicar y después un modo de juego.';
  const escoger=document.createElement('section');escoger.className='escoger-numeros';escoger.setAttribute('aria-label','Forma de escoger los números');escoger.append(document.querySelector('input[name="selectType"]').closest('.fila'),document.getElementById('digitsConfig'),document.getElementById('rangeConfig'));instruccion.after(escoger);
 

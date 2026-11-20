@@ -24,7 +24,7 @@
  actividad.append(document.querySelector('.acciones'));
  document.querySelector('.pregunta-fila').append(document.getElementById('controlLlenado'));
  const titulo=document.querySelector('.cabecera h1');titulo.classList.add('titulo-aventura');
- const insignia=document.createElement('span');insignia.className='insignia-aventura';insignia.textContent='🔎';insignia.setAttribute('aria-hidden','true');titulo.prepend(insignia);
+ const insignia=document.createElement('span');insignia.className='insignia-aventura';insignia.innerHTML='<img class="icono-actividad-en-soporte" src="../iconos/explorar-comparar.webp" width="64" height="64" alt="">';insignia.setAttribute('aria-hidden','true');titulo.prepend(insignia);
  document.body.append(document.getElementById('creditos-aplicaciones'));
  app.append(actividad);document.querySelector('.distribucion').remove();
  let proporcion=.25;

@@ -298,6 +298,13 @@
       font-size: 2.55rem;
     }
 
+    .icono img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
     .icono svg {
       display: block;
       width: 92%;
@@ -586,7 +593,7 @@
       {
         nombre: "Aprende a restar quitando",
         archivo: "aprende_a_restar_quitando.html",
-        icono: "🍎",
+        imagenIcono: "iconos/restar-quitando.webp",
         descripcion: "Práctica visual para comprender la resta quitando objetos.",
         color: "azul"
       },
@@ -628,28 +635,28 @@
       {
         nombre: "Explora y compara",
         archivo: "Mayor_Menor_Objetos/mayor_menor_objetos.html",
-        icono: "🧸",
+        imagenIcono: "iconos/explorar-comparar.webp",
         descripcion: "Cuatro modos para comparar tamaños, características y capacidad: cuánta agua tiene un recipiente y cuánto le cabe. Imágenes, selección luminosa y voz opcional.",
         color: "naranja"
       },
       {
         nombre: "Ordenar objetos",
         archivo: "Ordenar_Objetos_Tamano/ordenar_objetos_tamano.html",
-        icono: "📏",
+        imagenIcono: "iconos/ordenar-objetos.webp",
         descripcion: "Ordena de dos a seis objetos por tamaño, grosor, longitud, tono de color, inclinación, lados, altura o anchura. Incluye modo mixto y guía visual opcional.",
         color: "azul"
       },
       {
         nombre: "Mayor y menor",
         archivo: "Mayor_Menor.html",
-        icono: "🐊",
+        imagenIcono: "iconos/mayor-menor.webp",
         descripcion: "Comparación de números usando mayor que y menor que.",
         color: "verde"
       },
       {
         nombre: "Mayor, menor o igual",
         archivo: "mayor_menor_igual.html",
-        icono: '<img src="iconos/mayor-menor-igual.svg" alt="" aria-hidden="true" width="64" height="64" style="display:block;width:100%;height:100%;object-fit:contain">',
+        imagenIcono: "iconos/mayor-menor-igual.svg",
         descripcion: "Práctica de los signos >, < e = con actividades interactivas.",
         color: "naranja"
       },
@@ -663,28 +670,28 @@
       {
         nombre: "Multiplica y agrupa",
         archivo: "Multiplicacion/multiplicacion.html",
-        icono: "🔷",
+        imagenIcono: "iconos/multiplicar-agrupar.webp",
         descripcion: "Practica las tablas de multiplicar con figuras, grupos, pareo, ejercicios para completar y selección única.",
         color: "morado"
       },
       {
         nombre: "Mi reloj mágico",
         archivo: "Reloj_Analogico/reloj.html",
-        icono: "🕰️",
+        imagenIcono: "iconos/reloj-magico.webp",
         descripcion: "Cinco aventuras para aprender la hora: animaciones, agujas, lectura y pareo con carritos.",
         color: "azul"
       },
       {
         nombre: "Ordenar ascendente y descendente",
         archivo: "OrdenarAscendenteYDescendente.html",
-        icono: "📊",
+        imagenIcono: "iconos/ascendente-descendente.webp",
         descripcion: "Ordenamiento de números de menor a mayor y de mayor a menor.",
         color: "azul"
       },
       {
         nombre: "Reconocer números",
         archivo: "Reconocer_Numeros/reconocer_numeros.html",
-        icono: "🔢",
+        imagenIcono: "iconos/reconocer-numeros.webp",
         descripcion: "Identificación, lectura y práctica de números.",
         color: "verde"
       },
@@ -698,21 +705,21 @@
       {
         nombre: "Sumas y restas",
         archivo: "Sumas_y_restas.html",
-        icono: '<img src="iconos/sumas-y-restas.webp" alt="" width="64" height="64" style="display:block;width:100%;height:100%;object-fit:contain">',
+        imagenIcono: "iconos/sumas-y-restas.webp",
         descripcion: "Ejercicios combinados para practicar cálculo básico.",
         color: "azul"
       },
       {
         nombre: "Sumas y restas UM | C | D | U",
         archivo: "Sumas_y_Restas_UM_C_D_U.html",
-        icono: "🧮",
+        imagenIcono: "iconos/sumas-restas-valor-posicional.webp",
         descripcion: "Práctica de sumas, restas y valor posicional en formato UM | C | D | U.",
         color: "azul"
       },
       {
         nombre: "Situaciones problema: sumas y restas",
         archivo: "Situaciones_Problema_Sumas_Restas.html",
-        icono: "🧩",
+        imagenIcono: "iconos/situaciones-problema.webp",
         descripcion: "Situaciones problema animadas para plantear y resolver sumas y restas paso a paso.",
         color: "verde"
       },
@@ -754,14 +761,14 @@
 	  {
 		nombre: "Modelador de sólidos 3D",
 		archivo: "Modelador_de_Solidos_3D.html",
-		icono: "🔷",
+		imagenIcono: "iconos/solidos-3d.webp",
 		descripcion: "Explora sólidos 3D, sus caras, aristas y vértices con actividades interactivas.",
 		color: "morado"
      },
 	 {
 	    nombre: "Fracciones propias 1",
 	    archivo: "Fracciones_Propias_1.html",
-	    icono: "¾",
+	    imagenIcono: "iconos/fracciones-propias.webp",
 	    descripcion: "Actividades interactivas para identificar, representar, relacionar y construir fracciones propias.",
 	    color: "azul"
 	},{
@@ -971,6 +978,9 @@
 
     function crearTarjeta(app) {
       const c = colores[app.color] || colores.azul;
+      const icono = app.imagenIcono
+        ? `<img src="${app.imagenIcono}" alt="" width="64" height="64" decoding="async">`
+        : app.icono;
       const tarjeta = document.createElement("a");
       tarjeta.className = "card";
       tarjeta.href = app.archivo;
@@ -986,7 +996,7 @@
 
       tarjeta.innerHTML = `
         <div>
-          <div class="icono">${app.icono}</div>
+          <div class="icono">${icono}</div>
           <h3>${app.nombre}</h3>
           <p>${app.descripcion}</p>
         </div>

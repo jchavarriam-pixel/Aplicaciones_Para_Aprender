@@ -1,31 +1,26 @@
 "use strict";
 
-const rutaIlustracionesProblemas="ImagenesSituacionesProblemas/Ilustraciones/";
-const arteSituaciones={
-  estacionamiento:["estacionamiento","carro-estacionamiento"],
-  applesTree:["manzano","manzana"],
-  pearsBasket:["peras-servilleta","pera"],
-  busPasajeros:["autobus-pasillo-amplio","alumno-aula-4"],
-  danielGlobosParque:["parque-cielo-abierto","globo"],
-  pajaritosCable:["cielo-pajaritos","pajarito"],
-  andresMariaDulcesPlato:["dulces-mesa","confite"],
-  aulaPupitresDesocupados:["aula-pasillo","pupitre"],
-  aulaRecreo:["aula-pasillo","alumno-aula-4"]
+const fichasSituaciones={
+  estacionamiento:"estacionamiento",
+  applesTree:"manzanas",
+  pearsBasket:"peras",
+  busPasajeros:"autobus",
+  danielGlobosParque:"globos",
+  pajaritosCable:"pajaritos",
+  andresMariaDulcesPlato:"dulces",
+  aulaPupitresDesocupados:"pupitres",
+  aulaRecreo:"recreo"
 };
 
 function renderStoryThumbnail(box,problem){
-  const art=arteSituaciones[problem.id];
-  if(!art){problem.renderPreview(box);return;}
+  const archivo=fichasSituaciones[problem.id];
+  if(!archivo){problem.renderPreview(box);return;}
   box.classList.add("miniatura-ilustrada");
-  const background=new Image();
-  background.src=rutaIlustracionesProblemas+art[0]+".webp";
-  background.alt="";
-  const object=new Image();
-  object.src=rutaIlustracionesProblemas+art[1]+".webp";
-  object.alt="";
-  object.className="objeto-miniatura";
-  box.replaceChildren(background,object);
-  if(problem.id==="busPasajeros") problem.renderPreview(box);
+  const ilustracion=new Image(720,480);
+  ilustracion.src=`ImagenesSituacionesProblemas/Fichas/${archivo}.webp`;
+  ilustracion.alt="";
+  ilustracion.decoding="async";
+  box.replaceChildren(ilustracion);
 }
 
 (() => {

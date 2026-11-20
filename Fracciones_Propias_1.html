@@ -527,12 +527,12 @@ try {
   const old=JSON.parse(localStorage.getItem('fraccionesPropias1Settings')||'{}');
   if(!localStorage.getItem(key)&&old.voice)localStorage.setItem(key,JSON.stringify({idioma:'es',voces:{es:old.voice}}));
 } catch {}
-</script><script src="idioma-voz-textos.js"></script><script src="matematicas-fracciones-textos.js?v=tarjetas-1"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
+</script><script src="idioma-voz-textos.js"></script><script src="matematicas-fracciones-textos.js?v=tarjetas-1"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script><link rel="stylesheet" href="iconos/cabeceras.css"></head>
 <body>
 <div id="app">
   <header class="topbar">
     <button class="back-btn" id="backBtn" aria-label="Volver al menú">←</button>
-    <h1 class="brand">Fracciones Propias 1</h1>
+    <h1 class="brand"><img class="icono-actividad-en-titulo" src="iconos/fracciones-propias.webp" width="64" height="64" alt="">Fracciones Propias 1</h1>
     <a id="homeLink" class="home-link-fracciones" href="index.html" aria-label="Aplicaciones" title="Aplicaciones">⌂</a>
     <label class="student-control" for="studentNameInput">👤 Nombre
       <input id="studentNameInput" type="text" maxlength="40" autocomplete="name" placeholder="Escribe tu nombre">

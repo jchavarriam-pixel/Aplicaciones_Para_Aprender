@@ -42,11 +42,6 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 .problemCard .badge { font-size:calc(11 * var(--unidad)); padding:calc(3 * var(--unidad)) calc(7 * var(--unidad)); }
 .problemCard .miniScene { width:100%; min-height:0; height:auto; aspect-ratio:3/2; border:0; border-radius:calc(10 * var(--unidad)); background:#edf4ff; }
 .miniatura-ilustrada img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
-.miniatura-ilustrada .objeto-miniatura { inset:auto 6% 7% auto; width:28%; height:47%; object-fit:contain; filter:drop-shadow(0 3px 3px #231b5450); }
-.problemCard[data-story=danielGlobosParque] .objeto-miniatura { bottom:25%; right:28%; }
-.problemCard[data-story=busPasajeros] .miniScene { container-type:size; }
-.problemCard[data-story=busPasajeros] .objeto-miniatura { bottom:7%; right:10%; width:16%; height:21%; z-index:4; }
-.problemCard[data-story=estacionamiento] .objeto-miniatura { inset:auto 38% 20% auto; width:24%; height:60%; }
 .app:not(.horizontal) .problemGrid { grid-template-columns:repeat(auto-fit,minmax(min(100%,calc(145 * var(--unidad))),1fr)); }
 
 .app .layout { height:100%; min-height:0; margin:0; display:grid; grid-template-columns:minmax(0,1fr); grid-template-rows:auto minmax(0,1fr) auto; align-items:stretch; gap:calc(5 * var(--unidad)); }
@@ -212,21 +207,20 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
   opacity:.70;
 }
 
-.cable-pajaritos,.problemCard[data-story=pajaritosCable] .miniScene {
+.cable-pajaritos {
   --cable-superior:39%;
   --distancia-cables:37;
   --cable-inferior:calc(var(--cable-superior) + var(--distancia-cables) * 1%);
+  position:absolute; inset:0; pointer-events:none;
 }
-.cable-pajaritos { position:absolute; inset:0; pointer-events:none; }
-:is(.cable-pajaritos,.problemCard[data-story=pajaritosCable] .miniScene)::before,
-:is(.cable-pajaritos,.problemCard[data-story=pajaritosCable] .miniScene)::after {
+.cable-pajaritos::before,.cable-pajaritos::after {
   content:""; position:absolute; left:0; right:0; height:max(2px,.45cqw);
   background:#334155; box-shadow:0 1px 1px #1423355c;
 }
-:is(.cable-pajaritos,.problemCard[data-story=pajaritosCable] .miniScene)::before { top:var(--cable-superior); }
-:is(.cable-pajaritos,.problemCard[data-story=pajaritosCable] .miniScene)::after { top:var(--cable-inferior); }
+.cable-pajaritos::before { top:var(--cable-superior); }
+.cable-pajaritos::after { top:var(--cable-inferior); }
 .cable-pajaritos.salida-pajaritos { --cable-superior:52%; }
-.scene .cable-pajaritos.salida-pajaritos::after { content:none; }
+.cable-pajaritos.salida-pajaritos::after { content:none; }
 .rotulo-cable {
   position:absolute; left:3%; padding:.7cqh 2cqw; border-radius:5cqh;
   color:#173e66; background:#f3faff; font-weight:800;
@@ -234,9 +228,6 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 }
 .rotulo-cable-superior { top:5%; }
 .rotulo-cable-inferior { top:44%; color:#155f49; background:#e6fff1; }
-.problemCard[data-story=pajaritosCable] .objeto-miniatura {
-  inset:auto auto calc(100% - var(--cable-inferior)) 38%; width:24%; height:auto; z-index:1;
-}
 .pajarito-cable {
   position:absolute; top:var(--cable-superior); z-index:1;
   width:var(--ancho-pajarito); aspect-ratio:1; translate:-50% -97%;
@@ -361,9 +352,6 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
   .app:not(.horizontal) .dragChip { height:calc(28 * var(--unidad)); min-height:calc(28 * var(--unidad)); }
 }
 
-.problemCard[data-story=andresMariaDulcesPlato] .objeto-miniatura {
-  inset:auto 44% 23% auto; width:12%; height:12%;
-}
 .scene[data-story=andresMariaDulcesPlato] .nombre-mesa-dulces {
   position:absolute; top:38%; left:9.5%; transform:translateX(-50%);
   z-index:20; padding:.5cqh 1.25cqw; border-radius:8px;
