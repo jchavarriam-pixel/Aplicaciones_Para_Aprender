@@ -29,8 +29,6 @@ Object.assign(window.TEXTOS_INGLES||={}, {
  'Ejercicios combinados para practicar cálculo básico.':'Mixed exercises to practise basic arithmetic.',
  'Práctica de sumas, restas y valor posicional en formato UM | C | D | U.':'Practise addition, subtraction and place value with thousands, hundreds, tens and units.',
  'Situaciones problema animadas para plantear y resolver sumas y restas paso a paso.':'Animated word problems to set up and solve addition and subtraction step by step.',
- 'Estacionamiento':'Parking lot',
- 'Cuenta cuántos carros quedan estacionados cuando llegan o se van.':'Count how many cars are parked after some arrive or leave.',
  'Actividad para escuchar y clasificar sonidos agradables y desagradables.':'Listen and sort pleasant and unpleasant sounds.',
  'Lecturas por niveles con preguntas aleatorias y apoyo verbal opcional.':'Levelled readings with random questions and optional spoken support.',
  'Dictado de palabras con teclado propio, categorías ortográficas y retroalimentación.':'Word dictation with an on-screen keyboard, spelling categories and feedback.',
