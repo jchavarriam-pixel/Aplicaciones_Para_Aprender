@@ -2,7 +2,7 @@
   "use strict";
 
   Object.assign(window.TEXTOS_INGLES, ES_EN, {
-    "Explorar":"Explore", "Pareo":"Matching","Pareo de sólidos":"Solid matching", "Evaluación":"Assessment",
+    "Explorar":"Explore", "Clasificar (Pareo)":"Classify (Matching)","Pareo de sólidos":"Solid matching", "Evaluación":"Assessment",
     "Gira sólidos y descubre sus partes.":"Rotate solids and discover their parts.",
     "Une cada sólido con su nombre.":"Match each solid with its name.",
     "Cuenta caras, aristas o vértices.":"Count faces, edges, or vertices.",
