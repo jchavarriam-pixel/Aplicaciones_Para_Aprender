@@ -8,7 +8,7 @@ const arteSituaciones={
   busPasajeros:["autobus-pasillo-amplio","alumno-aula-4"],
   danielGlobosParque:["parque-cielo-abierto","globo"],
   pajaritosCable:["cielo-pajaritos","pajarito"],
-  juanMariaDulcesPlato:["dulces-mesa","confite"],
+  andresMariaDulcesPlato:["dulces-mesa","confite"],
   aulaPupitresDesocupados:["aula-pasillo","pupitre"],
   aulaRecreo:["aula-pasillo","alumno-aula-4"]
 };
@@ -117,13 +117,17 @@ function renderStoryThumbnail(box,problem){
   parkingOptions.className="opciones-ayuda-problemas";
   parkingOptions.innerHTML='<legend>Estacionamiento</legend><label for="modoEstacionamiento">Movimiento de carros</label><select id="modoEstacionamiento"><option value="alternado">Alternan: llegan y se van</option><option value="azar">Al azar en cada ronda</option><option value="addition">Solo llegan</option><option value="subtraction">Solo se van</option></select>';
   const modoEstacionamiento=parkingOptions.querySelector("select");
+  const dulcesOptions=document.createElement("fieldset");
+  dulcesOptions.className="opciones-ayuda-problemas";
+  dulcesOptions.innerHTML='<legend>Dulces de Andrés y María</legend><label for="modoDulces">Operación con dulces</label><select id="modoDulces"><option value="addition">Solo suma</option><option value="subtraction">Resta con ambos turnos</option><option value="restaAndres">Resta: María le quita a Andrés</option><option value="restaMaria">Resta: Andrés le quita a María</option><option value="mixto">Mixto (suma y resta)</option></select>';
+  const modoDulces=dulcesOptions.querySelector("select");
   const voice=document.createElement("div");
   voice.id="preferenciasProblemas";
   const done=document.createElement("button");
   done.type="button";
   done.className="mainBtn aplicar-ajustes-problemas";
   done.textContent="Aplicar y volver";
-  settings.append(options,busOptions,recreoOptions,parkingOptions,voice,done);
+  settings.append(options,busOptions,recreoOptions,parkingOptions,dulcesOptions,voice,done);
   dialog.append(settings);
   document.body.append(dialog);
 
@@ -136,6 +140,11 @@ function renderStoryThumbnail(box,problem){
     "Mixto (salen o regresan)":"Mixed (leave or return)","Solo salen":"Leave only","Solo regresan":"Return only",
     "Estacionamiento":"Parking lot","Movimiento de carros":"Car movement","Alternan: llegan y se van":"Alternate arrivals and departures",
     "Al azar en cada ronda":"Random each round","Solo llegan":"Arrivals only","Solo se van":"Departures only",
+    "Dulces de Andrés y María":"Andrés and María's candies","Operación con dulces":"Candy operation",
+    "Solo suma":"Addition only","Resta con ambos turnos":"Subtraction with either child",
+    "Resta: María le quita a Andrés":"Subtraction: María takes from Andrés",
+    "Resta: Andrés le quita a María":"Subtraction: Andrés takes from María",
+    "Mixto (suma y resta)":"Mixed (addition and subtraction)",
     "Ya estaban":"Already there","Llegaron":"Arrivals","Cable principal":"Main wire","Se fueron":"Left",
     "Narración y lectura":"Narration and reading","Pista de datos":"Data hint",
     "Pista de palabra clave":"Keyword hint","Pista de operación":"Operation hint"
@@ -171,6 +180,7 @@ function renderStoryThumbnail(box,problem){
     modoAutobus.value=preferenciasProblemas.autobus;
     modoRecreo.value=preferenciasProblemas.recreo;
     modoEstacionamiento.value=preferenciasProblemas.estacionamiento;
+    modoDulces.value=preferenciasProblemas.dulces;
     for(const input of options.querySelectorAll("input"))input.checked=preferenciasProblemas[input.name];
     IdiomaVoz.iniciarEdicion();
     dialog.showModal();
@@ -180,16 +190,18 @@ function renderStoryThumbnail(box,problem){
     const cambioAutobus=preferenciasProblemas.autobus!==modoAutobus.value;
     const cambioRecreo=preferenciasProblemas.recreo!==modoRecreo.value;
     const cambioEstacionamiento=preferenciasProblemas.estacionamiento!==modoEstacionamiento.value;
+    const cambioDulces=preferenciasProblemas.dulces!==modoDulces.value;
     preferenciasProblemas.autobus=modoAutobus.value;
     preferenciasProblemas.recreo=modoRecreo.value;
     preferenciasProblemas.estacionamiento=modoEstacionamiento.value;
+    preferenciasProblemas.dulces=modoDulces.value;
     if(!preferenciasProblemas.narracion)window.speechSynthesis?.cancel();
     Matematicas.guardar(CLAVE_AYUDAS_PROBLEMAS,preferenciasProblemas);
     const changed=JSON.stringify(readParams())!==previousRange;
     saveParams();
     saveFontSetting();
     IdiomaVoz.aplicarEdicion();
-    const cambiosPorHistoria={busPasajeros:cambioAutobus,aulaRecreo:cambioRecreo,estacionamiento:cambioEstacionamiento};
+    const cambiosPorHistoria={busPasajeros:cambioAutobus,aulaRecreo:cambioRecreo,estacionamiento:cambioEstacionamiento,andresMariaDulcesPlato:cambioDulces};
     if(state.currentProblem&&(changed||cambiosPorHistoria[state.currentProblem.id]))newProblem();
     actualizarAyudas();
     dialog.close();

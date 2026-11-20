@@ -2048,7 +2048,7 @@
   </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-problemas.css?v=confites-grandes-1"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-problemas.css?v=dulces-andres-maria-1"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
 <body>
   <main class="app">
     <section class="hero" aria-label="Encabezado de la aplicación">
@@ -2190,6 +2190,9 @@
     }
     if (!["alternado", "azar", "addition", "subtraction"].includes(preferenciasProblemas.estacionamiento)) {
       preferenciasProblemas.estacionamiento = "alternado";
+    }
+    if (!["addition", "subtraction", "restaAndres", "restaMaria", "mixto"].includes(preferenciasProblemas.dulces)) {
+      preferenciasProblemas.dulces = "addition";
     }
 
     const scene = document.getElementById("scene");
@@ -3794,7 +3797,7 @@
     }
   window.addEventListener('nombre-estudiante-cambiado',e=>{if(state.currentProblem)updateText();});
 </script>
-  <script src="escenas.js?v=confites-grandes-1"></script>
+  <script src="escenas.js?v=dulces-andres-maria-1"></script>
 
 <footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos">
   <div class="creditos-dedicatoria">
@@ -3806,7 +3809,7 @@
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="matematicas-problemas.js?v=controles-en-escena-1"></script><script src="pantalla-completa.js"></script>
+<script src="matematicas-problemas.js?v=dulces-andres-maria-1"></script><script src="pantalla-completa.js"></script>
 <script src="panel-plegable.js?v=historias-1"></script>
 <script src="nombre-compartido.js"></script>
 </body>

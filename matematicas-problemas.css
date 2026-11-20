@@ -147,18 +147,18 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 .scene[data-story=estacionamiento] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/estacionamiento.webp"); }
 .scene[data-story=danielGlobosParque] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/parque-cielo-abierto.webp"); }
 .scene[data-story=pajaritosCable] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/cielo-pajaritos.webp"); }
-.app .scene:is([data-story^=aula],[data-story=juanMariaDulcesPlato]) {
+.app .scene:is([data-story^=aula],[data-story=andresMariaDulcesPlato]) {
   --banda-controles-escena:calc(39 * var(--unidad));
   height:min(100cqh,calc(66.6667cqw + var(--banda-controles-escena)));
   background:#eaf1fb;
 }
-.scene:is([data-story^=aula],[data-story=juanMariaDulcesPlato]) .sceneActionBtn { min-height:calc(var(--banda-controles-escena) - 7 * var(--unidad)); }
-.scene:is([data-story^=aula],[data-story=juanMariaDulcesPlato]) .sceneActionBtn:hover { transform:none; }
+.scene:is([data-story^=aula],[data-story=andresMariaDulcesPlato]) .sceneActionBtn { min-height:calc(var(--banda-controles-escena) - 7 * var(--unidad)); }
+.scene:is([data-story^=aula],[data-story=andresMariaDulcesPlato]) .sceneActionBtn:hover { transform:none; }
 @container (width < 325px) {
-  .app .scene:is([data-story^=aula],[data-story=juanMariaDulcesPlato]) { --banda-controles-escena:calc(32 * var(--unidad)); }
+  .app .scene:is([data-story^=aula],[data-story=andresMariaDulcesPlato]) { --banda-controles-escena:calc(32 * var(--unidad)); }
 }
 @container (width < 235px) {
-  .scene:is([data-story^=aula],[data-story=juanMariaDulcesPlato]) .texto-accion-escena { display:none; }
+  .scene:is([data-story^=aula],[data-story=andresMariaDulcesPlato]) .texto-accion-escena { display:none; }
 }
 .plano-aula-situacion,.plano-dulces-situacion {
   position:absolute; top:0; left:50%; transform:translateX(-50%);
@@ -346,15 +346,15 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
   .app:not(.horizontal) .dragChip { height:calc(28 * var(--unidad)); min-height:calc(28 * var(--unidad)); }
 }
 
-.problemCard[data-story=juanMariaDulcesPlato] .objeto-miniatura {
+.problemCard[data-story=andresMariaDulcesPlato] .objeto-miniatura {
   inset:auto 44% 23% auto; width:12%; height:12%;
 }
-.scene[data-story=juanMariaDulcesPlato] .nombre-mesa-dulces {
+.scene[data-story=andresMariaDulcesPlato] .nombre-mesa-dulces {
   position:absolute; top:38%; left:9.5%; transform:translateX(-50%);
   z-index:20; padding:.5cqh 1.25cqw; border-radius:8px;
   background:#ecf6ff; color:#194b85; font-size:3.8cqh; line-height:1.1; font-weight:850;
 }
-.scene[data-story=juanMariaDulcesPlato] .nombre-mesa-dulces.maria {
+.scene[data-story=andresMariaDulcesPlato] .nombre-mesa-dulces.maria {
   left:87.7%; background:#f9eaff; color:#713384;
 }
 

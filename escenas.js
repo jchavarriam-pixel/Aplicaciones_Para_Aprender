@@ -1286,18 +1286,18 @@ Los globos y los cordeles se dibujan desde el código.
 ============================================================
 ESCENA NUEVA: JUAN Y MARÍA COLOCAN DULCES EN UN PLATO
 Versión ajustada:
-- Se ve un confite en la mano de Juan y uno en la mano de María.
+- Se ve un confite en la mano de Andrés y uno en la mano de María.
 - Los dulces salen desde la mano hacia el plato.
 - Los dulces finales quedan dentro del plato, no flotando arriba.
 ============================================================
 */
 
 (function () {
-  function addJuanMariaCandySceneStylesV3() {
-    if (document.getElementById("juanMariaCandySceneStylesV3")) return;
+  function addAndresMariaCandySceneStylesV3() {
+    if (document.getElementById("andresMariaCandySceneStylesV3")) return;
 
     const style = document.createElement("style");
-    style.id = "juanMariaCandySceneStylesV3";
+    style.id = "andresMariaCandySceneStylesV3";
     style.textContent = `
       .miniCandyTableJM3 {
         position: absolute;
@@ -1511,7 +1511,7 @@ Versión ajustada:
         z-index: 12;
       }
 
-      .candyChildJM3.juan {
+      .candyChildJM3.andres {
         left: 4%;
       }
 
@@ -1565,7 +1565,7 @@ Versión ajustada:
         z-index: 4;
       }
 
-      .candyChildJM3.juan .arm {
+      .candyChildJM3.andres .arm {
         left: 62%;
         transform: rotate(-20deg);
         transform-origin: left center;
@@ -1589,7 +1589,7 @@ Versión ajustada:
         box-shadow: 0 4px 6px rgba(15,23,42,.12);
       }
 
-      .candyChildJM3.juan .hand {
+      .candyChildJM3.andres .hand {
         left: 104%;
       }
 
@@ -1646,7 +1646,7 @@ Versión ajustada:
         box-shadow: inset 0 0 0 5px rgba(255,255,255,.18), 0 6px 10px rgba(15,23,42,.14);
       }
 
-      .candyChildJM3.juan .candyHandBowlJM3 {
+      .candyChildJM3.andres .candyHandBowlJM3 {
         left: 83%;
       }
 
@@ -1687,7 +1687,7 @@ Versión ajustada:
         right: -24%;
       }
 
-      .handCandyJM3.juanCandy {
+      .handCandyJM3.andresCandy {
         left: 27.3%;
         top: 57.3%;
         --candy-color: #ef4444;
@@ -1770,8 +1770,8 @@ Versión ajustada:
     document.head.appendChild(style);
   }
 
-  function renderJuanMariaDulcesPreviewV3(box) {
-    addJuanMariaCandySceneStylesV3();
+  function renderAndresMariaDulcesPreviewV3(box) {
+    addAndresMariaCandySceneStylesV3();
 
     box.innerHTML = `
       <div class="miniCandyTableJM3"></div>
@@ -1789,7 +1789,7 @@ Versión ajustada:
 
   function candyHandStackPositionJM3(owner,index){
     if(!usarIlustracionesSituaciones){
-      const base = owner === "juan" ? { x: 27.3, y: 57.3, r: -8 } : { x: 72.7, y: 57.3, r: 8 };
+      const base = owner === "andres" ? { x: 27.3, y: 57.3, r: -8 } : { x: 72.7, y: 57.3, r: 8 };
 
       return {
         x: base.x + (index % 3) * 0.10,
@@ -1797,7 +1797,7 @@ Versión ajustada:
         r: base.r + (index % 2 === 0 ? -3 : 3)
       };
     }
-    const first=owner==="juan";
+    const first=owner==="andres";
     return {x:(first?3.5:81)+(index%5)*3.8,y:49+Math.floor(index/5)*14,r:first?-90:90};
   }
 
@@ -1817,6 +1817,39 @@ Versión ajustada:
   ];
 
   const candyColorsJM3 = ["#ef4444", "#3b82f6", "#22c55e", "#f97316", "#a855f7", "#ec4899", "#06b6d4", "#eab308"];
+  let duenoDulces = "andres";
+  const nombresDulces = {andres:"Andrés", maria:"María"};
+  const restaDulces = () => usarIlustracionesSituaciones && state.operation === "subtraction";
+  const quienQuita = () => duenoDulces === "andres" ? "maria" : "andres";
+
+  function elegirOperacionDulces(anterior) {
+    const modo = preferenciasProblemas.dulces;
+    const operacion = modo === "mixto" ? alternarOperacionSituaciones(anterior)
+      : modo === "addition" ? "addition" : "subtraction";
+    if (operacion === "subtraction") {
+      if (modo === "restaAndres") duenoDulces = "andres";
+      else if (modo === "restaMaria") duenoDulces = "maria";
+      else duenoDulces = randInt(0, 1) ? "maria" : "andres";
+    }
+    return operacion;
+  }
+
+  function datosDulces(total, cambio, visual = false, resaltar = false) {
+    const resta = restaDulces();
+    const nombre = nombresDulces[resta ? duenoDulces : "andres"];
+    const otro = nombresDulces[resta ? quienQuita() : "maria"];
+    const numero = n => visual ? `<strong>${n}</strong>` : n;
+    const palabra = n => itemWord(problems.andresMariaDulcesPlato,n);
+    const verbo = isEnglish() ? (resta ? "takes away" : "adds") : (resta ? "le quita" : "agrega");
+    const accion = resaltar ? `<span class="keyAction">${verbo}</span>` : verbo;
+    const datos = isEnglish()
+      ? `${nombre} ${resta ? "has" : "places"} ${numero(total)} ${palabra(total)} on a plate. ${otro} ${accion} ${numero(cambio)} ${resta ? "" : "more "}${palabra(cambio)}.`
+      : `${nombre} ${resta ? "tiene" : "coloca"} ${numero(total)} ${palabra(total)} en un plato. ${otro} ${accion} ${numero(cambio)} ${palabra(cambio)}${resta ? "" : " más"}.`;
+    const pregunta = isEnglish()
+      ? (resta ? `How many candies does ${nombre} have left?` : "How many candies are on the plate?")
+      : (resta ? `¿Cuántos dulces le quedan a ${nombre}?` : "¿Cuántos dulces hay en el plato?");
+    return {datos,pregunta,verbo};
+  }
 
   function createCandyJM3(id, owner, pos, colorIndex) {
     const candy = document.createElement("div");
@@ -1860,14 +1893,14 @@ Versión ajustada:
     const plate = document.createElement("div");
     plate.className = "candyPlateJM3";
 
-    const juan = document.createElement("div");
-    juan.className = "candyChildJM3 juan";
-    juan.style.setProperty("--shirt-color", "#60a5fa");
-    juan.style.setProperty("--shirt-border", "#1d4ed8");
-    juan.style.setProperty("--pants-color", "#1d4ed8");
-    juan.style.setProperty("--hair-color", "#78350f");
-    juan.innerHTML = `
-      <div class="candyNameLabelJM3">Juan</div>
+    const andres = document.createElement("div");
+    andres.className = "candyChildJM3 andres";
+    andres.style.setProperty("--shirt-color", "#60a5fa");
+    andres.style.setProperty("--shirt-border", "#1d4ed8");
+    andres.style.setProperty("--pants-color", "#1d4ed8");
+    andres.style.setProperty("--hair-color", "#78350f");
+    andres.innerHTML = `
+      <div class="candyNameLabelJM3">Andrés</div>
       <div class="hair"></div>
       <div class="head"></div>
       <div class="body"></div>
@@ -1896,19 +1929,19 @@ Versión ajustada:
       <div class="candyHandBowlJM3"></div>
     `;
 
-    const handCandyJuan = document.createElement("div");
-    handCandyJuan.className = "handCandyJM3 juanCandy";
-    handCandyJuan.dataset.owner = "juan";
+    const handCandyAndres = document.createElement("div");
+    handCandyAndres.className = "handCandyJM3 andresCandy";
+    handCandyAndres.dataset.owner = "andres";
 
     const handCandyMaria = document.createElement("div");
     handCandyMaria.className = "handCandyJM3 mariaCandy";
     handCandyMaria.dataset.owner = "maria";
 
-    scene.append(wall, floor, windowHome, table, plate, juan, maria, handCandyJuan, handCandyMaria);
+    scene.append(wall, floor, windowHome, table, plate, andres, maria, handCandyAndres, handCandyMaria);
   }
 
-  function renderJuanMariaDulcesSceneV3() {
-    addJuanMariaCandySceneStylesV3();
+  function renderAndresMariaDulcesSceneV3() {
+    addAndresMariaCandySceneStylesV3();
     addIndoorKitchen();
     let plano = scene;
     if (usarIlustracionesSituaciones) {
@@ -1916,7 +1949,7 @@ Versión ajustada:
       plano.className = "plano-dulces-situacion";
       plano.setAttribute("aria-hidden", "true");
       scene.append(plano);
-      for (const [owner, name] of [["juan","Juan"],["maria","María"]]) {
+      for (const [owner, name] of Object.entries(nombresDulces)) {
         const label = document.createElement("span");
         label.className = "nombre-mesa-dulces " + owner;
         label.textContent = name;
@@ -1925,15 +1958,26 @@ Versión ajustada:
     } else agregarMesaClasicaJM3();
 
     state.movingIds = [];
+    if (restaDulces()) {
+      for (let i = 0; i < state.total; i++) {
+        const pos = candyPlatePositionsJM3[i];
+        const candy = createCandyJM3(`plato-${i}`,duenoDulces,pos,i);
+        candy.classList.replace("inHand","onPlate");
+        candy.style.transform = `translate(-50%, -50%) rotate(${pos.r}deg) scale(.92)`;
+        if (i >= state.answer) state.movingIds.push(`plato-${i}`);
+        plano.append(candy);
+      }
+      return;
+    }
 
     for (let i = 0; i < state.total; i++) {
       const candy = createCandyJM3(
-        `juan-${i}`,
-        "juan",
-        candyHandStackPositionJM3("juan", i),
+        `andres-${i}`,
+        "andres",
+        candyHandStackPositionJM3("andres", i),
         i
       );
-      state.movingIds.push(`juan-${i}`);
+      state.movingIds.push(`andres-${i}`);
       plano.append(candy);
     }
 
@@ -1949,22 +1993,63 @@ Versión ajustada:
     }
   }
 
-  function animateJuanMariaDulcesV3() {
+  function quitarDulcesDelPlato() {
+    const reducirMovimiento = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const destinatario = quienQuita();
+    for (const [indice,id] of state.movingIds.entries()) {
+      const candy = scene.querySelector(`.candyPieceJM3[data-id="${id}"]`);
+      const destino = candyHandStackPositionJM3(destinatario,indice);
+      const rotacion = `translate(-50%, -50%) rotate(${destino.r}deg)`;
+      const finalizar = () => {
+        candy.style.left = destino.x + "%";
+        candy.style.top = destino.y + "%";
+        candy.style.transform = rotacion;
+        candy.classList.add("dulce-retirado");
+      };
+      const mover = () => {
+        dejarRastroSituacion(candy);
+        candy.classList.remove("onPlate");
+        if (reducirMovimiento) {
+          finalizar();
+          return;
+        }
+        const animacion = candy.animate([
+          {left:candy.style.left,top:candy.style.top,transform:candy.style.transform},
+          {left:destinatario === "andres" ? "28%" : "72%",top:"49%",transform:`translate(-50%, -50%) rotate(${destino.r / 2}deg)`,offset:.58},
+          {left:destino.x + "%",top:destino.y + "%",transform:rotacion}
+        ],{duration:940,easing:"ease-in-out",fill:"forwards"});
+        animacion.onfinish = () => {
+          finalizar();
+          animacion.cancel();
+        };
+      };
+      if (reducirMovimiento) mover();
+      else esperarAnimacionSituacion(mover,90 + indice * 230);
+    }
+  }
+
+  function animateAndresMariaDulcesV3() {
     if (state.animated) return;
     state.animated = true;
 
     feedback.className = "feedback";
+    if (restaDulces()) {
+      feedback.textContent = isEnglish() ? "Count the candies in color on the plate." : "Cuenta los dulces de color que quedan en el plato.";
+      quitarDulcesDelPlato();
+      speak(state.currentProblem.speak(getName(),state.total,state.change));
+      return;
+    }
     feedback.textContent = isEnglish()
-      ? `Watch how Juan places ${state.total} ${itemWord(problems.juanMariaDulcesPlato, state.total)} and then María places ${state.change} more ${itemWord(problems.juanMariaDulcesPlato, state.change)} on the same plate.`
-      : `Observa cómo Juan coloca ${state.total} ${itemWord(problems.juanMariaDulcesPlato, state.total)} y luego María coloca ${state.change} ${itemWord(problems.juanMariaDulcesPlato, state.change)} en el mismo plato.`;
+      ? `Watch how Andrés places ${state.total} ${itemWord(problems.andresMariaDulcesPlato, state.total)} and then María places ${state.change} more ${itemWord(problems.andresMariaDulcesPlato, state.change)} on the same plate.`
+      : `Observa cómo Andrés coloca ${state.total} ${itemWord(problems.andresMariaDulcesPlato, state.total)} y luego María coloca ${state.change} ${itemWord(problems.andresMariaDulcesPlato, state.change)} en el mismo plato.`;
 
     updateText();
 
     for (let i = 0; i < state.total; i++) {
-      const candy = scene.querySelector(`.candyPieceJM3[data-id="juan-${i}"]`);
+      const candy = scene.querySelector(`.candyPieceJM3[data-id="andres-${i}"]`);
       if (!candy) continue;
 
-      const start = candyHandStackPositionJM3("juan", i);
+      const start = candyHandStackPositionJM3("andres", i);
       const target = candyPlatePositionsJM3[i % candyPlatePositionsJM3.length];
       const delay = i * 210;
 
@@ -2010,9 +2095,9 @@ Versión ajustada:
       }, delay + 90);
     }
 
-    const juanHandCandy = scene.querySelector(".handCandyJM3.juanCandy");
+    const andresHandCandy = scene.querySelector(".handCandyJM3.andresCandy");
     esperarAnimacionSituacion(() => {
-      juanHandCandy?.classList.add("isEmpty");
+      andresHandCandy?.classList.add("isEmpty");
     }, state.total * 210 + 220);
 
     const mariaStartDelay = state.total * 210 + 650;
@@ -2091,8 +2176,9 @@ Versión ajustada:
   }
 
   registerScene({
-    id: "juanMariaDulcesPlato",
+    id: "andresMariaDulcesPlato",
     operation: "addition",
+    chooseOperation: elegirOperacionDulces,
 
     itemSingular: "dulce",
     itemPlural: "dulces",
@@ -2106,54 +2192,47 @@ Versión ajustada:
 
     texts: {
       es: {
-        title: "Juan y María colocan dulces",
-        short: "Juan coloca dulces en un plato y María coloca más dulces en el mismo plato.",
-        badge: "🍬 Suma",
-        animateLabel: "🍬 Ver cómo colocan",
+        title: "Dulces de Andrés y María",
+        short: "Andrés y María ponen o quitan dulces de un plato. Cuenta cuántos quedan.",
+        badge: "🍬 Suma y resta",
+        animateLabel: "🍬 Ver qué pasa con los dulces",
         sceneTitle: "Observa cuántos dulces hay en el plato",
         answerQuestion: "¿Cuántos dulces hay en el plato?"
       },
       en: {
-        title: "Juan and María place candies",
-        short: "Juan places candies on a plate and María places more candies on the same plate.",
-        badge: "🍬 Addition",
-        animateLabel: "🍬 Watch them place candies",
+        title: "Andrés and María's candies",
+        short: "Andrés and María add or take away candies. Count how many are on the plate.",
+        badge: "🍬 Addition and subtraction",
+        animateLabel: "🍬 Watch what happens to the candies",
         sceneTitle: "Watch how many candies are on the plate",
         answerQuestion: "How many candies are on the plate?"
       }
     },
 
-    renderPreview: renderJuanMariaDulcesPreviewV3,
-    renderScene: renderJuanMariaDulcesSceneV3,
-    animate: animateJuanMariaDulcesV3,
+    renderPreview: renderAndresMariaDulcesPreviewV3,
+    renderScene: renderAndresMariaDulcesSceneV3,
+    animate: animateAndresMariaDulcesV3,
 
-    story: (name, total, change, highlight = false) => {
-      if (isEnglish()) {
-        return `Juan places <strong>${total}</strong> ${itemWord(problems.juanMariaDulcesPlato, total)} on a plate, and María <span class="${highlight ? "keyAction" : ""}">places</span> <strong>${change}</strong> more ${itemWord(problems.juanMariaDulcesPlato, change)} on the same plate. How many candies are on the plate?`;
-      }
-
-      return `Juan coloca <strong>${total}</strong> ${itemWord(problems.juanMariaDulcesPlato, total)} en un plato y María <span class="${highlight ? "keyAction" : ""}">coloca</span> <strong>${change}</strong> ${itemWord(problems.juanMariaDulcesPlato, change)} en el mismo plato. ¿Cuántos dulces hay en el plato?`;
+    story(_,total,cambio,resaltar) {
+      const {datos,pregunta} = datosDulces(total,cambio,true,resaltar);
+      return `${datos} ${pregunta}`;
     },
-
-    speak: (name, total, change) => {
-      if (isEnglish()) {
-        return `Juan places ${total} ${itemWord(problems.juanMariaDulcesPlato, total)} on a plate, and María places ${change} more ${itemWord(problems.juanMariaDulcesPlato, change)} on the same plate. How many candies are on the plate?`;
-      }
-
-      return `Juan coloca ${total} ${itemWord(problems.juanMariaDulcesPlato, total)} en un plato y María coloca ${change} ${itemWord(problems.juanMariaDulcesPlato, change)} en el mismo plato. ¿Cuántos dulces hay en el plato?`;
+    speak(_,total,cambio) {
+      const {datos,pregunta} = datosDulces(total,cambio);
+      return `${datos} ${pregunta}`;
     },
-
-    hintData: (total, change) => isEnglish()
-      ? `Start amount: Juan places <strong>${total}</strong> ${itemWord(problems.juanMariaDulcesPlato, total)}. Change: María places <strong>${change}</strong> more ${itemWord(problems.juanMariaDulcesPlato, change)}.`
-      : `Dato inicial: Juan coloca <strong>${total}</strong> ${itemWord(problems.juanMariaDulcesPlato, total)}. Cambio: María coloca <strong>${change}</strong> ${itemWord(problems.juanMariaDulcesPlato, change)} más.`,
-
-    hintKeyword: () => isEnglish()
-      ? `The key word is <strong>places more</strong>. When María places more candies on the same plate, the amount increases.`
-      : `La palabra clave es <strong>coloca más</strong>. Si María coloca más dulces en el mismo plato, la cantidad aumenta.`,
-
-    hintOperation: (total, change) => isEnglish()
-      ? `Because the amount increases, use <strong>addition</strong>: <strong>${total} + ${change}</strong>.`
-      : `Como la cantidad aumenta, se usa una <strong>suma</strong>: <strong>${total} + ${change}</strong>.`
+    hintData:(total,cambio) => datosDulces(total,cambio,true).datos,
+    hintKeyword() {
+      const {verbo} = datosDulces(state.total,state.change);
+      return isEnglish() ? `Look for <strong>${verbo}</strong>.` : `Fíjate en <strong>${verbo}</strong>.`;
+    },
+    hintOperation:(total,cambio) => {
+      const operacion = restaDulces()
+        ? (isEnglish() ? "subtraction" : "resta")
+        : (isEnglish() ? "addition" : "suma");
+      const cuenta = `${total} ${restaDulces() ? "−" : "+"} ${cambio}`;
+      return isEnglish() ? `Use <strong>${operacion}</strong>: ${cuenta}.` : `Usa una <strong>${operacion}</strong>: ${cuenta}.`;
+    }
   });
 })();
 
