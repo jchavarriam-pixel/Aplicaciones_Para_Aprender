@@ -430,9 +430,10 @@ const aulaCenital = (() => {
   const puerta = { x: 78.5, y: 51 };
   const pasillo = { x: 90, y: puerta.y };
   const pasoInterior = { x: 71, y: puerta.y };
+  // La pizarra termina al 13.4% y el pupitre ocupa 12.6% de alto.
   const pupitres = Array.from({length:25}, (_, index) => ({
     x: 13 + 12.55 * (index % 5),
-    y: 27 + 14.25 * Math.floor(index / 5)
+    y: 34.3 + 13.15 * Math.floor(index / 5)
   }));
   const espera = Array.from({length:10}, (_, index) => ({
     x: index % 2 ? 95.5 : 85,
@@ -453,7 +454,9 @@ const aulaCenital = (() => {
     const iniciales = pupitresVacios ? 0 : state.total;
     const cantidadPupitres = !pupitresVacios && !salen ? state.answer : state.total;
     const imagenes = avataresEstudiantesSituaciones();
-    const clase = document.createDocumentFragment();
+    const clase = document.createElement("div");
+    clase.className = "plano-aula-situacion";
+    clase.setAttribute("aria-hidden", "true");
 
     for (const [id, punto] of pupitres.slice(0,cantidadPupitres).entries()) {
       const mesa = document.createElement("div");
@@ -483,7 +486,7 @@ const aulaCenital = (() => {
 
   function ruta(entrada, pupitre) {
     const asiento = silla(pupitre);
-    const yPaso = pupitre.y + 7.3;
+    const yPaso = pupitre.y + 6.6;
     return [
       entrada, {x:pasillo.x,y:entrada.y}, pasillo, puerta, pasoInterior,
       {x:pasoInterior.x,y:yPaso}, {x:asiento.x,y:yPaso}, asiento

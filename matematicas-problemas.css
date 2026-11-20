@@ -148,7 +148,26 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 .scene[data-story=danielGlobosParque] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/parque-cielo-abierto.webp"); }
 .scene[data-story=pajaritosCable] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/cielo-pajaritos.webp"); }
 .scene[data-story=juanMariaDulcesPlato] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/dulces-mesa.webp"); }
-.scene[data-story^=aula] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/aula-pasillo.webp"); }
+.app .scene[data-story^=aula] {
+  --banda-aula:calc(39 * var(--unidad));
+  height:min(100cqh,calc(66.6667cqw + var(--banda-aula)));
+  background:#eaf1fb;
+}
+.scene[data-story^=aula] .sceneActionBtn { min-height:calc(var(--banda-aula) - 7 * var(--unidad)); }
+.scene[data-story^=aula] .sceneActionBtn:hover { transform:none; }
+@container (width < 325px) {
+  .app .scene[data-story^=aula] { --banda-aula:calc(32 * var(--unidad)); }
+}
+@container (width < 235px) {
+  .scene[data-story^=aula] .texto-accion-escena { display:none; }
+}
+.plano-aula-situacion {
+  position:absolute; top:0; left:50%; transform:translateX(-50%);
+  width:min(100cqw,calc((100cqh - var(--banda-aula)) * 1.5));
+  height:min(66.6667cqw,calc(100cqh - var(--banda-aula)));
+  container-type:size;
+  background:url("ImagenesSituacionesProblemas/Ilustraciones/aula-pasillo.webp") center / 100% 100% no-repeat;
+}
 .scene[data-story] :is(.fruit,.fruitGhost,.fruitShadow) { width:6.7cqw; height:9.1cqh; }
 .scene[data-story] .fruitShape { border:0; border-radius:0; box-shadow:none; background:var(--fruta) center / contain no-repeat; filter:drop-shadow(0 2px 2px #2518325e); }
 .scene[data-story] .apple .fruitShape { --fruta:url("ImagenesSituacionesProblemas/Ilustraciones/manzana.webp"); }
@@ -347,7 +366,7 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
   transform:translate(-50%,-50%) rotate(180deg);
 }
 .alumno-aula-cenital {
-  width:5.5cqw; height:8.25cqh; object-fit:contain; z-index:7;
+  width:6.875cqw; height:10.3125cqh; object-fit:contain; z-index:7;
   --filtro-objeto:drop-shadow(0 .25cqh .25cqh #21394b5c);
   filter:var(--filtro-objeto);
 }
