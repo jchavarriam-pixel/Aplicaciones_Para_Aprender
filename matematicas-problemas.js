@@ -145,7 +145,7 @@ function renderStoryThumbnail(box,problem){
     "Resta: María le quita a Andrés":"Subtraction: María takes from Andrés",
     "Resta: Andrés le quita a María":"Subtraction: Andrés takes from María",
     "Mixto (suma y resta)":"Mixed (addition and subtraction)",
-    "Ya estaban":"Already there","Llegaron":"Arrivals","Cable principal":"Main wire","Se fueron":"Left",
+    "Ya estaban":"Already there","Llegaron":"Arrivals",
     "Narración y lectura":"Narration and reading","Pista de datos":"Data hint",
     "Pista de palabra clave":"Keyword hint","Pista de operación":"Operation hint"
   });

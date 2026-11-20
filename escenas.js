@@ -281,16 +281,17 @@ if (usarIlustracionesSituaciones) {
     const numero = n => visual ? `<strong>${n}</strong>` : n;
     const palabra = itemWord(problems[id], cambio);
     const accion = resaltar ? `<span class="keyAction">${verbo(cambio)}</span>` : verbo(cambio);
+    const entrada = llegan();
     if (isEnglish()) {
-      const cambioTexto = llegan()
+      const cambioTexto = entrada
         ? `${numero(cambio)} more ${palabra} ${accion} on the lower wire. How many birds are there altogether?`
-        : `${numero(cambio)} ${palabra} ${accion} to another wire. How many birds stayed on the top wire?`;
-      return `There are ${numero(total)} birds on the top wire. ${cambioTexto}`;
+        : `${numero(cambio)} ${palabra} ${accion}. How many birds stayed on the wire?`;
+      return `There are ${numero(total)} birds on the ${entrada ? "top wire" : "wire"}. ${cambioTexto}`;
     }
-    const cambioTexto = llegan()
+    const cambioTexto = entrada
       ? `${accion} ${numero(cambio)} ${palabra} más en el cable de abajo. ¿Cuántos pajaritos hay en total?`
-      : `${accion} ${numero(cambio)} ${palabra} a otro cable. ¿Cuántos pajaritos quedan en el cable de arriba?`;
-    return `Hay ${numero(total)} pajaritos en el cable de arriba. Después, ${cambioTexto}`;
+      : `${accion} ${numero(cambio)} ${palabra}. ¿Cuántos pajaritos quedan en el cable?`;
+    return `Hay ${numero(total)} pajaritos en el cable${entrada ? " de arriba" : ""}. Después, ${cambioTexto}`;
   }
 
   function mostrarCable() {
@@ -300,14 +301,13 @@ if (usarIlustracionesSituaciones) {
     cable.setAttribute("aria-hidden", "true");
     const entran = llegan();
     cable.classList.toggle("salida-pajaritos", !entran);
-    for (const [clase, texto] of [
-      ["rotulo-cable-superior", entran ? "Ya estaban" : "Cable principal"],
-      ["rotulo-cable-inferior", entran ? "Llegaron" : "Se fueron"]
-    ]) {
-      const rotulo = document.createElement("span");
-      rotulo.className = `rotulo-cable ${clase}`;
-      rotulo.textContent = texto;
-      cable.append(rotulo);
+    if (entran) {
+      for (const [clase, texto] of [["rotulo-cable-superior","Ya estaban"], ["rotulo-cable-inferior","Llegaron"]]) {
+        const rotulo = document.createElement("span");
+        rotulo.className = `rotulo-cable ${clase}`;
+        rotulo.textContent = texto;
+        cable.append(rotulo);
+      }
     }
     const cantidad = state.total + (entran ? state.change : 0);
     const paso = Math.min(10.4, 88 / Math.max(1, Math.max(state.total,state.change) - 1));
@@ -334,10 +334,8 @@ if (usarIlustracionesSituaciones) {
         ave.dataset.vuelo = "";
         ave.classList.add("pajarito-ausente");
       } else if (!entran && elegidos.includes(indice)) {
-        const destino = posicion(elegidos.indexOf(indice),state.change);
-        ave.dataset.vuelo = destino;
-        ave.style.setProperty("--salida-ave", (destino - x) + "cqw");
-        ave.style.setProperty("--direccion-ave", destino >= x ? 1 : -1);
+        ave.dataset.vuelo = "";
+        ave.style.setProperty("--salida-ave", (110 - x) + "cqw");
       }
       cable.append(ave);
     }
@@ -351,21 +349,19 @@ if (usarIlustracionesSituaciones) {
     const reducirMovimiento = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const aves = [...scene.querySelectorAll(".pajarito-cable[data-vuelo]")];
     aves.forEach((ave, indice) => {
-      const posar = () => {
-        if (!entrada) {
-          ave.style.left = ave.dataset.vuelo + "%";
-          ave.classList.add("pajarito-cable-inferior");
-        } else ave.classList.add("agregado-situacion");
-        ave.classList.remove("pajarito-llega", "pajarito-sale", "pajarito-ausente");
+      const terminarVuelo = () => {
+        ave.classList.toggle("pajarito-ausente", !entrada);
+        ave.classList.toggle("agregado-situacion", entrada);
+        ave.classList.remove("pajarito-llega", "pajarito-sale");
       };
       if (reducirMovimiento) {
         if (!entrada) dejarRastroSituacion(ave);
-        posar();
+        terminarVuelo();
         return;
       }
       esperarAnimacionSituacion(() => {
         if (!entrada) dejarRastroSituacion(ave);
-        ave.addEventListener("animationend", posar, {once:true});
+        ave.addEventListener("animationend", terminarVuelo, {once:true});
         ave.classList.remove("pajarito-ausente");
         ave.classList.add(entrada ? "pajarito-llega" : "pajarito-sale");
       }, indice * 145);
@@ -373,7 +369,7 @@ if (usarIlustracionesSituaciones) {
     feedback.className = "feedback";
     feedback.textContent = entrada
       ? (isEnglish() ? "Count the birds on both wires." : "Cuenta los pajaritos de ambos cables.")
-      : (isEnglish() ? "Count the birds in color on the top wire." : "Cuenta los pajaritos de color del cable de arriba.");
+      : (isEnglish() ? "Count the birds in color on the wire." : "Cuenta los pajaritos de color que quedaron en el cable.");
     speak(enunciado(state.total, state.change));
   }
 
@@ -388,18 +384,18 @@ if (usarIlustracionesSituaciones) {
     texts: {
       es: {
         title: "Pajaritos en los cables",
-        short: "Algunos llegan y otros se van volando. Cuenta cuántos quedan en los dos cables.",
+        short: "Algunos llegan y otros se van volando. Cuenta los pajaritos que quedan.",
         badge: "🐦 Suma y resta",
         animateLabel: "▶ Ver el vuelo",
-        sceneTitle: "Observa los pajaritos de los dos cables",
+        sceneTitle: "Observa cómo llegan o se van los pajaritos",
         answerQuestion: "¿Cuántos pajaritos hay ahora en los cables?"
       },
       en: {
         title: "Birds on power lines",
-        short: "Some birds land and others fly away. Count how many are on the two lines.",
+        short: "Some birds land and others fly away. Count how many are left.",
         badge: "🐦 Addition and subtraction",
         animateLabel: "▶ Watch the birds",
-        sceneTitle: "Watch the birds on the two lines",
+        sceneTitle: "Watch the birds land or fly away",
         answerQuestion: "How many birds are on the lines now?"
       }
     },

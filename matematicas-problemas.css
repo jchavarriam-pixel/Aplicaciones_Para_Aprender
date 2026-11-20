@@ -225,9 +225,8 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 }
 :is(.cable-pajaritos,.problemCard[data-story=pajaritosCable] .miniScene)::before { top:var(--cable-superior); }
 :is(.cable-pajaritos,.problemCard[data-story=pajaritosCable] .miniScene)::after { top:var(--cable-inferior); }
-.cable-pajaritos.salida-pajaritos::after {
-  background:repeating-linear-gradient(90deg,#8b4b21 0 2cqw,#d8ac78 2cqw 3cqw);
-}
+.cable-pajaritos.salida-pajaritos { --cable-superior:52%; }
+.scene .cable-pajaritos.salida-pajaritos::after { content:none; }
 .rotulo-cable {
   position:absolute; left:3%; padding:.7cqh 2cqw; border-radius:5cqh;
   color:#173e66; background:#f3faff; font-weight:800;
@@ -235,7 +234,6 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 }
 .rotulo-cable-superior { top:5%; }
 .rotulo-cable-inferior { top:44%; color:#155f49; background:#e6fff1; }
-.salida-pajaritos .rotulo-cable-inferior { color:#784117; background:#fff0d2; }
 .problemCard[data-story=pajaritosCable] .objeto-miniatura {
   inset:auto auto calc(100% - var(--cable-inferior)) 38%; width:24%; height:auto; z-index:1;
 }
@@ -249,7 +247,6 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
   display:none; position:absolute; bottom:0; left:50%; width:134%; height:143%;
   translate:-50% 0; transform-origin:center 72%;
 }
-.pajarito-sale .ave-aleteando { scale:var(--direccion-ave) 1; }
 .pajarito-cable:nth-child(3n+2) { --filtro-objeto:hue-rotate(24deg); filter:var(--filtro-objeto); }
 .pajarito-cable:nth-child(3n+3) { --filtro-objeto:hue-rotate(-20deg); filter:var(--filtro-objeto); }
 .pajarito-ausente { visibility:hidden; }
@@ -272,9 +269,9 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 }
 @keyframes pajarito-sale {
   0% { transform:translate(0,0); }
-  30% { transform:translate(calc(var(--salida-ave) * .30 + var(--direccion-ave) * 3cqw),-19cqh) rotate(-12deg); }
-  68% { transform:translate(calc(var(--salida-ave) * .8 + var(--direccion-ave) * 3cqw),13cqh) rotate(12deg); }
-  100% { transform:translate(var(--salida-ave),calc(var(--distancia-cables) * 1cqh)); }
+  35% { transform:translate(calc(var(--salida-ave) * .25),-17cqh) rotate(-17deg); }
+  72% { transform:translate(calc(var(--salida-ave) * .72),-29cqh) rotate(-8deg); }
+  100% { transform:translate(var(--salida-ave),-37cqh) rotate(-12deg); }
 }
 
 .contenido-problemas { container-type:inline-size; }
