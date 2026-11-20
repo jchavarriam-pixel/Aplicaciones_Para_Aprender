@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+  <title>Divide y reparte</title>
+  <link rel="stylesheet" href="../idioma-voz.css">
+  <link rel="stylesheet" href="../creditos.css">
+  <link rel="stylesheet" href="../pantalla-completa.css">
+  <link rel="stylesheet" href="../panel-plegable.css">
+  <link rel="stylesheet" href="division.css">
+</head>
+<body>
+  <main id="appDivision">
+    <aside class="herramientas-division">
+      <header class="cabecera-division">
+        <h1><img src="../iconos/divide-reparte.webp" width="60" height="60" alt="">Divide y reparte</h1>
+        <a class="casa-division" href="../index.html" aria-label="Todas las aplicaciones" title="Todas las aplicaciones">⌂</a>
+        <label class="estudiante">Nombre del niño <input id="nombre" placeholder="Ej.: Gabriel" maxlength="40" autocomplete="given-name"></label>
+      </header>
+      <section class="guia-division">
+        <h2>Así jugamos</h2>
+        <p id="guia">Elige cómo quieres repartir las fichas.</p>
+      </section>
+      <div class="controles-division">
+        <button type="button" id="configDivision">⚙ Configuración general</button>
+        <div id="ayudasDivision" data-pistas-panel hidden>
+          <button type="button" id="escuchar">🔊 Escuchar</button>
+        </div>
+      </div>
+    </aside>
+
+    <section class="actividad">
+      <nav class="tarjetas-division" id="modos" aria-label="Modos de división">
+        <button type="button" data-modo="exacta">
+          <img src="imagenes/exacta.webp" width="720" height="480" alt="">
+          <strong>Reparto exacto</strong>
+          <span>Forma grupos iguales. Usa todas las fichas.</span>
+        </button>
+        <button type="button" data-modo="resto">
+          <img src="imagenes/resto.webp" width="720" height="480" alt="">
+          <strong>Reparto con resto</strong>
+          <span>Forma grupos iguales y cuenta las fichas que sobran.</span>
+        </button>
+        <button type="button" data-modo="cajas">
+          <img src="imagenes/cajas.webp" width="720" height="480" alt="">
+          <strong>Reparto en cajas</strong>
+          <span>Pon la misma cantidad de fichas en cada caja.</span>
+        </button>
+      </nav>
+
+      <section id="juego" class="juego-division" hidden>
+        <header class="reto-division">
+          <button type="button" id="volverModos">‹ Modos</button>
+          <h2 id="modoActual"></h2>
+          <p id="pregunta"></p>
+        </header>
+        <div class="espacio" id="espacioDivision">
+          <section id="grupoDivision">
+            <div class="barra-grupos">
+              <p id="conteoGrupos"></p>
+              <div>
+                <button type="button" id="separar">Separar ficha</button>
+                <button type="button" id="deshacer">Deshacer</button>
+              </div>
+            </div>
+            <div id="plano" class="plano-magnetico" aria-label="Tablero para agrupar fichas">
+              <svg class="enlaces-grupos" aria-hidden="true"></svg>
+              <div class="nodos-grupos"></div>
+            </div>
+          </section>
+          <section id="cajasDivision" hidden>
+            <div class="fichas-por-repartir zona-caja" data-destino="-1">
+              <div class="cabecera-caja"><button type="button" data-soltar="-1">Fichas por repartir</button><span id="pendientes"></span></div>
+              <div class="contenido-caja" id="fichasCajas"></div>
+            </div>
+            <div id="destinos" class="cajas-destino"></div>
+          </section>
+        </div>
+        <div class="entrega">
+          <p id="mensaje" role="status"></p>
+          <form id="respuesta" novalidate hidden>
+            <p>Escribe la división.</p>
+            <div class="ecuacion">
+              <label><span>Dividendo</span><input id="dividendo" inputmode="numeric" maxlength="2" size="2" autocomplete="off"></label>
+              <b aria-hidden="true">÷</b>
+              <label><span>Divisor</span><input id="divisor" inputmode="numeric" maxlength="2" size="2" autocomplete="off"></label>
+              <b aria-hidden="true">=</b>
+              <label><span>Cociente</span><input id="cociente" inputmode="numeric" maxlength="2" size="2" autocomplete="off"></label>
+              <label id="campoResto"><span>Resto</span><input id="residuo" inputmode="numeric" maxlength="2" size="2" autocomplete="off"></label>
+            </div>
+          </form>
+          <div class="acciones">
+            <button type="button" id="nuevaRonda">↻ Nueva ronda</button>
+            <button type="button" id="editarReparto" hidden>Editar reparto</button>
+            <button type="button" id="revisar" class="principal">Comprobar reparto</button>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+  <dialog id="ajustes" aria-labelledby="tituloAjustes">
+    <div class="ajustes-cuerpo">
+      <header><h2 id="tituloAjustes">Configuración general</h2><button type="button" id="cerrarAjustes" aria-label="Aplicar y cerrar">✕</button></header>
+      <div id="ajustesGenerales">
+        <label class="preferencia"><input type="checkbox" id="narracion"> Leer instrucciones y comentarios</label>
+        <div id="preferenciasDivision"></div>
+      </div>
+      <div id="ajustesModo" hidden>
+        <label>Máximo de grupos o cajas <select id="maxGrupos"><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
+        <label>Máximo de fichas por grupo <select id="maxPorGrupo"><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
+        <label id="campoTipo">Tipo de reparto
+          <select id="tipoCajas"><option value="exacta">Solo exacto</option><option value="resto">Solo con resto</option><option value="mixto">Mixto</option></select>
+        </label>
+        <label id="campoMetodo">Cómo unir las fichas
+          <select id="metodo"><option value="barrido">Pasar sobre ellas</option><option value="soltar">Acercar y soltar</option></select>
+        </label>
+        <label class="preferencia"><input type="checkbox" id="guiaGrupos"> Marcar los grupos o cajas completos</label>
+      </div>
+      <button type="button" id="aplicarAjustes" class="principal">Aplicar y volver</button>
+    </div>
+  </dialog>
+  <footer id="creditos-aplicaciones">
+    <div class="creditos-dedicatoria"><span class="creditos-gabriel">Creado para <strong>Gabriel</strong></span><span class="creditos-familia">Por su familia, con ayuda de la IA.</span></div>
+    <div class="creditos-equipo"><span class="creditos-autores">M.Sc. Jeffry Chavarría-Molina y Ph.D. (c) Natalia Rodríguez-Granados</span><span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span></div>
+  </footer>
+  <script>window.IDIOMA_VOZ_APP = 'division';</script>
+  <script src="../idioma-voz-textos.js"></script>
+  <script src="../idioma-voz.js"></script>
+  <script src="../matematicas-base.js"></script>
+  <script src="../Multiplicacion/grupos-magneticos.js"></script>
+  <script src="division.js"></script>
+  <script src="../pantalla-completa.js"></script>
+  <script src="../panel-plegable.js?v=division-1"></script>
+  <script src="../nombre-compartido.js"></script>
+</body>
+</html>
