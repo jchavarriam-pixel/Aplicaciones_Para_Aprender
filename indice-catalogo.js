@@ -3,6 +3,7 @@
  function iniciar({aplicaciones,materias,clasificacion,ordenAprendizaje,crearTarjeta}){
   const $=s=>document.querySelector(s),t=(es,en)=>IdiomaVoz.idioma==='en'?en:es,tr=s=>IdiomaVoz.t(s);
   const inicio=$('#inicioTemas'),lista=$('#vistaAplicaciones'),contenedor=$('#contenedorApps'),buscar=$('#buscar'),contador=$('#contador');
+  const catalogo=$('.catalogo-indice'),rejillaMaterias=$('#navegacionMaterias');
   let actual=null,filtros={},plegado=false,narrar=false;
   try{filtros=JSON.parse(localStorage.getItem('filtrosMateriasApps'))||{};narrar=localStorage.getItem('indice.narrarTemas')==='true';}catch{}
   if(!filtros||typeof filtros!=='object'||Array.isArray(filtros))filtros={};
@@ -25,18 +26,27 @@
   const buscarEn=apps=>{const q=normalizar(buscar.value);return apps.filter(a=>{const m=materias.find(m=>m.id===clasificacion[a.archivo]?.[0]),temas=clasificacion[a.archivo]?.[1]||[];return normalizar([a.nombre,tr(a.nombre),a.descripcion,tr(a.descripcion),m?.nombre,tr(m?.nombre||''),...temas,...temas.map(tr)].join(' ')).includes(q);});};
   const cantidad=n=>t(n===1?'1 aplicación':`${n} aplicaciones`,n===1?'1 app':`${n} apps`);
   function distribuirTarjetas(){
-   if(inicio.hidden)return;const ancho=$('#navegacionMaterias').getBoundingClientRect().width,cols=Math.min(7,Math.max(1,Math.floor((ancho+16)/236))),span=cols-(6%cols),todas=$('[data-materia="todas"]');
-   $('#navegacionMaterias').style.gridTemplateColumns=`repeat(${cols},minmax(0,1fr))`;
+   const ancho=catalogo.getBoundingClientRect().width;
+   const compacto=ancho<620;
+   catalogo.classList.toggle('catalogo-compacto',compacto);
+   if(compacto){
+    const columnasCompactas=ancho>=480?3:ancho>=248?2:1;
+    catalogo.style.setProperty('--columnas-compactas',String(columnasCompactas));
+   }
+   if(inicio.hidden)return;
+   const cols=Math.min(7,Math.max(1,Math.floor((ancho+16)/236)));
+   const span=compacto?1:cols-(6%cols),todas=$('[data-materia="todas"]');
+   rejillaMaterias.style.gridTemplateColumns=compacto?'':`repeat(${cols},minmax(0,1fr))`;
    if(todas){todas.style.gridColumn='span '+span;todas.classList.toggle('materia-amplia',span>1);}
   }
   function renderizar(){
    $('.subtitulo').textContent=tr('Elige un tema, juega y descubre algo nuevo.');
    const resultados=buscarEn(mezcladas);inicio.hidden=actual!==null;lista.hidden=actual===null;$('#verResultados').hidden=actual!==null||!buscar.value.trim();
-   $('#navegacionMaterias').replaceChildren();
+   rejillaMaterias.replaceChildren();
    for(const ficha of fichas){
     const total=appsDe(ficha.id).length,n=buscarEn(appsDe(ficha.id)).length,b=document.createElement('button');b.type='button';b.className='tarjeta-materia';b.dataset.materia=ficha.id;b.style.setProperty('--acento-materia',ficha.color);b.style.setProperty('--fondo-materia',ficha.fondo);
     b.innerHTML=`<span class="imagen-materia"><img src="imagenes-indice/${ficha.id}.webp" alt="" width="640" height="384" loading="eager" decoding="async"></span><span class="texto-materia"><span class="nombre-materia">${tr(ficha.nombre)}</span><span class="descripcion-materia">${tr(ficha.descripcion)}</span></span><span class="pie-materia"><span class="cantidad-materia">${buscar.value.trim()?t(`${n} de ${total}`,`${n} of ${total}`)+' · ':''}${buscar.value.trim()?t('coincidencias','matches'):cantidad(total)}</span><span class="abrir-materia">${t('Explorar','Explore')} <span aria-hidden="true">→</span></span></span>`;
-    b.onclick=()=>seleccionar(ficha.id);$('#navegacionMaterias').append(b);
+    b.onclick=()=>seleccionar(ficha.id);rejillaMaterias.append(b);
    }
    if(actual===null){contador.textContent=cantidad(resultados.length);distribuirTarjetas();return;}
    $('#todasDesdeMateria').hidden=actual==='todas';
@@ -72,7 +82,16 @@
   modal.addEventListener('change',e=>{if(!aplicando){e.stopImmediatePropagation();pendientes.add(e.target);}},true);
   modal.addEventListener('close',()=>{narrar=$('#narrarTemas').checked;try{localStorage.setItem('indice.narrarTemas',String(narrar));}catch{}aplicando=true;for(const e of pendientes)e.dispatchEvent(new Event('change',{bubbles:true}));aplicando=false;renderizar();IdiomaVoz.localizar();});
   IdiomaVoz.instalar('#vozIndice',{cambioIdioma:renderizar});
-  function ajustar(){const z=parseFloat(getComputedStyle(document.body).zoom)||1;document.documentElement.style.setProperty('--ui-indice',1/z+'px');document.documentElement.style.setProperty('--inversa-indice',String(1/z));document.documentElement.style.setProperty('--alto-indice',(visualViewport?.height||innerHeight)/z+'px');document.body.classList.toggle('indice-horizontal',innerWidth>innerHeight);distribuirTarjetas();}
+  function ajustar(){
+   const z=parseFloat(getComputedStyle(document.body).zoom)||1;
+   const raiz=document.documentElement,ancho=raiz.clientWidth,alto=raiz.clientHeight;
+   raiz.style.setProperty('--ui-indice',1/z+'px');
+   raiz.style.setProperty('--inversa-indice',String(1/z));
+   raiz.style.setProperty('--ancho-indice',ancho/z+'px');
+   raiz.style.setProperty('--alto-indice',Math.min(visualViewport?.height||alto,alto)/z+'px');
+   document.body.classList.toggle('indice-horizontal',ancho>alto);
+   distribuirTarjetas();
+  }
   $('#plegarIndice').onclick=()=>{plegado=!plegado;$('#panelIndice').hidden=plegado;$('#plegarIndice').setAttribute('aria-expanded',String(!plegado));$('#plegarIndice').setAttribute('aria-label',plegado?t('Mostrar panel','Show panel'):t('Ocultar panel','Hide panel'));document.body.classList.toggle('indice-plegado',plegado);distribuirTarjetas();};
   addEventListener('resize',ajustar);document.addEventListener('fullscreenchange',ajustar);visualViewport?.addEventListener('resize',ajustar);new MutationObserver(ajustar).observe(document.body,{attributes:true,attributeFilter:['style']});ajustar();renderizar();
   return {renderizar};
