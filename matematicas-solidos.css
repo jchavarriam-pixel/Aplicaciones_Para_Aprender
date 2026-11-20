@@ -129,20 +129,27 @@ body{width:var(--ancho-solidos,100%)!important;min-height:0!important}
   --separacion-filas:calc(5 * var(--unidad));
   --alto-minimo-ficha:calc(48 * var(--unidad));
   --alto-maximo-ficha:calc(100 * var(--unidad));
-  --alto-ficha:clamp(var(--alto-minimo-ficha),calc((100cqh - 44 * var(--unidad) - (var(--filas) - 1) * var(--separacion-filas)) / var(--filas)),var(--alto-maximo-ficha));
+  --alto-ficha-base:clamp(var(--alto-minimo-ficha),calc((100cqh - 44 * var(--unidad) - (var(--filas) - 1) * var(--separacion-filas)) / var(--filas)),var(--alto-maximo-ficha));
+  /* Descuenta los bordes al ampliar el área en la que se dibuja el sólido. */
+  --alto-figura-ampliada:calc(2.5 * (var(--alto-ficha-base) - 4px) + 4px);
+  --proporcion-ficha:1.2;
+  --margen-pareo:clamp(calc(16 * var(--unidad)),4cqw,calc(27 * var(--unidad)));
+  --pasillo-pareo:clamp(calc(44 * var(--unidad)),calc(25cqw - 38 * var(--unidad)),calc(440 * var(--unidad)));
+  --ancho-respuestas:clamp(calc(92 * var(--unidad)),28cqw,calc(192 * var(--unidad)));
+  --ancho-figuras:min(calc(var(--proporcion-ficha) * var(--alto-figura-ampliada)),max(0px,calc(100cqw - 2 * var(--margen-pareo) - var(--pasillo-pareo) - var(--ancho-respuestas) - 2px)));
+  --alto-ficha:max(var(--alto-minimo-ficha),calc(var(--ancho-figuras) / var(--proporcion-ficha)));
   width:100%;
   height:auto;
   min-height:0;
-  grid-template-columns:minmax(0,calc(152 * var(--unidad))) minmax(0,calc(192 * var(--unidad)));
+  grid-template-columns:var(--ancho-figuras) minmax(0,var(--ancho-respuestas));
   justify-content:center;
-  column-gap:clamp(calc(46 * var(--unidad)),35%,calc(478 * var(--unidad)));
+  column-gap:var(--pasillo-pareo);
+  padding-inline:var(--margen-pareo);
 }
 .app-shell #evalMatchingBoard {
   --alto-maximo-ficha:calc(165 * var(--unidad));
-  grid-template-columns:minmax(0,min(calc(198 * var(--unidad)),28%)) minmax(0,calc(230 * var(--unidad)));
-  column-gap:clamp(calc(46 * var(--unidad)),29%,calc(440 * var(--unidad)));
+  --ancho-respuestas:clamp(calc(106 * var(--unidad)),32cqw,calc(230 * var(--unidad)));
   margin:0;
-  padding-inline:clamp(calc(16 * var(--unidad)),4cqw,calc(27 * var(--unidad)));
 }
 .app-shell #evalMatchingBoard[data-answer-mode=visual] { --alto-minimo-ficha:calc(76 * var(--unidad)); }
 :is(#matchingBoard,#evalMatchingBoard) .matching-list {
@@ -151,7 +158,7 @@ body{width:var(--ancho-solidos,100%)!important;min-height:0!important}
 }
 :is(#matchingBoard,#evalMatchingBoard) .matching-figure {
   justify-self:end;
-  width:min(100%,calc(1.2 * var(--alto-ficha)));
+  width:min(100%,calc(var(--proporcion-ficha) * var(--alto-ficha)));
   border-radius:calc(13 * var(--unidad));
 }
 :is(#matchingBoard,#evalMatchingBoard) .matching-column:first-of-type h3 { text-align:right; }
