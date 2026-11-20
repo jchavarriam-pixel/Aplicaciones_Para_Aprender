@@ -31,7 +31,8 @@ function renderStoryThumbnail(box,problem){
   if(!archivo){problem.renderPreview(box);return;}
   box.classList.add("miniatura-ilustrada");
   const ilustracion=new Image(720,480);
-  ilustracion.src=`ImagenesSituacionesProblemas/Fichas/${archivo}.webp`;
+  const version=problem.id==="frutasNevera"?"?v=2":"";
+  ilustracion.src=`ImagenesSituacionesProblemas/Fichas/${archivo}.webp${version}`;
   ilustracion.alt="";
   ilustracion.decoding="async";
   box.replaceChildren(ilustracion);

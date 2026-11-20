@@ -19,6 +19,17 @@
     });
   }
 
+  function lugaresNevera(cantidad) {
+    const columnas = Math.ceil(cantidad / 3);
+    const paso = Math.min(9, 39 / Math.max(1, columnas - 1));
+    const estantes = [49.2,64.6,81.7];
+    return Array.from({length:cantidad}, (_, i) => {
+      const fila = i % estantes.length;
+      const columna = (Math.floor(i / estantes.length) + fila) % columnas;
+      return {x:44.1 + (columna - (columnas - 1) / 2) * paso, y:estantes[fila]};
+    });
+  }
+
   const escenas = [
     {
       id:"patosEstanque", clase:"estanque", emoji:"🦆", lugares:lugaresAgua(20, 15, [25,37,49,62,75]),
@@ -34,11 +45,7 @@
     },
     {
       id:"frutasNevera", clase:"nevera", emoji:"🍎",
-      lugares:Array.from({length:capacidad}, (_, i) => {
-        const fila = i % 3;
-        const columna = (Math.floor(i / 3) + fila * 3 + 4) % 9;
-        return {x:23 + columna * 7.15, y:[36.4,62.2,85.8][fila]};
-      }),
+      lugares:lugaresNevera,
       fichas:["manzana","pera"],
       es:{title:"Frutas en la nevera", lugar:"en la nevera", plural:"frutas", singular:"fruta",
         entra:["se guarda","se guardan"], sale:["se saca","se sacan"],
@@ -68,6 +75,7 @@
     const acuatico = clase !== "nevera";
     const selector = ".figura-situacion-nueva[data-lugar]";
     const texto = () => config[idioma()];
+    let lugaresRonda;
     const modo = preferenciasProblemas[id];
     if (!["alternado","azar","addition","subtraction"].includes(modo)) preferenciasProblemas[id] = "alternado";
 
@@ -103,12 +111,16 @@
       plano.setAttribute("aria-hidden", "true");
       const cantidad = recienLlegan() ? state.answer : state.total;
       plano.classList.toggle("muchas-figuras", cantidad > 12);
+      lugaresRonda = typeof lugares === "function" ? lugares(cantidad) : lugares;
+      if (clase === "nevera") {
+        plano.style.setProperty("--ancho-figura", Math.min(6.8, 41 / Math.ceil(cantidad / 3)) + "cqw");
+      }
       state.movingIds = recienLlegan()
         ? Array.from({length:state.change}, (_, i) => state.total + i)
         : shuffle(Array.from({length:state.total}, (_, i) => i)).slice(0, state.change);
 
       for (let i = 0; i < cantidad; i++) {
-        const punto = lugares[i];
+        const punto = lugaresRonda[i];
         const figura = document.createElement("span");
         figura.className = "figura-situacion-nueva";
         figura.dataset.lugar = i;
@@ -199,9 +211,9 @@
         return;
       }
 
-      const fuera = {x:8, y:58 - (orden % 3) * 8, opacidad:.15};
-      const entradaNevera = {x:17, y:punto.y - 4};
-      const sobreEstante = {x:punto.x, y:punto.y - 2};
+      const fuera = {x:44.1 + (orden % 3 - 1) * 9, y:104, opacidad:.15};
+      const entradaNevera = {x:punto.x, y:Math.min(91, punto.y + 12), escala:1.14};
+      const sobreEstante = {x:punto.x, y:punto.y - 1.6};
       const pasos = [fuera, entradaNevera, sobreEstante, punto];
       recorrer(figura, punto, entrada ? pasos : pasos.reverse(), 880, finalizar);
     }
@@ -212,7 +224,7 @@
       const entrada = recienLlegan();
       const figuras = scene.querySelectorAll(selector);
       for (const [orden, indice] of state.movingIds.entries()) {
-        const empezar = () => mover(figuras[indice], lugares[indice], orden, entrada);
+        const empezar = () => mover(figuras[indice], lugaresRonda[indice], orden, entrada);
         if (reducirMovimiento.matches) empezar();
         else esperarEnEscena(empezar, 55 + orden * (clase === "piscina" ? 240 : 165));
       }

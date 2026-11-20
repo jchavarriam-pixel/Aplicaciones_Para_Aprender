@@ -403,7 +403,7 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
   pointer-events:none; background:center / 100% 100% no-repeat;
 }
 .plano-estanque { background-image:url("ImagenesSituacionesProblemas/Ilustraciones/estanque-escena.webp"); --ancho-figura:10cqw; }
-.plano-nevera { background-image:url("ImagenesSituacionesProblemas/Ilustraciones/nevera-escena.webp"); --ancho-figura:6.1cqw; }
+.plano-nevera { background-image:url("ImagenesSituacionesProblemas/Ilustraciones/nevera-escena.webp?v=2"); }
 .plano-piscina { background-image:url("ImagenesSituacionesProblemas/Ilustraciones/piscina-escena.webp"); --ancho-figura:9.6cqw; }
 .plano-estanque.muchas-figuras { --ancho-figura:7.6cqw; }
 .plano-piscina.muchas-figuras { --ancho-figura:7.8cqw; }
@@ -416,6 +416,7 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
   position:absolute; inset:0; width:100%; height:100%; object-fit:contain;
 }
 .figura-situacion-nueva .pose-transito { visibility:hidden; }
+.plano-nevera .figura-situacion-nueva { transform:translate(-50%,-100%); }
 .plano-nevera .pose-principal { object-position:50% 100%; }
 .plano-situacion-nueva .rastro-situacion { z-index:1; }
 .plano-situacion-nueva .en-transito { z-index:3; }
