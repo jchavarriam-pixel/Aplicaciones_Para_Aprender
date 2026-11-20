@@ -821,10 +821,9 @@ Los globos y los cordeles se dibujan desde el código.
       }
 
       .danielBalloonStringsV3 line {
-        stroke: rgba(71,85,105,.78);
-        stroke-width: .62;
+        stroke: rgba(71,85,105,.82);
+        stroke-width: .30;
         stroke-linecap: round;
-        filter: drop-shadow(0 1px 1px rgba(255,255,255,.85));
         transition: opacity .35s ease;
       }
 
