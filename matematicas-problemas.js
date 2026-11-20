@@ -9,7 +9,10 @@ const fichasSituaciones={
   pajaritosCable:"pajaritos",
   andresMariaDulcesPlato:"dulces",
   aulaPupitresDesocupados:"pupitres",
-  aulaRecreo:"recreo"
+  aulaRecreo:"recreo",
+  patosEstanque:"estanque",
+  frutasNevera:"nevera",
+  ninosPiscina:"piscina"
 };
 
 function renderStoryThumbnail(box,problem){
@@ -116,13 +119,32 @@ function renderStoryThumbnail(box,problem){
   dulcesOptions.className="opciones-ayuda-problemas";
   dulcesOptions.innerHTML='<legend>Dulces de Andrés y María</legend><label for="modoDulces">Operación con dulces</label><select id="modoDulces"><option value="addition">Solo suma</option><option value="subtraction">Resta con ambos turnos</option><option value="restaAndres">Resta: María le quita a Andrés</option><option value="restaMaria">Resta: Andrés le quita a María</option><option value="mixto">Mixto (suma y resta)</option></select>';
   const modoDulces=dulcesOptions.querySelector("select");
+  const opcionesNuevas=document.createElement("fieldset");
+  opcionesNuevas.className="opciones-ayuda-problemas";
+  opcionesNuevas.innerHTML='<legend>Estanque, nevera y piscina</legend>';
+  const modosNuevos=Object.entries({
+    patosEstanque:"Patos en el estanque",
+    frutasNevera:"Frutas en la nevera",
+    ninosPiscina:"Niños en la piscina"
+  }).map(([id,titulo])=>{
+    const campo=document.createElement("div");
+    const label=document.createElement("label");
+    const select=document.createElement("select");
+    select.id="modo-"+id;
+    label.htmlFor=select.id;
+    label.textContent=titulo;
+    select.innerHTML='<option value="alternado">Alternar suma y resta</option><option value="azar">Al azar en cada ronda</option><option value="addition">Solo suma</option><option value="subtraction">Solo resta</option>';
+    campo.append(label,select);
+    opcionesNuevas.append(campo);
+    return [id,select];
+  });
   const voice=document.createElement("div");
   voice.id="preferenciasProblemas";
   const done=document.createElement("button");
   done.type="button";
   done.className="mainBtn aplicar-ajustes-problemas";
   done.textContent="Aplicar y volver";
-  settings.append(options,busOptions,recreoOptions,parkingOptions,dulcesOptions,voice,done);
+  settings.append(options,busOptions,recreoOptions,parkingOptions,dulcesOptions,opcionesNuevas,voice,done);
   dialog.append(settings);
   document.body.append(dialog);
 
@@ -140,6 +162,10 @@ function renderStoryThumbnail(box,problem){
     "Resta: María le quita a Andrés":"Subtraction: María takes from Andrés",
     "Resta: Andrés le quita a María":"Subtraction: Andrés takes from María",
     "Mixto (suma y resta)":"Mixed (addition and subtraction)",
+    "Estanque, nevera y piscina":"Pond, fridge and pool",
+    "Patos en el estanque":"Ducks in the pond","Frutas en la nevera":"Fruit in the fridge",
+    "Niños en la piscina":"Children in the pool","Alternar suma y resta":"Alternate addition and subtraction",
+    "Solo resta":"Subtraction only",
     "Ya estaban":"Already there","Llegaron":"Arrivals",
     "Narración y lectura":"Narration and reading","Pista de datos":"Data hint",
     "Pista de palabra clave":"Keyword hint","Pista de operación":"Operation hint"
@@ -176,6 +202,7 @@ function renderStoryThumbnail(box,problem){
     modoRecreo.value=preferenciasProblemas.recreo;
     modoEstacionamiento.value=preferenciasProblemas.estacionamiento;
     modoDulces.value=preferenciasProblemas.dulces;
+    for(const [id,select] of modosNuevos)select.value=preferenciasProblemas[id];
     for(const input of options.querySelectorAll("input"))input.checked=preferenciasProblemas[input.name];
     IdiomaVoz.iniciarEdicion();
     dialog.showModal();
@@ -190,13 +217,17 @@ function renderStoryThumbnail(box,problem){
     preferenciasProblemas.recreo=modoRecreo.value;
     preferenciasProblemas.estacionamiento=modoEstacionamiento.value;
     preferenciasProblemas.dulces=modoDulces.value;
+    const cambiosPorHistoria={busPasajeros:cambioAutobus,aulaRecreo:cambioRecreo,estacionamiento:cambioEstacionamiento,andresMariaDulcesPlato:cambioDulces};
+    for(const [id,select] of modosNuevos){
+      cambiosPorHistoria[id]=preferenciasProblemas[id]!==select.value;
+      preferenciasProblemas[id]=select.value;
+    }
     if(!preferenciasProblemas.narracion)window.speechSynthesis?.cancel();
     Matematicas.guardar(CLAVE_AYUDAS_PROBLEMAS,preferenciasProblemas);
     const changed=JSON.stringify(readParams())!==previousRange;
     saveParams();
     saveFontSetting();
     IdiomaVoz.aplicarEdicion();
-    const cambiosPorHistoria={busPasajeros:cambioAutobus,aulaRecreo:cambioRecreo,estacionamiento:cambioEstacionamiento,andresMariaDulcesPlato:cambioDulces};
     if(state.currentProblem&&(changed||cambiosPorHistoria[state.currentProblem.id]))newProblem();
     actualizarAyudas();
     dialog.close();

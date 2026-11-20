@@ -118,7 +118,7 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
   font-size:calc(12 * var(--unidad)); line-height:1.1; background:#f5f8ff;
 }
 .sceneHeader .sceneOperationPreview.isEmpty { display:none; }
-.revision-problemas { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:calc(4 * var(--unidad)); padding-right:calc(88 * var(--unidad)); }
+.revision-problemas { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:calc(4 * var(--unidad)); padding-right:calc(101 * var(--unidad)); }
 .revision-problemas .feedback { flex:1 1 calc(135 * var(--unidad)); min-height:0; max-height:calc(48 * var(--unidad)); overflow:auto; margin:0; padding:calc(4 * var(--unidad)); border-width:1px; border-radius:calc(8 * var(--unidad)); font-size:calc(11 * var(--unidad)); line-height:1.2; }
 #checkBtn.mainBtn { display:block; flex:1 1 calc(88 * var(--unidad)); max-width:calc(285 * var(--unidad)); min-height:calc(37 * var(--unidad)); height:auto; padding:calc(4 * var(--unidad)); background:linear-gradient(140deg,#5740ba,#235aac); border-radius:calc(10 * var(--unidad)); font-size:calc(15 * var(--unidad)); }
 .dialogo-problemas { zoom:var(--inverso-panel-compartido,1); width:min(690px,calc(100% - 18px)); max-height:calc(100dvh - 18px); background:white; border:0; padding:0; border-radius:19px; color:#273553; }
@@ -388,6 +388,68 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 .scene[data-story] .agregado-situacion {
   filter:var(--filtro-objeto,brightness(1))
     drop-shadow(0 0 .28cqw #a47200) drop-shadow(0 0 .55cqw #fff000);
+}
+.app .scene:has(.plano-situacion-nueva) {
+  --banda-escena-nueva:calc(37 * var(--unidad));
+  width:min(100cqw,calc((100cqh - var(--banda-escena-nueva)) * 1.5));
+  height:min(100cqh,calc(66.6667cqw + var(--banda-escena-nueva)));
+  background:#eaf1fb;
+}
+.plano-situacion-nueva {
+  position:absolute; inset:0 0 var(--banda-escena-nueva); container-type:size;
+  pointer-events:none; background:center / 100% 100% no-repeat;
+}
+.plano-estanque { background-image:url("ImagenesSituacionesProblemas/Ilustraciones/estanque-escena.webp"); --ancho-figura:10cqw; }
+.plano-nevera { background-image:url("ImagenesSituacionesProblemas/Ilustraciones/nevera-escena.webp"); --ancho-figura:6.1cqw; }
+.plano-piscina { background-image:url("ImagenesSituacionesProblemas/Ilustraciones/piscina-escena.webp"); --ancho-figura:9.6cqw; }
+.plano-estanque.muchas-figuras { --ancho-figura:7.6cqw; }
+.plano-piscina.muchas-figuras { --ancho-figura:7.8cqw; }
+.figura-situacion-nueva {
+  position:absolute; z-index:2; width:var(--ancho-figura); aspect-ratio:1;
+  transform:translate(-50%,-50%);
+}
+.figura-situacion-nueva[hidden] { display:none; }
+.figura-situacion-nueva img {
+  position:absolute; inset:0; width:100%; height:100%; object-fit:contain;
+}
+.figura-situacion-nueva .pose-transito { visibility:hidden; }
+.plano-nevera .pose-principal { object-position:50% 100%; }
+.plano-situacion-nueva .rastro-situacion { z-index:1; }
+.plano-situacion-nueva .en-transito { z-index:3; }
+:is(.plano-estanque,.plano-piscina) .pose-principal { scale:var(--direccion-nado) 1; }
+:is(.plano-estanque,.plano-piscina) .figura-situacion-nueva:not(.en-transito,.rastro-situacion) .pose-principal {
+  animation:nado-situacion 4.2s var(--fase-nado) ease-in-out infinite;
+}
+.plano-estanque .en-transito .pose-principal,.usando-escalera .pose-principal { visibility:hidden; }
+.plano-estanque .en-transito .pose-transito,.usando-escalera .pose-transito { visibility:visible; }
+.plano-estanque .en-transito .pose-transito { animation:aleteo-situacion .22s ease-in-out infinite alternate; }
+.plano-piscina .en-transito .pose-principal { scale:-1 1; animation:brazada-situacion .6s ease-in-out infinite alternate; }
+.plano-piscina .se-retira.en-transito .pose-principal { scale:1 1; }
+.plano-piscina .usando-escalera .pose-transito { animation:pasos-situacion .24s ease-in-out infinite alternate; }
+.plano-piscina .se-retira .pose-transito { scale:-1 1; }
+.onda-situacion-nueva {
+  position:absolute; width:6cqw; height:2.4cqw; border:.4cqw solid #edffff;
+  border-radius:50%; transform:translate(-50%,-50%); animation:onda-situacion .8s ease-out both;
+}
+.onda-situacion-nueva::after {
+  content:""; position:absolute; inset:-.85cqw; border:.25cqw solid #bcfaff; border-radius:inherit;
+}
+@keyframes nado-situacion {
+  0%,100% { transform:translate(-1cqw,.4cqh) rotate(-4deg); }
+  50% { transform:translate(1cqw,-.7cqh) rotate(4deg); }
+}
+@keyframes aleteo-situacion {
+  from { transform:scale(1,.85) rotate(-9deg); }
+  to { transform:scale(.90,1.07) rotate(5deg); }
+}
+@keyframes brazada-situacion { to { transform:rotate(9deg) translateY(-.6cqh); } }
+@keyframes pasos-situacion { to { transform:translateY(-.8cqh) rotate(6deg); } }
+@keyframes onda-situacion {
+  from { scale:.45; opacity:.85; }
+  to { scale:1.7; opacity:0; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .plano-situacion-nueva .figura-situacion-nueva img { animation:none!important; }
 }
 .alumno-aula-cenital.caminando { z-index:10; }
 .pupitre-libre { animation:resaltar-pupitre-libre .7s ease-in-out 2; }
