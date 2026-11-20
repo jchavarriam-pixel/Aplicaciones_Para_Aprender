@@ -95,8 +95,11 @@ button:disabled { opacity: .62; cursor: default; }
   box-shadow: inset 0 -2px #0002, 0 1px 2px #0005; transform: translateY(-50%);
   transition: left .27s cubic-bezier(.22,.72,.31,1); touch-action: none;
 }
-.cuenta.azul { --claro:#66ddff; --base:#338cdb; --borde-cuenta:#17488e; }
-.cuenta.roja { --claro:#ffb591; --base:#ef5872; --borde-cuenta:#ac2d53; }
+.fila:nth-child(5n+1) { --claro: #66ddff; --base: #338cdb; --borde-cuenta: #17488e; }
+.fila:nth-child(5n+2) { --claro: #ffb591; --base: #ef5872; --borde-cuenta: #ac2d53; }
+.fila:nth-child(5n+3) { --claro: #bbf18f; --base: #56b771; --borde-cuenta: #24704d; }
+.fila:nth-child(5n+4) { --claro: #ffd98a; --base: #eda342; --borde-cuenta: #a65b23; }
+.fila:nth-child(5n+5) { --claro: #e0baff; --base: #aa73df; --borde-cuenta: #673aa0; }
 .fila.arrastrando .cuenta, .sin-transicion .cuenta { transition: none; }
 .fila.iluminada { background: #ffe35e4f; border-radius: 8px; }
 .fila.iluminada .cuenta[aria-pressed="true"] { box-shadow: inset 0 -2px #0002, 0 0 5px #cc8510; }

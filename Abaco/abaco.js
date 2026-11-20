@@ -41,7 +41,7 @@
       const cuentas = Array.from({length: 10}, (_, indice) => {
         const boton = document.createElement('button');
         boton.type = 'button';
-        boton.className = 'cuenta ' + ((indice < 5) !== (fila % 2 === 1) ? 'azul' : 'roja');
+        boton.className = 'cuenta';
         boton.dataset.fila = fila;
         boton.dataset.indice = indice;
         boton.tabIndex = indice === 0 ? 0 : -1;
