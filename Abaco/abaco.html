@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Mi ábaco de colores</title>
+  <link rel="stylesheet" href="../idioma-voz.css">
+  <link rel="stylesheet" href="../creditos.css">
+  <link rel="stylesheet" href="../pantalla-completa.css">
+  <link rel="stylesheet" href="../panel-plegable.css">
+  <link rel="stylesheet" href="abaco.css">
+</head>
+<body>
+  <main id="appAbaco">
+    <aside class="herramientas-abaco">
+      <header>
+        <h1><img src="../iconos/abaco.webp" width="48" height="32" alt=""> <span>Mi ábaco de colores</span></h1>
+        <label for="nombre">Nombre del niño</label>
+        <input id="nombre" placeholder="Ej.: Gabriel" maxlength="40" autocomplete="given-name">
+        <a href="../index.html" aria-label="Todas las aplicaciones" title="Todas las aplicaciones">⌂</a>
+      </header>
+      <section class="guia">
+        <h2>Así jugamos</h2>
+        <p>Las cuentas de la izquierda se cuentan. Las de la derecha esperan.</p>
+      </section>
+      <nav class="modos" aria-label="Modos del ábaco">
+        <button type="button" data-modo="libre"><b aria-hidden="true">✋</b> <span>Explora</span></button>
+        <button type="button" data-modo="suma"><b aria-hidden="true">+</b> <span>Aprende a sumar</span></button>
+        <button type="button" data-modo="resta"><b aria-hidden="true">−</b> <span>Aprende a quitar</span></button>
+      </nav>
+      <div class="ajustes">
+        <label for="capacidad">Tamaño del ábaco</label>
+        <select id="capacidad"><option value="50">50 cuentas</option><option value="100">100 cuentas</option></select>
+        <button type="button" id="abrirAjustes">⚙ Configuración</button>
+      </div>
+    </aside>
+    <section class="actividad">
+      <header class="reto">
+        <div class="texto-reto">
+          <h2 id="modoActual"></h2>
+          <p id="instruccion" aria-live="polite" data-no-traducir></p>
+        </div>
+        <div class="marcador">
+          <span id="rotuloTotal">Cuentas a la izquierda</span>
+          <output id="total" aria-labelledby="rotuloTotal" aria-live="off">0</output>
+        </div>
+      </header>
+      <div class="mesa" id="mesa">
+        <div class="marco" id="marco">
+          <div class="leyenda"><span>Se cuentan</span><span>En espera</span></div>
+          <div id="tablero" role="group" aria-label="Cuentas del ábaco"></div>
+        </div>
+      </div>
+      <div class="pie">
+        <div class="datos">
+          <p id="decenas" data-no-traducir></p>
+          <p id="operacion" data-no-traducir hidden></p>
+        </div>
+        <div class="acciones">
+          <button type="button" id="reiniciar" data-simbolo="↺"><span>↺ Vaciar ábaco</span></button>
+          <button type="button" id="nuevo" data-simbolo="✦" hidden><span>Nuevo ejemplo</span></button>
+          <button type="button" id="ensayar" data-simbolo="✋" hidden><span>Probar por mi cuenta</span></button>
+          <button type="button" id="paso" class="principal" hidden><span>Mostrar inicio</span></button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <dialog id="ajustes" aria-labelledby="tituloAjustes">
+    <form method="dialog">
+      <div class="titulo-dialogo"><h2 id="tituloAjustes">Configuración</h2><button aria-label="Aplicar y cerrar">✕</button></div>
+      <label><input type="checkbox" id="narracion"> Narrar los pasos de los ejemplos</label>
+      <label><input type="checkbox" id="mostrarDecenas"> Mostrar decenas y unidades</label>
+      <div id="vozAbaco"></div>
+      <button class="principal">Aplicar y cerrar</button>
+    </form>
+  </dialog>
+  <footer id="creditos-aplicaciones">
+    <div class="creditos-dedicatoria"><span class="creditos-gabriel">Creado para <strong>Gabriel</strong></span><span class="creditos-familia">Por su familia, con ayuda de la IA.</span></div>
+    <div class="creditos-equipo"><span class="creditos-autores">M.Sc. Jeffry Chavarría-Molina y Ph.D. (c) Natalia Rodríguez-Granados</span><span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span></div>
+  </footer>
+  <script>window.IDIOMA_VOZ_APP = 'abaco';</script>
+  <script src="../idioma-voz-textos.js"></script>
+  <script src="abaco-textos.js"></script>
+  <script src="../idioma-voz.js"></script>
+  <script src="../matematicas-base.js"></script>
+  <script src="abaco.js"></script>
+  <script src="../pantalla-completa.js"></script>
+  <script src="../panel-plegable.js?v=abaco-1"></script>
+  <script src="../nombre-compartido.js"></script>
+</body>
+</html>

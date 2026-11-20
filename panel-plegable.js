@@ -10,6 +10,7 @@
    'situaciones_problema_sumas_restas.html':['.app','.herramientas-problemas','.contenido-problemas'],
    'modelador_de_solidos_3d.html':['.app-shell','.herramientas-solidos','.app-shell>main'],
    'division.html':['#appDivision','.herramientas-division','.actividad'],
+   'abaco.html':['#appAbaco','.herramientas-abaco','.actividad'],
    'sumas_y_restas.html':['#app','.herramientas-operaciones','#gameScreen'],
    'mayor_menor_igual.html':['.app','.herramientas-signos','#gameArea'],
    'reconocer_numeros.html':['#game','#pareoSidebar,#herramientasJuego','#gameContent']
