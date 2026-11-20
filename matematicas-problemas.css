@@ -251,7 +251,7 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
   content:""; position:absolute; left:0; right:0; top:50%; height:.6cqh;
   background:repeating-linear-gradient(90deg,#fff3bcbe 0 4cqw,transparent 4cqw 8cqw);
 }
-.estacionamiento-plaza,.estacionamiento-carro {
+.estacionamiento-plaza,.estacionamiento-carro,.estacionamiento-rastro {
   position:absolute; transform:translate(-50%,-50%); pointer-events:none;
 }
 .estacionamiento-plaza {
@@ -260,11 +260,15 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
   background:#283c5b18;
 }
 .estacionamiento-plaza-inferior { transform:translate(-50%,-50%) rotate(180deg); }
+.estacionamiento-carro,.estacionamiento-rastro { width:5.5cqw; height:20cqh; object-fit:contain; }
 .estacionamiento-carro {
-  width:5.5cqw; height:20cqh; object-fit:contain; z-index:2;
+  z-index:2;
   filter:hue-rotate(var(--tono-carro)) drop-shadow(.18cqw .35cqh .25cqw #16203385);
 }
 .estacionamiento-carro-movil { z-index:3; }
+.estacionamiento-rastro {
+  z-index:1; opacity:.38; filter:grayscale(1) brightness(1.55);
+}
 
 .plano-autobus {
   position:absolute; top:50%; left:50%; width:100%; height:100%;

@@ -104,19 +104,30 @@ if (usarIlustracionesSituaciones) {
     const reducir = matchMedia("(prefers-reduced-motion: reduce)").matches;
     for (const [indice, idPuesto] of state.movingIds.entries()) {
       const carro = scene.querySelector(`.estacionamiento-carro[data-puesto="${idPuesto}"]`);
-      const puesto = puestos[idPuesto];
-      if (reducir) {
-        carro.hidden = !entrada;
-        continue;
-      }
-      const recto = {x:puesto.x,y:50,giro:90};
-      const puntos = entrada
-        ? [{x:-8,y:50,giro:90}, {...recto,x:puesto.x-4}, {...recto,giro:puesto.giro}, puesto]
-        : [puesto, {...recto,giro:puesto.giro}, {...recto,x:puesto.x+4}, {x:108,y:50,giro:90}];
-      esperarAnimacionSituacion(() => recorrer(carro,puntos,entrada), 65 + indice * 400);
+      const mover = () => {
+        if (!entrada) {
+          const rastro = carro.cloneNode();
+          rastro.className = "estacionamiento-rastro";
+          carro.before(rastro);
+        }
+        if (reducir) {
+          carro.hidden = !entrada;
+          return;
+        }
+        const puesto = puestos[idPuesto];
+        const recto = {x:puesto.x,y:50,giro:90};
+        const puntos = entrada
+          ? [{x:-8,y:50,giro:90}, {...recto,x:puesto.x-4}, {...recto,giro:puesto.giro}, puesto]
+          : [puesto, {...recto,giro:puesto.giro}, {...recto,x:puesto.x+4}, {x:108,y:50,giro:90}];
+        recorrer(carro,puntos,entrada);
+      };
+      if (reducir) mover();
+      else esperarAnimacionSituacion(mover, 65 + indice * 400);
     }
     feedback.className = "feedback";
-    feedback.textContent = isEnglish() ? "Count the cars in the parking spaces." : "Cuenta los carros en los espacios de estacionamiento.";
+    feedback.textContent = entrada
+      ? (isEnglish() ? "Count the parked cars." : "Cuenta los carros estacionados.")
+      : (isEnglish() ? "Count only the cars in color." : "Cuenta solo los carros de color.");
     speak(state.currentProblem.speak(getName(),state.total,state.change));
   }
 
