@@ -1141,7 +1141,7 @@ Los globos y los cordeles se dibujan desde el código.
             left: `${target.x}%`,
             top: `${target.y}%`,
             transform: `translate(-50%, -50%) rotate(${target.r}deg) scale(${usarIlustracionesSituaciones ? .79 : .22})`,
-            opacity: usarIlustracionesSituaciones ? .65 : 0,
+            opacity: usarIlustracionesSituaciones ? .70 : 0,
             ...(usarIlustracionesSituaciones && {filter:`hue-rotate(${tono}) grayscale(1) brightness(1.05) blur(.12cqw)`}),
             offset: 1
           }
