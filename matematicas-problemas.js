@@ -4,7 +4,7 @@ const rutaIlustracionesProblemas="ImagenesSituacionesProblemas/Ilustraciones/";
 const arteSituaciones={
   estacionamiento:["estacionamiento","carro-estacionamiento"],
   applesTree:["manzano","manzana"],
-  pearsBasket:["peras-cenital","pera"],
+  pearsBasket:["peras-servilleta","pera"],
   busPasajeros:["autobus-pasillo-amplio","alumno-aula-4"],
   danielGlobosParque:["parque-cielo-abierto","globo"],
   pajaritosCable:["cielo-pajaritos","pajarito"],

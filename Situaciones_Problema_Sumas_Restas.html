@@ -2048,7 +2048,7 @@
   </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-problemas.css?v=estacionamiento-1"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-problemas.css?v=peras-servilleta-1"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
 <body>
   <main class="app">
     <section class="hero" aria-label="Encabezado de la aplicación">
@@ -2231,9 +2231,9 @@
       x: 13.7 + (index % 5) * 7,
       y: 45 + Math.floor(index / 5) * 11
     }));
-    const smallBasketPositions = Array.from({length:10}, (_, index) => ({
+    const posicionesServilleta = Array.from({length:10}, (_, index) => ({
       x: 63.5 + (index % 5) * 5.4,
-      y: 51.5 + Math.floor(index / 5) * 9.8
+      y: 54.5 + Math.floor(index / 5) * 11.5
     }));
 
     const encouragements = [
@@ -2309,7 +2309,7 @@
       pearsBasket: {
         id: "pearsBasket",
         title: "Peras en la canasta",
-        short: "Ana toma algunas peras de una canasta. Hay que contar cuántas quedan.",
+        short: "Ana saca algunas peras de la canasta. Hay que contar cuántas quedan dentro.",
         badge: "🍐 Resta",
         operation: "subtraction",
         fruit: "pear",
@@ -2327,24 +2327,24 @@
         animate: animatePearsTaken,
         story: (name, total, change, highlight = false) => {
           if (isEnglish()) {
-            return `In a basket ${thereIs(total)} <strong>${total}</strong> ${itemWord(problems.pearsBasket, total)}, and Ana <span class="${highlight ? 'keyAction' : ''}">takes</span> <strong>${change}</strong> ${itemWord(problems.pearsBasket, change)}. How many pears are left in the basket?`;
+            return `In a basket ${thereIs(total)} <strong>${total}</strong> ${itemWord(problems.pearsBasket, total)}. Ana <span class="${highlight ? 'keyAction' : ''}">takes out</span> <strong>${change}</strong> ${itemWord(problems.pearsBasket, change)}. How many pears are left inside the basket?`;
           }
-          return `En una canasta hay <strong>${total}</strong> ${itemWord(problems.pearsBasket, total)} y Ana <span class="${highlight ? 'keyAction' : ''}">toma</span> <strong>${change}</strong> ${itemWord(problems.pearsBasket, change)}. ¿Cuántas peras quedan en la canasta?`;
+          return `En la canasta hay <strong>${total}</strong> ${itemWord(problems.pearsBasket, total)}. Ana <span class="${highlight ? 'keyAction' : ''}">saca</span> <strong>${change}</strong> ${itemWord(problems.pearsBasket, change)}. ¿Cuántas peras quedan dentro de la canasta?`;
         },
         speak: (name, total, change) => {
           if (isEnglish()) {
-            return `In a basket ${thereIs(total)} ${total} ${itemWord(problems.pearsBasket, total)}, and Ana takes ${change} ${itemWord(problems.pearsBasket, change)}. How many pears are left in the basket?`;
+            return `In a basket ${thereIs(total)} ${total} ${itemWord(problems.pearsBasket, total)}. Ana takes out ${change} ${itemWord(problems.pearsBasket, change)}. How many pears are left inside the basket?`;
           }
-          return `En una canasta hay ${total} ${itemWord(problems.pearsBasket, total)} y Ana toma ${change} ${itemWord(problems.pearsBasket, change)}. ¿Cuántas peras quedan en la canasta?`;
+          return `En la canasta hay ${total} ${itemWord(problems.pearsBasket, total)}. Ana saca ${change} ${itemWord(problems.pearsBasket, change)}. ¿Cuántas peras quedan dentro de la canasta?`;
         },
         answerQuestion: "¿Cuántas peras quedan en la canasta?",
         sceneTitle: "Observa cuántas peras quedan en la canasta",
         hintData: (total, change) => isEnglish()
-          ? `Start amount: ${thereIs(total)} <strong>${total}</strong> ${itemWord(problems.pearsBasket, total)} in the basket. Change: Ana takes <strong>${change}</strong> ${itemWord(problems.pearsBasket, change)}.`
-          : `Dato inicial: hay <strong>${total}</strong> ${itemWord(problems.pearsBasket, total)} en la canasta. Cambio: Ana toma <strong>${change}</strong> ${itemWord(problems.pearsBasket, change)}.`,
+          ? `Start amount: ${thereIs(total)} <strong>${total}</strong> ${itemWord(problems.pearsBasket, total)} in the basket. Change: Ana takes out <strong>${change}</strong> ${itemWord(problems.pearsBasket, change)}.`
+          : `Dato inicial: hay <strong>${total}</strong> ${itemWord(problems.pearsBasket, total)} en la canasta. Cambio: Ana saca <strong>${change}</strong> ${itemWord(problems.pearsBasket, change)}.`,
         hintKeyword: () => isEnglish()
-          ? `The key word is <strong>takes</strong>. If Ana takes pears from the basket, fewer pears are left.`
-          : `La palabra clave es <strong>toma</strong>. Si Ana toma peras de la canasta, quedan menos peras.`,
+          ? `Look for <strong>takes out</strong>. Removing pears leaves fewer in the basket.`
+          : `Fíjate en <strong>saca</strong>. Al sacar peras, quedan menos en la canasta.`,
         hintOperation: (total, change) => isEnglish()
           ? `Because the amount decreases, use <strong>subtraction</strong>: <strong>${total} − ${change}</strong>.`
           : `Como la cantidad disminuye, se usa una <strong>resta</strong>: <strong>${total} − ${change}</strong>.`
@@ -2446,9 +2446,9 @@
         applesSceneTitle: "Observa cuántas manzanas quedan en el árbol",
         applesQuestion: "¿Cuántas manzanas quedan en el árbol?",
         pearsTitle: "Peras en la canasta",
-        pearsShort: "Ana toma algunas peras de una canasta. Hay que contar cuántas quedan.",
+        pearsShort: "Ana saca algunas peras de la canasta. Hay que contar cuántas quedan dentro.",
         pearsBadge: "🍐 Resta",
-        pearsAnimate: "🍐 Ver cómo Ana toma peras",
+        pearsAnimate: "🍐 Ver cómo Ana saca peras",
         pearsSceneTitle: "Observa cuántas peras quedan en la canasta",
         pearsQuestion: "¿Cuántas peras quedan en la canasta?"
       },
@@ -2500,7 +2500,7 @@
         applesSceneTitle: "Watch how many apples are left on the tree",
         applesQuestion: "How many apples are left on the tree?",
         pearsTitle: "Pears in the basket",
-        pearsShort: "Ana takes some pears from a basket. Count how many are left.",
+        pearsShort: "Ana takes some pears out of the basket. Count how many are left inside.",
         pearsBadge: "🍐 Subtraction",
         pearsAnimate: "🍐 Watch Ana take pears",
         pearsSceneTitle: "Watch how many pears are left in the basket",
@@ -3567,43 +3567,49 @@
       if (state.animated) return;
       state.animated = true;
       feedback.className = "feedback";
-      feedback.textContent = isEnglish()
-        ? `Watch how Ana takes ${state.change === 1 ? "one pear" : "some pears"} and puts ${state.change === 1 ? "it" : "them"} in her small basket. The pears left in the large basket are the answer.`
-        : `Mira cómo Ana toma ${state.change === 1 ? "una pera" : "algunas peras"} y ${state.change === 1 ? "la pone" : "las pone"} en su canasta pequeña. Las que quedan en la canasta grande son la respuesta.`;
+      feedback.textContent = isEnglish() ? "Count the pears inside the basket." : "Cuenta las peras dentro de la canasta.";
       updateText();
 
       const movingSet = new Set(state.movingIds);
+      const reducirMovimiento = matchMedia("(prefers-reduced-motion: reduce)").matches;
       state.movingIds.forEach((id, index) => {
         const pos = basketPositions[id];
-        const target = smallBasketPositions[index];
+        const target = posicionesServilleta[index];
         const delay = index * 290;
         const fruit = scene.querySelector(`.fruit[data-id="${id}"]`);
-        const ghost = createFruit("pear", `ghost-${id}`, pos, "fruitGhost");
-        scene.appendChild(ghost);
+        const poseFinal = `translate(-50%, -50%) rotate(${index % 2 === 0 ? 12 : -10}deg) scale(.80)`;
+        const dejarEnServilleta = () => {
+          fruit.style.left = `${target.x}%`;
+          fruit.style.top = `${target.y}%`;
+          fruit.style.transform = poseFinal;
+          fruit.classList.add("pera-en-servilleta");
+        };
+        if (reducirMovimiento) {
+          dejarEnServilleta();
+          return;
+        }
 
         esperarEnEscena(() => {
-          ghost.classList.add("show");
+          fruit.classList.add("pera-en-movimiento");
           const take = fruit.animate([
             { left: `${pos.x}%`, top: `${pos.y}%`, transform: "translate(-50%, -50%) rotate(0deg) scale(1)", offset: 0 },
             { left: "57%", top: "39%", transform: "translate(-50%, -50%) rotate(-8deg) scale(1.08)", offset: .55 },
-            { left: `${target.x}%`, top: `${target.y}%`, transform: `translate(-50%, -50%) rotate(${index % 2 === 0 ? 12 : -10}deg) scale(.80)`, offset: 1 }
+            { left: `${target.x}%`, top: `${target.y}%`, transform: poseFinal, offset: 1 }
           ], {
             duration: 1350,
             easing: "cubic-bezier(.2,.85,.25,1)",
             fill: "forwards"
           });
           take.onfinish = () => {
-            ghost.remove();
-            fruit.style.left = `${target.x}%`;
-            fruit.style.top = `${target.y}%`;
-            fruit.style.transform = `translate(-50%, -50%) rotate(${index % 2 === 0 ? 12 : -10}deg) scale(.80)`;
-            fruit.style.zIndex = 11;
+            dejarEnServilleta();
+            fruit.classList.remove("pera-en-movimiento");
+            take.cancel();
           };
         }, delay + 80);
       });
 
       scene.querySelectorAll(".fruit").forEach(fruit => {
-        if (!movingSet.has(Number(fruit.dataset.id))) {
+        if (!reducirMovimiento && !movingSet.has(Number(fruit.dataset.id))) {
           fruit.animate([
             { transform: "translate(-50%, -50%) scale(1)" },
             { transform: "translate(-50%, -50%) scale(1.08)" },
@@ -3797,7 +3803,7 @@
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="matematicas-problemas.js?v=estacionamiento-1"></script><script src="pantalla-completa.js"></script>
+<script src="matematicas-problemas.js?v=peras-servilleta-1"></script><script src="pantalla-completa.js"></script>
 <script src="panel-plegable.js?v=historias-1"></script>
 <script src="nombre-compartido.js"></script>
 </body>

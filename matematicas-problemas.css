@@ -124,7 +124,7 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 .compacta.horizontal .app .operationRow { gap:calc(2 * var(--unidad)); }
 
 .scene[data-story=applesTree] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/manzano.webp"); }
-.scene[data-story=pearsBasket] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/peras-cenital.webp"); }
+.scene[data-story=pearsBasket] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/peras-servilleta.webp"); }
 .scene[data-story=estacionamiento] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/estacionamiento.webp"); }
 .scene[data-story=danielGlobosParque] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/parque-cielo-abierto.webp"); }
 .scene[data-story=pajaritosCable] { --fondo-escena:url("ImagenesSituacionesProblemas/Ilustraciones/cielo-pajaritos.webp"); }
@@ -243,6 +243,7 @@ body { width:var(--ancho-problemas,100%) !important; min-height:0!important; bac
 
 .scene[data-story=applesTree] :is(.fruit,.fruitGhost,.fruitShadow) { width:5.025cqw; height:6.825cqh; }
 .scene[data-story=pearsBasket] :is(.fruit,.fruitGhost) { width:7.08cqw; height:10.32cqh; }
+.scene[data-story=pearsBasket] :is(.pera-en-movimiento,.pera-en-servilleta) { z-index:11; }
 .estacionamiento-plano {
   position:absolute; inset:0;
 }
