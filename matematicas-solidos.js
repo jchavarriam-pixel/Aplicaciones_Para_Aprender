@@ -2,7 +2,7 @@
   "use strict";
 
   Object.assign(window.TEXTOS_INGLES, ES_EN, {
-    "Explorar":"Explore", "Clasificar":"Classify", "Evaluación":"Assessment",
+    "Explorar":"Explore", "Pareo":"Matching","Pareo de sólidos":"Solid matching", "Evaluación":"Assessment",
     "Gira sólidos y descubre sus partes.":"Rotate solids and discover their parts.",
     "Une cada sólido con su nombre.":"Match each solid with its name.",
     "Cuenta caras, aristas o vértices.":"Count faces, edges, or vertices.",
@@ -150,14 +150,15 @@
     window.AppsFullscreen.navigate("index.html");
   };
 
-  const fit=Matematicas.pantalla(app,(height,zoom)=>{
-    const width=visualViewport?.width||document.documentElement.clientWidth;
+  const fit=Matematicas.pantalla(app,(_,zoom)=>{
+    const {clientWidth:width,clientHeight:height}=document.documentElement;
     const availableWidth=width/zoom+"px";
     if(document.body.style.getPropertyValue("--ancho-solidos")!==availableWidth)document.body.style.setProperty("--ancho-solidos",availableWidth);
-    app.classList.toggle("horizontal",width>height*zoom);
+    app.style.setProperty("--alto-util",height/zoom+"px");
+    app.classList.toggle("horizontal",width>height);
     app.style.setProperty("--unidad",1/zoom+"px");
     app.style.setProperty("--escala-modelo",String(1/zoom));
-    app.classList.toggle("compacta",height*zoom<500);
+    app.classList.toggle("compacta",height<500);
     updateLayout();
     for(const board of $$(".matching-board")){
       const n=board.querySelector(".matching-list").children.length||1;
@@ -240,9 +241,7 @@ function installSolidMatching(mode){
     selected?.setAttribute("aria-pressed","true");
   }
   function preview(event,source){
-    const bounds=svg.getBoundingClientRect();
-    const scale=Matematicas.escala();
-    draw({[previewKey]:source.dataset[sourceKey],x:(event.clientX-bounds.left)/scale,y:(event.clientY-bounds.top)/scale});
+    draw({[previewKey]:source.dataset[sourceKey],...puntoEnPareo(svg,event.clientX,event.clientY)});
   }
   function connect(target){
     if(!selected||state[lockKey])return;
@@ -277,7 +276,7 @@ function installSolidMatching(mode){
         scrollFrame=requestAnimationFrame(scrollWithPointer);
       }
       if(drag.moved){
-        moveRocketFlight(event.clientX,event.clientY,source.dataset.color);
+        moveRocketFlight(event.clientX,event.clientY);
         preview(event,source);
       }
     });

@@ -92,7 +92,7 @@ body{background:linear-gradient(145deg,#e9f8ff,#f3ecff 60%,#fff5dc)}
 .match-source::before{content:"";position:absolute;inset:calc(-7 * var(--unidad))}
 .matching-board .match-target.correct::after,.matching-board .match-target.wrong::after{right:calc(-22 * var(--unidad));width:calc(20 * var(--unidad));height:calc(20 * var(--unidad));font-size:calc(15 * var(--unidad))}
 .nombre-evaluacion-solidos{position:absolute;left:0;bottom:0;max-width:83%;padding:0 calc(4 * var(--unidad));border-radius:6px;background:#fffffff0;font-size:calc(10 * var(--unidad));color:#4d3c90;font-weight:800;pointer-events:none}
-.acciones-solidos{padding:0 calc(48 * var(--unidad))}
+.acciones-solidos{padding-inline:calc(8 * var(--unidad)) calc(104 * var(--unidad) + env(safe-area-inset-right))}
 .acciones-solidos .success{background:linear-gradient(135deg,#5840be,#2353ac)}
 #settingsBackdrop{zoom:var(--inverso-panel-compartido,1);border:0;padding:0;border-radius:22px;background:transparent;width:min(760px,calc(100% - 20px));max-height:calc(100dvh - 20px)}
 #settingsBackdrop::backdrop{background:#222b5299}
@@ -118,4 +118,83 @@ body{width:var(--ancho-solidos,100%)!important;min-height:0!important}
 #readQuestionBtn:not([hidden])+#evalInstruction{min-height:calc(28 * var(--unidad));padding-right:calc(109 * var(--unidad))}
 .app-shell[data-modo=presentation] #cornerAnimate{background:#e8dcff}
 
-.flight-rocket,.rocket-trail,.match-spark,.firework-ring,.firework-wave,.firework-shape,.mega-wave,.final-rocket,.firework-dim{zoom:var(--inverso-panel-compartido,1)}
+.flight-rocket,.match-spark,.firework-ring,.firework-wave,.firework-shape,.mega-wave,.final-rocket,.firework-dim{zoom:var(--inverso-panel-compartido,1)}
+
+.desplazamiento-pareo:has(>#matchingBoard) {
+  container-type:size;
+  display:grid;
+  align-items:safe center;
+}
+#matchingBoard {
+  --separacion-filas:calc(5 * var(--unidad));
+  --alto-ficha:clamp(calc(48 * var(--unidad)),calc((100cqh - 44 * var(--unidad) - (var(--filas) - 1) * var(--separacion-filas)) / var(--filas)),calc(100 * var(--unidad)));
+  width:100%;
+  height:auto;
+  min-height:0;
+  grid-template-columns:minmax(0,calc(152 * var(--unidad))) minmax(0,calc(192 * var(--unidad)));
+  justify-content:center;
+  column-gap:clamp(calc(46 * var(--unidad)),35%,calc(478 * var(--unidad)));
+}
+#matchingBoard .matching-list {
+  grid-template-rows:repeat(var(--filas),var(--alto-ficha));
+  gap:var(--separacion-filas);
+}
+#matchingBoard .classification-card {
+  justify-self:end;
+  width:min(100%,calc(1.2 * var(--alto-ficha)));
+  border-radius:calc(13 * var(--unidad));
+}
+#matchingBoard .matching-column:first-of-type h3 { text-align:right; }
+#matchingBoard .matching-column:last-of-type h3 { text-align:left; }
+#matchingBoard .match-target {
+  height:min(100%,calc(55 * var(--unidad)));
+  font-size:clamp(calc(12 * var(--unidad)),4cqw,calc(17 * var(--unidad)));
+  padding-inline:calc(16 * var(--unidad)) calc(6 * var(--unidad));
+}
+.matching-board .match-dot {
+  --luz-planeta:#a8f8ff;
+  --color-planeta:#3a9ee0;
+  --sombra-planeta:#29468d;
+  --anillo-planeta:#e8f5ff;
+  left:calc(-20 * var(--unidad));
+  width:calc(34 * var(--unidad));
+  height:calc(30 * var(--unidad));
+  display:grid;
+  place-items:center;
+  border:0;
+  box-shadow:none;
+  background:none;
+  z-index:3;
+}
+.match-target-row:nth-child(4n+2) .match-dot {
+  --luz-planeta:#ffe8ad; --color-planeta:#f18d62; --sombra-planeta:#9e4670; --anillo-planeta:#ffe1b6;
+}
+.match-target-row:nth-child(4n+3) .match-dot {
+  --luz-planeta:#fee0ff; --color-planeta:#ae75ee; --sombra-planeta:#54319d; --anillo-planeta:#f2cbff;
+}
+.match-target-row:nth-child(4n+4) .match-dot {
+  --luz-planeta:#eafcae; --color-planeta:#4fcbaf; --sombra-planeta:#267786; --anillo-planeta:#d3fff0;
+}
+.matching-board .match-dot::before {
+  content:"";
+  width:calc(26 * var(--unidad));
+  aspect-ratio:1;
+  border-radius:50%;
+  background:radial-gradient(circle at 29% 24%,#fff9,transparent 36%),
+    repeating-linear-gradient(155deg,transparent 0 22%,#fff3 23% 34%,transparent 35% 49%),
+    radial-gradient(circle at 25% 16%,var(--luz-planeta),var(--color-planeta) 50%,var(--sombra-planeta) 88%);
+  box-shadow:0 1px 3px #24325e70,inset 0 0 0 1px #fff9;
+}
+.matching-board .match-dot::after {
+  content:"";
+  position:absolute;
+  width:95%;
+  height:32%;
+  border:calc(2 * var(--unidad)) solid var(--anillo-planeta);
+  border-top-color:transparent;
+  border-radius:50%;
+  rotate:-24deg;
+  filter:drop-shadow(0 1px 1px #26345d80);
+}
+.flight-rocket.cohete-explota { animation:estalla-cohete-solidos .18s ease-out forwards; }
+@keyframes estalla-cohete-solidos { to { scale:1.65; opacity:0; } }
