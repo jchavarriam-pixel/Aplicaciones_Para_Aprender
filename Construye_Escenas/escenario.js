@@ -1,6 +1,7 @@
 (() => {
   const ancho = 760, alto = 440, piso = 396;
   const altoCasaAbierta = 205, proporcionCasaAbierta = 560 / 406;
+  const altoCamion = 104;
   const escala = z => .58 + z * .58;
   const anchoVista = z => 600 + 120 * z;
   const proyectar = (x, z, h = 0) => [380 + (x - .5) * anchoVista(z), 145 + 246 * z - h * escala(z)];
@@ -103,17 +104,24 @@
       [25,345,259,218],[315,345,261,218],[605,345,265,218],
       [17,647,276,205],[309,647,276,206],[600,647,281,206]
     ],
+    'camiones-frente': [[34,9,233,282],[334,9,233,282],[634,9,233,282]],
+    'camiones-lado': [[9,46,282,209],[309,46,282,209],[609,46,282,209]],
     recreopiezas: [[25,28,271,261],[305,46,290,231],[605,76,286,206],[7,341,289,224],[604,352,289,218]],
     extra: [[14,17,277,268],[326,7,239,278],[606,10,282,275],[9,291,288,282],[321,335,271,219],
       [605,291,287,285],[8,588,289,296],[310,590,279,276],[604,626,289,213]]
   };
+  const coloresVehiculo = ['rojo','azul','amarillo'];
   const ids = {
-    coches: ['carro','camion','autobus'].flatMap(tipo => ['rojo','azul','amarillo'].map(color => tipo + '-' + color)),
+    coches: ['carro','camion','autobus'].flatMap(tipo => coloresVehiculo.map(color => tipo + '-' + color)),
+    'camiones-frente': coloresVehiculo.map(color => 'camion-' + color + '-frente'),
+    'camiones-lado': coloresVehiculo.map(color => 'camion-' + color + '-lado'),
     recreopiezas: ['tobogan','columpios','trampolin','bicicleta','cerca'],
     extra: ['perro','gato','oveja','vaca','pajaro','caballo','escuela','sol','nube']
   };
   const alturas = {
-    coches: [71,71,71,104,104,104,111,111,111], recreopiezas: [107,110,62,63,65],
+    coches: [71,71,71,altoCamion,altoCamion,altoCamion,111,111,111], recreopiezas: [107,110,62,63,65],
+    'camiones-frente': [altoCamion,altoCamion,altoCamion],
+    'camiones-lado': [altoCamion,altoCamion,altoCamion],
     extra: [47,35,61,88,33,105,218,63,59]
   };
   const atlasPieza = {};
@@ -130,9 +138,17 @@
     const alto = tamano * (z < 0 ? .74 : escala(z));
     return {ancho: alto * w / h, alto};
   }
-  function objetoEnEscena(id, x, z) {
+  function vistaObjeto(id, x, z, terreno) {
+    if (!id.startsWith('camion-')) return {id, reflejar: false};
+    // La calle del barrio es horizontal. En la terminal, el acceso central apunta al frente.
+    if (terreno === 'terminal' && x >= .33 && x <= .67) return {id: id + '-frente', reflejar: false};
+    const reflejar = terreno === 'barrio' ? z >= .615 : x < .33;
+    return {id: id + '-lado', reflejar};
+  }
+  function objetoEnEscena(id, x, z, terreno) {
     const [px] = proyectar(x,z);
-    const mitad = dimensionesObjeto(id,z).ancho / 2;
+    const vista = vistaObjeto(id,x,z,terreno);
+    const mitad = dimensionesObjeto(vista.id,z).ancho / 2;
     return px - mitad >= 5 && px + mitad <= ancho - 5;
   }
   function visibleFueraDeCasa(id, x, z, casa) {
@@ -339,7 +355,7 @@
         break;
     }
   }
-  function paisajeObjeto(ctx, id, x, z, h = 0) {
+  function paisajeObjeto(ctx, id, x, z, h = 0, terreno) {
     const [sx, sy] = proyectar(x, z);
     if (z >= 0) {
       ctx.save();
@@ -351,13 +367,19 @@
       elipse(ctx, 0, 0, 43 + h * .14, 43 + h * .14, sombra);
       ctx.restore();
     }
-    const imagen = atlas.get(atlasPieza[id]);
+    const vista = vistaObjeto(id,x,z,terreno);
+    const spriteId = atlas.has(atlasPieza[vista.id]) ? vista.id : id;
+    const imagen = atlas.get(atlasPieza[spriteId]);
     if (imagen) {
-      const [origenX,origenY,anchoImagen,altoImagen] = recortes[id];
-      const {ancho, alto} = dimensionesObjeto(id,z);
+      const [origenX,origenY,anchoImagen,altoImagen] = recortes[spriteId];
+      const {ancho, alto} = dimensionesObjeto(spriteId,z);
       const agua = id === 'pato' ? .87 : 1;
       const [,base] = proyectar(x,z,h);
-      ctx.drawImage(imagen, origenX, origenY, anchoImagen, altoImagen * agua, sx - ancho/2, base - alto * (z < 0 ? .16 : agua), ancho, alto * agua);
+      ctx.save();
+      ctx.translate(sx, base);
+      if (vista.reflejar) ctx.scale(-1, 1);
+      ctx.drawImage(imagen, origenX, origenY, anchoImagen, altoImagen * agua, -ancho/2, -alto * (z < 0 ? .16 : agua), ancho, alto * agua);
+      ctx.restore();
       return;
     }
     if (['casa','tienda','banco'].includes(id)) { construccion(ctx,id,x,z,h); return; }

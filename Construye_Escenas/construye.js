@@ -139,10 +139,13 @@
     puestasEnPaso = 0;
     if (!esBloques()) {
       const [inicial, ...resto] = reto.objetos;
-      ordenPaisaje = reto.terreno === 'terminal' ? [
-        ...mezclar(reto.objetos.filter(id => /^(carro|camion|autobus)-/.test(id))).slice(0, 3),
-        ...mezclar(reto.objetos.filter(id => !/^(carro|camion|autobus)-/.test(id)))
-      ] : [inicial, ...mezclar(resto)];
+      if (reto.terreno === 'terminal') {
+        const llegada = ['camion','carro','autobus'].map(tipo =>
+          mezclar(reto.objetos.filter(id => id.startsWith(tipo + '-')))[0]);
+        ordenPaisaje = [...llegada, ...mezclar(reto.objetos.filter(id => !llegada.includes(id)))];
+      } else {
+        ordenPaisaje = [inicial, ...mezclar(resto)];
+      }
       pasoPaisaje = siguientePaisaje(reto, colocadas, historial, ordenPaisaje);
     }
     opciones = [];
@@ -236,7 +239,7 @@
   }
   function dibujarPieza(item, elevacion = 0) {
     if (esBloques()) escena.bloque(ctx, piezas[item.id], item.x, item.y - elevacion);
-    else escena.paisajeObjeto(ctx, item.id, item.x, item.z, elevacion);
+    else escena.paisajeObjeto(ctx, item.id, item.x, item.z, elevacion, reto.terreno);
   }
   const coloresFuegos = ['#ffe25e','#ff6ba2','#68edff','#caa0ff','#ff9652','#f9ffff'];
   function celebrar() {
