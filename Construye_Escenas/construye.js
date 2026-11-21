@@ -236,7 +236,7 @@
   }
   function dibujarPieza(item, elevacion = 0) {
     if (esBloques()) escena.bloque(ctx, piezas[item.id], item.x, item.y - elevacion);
-    else escena.paisajeObjeto(ctx, item.id, item.x, item.z, elevacion, Boolean(item.contenedor));
+    else escena.paisajeObjeto(ctx, item.id, item.x, item.z, elevacion);
   }
   const coloresFuegos = ['#ffe25e','#ff6ba2','#68edff','#caa0ff','#ff9652','#f9ffff'];
   function celebrar() {

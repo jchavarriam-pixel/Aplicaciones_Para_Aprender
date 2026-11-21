@@ -1,6 +1,6 @@
 (() => {
   const ancho = 760, alto = 440, piso = 396;
-  const altoCasaAbierta = 158;
+  const altoCasaAbierta = 205, proporcionCasaAbierta = 560 / 406;
   const escala = z => .58 + z * .58;
   const anchoVista = z => 600 + 120 * z;
   const proyectar = (x, z, h = 0) => [380 + (x - .5) * anchoVista(z), 145 + 246 * z - h * escala(z)];
@@ -81,20 +81,20 @@
   const fondos = new Map();
   const recortes = {
     fuente: [23, 25, 211, 199, 81],
-    nino: [318, 10, 99, 226, 100],
-    nina: [523, 16, 132, 219, 100],
-    pato: [757, 36, 165, 188, 53],
-    pelota: [996, 46, 171, 173, 34],
-    arbol: [19, 254, 218, 209, 137],
-    banco: [264, 301, 208, 140, 53],
-    flores: [501, 267, 190, 188, 49],
-    casa: [720, 269, 226, 177, 117],
-    conejo: [982, 258, 187, 197, 56],
-    barco: [30, 496, 191, 199, 77],
-    sombrilla: [260, 493, 205, 202, 93],
-    castillo: [496, 497, 224, 192, 60],
-    tienda: [720, 522, 235, 153, 79],
-    fogata: [995, 498, 167, 195, 68]
+    nino: [318, 10, 99, 226, 73],
+    nina: [523, 16, 132, 219, 73],
+    pato: [757, 36, 165, 188, 34],
+    pelota: [996, 46, 171, 173, 24],
+    arbol: [19, 254, 218, 209, 169],
+    banco: [264, 301, 208, 140, 47],
+    flores: [501, 267, 190, 188, 33],
+    casa: [720, 269, 226, 177, 190],
+    conejo: [982, 258, 187, 197, 36],
+    barco: [30, 496, 191, 199, 97],
+    sombrilla: [260, 493, 205, 202, 101],
+    castillo: [496, 497, 224, 192, 40],
+    tienda: [720, 522, 235, 153, 81],
+    fogata: [995, 498, 167, 195, 48]
   };
   const atlas = new Map();
   const grupos = {
@@ -113,8 +113,8 @@
     extra: ['perro','gato','oveja','vaca','pajaro','caballo','escuela','sol','nube']
   };
   const alturas = {
-    coches: [73,73,73,90,90,90,92,92,92], recreopiezas: [105,93,67,62,79],
-    extra: [71,58,76,104,56,111,150,63,59]
+    coches: [71,71,71,104,104,104,111,111,111], recreopiezas: [107,110,62,63,65],
+    extra: [47,35,61,88,33,105,218,63,59]
   };
   const atlasPieza = {};
   for (const id of Object.keys(recortes)) atlasPieza[id] = 'objetos';
@@ -124,6 +124,22 @@
       recortes[id] = [...caja, alturas[grupo][i]];
       atlasPieza[id] = grupo;
     });
+  }
+  function dimensionesObjeto(id, z) {
+    const [, , w, h, tamano] = recortes[id] ?? [0,0,proporcionCasaAbierta,1,altoCasaAbierta];
+    const alto = tamano * (z < 0 ? .74 : escala(z));
+    return {ancho: alto * w / h, alto};
+  }
+  function objetoEnEscena(id, x, z) {
+    const [px] = proyectar(x,z);
+    const mitad = dimensionesObjeto(id,z).ancho / 2;
+    return px - mitad >= 5 && px + mitad <= ancho - 5;
+  }
+  function visibleFueraDeCasa(id, x, z, casa) {
+    if (z >= casa.z) return true;
+    const [px] = proyectar(x,z), [cx] = proyectar(casa.x,casa.z);
+    return Math.abs(px - cx) >= dimensionesObjeto('casa-abierta',casa.z).ancho / 2 +
+      dimensionesObjeto(id,z).ancho / 4;
   }
   function cargarFondos(alCargar) {
     for (const tipo of ['rio','parque','playa','granja','campamento','barrio','terminal','recreo']) {
@@ -323,7 +339,7 @@
         break;
     }
   }
-  function paisajeObjeto(ctx, id, x, z, h = 0, enInterior = false) {
+  function paisajeObjeto(ctx, id, x, z, h = 0) {
     const [sx, sy] = proyectar(x, z);
     if (z >= 0) {
       ctx.save();
@@ -337,9 +353,8 @@
     }
     const imagen = atlas.get(atlasPieza[id]);
     if (imagen) {
-      const [origenX,origenY,anchoImagen,altoImagen,tamano] = recortes[id];
-      const alto = tamano * (z < 0 ? .74 : escala(z)) * (enInterior ? .56 : 1);
-      const ancho = alto * anchoImagen / altoImagen;
+      const [origenX,origenY,anchoImagen,altoImagen] = recortes[id];
+      const {ancho, alto} = dimensionesObjeto(id,z);
       const agua = id === 'pato' ? .87 : 1;
       const [,base] = proyectar(x,z,h);
       ctx.drawImage(imagen, origenX, origenY, anchoImagen, altoImagen * agua, sx - ancho/2, base - alto * (z < 0 ? .16 : agua), ancho, alto * agua);
@@ -376,5 +391,5 @@
     }
     ctx.restore();
   }
-  return window.EscenarioConstruccion = {ancho,alto,piso,proyectar,desdePantalla,dentroCasa,bloque,fondoBloques,cargarFondos,terreno,paisajeObjeto,ficha,poligono,elipse,linea};
+  return window.EscenarioConstruccion = {ancho,alto,piso,proyectar,desdePantalla,dentroCasa,objetoEnEscena,visibleFueraDeCasa,bloque,fondoBloques,cargarFondos,terreno,paisajeObjeto,ficha,poligono,elipse,linea};
 })();

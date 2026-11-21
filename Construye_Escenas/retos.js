@@ -162,7 +162,7 @@
 
   const zonaTablero = (x,z) => x >= .035 && x <= .965 && z >= -.57 && z <= .99;
   function posicionValida(paso, x, z, colocadas) {
-    if (!paso.zona(x,z)) return false;
+    if (!paso.zona(x,z) || !EscenarioConstruccion.objetoEnEscena(paso.id,x,z)) return false;
     return colocadas.every(a => a === paso.contenedor ||
       (contenedores.has(a.id) ? !interior(x,z,a) && dist(x,z,a) >= .095 :
         dist(x,z,a) >= (paso.contenedor ? .05 : .088)));
@@ -202,8 +202,10 @@
     const sitio = ref ? par(direccion.es + (ref.es.startsWith('el ') ? ' del ' + ref.es.slice(3) : ' de ' + ref.es),
       direccion.en + ' ' + ref.en) : lugar[suelo];
     const contenedor = tipo === 'dentro' ? a : null;
-    const zona = (x,z) => superficie(x,z,suelo,reto) && (!a || coincide(x-a.x,z-a.z,
-      EscenarioConstruccion.proyectar(x,z)[0] - EscenarioConstruccion.proyectar(a.x,a.z)[0],interior(x,z,a)));
+    const zona = (x,z) => superficie(x,z,suelo,reto) && (!a || (
+      coincide(x-a.x,z-a.z,EscenarioConstruccion.proyectar(x,z)[0] - EscenarioConstruccion.proyectar(a.x,a.z)[0],interior(x,z,a)) &&
+      (tipo !== 'fuera' || a.id !== 'casa-abierta' || EscenarioConstruccion.visibleFueraDeCasa(id,x,z,a))
+    ));
     return {id,cantidad,contenedor,tipo,ancla:a,zona,texto:par('Pon ' + objeto.es + ' ' + sitio.es + '.',
       'Put ' + objeto.en + ' ' + sitio.en + '.')};
   }
