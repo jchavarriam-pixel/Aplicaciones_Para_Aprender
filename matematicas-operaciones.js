@@ -48,8 +48,23 @@ document.addEventListener('DOMContentLoaded', () => {
   instruccion.textContent = 'Completa la operación.';
   const hint = document.getElementById('hintBar');
   hint.setAttribute('role','status');
-  cabeceraTablero.append(instruccion);
+  const botonAbaco = document.createElement('button');
+  botonAbaco.type = 'button';
+  botonAbaco.className = 'boton-abaco-operaciones';
+  botonAbaco.textContent = '🧮 Ábaco';
+  cabeceraTablero.append(instruccion, botonAbaco);
   game.prepend(cabeceraTablero, hint);
+  const abaco = AbacoOperaciones.instalar(botonAbaco, () => {
+    if (!topDigits.length) return null;
+    const tarea = findCurrentTask();
+    const columna = tarea.type === 'carry' ? tarea.col + 1 : tarea.type === 'answer' ? tarea.col : 0;
+    if (currentOperation === '+') {
+      const llevada = Number(carrySlots[columna] === 1 && expectedCarryIn[columna] === 1);
+      return {columna, signo: '+', m: topDigits[columna], n: bottomDigits[columna] + llevada, llevada};
+    }
+    const m = currentTop[columna], n = bottomDigits[columna];
+    return {columna, signo: '-', m, n, prestamo: m < n};
+  });
   const lugarAcciones = document.createComment('Acciones junto al panel');
   botones.before(lugarAcciones);
   function situarAcciones() {
@@ -164,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
     guardar();
     newProblem();
   });
-  IdiomaVoz.instalar('#preferenciasOperaciones');
+  IdiomaVoz.instalar('#preferenciasOperaciones', {cambioIdioma: abaco.localizar});
   startGameValidated();
   updateModeVisibility();
   initBackgroundMusic();

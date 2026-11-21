@@ -223,7 +223,7 @@
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
   <link rel="stylesheet" href="panel-ancho-ajustable.css?v=20261118-1">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-operaciones.css?v=organizacion-1"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="signos-celebraciones.css?v=20261118-5"><link rel="stylesheet" href="signos-escenas.css?v=20261118-1"><script>window.IDIOMA_VOZ_APP='operaciones';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-operaciones-textos.js?v=organizacion-1"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-operaciones.css?v=organizacion-1"><link rel="stylesheet" href="Abaco/cuentas.css"><link rel="stylesheet" href="Abaco/flotante-operaciones.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="signos-celebraciones.css?v=20261118-5"><link rel="stylesheet" href="signos-escenas.css?v=20261118-1"><script>window.IDIOMA_VOZ_APP='operaciones';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-operaciones-textos.js?v=organizacion-1"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
 <body>
   <div class="app-wrapper" id="app">
     <audio id="bgMusic" loop preload="auto"><source src="data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQIAAAAAAAA=" type="audio/wav"></audio>
@@ -782,6 +782,7 @@
       FiestaSignos.cerrar();
       document.getElementById('levelLabel').textContent = getOperationModeText() + ' de ' + digits + ' dígitos';
       genProblem();
+      document.dispatchEvent(new CustomEvent('operacion-cambiada', {detail: {nuevaRonda: true}}));
       isAnswerCorrect = false;
       clearAudioGuide();
       renderBoard();
@@ -800,6 +801,7 @@
       carrySlots = new Array(digits).fill(null);
       leadingAnswer = null;
       isAnswerCorrect = false;
+      document.dispatchEvent(new CustomEvent('operacion-cambiada', {detail: {nuevaRonda: true}}));
       clearAudioGuide();
       renderBoard();
       updateHint();
@@ -1211,6 +1213,7 @@
     }
 
     function updateHint() {
+      document.dispatchEvent(new Event('operacion-cambiada'));
       const bar = document.getElementById('hintBar');
       if (!helpOn) { bar.textContent = ''; return; }
 
@@ -1509,7 +1512,7 @@
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="signos-escenas.js?v=20261118-2"></script><script src="operaciones-globos.js?v=1"></script><script src="signos-celebraciones.js?v=operaciones-2"></script><script src="operaciones-pasos.js?v=recta-1"></script><script src="matematicas-operaciones.js?v=organizacion-1"></script><script src="pantalla-completa.js"></script><script src="panel-plegable.js?v=operaciones-1"></script>
+<script src="signos-escenas.js?v=20261118-2"></script><script src="operaciones-globos.js?v=1"></script><script src="signos-celebraciones.js?v=operaciones-2"></script><script src="operaciones-pasos.js?v=recta-1"></script><script src="Abaco/cuentas.js"></script><script src="Abaco/flotante-operaciones.js"></script><script src="matematicas-operaciones.js?v=abaco-1"></script><script src="pantalla-completa.js"></script><script src="panel-plegable.js?v=operaciones-1"></script>
 <script src="nombre-compartido.js"></script>
 <script src="panel-ancho-ajustable.js?v=operaciones-1"></script>
 </body>

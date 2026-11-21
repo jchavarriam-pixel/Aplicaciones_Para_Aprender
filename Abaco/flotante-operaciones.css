@@ -1,0 +1,92 @@
+#abaco-flotante {
+  position: fixed;
+  z-index: 999;
+  left: 8px;
+  top: 54px;
+  width: min(340px, calc(100% - 16px));
+  max-height: calc(100dvh - 16px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #849ad8;
+  border-radius: 15px;
+  background: #f5f8ff;
+  color: #263c66;
+  box-shadow: 0 8px 26px #21376549;
+  font: 750 14px/1.26 Nunito, "Trebuchet MS", system-ui, sans-serif;
+}
+#abaco-flotante [hidden], #abaco-flotante[hidden] { display: none !important; }
+#abaco-flotante > header { display: flex; justify-content: space-between; gap: 3px; background: #e6edff; flex: none; }
+#abaco-flotante button, #abaco-flotante select { color: inherit; font: inherit; }
+#abaco-flotante button:focus-visible, #abaco-flotante select:focus-visible { outline: 3px solid #1f3dae; outline-offset: 2px; }
+#abaco-flotante > header button {
+  min-height: 38px;
+  padding: 4px 8px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+#abaco-flotante > header .mover-abaco {
+  flex: auto;
+  text-align: start;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+#abaco-flotante > header .mover-abaco:active { cursor: grabbing; }
+#abaco-flotante [data-abaco="cerrar"] { min-width: 36px; }
+.interior-abaco { display: grid; gap: 5px; overflow: auto; overscroll-behavior: contain; padding: 6px; }
+.opciones-abaco { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; }
+.opciones-abaco select, .pie-abaco-operaciones button {
+  min-height: 34px;
+  padding: 3px 6px;
+  border: 1px solid #a8bbe5;
+  border-radius: 8px;
+  background: #fff;
+}
+.opciones-abaco output {
+  margin-inline-start: auto;
+  padding: 3px 6px;
+  border-radius: 7px;
+  background: #e8edff;
+  font-size: 1.04rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+#abaco-flotante [data-abaco="mensaje"] { margin: 0; }
+.marco-abaco-operaciones {
+  border: 5px solid #9c5c35;
+  border-radius: 12px;
+  padding: 2px 5px 3px;
+  background: linear-gradient(90deg, #ecf8ff 0 45%, #fcf3dd 55%);
+}
+.leyenda-abaco-operaciones { display: flex; justify-content: space-between; gap: 2px; font-size: 11px; }
+#abaco-flotante .abaco-cuentas { height: 76px; --alto-cuenta: 32px; }
+#abaco-flotante .cuenta { transition-duration: .2s; }
+#abaco-flotante .objetivo-abaco {
+  z-index: 1;
+  outline: 2px solid #ffda15;
+  box-shadow: 0 0 0 3px #804e00;
+}
+#abaco-flotante .objetivo-abaco:focus-visible { outline-color: #223f9b; }
+#abaco-flotante .contada-abaco { filter: brightness(.71); }
+#abaco-flotante .contada-abaco::after { content: "✓" / ""; color: #fff; text-shadow: 0 1px 2px #222; }
+.pie-abaco-operaciones { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 3px; }
+#abaco-flotante [data-abaco="comprobar"] { background: #4059b4; border-color: #354eab; color: #fff; font-weight: 850; }
+.boton-abaco-operaciones {
+  border: 1px solid #a5acef;
+  border-radius: calc(9 * var(--unidad));
+  background: #fff;
+  color: #3d347f;
+  font: 850 calc(13 * var(--unidad))/1.15 Nunito, "Trebuchet MS", system-ui, sans-serif;
+  padding: calc(5 * var(--unidad)) calc(8 * var(--unidad));
+  min-height: calc(34 * var(--unidad));
+  cursor: pointer;
+}
+.boton-abaco-operaciones[aria-expanded="true"] { background: #e4dcfd; }
+@media (max-height: 340px) {
+  #abaco-flotante .abaco-cuentas { height: 64px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #abaco-flotante .cuenta { transition: none; }
+}

@@ -4,8 +4,6 @@
   const $ = id => document.getElementById(id);
   const tablero = $('tablero');
   const clave = 'abaco.ajustes.v1';
-  const pasoCuenta = 6.4;
-  const recorrido = 100 - 10 * pasoCuenta;
   const titulos = {libre: 'Explora', suma: 'Aprende a sumar', resta: 'Aprende a quitar'};
   const t = (es, en) => IdiomaVoz.idioma === 'en' ? en : es;
   const movimientoReducido = matchMedia('(prefers-reduced-motion: reduce)');
@@ -16,7 +14,7 @@
     mostrarDecenas: guardados.mostrarDecenas !== false
   };
 
-  let modo = 'libre', fase = 'inicio', ejemplo, arrastre, suprimirClic;
+  let modo = 'libre', fase = 'inicio', ejemplo;
   let filas = [];
   let cantidades = [];
   let animacion = 0;
@@ -28,49 +26,14 @@
   const guardar = () => Matematicas.guardar(clave, ajustes);
 
   function construirTablero() {
-    const fragmento = document.createDocumentFragment();
-    tablero.style.setProperty('--filas', ajustes.capacidad / 10);
-    tablero.style.setProperty('--ancho', pasoCuenta + '%');
     $('marco').dataset.cuentas = ajustes.capacidad;
     $('marco').style.setProperty('--alto-minimo-marco', (ajustes.capacidad / 10 * 17 + 32) + 'px');
     cantidades = Array(ajustes.capacidad / 10).fill(0);
-    filas = cantidades.map((_, fila) => {
-      const elemento = document.createElement('div');
-      elemento.className = 'fila';
-      elemento.setAttribute('role', 'group');
-      const cuentas = Array.from({length: 10}, (_, indice) => {
-        const boton = document.createElement('button');
-        boton.type = 'button';
-        boton.className = 'cuenta';
-        boton.dataset.fila = fila;
-        boton.dataset.indice = indice;
-        boton.tabIndex = indice === 0 ? 0 : -1;
-        elemento.append(boton);
-        return boton;
-      });
-      fragmento.append(elemento);
-      return {elemento, cuentas};
-    });
-    tablero.replaceChildren(fragmento);
-  }
-
-  function posicion(boton, indice, progreso) {
-    boton.style.left = (indice * pasoCuenta + recorrido * (1 - progreso)) + '%';
+    filas = AbacoCuentas.crear(tablero, cantidades.length);
   }
 
   function pintarFila(fila) {
-    const {elemento, cuentas} = filas[fila];
-    elemento.setAttribute('aria-label', t('Fila ', 'Row ') + (fila + 1));
-    cuentas.forEach((boton, indice) => {
-      const activa = indice < cantidades[fila];
-      posicion(boton, indice, Number(activa));
-      boton.setAttribute('aria-pressed', activa);
-      boton.setAttribute('aria-label', t(
-        `Fila ${fila + 1}, cuenta ${indice + 1}. ${activa ? 'Quitar' : 'Añadir'}`,
-        `Row ${fila + 1}, bead ${indice + 1}. ${activa ? 'Take away' : 'Add'}`
-      ));
-      boton.disabled = modo !== 'libre';
-    });
+    AbacoCuentas.pintar(filas[fila], fila, cantidades[fila], t, () => modo === 'libre');
   }
 
   function pintarTotal() {
@@ -201,76 +164,11 @@
     });
   }
 
-  function finalizarArrastre(confirmar = false) {
-    if (!arrastre) return;
-    const {fila, indice, boton, puntero, progreso, movido} = arrastre;
-    arrastre = null;
-    filas[fila].elemento.classList.remove('arrastrando');
-    if (boton.hasPointerCapture(puntero)) boton.releasePointerCapture(puntero);
-    if (confirmar && movido) {
-      suprimirClic = boton;
-      setTimeout(() => { if (suprimirClic === boton) suprimirClic = null; }, 0);
-      cambiarFila(fila, progreso >= .5 ? Math.max(cantidades[fila], indice + 1) : Math.min(cantidades[fila], indice));
-    } else pintarFila(fila);
-  }
-
-  tablero.addEventListener('pointerdown', evento => {
-    const boton = evento.target.closest('.cuenta');
-    if (!boton || modo !== 'libre' || arrastre || !evento.isPrimary || evento.button !== 0) return;
-    const {fila, indice} = boton.dataset;
-    const rect = boton.getBoundingClientRect();
-    evento.preventDefault();
-    boton.focus({preventScroll: true});
-    arrastre = {
-      boton, fila: Number(fila), indice: Number(indice), puntero: evento.pointerId,
-      inicioX: evento.clientX, agarre: (evento.clientX - rect.left) / rect.width,
-      progreso: Number(Number(indice) < cantidades[fila]), movido: false
-    };
-    boton.setPointerCapture(evento.pointerId);
-  });
-
-  tablero.addEventListener('pointermove', evento => {
-    if (!arrastre || evento.pointerId !== arrastre.puntero) return;
-    if (!arrastre.movido && Math.abs(evento.clientX - arrastre.inicioX) < 4) return;
-    arrastre.movido = true;
-    const {fila, indice, agarre} = arrastre;
-    const {elemento, cuentas} = filas[fila];
-    const rect = elemento.getBoundingClientRect();
-    const x = (evento.clientX - rect.left) / rect.width * 100;
-    const progreso = limite(1 - (x - (indice + agarre) * pasoCuenta) / recorrido, 0, 1);
-    arrastre.progreso = progreso;
-    elemento.classList.add('arrastrando');
-    cuentas.forEach((boton, i) => {
-      const previo = Number(i < cantidades[fila]);
-      const previoOPuntero = i < indice ? Math.max(previo, progreso) : Math.min(previo, progreso);
-      posicion(boton, i, i === indice ? progreso : previoOPuntero);
-    });
-  });
-
-  tablero.addEventListener('pointerup', evento => {
-    if (arrastre?.puntero === evento.pointerId) finalizarArrastre(true);
-  });
-  for (const evento of ['pointercancel', 'lostpointercapture']) {
-    tablero.addEventListener(evento, e => { if (arrastre?.puntero === e.pointerId) finalizarArrastre(); });
-  }
-  addEventListener('blur', () => finalizarArrastre());
-  tablero.addEventListener('focusin', evento => {
-    const boton = evento.target.closest('.cuenta');
-    if (boton) filas[boton.dataset.fila].cuentas.forEach(cuenta => { cuenta.tabIndex = cuenta === boton ? 0 : -1; });
-  });
-  tablero.addEventListener('keydown', evento => {
-    const boton = evento.target.closest('.cuenta');
-    if (!boton || !['ArrowLeft', 'ArrowRight'].includes(evento.key)) return;
-    evento.preventDefault();
-    const indice = Number(boton.dataset.indice) + (evento.key === 'ArrowLeft' ? -1 : 1);
-    filas[boton.dataset.fila].cuentas[limite(indice, 0, 9)].focus({preventScroll: true});
-  });
-  tablero.addEventListener('click', evento => {
-    const boton = evento.target.closest('.cuenta');
-    if (!boton || modo !== 'libre') return;
-    if (boton === suprimirClic) { suprimirClic = null; return; }
-    const fila = Number(boton.dataset.fila), indice = Number(boton.dataset.indice);
-    cambiarFila(fila, indice < cantidades[fila] ? indice : indice + 1);
+  const finalizarArrastre = AbacoCuentas.conectar(tablero, {
+    filas: () => filas,
+    cantidad: fila => cantidades[fila],
+    puedeMover: () => modo === 'libre',
+    pintarFila, cambiarFila
   });
 
   document.querySelectorAll('[data-modo]').forEach(boton => boton.addEventListener('click', () => {
