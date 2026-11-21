@@ -1,7 +1,7 @@
 (() => {
   const ancho = 760, alto = 440, piso = 396;
-  const altoCasaAbierta = 205, proporcionCasaAbierta = 560 / 406;
-  const escala = z => .58 + z * .58;
+  const altoCasaAbierta = 205;
+  const escala = z => .40 + z * .94;
   const anchoVista = z => 600 + 120 * z;
   const proyectar = (x, z, h = 0) => [380 + (x - .5) * anchoVista(z), 145 + 246 * z - h * escala(z)];
   const desdePantalla = (x, y) => {
@@ -113,21 +113,22 @@
       [25,345,259,218],[315,345,261,218],[605,345,265,218],
       [17,647,276,205],[309,647,276,206],[600,647,281,206]
     ],
-    recreopiezas: [[25,28,271,261],[305,46,290,231],[605,76,286,206],[7,341,289,224],[604,352,289,218]],
+    recreopiezas: [[25,28,271,261],[305,46,290,231],[605,76,286,206],[7,341,289,224]],
     extra: [[14,17,277,268],[326,7,239,278],[606,10,282,275],[9,291,288,282],[321,335,271,219],
       [605,291,287,285],[8,588,289,296],[310,590,279,276],[604,626,289,213]]
   };
   const ids = {
     coches: Object.keys(alturasVehiculos).flatMap(tipo => coloresVehiculo.map(color => tipo + '-' + color)),
-    recreopiezas: ['tobogan','columpios','trampolin','bicicleta','cerca'],
+    recreopiezas: ['tobogan','columpios','trampolin','bicicleta'],
     extra: ['perro','gato','oveja','vaca','pajaro','caballo','escuela','sol','nube']
   };
   const alturas = {
     coches: Object.values(alturasVehiculos).flatMap(alto => coloresVehiculo.map(() => alto)),
-    recreopiezas: [107,110,62,63,65],
+    recreopiezas: [107,110,62,63],
     extra: [47,35,61,88,33,105,218,63,59]
   };
   const atlasPieza = {};
+  const piezasIndividuales = {'casa-abierta': [560,406,altoCasaAbierta], cerca: [560,348,114]};
   for (const id of Object.keys(recortes)) atlasPieza[id] = 'objetos';
   for (const [grupo, cajas] of Object.entries(grupos)) {
     cajas.forEach((caja, i) => {
@@ -143,10 +144,21 @@
       atlasPieza[id] = grupo;
     });
   }
+  for (const [id, medidas] of Object.entries(piezasIndividuales)) {
+    recortes[id] = [0,0,...medidas];
+    atlasPieza[id] = id;
+  }
   function dimensionesObjeto(id, z) {
-    const [, , w, h, tamano] = recortes[id] ?? [0,0,proporcionCasaAbierta,1,altoCasaAbierta];
+    const [, , w, h, tamano] = recortes[id];
     const alto = tamano * (z < 0 ? .74 : escala(z));
     return {ancho: alto * w / h, alto};
+  }
+  function dentroCerca(x, z, cerca) {
+    const [px, py] = proyectar(x,z), [cx, cy] = proyectar(cerca.x,cerca.z);
+    const {ancho, alto} = dimensionesObjeto('cerca',cerca.z);
+    const profundidad = (cy - py) / alto;
+    return profundidad >= .31 && profundidad <= .78 &&
+      Math.abs(px - cx) / ancho <= .44 - profundidad * .18;
   }
   function vistaObjeto(id, x, z, terreno) {
     if (!recortes[id + '-lado']) return {id, reflejar: false};
@@ -173,19 +185,11 @@
       imagen.onload = () => { fondos.set(tipo, imagen); alCargar(tipo); };
       imagen.src = `paisajes/${tipo}.webp`;
     }
-    for (const grupo of ['objetos', ...Object.keys(grupos), ...Object.keys(vistasVehiculos)]) {
+    for (const grupo of ['objetos', ...Object.keys(grupos), ...Object.keys(vistasVehiculos), ...Object.keys(piezasIndividuales)]) {
       const imagen = new Image();
       imagen.onload = () => { atlas.set(grupo, imagen); alCargar('objetos'); };
       imagen.src = `paisajes/${grupo}.webp`;
     }
-    const casa = new Image();
-    casa.onload = () => {
-      recortes['casa-abierta'] = [0, 0, casa.naturalWidth, casa.naturalHeight, altoCasaAbierta];
-      atlasPieza['casa-abierta'] = 'casa-abierta';
-      atlas.set('casa-abierta', casa);
-      alCargar('objetos');
-    };
-    casa.src = 'paisajes/casa-abierta.webp';
   }
   function terreno(ctx, tipo, area = {x: 0, y: 0, ancho, alto}) {
     const imagen = fondos.get(tipo);
@@ -423,5 +427,5 @@
     }
     ctx.restore();
   }
-  return window.EscenarioConstruccion = {ancho,alto,piso,proyectar,desdePantalla,dentroCasa,objetoEnEscena,visibleFueraDeCasa,bloque,fondoBloques,cargarFondos,terreno,paisajeObjeto,ficha,poligono,elipse,linea};
+  return window.EscenarioConstruccion = {ancho,alto,piso,proyectar,desdePantalla,dentroCasa,dentroCerca,objetoEnEscena,visibleFueraDeCasa,bloque,fondoBloques,cargarFondos,terreno,paisajeObjeto,ficha,poligono,elipse,linea};
 })();
