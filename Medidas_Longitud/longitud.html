@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+  <title>Mide y compara</title>
+  <link rel="stylesheet" href="../creditos.css">
+  <link rel="stylesheet" href="../idioma-voz.css">
+  <link rel="stylesheet" href="../pantalla-completa.css">
+  <link rel="stylesheet" href="../panel-plegable.css">
+  <link rel="stylesheet" href="longitud.css">
+</head>
+<body>
+  <main id="appLongitud">
+    <aside class="herramientas-longitud">
+      <header>
+        <div class="titulo"><span aria-hidden="true">📏</span><h1>Mide y compara</h1></div>
+        <label for="nombre">Nombre del niño</label>
+        <input id="nombre" type="text" maxlength="40" autocomplete="given-name" placeholder="Ej.: Gabriel">
+        <a id="inicio" href="../index.html" title="Todas las aplicaciones" aria-label="Todas las aplicaciones">⌂</a>
+      </header>
+      <section class="guia">
+        <h2>Así jugamos</h2>
+        <p>Arrastra la regla por el centro. Gírala con la punta morada. Pon el 0 en un extremo y lee la marca del otro.</p>
+      </section>
+      <div class="herramientas-acciones">
+        <button type="button" id="abrirAjustes">⚙ Configuración</button>
+      </div>
+    </aside>
+    <nav class="actividad tarjetas" id="modos" aria-label="Modos de longitud">
+      <button type="button" class="tarjeta" data-modo="medir">
+        <span class="arte arte-medir" aria-hidden="true"><i class="lapiz"></i><i class="mini-regla"></i></span>
+        <strong>Mide los objetos</strong><span>Usa la regla y escribe cuánto mide cada objeto.</span>
+      </button>
+      <button type="button" class="tarjeta" data-modo="diferencia">
+        <span class="arte arte-diferencia" aria-hidden="true"><i class="lapiz"></i><i class="lapiz"></i><b>↔</b></span>
+        <strong>¿Cuánto más largo?</strong><span>Compara dos objetos y encuentra la diferencia.</span>
+      </button>
+      <button type="button" class="tarjeta" data-modo="estimar">
+        <span class="arte arte-estimar" aria-hidden="true"><i class="lapiz"></i><i class="lapiz"></i><b>?</b></span>
+        <strong>Estima y elige</strong><span>Busca el más corto o el más largo. Usa la regla si la necesitas.</span>
+      </button>
+    </nav>
+    <section class="actividad juego" id="juego" hidden aria-labelledby="tituloReto">
+      <header class="reto">
+        <div class="barra-reto">
+          <button type="button" id="volver">‹ Modos</button>
+          <h2 id="tituloReto"></h2>
+          <button type="button" id="escuchar" aria-label="Leer instrucción" title="Leer instrucción">🔊</button>
+        </div>
+        <p id="pregunta" data-no-traducir></p>
+      </header>
+      <div class="escena" id="escena" role="group" aria-label="Mesa de medición">
+        <div class="plano" id="plano">
+          <div id="objetos"></div>
+          <div class="regla" id="regla" tabindex="0" role="group" aria-label="Regla en centímetros">
+            <div class="graduacion" id="graduacion" aria-hidden="true"></div>
+            <span class="unidad" aria-hidden="true">cm</span>
+            <button class="giro" id="giro" type="button" aria-label="Arrastra para girar la regla" title="Arrastra para girar la regla">↻</button>
+          </div>
+        </div>
+      </div>
+      <div class="regla-acciones" role="group" aria-label="Controles de la regla">
+        <button type="button" id="giroIzquierdo" title="Girar a la izquierda" aria-label="Girar a la izquierda">↶ 15°</button>
+        <button type="button" id="giroDerecho" title="Girar a la derecha" aria-label="Girar a la derecha">↷ 15°</button>
+        <button type="button" id="resetRegla" aria-label="Centrar regla" title="Centrar regla">↺ <span>Centrar regla</span></button>
+      </div>
+      <form id="respuesta" novalidate>
+        <div id="campos"></div>
+        <p id="resultado" role="status" data-no-traducir></p>
+        <div class="revision">
+          <button type="submit" class="principal" id="revisar">✓ Revisar</button>
+          <button type="button" class="principal" id="siguiente" hidden>Siguiente pregunta</button>
+        </div>
+      </form>
+    </section>
+  </main>
+  <dialog id="ajustes" aria-labelledby="tituloAjustes">
+    <form method="dialog">
+      <div class="encabezado-dialogo">
+        <h2 id="tituloAjustes">Configuración</h2>
+        <button aria-label="Aplicar y cerrar">✕</button>
+      </div>
+      <label for="cantidad">Objetos al medir o estimar</label>
+      <select id="cantidad"><option value="2">2 objetos</option><option value="3">3 objetos</option></select>
+      <label class="casilla"><input type="checkbox" id="extremos"> Marcar los extremos al medir</label>
+      <label class="casilla"><input type="checkbox" id="narracion"> Leer las preguntas y respuestas</label>
+      <div id="vozLongitud"></div>
+      <button class="principal">Aplicar y cerrar</button>
+    </form>
+  </dialog>
+  <footer id="creditos-aplicaciones">
+    <div class="creditos-dedicatoria"><span class="creditos-gabriel">Creado para <strong>Gabriel</strong></span><span class="creditos-familia">Por su familia, con ayuda de la IA.</span></div>
+    <div class="creditos-equipo"><span class="creditos-autores">M.Sc. Jeffry Chavarría-Molina y Ph.D. (c) Natalia Rodríguez-Granados</span><span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span></div>
+  </footer>
+  <script>window.IDIOMA_VOZ_APP = 'longitud';</script>
+  <script src="../idioma-voz-textos.js"></script>
+  <script src="longitud-textos.js"></script>
+  <script src="../idioma-voz.js"></script>
+  <script src="../matematicas-base.js"></script>
+  <script src="longitud.js"></script>
+  <script src="../pantalla-completa.js"></script>
+  <script src="../panel-plegable.js?v=longitud-1"></script>
+  <script src="../nombre-compartido.js"></script>
+</body>
+</html>
