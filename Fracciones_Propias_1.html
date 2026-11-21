@@ -527,7 +527,7 @@ try {
   const old=JSON.parse(localStorage.getItem('fraccionesPropias1Settings')||'{}');
   if(!localStorage.getItem(key)&&old.voice)localStorage.setItem(key,JSON.stringify({idioma:'es',voces:{es:old.voice}}));
 } catch {}
-</script><script src="idioma-voz-textos.js"></script><script src="matematicas-fracciones-textos.js?v=tarjetas-1"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script><link rel="stylesheet" href="iconos/cabeceras.css"></head>
+</script><script src="idioma-voz-textos.js"></script><script src="matematicas-fracciones-textos.js?v=tarjetas-1"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script><link rel="stylesheet" href="iconos/cabeceras.css"><script src="historial-modos.js"></script></head>
 <body>
 <div id="app">
   <header class="topbar">
@@ -1319,10 +1319,18 @@ $('#studentNameInput').addEventListener('change',e=>setStudentName(e.target.valu
 window.addEventListener('storage',e=>{
   if(e.key===STUDENT_NAME_KEY)setStudentName(e.newValue||'',false);
 });
-$$('[data-open]').forEach(btn=>btn.addEventListener('click',()=>{
-  const id=btn.dataset.open;setScreen(id);startActivity(id);
-}));
-$('#backBtn').addEventListener('click',()=>setScreen('home'));
+const tarjetasFracciones = $$('[data-open]');
+const historialFracciones = HistorialModos.crear(tarjetasFracciones.map(btn => btn.dataset.open), id => {
+  if (!id) {
+    if ($('#settingsDialog').open) $('#settingsDialog').close();
+    setScreen('home');
+    return;
+  }
+  setScreen(id);
+  startActivity(id);
+});
+tarjetasFracciones.forEach(btn => btn.addEventListener('click', () => historialFracciones.ir(btn.dataset.open)));
+$('#backBtn').addEventListener('click', historialFracciones.volver);
 $('#repeatBtn').addEventListener('click',()=>currentInstruction?speak(currentInstruction):speak('Fracciones Propias uno.'));
 $$('[data-speak]').forEach(b=>b.addEventListener('click',()=>speak(currentInstruction)));
 
@@ -2018,6 +2026,7 @@ function refreshActivityLanguage(){
 /* inicio */
 setStudentName(readStudentName(),false);
 setScreen('home');
+historialFracciones.restaurar();
 window.FraccionesAPI={startActivity,setScreen,openSettings,redrawConnections,renderActivityCards,refreshActivityLanguage,get current(){return currentActivity},get states(){return states},get settings(){return settings},fractionText};
 window.addEventListener('nombre-estudiante-cambiado',e=>{setStudentName(e.detail.nombre,false);});
 })();

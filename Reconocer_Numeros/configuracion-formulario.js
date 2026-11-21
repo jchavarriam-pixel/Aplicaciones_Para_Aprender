@@ -13,7 +13,7 @@
  document.body.append(modal);const campos=document.getElementById('camposConfiguracionNumeros');campos.append(general,setup,document.getElementById('preferenciasIdiomaVoz'));
  general.querySelector('h2').remove();general.querySelector('p.sub').textContent='Los cambios se aplican al cerrar el formulario y se guardan en este navegador.';setup.querySelector('.encabezado').hidden=true;
  modos.classList.add('seleccion-modos');home.querySelector('.home-grid').append(modos);
- const pendientes=new Map();let aplicando=false,lanzando=false,eraJuego=false,modoModal=null,modoAnterior=null,valoresPrevios=[],configPrevia=null;
+ const pendientes=new Map();let aplicando=false,cierresControlados=0,eraJuego=false,modoModal=null,modoAnterior=null,valoresPrevios=[],configPrevia=null;
  Object.assign(window.TEXTOS_INGLES,{'Elige los números que quieres practicar y después un modo de juego.':'Choose the numbers you want to practise, then choose a game mode.','Jugar':'Play','Cancelar':'Cancel','Aplicar y cerrar':'Apply and close','Aplicar y volver al juego':'Apply and return to the game','Elegir modo':'Choose a mode','Ajustes del modo':'Mode settings','Configuración general':'General settings','Los cambios se aplican al cerrar el formulario y se guardan en este navegador.':'Changes apply when you close the form and are saved in this browser.'});
  function abrir(modo=null,preparar=false){
   pendientes.clear();eraJuego=game.classList.contains('activa');modoAnterior=state.mode;modoModal=modo;
@@ -31,20 +31,48 @@
   guardarConfiguracion();state.childName=guardarNombreEstudiante(nombre.value)||'Gabriel';
   if(modoModal){state.mode=modoModal;state.numbers=getNums();}
  }
+ function cancelarModo(){
+  for(const {el,value,checked}of valoresPrevios){el.value=value;if(el.type==='checkbox'||el.type==='radio')el.checked=checked;}
+  configuracion=JSON.parse(configPrevia);state.mode=modoAnterior;pendientes.clear();
+ }
+ function cerrarControlado(){cierresControlados++;modal.close();}
+ function prepararJuego(){
+  aplicar();
+  historial.registrar('juego:'+modoModal,2);
+  cerrarControlado();
+ }
  for(const tipo of ['input','change'])modal.addEventListener(tipo,e=>{
   if(aplicando)return;e.stopImmediatePropagation();pendientes.set(e.target,tipo);
   if(e.target.name==='selectType')actualizarSeleccionNumeros();
  },true);
- modal.addEventListener('click',e=>{if(e.target.closest('[onclick^="startMode"]')){lanzando=true;aplicar();modal.close();}},true);
+ modal.addEventListener('click',e=>{if(e.target.closest('[onclick^="startMode"]'))prepararJuego();},true);
  const cancelar=document.createElement('button');cancelar.type='button';cancelar.className='btn gray cancelar-numeros';cancelar.textContent='Cancelar';cancelar.onclick=()=>modal.close();modal.querySelector('form').append(cancelar);
- modal.querySelector('.aplicar-numeros').addEventListener('click',()=>{if(!modoModal)return;lanzando=true;aplicar();modal.close();window['startMode'+modoModal]();});
+ modal.querySelector('.aplicar-numeros').addEventListener('click',()=>{if(!modoModal)return;prepararJuego();window['startMode'+modoModal]();});
  document.getElementById('cerrarConfiguracionNumeros').onclick=()=>modal.close();
  modal.addEventListener('close',()=>{
-  if(lanzando){lanzando=false;return;}
-  if(modoModal){for(const {el,value,checked}of valoresPrevios){el.value=value;if(el.type==='checkbox'||el.type==='radio')el.checked=checked;}configuracion=JSON.parse(configPrevia);state.mode=modoAnterior;pendientes.clear();return;}
+  if(cierresControlados){cierresControlados--;return;}
+  if(modoModal){cancelarModo();historial.volver();return;}
   const cambio=pendientes.size;aplicar();const reiniciar=modoModal||modoAnterior;if(cambio&&eraJuego&&reiniciar){state.mode=reiniciar;state.numbers=getNums();window['startMode'+reiniciar]();}
  });
- const openOriginal=openModeSetup;openModeSetup=m=>abrir(m,true);
+ const openOriginal=openModeSetup;
+ const historial=HistorialModos.crear([1,2,3,4].flatMap(m=>['ajustes:'+m,'juego:'+m]),vista=>{
+  if(modal.open){
+   if(modoModal)cancelarModo();
+   cerrarControlado();
+  }
+  if(!vista){mostrarInicioNumeros();return;}
+  const [etapa,modo]=vista.split(':');
+  if(etapa==='ajustes'){
+   mostrarInicioNumeros();
+   abrir(Number(modo),true);
+  }else{
+   openOriginal(Number(modo));
+   window['startMode'+modo]();
+  }
+ });
+ openModeSetup=m=>historial.ir('ajustes:'+m);
+ goHome=historial.volver;
+ addEventListener('DOMContentLoaded',()=>historial.restaurar());
  for(const pantalla of [home]){const b=document.createElement('button');b.className='btn blue configurar-numeros';b.textContent=pantalla===game?'⚙ Ajustes del modo':'⚙ Configuración general';b.onclick=()=>abrir(pantalla===game?state.mode:null);pantalla.querySelector('.encabezado').append(b);}
  function situarNombre(){const titulo=home.querySelector('.titulo');titulo.querySelector('h1,h2').after(filaNombre);}
  for(const el of[home,game])new MutationObserver(situarNombre).observe(el,{attributes:true,attributeFilter:['class']});

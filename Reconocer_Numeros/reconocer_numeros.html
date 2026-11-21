@@ -218,7 +218,7 @@ button,input,select{font-family:inherit}.pantalla{display:none;min-height:100vh;
 <link rel="stylesheet" href="configuracion-formulario.css?v=20261113">
 <link rel="stylesheet" href="espacio-juego.css?v=20261113">
 <link rel="stylesheet" href="../panel-plegable.css">
-<link rel="stylesheet" href="../iconos/cabeceras.css"></head>
+<link rel="stylesheet" href="../iconos/cabeceras.css"><script src="../historial-modos.js"></script></head>
 <body>
 <section id="home" class="pantalla activa"><div class="encabezado"><div class="titulo"><h1>🔢 Reconocer números</h1><div class="sub">Números, nombres, escucha, pareo y escritura.</div></div></div><div class="home-grid"><div class="tarjeta"><h2>Configuración general</h2><section id="preferenciasIdiomaVoz" aria-label="Idioma y voz" style="margin:14px 0"></section><p class="sub">Tus opciones se guardan automáticamente en este navegador.</p><div class="fila uno"><div><label>Nombre del niño</label><input id="childName" value="Gabriel"></div></div><div class="fila uno"><div><label>Forma de escoger los números</label><div class="radio"><label class="pill"><input type="radio" name="selectType" value="digits" checked> Por cantidad de cifras</label><label class="pill"><input type="radio" name="selectType" value="range"> Por mínimo y máximo</label></div></div></div><div id="digitsConfig" class="fila uno"><div><label>Cantidad de cifras</label><select id="digitsCount"><option value="1">1 cifra: 0 a 9</option><option value="2">2 cifras: 10 a 99</option><option value="3">3 cifras: 100 a 999</option><option value="4">4 cifras: 1 000 a 9 999</option><option value="5">5 cifras: 10 000 a 99 999</option><option value="6">6 cifras: 100 000 a 999 999</option></select></div></div><div id="rangeConfig" class="fila oculto"><div><label>Mínimo</label><input id="minNumber" type="number" value="0" min="0" max="999999"></div><div><label>Máximo</label><input id="maxNumber" type="number" value="30" min="0" max="999999"></div></div><button class="btn orange" onclick="probarVoz()">🔊 Probar voz</button></div><div class="tarjeta"><h2>Modos de juego</h2><div class="modos"><div class="modo" onclick="openModeSetup(1)"><div class="emoji">🔗</div><h3>Modo 1: Pareo</h3><p>Unir números con sus nombres.</p></div><div class="modo" onclick="openModeSetup(2)"><div class="emoji">🐮</div><h3>Modo 2: Corral</h3><p>Atrapar el número indicado.</p></div><div class="modo" onclick="openModeSetup(3)"><div class="emoji">📦</div><h3>Modo 3: Cajas con sonido</h3><p>Escuchar y colocar.</p></div><div class="modo" onclick="openModeSetup(4)"><div class="emoji">✍️</div><h3>Modo 4: Escritura</h3><p>Formar el nombre del número.</p></div></div></div></div></section>
 <section id="setup" class="pantalla"><div class="encabezado"><div class="titulo"><h2 id="setupTitle"></h2><div id="setupSubtitle" class="sub"></div></div><button class="btn gray" onclick="goHome()">🏠 Inicio</button></div><div id="setupContent" class="area tarjeta"></div></section>
@@ -321,18 +321,25 @@ function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){let j=Math.floor(Math
 function sample(a,n){const count=Math.max(0,Math.min(Math.floor(n),a.length)),indices=new Set();for(let i=a.length-count;i<a.length;i++){const pick=Math.floor(Math.random()*(i+1));indices.add(indices.has(pick)?i:pick);}return shuffle([...indices].map(i=>a[i]));}
 function norm(s){s=(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');if(IdiomaVoz.idioma==='en')s=s.replace(/\band\b/g,'').replace(/[-‐‑–]/g,' ');return s.replace(/\s+/g,' ').trim();}
 function screen(id){stopVictory();if(id!=='game'){cancelCowArrival();if(state.drag)finishDrag({pointerId:state.drag.pid,clientX:state.drag.x,clientY:state.drag.y},true);stopPareoAnimation();stopCorralAnimals();clearTimeout(state.targetTimer);state.targetTimer=null;}document.querySelectorAll('.pantalla').forEach(x=>x.classList.remove('activa'));document.getElementById(id).classList.add('activa');}
-function goHome(){
+function mostrarInicioNumeros(){
   stopAudio();
+  clearTimeout(state.hint);
+  clearTimeout(state.writeTimer);
+  clearTimeout(state.boxFinishTimer);
   const nombre = state.childName || obtenerNombreGuardado();
   if(nombre) document.getElementById('childName').value = nombre;
   screen('home');
 }
+function goHome(){mostrarInicioNumeros();}
 function setGame(t,s){resetPareoLayout();if(state.mode!==1)document.getElementById('game').style.minHeight='';document.getElementById('game').classList.toggle('modo-pareo',state.mode===1);document.getElementById('game').classList.toggle('modo-corral',state.mode===2);document.getElementById('gameTitle').textContent=t;document.getElementById('gameSubtitle').textContent=s;document.getElementById('gameSubtitle').classList.toggle('oculto',state.mode!==1);screen('game');}
 function progress(a,b){document.getElementById('progressPill').textContent=`${a}/${b}`;}
 document.querySelectorAll('input[name="selectType"]').forEach(r=>r.addEventListener('change',actualizarSeleccionNumeros));
 function getNums(){let type=document.querySelector('input[name="selectType"]:checked').value,arr=[];if(type==='digits'){let d=+document.getElementById('digitsCount').value;let min=d===1?0:10**(d-1),max=10**d-1;for(let i=min;i<=max;i++)arr.push(i);}else{let min=Math.max(0,Math.min(999999,+document.getElementById('minNumber').value||0));let max=Math.max(0,Math.min(999999,Number.isFinite(document.getElementById('maxNumber').valueAsNumber)?document.getElementById('maxNumber').valueAsNumber:30));if(min>max)[min,max]=[max,min];for(let i=min;i<=max;i++)arr.push(i);}return arr;}
 function openModeSetup(m){
   stopAudio();
+  clearTimeout(state.hint);
+  clearTimeout(state.writeTimer);
+  clearTimeout(state.boxFinishTimer);
   state.mode=m;
   const input = document.getElementById('childName');
   let nombre = guardarNombreEstudiante(input.value);
@@ -1029,7 +1036,7 @@ window.addEventListener('nombre-estudiante-cambiado',e=>{state.childName=e.detai
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="configuracion-formulario.js?v=iconos-matematicas-1"></script>
+<script src="configuracion-formulario.js?v=historial-1"></script>
 <script src="espacio-juego.js?v=20261113"></script>
 <script src="../pantalla-completa.js"></script>
 <script src="../panel-plegable.js"></script>

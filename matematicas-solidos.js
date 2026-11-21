@@ -143,7 +143,7 @@
   $("#saveSettingsBtn").onclick=$("#closeSettingsBtn").onclick=saveSettings;
   settings.addEventListener("cancel",event=>{event.preventDefault();saveSettings();});
   settings.addEventListener("click",event=>{if(event.target===settings)saveSettings();});
-  $("#volverModosSolidos").onclick=()=>setMode("menu");
+  $("#volverModosSolidos").onclick=historialSolidos.volver;
   $("#homeBtn").onclick=event=>{
     if(event.ctrlKey||event.metaKey||event.shiftKey||event.altKey||!window.AppsFullscreen)return;
     event.preventDefault();

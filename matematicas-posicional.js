@@ -164,6 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   function irModo(modo) {
+    if (!modo && opciones.open) opciones.close();
     PasosOperaciones.limpiar();
     cancelarArrastrePosicional();
     clearAudioGuide(false);
@@ -176,8 +177,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (modo === 'custom') generateFromInput();
     fit();
   }
-  openMode = irModo;
-  goMenu = () => irModo(null);
+  const historialPosicional = HistorialModos.crear(['house', 'custom'], irModo);
+  openMode = modo => historialPosicional.ir(modo);
+  goMenu = historialPosicional.volver;
   $('modosPosicional').onclick = goMenu;
   $('nuevaOperacion').onclick = () => newHouseProblem();
   $('reiniciarPosicional').onclick = () => {
@@ -245,6 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }});
   sincronizar();
+  historialPosicional.restaurar();
   document.addEventListener('pointercancel',cancelarArrastrePosicional);
   document.addEventListener('lostpointercapture',evento => { if (drag.id === evento.pointerId) cancelarArrastrePosicional(); });
   addEventListener('resize',cancelarArrastrePosicional);

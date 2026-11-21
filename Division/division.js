@@ -458,11 +458,19 @@
     magneticos.cancelar();
     window.speechSynthesis?.cancel();
     modo = null;
+    if (dialogo.open) dialogo.close();
     $('juego').hidden = true;
     $('modos').hidden = false;
     actualizarTextos();
   }
-  $('volverModos').onclick = irAModos;
+  const historial = HistorialModos.crear(['exacta', 'resto', 'cajas'], vista => {
+    if (!vista) { irAModos(); return; }
+    modo = vista;
+    $('modos').hidden = true;
+    $('juego').hidden = false;
+    iniciarRonda();
+  });
+  $('volverModos').onclick = historial.volver;
   $('nuevaRonda').onclick = iniciarRonda;
   $('escuchar').onclick = leerReto;
   $('revisar').onclick = () => {
@@ -529,10 +537,7 @@
   $('modos').addEventListener('click',event => {
     const tarjeta = event.target.closest('[data-modo]');
     if (!tarjeta) return;
-    modo = tarjeta.dataset.modo;
-    $('modos').hidden = true;
-    $('juego').hidden = false;
-    iniciarRonda();
+    historial.ir(tarjeta.dataset.modo);
   });
 
   $('configDivision').onclick = () => {
@@ -590,4 +595,5 @@
   });
   new ResizeObserver(ajustar).observe(espacio);
   actualizarTextos();
+  historial.restaurar();
 })();

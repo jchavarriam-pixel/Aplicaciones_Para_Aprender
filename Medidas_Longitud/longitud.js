@@ -329,19 +329,22 @@
     get('volver').focus({preventScroll:true});
   }
 
-  get('modos').addEventListener('click', evento => {
-    const tarjeta = evento.target.closest('[data-modo]');
-    if (tarjeta) iniciar(tarjeta.dataset.modo);
-  });
-  get('volver').addEventListener('click', () => {
+  function volverModos() {
     const tarjeta = get('modos').querySelector(`[data-modo="${modo}"]`);
+    if (ajustes.open) ajustes.close();
     modo = null;
     ronda = null;
     window.speechSynthesis?.cancel();
     juego.hidden = true;
     get('modos').hidden = false;
-    tarjeta.focus({preventScroll:true});
+    tarjeta?.focus({preventScroll:true});
+  }
+  const historial = HistorialModos.crear(Object.keys(titulos), vista => vista ? iniciar(vista) : volverModos());
+  get('modos').addEventListener('click', evento => {
+    const tarjeta = evento.target.closest('[data-modo]');
+    if (tarjeta) historial.ir(tarjeta.dataset.modo);
   });
+  get('volver').addEventListener('click', historial.volver);
   get('escuchar').addEventListener('click', () => IdiomaVoz.hablar(redactarPregunta()));
   get('respuesta').addEventListener('submit', revisar);
   get('siguiente').addEventListener('click', () => {
@@ -410,4 +413,5 @@
     app.style.setProperty('--u', 1 / zoom + 'px');
   });
   new ResizeObserver(adaptarEscena).observe(escena);
+  historial.restaurar();
 })();

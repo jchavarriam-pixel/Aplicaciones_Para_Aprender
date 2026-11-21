@@ -281,10 +281,17 @@
     pintarFila, cambiarFila
   });
 
-  document.querySelectorAll('[data-modo]').forEach(boton => boton.addEventListener('click', () => {
-    if (boton.dataset.modo === modo) return;
+  function mostrarModo(vista) {
     detener();
-    modo = boton.dataset.modo;
+    if (!vista) {
+      const anterior = modo;
+      modo = null;
+      if ($('ajustes').open) $('ajustes').close();
+      pintarInterfaz();
+      document.querySelector(`[data-modo="${anterior}"]`)?.focus({preventScroll:true});
+      return;
+    }
+    modo = vista;
     if (modo === 'libre') {
       mostrarCantidad(0);
       pintarInterfaz();
@@ -293,14 +300,10 @@
       nuevaPregunta();
     }
     else nuevoEjemplo();
-  }));
-  $('volverModosAbaco').addEventListener('click', () => {
-    detener();
-    const anterior = modo;
-    modo = null;
-    pintarInterfaz();
-    document.querySelector(`[data-modo="${anterior}"]`).focus({preventScroll:true});
-  });
+  }
+  const historial = HistorialModos.crear(Object.keys(titulos), mostrarModo);
+  document.querySelectorAll('[data-modo]').forEach(boton => boton.addEventListener('click', () => historial.ir(boton.dataset.modo)));
+  $('volverModosAbaco').addEventListener('click', historial.volver);
   TecladoEnPantalla.instalar($('respuestaPractica'), $('tecladoAbaco'));
   $('respuestaPractica').addEventListener('submit',revisarPregunta);
   $('siguientePractica').addEventListener('click',nuevaPregunta);
@@ -312,6 +315,7 @@
     }
   });
   $('ensayar').addEventListener('click', () => {
+    historial.registrar('libre');
     modo = 'libre';
     detener();
     pintarInterfaz();
@@ -366,4 +370,5 @@
   });
   construirTablero();
   pintarInterfaz();
+  historial.restaurar();
 })();

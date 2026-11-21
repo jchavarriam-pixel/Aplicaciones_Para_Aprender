@@ -131,8 +131,13 @@ const cabecera=$('.cabecera');
 function nombreModo(m){return ({explica:t('Aprende','Learn'),explora:t('Explora','Explore'),construye:t('Pon las agujas','Set the hands'),lee:t('Lee el reloj','Read the clock'),pareo:t('Carrera de relojes','Clock race')})[m];}
 function mostrarInicio(){parar();enInicio=true;plegado=false;$('#inicioReloj').hidden=false;$('.app').hidden=true;$('#cabeceraInicio').append(cabecera);$('#plegar').hidden=true;$('#ayudasFlotantes').hidden=true;window.speechSynthesis?.cancel();window.scrollTo(0,0);programar();}
 function entrarModo(m){parar();guardar();config.modo=m;Object.assign(config,config.modos[m]);enInicio=false;plegado=false;$('#inicioReloj').hidden=true;$('.app').hidden=false;$('#herramientas').prepend(cabecera);guardar();nueva();window.scrollTo(0,0);$('#herramientas').scrollTop=0;$('.actividad').scrollTop=0;}
-for(const b of document.querySelectorAll('[data-entrar]'))b.onclick=()=>entrarModo(b.dataset.entrar);
-$('#volverModos').onclick=mostrarInicio;
+const historialReloj=HistorialModos.crear([...document.querySelectorAll('[data-entrar]')].map(b=>b.dataset.entrar),vista=>{
+  if(vista){entrarModo(vista);return;}
+  if($('#configuracion').open)$('#configuracion').close();
+  mostrarInicio();
+});
+for(const b of document.querySelectorAll('[data-entrar]'))b.onclick=()=>historialReloj.ir(b.dataset.entrar);
+$('#volverModos').onclick=historialReloj.volver;
 function iniciarPareo(){
  for(const el of [...$('.actividad').children])el.hidden=!['reto','pareoRelojes','estado','revisar'].includes(el.id);
  entrada.hidden=true;$('#relojObjetivo').hidden=true;panelManipular.hidden=true;
@@ -186,5 +191,6 @@ for(let n=0;n<=9;n++){const b=document.createElement('button');b.className='cifr
 function actualizarOrigenCelebracion(){if(efectoCelebracion)efectoCelebracion.matriz=$('#reloj').getScreenCTM();}
 $('.actividad').addEventListener('scroll',actualizarOrigenCelebracion,{passive:true});window.addEventListener('scroll',actualizarOrigenCelebracion,{passive:true});
 addEventListener('resize',()=>{parar();programar();});document.addEventListener('fullscreenchange',()=>{parar();programar();});document.addEventListener('visibilitychange',()=>{if(document.hidden)parar();});new MutationObserver(programar).observe(document.body,{attributes:true,attributeFilter:['style']});visualViewport?.addEventListener('resize',programar);document.fonts.ready.then(programar);mostrarInicio();
+historialReloj.restaurar();
 window.addEventListener('nombre-estudiante-cambiado',e=>{nombre=e.detail.nombre;});
 })();

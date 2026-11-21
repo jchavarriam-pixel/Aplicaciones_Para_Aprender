@@ -72,7 +72,7 @@ footer{text-align:center;color:#59667c;padding:28px 10px 8px;font-weight:700;fon
 </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-solidos.css?v=pareo-movil-2"><script>window.IDIOMA_VOZ_APP='solidos';try{if(!localStorage.getItem('idiomaVoz.solidos.v1')){let pref;const c=JSON.parse(localStorage.getItem('configModeladorSolidos3D_v1')||'null');if(c)pref={idioma:c.language,voces:{[c.language||'es']:c.voice||''}};if(pref)localStorage.setItem('idiomaVoz.solidos.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script><link rel="stylesheet" href="iconos/cabeceras.css"></head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-solidos.css?v=pareo-movil-2"><script>window.IDIOMA_VOZ_APP='solidos';try{if(!localStorage.getItem('idiomaVoz.solidos.v1')){let pref;const c=JSON.parse(localStorage.getItem('configModeladorSolidos3D_v1')||'null');if(c)pref={idioma:c.language,voces:{[c.language||'es']:c.voice||''}};if(pref)localStorage.setItem('idiomaVoz.solidos.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script><link rel="stylesheet" href="iconos/cabeceras.css"><script src="historial-modos.js"></script></head>
 <body>
 <div class="app-shell" data-modo="menu">
   <header class="topbar">
@@ -615,6 +615,10 @@ function saveSettings(){
 function speak(text){if(state.config.speech)return IdiomaVoz.hablar(text)}
 function speakReview(text){return new Promise(resolve=>{if(!state.config.speech){resolve();return}const u=IdiomaVoz.hablar(text);if(u)u.onend=u.onerror=resolve;else resolve();});}
 function toast(msg){const t=$("#toast");t.textContent=tr(msg);t.classList.add("show");clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove("show"),2400)}
+const historialSolidos = HistorialModos.crear(['presentation','classification','evaluation'], modo => {
+  if (!modo && $("#settingsBackdrop").open) $("#settingsBackdrop").close();
+  setMode(modo || "menu");
+});
 function setMode(mode){
   if(mode!=="classification"&&classRenderers.length){releaseRenderers(classRenderers);classRenderers=[];}
   if(mode!=="evaluation"&&evalMatchRenderers.length){releaseRenderers(evalMatchRenderers);evalMatchRenderers=[];}
@@ -955,7 +959,7 @@ function init(){
     requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);
-  $$(".mode-tab").forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
+  $$(".mode-tab").forEach(b=>b.onclick=()=>historialSolidos.ir(b.dataset.mode));
   $$(".feature-btn").forEach(b=>b.onclick=()=>{const f=b.dataset.feature;state.showVertices=state.showEdges=state.showFaces=false;viewerRenderer.show={vertices:false,edges:false,faces:false};state["show"+f[0].toUpperCase()+f.slice(1)]=true;viewerRenderer.show[f]=true;$$(".feature-btn").forEach(x=>x.classList.toggle("active",x===b));updateCounts(viewerRenderer.mesh);viewerRenderer.startFeatureAnimation(f)});
   const setAppearance=transparent=>{viewerRenderer.transparent=transparent;$("#transparentModeBtn").classList.toggle("active",transparent);$("#solidModeBtn").classList.toggle("active",!transparent)};$("#transparentModeBtn").onclick=()=>setAppearance(true);$("#solidModeBtn").onclick=()=>setAppearance(false);
   $("#resetViewBtn").onclick=resetView;$("#autoRotateBtn").onclick=()=>{viewerRenderer.auto=!viewerRenderer.auto;state.autoRotate=viewerRenderer.auto;$("#autoRotateBtn").textContent=viewerRenderer.auto?"⏸ Detener giro":"▶ Giro automático"};$("#readSolidBtn").onclick=()=>speak(screenText());
@@ -977,6 +981,7 @@ function init(){
   $("#celebrateClose").onclick=closeCelebration;$("#celebration").addEventListener("click",e=>{if(e.target===$("#celebration"))closeCelebration()});
 
   setMode("menu");
+  historialSolidos.restaurar();
 }
 window.addEventListener("DOMContentLoaded",init);
 window.addEventListener('nombre-estudiante-cambiado',e=>{state.name=e.detail.nombre;updateStudentUI();});
@@ -992,7 +997,7 @@ window.addEventListener('nombre-estudiante-cambiado',e=>{state.name=e.detail.nom
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="matematicas-solidos.js?v=pareo-evaluacion-1"></script><script src="pantalla-completa.js"></script>
+<script src="matematicas-solidos.js?v=historial-1"></script><script src="pantalla-completa.js"></script>
 <script src="panel-plegable.js?v=solidos-1"></script>
 <script src="nombre-compartido.js"></script>
 </body>

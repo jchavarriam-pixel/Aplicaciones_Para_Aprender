@@ -2048,7 +2048,7 @@
   </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-problemas.css?v=nadadores-1"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script><link rel="stylesheet" href="iconos/cabeceras.css"></head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-problemas.css?v=nadadores-1"><script>window.IDIOMA_VOZ_APP='problemas';try{if(!localStorage.getItem('idiomaVoz.problemas.v1')){let pref;const lang=localStorage.getItem('gabrielAppsLanguage');if(lang)pref={idioma:lang,voces:{[lang]:localStorage.getItem('gabrielAppsVoiceURI')||''}};if(pref)localStorage.setItem('idiomaVoz.problemas.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script><link rel="stylesheet" href="iconos/cabeceras.css"><script src="historial-modos.js"></script></head>
 <body>
   <main class="app">
     <section class="hero" aria-label="Encabezado de la aplicación">
@@ -2865,6 +2865,7 @@
       Matematicas.guardar(RANGOS_POR_SITUACION, rangosPorSituacion);
     }
 
+    let historialProblemas;
     function showScreen(which) {
       document.querySelector(".app").dataset.pantalla = which;
       menuScreen.classList.toggle("active", which === "menu");
@@ -2887,7 +2888,7 @@
           <div class="miniScene" aria-hidden="true"></div>
         `;
         renderStoryThumbnail(card.querySelector(".miniScene"),problem);
-        card.addEventListener("click", () => openProblem(problem.id));
+        card.addEventListener("click", () => historialProblemas.ir(problem.id));
         problemGrid.appendChild(card);
       });
     }
@@ -2939,6 +2940,7 @@
 
     function backToMenu() {
       cancelarAnimacionesEscena();
+      document.querySelectorAll(".dialogo-problemas[open]").forEach(dialogo => dialogo.close());
       window.speechSynthesis?.cancel?.();
       state.currentProblem = null;
       delete scene.dataset.story;
@@ -3775,7 +3777,7 @@
     hintDataBtn.addEventListener("click", () => showHint("data"));
     hintKeywordBtn.addEventListener("click", () => showHint("keyword"));
     hintOperationBtn.addEventListener("click", () => showHint("operation"));
-    backBtn.addEventListener("click", backToMenu);
+    backBtn.addEventListener("click", () => historialProblemas.volver());
     speakBtn.addEventListener("click", () => {
       if (!state.currentProblem) return;
       speak(state.currentProblem.speak(getName(), state.total, state.change));
@@ -3785,6 +3787,8 @@
       applyFontSetting();
       applyLanguageSetting();
       showScreen("menu");
+      historialProblemas = HistorialModos.crear(Object.keys(problems), id => id ? openProblem(id) : backToMenu());
+      historialProblemas.restaurar();
     }
   window.addEventListener('nombre-estudiante-cambiado',e=>{if(state.currentProblem)updateText();});
 </script>
