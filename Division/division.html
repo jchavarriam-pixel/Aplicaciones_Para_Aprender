@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="../creditos.css">
   <link rel="stylesheet" href="../pantalla-completa.css">
   <link rel="stylesheet" href="../panel-plegable.css">
-  <link rel="stylesheet" href="division.css">
+  <link rel="stylesheet" href="division.css?v=reparto-2">
 </head>
 <body>
   <main id="appDivision">
@@ -53,6 +53,7 @@
         <header class="reto-division">
           <button type="button" id="volverModos">‹ Modos</button>
           <h2 id="modoActual"></h2>
+          <p id="operacionReto" data-no-traducir></p>
           <p id="pregunta"></p>
         </header>
         <div class="espacio" id="espacioDivision">
@@ -79,8 +80,12 @@
         </div>
         <div class="entrega">
           <p id="mensaje" role="status"></p>
+          <form id="respuestaCociente" novalidate hidden>
+            <label for="cocienteReto">¿Cuántas fichas hay en cada grupo?</label>
+            <input id="cocienteReto" inputmode="numeric" maxlength="2" size="2" autocomplete="off">
+          </form>
           <form id="respuesta" novalidate hidden>
-            <p>Escribe la división.</p>
+            <p>Escribe la división completa.</p>
             <div class="ecuacion">
               <label><span>Dividendo</span><input id="dividendo" inputmode="numeric" maxlength="2" size="2" autocomplete="off"></label>
               <b aria-hidden="true">÷</b>
@@ -128,8 +133,8 @@
   <script src="../idioma-voz-textos.js"></script>
   <script src="../idioma-voz.js"></script>
   <script src="../matematicas-base.js"></script>
-  <script src="../Multiplicacion/grupos-magneticos.js"></script>
-  <script src="division.js"></script>
+  <script src="../Multiplicacion/grupos-magneticos.js?v=contornos-1"></script>
+  <script src="division.js?v=reparto-2"></script>
   <script src="../pantalla-completa.js"></script>
   <script src="../panel-plegable.js?v=division-1"></script>
   <script src="../nombre-compartido.js"></script>

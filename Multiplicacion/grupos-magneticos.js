@@ -20,6 +20,11 @@
     for(const v of p.slice().reverse()){while(arriba.length>1&&giro(arriba.at(-2),arriba.at(-1),v)<=0)arriba.pop();arriba.push(v);}
     return abajo.slice(0,-1).concat(arriba.slice(0,-1));
   }
+  function contorno(nodos,radio,encuadrar=(x,y)=>({x,y})) {
+    const puntos=nodos.flatMap(n=>Array.from({length:12},(_,i)=>
+      encuadrar(n.x+radio*Math.cos(i*Math.PI/6),n.y+radio*Math.sin(i*Math.PI/6))));
+    return envolvente(puntos).map(p=>p.x+','+p.y).join(' ');
+  }
   class GruposMagneticos {
     constructor({plano,separar,deshacer,svgFigura,t,alCambiar,alCompletar,alAvisar}) {
       Object.assign(this,{plano,separar,deshacer,svgFigura,t,alCambiar,alCompletar,alAvisar});
@@ -35,8 +40,9 @@
       plano.addEventListener('keydown',e=>this.tecla(e));
       separar.onclick=()=>this.separarSeleccion();deshacer.onclick=()=>this.deshacerUltimo();
     }
-    iniciar(figuras,cantidad,{ayuda=true,nombreFigura='figura',disposicion='compactos',inercia=false,metodo='soltar'}={}) {
+    iniciar(figuras,cantidad,{ayuda=true,nombreFigura='figura',disposicion='compactos',inercia=false,metodo='soltar',mostrarContornos=false}={}) {
       this.cancelar();this.nodos=figuras.map(f=>({...f,x:0,y:0}));this.enlaces=[];
+      this.mostrarContornos=mostrarContornos;
       this.cantidad=cantidad;this.ayuda=ayuda;this.nombreFigura=nombreFigura;this.disposicion=['compactos','hileras','libre'].includes(disposicion)?disposicion:'compactos';this.inercia=inercia===true;this.plano.dataset.disposicion=this.disposicion;this.plano.dataset.movimiento='reposo';
       this.metodo=metodo==='barrido'?'barrido':'soltar';
       this.plano.dataset.metodo=this.metodo;
@@ -159,10 +165,15 @@
       for(const n of this.nodos){const b=this.botones.get(n.id),g=porId.get(n.id);b.style.left=(n.x/w*100)+'%';b.style.top=(n.y/h*100)+'%';b.classList.toggle('elegida',n.id===this.seleccion);b.classList.toggle('moviendo',!!this.arrastre?.movido&&this.arrastre.ids.includes(n.id));b.classList.toggle('grupo-cerrado',this.ayuda&&g.length===this.cantidad);b.classList.toggle('atraccion',!!this.candidato&&!this.candidato.bloqueado&&this.candidato.destino.includes(n.id));b.dataset.grupo=String(g[0]);b.dataset.cantidad=String(g.length);b.setAttribute('aria-pressed',String(n.id===this.seleccion));b.setAttribute('aria-label',this.nombreFigura+' '+(n.id+1)+(this.ayuda&&g.length===this.cantidad?this.t(', grupo completo',', complete group'):''));b.disabled=this.resuelto||this.movimiento?.tipo==='ajuste';}
       const d=this.arrastre,levantados=d?.fantasma?new Set(d.ids):null;
       let svg='';
-      if(this.ayuda)for(const g of grupos.filter(g=>g.length===this.cantidad&&!levantados?.has(g[0])&&!(this.movimiento?.tipo==='ajuste'&&g.some(id=>this.movimiento.ids.includes(id))))){
+      if(this.ayuda||this.mostrarContornos)for(const g of grupos){
+        if(levantados?.has(g[0]))continue;
+        const completo=this.ayuda&&g.length===this.cantidad;
+        if(!completo&&(!this.mostrarContornos||g.length<2))continue;
         const ns=g.map(id=>this.nodos[id]),radio=tam*.64;
-        const puntos=ns.flatMap(n=>Array.from({length:12},(_,i)=>({x:limitar(n.x+radio*Math.cos(i*Math.PI/6),2,w-2),y:limitar(n.y+radio*Math.sin(i*Math.PI/6),2,h-2)})));
-        const casco=envolvente(puntos);svg+=`<polygon class="marco-completo" points="${casco.map(p=>p.x+','+p.y).join(' ')}"/>`;
+        if(this.movimiento?.tipo==='ajuste'&&g.some(id=>this.movimiento.ids.includes(id))&&!this.mostrarContornos)continue;
+        const puntos=contorno(ns,radio,(x,y)=>({x:limitar(x,2,w-2),y:limitar(y,2,h-2)}));
+        svg+=`<polygon class="${completo?'marco-completo':'marco-grupo'}" data-color="${g[0]%5}" points="${puntos}"/>`;
+        if(!completo||this.movimiento?.tipo==='ajuste'&&g.some(id=>this.movimiento.ids.includes(id)))continue;
         const minX=Math.min(...ns.map(n=>n.x)),maxX=Math.max(...ns.map(n=>n.x)),minY=Math.min(...ns.map(n=>n.y)),maxY=Math.max(...ns.map(n=>n.y)),cx=(minX+maxX)/2,cy=(minY+maxY)/2;
         const opciones=[{x:cx,y:minY-radio-13},{x:cx,y:maxY+radio+13},{x:minX-radio-48,y:cy},{x:maxX+radio+48,y:cy},{x:minX-radio-48,y:minY},{x:maxX+radio+48,y:minY}];
         const etiqueta=opciones.find(p=>p.x>=48&&p.x<=w-48&&p.y>=12&&p.y<=h-12&&this.nodos.every(n=>Math.hypot(Math.max(Math.abs(n.x-p.x)-46,0),Math.max(Math.abs(n.y-p.y)-10,0))>tam*.46))||{x:limitar(cx,49,w-49),y:limitar(minY-radio-13,13,h-13)},x=etiqueta.x,y=etiqueta.y;
@@ -311,7 +322,9 @@
         });
       }
       const enlaces=this.calcularEnlaces([d.ids],nodos);
-      d.enlacesFantasma.innerHTML=enlaces.map(([i,j])=>{
+      const marco=this.mostrarContornos&&d.ids.length>1
+        ? `<polygon class="marco-grupo" data-color="${Math.min(...d.ids)%5}" points="${contorno(d.relativos,this.mundo.tam*.64)}"/>` : '';
+      d.enlacesFantasma.innerHTML=marco+enlaces.map(([i,j])=>{
         const a=nodos[i],b=nodos[j];
         return `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}"/>`;
       }).join('');

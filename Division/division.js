@@ -15,9 +15,11 @@
     '⚙ Ajustes del modo':'⚙ Mode settings', 'Ajustes del modo':'Mode settings',
     '‹ Modos':'‹ Modes', 'Tablero para agrupar fichas':'Board for grouping counters',
     'Separar ficha':'Separate counter', 'Deshacer':'Undo', 'Fichas por repartir':'Counters to share',
-    'Escribe la división.':'Write the division.', 'Dividendo':'Dividend', 'Divisor':'Divisor',
+    'Escribe la división completa.':'Write the complete division.', 'Dividendo':'Dividend', 'Divisor':'Divisor',
+    '¿Cuántas fichas hay en cada grupo?':'How many counters are in each group?',
+    '¿Cuántas fichas hay en cada caja?':'How many counters are in each box?',
     'Cociente':'Quotient', 'Resto':'Remainder', 'Editar reparto':'Edit sharing',
-    'Comprobar reparto':'Check sharing', 'Revisar división':'Check division', '↻ Nueva ronda':'↻ New round',
+    'Comprobar reparto':'Check sharing', 'Comprobar cociente':'Check quotient', 'Revisar división':'Check division', '↻ Nueva ronda':'↻ New round',
     'Leer instrucciones y comentarios':'Read instructions and feedback aloud',
     'Máximo de grupos o cajas':'Maximum groups or boxes', 'Máximo de fichas por grupo':'Maximum counters per group',
     'Tipo de reparto':'Sharing type', 'Solo exacto':'Exact only', 'Solo con resto':'With remainder only', 'Mixto':'Mixed',
@@ -43,6 +45,7 @@
   };
   const app = $('appDivision'), espacio = $('espacioDivision'), dialogo = $('ajustes');
   const campos = ['dividendo','divisor','cociente','residuo'].map($);
+  const cocienteReto = $('cocienteReto');
   const repartosPrevios = new Map();
   let modo = null, ronda, fase, elegido = null, arrastre = null, ignorarClic = false;
   let fichasCajas = [], zonas = [];
@@ -58,7 +61,11 @@
 
   const magneticos = new GruposMagneticos({
     plano:$('plano'), separar:$('separar'), deshacer:$('deshacer'), svgFigura:dibujarFicha, t,
-    alCambiar:actualizarConteo, alAvisar:mensajeDirecto
+    alCambiar:() => {
+      actualizarConteo();
+      if (fase === 'repartir' && $('mensaje').dataset.estado === 'intenta') mensajeDirecto('');
+    },
+    alAvisar:mensajeDirecto
   });
 
   function hablar(texto) {
@@ -90,13 +97,18 @@
   }
 
   function enunciado() {
-    const {total,divisor,resto} = ronda;
+    const {resto} = ronda;
     if (modo === 'cajas') return t(
-      `Reparte ${total} fichas en ${divisor} cajas. Pon la misma cantidad en cada una.${resto ? ' Deja las que sobren afuera.' : ''}`,
-      `Share ${total} counters among ${divisor} boxes. Put the same number in each box.${resto ? ' Leave any extras outside.' : ''}`);
+      `Pon la misma cantidad de fichas en cada caja.${resto ? ' Deja las que sobren afuera.' : ' Usa todas las fichas.'}`,
+      `Put the same number of counters in each box.${resto ? ' Leave any extras outside.' : ' Use every counter.'}`);
     return t(
-      `Forma ${divisor} grupos iguales con ${total} fichas.${resto ? ' Deja sueltas las que sobren.' : ' Usa todas las fichas.'}`,
-      `Make ${divisor} equal groups from ${total} counters.${resto ? ' Leave any extras loose.' : ' Use every counter.'}`);
+      `El divisor te dice cuántos grupos iguales debes formar.${resto ? ' Deja sueltas las fichas que sobren.' : ' Usa todas las fichas.'}`,
+      `The divisor tells you how many equal groups to make.${resto ? ' Leave any leftover counters loose.' : ' Use every counter.'}`);
+  }
+
+  function leerReto() {
+    const {total,divisor} = ronda;
+    hablar(`${t(`${total} dividido entre ${divisor}.`, `${total} divided by ${divisor}.`)} ${enunciado()}`);
   }
 
   function actualizarTextos() {
@@ -110,6 +122,8 @@
     if (!modo) return;
     $('modoActual').textContent = IdiomaVoz.t(titulos[modo]);
     $('pregunta').textContent = enunciado();
+    $('respuestaCociente').querySelector('label').textContent = IdiomaVoz.t(modo === 'cajas'
+      ? '¿Cuántas fichas hay en cada caja?' : '¿Cuántas fichas hay en cada grupo?');
     if (modo === 'cajas') pintarCajas();
     else {
       magneticos.nombreFigura = t(ronda.forma.es,ronda.forma.en);
@@ -120,10 +134,14 @@
   }
 
   function actualizarFase() {
-    $('respuesta').hidden = fase === 'repartir';
+    const {total,divisor,cociente} = ronda;
+    const mostrarEcuacion = fase === 'escribir' || fase === 'listo';
+    $('operacionReto').textContent = `${total} ÷ ${divisor} = ${mostrarEcuacion ? cociente : '?'}`;
+    $('respuestaCociente').hidden = fase !== 'cociente';
+    $('respuesta').hidden = !mostrarEcuacion;
     $('campoResto').hidden = !ronda.resto;
-    $('editarReparto').hidden = fase !== 'escribir';
-    $('revisar').textContent = IdiomaVoz.t(fase === 'repartir' ? 'Comprobar reparto' : 'Revisar división');
+    $('editarReparto').hidden = fase !== 'escribir' && fase !== 'cociente';
+    $('revisar').textContent = IdiomaVoz.t(fase === 'repartir' ? 'Comprobar reparto' : fase === 'cociente' ? 'Comprobar cociente' : 'Revisar división');
     $('revisar').disabled = fase === 'listo';
     for (const campo of campos) campo.readOnly = fase === 'listo';
   }
@@ -136,7 +154,7 @@
     espacio.scrollTop = 0;
     $('grupoDivision').hidden = modo === 'cajas';
     $('cajasDivision').hidden = modo !== 'cajas';
-    for (const campo of campos) {
+    for (const campo of [cocienteReto,...campos]) {
       campo.value = '';
       campo.removeAttribute('aria-invalid');
     }
@@ -147,10 +165,12 @@
       crearCajas(fichas);
     } else {
       const config = ajustes.modos[modo];
-      magneticos.iniciar(fichas,ronda.cociente,{ayuda:config.guiaGrupos,metodo:config.metodo,nombreFigura:t(ronda.forma.es,ronda.forma.en)});
+      magneticos.iniciar(fichas,ronda.cociente,{
+        ayuda:config.guiaGrupos,metodo:config.metodo,nombreFigura:t(ronda.forma.es,ronda.forma.en),mostrarContornos:true
+      });
     }
     actualizarTextos();
-    hablar(enunciado());
+    leerReto();
   }
 
   function actualizarConteo() {
@@ -158,7 +178,7 @@
     const grupos = magneticos.componentes();
     const unidos = grupos.filter(g => g.length > 1).length;
     const sueltas = grupos.length - unidos;
-    $('conteoGrupos').textContent = t(`Grupos de dos o más: ${unidos} · Sueltas: ${sueltas}`, `Groups of two or more: ${unidos} · Loose: ${sueltas}`);
+    $('conteoGrupos').textContent = t(`Grupos formados: ${unidos} · Fichas sueltas: ${sueltas}`, `Groups made: ${unidos} · Loose counters: ${sueltas}`);
   }
 
   function crearCajas(fichas) {
@@ -168,7 +188,7 @@
       const caja = document.createElement('section');
       caja.className = 'zona-caja caja-destino';
       caja.dataset.destino = i;
-      caja.innerHTML = `<div class="cabecera-caja"><button type="button" data-soltar="${i}"></button><span></span></div><div class="contenido-caja"></div>`;
+      caja.innerHTML = `<div class="contenido-caja"></div><div class="cabecera-caja"><button type="button" data-soltar="${i}"></button><span></span></div>`;
       return caja;
     });
     $('destinos').replaceChildren(...cajas);
@@ -194,6 +214,7 @@
       if (i) boton.textContent = t(`Caja ${i}`,`Box ${i}`);
       boton.setAttribute('aria-label', t(i ? `Caja ${i}, fichas: ${cantidad}` : `Fichas por repartir: ${cantidad}`,i ? `Box ${i}, counters: ${cantidad}` : `Counters to share: ${cantidad}`));
       boton.disabled = fase !== 'repartir';
+      zona.classList.toggle('lista-para-ficha', elegido !== null && fichasCajas[elegido].destino !== i-1);
       zona.classList.toggle('completa',i > 0 && ajustes.modos.cajas.guiaGrupos && cantidad === ronda.cociente);
     }
     for (const [id,{boton,destino}] of fichasCajas.entries()) {
@@ -206,11 +227,18 @@
   function colocarFicha(id,destino) {
     const ficha = fichasCajas[id], zona = zonas[destino+1];
     if (!ficha || !zona || fase !== 'repartir') return;
+    const cambio = ficha.destino !== destino;
     ficha.destino = destino;
     zona.querySelector('.contenido-caja').append(ficha.boton);
     elegido = null;
     mensajeDirecto('');
     pintarCajas();
+    if (cambio && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      ficha.boton.firstElementChild.animate(
+        [{transform:'translateY(-9px) scale(.78)'},{transform:'translateY(2px) scale(1.08)',offset:.72},{transform:'none'}],
+        {duration:250,easing:'ease-out'}
+      );
+    }
   }
 
   const cajasDivision = $('cajasDivision');
@@ -309,21 +337,42 @@
       hablar(error);
       return;
     }
-    fase = 'escribir';
+    fase = 'cociente';
     if (modo === 'cajas') pintarCajas();
     else magneticos.bloquear();
     actualizarFase();
     const bien = resto
-      ? t('El reparto es equitativo. Las fichas que sobran no alcanzan para dar una más a cada grupo.', 'You shared equally. There are not enough leftover counters to give one more to each group.')
-      : t('¡El reparto es equitativo! Ahora escribe la división.', 'You shared equally! Now write the division.');
+      ? t('Repartiste por igual. Las fichas que sobran no alcanzan para dar una más a cada grupo.', 'You shared equally. There are too few leftovers to give one more to each group.')
+      : t('¡Repartiste por igual!', 'You shared equally!');
     mensajeDirecto(bien,'bien');
     hablar(bien);
+  }
+
+  const coincide = (campo, valor) => /^\d+$/.test(campo.value) && Number(campo.value) === valor;
+
+  function comprobarCociente() {
+    if (!coincide(cocienteReto,ronda.cociente)) {
+      cocienteReto.setAttribute('aria-invalid','true');
+      const texto = modo === 'cajas'
+        ? t('Cuenta las fichas que hay dentro de una sola caja.', 'Count the counters in just one box.')
+        : t('Cuenta las fichas que quedaron juntas en un solo grupo.', 'Count the counters joined in just one group.');
+      mensajeDirecto(texto,'intenta');
+      hablar(texto);
+      return;
+    }
+    fase = 'escribir';
+    actualizarFase();
+    const texto = ronda.resto
+      ? t('Escribe la división completa y anota las fichas sueltas en el resto.', 'Write the complete division and enter the loose counters as the remainder.')
+      : t('Escribe la división completa con ÷ y = en sus casillas.', 'Write the complete division in the boxes with ÷ and =.');
+    mensajeDirecto('');
+    hablar(texto);
   }
 
   function revisarDivision() {
     const {total,divisor,cociente,resto} = ronda;
     const esperados = [total,divisor,cociente,...(resto ? [resto] : [])];
-    const errores = esperados.map((valor,i) => !/^\d+$/.test(campos[i].value) || Number(campos[i].value) !== valor);
+    const errores = esperados.map((valor,i) => !coincide(campos[i],valor));
     for (const [i,error] of errores.entries()) campos[i].setAttribute('aria-invalid',String(error));
     if (errores.some(Boolean)) {
       const texto = t(
@@ -356,18 +405,22 @@
   }
   $('volverModos').onclick = irAModos;
   $('nuevaRonda').onclick = iniciarRonda;
-  $('escuchar').onclick = () => hablar(enunciado());
+  $('escuchar').onclick = leerReto;
   $('revisar').onclick = () => {
     if (fase === 'repartir') comprobarReparto();
+    else if (fase === 'cociente') comprobarCociente();
     else if (fase === 'escribir') revisarDivision();
   };
   $('respuesta').onsubmit = event => {event.preventDefault();if(fase === 'escribir')revisarDivision();};
-  for (const campo of campos) campo.addEventListener('input', () => {
+  $('respuestaCociente').onsubmit = event => {event.preventDefault();if(fase === 'cociente')comprobarCociente();};
+  for (const campo of [cocienteReto,...campos]) campo.addEventListener('input', () => {
     campo.value = campo.value.replace(/\D/g,'');
     campo.removeAttribute('aria-invalid');
   });
   $('editarReparto').onclick = () => {
     fase = 'repartir';
+    cocienteReto.value = '';
+    cocienteReto.removeAttribute('aria-invalid');
     if (modo === 'cajas') pintarCajas();
     else {magneticos.resuelto = false;magneticos.actualizar();}
     actualizarFase();
@@ -422,14 +475,18 @@
   dialogo.addEventListener('click',event => {if(event.target === dialogo)aplicarAjustes();});
 
   IdiomaVoz.instalar('#preferenciasDivision',{cambioIdioma:actualizarTextos});
+  let ultimaVista;
   const ajustar = Matematicas.pantalla(app,(_,z) => {
     const {clientWidth:w,clientHeight:h} = document.documentElement;
     const altoVisible = Math.min(h,window.visualViewport?.height ?? h);
     app.style.setProperty('--alto-util',altoVisible/z+'px');
     app.style.setProperty('--iz',String(1/z));
     app.classList.toggle('horizontal',w>h);
+    app.classList.toggle('compacta', w/z < 480 || altoVisible/z < 500);
     if (modo && modo !== 'cajas') magneticos.adaptar();
-    cancelarArrastre();
+    const vista = `${w}/${altoVisible}/${z}`;
+    if (vista !== ultimaVista) cancelarArrastre();
+    ultimaVista = vista;
   });
   new ResizeObserver(ajustar).observe(espacio);
   actualizarTextos();
