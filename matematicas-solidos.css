@@ -268,7 +268,7 @@ body{width:var(--ancho-solidos,100%)!important;min-height:0!important}
   opacity:var(--opacidad-anillo,1);
   filter:drop-shadow(0 1px 1px #26345d80);
 }
-@media (orientation: portrait) and (max-width: 540px) {
+@media (orientation: portrait) and (max-width: 640px) {
   .app-shell :is(#matchingBoard,#evalMatchingBoard) {
     /* La proyección 3D conserva su escala cuando solo se recorta el ancho sobrante. */
     grid-template-columns:min(var(--ancho-figuras-base),var(--alto-ficha)) minmax(0,var(--ancho-respuestas));
