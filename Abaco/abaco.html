@@ -2,14 +2,14 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
   <title>Mi ábaco de colores</title>
   <link rel="stylesheet" href="../idioma-voz.css">
   <link rel="stylesheet" href="../creditos.css">
   <link rel="stylesheet" href="../pantalla-completa.css">
   <link rel="stylesheet" href="../panel-plegable.css">
   <link rel="stylesheet" href="cuentas.css">
-  <link rel="stylesheet" href="abaco.css?v=3">
+  <link rel="stylesheet" href="abaco.css?v=practica-1">
 </head>
 <body>
   <main id="appAbaco">
@@ -24,24 +24,37 @@
         <h2>Así jugamos</h2>
         <p>Las cuentas de la izquierda se cuentan. Las de la derecha esperan.</p>
       </section>
-      <nav class="modos" aria-label="Modos del ábaco">
-        <button type="button" data-modo="libre"><b aria-hidden="true">✋</b> <span>Explora</span></button>
-        <button type="button" data-modo="suma"><b aria-hidden="true">+</b> <span>Aprende a sumar</span></button>
-        <button type="button" data-modo="resta"><b aria-hidden="true">−</b> <span>Aprende a quitar</span></button>
-      </nav>
       <div class="ajustes">
         <label for="capacidad">Tamaño del ábaco</label>
         <select id="capacidad"><option value="50">50 cuentas</option><option value="100">100 cuentas</option></select>
         <button type="button" id="abrirAjustes">⚙ Configuración</button>
       </div>
     </aside>
-    <section class="actividad">
+    <nav class="actividad tarjetas-abaco" id="modosAbaco" aria-label="Modos del ábaco">
+      <button type="button" data-modo="libre">
+        <span class="arte-modo" aria-hidden="true"><i></i><b>✋</b></span>
+        <strong>Explora</strong><span>Mueve las cuentas libremente.</span>
+      </button>
+      <button type="button" data-modo="suma">
+        <span class="arte-modo" aria-hidden="true"><i></i><b>+</b></span>
+        <strong>Aprende a sumar</strong><span>Mira cómo se añaden las cuentas.</span>
+      </button>
+      <button type="button" data-modo="resta">
+        <span class="arte-modo" aria-hidden="true"><i></i><b>−</b></span>
+        <strong>Aprende a quitar</strong><span>Mira cómo se quitan las cuentas.</span>
+      </button>
+      <button type="button" data-modo="practica">
+        <span class="arte-modo" aria-hidden="true"><i></i><b>?</b></span>
+        <strong>Preguntas y respuestas</strong><span>Resuelve sumas, restas o ambas.</span>
+      </button>
+    </nav>
+    <section class="actividad" id="juegoAbaco" hidden>
       <header class="reto">
         <div class="texto-reto">
-          <h2 id="modoActual"></h2>
+          <div class="titulo-reto"><button type="button" id="volverModosAbaco">‹ Modos</button><h2 id="modoActual"></h2></div>
           <p id="instruccion" aria-live="polite" data-no-traducir></p>
         </div>
-        <div class="marcador">
+        <div class="marcador" id="marcadorAbaco">
           <span id="rotuloTotal">Cuentas a la izquierda</span>
           <output id="total" aria-labelledby="rotuloTotal" aria-live="off">0</output>
         </div>
@@ -57,6 +70,12 @@
           <p id="decenas" data-no-traducir></p>
           <p id="operacion" data-no-traducir hidden></p>
         </div>
+        <form id="respuestaPractica" hidden novalidate>
+          <label for="resultadoPractica">Tu respuesta</label>
+          <input id="resultadoPractica" type="text" inputmode="numeric" maxlength="3" size="3" autocomplete="off">
+          <button class="principal" id="revisarPractica">Comprobar</button>
+          <button class="principal" type="button" id="siguientePractica" hidden>Siguiente pregunta</button>
+        </form>
         <div class="acciones">
           <button type="button" id="reiniciar" data-simbolo="↺"><span>↺ Vaciar ábaco</span></button>
           <button type="button" id="nuevo" data-simbolo="✦" hidden><span>Nuevo ejemplo</span></button>
@@ -69,8 +88,11 @@
   <dialog id="ajustes" aria-labelledby="tituloAjustes">
     <form method="dialog">
       <div class="titulo-dialogo"><h2 id="tituloAjustes">Configuración</h2><button aria-label="Aplicar y cerrar">✕</button></div>
-      <label><input type="checkbox" id="narracion"> Narrar los pasos de los ejemplos</label>
+      <label><input type="checkbox" id="narracion"> Narrar ejemplos y preguntas</label>
       <label><input type="checkbox" id="mostrarDecenas"> Mostrar decenas y unidades</label>
+      <label class="tipo-practica">Operaciones de práctica
+        <select id="tipoPractica"><option value="suma">Solo sumas</option><option value="resta">Solo restas</option><option value="mixta">Sumas y restas</option></select>
+      </label>
       <div id="vozAbaco"></div>
       <button class="principal">Aplicar y cerrar</button>
     </form>
@@ -81,11 +103,11 @@
   </footer>
   <script>window.IDIOMA_VOZ_APP = 'abaco';</script>
   <script src="../idioma-voz-textos.js"></script>
-  <script src="abaco-textos.js"></script>
+  <script src="abaco-textos.js?v=practica-1"></script>
   <script src="../idioma-voz.js"></script>
   <script src="../matematicas-base.js"></script>
   <script src="cuentas.js"></script>
-  <script src="abaco.js?v=3"></script>
+  <script src="abaco.js?v=practica-1"></script>
   <script src="../pantalla-completa.js"></script>
   <script src="../panel-plegable.js?v=abaco-1"></script>
   <script src="../nombre-compartido.js"></script>

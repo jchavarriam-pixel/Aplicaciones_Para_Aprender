@@ -43,15 +43,6 @@ button:disabled { opacity: .62; cursor: default; }
 .guia { display: grid; align-content: center; gap: 4px; padding: 8px; border: 1px solid #ead797; border-radius: 14px; background: #fff6d9; }
 .guia h2 { font-size: .97rem; }
 .guia p { font-size: .82rem; }
-.modos { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; }
-.modos button { display: flex; align-items: center; justify-content: center; gap: 4px; padding: 4px; font-size: .8rem; }
-.modos b {
-  display: grid; flex: none; place-items: center; width: 25px; height: 25px; border-radius: 9px;
-  font-size: 1.12rem; background: #d8effc; color: #1a4a9c;
-}
-.modos [data-modo="suma"] b { background: #d6f7df; color: #125b4a; }
-.modos [data-modo="resta"] b { background: #ffecd2; color: #8c4119; }
-.modos button[aria-pressed="true"] { border-color: #536ae2; background: #e6ebff; box-shadow: inset 0 -2px #8293f1; }
 .ajustes { grid-column: 1 / -1; display: flex; align-items: center; flex-wrap: wrap; gap: 5px; font-size: .8rem; }
 .ajustes select, .ajustes button { min-height: 36px; }
 .actividad {
@@ -59,7 +50,54 @@ button:disabled { opacity: .62; cursor: default; }
   display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: 6px;
   padding: 8px 8px 8px; background: #fff;
 }
+.actividad.tarjetas-abaco {
+  --ui:var(--inverso-panel-compartido,1);
+  grid-template: auto auto / repeat(2,minmax(0,1fr)); align-content:safe center;
+  gap:calc(clamp(8px,2vw,18px) * var(--ui)); padding:calc(12px * var(--ui)) calc(12px * var(--ui)) calc(46px * var(--ui));
+  overflow:auto; background:#ffffff8a;
+}
+.panel-lateral-oculto .tarjetas-abaco { padding-top:calc(46px * var(--ui)); }
+.tarjetas-abaco button {
+  --tinta-tarjeta:#22568c; --fondo-tarjeta:#e2f6ff; --borde-tarjeta:#b4d9fa;
+  display:grid; align-content:start; gap:calc(4px * var(--ui)); padding:calc(8px * var(--ui));
+  min-width:0; border-color:var(--borde-tarjeta); color:var(--tinta-tarjeta); text-align:start;
+  box-shadow:0 3px 0 var(--borde-tarjeta); overflow-wrap:normal;
+}
+.tarjetas-abaco button:hover { border-color:var(--tinta-tarjeta); }
+.tarjetas-abaco [data-modo="suma"] { --tinta-tarjeta:#185c49; --fondo-tarjeta:#e1f8e8; --borde-tarjeta:#b0e1c5; }
+.tarjetas-abaco [data-modo="resta"] { --tinta-tarjeta:#884319; --fondo-tarjeta:#fff0d8; --borde-tarjeta:#f8d6a6; }
+.tarjetas-abaco [data-modo="practica"] { --tinta-tarjeta:#553a93; --fondo-tarjeta:#f0e7ff; --borde-tarjeta:#d9c4f7; }
+.tarjetas-abaco strong { font-size:calc(clamp(14px,2.8vw,24px) * var(--ui)); line-height:1.15; }
+.tarjetas-abaco button > span:last-child { color:#3c506e; font-size:calc(clamp(12px,1.6vw,15px) * var(--ui)); }
+.arte-modo {
+  position:relative; display:grid; place-items:center; overflow:hidden;
+  min-height:calc(56px * var(--ui)); height:calc(clamp(56px,15dvh,120px) * var(--ui));
+  border-radius:8px; background:var(--fondo-tarjeta);
+}
+.arte-modo i {
+  position:absolute; width:min(60%,calc(125px * var(--ui))); height:65%; left:12%; top:19%;
+  border:calc(4px * var(--ui)) solid #a66a42; border-radius:7px; background:#fff9ec;
+  transform:rotate(-8deg); box-shadow:0 2px 0 #784629;
+}
+.arte-modo i::before,.arte-modo i::after {
+  content:""; position:absolute; left:0; right:0; height:40%; top:9%;
+  background:radial-gradient(ellipse at 50% 43%,#82ddfc 20%,#3d83ca 48%,transparent 51%) 0 55% / 15% 90% repeat-x,
+    linear-gradient(transparent 48%,#746965 48% 55%,transparent 55%);
+}
+.arte-modo i::after {
+  top:52%;
+  background:radial-gradient(ellipse at 50% 43%,#ffb591 20%,#dc5476 48%,transparent 51%) 0 55% / 15% 90% repeat-x,
+    linear-gradient(transparent 48%,#746965 48% 55%,transparent 55%);
+}
+.arte-modo b {
+  display:grid; place-items:center; position:absolute; right:12%; bottom:12%;
+  width:calc(clamp(34px,7vw,62px) * var(--ui)); aspect-ratio:1; border-radius:50%;
+  background:white; color:inherit; box-shadow:0 2px 4px #334e762f;
+  font-size:calc(clamp(21px,5vw,40px) * var(--ui));
+}
 .reto { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.titulo-reto { display:flex; flex-wrap:wrap; align-items:center; gap:5px; }
+#volverModosAbaco { min-height:30px; padding:3px 7px; font-size:.78rem; }
 .reto h2 { font-size: clamp(1rem, 3.2vw, 1.65rem); color: var(--primary); line-height: 1.1; }
 .reto p { margin-top: 3px; font-size: clamp(.78rem, 2vw, 1rem); }
 .panel-lateral-oculto .reto { padding-inline-start: calc(38px * var(--inverso-panel-compartido, 1)); }
@@ -91,6 +129,21 @@ button:disabled { opacity: .62; cursor: default; }
 }
 .acciones { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; }
 .acciones button { font-size: clamp(.75rem, 2vw, .95rem); }
+.acciones:not(:has(button:not([hidden]))) { display:none; }
+#respuestaPractica { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:5px; }
+#respuestaPractica label { font-size:.85rem; }
+#resultadoPractica {
+  width:3.5em; min-height:38px; padding:2px 4px; border:2px solid #8298db; border-radius:9px;
+  background:white; text-align:center; font-size:1.12rem; font-weight:900;
+}
+#resultadoPractica[aria-invalid=true] { border-color:#ad4f32; background:#fff0e4; }
+#respuestaPractica button { font-size:.87rem; }
+.tipo-practica { display:grid; gap:4px; }
+.caida-abaco { position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:998; }
+.caida-abaco span {
+  position:absolute; border:1px solid; border-radius:39%; box-shadow:inset 0 -2px #0002,0 1px 2px #0005;
+}
+.cuentas-caidas .cuenta { visibility:hidden; }
 .principal { border-color: #243d98; color: white; background: #2d4bb5; font-weight: 850; }
 dialog {
   color: inherit; width: min(94%, 500px); max-height: 92dvh; padding: 14px;
@@ -103,8 +156,6 @@ dialog label { cursor: pointer; }
 @media (orientation: landscape) {
   #appAbaco { grid-template: minmax(0, 1fr) / clamp(152px, 25%, 315px) minmax(0, 1fr); }
   .herramientas-abaco { grid-template-columns: minmax(0, 1fr); max-height: none; }
-  .modos { grid-template-columns: minmax(0, 1fr); }
-  .modos button { justify-content: start; padding-inline: 8px; }
   .ajustes { display: grid; }
 }
 @media (max-width: 450px), (max-height: 500px) {
@@ -133,3 +184,12 @@ dialog label { cursor: pointer; }
   #appAbaco.compacto { grid-template-columns: minmax(0, 28%) minmax(0, 1fr); }
   #appAbaco.compacto .herramientas-abaco { max-height: none; }
 }
+#appAbaco.compacto #volverModosAbaco { min-height:calc(26px * var(--inverso-panel-compartido,1)); font-size:calc(12px * var(--inverso-panel-compartido,1)); }
+#appAbaco.compacto #respuestaPractica { gap:calc(4px * var(--inverso-panel-compartido,1)); }
+#appAbaco.compacto #respuestaPractica label,#appAbaco.compacto #respuestaPractica button {
+  font-size:calc(12px * var(--inverso-panel-compartido,1));
+}
+#appAbaco.compacto #respuestaPractica button,#appAbaco.compacto #resultadoPractica {
+  min-height:calc(32px * var(--inverso-panel-compartido,1));
+}
+#appAbaco.compacto #resultadoPractica { font-size:calc(15px * var(--inverso-panel-compartido,1)); }
