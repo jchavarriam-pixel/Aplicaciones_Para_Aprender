@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Aprende a restar quitando</title>
-  <link rel="stylesheet" href="creditos.css"><link rel="stylesheet" href="pantalla-completa.css"><link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-restar.css">
-  <script>window.IDIOMA_VOZ_APP='restarQuitando';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-restar-textos.js"></script><script src="idioma-voz.js"></script><script src="matematicas-base.js"></script>
+  <link rel="stylesheet" href="creditos.css"><link rel="stylesheet" href="pantalla-completa.css"><link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-restar.css?v=rango-1">
+  <script>window.IDIOMA_VOZ_APP='restarQuitando';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-restar-textos.js?v=rango-1"></script><script src="idioma-voz.js"></script><script src="matematicas-base.js"></script>
 <link rel="stylesheet" href="iconos/cabeceras.css"></head>
 <body>
 <main class="app-wrapper" id="app">
@@ -35,7 +35,20 @@
 </main>
 <button id="plegarRestar" aria-controls="herramientasRestar" aria-expanded="true" aria-label="Ocultar panel" title="Ocultar panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16"/></svg></button>
 <div id="flotantesRestar" hidden></div>
-<dialog id="configuracionRestar" aria-labelledby="tituloConfiguracion"><header><h2 id="tituloConfiguracion">Configuración</h2><button id="cerrarConfiguracionRestar" type="button" aria-label="Aplicar y cerrar">✕</button></header><form id="ajustesRestar"><fieldset><legend>Cómo quitar los objetos</legend><label class="casilla-config"><input type="checkbox" id="agruparRestar">Agrupar</label><p class="nota-config">Arrastra un objeto sobre otros o muy cerca para juntarlos. Luego lleva el grupo a la cesta. También puedes tocar los objetos para unirlos.</p></fieldset><fieldset><legend>Ayudas</legend><label class="casilla-config"><input type="checkbox" id="mostrarContadores">Mostrar cuánto hay que quitar y cuántos se han quitado</label><label class="casilla-config"><input type="checkbox" id="mostrarRestantes">Mostrar cuántos objetos quedan</label><label class="casilla-config"><input type="checkbox" id="narracionRestar">Leer instrucciones y mensajes</label></fieldset><section id="preferenciasRestar"></section><button class="principal" type="submit">Aplicar y volver al juego</button></form></dialog>
+<dialog id="configuracionRestar" aria-labelledby="tituloConfiguracion">
+  <header><h2 id="tituloConfiguracion">Configuración</h2><button id="cerrarConfiguracionRestar" type="button" aria-label="Aplicar y cerrar">✕</button></header>
+  <form id="ajustesRestar">
+    <fieldset class="rango-restar">
+      <legend>Cantidad inicial de objetos</legend>
+      <label>Desde <select id="minimoInicialRestar"></select></label>
+      <label>Hasta <select id="maximoInicialRestar"></select></label>
+      <p class="nota-config">Elige los dos límites. Si son iguales, todas las rondas comienzan con esa cantidad.</p>
+    </fieldset>
+    <fieldset><legend>Cómo quitar los objetos</legend><label class="casilla-config"><input type="checkbox" id="agruparRestar">Agrupar</label><p class="nota-config">Arrastra un objeto sobre otros o muy cerca para juntarlos. Luego lleva el grupo a la cesta. También puedes tocar los objetos para unirlos.</p></fieldset>
+    <fieldset><legend>Ayudas</legend><label class="casilla-config"><input type="checkbox" id="mostrarContadores">Mostrar cuánto hay que quitar y cuántos se han quitado</label><label class="casilla-config"><input type="checkbox" id="mostrarRestantes">Mostrar cuántos objetos quedan</label><label class="casilla-config"><input type="checkbox" id="narracionRestar">Leer instrucciones y mensajes</label></fieldset>
+    <section id="preferenciasRestar"></section><button class="principal" type="submit">Aplicar y volver al juego</button>
+  </form>
+</dialog>
 <footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos"><div class="creditos-dedicatoria"><span class="creditos-gabriel">Creado para <strong>Gabriel</strong></span><span class="creditos-familia">Por su familia, con ayuda de la IA.</span></div><div class="creditos-equipo"><span class="creditos-autores">M.Sc. Jeffry Chavarría-Molina y Ph.D. (c) Natalia Rodríguez-Granados</span><span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span></div></footer>
-<script src="restar-grupos.js"></script><script src="matematicas-restar.js"></script><script src="pantalla-completa.js"></script><script src="nombre-compartido.js"></script>
+<script src="restar-grupos.js"></script><script src="matematicas-restar.js?v=rango-1"></script><script src="pantalla-completa.js"></script><script src="nombre-compartido.js"></script>
 </body></html>

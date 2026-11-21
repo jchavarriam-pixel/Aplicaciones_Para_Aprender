@@ -6,10 +6,23 @@ const savedRestar=Matematicas.leer('restarQuitando.config.v1');
 let mode=['mix','yes','no'].includes(savedRestar.mode)?savedRestar.mode:'mix',muted=savedRestar.muted===true;
 let agrupar=savedRestar.agrupar===true,agrupadorRestar=null,avisoAgrupacion=null;
 let mostrarContadores=savedRestar.mostrarContadores!==false,mostrarRestantes=savedRestar.mostrarRestantes!==false;
+const limiteInicialRestar = 9;
+const minimoInicialRestar = $('#minimoInicialRestar'), maximoInicialRestar = $('#maximoInicialRestar');
+const esCantidadInicial = n => Number.isInteger(n) && n >= 1 && n <= limiteInicialRestar;
+const rangoGuardado = savedRestar.rangoInicial;
+let rangoInicial = esCantidadInicial(rangoGuardado?.desde) && esCantidadInicial(rangoGuardado?.hasta) && rangoGuardado.desde <= rangoGuardado.hasta
+  ? rangoGuardado : {desde:1,hasta:limiteInicialRestar};
+for (let n = 1; n <= limiteInicialRestar; n++) {
+  minimoInicialRestar.add(new Option(n,n));
+  maximoInicialRestar.add(new Option(n,n));
+}
+for (const selector of [minimoInicialRestar,maximoInicialRestar]) {
+  selector.addEventListener('change',() => maximoInicialRestar.setCustomValidity(''));
+}
 const t=(es,en)=>IdiomaVoz.idioma==='en'?en:es,rand=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
-const numWords=['cero','uno','dos','tres','cuatro','cinco','seis','siete','ocho','nueve'];
+const numWords=['cero','uno','dos','tres','cuatro','cinco','seis','siete','ocho','nueve','diez'];
 function obtenerNombreNino(){return $('#nombre').value.trim()||window.NombreCompartido?.obtener()||'Gabriel';}
-function guardarRestar(){Matematicas.guardar('restarQuitando.config.v1',{mode,muted,mostrarContadores,mostrarRestantes,agrupar});}
+function guardarRestar(){Matematicas.guardar('restarQuitando.config.v1',{mode,muted,mostrarContadores,mostrarRestantes,agrupar,rangoInicial});}
 function speak(text){lastAudio=text;if(!muted)IdiomaVoz.hablar(text);}
 function instruccion(){return t(`Quita ${numB} ${emoji}. ¿Cuántos quedan?`,`Take away ${numB} ${emoji}. How many are left?`);}
 function mensajeResultado(){const nombre=obtenerNombreNino();return numB<=numA?t(`¡Muy bien, ${nombre}! Quedan ${numA-removed}.`,`Well done, ${nombre}! ${numA-removed} are left.`):t(`${nombre}, no hay suficientes: tienes ${numA} y necesitas quitar ${numB}.`,`${nombre}, there are not enough: you have ${numA} and need to take away ${numB}.`);}
@@ -30,7 +43,11 @@ function actualizarVista(){
  const result=$('#resultArea');result.replaceChildren();if(done){const message=document.createElement('p');message.className='result-msg '+(numB<=numA?'success':'aviso');message.textContent=(numB<=numA?'★ ':'🧺 ')+mensajeResultado();result.append(message);}
  actualizarGrupoRestar();lastAudio=audioActual();programarAjuste();
 }
-function generateNumbers(){if(mode==='yes'){numA=rand(2,9);numB=rand(1,numA);}else if(mode==='no'){numA=rand(1,7);numB=rand(numA+1,9);}else if(Math.random()<.5){numA=rand(2,9);numB=rand(1,numA);}else{numA=rand(1,7);numB=rand(numA+1,9);}}
+function generateNumbers() {
+  const alcanza = mode === 'yes' || (mode === 'mix' && Math.random() < .5);
+  numA = rand(rangoInicial.desde,rangoInicial.hasta);
+  numB = alcanza ? rand(1,numA) : rand(numA+1,Math.max(limiteInicialRestar,numA+1));
+}
 function buildObjects(){const pa=$('#playArea');pa.replaceChildren();for(let i=0;i<numA;i++){const b=document.createElement('button');b.type='button';b.className='obj-item';b.textContent=emoji;b.dataset.idx=i;b.draggable=false;b.addEventListener('pointerdown',startPointerDrag);b.addEventListener('click',e=>{if(e.detail===0&&!done){if(agrupar)agrupadorRestar.tocar(b);else handleDrop(b);}});pa.append(b);}}
 function resetExercise(){cleanupPointerDrag();agrupadorRestar?.desactivar();avisoAgrupacion=null;done=false;removed=0;$('#objetosQuitados').replaceChildren();buildObjects();if(agrupar)agrupadorRestar.iniciar();actualizarVista();}
 function newExercise(){generateNumbers();emoji=EMOJIS[rand(0,EMOJIS.length-1)];resetExercise();speak(audioActual());}
@@ -48,8 +65,45 @@ function onPointerMove(e){if(agrupadorRestar?.drag){agrupadorRestar.mover(e);ret
 function endPointerDrag(e){if(agrupadorRestar?.drag){agrupadorRestar.soltar(e);return;}const d=activeDrag;if(!d||d.pointerId!==e.pointerId)return;e.preventDefault();const quitar=!d.movido||isInsideDropZone(e.clientX,e.clientY);cleanupPointerDrag();if(quitar)handleDrop(d.item);}
 function cleanupPointerDrag(){agrupadorRestar?.cancelar();const d=activeDrag;if(!d)return;activeDrag=null;d.item.classList.remove('dragging');d.clone.remove();try{d.item.releasePointerCapture(d.pointerId);}catch{}$('#dropZone').classList.remove('over');}
 window.addEventListener('pointermove',onPointerMove,{passive:false});window.addEventListener('pointerup',endPointerDrag,{passive:false});window.addEventListener('pointercancel',cleanupPointerDrag);document.addEventListener('lostpointercapture',e=>{if(activeDrag?.pointerId===e.pointerId||agrupadorRestar?.drag?.pointerId===e.pointerId)cleanupPointerDrag();});
-function abrirConfiguracion(){cleanupPointerDrag();$('#agruparRestar').checked=agrupar;$('#mostrarContadores').checked=mostrarContadores;$('#mostrarRestantes').checked=mostrarRestantes;$('#narracionRestar').checked=!muted;$('#configuracionRestar').style.zoom=String(1/Matematicas.escala());$('#configuracionRestar').showModal();}
-function cerrarConfiguracion(){const anterior=agrupar;agrupar=$('#agruparRestar').checked;mostrarContadores=$('#mostrarContadores').checked;mostrarRestantes=$('#mostrarRestantes').checked;muted=!$('#narracionRestar').checked;guardarRestar();if('speechSynthesis'in window)speechSynthesis.cancel();$('#configuracionRestar').close();if(agrupar!==anterior){avisoAgrupacion=null;if(agrupar)agrupadorRestar.iniciar();else agrupadorRestar.desactivar();}actualizarVista();}
+function abrirConfiguracion() {
+  cleanupPointerDrag();
+  minimoInicialRestar.value = rangoInicial.desde;
+  maximoInicialRestar.value = rangoInicial.hasta;
+  $('#agruparRestar').checked = agrupar;
+  $('#mostrarContadores').checked = mostrarContadores;
+  $('#mostrarRestantes').checked = mostrarRestantes;
+  $('#narracionRestar').checked = !muted;
+  $('#configuracionRestar').style.zoom = String(1/Matematicas.escala());
+  $('#configuracionRestar').showModal();
+}
+function cerrarConfiguracion() {
+  const desde = Number(minimoInicialRestar.value), hasta = Number(maximoInicialRestar.value);
+  if (desde > hasta) {
+    maximoInicialRestar.setCustomValidity(t('El máximo debe ser igual o mayor que el mínimo.','The maximum must be at least the minimum.'));
+    maximoInicialRestar.reportValidity();
+    return;
+  }
+  const cambioRango = desde !== rangoInicial.desde || hasta !== rangoInicial.hasta;
+  rangoInicial = {desde,hasta};
+  const anterior = agrupar;
+  agrupar = $('#agruparRestar').checked;
+  mostrarContadores = $('#mostrarContadores').checked;
+  mostrarRestantes = $('#mostrarRestantes').checked;
+  muted = !$('#narracionRestar').checked;
+  guardarRestar();
+  window.speechSynthesis?.cancel();
+  $('#configuracionRestar').close();
+  if (cambioRango) {
+    newExercise();
+    return;
+  }
+  if (agrupar !== anterior) {
+    avisoAgrupacion = null;
+    if (agrupar) agrupadorRestar.iniciar();
+    else agrupadorRestar.desactivar();
+  }
+  actualizarVista();
+}
 function plegarPanel(){cleanupPointerDrag();plegado=!plegado;document.body.classList.toggle('plegado',plegado);$('#plegarRestar').setAttribute('aria-expanded',String(!plegado));const label=t(plegado?'Mostrar panel':'Ocultar panel',plegado?'Show panel':'Hide panel');$('#plegarRestar').setAttribute('aria-label',label);$('#plegarRestar').title=label;$('#flotantesRestar').hidden=!plegado;(plegado?$('#flotantesRestar'):$('#herramientasRestar')).append($('#ayudasRestar'));(plegado?$('#accionesRestar'):$('#cabeceraRestar')).append($('#volverAplicaciones'));programarAjuste();}
 let frameAjuste=0;
 function programarAjuste(){if(frameAjuste)return;frameAjuste=requestAnimationFrame(()=>{frameAjuste=0;ajustarObjetos();});}

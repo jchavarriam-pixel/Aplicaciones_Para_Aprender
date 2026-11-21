@@ -48,3 +48,11 @@ body.plegado .reto{padding-top:calc(4*var(--u))}body.plegado .reto h2{width:100%
 @media(max-height:650px) and (orientation:portrait){.app-wrapper.compacta:not(.horizontal):not(.agrupacion-activa) .cabecera-objetos{display:none}.app-wrapper.agrupacion-activa.compacta:not(.horizontal) .objects-box{padding:calc(4*var(--u));gap:calc(2*var(--u))}}
 
 .grupo-excedido #estadoGrupoRestar{color:#a94c29}.grupo-excedido .enlaces-restar .seleccionado rect{stroke:#c97650;fill:#ffead9}.grupo-excedido #separarGrupoRestar{border-color:#d69b71;background:#fff1e3}@media(max-height:450px) and (orientation:landscape){.agrupacion-activa .objects-box-label{display:none}.agrupacion-activa .cabecera-objetos{justify-content:flex-end}}
+
+.rango-restar { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.rango-restar label { display:grid; gap:4px; font-weight:700; }
+.rango-restar select {
+  width:100%; min-height:40px; padding:5px 8px; border:1px solid #b7c6e2; border-radius:8px;
+  background:#f6f8ff; color:var(--tinta); font:inherit;
+}
+.rango-restar .nota-config { grid-column:1/-1; }
