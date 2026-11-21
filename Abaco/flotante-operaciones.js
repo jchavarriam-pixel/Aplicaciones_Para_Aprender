@@ -1,249 +1,216 @@
-/* Ayuda de conteo para la columna que se está resolviendo en Sumas y restas. */
+/* Ábaco libre con orientación opcional para la columna activa. */
 Object.assign(window.TEXTOS_INGLES ||= {}, {
   '🧮 Ábaco': '🧮 Abacus',
-  'Ábaco de 20 cuentas': '20-bead abacus',
+  'Ábaco': 'Abacus',
   'Mover el ábaco con las flechas': 'Move the abacus with the arrow keys',
   'Arrastra para mover el ábaco': 'Drag to move the abacus',
   'Cerrar ábaco': 'Close abacus',
+  'Ayuda del ábaco': 'Abacus hints',
+  'Tamaño del ábaco': 'Abacus size',
   'Libre': 'Free play',
   'Intermedio': 'Intermediate',
   'Paso a paso': 'Step by step',
-  'Se cuentan': 'Count these',
-  'En espera': 'Waiting',
-  'Cuentas del ábaco': 'Abacus beads',
-  '↺ Reiniciar ábaco': '↺ Reset abacus',
-  'Comprobar paso': 'Check step'
+  'Pequeño': 'Small',
+  'Mediano': 'Medium',
+  'Grande': 'Large',
+  'Cuentas del ábaco': 'Abacus beads'
 });
 
 window.AbacoOperaciones = (() => {
   'use strict';
   const clave = 'operaciones.abaco.v1';
   const t = (es, en) => IdiomaVoz.idioma === 'en' ? en : es;
-  const modos = ['libre', 'intermedio', 'guiado'];
-  const distribuir = n => [Math.min(n, 10), Math.max(0, n - 10)];
-  const cuentas = (n, idioma) => idioma === 'es' ? `${n} ${n === 1 ? 'cuenta' : 'cuentas'}` : `${n} ${n === 1 ? 'bead' : 'beads'}`;
+  const modos = ['libre','intermedio','guiado'];
+  const anchos = {pequeno:276, mediano:342, grande:426};
+  const distribuir = n => [Math.min(n,10),Math.max(0,n-10)];
 
   function instalar(boton, obtenerOperacion) {
+    const configuracion = document.createElement('fieldset');
+    configuracion.className = 'ajustes-abaco-operaciones';
+    configuracion.innerHTML = `
+      <legend>Ábaco</legend>
+      <label>Ayuda del ábaco
+        <select id="modoAbacoFlotante">
+          <option value="libre">Libre</option>
+          <option value="intermedio">Intermedio</option>
+          <option value="guiado">Paso a paso</option>
+        </select>
+      </label>
+      <label>Tamaño del ábaco
+        <select id="tamanoAbacoFlotante">
+          <option value="pequeno">Pequeño</option>
+          <option value="mediano">Mediano</option>
+          <option value="grande">Grande</option>
+        </select>
+      </label>`;
+    const selectorModo = configuracion.querySelector('#modoAbacoFlotante');
+    const selectorTamano = configuracion.querySelector('#tamanoAbacoFlotante');
+
     const panel = document.createElement('aside');
     panel.id = 'abaco-flotante';
     panel.hidden = true;
-    panel.setAttribute('aria-labelledby', 'tituloAbacoFlotante');
+    panel.setAttribute('aria-labelledby','tituloAbacoFlotante');
     panel.innerHTML = `
       <header>
         <button type="button" class="mover-abaco" aria-label="Mover el ábaco con las flechas" title="Arrastra para mover el ábaco">
-          <span aria-hidden="true">✥</span> <strong id="tituloAbacoFlotante">Ábaco de 20 cuentas</strong>
+          <span aria-hidden="true">✥</span> <strong id="tituloAbacoFlotante">Ábaco</strong>
         </button>
         <button type="button" data-abaco="cerrar" aria-label="Cerrar ábaco" title="Cerrar ábaco">✕</button>
       </header>
       <div class="interior-abaco">
-        <div class="opciones-abaco">
-          <label for="modoAbacoFlotante">Ayuda</label>
-          <select id="modoAbacoFlotante">
-            <option value="libre">Libre</option>
-            <option value="intermedio">Intermedio</option>
-            <option value="guiado">Paso a paso</option>
-          </select>
-          <output data-abaco="expresion" data-no-traducir></output>
-        </div>
+        <div data-abaco="tablero" role="group" aria-label="Cuentas del ábaco"></div>
         <p data-abaco="mensaje" role="status" data-no-traducir></p>
-        <div class="marco-abaco-operaciones">
-          <div class="leyenda-abaco-operaciones"><span>Se cuentan</span><span>En espera</span></div>
-          <div data-abaco="tablero" role="group" aria-label="Cuentas del ábaco"></div>
-        </div>
-        <div class="pie-abaco-operaciones">
-          <button type="button" data-abaco="reiniciar">↺ Reiniciar ábaco</button>
-          <button type="button" data-abaco="comprobar">Comprobar paso</button>
-        </div>
       </div>`;
     document.body.append(panel);
-    const buscar = id => panel.querySelector(`[data-abaco="${id}"]`);
-    const tablero = buscar('tablero'), mensaje = buscar('mensaje'), expresion = buscar('expresion');
-    const comprobar = buscar('comprobar'), reiniciar = buscar('reiniciar');
-    const selector = panel.querySelector('select');
-    const filas = AbacoCuentas.crear(tablero, 2);
+    const tablero = panel.querySelector('[data-abaco="tablero"]');
+    const mensaje = panel.querySelector('[data-abaco="mensaje"]');
+    const filas = AbacoCuentas.crear(tablero,2);
+    const rotulos = filas.map(({elemento}) => {
+      const rotulo = document.createElement('span');
+      rotulo.className = 'rotulo-fila-abaco';
+      elemento.append(rotulo);
+      return rotulo;
+    });
     const guardado = Matematicas.leer(clave);
     let modo = modos.includes(guardado.modo) ? guardado.modo : 'guiado';
-    let cantidades = [0, 0], fase = 'inicio', operacion, firma, error = false;
-    let contar = [], contadas = new Set();
+    let tamano = Object.hasOwn(anchos,guardado.tamano) ? guardado.tamano : 'pequeno';
+    let cantidades = [0,0], operacion, firma, filaBase = null, restaPreparada = false;
 
-    function puedeMover(fila) {
-      if (modo === 'libre') return true;
-      if (!operacion || operacion.prestamo) return false;
-      if (fase === 'inicio') return fila === 0 || operacion.m > 10;
-      if (fase !== 'cambio') return false;
-      return operacion.signo === '+' ? fila === 1 : distribuir(operacion.m)[fila] > distribuir(operacion.m - operacion.n)[fila];
-    }
-
-    function destino() {
-      const {m, n, signo} = operacion;
-      if (fase === 'inicio') return distribuir(m);
-      return signo === '+' ? [m, n] : distribuir(m - n);
-    }
-
-    function escribir() {
-      const {m, n, signo, prestamo, llevada} = operacion || {};
-      const esSuma = signo === '+';
-      expresion.hidden = modo === 'libre' || !operacion;
-      const total = esSuma ? m + n : m - n;
-      expresion.textContent = operacion ? `${m} ${esSuma ? '+' : '−'} ${n} = ${fase === 'resultado' ? total : '?'}` : '';
-      comprobar.hidden = modo === 'libre' || !operacion || prestamo || !['inicio', 'cambio'].includes(fase);
+    function orientacion() {
+      const metas = [...cantidades];
+      const rotulosFila = ['',''];
+      if (!operacion) return {metas,rotulosFila,texto:''};
+      const {signo,m,n,prestamo} = operacion;
+      const total = cantidades[0] + cantidades[1];
       let texto;
-      if (modo === 'libre') {
-        texto = t('Toca o arrastra las cuentas. A la izquierda se cuentan.', 'Tap or slide the beads. Count the ones on the left.');
-      } else if (!operacion) {
-        texto = t('Abre una operación para usar la guía.', 'Open a problem to use the guide.');
-      } else if (prestamo) {
-        texto = t('Primero pulsa Pedir prestado en la operación. Luego representa la nueva cantidad.',
-          'Select Borrow in the problem first. Then show the new amount.');
-      } else if (error) {
-        texto = fase === 'conteo'
-          ? t('Toca la siguiente cuenta resaltada.', 'Tap the next highlighted bead.')
-          : t('Revisa cuántas cuentas quedaron a la izquierda y vuelve a comprobar.',
-            'Check how many beads are on the left and try again.');
-      } else if (fase === 'inicio') {
-        texto = m > 10
-          ? t(`Pon 10 cuentas a la izquierda en la primera fila y ${m - 10} en la segunda.`, `Move 10 beads left in the first row and ${m - 10} in the second row.`)
-          : t(`Pon ${cuentas(m, 'es')} a la izquierda en la primera fila.`, `Move ${cuentas(m, 'en')} to the left in the first row.`);
-      } else if (fase === 'cambio') {
-        texto = esSuma
-          ? t(`Añade ${cuentas(n, 'es')} a la izquierda en la segunda fila${llevada ? ', incluida la que llevas' : ''}.`,
-            `Move ${cuentas(n, 'en')} to the left in the second row${llevada ? ', including the one you carried' : ''}.`)
-          : t(`Devuelve ${cuentas(n, 'es')} a la derecha. Empieza por la última fila que tenga cuentas a la izquierda.`,
-            `Move ${cuentas(n, 'en')} back to the right. Start with the last row that has beads on the left.`);
-      } else if (fase === 'conteo') {
-        texto = esSuma
-          ? t(`Parte de ${m} y toca cada cuenta de la segunda fila para seguir contando. Vas por ${m + contadas.size}.`,
-            `Start at ${m} and tap each bead in the second row to count on. You are at ${m + contadas.size}.`)
-          : t(`Toca las cuentas que quedaron a la izquierda para contarlas. Llevas ${contadas.size}.`,
-            `Tap the beads left on the left to count them. You have counted ${contadas.size}.`);
-      } else {
-        texto = esSuma && total > 9
-          ? t(`Llegaste a ${total}. Escribe ${total % 10} en esta columna y lleva 1 a la siguiente.`,
-            `You reached ${total}. Write ${total % 10} in this column and carry 1 to the next.`)
-          : t(`El resultado es ${total}. Colócalo en la operación.`, `The answer is ${total}. Put it in the problem.`);
-      }
-      mensaje.textContent = texto;
-    }
 
-    const claveCuenta = (fila, indice) => fila * 10 + indice;
+      if (signo === '+') {
+        let fila = filaBase ?? 0;
+        if (total === m && cantidades.includes(m)) filaBase = fila = cantidades.indexOf(m);
+        const unaFila = total === m+n && cantidades.includes(total);
+        const mismaFila = (filaBase !== null && cantidades[fila] > m && cantidades[1-fila] === 0) || unaFila;
+        if (unaFila) fila = cantidades.indexOf(total);
+        rotulosFila[fila] = mismaFila ? `${m} + ${n}` : String(m);
+        if (!mismaFila) rotulosFila[1-fila] = `+ ${n}`;
+
+        const dosFilas = cantidades.includes(m) && cantidades.includes(n);
+        const conservaInicio = filaBase !== null && cantidades[filaBase] >= m;
+        if (total === m+n && (unaFila || dosFilas || conservaInicio)) {
+          texto = n ? t(`Cuenta a partir de ${m}.`, `Count on from ${m}.`)
+            : t(`Ya tienes ${m}.`, `You already have ${m}.`);
+        } else if (conservaInicio) {
+          const faltan = m+n-total;
+          if (faltan < 0) texto = t('Quita las cuentas de más.', 'Take away the extra beads.');
+          else {
+            texto = faltan < n ? t(`Añade ${faltan} más.`, `Add ${faltan} more.`) : m+n <= 10
+              ? t(`Añade ${n} en esta fila o en la otra.`, `Add ${n} on this row or the other row.`)
+              : t(`Añade ${n} en la otra fila.`, `Add ${n} on the other row.`);
+            const preferida = mismaFila && m+n <= 10 ? fila : 1-fila;
+            const agregar = Math.min(faltan,10-cantidades[preferida]);
+            metas[preferida] += agregar;
+            metas[1-preferida] += faltan-agregar;
+          }
+        } else {
+          texto = t(`Pon ${m} en la primera fila.`, `Put ${m} on the first row.`);
+          metas[0] = m;
+          metas[1] = 0;
+        }
+      } else {
+        rotulosFila[0] = `${m} − ${n}`;
+        if (prestamo) {
+          texto = t(`Pide prestado para quitar ${n}.`, `Borrow to take away ${n}.`);
+        } else {
+          const inicio = distribuir(m);
+          if (total === m && cantidades.every((cantidad,i) => cantidad === inicio[i])) restaPreparada = true;
+          if (!restaPreparada || total > m || cantidades.some((cantidad,i) => cantidad > inicio[i])) {
+            texto = m <= 10 ? t(`Pon ${m} en la primera fila.`, `Put ${m} on the first row.`)
+              : t(`Pon 10 arriba y ${m-10} abajo.`, `Put 10 on top and ${m-10} below.`);
+            metas[0] = inicio[0];
+            metas[1] = inicio[1];
+          } else if (total === m-n) {
+            texto = t('Cuenta las que quedan.', 'Count the beads left.');
+          } else if (total < m-n) {
+            texto = t('Quitaste de más. Devuelve algunas.', 'You took away too many. Put some back.');
+          } else {
+            const faltan = total-(m-n), abajo = Math.min(faltan,cantidades[1]);
+            texto = t(`Quita ${faltan} hacia la derecha.`, `Move ${faltan} to the right.`);
+            metas[1] -= abajo;
+            metas[0] -= faltan-abajo;
+          }
+        }
+      }
+      return {metas,rotulosFila,texto};
+    }
 
     function pintarFila(fila) {
-      const contando = modo !== 'libre' && fase === 'conteo';
-      AbacoCuentas.pintar(filas[fila], fila, cantidades[fila], t, indice =>
-        contando ? contar.includes(claveCuenta(fila, indice)) && !contadas.has(claveCuenta(fila, indice)) : puedeMover(fila), contando);
-      const siguiente = contar.find(id => !contadas.has(id));
-      const objetivo = modo === 'guiado' && operacion && ['inicio', 'cambio'].includes(fase) && puedeMover(fila) ? destino()[fila] : null;
-      filas[fila].cuentas.forEach((cuenta, indice) => {
-        const id = claveCuenta(fila, indice);
-        const mueve = objetivo !== null && indice >= Math.min(objetivo, cantidades[fila]) && indice < Math.max(objetivo, cantidades[fila]);
-        cuenta.classList.toggle('objetivo-abaco', mueve || (modo === 'guiado' && contando && siguiente === id));
-        cuenta.classList.toggle('contada-abaco', modo !== 'libre' && contadas.has(id));
-      });
+      AbacoCuentas.pintar(filas[fila],fila,cantidades[fila],t,() => true);
     }
 
     function pintar() {
-      filas.forEach((_, fila) => pintarFila(fila));
-      escribir();
+      const {metas,rotulosFila,texto} = orientacion();
+      filas.forEach(({cuentas},fila) => {
+        pintarFila(fila);
+        const [inicio,fin] = [metas[fila],cantidades[fila]].sort((a,b) => a-b);
+        cuentas.forEach((cuenta,indice) => cuenta.classList.toggle('objetivo-abaco',modo === 'guiado' && indice >= inicio && indice < fin));
+        rotulos[fila].textContent = rotulosFila[fila];
+      });
+      mensaje.textContent = modo === 'libre' ? '' : texto;
     }
 
-    function cambiarFila(fila, valor) {
-      cantidades[fila] = valor;
-      if (error) { error = false; escribir(); }
-      pintarFila(fila);
-    }
-
-    function alTocar(fila, indice) {
-      if (fase !== 'conteo' || modo === 'libre') return false;
-      const id = claveCuenta(fila, indice);
-      const siguiente = contar.find(cuenta => !contadas.has(cuenta));
-      error = modo === 'guiado' && siguiente !== id;
-      if (!error) {
-        contadas.add(id);
-        if (contadas.size === contar.length) fase = 'resultado';
-      }
-      pintar();
-      if (!error) {
-        const proxima = contar.find(cuenta => !contadas.has(cuenta));
-        const foco = proxima === undefined ? reiniciar : filas[Math.floor(proxima / 10)].cuentas[proxima % 10];
-        foco.focus({preventScroll: true});
-      }
-      return true;
-    }
-
-    const cancelarCuentas = AbacoCuentas.conectar(tablero, {
-      filas: () => filas, cantidad: fila => cantidades[fila], puedeMover, pintarFila, cambiarFila, alTocar
+    const cancelarCuentas = AbacoCuentas.conectar(tablero,{
+      filas:() => filas, cantidad:fila => cantidades[fila], puedeMover:() => true, pintarFila,
+      cambiarFila(fila,valor) { cantidades[fila] = valor; pintar(); }
     });
-
-    function volverAlInicio() {
-      cancelarCuentas();
-      cantidades = [0, 0];
-      fase = 'inicio';
-      error = false;
-      contar = [];
-      contadas = new Set();
-      pintar();
-    }
 
     function actualizar(nuevaRonda = false) {
       operacion = obtenerOperacion();
       const nuevaFirma = JSON.stringify(operacion);
-      if (modo !== 'libre' && (nuevaRonda || nuevaFirma !== firma)) volverAlInicio();
-      firma = nuevaFirma;
+      if (nuevaRonda || nuevaFirma !== firma) {
+        cancelarCuentas();
+        filaBase = null;
+        restaPreparada = false;
+        if (modo !== 'libre') cantidades = [0,0];
+        firma = nuevaFirma;
+        pintar();
+      }
     }
 
-    comprobar.onclick = () => {
-      const esperadas = destino();
-      error = cantidades.some((n, fila) => n !== esperadas[fila]);
-      if (error) { escribir(); return; }
-      if (fase === 'inicio') {
-        fase = 'cambio';
-      } else {
-        const esSuma = operacion.signo === '+';
-        contar = cantidades.flatMap((n, fila) => esSuma && fila === 0 ? [] :
-          Array.from({length: n}, (_, indice) => claveCuenta(fila, indice)));
-        fase = contar.length ? 'conteo' : 'resultado';
-      }
-      pintar();
-      if (comprobar.hidden) {
-        const primera = contar[0];
-        const foco = primera === undefined ? reiniciar : filas[Math.floor(primera / 10)].cuentas[primera % 10];
-        foco.focus({preventScroll: true});
-      }
-    };
-    reiniciar.onclick = volverAlInicio;
-    selector.value = modo;
-    selector.onchange = () => {
-      modo = selector.value;
-      Matematicas.guardar(clave, {modo});
-      actualizar();
-      volverAlInicio();
-    };
-
-    posicionarAbaco(panel, cancelarCuentas);
+    const ajustar = posicionarAbaco(panel,cancelarCuentas,() => anchos[tamano]);
     function mostrar(visible) {
       panel.hidden = !visible;
-      boton.setAttribute('aria-expanded', visible);
+      boton.setAttribute('aria-expanded',visible);
       if (visible) {
         actualizar();
         pintar();
-        panel.querySelector('.mover-abaco').focus({preventScroll: true});
+        panel.querySelector('.mover-abaco').focus({preventScroll:true});
       } else {
         cancelarCuentas();
-        boton.focus({preventScroll: true});
+        boton.focus({preventScroll:true});
       }
     }
-    boton.setAttribute('aria-controls', panel.id);
-    boton.setAttribute('aria-expanded', 'false');
+    boton.setAttribute('aria-controls',panel.id);
+    boton.setAttribute('aria-expanded','false');
     boton.onclick = () => mostrar(panel.hidden);
-    buscar('cerrar').onclick = () => mostrar(false);
-    panel.addEventListener('keydown', evento => {
+    panel.querySelector('[data-abaco="cerrar"]').onclick = () => mostrar(false);
+    panel.addEventListener('keydown',evento => {
       if (evento.key === 'Escape') { evento.preventDefault(); mostrar(false); }
     });
-    document.addEventListener('operacion-cambiada', evento => actualizar(evento.detail?.nuevaRonda));
-    return {localizar: pintar};
+    document.addEventListener('operacion-cambiada',evento => actualizar(evento.detail?.nuevaRonda));
+    return {
+      configuracion,
+      prepararConfiguracion() { selectorModo.value = modo; selectorTamano.value = tamano; },
+      aplicarConfiguracion() {
+        modo = selectorModo.value;
+        tamano = selectorTamano.value;
+        Matematicas.guardar(clave,{modo,tamano});
+        pintar();
+        ajustar();
+      },
+      localizar:pintar
+    };
   }
 
-  function posicionarAbaco(panel, cancelarCuentas) {
+  function posicionarAbaco(panel, cancelarCuentas, anchoPreferido) {
     const mover = panel.querySelector('.mover-abaco');
     const margen = 8;
     let posicion, arrastre;
@@ -264,7 +231,7 @@ window.AbacoOperaciones = (() => {
       const vista = window.visualViewport;
       const ancho = Math.min(document.documentElement.clientWidth, vista?.width ?? innerWidth);
       const alto = Math.min(document.documentElement.clientHeight, vista?.height ?? innerHeight);
-      panel.style.width = Math.min(340, ancho - 2 * margen) + 'px';
+      panel.style.width = Math.min(anchoPreferido(), ancho - 2 * margen) + 'px';
       panel.style.maxHeight = Math.max(0, alto - 2 * margen) + 'px';
       const x = posicion?.x ?? (innerWidth > innerHeight ? margen : ancho - panel.offsetWidth - margen);
       ubicar(x, posicion?.y ?? 54);
@@ -301,6 +268,7 @@ window.AbacoOperaciones = (() => {
     window.visualViewport?.addEventListener('resize', adaptar);
     window.visualViewport?.addEventListener('scroll', adaptar);
     new MutationObserver(adaptar).observe(document.body, {attributes: true, attributeFilter: ['style']});
+    return ajustar;
   }
 
   return {instalar};

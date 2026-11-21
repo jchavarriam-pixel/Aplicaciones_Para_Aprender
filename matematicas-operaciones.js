@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <label class="option-check"><input type="checkbox" id="animarPasosOperaciones"> Animar préstamos y llevadas</label>
     <label class="option-check"><input type="checkbox" id="narrarPasosOperaciones"> Narrar los pasos de la animación</label>`;
   ayudas.insertBefore(game.querySelector('.audio-settings'), ayudas.querySelector('#animarPasosOperaciones').closest('label'));
-  ajustes.append(menu, ayudas, document.getElementById('musicBtn'),
+  ajustes.append(menu, ayudas, abaco.configuracion, document.getElementById('musicBtn'),
     FiestaSignos.instalarConfiguracion(), preferencias, aplicar);
   document.body.append(ajustes);
   menu.querySelectorAll('#levelScreen>p:last-child,[onclick="startGameValidated()"]').forEach(el => el.remove());
@@ -151,6 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
     clearAudioGuide();
     practicaAlAbrir = practicaActual();
     IdiomaVoz.iniciarEdicion();
+    abaco.prepararConfiguracion();
     FiestaSignos.prepararConfiguracion();
     ajustes.style.zoom = String(1 / Matematicas.escala());
     ajustes.showModal();
@@ -165,6 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
     narrarPasos = leerPasos.checked;
     FiestaSignos.aplicarConfiguracion();
     IdiomaVoz.aplicarEdicion();
+    abaco.aplicarConfiguracion();
     guardar();
     initBackgroundMusic();
     if (practicaActual() !== practicaAlAbrir) newProblem();
