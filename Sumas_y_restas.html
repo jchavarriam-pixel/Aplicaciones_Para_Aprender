@@ -1004,19 +1004,38 @@
       const el = document.elementFromPoint(e.clientX, e.clientY);
       if (!el?.matches('.answer-cell, .carry-cell')) return;
       const col = Number(el.dataset.col);
-      const total = topDigits[col] + bottomDigits[col] + expectedCarryIn[col];
-      if (currentOperation === '+' && el.dataset.type === 'answer' &&
-          answers[col] === 1 && total === 10 + valor) {
-        const destino = col === 0
-          ? document.querySelector('.answer-cell[data-type="leading"]')
-          : document.querySelector(`.carry-cell[data-col="${col-1}"]`);
+      if (currentOperation === '+' && el.dataset.type === 'answer') {
+        const totalEn = i => i < digits && (!expectedCarryIn[i] || carrySlots[i] === 1)
+          ? topDigits[i] + bottomDigits[i] + expectedCarryIn[i] : 0;
+        const correccion = PasosOperaciones.detectarLlevadaEnRespuesta(col, valor, answers, totalEn,
+          i => expectedCarryIn[i] === 1 && carrySlots[i] === null);
+        const destino = correccion && document.querySelector(`.carry-cell[data-col="${correccion.columna}"]`);
         if (destino) {
           const separar = () => {
-            colocarFicha(el, valor);
+            if (correccion.resto !== null) colocarFicha(el, correccion.resto);
             colocarFicha(destino, 1);
             actualizarTrasFicha();
           };
-          if (animarPasos) mostrarLlevada(total, el, destino, separar);
+          if (animarPasos) mostrarPasos(PasosOperaciones.pasosCorregirLlevada(el, destino,
+            correccion.resto, correccion.unidadVisible), separar);
+          else {
+            separar();
+            const aviso = PasosOperaciones.avisoLlevada();
+            document.getElementById('hintBar').textContent = aviso;
+            if (narrarPasos) { clearAudioGuide(); speakText(aviso); }
+          }
+          return;
+        }
+        const total = topDigits[col] + bottomDigits[col] + expectedCarryIn[col];
+        const casillaInicial = col === 0 && answers[col] === 1 && total === 10 + valor &&
+          document.querySelector('.answer-cell[data-type="leading"]');
+        if (casillaInicial) {
+          const separar = () => {
+            colocarFicha(el, valor);
+            colocarFicha(casillaInicial, 1);
+            actualizarTrasFicha();
+          };
+          if (animarPasos) mostrarLlevada(total, el, casillaInicial, separar);
           else separar();
           return;
         }
@@ -1454,7 +1473,7 @@
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="signos-escenas.js?v=20261118-2"></script><script src="operaciones-globos.js?v=1"></script><script src="signos-celebraciones.js?v=operaciones-2"></script><script src="operaciones-pasos.js?v=valor-posicional-1"></script><script src="Abaco/cuentas.js"></script><script src="Abaco/flotante-operaciones.js?v=valor-posicional-1"></script><script src="matematicas-operaciones.js?v=abaco-2"></script><script src="pantalla-completa.js"></script><script src="panel-plegable.js?v=operaciones-1"></script>
+<script src="signos-escenas.js?v=20261118-2"></script><script src="operaciones-globos.js?v=1"></script><script src="signos-celebraciones.js?v=operaciones-2"></script><script src="operaciones-pasos.js?v=corregir-llevada-1"></script><script src="Abaco/cuentas.js"></script><script src="Abaco/flotante-operaciones.js?v=valor-posicional-1"></script><script src="matematicas-operaciones.js?v=abaco-2"></script><script src="pantalla-completa.js"></script><script src="panel-plegable.js?v=operaciones-1"></script>
 <script src="nombre-compartido.js"></script>
 <script src="panel-ancho-ajustable.js?v=operaciones-1"></script>
 </body>

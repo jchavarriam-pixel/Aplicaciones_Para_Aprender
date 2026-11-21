@@ -344,34 +344,26 @@ function colocarFichaPosicional(slot,valor) {
   const tipo=slot.dataset.type,col=Number(slot.dataset.col);
   if((tipo==='houseSign') !== (typeof valor==='string'))return;
   if(tipo==='answer') {
-    const llevada=col>0 && needsCarrySlot(col-1) && current.carrySlots[col-1]===null;
-    const suma=current.topDigits[col]+current.bottomDigits[col]+(current.carrySlots[col]||0);
-    const soloElUno=valor===1 && suma%10!==1;
-    const dosCifras=current.answers[col]===1 && valor===suma%10;
-    if(llevada&&suma>=10&&(soloElUno||dosCifras)&&(!needsCarrySlot(col)||current.carrySlots[col]===1)&&!getHouseLayoutTask()) {
-      const destino=slot.closest('.vertical-op').querySelector('.carry-slot[data-col="'+(col-1)+'"]');
+    const totalEn=i=>i<current.digits && (!needsCarrySlot(i)||current.carrySlots[i]===1)
+      ? current.topDigits[i]+current.bottomDigits[i]+(current.carrySlots[i]||0) : 0;
+    const correccion=current.op==='+' && !getHouseLayoutTask() &&
+      PasosOperaciones.detectarLlevadaEnRespuesta(col,valor,current.answers,totalEn,
+        i=>needsCarrySlot(i)&&current.carrySlots[i]===null,true);
+    const destino=correccion && slot.closest('.vertical-op').querySelector(`.carry-slot[data-col="${correccion.columna}"]`);
+    if(destino) {
       const aplicar=()=>{
-        if(dosCifras)current.answers[col]=valor;
-        else if(current.answers[col]===1)current.answers[col]=null;
-        current.carrySlots[col-1]=1;
+        current.answers[col]=correccion.resto;
+        current.carrySlots[correccion.columna]=1;
         rerenderActive();
       };
-      const en=IdiomaVoz.idioma==='en';
-      const indicacion=en?'The 1 is a ten. It goes above the column on the left.':'El 1 vale una decena y va arriba, en la columna de la izquierda.';
-      if(animarPasosPosicional&&destino){
-        const restante=dosCifras ? valor : current.answers[col]??'';
-        slot.textContent=dosCifras ? suma : '1';
-        const pasos=dosCifras ? PasosOperaciones.pasosLlevada(suma,slot,destino) : [{
-          texto:indicacion,origen:slot,destino,resto:restante,origenFraccion:.5,
-          narracion:[{texto:indicacion,efecto:'llevada',minimo:3400}]
-        }];
-        PosicionalUI.animar(pasos,aplicar);
+      if(animarPasosPosicional){
+        PosicionalUI.animar(PasosOperaciones.pasosCorregirLlevada(slot,destino,correccion.resto,correccion.unidadVisible),aplicar);
       }else {
         aplicar();
         const aviso=$('hint_'+getActiveContainerId());
-        aviso.textContent=indicacion;
+        aviso.textContent=PasosOperaciones.avisoLlevada();
         aviso.hidden=false;
-        if(narrarPasosPosicional)speak(indicacion);
+        if(narrarPasosPosicional){clearAudioGuide(false);speak(PasosOperaciones.avisoLlevada());}
       }
       return;
     }
@@ -579,7 +571,7 @@ window.addEventListener('nombre-estudiante-cambiado',e=>{studentName=e.detail.no
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="operaciones-pasos.js?v=valor-posicional-1"></script><script src="Abaco/cuentas.js"></script><script src="Abaco/flotante-operaciones.js?v=valor-posicional-1"></script><script src="matematicas-posicional.js?v=tablero-1"></script><script src="pantalla-completa.js"></script><script src="panel-plegable.js?v=valor-posicional-1"></script>
+<script src="operaciones-pasos.js?v=corregir-llevada-1"></script><script src="Abaco/cuentas.js"></script><script src="Abaco/flotante-operaciones.js?v=valor-posicional-1"></script><script src="matematicas-posicional.js?v=tablero-1"></script><script src="pantalla-completa.js"></script><script src="panel-plegable.js?v=valor-posicional-1"></script>
 <script src="nombre-compartido.js"></script>
 </body>
 </html>

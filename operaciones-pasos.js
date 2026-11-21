@@ -79,7 +79,7 @@ window.PasosOperaciones = (() => {
     } else if (efecto === 'retroceso') {
       sesion.recta?.linea.classList.add('recta-en-retroceso');
     } else if (efecto === 'llevada') {
-      const salida = paso.origen.getBoundingClientRect();
+      const salida = (paso.cifraOrigen || paso.origen).getBoundingClientRect();
       const llegada = paso.destino.getBoundingClientRect();
       const escala = Matematicas.escala();
       const ficha = document.createElement('span');
@@ -89,6 +89,7 @@ window.PasosOperaciones = (() => {
       const origenX = salida.left + salida.width * (paso.origenFraccion ?? .32);
       ficha.style.setProperty('--origen-llevada-x', (origenX - llegada.left - llegada.width/2)/escala+'px');
       ficha.style.setProperty('--origen-llevada-y', (salida.top + salida.height/2 - llegada.top - llegada.height/2)/escala+'px');
+      if (paso.cifraOrigen) ficha.style.animationDelay = '450ms';
       paso.origen.textContent = paso.resto;
       paso.destino.append(ficha);
     }
@@ -189,6 +190,43 @@ window.PasosOperaciones = (() => {
     }
   }
 
+    function detectarLlevadaEnRespuesta(col, valor, respuestas, totalEn, faltaLlevada, reconocerUnoSolo = false) {
+      const totalDerecha = totalEn(col + 1);
+      const respuesta = respuestas[col];
+      if (valor === 1 && faltaLlevada(col) && totalDerecha >= 10 &&
+          respuestas[col + 1] === totalDerecha - 10) {
+        return {columna: col, resto: respuesta};
+      }
+      const total = totalEn(col);
+      if (col === 0 || total < 10 || !faltaLlevada(col - 1)) return null;
+      const unidad = total - 10;
+      if ((respuesta === 1 && valor === unidad) || (valor === 1 && respuesta === unidad)) {
+        return {columna: col - 1, resto: unidad, unidadVisible: unidad};
+      }
+      if (reconocerUnoSolo && valor === 1 && unidad !== 1) {
+        return {columna: col - 1, resto: respuesta === 1 ? null : respuesta};
+      }
+      return null;
+    }
+
+    function avisoLlevada() {
+      return t('Oh… recuerda que el 1 va arriba. Ese 1 es el que se lleva.',
+        'Oh… remember, the 1 goes above. That is the 1 you carry.');
+    }
+
+    function pasosCorregirLlevada(origen, destino, resto, unidadVisible) {
+      const par = document.createElement('span');
+      const uno = document.createElement('span');
+      uno.textContent = '1';
+      par.append(uno, String(unidadVisible ?? ''));
+      origen.replaceChildren(par);
+      const texto = avisoLlevada();
+      return [{
+        texto, origen, destino, resto: resto ?? '', cifraOrigen: uno, origenFraccion: .5,
+        narracion: [{texto, efecto:'llevada', minimo:3500}]
+      }];
+    }
+
     function pasosLlevada(total, origen, destino) {
       const resto = total - 10;
       const en = IdiomaVoz.idioma === 'en';
@@ -254,5 +292,6 @@ window.PasosOperaciones = (() => {
       return pasos;
     }
 
-  return {mostrar, limpiar, pasosPrestamo, pasosLlevada, get activo() { return sesion !== null; }};
+  return {mostrar, limpiar, pasosPrestamo, pasosLlevada, detectarLlevadaEnRespuesta, avisoLlevada,
+    pasosCorregirLlevada, get activo() { return sesion !== null; }};
 })();
