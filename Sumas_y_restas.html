@@ -223,7 +223,7 @@
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
   <link rel="stylesheet" href="panel-ancho-ajustable.css?v=20261118-1">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-operaciones.css?v=organizacion-1"><link rel="stylesheet" href="Abaco/cuentas.css"><link rel="stylesheet" href="Abaco/flotante-operaciones.css?v=libre-1"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="signos-celebraciones.css?v=20261118-5"><link rel="stylesheet" href="signos-escenas.css?v=20261118-1"><script>window.IDIOMA_VOZ_APP='operaciones';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-operaciones-textos.js?v=organizacion-1"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-operaciones.css?v=prestamo-en-cuenta-1"><link rel="stylesheet" href="Abaco/cuentas.css"><link rel="stylesheet" href="Abaco/flotante-operaciones.css?v=libre-1"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="signos-celebraciones.css?v=20261118-5"><link rel="stylesheet" href="signos-escenas.css?v=20261118-1"><script>window.IDIOMA_VOZ_APP='operaciones';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-operaciones-textos.js?v=organizacion-1"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
 <body>
   <div class="app-wrapper" id="app">
     <audio id="bgMusic" loop preload="auto"><source src="data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQIAAAAAAAA=" type="audio/wav"></audio>
@@ -941,7 +941,6 @@
         ans.appendChild(ansCell);
       }
 
-      borrowBtn.style.display = currentOperation === '-' ? 'flex' : 'none';
       borrowBtn.parentElement.hidden = currentOperation !== '-';
       buildBank();
       updateBorrowBtn();
@@ -1042,9 +1041,9 @@
       if (audioHelpOn) startAudioGuide();
     }
 
-    function mostrarPasos(pasos, completar) {
+    function mostrarPasos(pasos, completar, {prestamo = false} = {}) {
       clearAudioGuide();
-      PasosOperaciones.mostrar(pasos, completar, {narrar:narrarPasos});
+      PasosOperaciones.mostrar(pasos, completar, {narrar:narrarPasos,prestamo});
       updateBorrowBtn();
       updateCheckButtonState();
     }
@@ -1123,12 +1122,12 @@
         {
           texto: en ? `${origen.antes} lends one. Go back to ${origen.despues}, the previous number.`
             : `El ${origen.antes} presta uno. Retrocede al ${origen.despues}, su antecesor.`,
-          recta:origen.antes, cambios:[origen],
+          recta:origen,
           narracion: [
             {texto: en ? `Find the ${origen.antes} on the number line. This is the digit that lends.`
               : `Busquemos el ${origen.antes} en la recta numérica. Es la cifra que presta.`, minimo:3400},
-            {texto: en ? `Move one step to the left. We land on ${origen.despues}, the number just before ${origen.antes}.`
-              : `Damos un paso a la izquierda. Llegamos al ${origen.despues}, el antecesor del ${origen.antes}.`,
+            {texto: en ? `Go back one number. We land on ${origen.despues}, the number before ${origen.antes}.`
+              : `Retrocedemos un número. Llegamos al ${origen.despues}, el antecesor del ${origen.antes}.`,
               efecto:'retroceso', minimo:3900}
           ]
         }
@@ -1143,7 +1142,7 @@
           cambio, minimo:3900
         }))
       });
-      mostrarPasos(pasos, aplicar);
+      mostrarPasos(pasos, aplicar, {prestamo:true});
     }
 
     function updateBorrowBtn() {
@@ -1512,7 +1511,7 @@
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="signos-escenas.js?v=20261118-2"></script><script src="operaciones-globos.js?v=1"></script><script src="signos-celebraciones.js?v=operaciones-2"></script><script src="operaciones-pasos.js?v=recta-1"></script><script src="Abaco/cuentas.js"></script><script src="Abaco/flotante-operaciones.js?v=libre-1"></script><script src="matematicas-operaciones.js?v=abaco-2"></script><script src="pantalla-completa.js"></script><script src="panel-plegable.js?v=operaciones-1"></script>
+<script src="signos-escenas.js?v=20261118-2"></script><script src="operaciones-globos.js?v=1"></script><script src="signos-celebraciones.js?v=operaciones-2"></script><script src="operaciones-pasos.js?v=prestamo-en-cuenta-1"></script><script src="Abaco/cuentas.js"></script><script src="Abaco/flotante-operaciones.js?v=libre-1"></script><script src="matematicas-operaciones.js?v=abaco-2"></script><script src="pantalla-completa.js"></script><script src="panel-plegable.js?v=operaciones-1"></script>
 <script src="nombre-compartido.js"></script>
 <script src="panel-ancho-ajustable.js?v=operaciones-1"></script>
 </body>

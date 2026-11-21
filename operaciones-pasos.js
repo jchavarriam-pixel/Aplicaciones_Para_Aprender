@@ -16,8 +16,8 @@ window.PasosOperaciones = (() => {
     if (!sesion) return;
     detenerNarracion();
     sesion.panel.remove();
-    sesion.tablero.classList.remove('mostrando-pasos');
-    sesion.tablero.querySelectorAll('.cifra-del-paso').forEach(el => el.remove());
+    sesion.tablero.classList.remove('mostrando-pasos','prestamo-en-cuenta');
+    sesion.tablero.querySelectorAll('.cifra-del-paso,.recta-prestamo').forEach(el => el.remove());
     sesion.tablero.querySelectorAll('.cifra-en-transformacion').forEach(el => el.classList.remove('cifra-en-transformacion'));
     sesion = null;
   }
@@ -33,23 +33,27 @@ window.PasosOperaciones = (() => {
     }
   }
 
-  function rectaNumerica(antes) {
+  function rectaNumerica(cambio) {
+    const {antes,col} = cambio;
+    const columna = document.querySelector(`#colsContainer .col[data-col="${col}"]`);
+    const zona = columna.querySelector('.borrow-zone');
+    zona.querySelector('.cifra-del-paso')?.remove();
+    columna.querySelector('.digit-cell').classList.add('cifra-en-transformacion');
     const linea = document.createElement('div');
     linea.className = 'recta-prestamo';
     linea.setAttribute('aria-hidden', 'true');
-    for (let n=Math.max(0,antes-2); n<=antes+1; n++) {
+    const cinta = document.createElement('div');
+    cinta.className = 'cinta-recta-prestamo';
+    for (let n=antes+1; n>=antes-2; n--) {
       const marca = document.createElement('span');
-      marca.textContent = n;
+      marca.textContent = n < 0 ? '' : n;
       if (n === antes-1) marca.className = 'recta-antecesor';
-      if (n === antes) {
-        marca.className = 'recta-origen';
-        const marcador = document.createElement('i');
-        marcador.className = 'marcador-recta-prestamo';
-        marca.append(marcador);
-      }
-      linea.append(marca);
+      if (n === antes) marca.className = 'recta-origen';
+      cinta.append(marca);
     }
-    return linea;
+    linea.append(cinta);
+    zona.append(linea);
+    sesion.recta = {linea,cambio};
   }
 
   function cifraPrestada({ col, antes, despues, subir }) {
@@ -73,8 +77,7 @@ window.PasosOperaciones = (() => {
     if (efecto === 'prefijo') {
       sesion.tablero.querySelector('.cifra-sube')?.classList.add('muestra-prefijo');
     } else if (efecto === 'retroceso') {
-      sesion.detalle.querySelector('.recta-prestamo')?.classList.add('recta-en-retroceso');
-      for (const cambio of paso.cambios) cifraPrestada(cambio);
+      sesion.recta?.linea.classList.add('recta-en-retroceso');
     } else if (efecto === 'llevada') {
       const salida = paso.origen.getBoundingClientRect();
       const llegada = paso.destino.getBoundingClientRect();
@@ -125,6 +128,12 @@ window.PasosOperaciones = (() => {
     const siguiente = sesion.pasos[++sesion.indice];
     if (!siguiente) { terminar(); return; }
     sesion.tablero.querySelectorAll('.cifra-sube').forEach(el => el.classList.remove('cifra-sube'));
+    if (sesion.recta) {
+      const {linea,cambio} = sesion.recta;
+      linea.remove();
+      cifraPrestada(cambio);
+      sesion.recta = null;
+    }
     const { panel, mensaje, detalle } = sesion;
     panel.querySelector('.paso-operacion-contador').textContent = t(
       `Paso ${sesion.indice+1} de ${sesion.pasos.length}`,
@@ -132,19 +141,21 @@ window.PasosOperaciones = (() => {
     );
     mensaje.textContent = siguiente.texto;
     detalle.replaceChildren();
-    if (siguiente.recta !== undefined) detalle.append(rectaNumerica(siguiente.recta));
+    if (siguiente.recta) rectaNumerica(siguiente.recta);
     if (siguiente.ecuacion) detalle.textContent = siguiente.ecuacion;
-    if (siguiente.recta === undefined) for (const cambio of siguiente.cambios || []) cifraPrestada(cambio);
+    for (const cambio of siguiente.cambios || []) cifraPrestada(cambio);
     panel.querySelector('.avanzar-paso-operacion').textContent = sesion.indice < sesion.pasos.length-1
-      ? t('Siguiente paso','Next step') : t('Terminar','Finish');
+      ? sesion.prestamo ? t('Siguiente','Next') : t('Siguiente paso','Next step') : t('Terminar','Finish');
     presentarFragmento(siguiente, 0);
   }
 
-  function mostrar(pasos, completar, { narrar = true } = {}) {
+  function mostrar(pasos, completar, { narrar = true, prestamo = false } = {}) {
     limpiar();
     const tablero = document.getElementById('gameScreen');
+    const botonPrestamo = document.getElementById('borrowBtn');
+    const enfocarSiguiente = prestamo && document.activeElement === botonPrestamo;
     const panel = document.createElement('section');
-    panel.className = 'panel-pasos-operaciones';
+    panel.className = prestamo ? 'controles-pasos-prestamo' : 'panel-pasos-operaciones';
     panel.innerHTML = `<div class="texto-paso-operacion" role="status">
       <strong class="paso-operacion-contador"></strong><span class="mensaje-paso-operacion"></span>
     </div><div class="detalle-paso-operacion"></div>
@@ -158,13 +169,19 @@ window.PasosOperaciones = (() => {
     saltar.setAttribute('aria-label', t('Saltar animación','Skip animation'));
     saltar.onclick = terminar;
     tablero.classList.add('mostrando-pasos');
-    document.getElementById('hintBar').after(panel);
+    if (prestamo) {
+      tablero.classList.add('prestamo-en-cuenta');
+      botonPrestamo.after(panel);
+    } else document.getElementById('hintBar').after(panel);
     sesion = {
-      tablero, panel, pasos, completar, narrar, indice:-1,
+      tablero, panel, pasos, completar, narrar, prestamo, indice:-1,
       mensaje:panel.querySelector('.mensaje-paso-operacion'),
       detalle:panel.querySelector('.detalle-paso-operacion')
     };
     avanzar();
+    if (enfocarSiguiente) {
+      panel.querySelector('.avanzar-paso-operacion').focus({preventScroll:true});
+    }
   }
 
   return {mostrar, limpiar, get activo() { return sesion !== null; }};
