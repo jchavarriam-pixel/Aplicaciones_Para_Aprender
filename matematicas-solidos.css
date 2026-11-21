@@ -136,12 +136,12 @@ body{width:var(--ancho-solidos,100%)!important;min-height:0!important}
   --margen-pareo:clamp(calc(16 * var(--unidad)),4cqw,calc(27 * var(--unidad)));
   --pasillo-pareo:clamp(calc(44 * var(--unidad)),calc(25cqw - 38 * var(--unidad)),calc(440 * var(--unidad)));
   --ancho-respuestas:clamp(calc(92 * var(--unidad)),28cqw,calc(192 * var(--unidad)));
-  --ancho-figuras:min(calc(var(--proporcion-ficha) * var(--alto-figura-ampliada)),max(0px,calc(100cqw - 2 * var(--margen-pareo) - var(--pasillo-pareo) - var(--ancho-respuestas) - 2px)));
-  --alto-ficha:max(var(--alto-minimo-ficha),calc(var(--ancho-figuras) / var(--proporcion-ficha)));
+  --ancho-figuras-base:min(calc(var(--proporcion-ficha) * var(--alto-figura-ampliada)),max(0px,calc(100cqw - 2 * var(--margen-pareo) - var(--pasillo-pareo) - var(--ancho-respuestas) - 2px)));
+  --alto-ficha:max(var(--alto-minimo-ficha),calc(var(--ancho-figuras-base) / var(--proporcion-ficha)));
   width:100%;
   height:auto;
   min-height:0;
-  grid-template-columns:var(--ancho-figuras) minmax(0,var(--ancho-respuestas));
+  grid-template-columns:var(--ancho-figuras-base) minmax(0,var(--ancho-respuestas));
   justify-content:center;
   column-gap:var(--pasillo-pareo);
   padding-inline:var(--margen-pareo);
@@ -267,6 +267,23 @@ body{width:var(--ancho-solidos,100%)!important;min-height:0!important}
   rotate:var(--angulo-anillo,-24deg);
   opacity:var(--opacidad-anillo,1);
   filter:drop-shadow(0 1px 1px #26345d80);
+}
+@media (orientation: portrait) and (max-width: 540px) {
+  .app-shell :is(#matchingBoard,#evalMatchingBoard) {
+    /* La proyección 3D conserva su escala cuando solo se recorta el ancho sobrante. */
+    grid-template-columns:min(var(--ancho-figuras-base),var(--alto-ficha)) minmax(0,var(--ancho-respuestas));
+    justify-content:space-between;
+    column-gap:0;
+    padding-inline:calc(6 * var(--unidad));
+  }
+  :is(#matchingBoard,#evalMatchingBoard) .matching-column:first-of-type h3 {
+    align-self:stretch;
+    text-align:center;
+  }
+  :is(#matchingBoard,#evalMatchingBoard) .match-target:is(.correct,.wrong)::after {
+    right:0;
+    top:0;
+  }
 }
 .flight-rocket.cohete-explota { animation:estalla-cohete-solidos .18s ease-out forwards; }
 .fragmento-cohete-solidos { animation-duration:.76s; }
