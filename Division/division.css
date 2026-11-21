@@ -85,6 +85,29 @@ h1,h2,h3,p { margin:0; }
   margin-inline-start:auto; padding:.12em .7em; border:1px solid #ccd2f9; border-radius:10px;
   color:#422a91; background:#eceaff; font-size:clamp(19px,3vw,32px); font-weight:900; white-space:nowrap;
 }
+#sillita {
+  padding:calc(8px * var(--iz,1)); border:1px solid #c7d4ef; border-radius:12px; background:#f3f6ff;
+}
+#tituloSillita { margin-bottom:calc(6px * var(--iz,1)); color:#47348b; font-size:calc(16px * var(--iz,1)); }
+.procedimiento-division {
+  display:grid; grid-template-columns:minmax(0, 12em) minmax(0, 1fr);
+  align-items:center; gap:calc(9px * var(--iz,1)); font-size:calc(14px * var(--iz,1));
+}
+.galera-division {
+  display:grid; grid-template-columns:1fr 1fr; grid-template-rows:repeat(3,auto);
+  background:#fff; border:1px solid #c4cbed; border-radius:9px; color:#2b315a; padding:.3em .5em;
+}
+.galera-division > div { display:grid; gap:.12em; padding:.16em .25em; text-align:right; min-width:0; }
+.galera-division span { font-size:.76em; line-height:1.15; overflow-wrap:anywhere; }
+.galera-division strong { font-size:1.65em; font-variant-numeric:tabular-nums; line-height:1; }
+.galera-division .galera-divisor,.galera-division .galera-cociente { border-inline-start:2px solid #524a99; text-align:left; }
+.galera-division .galera-cociente,.galera-division .galera-resto { border-top:2px solid #524a99; }
+.galera-division .por-mostrar { visibility:hidden; }
+.galera-division .paso-activo { background:#fff0b8; }
+.explicacion-sillita { font-size:.96em; }
+.explicacion-sillita > strong { color:#493793; }
+.explicacion-sillita p { margin-top:.35em; }
+#pruebaSillita { color:#115744; background:#dbf7e9; width:fit-content; padding:.2em .55em; border-radius:6px; font-weight:900; }
 .espacio { overflow:auto; overscroll-behavior:contain; scrollbar-width:thin; min-width:0; min-height:0; border-radius:12px; }
 .barra-grupos {
   position:sticky; top:0; z-index:7; display:flex; min-height:38px; align-items:center;
@@ -246,4 +269,5 @@ h1,h2,h3,p { margin:0; }
 .compacta .zona-caja { min-height:calc(57px * var(--iz)); padding:calc(4px * var(--iz)); }
 .compacta .caja-destino .contenido-caja { min-height:calc(47px * var(--iz)); padding:calc(3px * var(--iz)); }
 .compacta .cajas-destino { grid-template-columns:repeat(auto-fit,minmax(min(100%,calc(122px * var(--iz))),1fr)); }
+.compacta .procedimiento-division { grid-template-columns:minmax(0, 42%) minmax(0, 1fr); font-size:calc(13px * var(--iz)); }
 @media (prefers-reduced-motion:reduce) { .ficha-barrido { transition:none; } }

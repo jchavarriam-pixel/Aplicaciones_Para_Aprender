@@ -18,6 +18,8 @@
     'Escribe la división completa.':'Write the complete division.', 'Dividendo':'Dividend', 'Divisor':'Divisor',
     '¿Cuántas fichas hay en cada grupo?':'How many counters are in each group?',
     '¿Cuántas fichas hay en cada caja?':'How many counters are in each box?',
+    'División en sillita':'Long division', 'Partes de la división en sillita':'Parts of a long division',
+    'Fichas repartidas':'Counters shared', 'Siguiente paso':'Next step', 'Escribir división':'Write the division',
     'Cociente':'Quotient', 'Resto':'Remainder', 'Editar reparto':'Edit sharing',
     'Comprobar reparto':'Check sharing', 'Comprobar cociente':'Check quotient', 'Revisar división':'Check division', '↻ Nueva ronda':'↻ New round',
     'Leer instrucciones y comentarios':'Read instructions and feedback aloud',
@@ -46,9 +48,12 @@
   const app = $('appDivision'), espacio = $('espacioDivision'), dialogo = $('ajustes');
   const campos = ['dividendo','divisor','cociente','residuo'].map($);
   const cocienteReto = $('cocienteReto');
+  const sillita = $('sillita');
+  const celdasSillita = [...sillita.querySelectorAll('[data-paso]')];
   const repartosPrevios = new Map();
   let modo = null, ronda, fase, elegido = null, arrastre = null, ignorarClic = false;
   let fichasCajas = [], zonas = [];
+  let pasoSillita = 0;
   const formas = [
     {es:'estrella',en:'star',d:'M32 5 40 23 60 25 45 39 49 59 32 49 15 59 19 39 4 25 24 23Z',color:'#ffbf43',brillo:'#fff0aa',borde:'#bd7622'},
     {es:'rombo',en:'diamond',d:'M32 5 57 32 32 59 7 32Z',color:'#35cbb1',brillo:'#b5fae9',borde:'#218076'},
@@ -97,7 +102,10 @@
   }
 
   function enunciado() {
-    const {resto} = ronda;
+    const {total,divisor,resto} = ronda;
+    if (modo === 'resto') return t(
+      `Reparte ${total} fichas en ${divisor} grupos iguales. Deja sueltas las que sobren.`,
+      `Share ${total} counters among ${divisor} equal groups. Leave any extras loose.`);
     if (modo === 'cajas') return t(
       `Pon la misma cantidad de fichas en cada caja.${resto ? ' Deja las que sobren afuera.' : ' Usa todas las fichas.'}`,
       `Put the same number of counters in each box.${resto ? ' Leave any extras outside.' : ' Use every counter.'}`);
@@ -107,6 +115,7 @@
   }
 
   function leerReto() {
+    if (fase === 'sillita') { hablar($('textoSillita').textContent); return; }
     const {total,divisor} = ronda;
     hablar(`${t(`${total} dividido entre ${divisor}.`, `${total} divided by ${divisor}.`)} ${enunciado()}`);
   }
@@ -134,22 +143,62 @@
   }
 
   function actualizarFase() {
-    const {total,divisor,cociente} = ronda;
+    const {total,divisor,cociente,resto} = ronda;
     const mostrarEcuacion = fase === 'escribir' || fase === 'listo';
-    $('operacionReto').textContent = `${total} ÷ ${divisor} = ${mostrarEcuacion ? cociente : '?'}`;
+    const mostrarSillita = modo === 'resto' && (fase === 'sillita' || mostrarEcuacion);
+    const mostrarResultado = mostrarEcuacion || (mostrarSillita && pasoSillita === 3);
+    const resultado = mostrarResultado ? `${cociente}${resto ? t(`, resto ${resto}`, `, remainder ${resto}`) : ''}` : '?';
+    $('operacionReto').textContent = `${total} ÷ ${divisor} = ${resultado}`;
     $('respuestaCociente').hidden = fase !== 'cociente';
     $('respuesta').hidden = !mostrarEcuacion;
+    sillita.hidden = !mostrarSillita;
+    $('grupoDivision').hidden = modo === 'cajas' || mostrarSillita;
+    if (mostrarSillita) pintarSillita();
     $('campoResto').hidden = !ronda.resto;
-    $('editarReparto').hidden = fase !== 'escribir' && fase !== 'cociente';
-    $('revisar').textContent = IdiomaVoz.t(fase === 'repartir' ? 'Comprobar reparto' : fase === 'cociente' ? 'Comprobar cociente' : 'Revisar división');
+    $('editarReparto').hidden = !['escribir','cociente','sillita'].includes(fase);
+    const accion = fase === 'sillita' ? pasoSillita === 3 ? 'Escribir división' : 'Siguiente paso'
+      : fase === 'repartir' ? 'Comprobar reparto' : fase === 'cociente' ? 'Comprobar cociente' : 'Revisar división';
+    $('revisar').textContent = IdiomaVoz.t(accion);
     $('revisar').disabled = fase === 'listo';
     for (const campo of campos) campo.readOnly = fase === 'listo';
+  }
+
+  function pintarSillita() {
+    const {total,divisor,cociente,resto} = ronda;
+    const repartidas = divisor * cociente;
+    const pasos = [
+      [t('1. Acomoda la división','1. Set up the division'),
+        t(`El dividendo es ${total}, todas las fichas. El divisor es ${divisor}, la cantidad de grupos.`,
+          `The dividend is ${total}, all of the counters. The divisor is ${divisor}, the number of groups.`)],
+      [t('2. Escribe el cociente','2. Write the quotient'),
+        t(`Encontraste ${cociente} fichas en cada grupo. Escribe el cociente ${cociente} debajo del divisor.`,
+          `You found ${cociente} counters in each group. Write the quotient ${cociente} below the divisor.`)],
+      [t('3. Multiplica','3. Multiply'),
+        t(`Multiplica ${divisor} × ${cociente} para hallar las ${repartidas} fichas repartidas. Escribe ${repartidas} debajo del dividendo para restarlo.`,
+          `Multiply ${divisor} × ${cociente} to find the ${repartidas} counters shared. Write ${repartidas} below the dividend to subtract it.`)],
+      [t('4. Resta y comprueba','4. Subtract and check'),
+        t(`Resta ${total} − ${repartidas} para obtener el resto, ${resto}. Como ${resto} es menor que ${divisor}, no alcanza para dar una ficha más a cada grupo.`,
+          `Subtract ${total} − ${repartidas} to find the remainder, ${resto}. Since ${resto} is less than ${divisor}, there are too few counters for one more in each group.`)]
+    ];
+    for (const [id, valor] of Object.entries({Dividendo:total,Divisor:divisor,Cociente:cociente,Producto:`−${repartidas}`,Resto:resto})) {
+      $(`sillita${id}`).textContent = valor;
+    }
+    for (const celda of celdasSillita) {
+      const paso = Number(celda.dataset.paso);
+      celda.classList.toggle('por-mostrar', paso > pasoSillita);
+      celda.classList.toggle('paso-activo', paso === pasoSillita);
+    }
+    $('tituloPasoSillita').textContent = pasos[pasoSillita][0];
+    $('textoSillita').textContent = pasos[pasoSillita][1];
+    $('pruebaSillita').hidden = pasoSillita !== 3;
+    $('pruebaSillita').textContent = `${divisor} × ${cociente} + ${resto} = ${total}`;
   }
 
   function iniciarRonda() {
     cancelarArrastre();
     magneticos.cancelar();
     fase = 'repartir';
+    pasoSillita = 0;
     ronda = crearRonda();
     espacio.scrollTop = 0;
     $('grupoDivision').hidden = modo === 'cajas';
@@ -360,6 +409,19 @@
       hablar(texto);
       return;
     }
+    if (modo === 'resto') {
+      fase = 'sillita';
+      pasoSillita = 0;
+      espacio.scrollTop = 0;
+      mensajeDirecto('');
+      actualizarFase();
+      leerReto();
+      return;
+    }
+    abrirEscritura();
+  }
+
+  function abrirEscritura() {
     fase = 'escribir';
     actualizarFase();
     const texto = ronda.resto
@@ -409,6 +471,10 @@
   $('revisar').onclick = () => {
     if (fase === 'repartir') comprobarReparto();
     else if (fase === 'cociente') comprobarCociente();
+    else if (fase === 'sillita') {
+      if (pasoSillita === 3) abrirEscritura();
+      else { pasoSillita++; actualizarFase(); leerReto(); }
+    }
     else if (fase === 'escribir') revisarDivision();
   };
   $('respuesta').onsubmit = event => {event.preventDefault();if(fase === 'escribir')revisarDivision();};
@@ -421,9 +487,10 @@
     fase = 'repartir';
     cocienteReto.value = '';
     cocienteReto.removeAttribute('aria-invalid');
+    actualizarFase();
     if (modo === 'cajas') pintarCajas();
     else {magneticos.resuelto = false;magneticos.actualizar();}
-    actualizarFase();
+    espacio.scrollTop = 0;
     mensajeDirecto('');
   };
   $('modos').addEventListener('click',event => {

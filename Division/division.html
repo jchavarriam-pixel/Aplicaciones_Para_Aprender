@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="../creditos.css">
   <link rel="stylesheet" href="../pantalla-completa.css">
   <link rel="stylesheet" href="../panel-plegable.css">
-  <link rel="stylesheet" href="division.css?v=reparto-2">
+  <link rel="stylesheet" href="division.css?v=sillita-1">
 </head>
 <body>
   <main id="appDivision">
@@ -77,6 +77,23 @@
             </div>
             <div id="destinos" class="cajas-destino"></div>
           </section>
+          <section id="sillita" aria-labelledby="tituloSillita" hidden>
+            <h3 id="tituloSillita">División en sillita</h3>
+            <div class="procedimiento-division">
+              <div class="galera-division" aria-label="Partes de la división en sillita">
+                <div class="galera-dividendo" data-paso="0"><span>Dividendo</span><strong id="sillitaDividendo"></strong></div>
+                <div class="galera-divisor" data-paso="0"><span>Divisor</span><strong id="sillitaDivisor"></strong></div>
+                <div class="galera-producto" data-paso="2"><span>Fichas repartidas</span><strong id="sillitaProducto"></strong></div>
+                <div class="galera-cociente" data-paso="1"><span>Cociente</span><strong id="sillitaCociente"></strong></div>
+                <div class="galera-resto" data-paso="3"><span>Resto</span><strong id="sillitaResto"></strong></div>
+              </div>
+              <div class="explicacion-sillita" aria-live="polite">
+                <strong id="tituloPasoSillita"></strong>
+                <p id="textoSillita" data-no-traducir></p>
+                <p id="pruebaSillita" data-no-traducir hidden></p>
+              </div>
+            </div>
+          </section>
         </div>
         <div class="entrega">
           <p id="mensaje" role="status"></p>
@@ -134,7 +151,7 @@
   <script src="../idioma-voz.js"></script>
   <script src="../matematicas-base.js"></script>
   <script src="../Multiplicacion/grupos-magneticos.js?v=contornos-1"></script>
-  <script src="division.js?v=reparto-2"></script>
+  <script src="division.js?v=sillita-1"></script>
   <script src="../pantalla-completa.js"></script>
   <script src="../panel-plegable.js?v=division-1"></script>
   <script src="../nombre-compartido.js"></script>
