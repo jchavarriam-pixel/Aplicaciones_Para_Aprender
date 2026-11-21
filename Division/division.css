@@ -290,4 +290,34 @@ h1,h2,h3,p { margin:0; }
   .compacta #respuesta { --tecla:calc(28px * var(--iz)); }
   .compacta #tecladoReparto { grid-template-columns:repeat(12,minmax(0,1fr)); }
 }
+#respuesta.respuesta-en-sillita {
+  --u:var(--iz,1);
+  grid-template-columns:auto auto; justify-content:center; align-items:center;
+  gap:calc(4px * var(--u)) calc(8px * var(--u));
+}
+.respuesta-en-sillita #tituloRespuesta { grid-column:1/-1; }
+.respuesta-en-sillita .ecuacion {
+  display:grid; grid-template-columns:repeat(2,minmax(calc(58px * var(--u)),auto));
+  gap:0; padding:calc(3px * var(--u)); border-radius:8px; background:#fff;
+}
+.respuesta-en-sillita .ecuacion b { display:none; }
+.respuesta-en-sillita .ecuacion label {
+  padding:calc(3px * var(--u)); gap:calc(2px * var(--u)); justify-items:center;
+  font-size:calc(11px * var(--u));
+}
+.respuesta-en-sillita .ecuacion label:has(#divisor),.respuesta-en-sillita .ecuacion label:has(#cociente) {
+  border-inline-start:calc(2px * var(--u)) solid #524a99;
+}
+.respuesta-en-sillita .ecuacion label:has(#cociente),.respuesta-en-sillita #campoResto {
+  border-top:calc(2px * var(--u)) solid #524a99;
+}
+.respuesta-en-sillita #campoResto { grid-area:2/1; }
+.respuesta-en-sillita .ecuacion label:has(#cociente) { grid-area:2/2; }
+.respuesta-en-sillita .ecuacion input {
+  width:calc(43px * var(--u)); padding:calc(3px * var(--u)); font-size:calc(17px * var(--u));
+}
+.respuesta-en-sillita #tecladoReparto { grid-template-columns:repeat(6,minmax(0,1fr)); }
+@media (max-width:450px) {
+  .respuesta-en-sillita #tecladoReparto { grid-template-columns:repeat(4,minmax(0,1fr)); }
+}
 @media (prefers-reduced-motion:reduce) { .ficha-barrido { transition:none; } }

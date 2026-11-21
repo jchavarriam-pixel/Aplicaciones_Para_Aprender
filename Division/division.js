@@ -16,6 +16,7 @@
     '‹ Modos':'‹ Modes', 'Tablero para agrupar fichas':'Board for grouping counters',
     'Separar ficha':'Separate counter', 'Deshacer':'Undo', 'Fichas por repartir':'Counters to share',
     'Escribe la división completa.':'Write the complete division.', 'División completa':'Complete division',
+    'Completa la división en sillita.':'Complete the long division.',
     'Dividendo':'Dividend', 'Divisor':'Divisor',
     'Teclado numérico':'Number keypad', 'Borrar cifra':'Delete digit', 'Siguiente casilla':'Next box',
     'División en sillita':'Long division', 'Partes de la división en sillita':'Parts of a long division',
@@ -147,11 +148,14 @@
     const escribir = fase === 'escribir';
     const resuelto = fase === 'sillita' || fase === 'listo';
     const mostrarSillita = modo !== 'cajas' && resuelto;
+    const enSillita = modo === 'resto';
     const resultado = resuelto ? `${cociente}${resto ? t(`, resto ${resto}`, `, remainder ${resto}`) : ''}` : '?';
     $('operacionReto').textContent = `${total} ÷ ${divisor} = ${resultado}`;
     $('pregunta').hidden = fase !== 'repartir';
-    $('respuesta').hidden = !escribir && !resuelto;
-    $('tituloRespuesta').textContent = IdiomaVoz.t(resuelto ? 'División completa' : 'Escribe la división completa.');
+    $('respuesta').hidden = !escribir && (!resuelto || enSillita);
+    $('respuesta').classList.toggle('respuesta-en-sillita',enSillita);
+    const titulo = enSillita ? 'Completa la división en sillita.' : resuelto ? 'División completa' : 'Escribe la división completa.';
+    $('tituloRespuesta').textContent = IdiomaVoz.t(titulo);
     teclado.hidden = !escribir;
     sillita.hidden = !mostrarSillita;
     $('grupoDivision').hidden = modo === 'cajas' || mostrarSillita;
@@ -403,13 +407,16 @@
     if (modo === 'cajas') pintarCajas();
     else magneticos.bloquear();
     const bien = t('¡Repartiste por igual!', 'You shared equally!');
-    mensajeDirecto(bien,'bien');
+    mensajeDirecto(modo === 'resto' ? '' : bien,'bien');
     hablar(`${bien} ${instruccionEscritura()}`);
   }
 
   const coincide = (campo, valor) => /^\d+$/.test(campo.value) && Number(campo.value) === valor;
 
   function instruccionEscritura() {
+    if (modo === 'resto') return t(
+      'Coloca el dividendo, el divisor, el cociente y el resto en la sillita.',
+      'Put the dividend, divisor, quotient and remainder in the long division.');
     return ronda.resto
       ? t('Escribe la división completa y anota las fichas sueltas en el resto.', 'Write the complete division and enter the loose counters as the remainder.')
       : t('Escribe la división completa con ÷ y = en sus casillas.', 'Write the complete division in the boxes with ÷ and =.');
@@ -421,8 +428,11 @@
     const errores = esperados.map((valor,i) => !coincide(campos[i],valor));
     for (const [i,error] of errores.entries()) campos[i].setAttribute('aria-invalid',String(error));
     if (errores.some(Boolean)) {
-      seleccionarCampo(campos[errores.indexOf(true)]);
-      const texto = t(
+      const primera = errores.indexOf(true);
+      seleccionarCampo(campos[primera]);
+      const texto = modo === 'resto' && primera === 3
+        ? t('Cuenta las fichas sueltas para escribir el resto.', 'Count the loose counters to find the remainder.')
+        : t(
         `Revisa las casillas marcadas. Cuenta las fichas, los grupos y cuántas hay en cada grupo.${resto ? ' Incluye las que sobran en el resto.' : ''}`,
         `Check the marked boxes. Count the counters, the groups and how many are in each group.${resto ? ' Write any leftovers as the remainder.' : ''}`);
       mensajeDirecto(texto,'intenta');
@@ -439,7 +449,8 @@
     mensajeDirecto(`${felicitacion} ${ecuacion}`,'bien');
     hablar(t(`${felicitacion} ${total} dividido entre ${divisor} es ${cociente}.${resto ? ` Sobran ${resto}.` : ''}`,`${felicitacion} ${total} divided by ${divisor} is ${cociente}.${resto ? ` The remainder is ${resto}.` : ''}`));
     if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      $('respuesta').animate([{transform:'scale(1)'},{transform:'scale(1.025)'},{transform:'scale(1)'}],{duration:470,easing:'ease-out'});
+      const retroalimentacion = modo === 'resto' ? sillita : $('respuesta');
+      retroalimentacion.animate([{transform:'scale(1)'},{transform:'scale(1.025)'},{transform:'scale(1)'}],{duration:470,easing:'ease-out'});
     }
   }
 
