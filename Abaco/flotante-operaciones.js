@@ -18,13 +18,12 @@ Object.assign(window.TEXTOS_INGLES ||= {}, {
 
 window.AbacoOperaciones = (() => {
   'use strict';
-  const clave = 'operaciones.abaco.v1';
   const t = (es, en) => IdiomaVoz.idioma === 'en' ? en : es;
   const modos = ['libre','intermedio','guiado'];
   const anchos = {pequeno:276, mediano:342, grande:426};
   const distribuir = n => [Math.min(n,10),Math.max(0,n-10)];
 
-  function instalar(boton, obtenerOperacion) {
+  function instalar(boton, obtenerOperacion, clave = 'operaciones.abaco.v1') {
     const configuracion = document.createElement('fieldset');
     configuracion.className = 'ajustes-abaco-operaciones';
     configuracion.innerHTML = `

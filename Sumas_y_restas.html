@@ -223,7 +223,7 @@
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
   <link rel="stylesheet" href="panel-ancho-ajustable.css?v=20261118-1">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-operaciones.css?v=prestamo-en-cuenta-1"><link rel="stylesheet" href="Abaco/cuentas.css"><link rel="stylesheet" href="Abaco/flotante-operaciones.css?v=libre-1"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="signos-celebraciones.css?v=20261118-5"><link rel="stylesheet" href="signos-escenas.css?v=20261118-1"><script>window.IDIOMA_VOZ_APP='operaciones';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-operaciones-textos.js?v=organizacion-1"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="operaciones-pasos.css"><link rel="stylesheet" href="matematicas-operaciones.css?v=prestamo-en-cuenta-2"><link rel="stylesheet" href="Abaco/cuentas.css"><link rel="stylesheet" href="Abaco/flotante-operaciones.css?v=libre-1"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="signos-celebraciones.css?v=20261118-5"><link rel="stylesheet" href="signos-escenas.css?v=20261118-1"><script>window.IDIOMA_VOZ_APP='operaciones';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-operaciones-textos.js?v=organizacion-1"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script></head>
 <body>
   <div class="app-wrapper" id="app">
     <audio id="bgMusic" loop preload="auto"><source src="data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQIAAAAAAAA=" type="audio/wav"></audio>
@@ -1049,28 +1049,8 @@
     }
 
     function mostrarLlevada(total, origen, destino, colocar) {
-      const resto = total - 10;
-      const en = IdiomaVoz.idioma === 'en';
       origen.textContent = total;
-      mostrarPasos([
-        {
-          texto: en ? `Separate one group of ten from the ${total}.` : `Separa un grupo de diez del ${total}.`,
-          ecuacion: `${total} = 10 + ${resto}`,
-          narracion: [
-            {texto: en ? `This column adds up to ${total}.` : `En esta columna, la suma da ${total}.`},
-            {texto: en ? `We separate one ten. That leaves ${resto} ones.` : `Separamos una decena. Nos quedan ${resto} unidades.`, minimo:3400}
-          ]
-        },
-        {
-          texto: en ? `The 1 goes to the left. The ${resto} stays in this column.` : `El 1 pasa a la izquierda. El ${resto} se queda en esta columna.`,
-          origen, destino, resto,
-          narracion: [
-            {texto: en ? 'We carry the 1 to the box on the left. That 1 stands for one ten.'
-              : 'Llevamos el 1 a la casilla de la izquierda. Ese 1 representa una decena.', efecto:'llevada', minimo:3600},
-            {texto: en ? `The ${resto} stays in the column where we added.` : `El ${resto} se queda en la columna donde sumamos.`}
-          ]
-        }
-      ], colocar);
+      mostrarPasos(PasosOperaciones.pasosLlevada(total,origen,destino), colocar);
     }
 
     function doBorrow() {
@@ -1105,44 +1085,7 @@
       };
       if (!animarPasos) { aplicar(); return; }
 
-      const en = IdiomaVoz.idioma === 'en';
-      const pasos = [
-        {
-          texto: en ? `Add ten to ${receptor.antes}. It becomes ${receptor.despues}.`
-            : `Suma diez al ${receptor.antes}. Ahora tienes ${receptor.despues}.`,
-          ecuacion: `${receptor.antes} + 10 = ${receptor.despues}`, cambios:[receptor],
-          narracion: [
-            {texto: en ? `Let's take the ${receptor.antes} and move it up.`
-              : `Tomemos el ${receptor.antes}. Lo subimos.`, minimo:3200},
-            {texto: en ? `We put a 1 in front to make ${receptor.despues}. That 1 represents one ten.`
-              : `Le agregamos un 1 delante para formar el ${receptor.despues}. Ese 1 representa una decena.`,
-              efecto:'prefijo', minimo:4100}
-          ]
-        },
-        {
-          texto: en ? `${origen.antes} lends one. Go back to ${origen.despues}, the previous number.`
-            : `El ${origen.antes} presta uno. Retrocede al ${origen.despues}, su antecesor.`,
-          recta:origen,
-          narracion: [
-            {texto: en ? `Find the ${origen.antes} on the number line. This is the digit that lends.`
-              : `Busquemos el ${origen.antes} en la recta numérica. Es la cifra que presta.`, minimo:3400},
-            {texto: en ? `Go back one number. We land on ${origen.despues}, the number before ${origen.antes}.`
-              : `Retrocedemos un número. Llegamos al ${origen.despues}, el antecesor del ${origen.antes}.`,
-              efecto:'retroceso', minimo:3900}
-          ]
-        }
-      ];
-      if (intermedias.length) pasos.push({
-        texto: en ? 'Each zero in between receives ten and passes one to the right. That leaves nine.'
-          : 'Cada cero intermedio recibe diez y pasa uno a la derecha. Le quedan nueve.',
-        ecuacion:'10 − 1 = 9',
-        narracion: intermedias.map((cambio, i) => ({
-          texto: en ? `${i === 0 ? 'This zero' : 'The next zero'} receives ten and passes one to the right. Nine stays here.`
-            : `${i === 0 ? 'Este cero' : 'El siguiente cero'} recibe diez y pasa uno a la derecha. Aquí quedan nueve.`,
-          cambio, minimo:3900
-        }))
-      });
-      mostrarPasos(pasos, aplicar, {prestamo:true});
+      mostrarPasos(PasosOperaciones.pasosPrestamo(origen,receptor,intermedias), aplicar, {prestamo:true});
     }
 
     function updateBorrowBtn() {
@@ -1511,7 +1454,7 @@
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="signos-escenas.js?v=20261118-2"></script><script src="operaciones-globos.js?v=1"></script><script src="signos-celebraciones.js?v=operaciones-2"></script><script src="operaciones-pasos.js?v=prestamo-en-cuenta-1"></script><script src="Abaco/cuentas.js"></script><script src="Abaco/flotante-operaciones.js?v=libre-1"></script><script src="matematicas-operaciones.js?v=abaco-2"></script><script src="pantalla-completa.js"></script><script src="panel-plegable.js?v=operaciones-1"></script>
+<script src="signos-escenas.js?v=20261118-2"></script><script src="operaciones-globos.js?v=1"></script><script src="signos-celebraciones.js?v=operaciones-2"></script><script src="operaciones-pasos.js?v=valor-posicional-1"></script><script src="Abaco/cuentas.js"></script><script src="Abaco/flotante-operaciones.js?v=valor-posicional-1"></script><script src="matematicas-operaciones.js?v=abaco-2"></script><script src="pantalla-completa.js"></script><script src="panel-plegable.js?v=operaciones-1"></script>
 <script src="nombre-compartido.js"></script>
 <script src="panel-ancho-ajustable.js?v=operaciones-1"></script>
 </body>

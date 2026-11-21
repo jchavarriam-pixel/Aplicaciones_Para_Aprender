@@ -35,10 +35,10 @@ window.PasosOperaciones = (() => {
 
   function rectaNumerica(cambio) {
     const {antes,col} = cambio;
-    const columna = document.querySelector(`#colsContainer .col[data-col="${col}"]`);
+    const columna = sesion.columna(col);
     const zona = columna.querySelector('.borrow-zone');
     zona.querySelector('.cifra-del-paso')?.remove();
-    columna.querySelector('.digit-cell').classList.add('cifra-en-transformacion');
+    columna.querySelector(sesion.selectorCifra).classList.add('cifra-en-transformacion');
     const linea = document.createElement('div');
     linea.className = 'recta-prestamo';
     linea.setAttribute('aria-hidden', 'true');
@@ -57,10 +57,10 @@ window.PasosOperaciones = (() => {
   }
 
   function cifraPrestada({ col, antes, despues, subir }) {
-    const columna = document.querySelector(`#colsContainer .col[data-col="${col}"]`);
+    const columna = sesion.columna(col);
     const zona = columna.querySelector('.borrow-zone');
     zona.querySelector('.cifra-del-paso')?.remove();
-    columna.querySelector('.digit-cell').classList.add('cifra-en-transformacion');
+    columna.querySelector(sesion.selectorCifra).classList.add('cifra-en-transformacion');
     const cifra = document.createElement('span');
     cifra.className = subir ? 'cifra-del-paso cifra-sube' : 'cifra-del-paso';
     if (subir) {
@@ -86,7 +86,8 @@ window.PasosOperaciones = (() => {
       ficha.className = 'cifra-del-paso ficha-llevada-animada';
       ficha.textContent = '1';
       ficha.setAttribute('aria-hidden','true');
-      ficha.style.setProperty('--origen-llevada-x', (salida.left + salida.width*.32 - llegada.left - llegada.width/2)/escala+'px');
+      const origenX = salida.left + salida.width * (paso.origenFraccion ?? .32);
+      ficha.style.setProperty('--origen-llevada-x', (origenX - llegada.left - llegada.width/2)/escala+'px');
       ficha.style.setProperty('--origen-llevada-y', (salida.top + salida.height/2 - llegada.top - llegada.height/2)/escala+'px');
       paso.origen.textContent = paso.resto;
       paso.destino.append(ficha);
@@ -149,13 +150,16 @@ window.PasosOperaciones = (() => {
     presentarFragmento(siguiente, 0);
   }
 
-  function mostrar(pasos, completar, { narrar = true, prestamo = false } = {}) {
+  function mostrar(pasos, completar, {
+    narrar = true, prestamo = false, tablero = document.getElementById('gameScreen'),
+    columna = col => document.querySelector(`#colsContainer .col[data-col="${col}"]`),
+    selectorCifra = '.digit-cell', controles
+  } = {}) {
     limpiar();
-    const tablero = document.getElementById('gameScreen');
     const botonPrestamo = document.getElementById('borrowBtn');
     const enfocarSiguiente = prestamo && document.activeElement === botonPrestamo;
     const panel = document.createElement('section');
-    panel.className = prestamo ? 'controles-pasos-prestamo' : 'panel-pasos-operaciones';
+    panel.className = prestamo || controles ? 'controles-pasos-prestamo' : 'panel-pasos-operaciones';
     panel.innerHTML = `<div class="texto-paso-operacion" role="status">
       <strong class="paso-operacion-contador"></strong><span class="mensaje-paso-operacion"></span>
     </div><div class="detalle-paso-operacion"></div>
@@ -169,12 +173,13 @@ window.PasosOperaciones = (() => {
     saltar.setAttribute('aria-label', t('Saltar animación','Skip animation'));
     saltar.onclick = terminar;
     tablero.classList.add('mostrando-pasos');
-    if (prestamo) {
+    if (prestamo || controles) {
       tablero.classList.add('prestamo-en-cuenta');
-      botonPrestamo.after(panel);
+      if (controles) controles.append(panel);
+      else botonPrestamo.after(panel);
     } else document.getElementById('hintBar').after(panel);
     sesion = {
-      tablero, panel, pasos, completar, narrar, prestamo, indice:-1,
+      tablero, panel, pasos, completar, narrar, prestamo:prestamo || !!controles, columna, selectorCifra, indice:-1,
       mensaje:panel.querySelector('.mensaje-paso-operacion'),
       detalle:panel.querySelector('.detalle-paso-operacion')
     };
@@ -184,5 +189,70 @@ window.PasosOperaciones = (() => {
     }
   }
 
-  return {mostrar, limpiar, get activo() { return sesion !== null; }};
+    function pasosLlevada(total, origen, destino) {
+      const resto = total - 10;
+      const en = IdiomaVoz.idioma === 'en';
+      return [
+        {
+          texto: en ? `Separate one group of ten from the ${total}.` : `Separa un grupo de diez del ${total}.`,
+          ecuacion: `${total} = 10 + ${resto}`,
+          narracion: [
+            {texto: en ? `This column adds up to ${total}.` : `En esta columna, la suma da ${total}.`},
+            {texto: en ? `We separate one ten. That leaves ${resto} ones.` : `Separamos una decena. Nos quedan ${resto} unidades.`, minimo:3400}
+          ]
+        },
+        {
+          texto: en ? `The 1 goes to the left. The ${resto} stays in this column.` : `El 1 pasa a la izquierda. El ${resto} se queda en esta columna.`,
+          origen, destino, resto,
+          narracion: [
+            {texto: en ? 'We carry the 1 to the box on the left. That 1 stands for one ten.'
+              : 'Llevamos el 1 a la casilla de la izquierda. Ese 1 representa una decena.', efecto:'llevada', minimo:3600},
+            {texto: en ? `The ${resto} stays in the column where we added.` : `El ${resto} se queda en la columna donde sumamos.`}
+          ]
+        }
+      ];
+    }
+
+    function pasosPrestamo(origen, receptor, intermedias) {
+      const en = IdiomaVoz.idioma === 'en';
+      const pasos = [
+        {
+          texto: en ? `Add ten to ${receptor.antes}. It becomes ${receptor.despues}.`
+            : `Suma diez al ${receptor.antes}. Ahora tienes ${receptor.despues}.`,
+          ecuacion: `${receptor.antes} + 10 = ${receptor.despues}`, cambios:[receptor],
+          narracion: [
+            {texto: en ? `Let's take the ${receptor.antes} and move it up.`
+              : `Tomemos el ${receptor.antes}. Lo subimos.`, minimo:3200},
+            {texto: en ? `We put a 1 in front to make ${receptor.despues}. That 1 represents one ten.`
+              : `Le agregamos un 1 delante para formar el ${receptor.despues}. Ese 1 representa una decena.`,
+              efecto:'prefijo', minimo:4100}
+          ]
+        },
+        {
+          texto: en ? `${origen.antes} lends one. Go back to ${origen.despues}, the previous number.`
+            : `El ${origen.antes} presta uno. Retrocede al ${origen.despues}, su antecesor.`,
+          recta:origen,
+          narracion: [
+            {texto: en ? `Find the ${origen.antes} on the number line. This is the digit that lends.`
+              : `Busquemos el ${origen.antes} en la recta numérica. Es la cifra que presta.`, minimo:3400},
+            {texto: en ? `Go back one number. We land on ${origen.despues}, the number before ${origen.antes}.`
+              : `Retrocedemos un número. Llegamos al ${origen.despues}, el antecesor del ${origen.antes}.`,
+              efecto:'retroceso', minimo:3900}
+          ]
+        }
+      ];
+      if (intermedias.length) pasos.push({
+        texto: en ? 'Each zero in between receives ten and passes one to the right. That leaves nine.'
+          : 'Cada cero intermedio recibe diez y pasa uno a la derecha. Le quedan nueve.',
+        ecuacion:'10 − 1 = 9',
+        narracion: intermedias.map((cambio, i) => ({
+          texto: en ? `${i === 0 ? 'This zero' : 'The next zero'} receives ten and passes one to the right. Nine stays here.`
+            : `${i === 0 ? 'Este cero' : 'El siguiente cero'} recibe diez y pasa uno a la derecha. Aquí quedan nueve.`,
+          cambio, minimo:3900
+        }))
+      });
+      return pasos;
+    }
+
+  return {mostrar, limpiar, pasosPrestamo, pasosLlevada, get activo() { return sesion !== null; }};
 })();

@@ -2,8 +2,8 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sumas y Restas - Versión personalizada</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content" />
+  <title>Sumas y restas por valor posicional</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -114,12 +114,12 @@
   </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-posicional.css"><script>window.IDIOMA_VOZ_APP='valorPosicional';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-operaciones-textos.js"></script><script src="idioma-voz.js"></script><script src="matematicas-base.js"></script><link rel="stylesheet" href="iconos/cabeceras.css"></head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="operaciones-pasos.css"><link rel="stylesheet" href="Abaco/cuentas.css"><link rel="stylesheet" href="Abaco/flotante-operaciones.css?v=libre-1"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-posicional.css?v=tablero-1"><script>window.IDIOMA_VOZ_APP='valorPosicional';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-operaciones-textos.js"></script><script src="idioma-voz.js"></script><script src="matematicas-base.js"></script><link rel="stylesheet" href="iconos/cabeceras.css"></head>
 <body>
-<div class="app">
-  <main id="menu" class="screen active">
+<div class="app" id="appPosicional">
+  <main id="menu" class="screen actividad active">
     <section class="card hero">
-      <h1 class="title"><img class="icono-actividad-en-titulo" src="iconos/sumas-restas-valor-posicional.webp" width="64" height="64" alt="">Sumas y Restas</h1>
+      <h1 class="title"><img class="icono-actividad-en-titulo" src="iconos/sumas-restas-valor-posicional.webp" width="64" height="64" alt="">Sumas y restas por valor posicional</h1>
       <p class="subtitle"><span class="subtitle-main">Elige cómo practicar: escribe tu propia operación o acomoda una operación sorpresa.</span><span class="pos-format">| UM | C | D | U |</span></p>
       <div class="name-row">
         <input id="nameInput" class="name-input" type="text" placeholder="Nombre del estudiante" autocomplete="off" />
@@ -140,7 +140,7 @@
     </section>
   </main>
 
-  <main id="customScreen" class="screen">
+  <main id="customScreen" class="screen actividad">
     <div class="topbar">
       <button class="btn back" onclick="goMenu()">⬅ Menú</button>
       <h2 class="small-title">Escribo mi operación</h2>
@@ -161,7 +161,7 @@
     <section id="solverCustom" class="workspace hidden"></section>
   </main>
 
-  <main id="houseScreen" class="screen">
+  <main id="houseScreen" class="screen actividad">
     <div class="topbar">
       <button class="btn back" onclick="goMenu()">⬅ Menú</button>
       <h2 class="small-title">Operación sorpresa y valor posicional</h2>
@@ -207,6 +207,7 @@ let showLeadingZeros=false;
 let audioHelpOn=false;
 let audioGuideTimeout=null;
 const ghost=document.getElementById('ghost');
+let animarPasosPosicional=true, narrarPasosPosicional=true, ayudaVisualPosicional=true;
 function $(id){return document.getElementById(id)}
 function saveName(){const inp=$('nameInput');studentName=(inp.value||'').trim();if(studentName){try{localStorage.setItem(CLAVE_NOMBRE,studentName)}catch{}}}
 function loadName(){let saved='';try{saved=(localStorage.getItem(CLAVE_NOMBRE)||'').trim()}catch{}if(saved){$('nameInput').value=saved;studentName=saved}$('nameInput').addEventListener('input',saveName)}
@@ -231,21 +232,159 @@ function setShowLeadingZeros(checked){
 }
 function makeProblem(a,b,op,mode){const result=op==='+'?a+b:a-b;const maxLen=Math.max(numDigits(a),numDigits(b),numDigits(result));current={a,b,op,digits:Math.max(1,maxLen),mode,resultDigits:digitsArray(result,Math.max(1,maxLen)),topDigits:digitsArray(a,Math.max(1,maxLen)),bottomDigits:digitsArray(b,Math.max(1,maxLen)),answers:new Array(Math.max(1,maxLen)).fill(null),carrySlots:new Array(Math.max(1,maxLen)).fill(null),borrowed:new Array(Math.max(1,maxLen)).fill(false),currentTop:digitsArray(a,Math.max(1,maxLen)),leadingAnswer:null,expectedLeading:0,solved:false};if(op==='+')prepareCarries();renderSolver(mode==='custom'?'solverCustom':'houseArea')}
 function prepareCarries(){let carry=0;const expected=new Array(current.digits).fill(0);for(let i=current.digits-1;i>=0;i--){expected[i]=carry;const total=current.topDigits[i]+current.bottomDigits[i]+carry;carry=total>=10?1:0}current.expectedCarryIn=expected}
-function generateFromInput(){clearAudioGuide(false);const p=parseOperation($('operationInput').value);const msg=$('customMsg');if(!p.ok){msg.textContent=p.msg;msg.className='message bad';$('solverCustom').classList.add('hidden');return}msg.textContent='¡Lista! Ahora resuelve la operación arrastrando los números.';msg.className='message good';makeProblem(p.a,p.b,p.op,'custom');$('solverCustom').classList.remove('hidden')}
+function generateFromInput(){PasosOperaciones.limpiar();clearAudioGuide(false);const p=parseOperation($('operationInput').value);const msg=$('customMsg');if(!p.ok){msg.textContent=p.msg;msg.className='message bad';$('solverCustom').classList.add('hidden');return}msg.textContent='';msg.className='message info';makeProblem(p.a,p.b,p.op,'custom');$('solverCustom').classList.remove('hidden')}
 function expectedAnswerDigits(){return digitsArray(current.op==='+'?current.a+current.b:current.a-current.b,current.digits)}
 function expectedCarryAt(i){if(current.op!=='+')return 0;return current.expectedCarryIn?current.expectedCarryIn[i]:0}
 function needsCarrySlot(i){return current.op==='+'&&expectedCarryAt(i)===1&&!bothOperandsPaddingAt(i,current.digits)}
-function renderSolver(containerId){const cont=$(containerId);cont.innerHTML='';cont.classList.remove('hidden');const title=document.createElement('div');title.className='operation-preview';title.textContent=`${current.a} ${current.op} ${current.b} = ?`;cont.appendChild(title);const board=document.createElement('div');board.className='board';board.innerHTML=`<div id="hint_${containerId}" class="message info">Resuelve de derecha a izquierda. Arrastra los números a los espacios.</div>`;const wrap=document.createElement('div');wrap.className='vertical-op no-head';const signCol=document.createElement('div');signCol.className='sign-col';signCol.innerHTML=`<div class="carry-row"></div><div class="sign-space"></div><div class="bottom-row"><div class="sign ${current.op==='-'?'minus':''}">${current.op==='-'?'<span class="minus-line"></span>':'+'}</div></div><div class="line-row"><div class="line"></div></div><div class="answer-row"></div>`;wrap.appendChild(signCol);
-for(let i=0;i<current.digits;i++){const col=document.createElement('div');col.className='digit-col';col.dataset.col=i;const carry=current.op==='+'?(needsCarrySlot(i)?`<div class="carry-slot ${current.carrySlots[i]!==null?'slot-filled':''}" data-type="carry" data-col="${i}">${current.carrySlots[i]??''}</div>`:`<div style="width:31px;height:31px"></div>`):`<div style="width:31px;height:31px"></div>`;const topDisplay=displayProblemDigit(current.a,current.topDigits,i);const bottomDisplay=displayProblemDigit(current.b,current.bottomDigits,i);let top=`<div class="digit ${current.op==='-'&&current.borrowed[i]?'crossed':''} ${topDisplay===''?'blank':''}">${topDisplay}${current.op==='-'&&current.borrowed[i]?`<span class="new-above">${current.currentTop[i]}</span>`:''}</div>`;let bottom=`<div class="digit ${bottomDisplay===''?'blank':''}">${bottomDisplay}</div>`;col.innerHTML=`<div class="carry-row">${carry}</div><div class="top-row">${top}</div><div class="bottom-row">${bottom}</div><div class="line-row"><div class="line"></div></div><div class="answer-row"><div class="answer-slot ${current.answers[i]!==null?'slot-filled':''}" data-type="answer" data-col="${i}">${current.answers[i]??''}</div></div>`;wrap.appendChild(col)}
-board.appendChild(wrap);if(current.op==='-'){const b=document.createElement('button');b.className='btn orange borrow-btn';b.id='borrowBtn';b.innerHTML='Pedir prestado';b.onclick=doBorrow;board.appendChild(b)}cont.appendChild(board);const bank=document.createElement('div');bank.className='bank-wrap';bank.innerHTML='<div class="bank-label">Arrastra un número 👇</div><div class="number-bank"></div>';cont.appendChild(bank);const nb=bank.querySelector('.number-bank');for(let n=0;n<=9;n++){const chip=document.createElement('div');chip.className=`chip c${n}`;chip.dataset.val=n;chip.textContent=n;chip.addEventListener('pointerdown',startDrag);nb.appendChild(chip)}const actions=document.createElement('div');actions.className='actions';actions.innerHTML=`<button class="btn ok" onclick="checkSolver('${containerId}')">✅ Revisar</button><button class="btn blue" id="audioHelpBtn_${containerId}" onclick="toggleAudioHelp('${containerId}')">🔊 Ayuda verbal</button><button class="btn pink" onclick="resetSolver('${containerId}')">🔁 Reiniciar respuesta</button>${current.mode==='custom'?'<button class="btn purple" onclick="generateFromInput()">🔄 Generar otra vez</button>':'<button class="btn purple" onclick="newHouseProblem()">🆕 Nueva operación</button>'}`;cont.appendChild(actions);attachDropEvents(cont);updateBorrowButton();updateHint(containerId)}
-function attachDropEvents(root){root.querySelectorAll('.answer-slot,.carry-slot,.place-slot,.sign-slot').forEach(el=>{el.addEventListener('pointerenter',()=>{if(drag.value!==null)el.classList.add('drop-hover')});el.addEventListener('pointerleave',()=>el.classList.remove('drop-hover'));el.addEventListener('click',()=>clearSlot(el))})}
-function clearSlot(el){const type=el.dataset.type;const col=parseInt(el.dataset.col,10);if(type==='answer'){current.answers[col]=null}else if(type==='carry'){current.carrySlots[col]=null}else if(type==='houseTop'){house.topSlots[col]=null}else if(type==='houseBottom'){house.bottomSlots[col]=null}else if(type==='houseSign'){house.signSlot=null}rerenderActive()}
-function startDrag(e){e.preventDefault();const raw=e.currentTarget.dataset.val;drag.value=(raw==='+'||raw==='-')?raw:parseInt(raw,10);drag.source=e.currentTarget;ghost.textContent=drag.value;ghost.className=(drag.value==='+'||drag.value==='-')?'ghost signchip':`ghost c${drag.value}`;ghost.style.display='flex';ghost.style.background=getComputedStyle(e.currentTarget).backgroundColor;moveGhost(e);document.addEventListener('pointermove',moveGhost);document.addEventListener('pointerup',endDrag)}
-function moveGhost(e){Matematicas.fantasma(ghost,e.clientX,e.clientY)}
-function endDrag(e){document.removeEventListener('pointermove',moveGhost);document.removeEventListener('pointerup',endDrag);ghost.style.display='none';const el=document.elementFromPoint(e.clientX,e.clientY);if(el&&(el.classList.contains('answer-slot')||el.classList.contains('carry-slot')||el.classList.contains('place-slot')||el.classList.contains('sign-slot'))){const type=el.dataset.type;const col=parseInt(el.dataset.col,10);const isSign=(drag.value==='+'||drag.value==='-');if((type==='answer'||type==='carry'||type==='houseTop'||type==='houseBottom')&&isSign){drag.value=null;return}else if(type==='houseSign'&&!isSign){drag.value=null;return}else if(type==='answer')current.answers[col]=drag.value;else if(type==='carry')current.carrySlots[col]=drag.value;else if(type==='houseTop')house.topSlots[col]=drag.value;else if(type==='houseBottom')house.bottomSlots[col]=drag.value;else if(type==='houseSign')house.signSlot=drag.value;rerenderActive()}document.querySelectorAll('.drop-hover').forEach(x=>x.classList.remove('drop-hover'));drag.value=null}
-function rerenderActive(){if(activeScreen==='customScreen')renderSolver('solverCustom');else if(activeScreen==='houseScreen'){if(house.ready)renderHouse();else renderSolver('houseArea')}if(audioHelpOn)startAudioGuide(getActiveContainerId())}
-function resetSolver(containerId){clearAudioGuide(false);current.answers=new Array(current.digits).fill(null);current.carrySlots=new Array(current.digits).fill(null);current.borrowed=new Array(current.digits).fill(false);current.currentTop=[...current.topDigits];current.solved=false;renderSolver(containerId);if(audioHelpOn)startAudioGuide(containerId)}
-function updateHint(containerId){const h=$(`hint_${containerId}`);if(!h)return;const task=findTask();if(task.done){h.textContent='¡Ya llenaste los espacios! Pulsa Revisar ✅';h.className='message good';return}if(current.op==='-'){const i=task.col;if(current.currentTop[i]<current.bottomDigits[i]){h.textContent=`En la columna actual, ${current.currentTop[i]} es menor que ${current.bottomDigits[i]}. Usa “Pedir prestado”.`;h.className='message bad'}else{h.textContent=`Ahora resta ${current.currentTop[i]} − ${current.bottomDigits[i]} y coloca el resultado.`;h.className='message info'}}else{const i=task.col;if(task.type==='carry'){h.textContent='Recuerda colocar el 1 que llevas en la casilla de arriba.';h.className='message info'}else{const c=i<current.digits-1?(current.carrySlots[i]||0):0;const exp=expectedAnswerDigits();const topTxt=displayProblemDigit(current.a,current.topDigits,i);const bottomTxt=displayProblemDigit(current.b,current.bottomDigits,i);if(topTxt===''&&bottomTxt===''&&exp[i]>0){h.textContent='Coloca el nuevo dígito que aparece al inicio del resultado.';}else{h.textContent=`Ahora suma ${topTxt===''?0:topTxt} + ${bottomTxt===''?0:bottomTxt}${c?` + ${c} que llevas`:''}.`;}h.className='message info'}}}
+function renderSolver(containerId){const cont=$(containerId);cont.innerHTML='';cont.classList.remove('hidden');const title=document.createElement('div');title.className='operation-preview';title.textContent=`${current.a} ${current.op} ${current.b} = ?`;cont.appendChild(title);const board=document.createElement('div');board.className='board';board.innerHTML=`<div id="hint_${containerId}" class="message info">Resuelve de derecha a izquierda. Arrastra los números a los espacios.</div>`;const wrap=document.createElement('div');wrap.className='vertical-op no-head';const signCol=document.createElement('div');signCol.className='sign-col';signCol.innerHTML=`<div class="carry-row borrow-zone"></div><div class="sign-space"></div><div class="bottom-row"><div class="sign ${current.op==='-'?'minus':''}">${current.op==='-'?'<span class="minus-line"></span>':'+'}</div></div><div class="line-row"><div class="line"></div></div><div class="answer-row"></div>`;wrap.appendChild(signCol);
+for(let i=0;i<current.digits;i++){const col=document.createElement('div');col.className='digit-col';col.dataset.col=i;const carry=current.op==='+'?(needsCarrySlot(i)?`<div class="carry-slot ${current.carrySlots[i]!==null?'slot-filled':''}" data-type="carry" data-col="${i}">${current.carrySlots[i]??''}</div>`:`<div style="width:31px;height:31px"></div>`):`<div style="width:31px;height:31px"></div>`;const topDisplay=displayProblemDigit(current.a,current.topDigits,i);const bottomDisplay=displayProblemDigit(current.b,current.bottomDigits,i);let top=`<div class="digit ${current.op==='-'&&current.borrowed[i]?'crossed':''} ${topDisplay===''?'blank':''}">${topDisplay}${current.op==='-'&&current.borrowed[i]?`<span class="new-above">${current.currentTop[i]}</span>`:''}</div>`;let bottom=`<div class="digit ${bottomDisplay===''?'blank':''}">${bottomDisplay}</div>`;col.innerHTML=`<div class="carry-row borrow-zone">${carry}</div><div class="top-row">${top}</div><div class="bottom-row">${bottom}</div><div class="line-row"><div class="line"></div></div><div class="answer-row"><div class="answer-slot ${current.answers[i]!==null?'slot-filled':''}" data-type="answer" data-col="${i}">${current.answers[i]??''}</div></div>`;wrap.appendChild(col)}
+board.appendChild(wrap);if(current.op==='-'){const b=document.createElement('button');b.className='btn orange borrow-btn';b.id='borrowBtn';b.innerHTML='Pedir prestado';b.onclick=doBorrow;board.appendChild(b)}cont.appendChild(board);const bank=document.createElement('div');bank.className='bank-wrap';bank.innerHTML='<div class="bank-label">Arrastra un número 👇</div><div class="number-bank"></div>';cont.appendChild(bank);const nb=bank.querySelector('.number-bank');for(let n=0;n<=9;n++){const chip=document.createElement('div');chip.className=`chip c${n}`;chip.dataset.val=n;chip.textContent=n;chip.addEventListener('pointerdown',startDrag);nb.appendChild(chip)}const actions=document.createElement('div');actions.className='actions';actions.innerHTML=`<button class="btn ok" onclick="checkSolver('${containerId}')">✅ Revisar</button>`;cont.appendChild(actions);attachDropEvents(cont);PosicionalUI.tablero(cont);updateBorrowButton();updateHint(containerId)}
+let fichaSeleccionada = null;
+function rotularCasillasPosicional(root) {
+  const en = IdiomaVoz.idioma === 'en';
+  const lugares = en ? ['ones','tens','hundreds','thousands','ten thousands','hundred thousands','millions']
+    : ['unidades','decenas','centenas','unidades de millar','decenas de millar','centenas de millar','millones'];
+  const tipos = en ? {answer:'Answer',carry:'Carry',houseTop:'First number',houseBottom:'Second number',houseSign:'Sign'}
+    : {answer:'Respuesta',carry:'Llevada',houseTop:'Primer número',houseBottom:'Segundo número',houseSign:'Signo'};
+  for (const casilla of root.querySelectorAll('[data-type]')) {
+    const {type,col} = casilla.dataset;
+    const lugar = lugares[current.digits-1-Number(col)];
+    const valor = casilla.textContent.trim();
+    const texto = [tipos[type],lugar,valor || (en?'empty':'vacía')].filter(Boolean).join(', ');
+    casilla.setAttribute('aria-label',texto);
+  }
+}
+function attachDropEvents(root) {
+  fichaSeleccionada = null;
+  rotularCasillasPosicional(root);
+  for (const slot of root.querySelectorAll('.answer-slot,.carry-slot,.place-slot,.sign-slot')) {
+    slot.tabIndex = 0;
+    slot.setAttribute('role','button');
+    slot.addEventListener('pointerenter',()=>{if(drag.value!==null)slot.classList.add('drop-hover')});
+    slot.addEventListener('pointerleave',()=>slot.classList.remove('drop-hover'));
+    const activar = () => fichaSeleccionada === null ? clearSlot(slot) : colocarFichaPosicional(slot,fichaSeleccionada);
+    slot.addEventListener('click',activar);
+    slot.addEventListener('keydown',e=>{if(['Enter',' '].includes(e.key)){e.preventDefault();activar();}});
+  }
+  for (const ficha of root.querySelectorAll('.chip')) {
+    ficha.tabIndex = 0;
+    ficha.setAttribute('role','button');
+    ficha.setAttribute('aria-pressed','false');
+    ficha.addEventListener('keydown',e=>{
+      if(!['Enter',' '].includes(e.key))return;
+      e.preventDefault();
+      seleccionarFichaPosicional(ficha);
+    });
+  }
+}
+function seleccionarFichaPosicional(ficha) {
+  if(PasosOperaciones.activo)return;
+  const valor = leerFichaPosicional(ficha);
+  fichaSeleccionada = fichaSeleccionada === valor ? null : valor;
+  for (const el of document.querySelectorAll('.screen.active .chip')) {
+    el.setAttribute('aria-pressed',String(fichaSeleccionada === leerFichaPosicional(el)));
+  }
+}
+function leerFichaPosicional(ficha) {
+  const valor=ficha.dataset.val;
+  return valor==='+'||valor==='-' ? valor : Number(valor);
+}
+function clearSlot(el) {
+  if(PasosOperaciones.activo)return;
+  const {type,col}=el.dataset;
+  if(type==='answer')current.answers[col]=null;
+  else if(type==='carry')current.carrySlots[col]=null;
+  else if(type==='houseTop')house.topSlots[col]=null;
+  else if(type==='houseBottom')house.bottomSlots[col]=null;
+  else if(type==='houseSign')house.signSlot=null;
+  rerenderActive();
+}
+function startDrag(e) {
+  if(PasosOperaciones.activo||drag.value!==null||!e.isPrimary||e.button!==0)return;
+  e.preventDefault();
+  const source=e.currentTarget;
+  drag={value:leerFichaPosicional(source),source,id:e.pointerId,x:e.clientX,y:e.clientY};
+  ghost.textContent=drag.value;
+  ghost.className=typeof drag.value==='string'?'ghost signchip':'ghost c'+drag.value;
+  const rect=source.getBoundingClientRect();
+  ghost.style.width=rect.width+'px';ghost.style.height=rect.height+'px';
+  ghost.style.fontSize=parseFloat(getComputedStyle(source).fontSize)*Matematicas.escala()+'px';
+  ghost.style.background=getComputedStyle(source).backgroundColor;
+  source.setPointerCapture(e.pointerId);
+  document.addEventListener('pointermove',moveGhost,{passive:false});
+  document.addEventListener('pointerup',endDrag);
+}
+function moveGhost(e) {
+  if(e.pointerId!==drag.id||drag.value===null)return;
+  if(!drag.moved&&Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<5)return;
+  drag.moved=true;
+  e.preventDefault();
+  ghost.style.display='flex';
+  Matematicas.fantasma(ghost,e.clientX,e.clientY);
+}
+function cancelarArrastrePosicional() {
+  const {source,id}=drag;
+  drag={value:null,source:null};
+  ghost.style.display='none';
+  if(source?.hasPointerCapture(id))source.releasePointerCapture(id);
+  document.removeEventListener('pointermove',moveGhost);
+  document.removeEventListener('pointerup',endDrag);
+  document.querySelectorAll('.drop-hover').forEach(el=>el.classList.remove('drop-hover'));
+}
+function endDrag(e) {
+  if(e.pointerId!==drag.id)return;
+  const {value,source,moved}=drag;
+  const slot=document.elementFromPoint(e.clientX,e.clientY)?.closest('.answer-slot,.carry-slot,.place-slot,.sign-slot');
+  cancelarArrastrePosicional();
+  if(slot)colocarFichaPosicional(slot,value);
+  else if(!moved)seleccionarFichaPosicional(source);
+}
+function colocarFichaPosicional(slot,valor) {
+  if(PasosOperaciones.activo)return;
+  const tipo=slot.dataset.type,col=Number(slot.dataset.col);
+  if((tipo==='houseSign') !== (typeof valor==='string'))return;
+  if(tipo==='answer') {
+    const llevada=col>0 && needsCarrySlot(col-1) && current.carrySlots[col-1]===null;
+    const suma=current.topDigits[col]+current.bottomDigits[col]+(current.carrySlots[col]||0);
+    const soloElUno=valor===1 && suma%10!==1;
+    const dosCifras=current.answers[col]===1 && valor===suma%10;
+    if(llevada&&suma>=10&&(soloElUno||dosCifras)&&(!needsCarrySlot(col)||current.carrySlots[col]===1)&&!getHouseLayoutTask()) {
+      const destino=slot.closest('.vertical-op').querySelector('.carry-slot[data-col="'+(col-1)+'"]');
+      const aplicar=()=>{
+        if(dosCifras)current.answers[col]=valor;
+        else if(current.answers[col]===1)current.answers[col]=null;
+        current.carrySlots[col-1]=1;
+        rerenderActive();
+      };
+      const en=IdiomaVoz.idioma==='en';
+      const indicacion=en?'The 1 is a ten. It goes above the column on the left.':'El 1 vale una decena y va arriba, en la columna de la izquierda.';
+      if(animarPasosPosicional&&destino){
+        const restante=dosCifras ? valor : current.answers[col]??'';
+        slot.textContent=dosCifras ? suma : '1';
+        const pasos=dosCifras ? PasosOperaciones.pasosLlevada(suma,slot,destino) : [{
+          texto:indicacion,origen:slot,destino,resto:restante,origenFraccion:.5,
+          narracion:[{texto:indicacion,efecto:'llevada',minimo:3400}]
+        }];
+        PosicionalUI.animar(pasos,aplicar);
+      }else {
+        aplicar();
+        const aviso=$('hint_'+getActiveContainerId());
+        aviso.textContent=indicacion;
+        aviso.hidden=false;
+        if(narrarPasosPosicional)speak(indicacion);
+      }
+      return;
+    }
+    current.answers[col]=valor;
+  }else if(tipo==='carry')current.carrySlots[col]=valor;
+  else if(tipo==='houseTop')house.topSlots[col]=valor;
+  else if(tipo==='houseBottom')house.bottomSlots[col]=valor;
+  else if(tipo==='houseSign')house.signSlot=valor;
+  rerenderActive();
+}
+function rerenderActive(){PasosOperaciones.limpiar();if(activeScreen==='customScreen')renderSolver('solverCustom');else if(activeScreen==='houseScreen'){if(house.ready)renderHouse();else renderSolver('houseArea')}if(audioHelpOn)startAudioGuide(getActiveContainerId())}
+function resetSolver(containerId){PasosOperaciones.limpiar();clearAudioGuide(false);current.answers=new Array(current.digits).fill(null);current.carrySlots=new Array(current.digits).fill(null);current.borrowed=new Array(current.digits).fill(false);current.currentTop=[...current.topDigits];current.solved=false;renderSolver(containerId);if(audioHelpOn)startAudioGuide(containerId)}
+function updateHint(containerId){document.dispatchEvent(new Event('operacion-cambiada'));const h=$(`hint_${containerId}`);if(!h)return;h.hidden=!ayudaVisualPosicional;const layout=getHouseLayoutTask();if(layout){h.textContent=layout.type==='houseSign'?'Arrastra el signo correcto al espacio del signo.':layout.type==='houseTop'?'Acomoda el primer número en la fila de arriba.':'Acomoda el segundo número en la fila de abajo.';h.className='message info';return;}const task=findTask();if(task.done){h.textContent='¡Ya llenaste los espacios! Pulsa Revisar ✅';h.className='message good';return}if(current.op==='-'){const i=task.col;if(current.currentTop[i]<current.bottomDigits[i]){h.textContent=`En la columna actual, ${current.currentTop[i]} es menor que ${current.bottomDigits[i]}. Usa “Pedir prestado”.`;h.className='message bad'}else{h.textContent=`Ahora resta ${current.currentTop[i]} − ${current.bottomDigits[i]} y coloca el resultado.`;h.className='message info'}}else{const i=task.col;if(task.type==='carry'){h.textContent='Recuerda colocar el 1 que llevas en la casilla de arriba.';h.className='message info'}else{const c=i<current.digits-1?(current.carrySlots[i]||0):0;const exp=expectedAnswerDigits();const topTxt=displayProblemDigit(current.a,current.topDigits,i);const bottomTxt=displayProblemDigit(current.b,current.bottomDigits,i);if(topTxt===''&&bottomTxt===''&&exp[i]>0){h.textContent='Coloca el nuevo dígito que aparece al inicio del resultado.';}else{h.textContent=`Ahora suma ${topTxt===''?0:topTxt} + ${bottomTxt===''?0:bottomTxt}${c?` + ${c} que llevas`:''}.`;}h.className='message info'}}}
 function findTask(){if(current.op==='-'){for(let i=current.digits-1;i>=0;i--){if(current.answers[i]===null)return {type:'answer',col:i}}return {done:true}}for(let i=current.digits-1;i>=0;i--){if(current.answers[i]===null)return {type:'answer',col:i};if(i>0&&needsCarrySlot(i-1)&&current.carrySlots[i-1]===null&&current.answers[i]!==null)return {type:'carry',col:i-1}}return {done:true}}
 function getCurrentSubtractionColumn(){
   if(current.op!=='-')return -1;
@@ -256,22 +395,25 @@ function getCurrentSubtractionColumn(){
   return task.col;
 }
 function doBorrow(){
-  if(current.op!=='-')return;
+  if(current.op!=='-'||PasosOperaciones.activo)return;
   const col=getCurrentSubtractionColumn();
   if(col<=0)return;
   if(current.currentTop[col]>=current.bottomDigits[col])return;
   let lender=col-1;
   while(lender>=0&&current.currentTop[lender]===0)lender--;
   if(lender<0)return;
-  current.currentTop[lender]-=1;
-  current.borrowed[lender]=true;
-  for(let z=lender+1;z<col;z++){
-    current.currentTop[z]=9;
-    current.borrowed[z]=true;
-  }
-  current.currentTop[col]+=10;
-  current.borrowed[col]=true;
-  rerenderActive();
+  const origen={col:lender,antes:current.currentTop[lender],despues:current.currentTop[lender]-1};
+  const receptor={col,antes:current.currentTop[col],despues:current.currentTop[col]+10,subir:true};
+  const intermedias=Array.from({length:col-lender-1},(_,i)=>({col:lender+i+1,antes:0,despues:9}));
+  const aplicar=()=>{
+    for(const cambio of [origen,...intermedias,receptor]){
+      current.currentTop[cambio.col]=cambio.despues;
+      current.borrowed[cambio.col]=true;
+    }
+    rerenderActive();
+  };
+  if(animarPasosPosicional)PosicionalUI.animar(PasosOperaciones.pasosPrestamo(origen,receptor,intermedias),aplicar,true);
+  else aplicar();
 }
 function updateBorrowButton(){
   const b=$('borrowBtn');
@@ -283,7 +425,7 @@ function updateBorrowButton(){
     while(lender>=0&&current.currentTop[lender]===0)lender--;
     can=lender>=0;
   }
-  b.disabled=!can;
+  b.disabled=!can||PasosOperaciones.activo;
   b.classList.toggle('borrow-ready',can);
 }
 function checkSolver(containerId){const exp=expectedAnswerDigits();let ok=true;for(let i=0;i<current.digits;i++){if(current.answers[i]!==exp[i])ok=false}if(current.op==='+'){for(let i=0;i<current.digits;i++){if(needsCarrySlot(i)&&current.carrySlots[i]!==1)ok=false}}const cont=$(containerId);cont.querySelectorAll('.answer-slot').forEach(s=>{const i=parseInt(s.dataset.col,10);s.classList.add(current.answers[i]===exp[i]?'slot-good':'slot-bad')});cont.querySelectorAll('.carry-slot').forEach(s=>{const i=parseInt(s.dataset.col,10);s.classList.add(current.carrySlots[i]===1?'slot-good':'slot-bad')});if(ok){if(current.mode==='house'){house.score++;$('houseScore').textContent=`⭐ ${house.score}`}celebrate();showFeedback(true,`${current.a} ${current.op} ${current.b} = ${current.op==='+'?current.a+current.b:current.a-current.b}`)}else{showFeedback(false,'Revisa los espacios en rojo y vuelve a intentarlo.')}}
@@ -292,15 +434,15 @@ function setHouseDigits(d,btn){house.digits=d;document.querySelectorAll('#digitO
 function randInt(lo,hi){return lo+Math.floor(Math.random()*(hi-lo+1))}
 function randomProblem(){const d=house.digits;const lo=Math.pow(10,d-1),hi=Math.pow(10,d)-1;let op,a,b,result,tries=0;do{op=house.opMode==='mix'?(Math.random()<.5?'+':'-'):house.opMode;a=randInt(lo,hi);b=randInt(lo,hi);if(op==='-'&&b>a)[a,b]=[b,a];result=op==='+'?a+b:a-b;tries++}while((numDigits(result)>4)&&tries<1000);if(numDigits(result)>4){op='+';const safeHi=Math.min(hi,9999-lo);a=randInt(lo,safeHi);b=randInt(lo,9999-a);result=a+b}return {a,b,op}}
 function setupCurrentForHouse(){const result=house.op==='+'?house.a+house.b:house.a-house.b;const maxLen=Math.max(numDigits(house.a),numDigits(house.b),numDigits(result));house.cols=maxLen;current={a:house.a,b:house.b,op:house.op,digits:maxLen,mode:'house',resultDigits:digitsArray(result,maxLen),topDigits:digitsArray(house.a,maxLen),bottomDigits:digitsArray(house.b,maxLen),answers:current.mode==='house'&&current.answers.length===maxLen?current.answers:new Array(maxLen).fill(null),carrySlots:current.mode==='house'&&current.carrySlots.length===maxLen?current.carrySlots:new Array(maxLen).fill(null),borrowed:current.mode==='house'&&current.borrowed.length===maxLen?current.borrowed:new Array(maxLen).fill(false),currentTop:current.mode==='house'&&current.currentTop.length===maxLen?current.currentTop:digitsArray(house.a,maxLen),leadingAnswer:null,expectedLeading:0,solved:false};if(house.op==='+')prepareCarries();}
-function newHouseProblem(){clearAudioGuide(false);const p=randomProblem();house.a=p.a;house.b=p.b;house.op=p.op;house.ready=true;house.signSlot=null;const result=p.op==='+'?p.a+p.b:p.a-p.b;house.cols=Math.max(numDigits(p.a),numDigits(p.b),numDigits(result));house.topSlots=new Array(house.cols).fill(null);house.bottomSlots=new Array(house.cols).fill(null);current.answers=new Array(house.cols).fill(null);current.carrySlots=new Array(house.cols).fill(null);current.borrowed=new Array(house.cols).fill(false);current.currentTop=digitsArray(p.a,house.cols);$('houseMsg').textContent='Acomoda los números en la tabla de valor posicional: UM | C | D | U, según corresponda. También arrastra el signo correcto. Luego resuelve en la misma tabla.';$('houseMsg').className='message info';setupCurrentForHouse();renderHouse()}
-function resetHouseOnly(){clearAudioGuide(false);if(!house.ready){newHouseProblem();return}house.topSlots=new Array(house.cols).fill(null);house.bottomSlots=new Array(house.cols).fill(null);house.signSlot=null;current.answers=new Array(house.cols).fill(null);current.carrySlots=new Array(house.cols).fill(null);current.borrowed=new Array(house.cols).fill(false);current.currentTop=digitsArray(house.a,house.cols);renderHouse()}
-function renderHouse(){const area=$('houseArea');area.innerHTML='';area.classList.remove('hidden');setupCurrentForHouse();const prev=document.createElement('div');prev.className='operation-preview';prev.textContent=`Acomoda y resuelve: ${house.a} ${house.op} ${house.b}`;area.appendChild(prev);const guide=document.createElement('div');guide.className='value-guide';guide.textContent='UM | C | D | U';area.appendChild(guide);const board=document.createElement('div');board.className='board';board.innerHTML='<div id="hint_houseArea" class="message info">Primero acomoda los números en la tabla de valor posicional: UM | C | D | U. Luego completa la respuesta.</div>';const wrap=document.createElement('div');wrap.className='vertical-op';const names=['U','D','C','UM'];const signCol=document.createElement('div');signCol.className='sign-col';signCol.innerHTML=`<div class="place-head-row"><div class="place-head">Signo</div></div><div class="carry-row"></div><div class="top-row"></div><div class="bottom-row"><div class="sign-slot ${house.signSlot!==null?'slot-filled':''}" data-type="houseSign">${house.signSlot??''}</div></div><div class="line-row"><div class="line"></div></div><div class="answer-row"></div>`;wrap.appendChild(signCol);for(let i=0;i<house.cols;i++){const placeIndex=house.cols-1-i;const col=document.createElement('div');col.className='digit-col';col.dataset.col=i;const carry=current.op==='+'?(needsCarrySlot(i)?`<div class="carry-slot ${current.carrySlots[i]!==null?'slot-filled':''}" data-type="carry" data-col="${i}">${current.carrySlots[i]??''}</div>`:`<div style="width:31px;height:31px"></div>`):`<div style="width:31px;height:31px"></div>`;const topExpected=expectedHouseSlots(house.a,house.cols)[i];const bottomExpected=expectedHouseSlots(house.b,house.cols)[i];if(topExpected===null)house.topSlots[i]=null;if(bottomExpected===null)house.bottomSlots[i]=null;const topVal=house.topSlots[i];const botVal=house.bottomSlots[i];const solvedTop=(topVal!==null && current.op==='-' && current.borrowed[i]);const topCell=topExpected===null?`<div class="house-empty-slot"></div>`:`<div class="place-slot ${topVal!==null?'slot-filled':''} ${solvedTop?'crossed':''}" data-type="houseTop" data-col="${i}">${topVal??''}${solvedTop?`<span class="new-above">${current.currentTop[i]}</span>`:''}</div>`;const bottomCell=bottomExpected===null?`<div class="house-empty-slot"></div>`:`<div class="place-slot ${botVal!==null?'slot-filled':''}" data-type="houseBottom" data-col="${i}">${botVal??''}</div>`;col.innerHTML=`<div class="place-head-row"><div class="place-head">${names[placeIndex]||''}</div></div><div class="carry-row">${carry}</div><div class="top-row">${topCell}</div><div class="bottom-row">${bottomCell}</div><div class="line-row"><div class="line"></div></div><div class="answer-row"><div class="answer-slot ${current.answers[i]!==null?'slot-filled':''}" data-type="answer" data-col="${i}">${current.answers[i]??''}</div></div>`;wrap.appendChild(col)}board.appendChild(wrap);if(current.op==='-'){const b=document.createElement('button');b.className='btn orange borrow-btn';b.id='borrowBtn';b.innerHTML='Pedir prestado';b.onclick=doBorrow;board.appendChild(b)}area.appendChild(board);const bank=document.createElement('div');bank.className='bank-wrap';bank.innerHTML='<div class="bank-label">Arrastra los dígitos y el signo 👇</div><div class="number-bank"></div>';const nb=bank.querySelector('.number-bank');let houseDigitsBank=[0,1,2,3,4,5,6,7,8,9];houseDigitsBank.forEach(n=>{const chip=document.createElement('div');chip.className=`chip c${n}`;chip.dataset.val=n;chip.textContent=n;chip.addEventListener('pointerdown',startDrag);nb.appendChild(chip)});['+','-'].forEach(sign=>{const chip=document.createElement('div');chip.className='chip signchip';chip.dataset.val=sign;chip.textContent=sign;chip.addEventListener('pointerdown',startDrag);nb.appendChild(chip)});area.appendChild(bank);const actions=document.createElement('div');actions.className='actions';actions.innerHTML='<button class="btn ok" onclick="checkHouse()">✅ Revisar todo</button><button class="btn blue" id="audioHelpBtn_houseArea" onclick="toggleAudioHelp(\'houseArea\')">🔊 Ayuda verbal</button><button class="btn pink" onclick="resetHouseOnly()">🔁 Reiniciar tabla</button><button class="btn purple" onclick="newHouseProblem()">🆕 Nueva operación</button>';area.appendChild(actions);attachDropEvents(area);updateBorrowButton();updateHint('houseArea')}
+function newHouseProblem(){PasosOperaciones.limpiar();clearAudioGuide(false);const p=randomProblem();house.a=p.a;house.b=p.b;house.op=p.op;house.ready=true;house.signSlot=null;const result=p.op==='+'?p.a+p.b:p.a-p.b;house.cols=Math.max(numDigits(p.a),numDigits(p.b),numDigits(result));house.topSlots=new Array(house.cols).fill(null);house.bottomSlots=new Array(house.cols).fill(null);current.answers=new Array(house.cols).fill(null);current.carrySlots=new Array(house.cols).fill(null);current.borrowed=new Array(house.cols).fill(false);current.currentTop=digitsArray(p.a,house.cols);$('houseMsg').textContent='';$('houseMsg').className='message info';setupCurrentForHouse();renderHouse()}
+function resetHouseOnly(){PasosOperaciones.limpiar();clearAudioGuide(false);if(!house.ready){newHouseProblem();return}house.topSlots=new Array(house.cols).fill(null);house.bottomSlots=new Array(house.cols).fill(null);house.signSlot=null;current.answers=new Array(house.cols).fill(null);current.carrySlots=new Array(house.cols).fill(null);current.borrowed=new Array(house.cols).fill(false);current.currentTop=digitsArray(house.a,house.cols);renderHouse()}
+function renderHouse(){const area=$('houseArea');area.innerHTML='';area.classList.remove('hidden');setupCurrentForHouse();const prev=document.createElement('div');prev.className='operation-preview';prev.textContent=`Acomoda y resuelve: ${house.a} ${house.op} ${house.b}`;area.appendChild(prev);const guide=document.createElement('div');guide.className='value-guide';guide.textContent='UM | C | D | U';area.appendChild(guide);const board=document.createElement('div');board.className='board';board.innerHTML='<div id="hint_houseArea" class="message info">Primero acomoda los números en la tabla de valor posicional: UM | C | D | U. Luego completa la respuesta.</div>';const wrap=document.createElement('div');wrap.className='vertical-op';const names=['U','D','C','UM'];const signCol=document.createElement('div');signCol.className='sign-col';signCol.innerHTML=`<div class="place-head-row"><div class="place-head">Signo</div></div><div class="carry-row borrow-zone"></div><div class="top-row"></div><div class="bottom-row"><div class="sign-slot ${house.signSlot!==null?'slot-filled':''}" data-type="houseSign">${house.signSlot??''}</div></div><div class="line-row"><div class="line"></div></div><div class="answer-row"></div>`;wrap.appendChild(signCol);for(let i=0;i<house.cols;i++){const placeIndex=house.cols-1-i;const col=document.createElement('div');col.className='digit-col';col.dataset.col=i;const carry=current.op==='+'?(needsCarrySlot(i)?`<div class="carry-slot ${current.carrySlots[i]!==null?'slot-filled':''}" data-type="carry" data-col="${i}">${current.carrySlots[i]??''}</div>`:`<div style="width:31px;height:31px"></div>`):`<div style="width:31px;height:31px"></div>`;const topExpected=expectedHouseSlots(house.a,house.cols)[i];const bottomExpected=expectedHouseSlots(house.b,house.cols)[i];if(topExpected===null)house.topSlots[i]=null;if(bottomExpected===null)house.bottomSlots[i]=null;const topVal=house.topSlots[i];const botVal=house.bottomSlots[i];const solvedTop=(topVal!==null && current.op==='-' && current.borrowed[i]);const topCell=topExpected===null?`<div class="house-empty-slot"></div>`:`<div class="place-slot ${topVal!==null?'slot-filled':''} ${solvedTop?'crossed':''}" data-type="houseTop" data-col="${i}">${topVal??''}${solvedTop?`<span class="new-above">${current.currentTop[i]}</span>`:''}</div>`;const bottomCell=bottomExpected===null?`<div class="house-empty-slot"></div>`:`<div class="place-slot ${botVal!==null?'slot-filled':''}" data-type="houseBottom" data-col="${i}">${botVal??''}</div>`;col.innerHTML=`<div class="place-head-row"><div class="place-head">${names[placeIndex]||''}</div></div><div class="carry-row borrow-zone">${carry}</div><div class="top-row">${topCell}</div><div class="bottom-row">${bottomCell}</div><div class="line-row"><div class="line"></div></div><div class="answer-row"><div class="answer-slot ${current.answers[i]!==null?'slot-filled':''}" data-type="answer" data-col="${i}">${current.answers[i]??''}</div></div>`;wrap.appendChild(col)}board.appendChild(wrap);if(current.op==='-'){const b=document.createElement('button');b.className='btn orange borrow-btn';b.id='borrowBtn';b.innerHTML='Pedir prestado';b.onclick=doBorrow;board.appendChild(b)}area.appendChild(board);const bank=document.createElement('div');bank.className='bank-wrap';bank.innerHTML='<div class="bank-label">Arrastra los dígitos y el signo 👇</div><div class="number-bank"></div>';const nb=bank.querySelector('.number-bank');let houseDigitsBank=[0,1,2,3,4,5,6,7,8,9];houseDigitsBank.forEach(n=>{const chip=document.createElement('div');chip.className=`chip c${n}`;chip.dataset.val=n;chip.textContent=n;chip.addEventListener('pointerdown',startDrag);nb.appendChild(chip)});['+','-'].forEach(sign=>{const chip=document.createElement('div');chip.className='chip signchip';chip.dataset.val=sign;chip.textContent=sign;chip.addEventListener('pointerdown',startDrag);nb.appendChild(chip)});area.appendChild(bank);const actions=document.createElement('div');actions.className='actions';actions.innerHTML='<button class="btn ok" onclick="checkHouse()">✅ Revisar todo</button>';area.appendChild(actions);attachDropEvents(area);PosicionalUI.tablero(area);updateBorrowButton();updateHint('houseArea')}
 function checkHouse(){const top=expectedHouseSlots(house.a,house.cols);const bottom=expectedHouseSlots(house.b,house.cols);let layoutOk=true;for(let i=0;i<house.cols;i++){if(house.topSlots[i]!==top[i])layoutOk=false;if(house.bottomSlots[i]!==bottom[i])layoutOk=false}if(house.signSlot!==house.op)layoutOk=false;document.querySelectorAll('[data-type="houseTop"]').forEach(s=>{const i=parseInt(s.dataset.col,10);s.classList.remove('slot-good','slot-bad');s.classList.add(house.topSlots[i]===top[i]?'slot-good':'slot-bad')});document.querySelectorAll('[data-type="houseBottom"]').forEach(s=>{const i=parseInt(s.dataset.col,10);s.classList.remove('slot-good','slot-bad');s.classList.add(house.bottomSlots[i]===bottom[i]?'slot-good':'slot-bad')});document.querySelectorAll('[data-type="houseSign"]').forEach(s=>{s.classList.remove('slot-good','slot-bad');s.classList.add(house.signSlot===house.op?'slot-good':'slot-bad')});if(!layoutOk){$('houseMsg').textContent='Revisa la tabla: algún número o el signo no está en su lugar.';$('houseMsg').className='message bad';speak('Revisa la tabla. Hay algo que no está en su lugar.');return}const answersReady=current.answers.every(x=>x!==null);let carriesReady=true;if(current.op==='+'){for(let i=0;i<current.digits;i++){if(needsCarrySlot(i)&&current.carrySlots[i]===null)carriesReady=false}}if(!answersReady||!carriesReady){$('houseMsg').textContent='¡La tabla está bien! Ahora completa la respuesta en los espacios de abajo.';$('houseMsg').className='message good';speak('Muy bien. La tabla está correcta. Ahora completa la respuesta.');return}checkSolver('houseArea')}
 function getActiveContainerId(){return activeScreen==='customScreen'?'solverCustom':'houseArea'}
-function getHouseLayoutTask(){if(activeScreen!=='houseScreen'||!house.ready)return null;if(house.signSlot===null)return {type:'houseSign'};const top=expectedHouseSlots(house.a,house.cols);const bottom=expectedHouseSlots(house.b,house.cols);for(let i=0;i<house.cols;i++){if(top[i]!==null&&house.topSlots[i]===null)return {type:'houseTop',col:i}}for(let i=0;i<house.cols;i++){if(bottom[i]!==null&&house.bottomSlots[i]===null)return {type:'houseBottom',col:i}}return null}
+function getHouseLayoutTask(){if(activeScreen!=='houseScreen'||!house.ready)return null;if(house.signSlot!==house.op)return {type:'houseSign'};const top=expectedHouseSlots(house.a,house.cols);const bottom=expectedHouseSlots(house.b,house.cols);for(let i=0;i<house.cols;i++){if(top[i]!==null&&house.topSlots[i]!==top[i])return {type:'houseTop',col:i}}for(let i=0;i<house.cols;i++){if(bottom[i]!==null&&house.bottomSlots[i]!==bottom[i])return {type:'houseBottom',col:i}}return null}
 function toggleAudioHelp(containerId){audioHelpOn=!audioHelpOn;document.querySelectorAll('[id^="audioHelpBtn_"]').forEach(b=>b.textContent=audioHelpOn?'🔊 Audio: ON':'🔊 Ayuda verbal');if(audioHelpOn)startAudioGuide(containerId);else clearAudioGuide()}
 function clearAudioGuide(keepButtonText){if(audioGuideTimeout){clearTimeout(audioGuideTimeout);audioGuideTimeout=null}clearAudioHighlight();clearSpeech();if(keepButtonText!==false&&!audioHelpOn){document.querySelectorAll('[id^="audioHelpBtn_"]').forEach(b=>b.textContent='🔊 Ayuda verbal')}}
-function startAudioGuide(containerId){clearAudioGuide(false);if(!audioHelpOn)return;const layoutTask=getHouseLayoutTask();if(layoutTask){performLayoutAudioCycle(layoutTask,1);return}const task=findTask();if(task.done)return;performAudioCycle(task,1)}
+function startAudioGuide(containerId){clearAudioGuide(false);if(!audioHelpOn||PasosOperaciones.activo)return;const layoutTask=getHouseLayoutTask();if(layoutTask){performLayoutAudioCycle(layoutTask,1);return}const task=findTask();if(task.done)return;performAudioCycle(task,1)}
 function performLayoutAudioCycle(task,iteration){const fresh=getHouseLayoutTask();if(!fresh){startAudioGuide(getActiveContainerId());return}if(fresh.type!==task.type||fresh.col!==task.col){startAudioGuide(getActiveContainerId());return}highlightLayoutStep(task);let msg='';if(task.type==='houseSign')msg='Arrastra el signo correcto al espacio del signo.';else if(task.type==='houseTop')msg='Acomoda el primer número en la fila de arriba.';else msg='Acomoda el segundo número en la fila de abajo.';speak(msg);audioGuideTimeout=setTimeout(()=>{clearAudioHighlight();audioGuideTimeout=setTimeout(()=>performLayoutAudioCycle(task,iteration>=3?1:iteration+1),iteration>=3?5000:3000)},3000)}
 function performAudioCycle(task,iteration){const currentTask=findTask();if(currentTask.done){audioGuideTimeout=null;return}if(currentTask.type!==task.type||currentTask.col!==task.col){startAudioGuide(getActiveContainerId());return}const col=task.col;let mainMessage='',followMessage='',needsSpecial=false;if(current.op==='-'){const top=current.currentTop[col];const sub=current.bottomDigits[col];mainMessage=`Tengo ${top} y le quito ${sub}`;if(top<sub){needsSpecial=true;followMessage=`A ${top} no se le puede quitar ${sub}. Debes pedir prestado.`}}else{if(task.type==='carry'){mainMessage='Arrastra el 1 que llevas a la siguiente columna'}else{const carryIn=col<current.digits-1?(current.carrySlots[col]||0):0;const topVal=displayProblemDigit(current.a,current.topDigits,col);const bottomVal=displayProblemDigit(current.b,current.bottomDigits,col);mainMessage=`Tengo ${topVal===''?0:topVal} y le sumo ${bottomVal===''?0:bottomVal}`;if(carryIn)mainMessage+=` y ${carryIn} que llevo`}}highlightAudioStep(task);speak(mainMessage);audioGuideTimeout=setTimeout(()=>{clearAudioHighlight();const freshTask=findTask();if(freshTask.done)return;if(freshTask.type!==task.type||freshTask.col!==task.col)return;if(!needsSpecial){audioGuideTimeout=setTimeout(()=>performAudioCycle(task,iteration>=3?1:iteration+1),iteration>=3?6000:3000)}else if(iteration<3){audioGuideTimeout=setTimeout(()=>performAudioCycle(task,iteration+1),3000)}else{audioGuideTimeout=setTimeout(()=>{highlightAudioStep(task);speak(followMessage);audioGuideTimeout=setTimeout(()=>{clearAudioHighlight();audioGuideTimeout=setTimeout(()=>performAudioCycle(task,1),5000)},3200)},5000)}},3000)}
 function highlightAudioStep(task){clearAudioHighlight();const container=$(getActiveContainerId());if(!container)return;const signDiv=container.querySelector('.sign-col');if(signDiv)signDiv.classList.add('audio-highlight');const col=container.querySelector(`.digit-col[data-col="${task.col}"]`);if(col)col.classList.add('audio-highlight');if(task.type==='carry'){const carry=container.querySelector(`.carry-slot[data-col="${task.col}"]`);if(carry)carry.classList.add('audio-highlight')}else{const ans=container.querySelector(`.answer-slot[data-col="${task.col}"]`);if(ans)ans.classList.add('audio-highlight')}}
@@ -437,7 +579,7 @@ window.addEventListener('nombre-estudiante-cambiado',e=>{studentName=e.detail.no
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="matematicas-posicional.js"></script><script src="pantalla-completa.js"></script>
+<script src="operaciones-pasos.js?v=valor-posicional-1"></script><script src="Abaco/cuentas.js"></script><script src="Abaco/flotante-operaciones.js?v=valor-posicional-1"></script><script src="matematicas-posicional.js?v=tablero-1"></script><script src="pantalla-completa.js"></script><script src="panel-plegable.js?v=valor-posicional-1"></script>
 <script src="nombre-compartido.js"></script>
 </body>
 </html>

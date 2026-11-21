@@ -1,0 +1,95 @@
+.panel-pasos-operaciones {
+  grid-row: 2;
+  width: min(100%,calc(710 * var(--unidad)));
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto auto;
+  align-items: center;
+  gap: calc(6 * var(--unidad));
+  padding: calc(6 * var(--unidad)) var(--espacio);
+  border: calc(1.5 * var(--unidad)) solid #b1bdea;
+  border-radius: calc(12 * var(--unidad));
+  background: #eef1ff;
+  color: #2e3c76;
+  font-size: calc(13 * var(--unidad));
+  line-height: 1.2;
+}
+.texto-paso-operacion { min-width: 0; }
+.paso-operacion-contador { display: block; font-size: calc(11 * var(--unidad)); color: #584c9a; }
+.detalle-paso-operacion { font-size: calc(17 * var(--unidad)); font-weight: 900; text-align: center; }
+.detalle-paso-operacion:empty { display: none; }
+.acciones-paso-operacion { grid-column: 3; display: flex; gap: calc(4 * var(--unidad)); }
+.acciones-paso-operacion button {
+  min-height: calc(34 * var(--unidad)); padding: calc(4 * var(--unidad)) calc(7 * var(--unidad));
+  border: 1px solid #a8b9e5; border-radius: calc(8 * var(--unidad));
+  color: #30457f; background: white; font: inherit; font-weight: 800; cursor: pointer;
+}
+.acciones-paso-operacion .avanzar-paso-operacion { background: #4b54c6; color: #fff; border-color: #4b54c6; }
+.recta-prestamo {
+  --intervalo:calc(var(--celda) * .41);
+  position:absolute; z-index:6; pointer-events:none;
+  inset-inline-start:50%; top:50%; transform:translate(-50%,-50%);
+  display:grid; isolation:isolate; overflow:hidden;
+  width:calc(var(--celda) * .92); height:calc(3 * var(--intervalo));
+  background:#edf4ff; border-radius:calc(8 * var(--unidad));
+  animation:subir-recta-prestamo 1000ms ease-in-out both;
+}
+.recta-prestamo::before,.recta-prestamo::after { content:""; position:absolute; pointer-events:none; }
+.recta-prestamo::before {
+  left:17%; top:12%; bottom:12%; width:calc(2 * var(--unidad)); background:#8a9bc9;
+}
+.recta-prestamo::after {
+  inset:var(--intervalo) 0 auto; height:var(--intervalo);
+  background:#ffd981; border-radius:calc(6 * var(--unidad)); z-index:-1;
+}
+.cinta-recta-prestamo { transition:transform 1650ms cubic-bezier(.44,.07,.22,.98); }
+.cinta-recta-prestamo > span {
+  display:grid; place-items:center; position:relative;
+  height:var(--intervalo); font-size:calc(var(--celda) * .33); line-height:1;
+  font-weight:900; color:#3c5182;
+}
+.cinta-recta-prestamo > span:not(:empty)::before {
+  content:""; position:absolute; left:13%; top:50%; width:calc(7 * var(--unidad)); height:calc(2 * var(--unidad)); background:currentColor;
+}
+.recta-prestamo:not(.recta-en-retroceso) .recta-origen,
+.recta-en-retroceso .recta-antecesor { color:#693909; font-size:calc(var(--celda) * .46); }
+.recta-en-retroceso .cinta-recta-prestamo { transform:translateY(calc(-1 * var(--intervalo))); }
+@keyframes subir-recta-prestamo {
+  from { translate:0 calc(var(--celda) * .825); clip-path:inset(33.3% 0); }
+  60% { clip-path:inset(33.3% 0); }
+  to { translate:none; clip-path:inset(0); }
+}
+.controles-pasos-prestamo {
+  display:grid; justify-items:center; align-content:center; gap:calc(4 * var(--unidad));
+  min-width:0; width:100%; max-height:100%; overflow:auto;
+  text-align:center; color:#2e3c76; font-size:calc(12 * var(--unidad)); line-height:1.18;
+}
+.controles-pasos-prestamo .paso-operacion-contador { font-size:calc(10 * var(--unidad)); }
+.controles-pasos-prestamo .detalle-paso-operacion { font-size:calc(14 * var(--unidad)); }
+.controles-pasos-prestamo .acciones-paso-operacion { grid-column:auto; flex-direction:column; }
+.controles-pasos-prestamo .acciones-paso-operacion button { min-height:calc(28 * var(--unidad)); }
+.prestamo-en-cuenta #borrowBtn { display:none; }
+.mostrando-pasos :is(.number-bank,.answer-cell,.carry-cell) { pointer-events: none; }
+.borrow-zone, .carry-cell, .answer-cell { position: relative; }
+.cifra-en-transformacion { opacity: .42; }
+.cifra-del-paso {
+  position: absolute; z-index: 5; pointer-events: none; white-space: nowrap;
+  border: calc(1.5 * var(--unidad)) solid #ab7825; border-radius: calc(8 * var(--unidad));
+  padding: 0 calc(4 * var(--unidad)); font-size: calc(var(--celda)*.46); font-weight: 900;
+  line-height: 1.12; background: #ffe5a5; color: #5f3507;
+}
+.cifra-sube { animation: subir-prestamo 1600ms ease-in-out both; }
+.prefijo-prestado { display: inline-block; color: #a34022; }
+.cifra-sube:not(.muestra-prefijo) .prefijo-prestado { width: 0; opacity: 0; }
+.cifra-sube.muestra-prefijo .prefijo-prestado { animation: aparecer-prefijo 950ms ease-out both; }
+@keyframes subir-prestamo { from { transform: translateY(calc(var(--celda)*.75)); } }
+@keyframes aparecer-prefijo { from { opacity: 0; transform: translateX(calc(-6 * var(--unidad))); } }
+.ficha-llevada-animada {
+  animation: volar-llevada 1750ms ease-in-out both;
+}
+@keyframes volar-llevada {
+  from { transform: translate(var(--origen-llevada-x),var(--origen-llevada-y)) scale(1.24); }
+}
+@media (prefers-reduced-motion:reduce) {
+  .cifra-del-paso,.recta-prestamo,.cinta-recta-prestamo { animation:none !important; transition:none !important; }
+}
