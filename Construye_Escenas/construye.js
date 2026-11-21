@@ -7,6 +7,8 @@
   const app = get('appConstruye'), juego = get('juego'), tablero = get('tablero'), banco = get('banco');
   const ctx = tablero.getContext('2d');
   const ajustes = get('ajustes'), selector = get('elegirReto');
+  const guiaDirecciones = get('direccionesEscena'), verZona = get('verZona');
+  const controlesConfigurables = ['narracion', 'texto', 'pistas', 'direcciones'];
   const esEn = (es, en) => IdiomaVoz.ingles() ? en : es;
   const local = texto => texto[IdiomaVoz.idioma];
   const clave = 'construye-escenas.v1';
@@ -15,12 +17,14 @@
     cantidad: guardado.cantidad === 5 ? 5 : 4,
     narracion: guardado.narracion !== false,
     texto: guardado.texto !== false,
+    direcciones: guardado.direcciones !== false,
     pistas: guardado.pistas === true
   };
   const vista = {escala: 1, x: 0, y: 0, densidad: 1};
+  const malla = {columnas: 23, filas: 19};
   const colocadas = [];
   const cursor = {x: 380, y: 275};
-  let modo, reto, indiceReto = 0, elegida, opciones = [], zonas = [];
+  let modo, reto, indiceReto = 0, elegida, opciones = [], zonas = [], pistaManual = null;
   let arrastre, vistaPrevia, movimiento, teclado = false;
   let cuadroAnimacion = 0;
 
@@ -30,6 +34,7 @@
   const dentro = ({x, y}) => x >= 0 && x <= escena.ancho && y <= escena.alto &&
     y >= (esBloques() ? -vista.y / vista.escala : 0);
   const completar = () => reto && !paso();
+  const mostrarZona = () => pistaManual ?? config.pistas;
   function mezclar(elementos) {
     for (let i = elementos.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -94,7 +99,10 @@
   }
   function renderPaso(nuevoBanco = true, leer = true) {
     elegida = nuevoBanco ? null : elegida;
-    if (nuevoBanco) opciones = generarOpciones();
+    if (nuevoBanco) {
+      opciones = generarOpciones();
+      pistaManual = null;
+    }
     tablero.classList.toggle('colocando', !!elegida);
     get('progreso').textContent = completar() ? esEn('¡Listo!', 'Done!') :
       esEn(`Paso ${colocadas.length + 1} de ${reto.pasos.length}`, `Step ${colocadas.length + 1} of ${reto.pasos.length}`);
@@ -102,7 +110,7 @@
     get('indicacion').textContent = instruccion();
     get('siguiente').hidden = !completar();
     renderBanco();
-    zonas = calcularPistas();
+    actualizarGuias();
     dibujar();
     if (leer) narrar(instruccion());
   }
@@ -127,6 +135,8 @@
   }
   function abrirModo(nuevoModo) {
     modo = nuevoModo;
+    juego.dataset.modo = nuevoModo;
+    get('escena').classList.toggle('paisaje', !esBloques());
     indiceReto = 0;
     renderLista();
     get('modos').hidden = true;
@@ -168,29 +178,60 @@
       colocadas.every(otra => Math.hypot(x - otra.x, (z - otra.z) * .72) >= .094);
   }
   function calcularPistas() {
-    if (!config.pistas || !paso()) return [];
+    if (!mostrarZona() || !paso()) return [];
     if (esBloques()) {
       const id = paso().id;
       return Array.from({length: 95}, (_, i) => destinoBloque(id, (i + 1) * 8, 0)).filter(bloqueCorrecto);
     }
     const puntos = [];
-    for (let i = 1; i <= 22; i++) {
-      for (let j = 1; j <= 18; j++) {
-        const x = i / 23, z = j / 19;
-        if (paisajeCorrecto(x,z)) puntos.push({x,z});
+    for (let i = 1; i < malla.columnas; i++) {
+      for (let j = 1; j < malla.filas; j++) {
+        const x = i / malla.columnas, z = j / malla.filas;
+        if (paisajeCorrecto(x,z)) puntos.push({i,j,x,z});
       }
     }
     return puntos;
   }
+  function actualizarGuias() {
+    guiaDirecciones.hidden = !config.direcciones;
+    verZona.hidden = !paso();
+    verZona.setAttribute('aria-pressed', String(mostrarZona()));
+    verZona.title = IdiomaVoz.t(mostrarZona() ? 'Ocultar zona' : 'Mostrar zona');
+    zonas = calcularPistas();
+  }
+  function dibujarDirecciones() {
+    if (!config.direcciones) return;
+    ctx.save();
+    ctx.setLineDash([8, 9]);
+    for (const limite of [.37, .63]) {
+      const x = escena.ancho * limite;
+      const puntos = esBloques() ? [[x, 20], [x, escena.piso]] :
+        [escena.proyectar(limite, .08), escena.proyectar(limite, .98)];
+      if (!esBloques()) escena.linea(ctx, puntos, '#223e3d7d', 3.9);
+      escena.linea(ctx, puntos, esBloques() ? '#7565a365' : '#ffffffe0', 2.3);
+    }
+    ctx.restore();
+  }
   function dibujarPistas() {
     if (esBloques()) {
       for (const zona of zonas) {
-        ctx.fillStyle = '#694cc6a8';
-        ctx.fillRect(zona.x - 4, zona.y - 4, 8, 4);
+        ctx.fillStyle = '#6644b4c9';
+        ctx.fillRect(zona.x - 4, zona.y - 7, 8, 7);
       }
     } else {
-      for (const {x,z} of zonas) {
-        escena.elipse(ctx, ...escena.proyectar(x,z), 7 + z * 4, 4, '#fff27e9f', '#8a773c75');
+      const casillas = new Set(zonas.map(({i,j}) => `${i}:${j}`));
+      const dx = .5 / malla.columnas, dz = .5 / malla.filas;
+      const bordes = [];
+      for (const {i,j,x,z} of zonas) {
+        const vertices = [[x-dx,z-dz],[x+dx,z-dz],[x+dx,z+dz],[x-dx,z+dz]].map(([px,pz]) => escena.proyectar(px,pz));
+        escena.poligono(ctx, vertices, '#ecdaffae');
+        const vecinos = [[i,j-1],[i+1,j],[i,j+1],[i-1,j]];
+        vecinos.forEach(([vi,vj], arista) => {
+          if (!casillas.has(`${vi}:${vj}`)) bordes.push([vertices[arista], vertices[(arista+1)%4]]);
+        });
+      }
+      for (const borde of bordes) {
+        escena.linea(ctx, borde, '#67419b', 2.8);
       }
     }
   }
@@ -207,6 +248,7 @@
     const area = {x: -x / escala, y: -y / escala, ancho: tablero.width / densidad / escala, alto: tablero.height / densidad / escala};
     if (esBloques()) escena.fondoBloques(ctx, area);
     else escena.terreno(ctx,reto.terreno, area);
+    dibujarDirecciones();
     dibujarPistas();
     const progreso = movimiento ? limites((tiempo - movimiento.inicio) / movimiento.duracion, 0, 1) : 0;
     const fantasma = movimiento?.pieza || vistaPrevia;
@@ -234,6 +276,8 @@
     const densidad = Math.min(devicePixelRatio || 1, 2);
     const escala = Math.min(w / escena.ancho, h / escena.alto);
     Object.assign(vista, {densidad, escala, x: (w - escena.ancho * escala) / 2, y: (h - escena.alto * escala) / 2});
+    guiaDirecciones.style.setProperty('--ancho-guia', (w - 2 * vista.x) + 'px');
+    guiaDirecciones.style.setProperty('--fondo-guia', (vista.y + 5 / Matematicas.escala()) + 'px');
     if (tablero.width !== Math.round(w * densidad)) tablero.width = Math.round(w * densidad);
     if (tablero.height !== Math.round(h * densidad)) tablero.height = Math.round(h * densidad);
     cancelAnimationFrame(cuadroAnimacion);
@@ -277,14 +321,22 @@
     let pieza, elevacion, valido;
     if (esBloques()) {
       pieza = destinoBloque(elegida, punto.x, punto.y);
-      elevacion = pieza.y - pieza.origen;
       valido = bloqueCorrecto(pieza);
+      const ajuste = !valido && zonas.find(zona => Math.abs(pieza.x - zona.x) <= 4);
+      if (ajuste) {
+        pieza = destinoBloque(elegida, ajuste.x, punto.y);
+        valido = true;
+      }
+      elevacion = pieza.y - pieza.origen;
     } else {
       const {x,z} = escena.desdePantalla(punto.x,punto.y);
-      if (!lugarPaisaje(x,z)) { errorLugar(); return; }
-      pieza = {id: elegida,x,z};
-      elevacion = 94;
       valido = paisajeCorrecto(x,z);
+      const ajuste = !valido && zonas.find(zona => Math.abs(x - zona.x) <= .5 / malla.columnas &&
+        Math.abs(z - zona.z) <= .5 / malla.filas);
+      if (!ajuste && !lugarPaisaje(x,z)) { errorLugar(); return; }
+      pieza = {id: elegida, x: ajuste?.x ?? x, z: ajuste?.z ?? z};
+      elevacion = 94;
+      valido ||= Boolean(ajuste);
     }
     vistaPrevia = null;
     mostrarEstado();
@@ -384,6 +436,12 @@
   selector.addEventListener('change', () => iniciar(Number(selector.value)));
   get('reiniciar').addEventListener('click', () => iniciar(indiceReto));
   get('escuchar').addEventListener('click', () => narrar(instruccion(), true));
+  verZona.addEventListener('click', () => {
+    if (!paso() || movimiento) return;
+    pistaManual = !mostrarZona();
+    actualizarGuias();
+    dibujar();
+  });
   get('siguiente').addEventListener('click', () => {
     iniciar((indiceReto + 1) % retos[modo].length);
     selector.focus({preventScroll: true});
@@ -395,7 +453,7 @@
   });
   get('abrirAjustes').addEventListener('click', () => {
     get('cantidad').value = config.cantidad;
-    for (const claveControl of ['narracion','texto','pistas']) get(claveControl).checked = config[claveControl];
+    for (const claveControl of controlesConfigurables) get(claveControl).checked = config[claveControl];
     IdiomaVoz.iniciarEdicion();
     ajustes.showModal();
   });
@@ -403,7 +461,8 @@
     const cantidad = Number(get('cantidad').value);
     const cambioCantidad = config.cantidad !== cantidad;
     config.cantidad = cantidad;
-    for (const claveControl of ['narracion','texto','pistas']) config[claveControl] = get(claveControl).checked;
+    for (const claveControl of controlesConfigurables) config[claveControl] = get(claveControl).checked;
+    pistaManual = null;
     Matematicas.guardar(clave,config);
     IdiomaVoz.aplicarEdicion();
     if (!modo) return;
@@ -429,7 +488,7 @@
     escena.bloque(bloques,piezas['triangulo-azul'],566,escena.piso-92);
     const paisaje = get('artePaisajes').getContext('2d');
     escena.terreno(paisaje,'rio');
-    for (const [id,x,z] of [['arbol',.73,.2],['fuente',.74,.56],['pato',.18,.65],['nino',.51,.74],['pelota',.63,.87]]) {
+    for (const [id,x,z] of [['arbol',.73,.2],['fuente',.74,.56],['pato',.12,.65],['nino',.51,.74],['pelota',.63,.87]]) {
       escena.paisajeObjeto(paisaje,id,x,z);
     }
   }
@@ -443,4 +502,14 @@
   });
   new ResizeObserver(adaptar).observe(tablero);
   dibujarTarjetas();
+  escena.cargarFondos(tipo => {
+    if (tipo === 'rio' || tipo === 'objetos') dibujarTarjetas();
+    if (tipo === 'objetos') {
+      for (const boton of banco.children) escena.ficha(boton.firstElementChild, boton.dataset.pieza, piezas[boton.dataset.pieza]);
+    }
+    if (reto?.terreno === tipo || (modo === 'paisajes' && tipo === 'objetos')) {
+      cancelAnimationFrame(cuadroAnimacion);
+      dibujar();
+    }
+  });
 })();

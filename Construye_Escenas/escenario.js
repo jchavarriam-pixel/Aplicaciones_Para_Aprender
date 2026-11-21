@@ -1,10 +1,11 @@
 (() => {
   const ancho = 760, alto = 440, piso = 396;
   const escala = z => .58 + z * .58;
-  const proyectar = (x, z, h = 0) => [380 + (x - .5) * (355 + 365 * z), 145 + 246 * z - h * escala(z)];
+  const anchoVista = z => 600 + 120 * z;
+  const proyectar = (x, z, h = 0) => [380 + (x - .5) * anchoVista(z), 145 + 246 * z - h * escala(z)];
   const desdePantalla = (x, y) => {
     const z = (y - 145) / 246;
-    return {x: .5 + (x - 380) / (355 + 365 * z), z};
+    return {x: .5 + (x - 380) / anchoVista(z), z};
   };
   function poligono(ctx, puntos, relleno, borde, grosor = 2) {
     ctx.beginPath();
@@ -68,7 +69,46 @@
     for (let x = area.x - area.x % 33 + 27; x < area.x + area.ancho; x += 33) linea(ctx, [[x, piso + 13], [x - 9, piso + 26]], '#a1b2d47c', 2);
   }
   const orilla = (tipo, z) => (tipo === 'rio' ? .247 : .32) + .018 * Math.sin(z * 9);
+  const fondos = new Map();
+  const recortes = {
+    fuente: [23, 25, 211, 199, 81],
+    nino: [318, 10, 99, 226, 100],
+    nina: [523, 16, 132, 219, 100],
+    pato: [757, 36, 165, 188, 53],
+    pelota: [996, 46, 171, 173, 34],
+    arbol: [19, 254, 218, 209, 137],
+    banco: [264, 301, 208, 140, 53],
+    flores: [501, 267, 190, 188, 49],
+    casa: [720, 269, 226, 177, 117],
+    conejo: [982, 258, 187, 197, 56],
+    barco: [30, 496, 191, 199, 77],
+    sombrilla: [260, 493, 205, 202, 93],
+    castillo: [496, 497, 224, 192, 60],
+    tienda: [720, 522, 235, 153, 79],
+    fogata: [995, 498, 167, 195, 68]
+  };
+  let atlas;
+  function cargarFondos(alCargar) {
+    for (const tipo of ['rio', 'parque', 'playa', 'granja', 'campamento']) {
+      const imagen = new Image();
+      imagen.onload = () => { fondos.set(tipo, imagen); alCargar(tipo); };
+      imagen.src = `paisajes/${tipo}.webp`;
+    }
+    const objetos = new Image();
+    objetos.onload = () => { atlas = objetos; alCargar('objetos'); };
+    objetos.src = 'paisajes/objetos.webp';
+  }
   function terreno(ctx, tipo, area = {x: 0, y: 0, ancho, alto}) {
+    const imagen = fondos.get(tipo);
+    if (imagen) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.roundRect(0, 0, ancho, alto, 16);
+      ctx.clip();
+      ctx.drawImage(imagen, 0, 0, ancho, alto);
+      ctx.restore();
+      return;
+    }
     const cielo = ctx.createLinearGradient(0, area.y, 0, 440);
     cielo.addColorStop(0, tipo === 'campamento' ? '#91a0f3' : '#86d7fa');
     cielo.addColorStop(.66, '#fff7dc');
@@ -238,7 +278,23 @@
   }
   function paisajeObjeto(ctx, id, x, z, h = 0) {
     const [sx, sy] = proyectar(x, z);
-    elipse(ctx, sx, sy+1, 39*escala(z), 9*escala(z), '#433b5529');
+    ctx.save();
+    ctx.translate(sx + 7 * escala(z), sy + 3 * escala(z));
+    ctx.scale(escala(z), escala(z) * .27);
+    const sombra = ctx.createRadialGradient(0, 0, 4, 0, 0, 43 + h * .14);
+    sombra.addColorStop(0, h ? '#272f4b44' : '#272f4b69');
+    sombra.addColorStop(1, '#272f4b00');
+    elipse(ctx, 0, 0, 43 + h * .14, 43 + h * .14, sombra);
+    ctx.restore();
+    if (atlas && recortes[id]) {
+      const [origenX,origenY,anchoImagen,altoImagen,tamano] = recortes[id];
+      const alto = tamano * escala(z);
+      const ancho = alto * anchoImagen / altoImagen;
+      const agua = id === 'pato' ? .87 : 1;
+      const [,base] = proyectar(x,z,h);
+      ctx.drawImage(atlas, origenX, origenY, anchoImagen, altoImagen * agua, sx - ancho/2, base - alto * agua, ancho, alto * agua);
+      return;
+    }
     if (['casa','tienda','banco'].includes(id)) { construccion(ctx,id,x,z,h); return; }
     ctx.save();
     ctx.translate(...proyectar(x,z,h));
@@ -255,6 +311,10 @@
       const factor = Math.min(canvas.width*.8/pieza.ancho,canvas.height*.72/pieza.alto);
       ctx.scale(factor,factor);
       bloque(ctx,pieza,0,0);
+    } else if (atlas && recortes[id]) {
+      const [x,y,w,h] = recortes[id];
+      const tamano = Math.min(canvas.width * .79 / w, canvas.height * .76 / h);
+      ctx.drawImage(atlas, x,y,w,h, (canvas.width-w*tamano)/2, (canvas.height-h*tamano)/2, w*tamano,h*tamano);
     } else {
       ctx.scale(canvas.width/760,canvas.width/760);
       const relacion = canvas.height/canvas.width;
@@ -266,5 +326,5 @@
     }
     ctx.restore();
   }
-  return window.EscenarioConstruccion = {ancho,alto,piso,proyectar,desdePantalla,bloque,fondoBloques,terreno,paisajeObjeto,ficha,poligono,elipse,linea};
+  return window.EscenarioConstruccion = {ancho,alto,piso,proyectar,desdePantalla,bloque,fondoBloques,cargarFondos,terreno,paisajeObjeto,ficha,poligono,elipse,linea};
 })();

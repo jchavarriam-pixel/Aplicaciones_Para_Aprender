@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="../idioma-voz.css">
   <link rel="stylesheet" href="../pantalla-completa.css">
   <link rel="stylesheet" href="../panel-plegable.css">
-  <link rel="stylesheet" href="construye.css">
+  <link rel="stylesheet" href="construye.css?v=paisajes-1">
 </head>
 <body>
   <main id="appConstruye">
@@ -45,6 +45,7 @@
         <div class="barra-reto">
           <button type="button" id="volver">‹ Modos</button>
           <select id="elegirReto" aria-label="Elegir reto" title="Elegir reto"></select>
+          <button type="button" id="verZona" aria-pressed="false" aria-label="Zona de colocación" title="Mostrar zona">📍 <span>Zona</span></button>
           <button type="button" id="escuchar" aria-label="Repetir instrucción" title="Repetir instrucción">🔊</button>
         </div>
         <div class="instruccion">
@@ -54,6 +55,9 @@
       </header>
       <div class="escena" id="escena">
         <canvas id="tablero" tabindex="0" aria-label="Escenario. Con el teclado, usa las flechas para mover el cursor y Enter para colocar la pieza."></canvas>
+        <div id="direccionesEscena" class="direcciones" aria-label="Guía de direcciones" hidden>
+          <span><b aria-hidden="true">←</b> Izquierda</span><span>Centro</span><span>Derecha <b aria-hidden="true">→</b></span>
+        </div>
       </div>
       <div class="banco" id="banco" role="group" aria-label="Piezas para escoger"></div>
       <footer class="respuesta">
@@ -72,6 +76,7 @@
       <select id="cantidad"><option value="4">4 opciones</option><option value="5">5 opciones</option></select>
       <label class="casilla"><input type="checkbox" id="narracion"> Narrar las instrucciones automáticamente</label>
       <label class="casilla"><input type="checkbox" id="texto"> Mostrar la instrucción escrita</label>
+      <label class="casilla"><input type="checkbox" id="direcciones"> Mostrar izquierda, centro y derecha</label>
       <label class="casilla"><input type="checkbox" id="pistas"> Marcar dónde se puede colocar cada pieza</label>
       <div id="vozConstruye"></div>
       <button class="principal">Aplicar y cerrar</button>
@@ -83,12 +88,12 @@
   </footer>
   <script>window.IDIOMA_VOZ_APP = 'construyeEscenas';</script>
   <script src="../idioma-voz-textos.js"></script>
-  <script src="textos.js"></script>
+  <script src="textos.js?v=paisajes-1"></script>
   <script src="../idioma-voz.js"></script>
   <script src="../matematicas-base.js"></script>
-  <script src="retos.js"></script>
-  <script src="escenario.js"></script>
-  <script src="construye.js"></script>
+  <script src="escenario.js?v=paisajes-1"></script>
+  <script src="retos.js?v=paisajes-1"></script>
+  <script src="construye.js?v=paisajes-1"></script>
   <script src="../pantalla-completa.js"></script>
   <script src="../panel-plegable.js?v=construye-1"></script>
   <script src="../nombre-compartido.js"></script>

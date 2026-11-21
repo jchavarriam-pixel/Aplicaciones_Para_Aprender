@@ -28,6 +28,18 @@
   const bloque = (id, x, apoyos, es, en) => ({id, x, apoyos, texto: par(es, en)});
   const paisaje = (id, zona, es, en) => ({id, zona, texto: par(es, en)});
   const zona = (izquierda, derecha, fondo, frente) => (x, z) => x >= izquierda && x <= derecha && z >= fondo && z <= frente;
+  // Bordes de agua muestreados en los fondos ilustrados, medidos sobre el plano de 760 × 440.
+  const orillas = {
+    rio: [168, 170, 154, 163, 191, 195, 187, 191],
+    playa: [223, 181, 170, 179, 143, 80, 48, 0]
+  };
+  const enAgua = nombre => (x, z) => {
+    const muestras = orillas[nombre];
+    const fila = Math.max(0, Math.min(muestras.length - 1, (z - .25) * 10));
+    const indice = Math.min(muestras.length - 2, Math.floor(fila));
+    const orilla = muestras[indice] + (muestras[indice + 1] - muestras[indice]) * (fila - indice);
+    return EscenarioConstruccion.proyectar(x, z)[0] <= orilla - 10;
+  };
   const cerca = (indice, direccion = '') => (x, z, piezas) => {
     const referencia = piezas[indice];
     const dx = x - referencia.x, dz = z - referencia.z;
@@ -76,7 +88,7 @@
   const paisajes = [
     {nombre: par('Una tarde junto al río', 'An afternoon by the river'), terreno: 'rio', pasos: [
       paisaje('fuente', zona(.66, .9, .36, .72), 'Pon una fuente a la derecha del río.', 'Put a fountain on the right side of the river.'),
-      paisaje('pato', zona(.08, .22, .3, .85), 'Pon un pato en el río, a la izquierda.', 'Put a duck in the river on the left.'),
+      paisaje('pato', y(zona(.035, .24, .25, .93), enAgua('rio')), 'Pon un pato en el río, a la izquierda.', 'Put a duck in the river on the left.'),
       paisaje('nino', zona(.35, .59, .55, .81), 'Pon un niño en el césped, entre el río y la fuente.', 'Put a boy on the grass between the river and the fountain.'),
       paisaje('pelota', y(cerca(2), zona(.31, .72, .29, .94)), 'Pon una pelota cerca del niño para que pueda jugar.', 'Put a ball near the boy so he can play.'),
       paisaje('arbol', y(cerca(0, 'fondo'), zona(.6, .94, .1, .59)), 'Pon un árbol detrás de la fuente.', 'Put a tree behind the fountain.')
@@ -90,7 +102,7 @@
     ]},
     {nombre: par('Un día de playa', 'A day at the beach'), terreno: 'playa', pasos: [
       paisaje('sombrilla', zona(.65, .87, .44, .71), 'Pon una sombrilla en la arena, a la derecha.', 'Put a beach umbrella on the sand on the right.'),
-      paisaje('barco', zona(.07, .26, .24, .72), 'Pon un barco en el mar, a la izquierda.', 'Put a boat in the sea on the left.'),
+      paisaje('barco', y(zona(.035, .24, .25, .72), enAgua('playa')), 'Pon un barco en el mar, a la izquierda.', 'Put a boat in the sea on the left.'),
       paisaje('castillo', y(cerca(0, 'frente'), zona(.54, .93, .57, .94)), 'Pon un castillo de arena delante de la sombrilla.', 'Put a sandcastle in front of the beach umbrella.'),
       paisaje('pelota', zona(.37, .52, .51, .83), 'Pon una pelota en la arena, a la izquierda de la sombrilla.', 'Put a ball on the sand to the left of the beach umbrella.')
     ]},
