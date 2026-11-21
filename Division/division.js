@@ -150,7 +150,7 @@
   function actualizarFase() {
     const {total,divisor,cociente,resto} = ronda;
     const mostrarEcuacion = fase === 'escribir' || fase === 'listo';
-    const mostrarSillita = modo === 'resto' && (fase === 'sillita' || mostrarEcuacion);
+    const mostrarSillita = modo !== 'cajas' && (fase === 'sillita' || mostrarEcuacion);
     const mostrarResultado = mostrarEcuacion || (mostrarSillita && pasoSillita === 3);
     const resultado = mostrarResultado ? `${cociente}${resto ? t(`, resto ${resto}`, `, remainder ${resto}`) : ''}` : '?';
     $('operacionReto').textContent = `${total} ÷ ${divisor} = ${resultado}`;
@@ -223,9 +223,11 @@
       [t('3. Multiplica','3. Multiply'),
         t(`Multiplica ${divisor} × ${cociente} para hallar las ${repartidas} fichas repartidas. Escribe ${repartidas} debajo del dividendo para restarlo.`,
           `Multiply ${divisor} × ${cociente} to find the ${repartidas} counters shared. Write ${repartidas} below the dividend to subtract it.`)],
-      [t('4. Resta y comprueba','4. Subtract and check'),
-        t(`Resta ${total} − ${repartidas} para obtener el resto, ${resto}. Como ${resto} es menor que ${divisor}, no alcanza para dar una ficha más a cada grupo.`,
-          `Subtract ${total} − ${repartidas} to find the remainder, ${resto}. Since ${resto} is less than ${divisor}, there are too few counters for one more in each group.`)]
+      [t('4. Resta y comprueba','4. Subtract and check'), resto
+        ? t(`Resta ${total} − ${repartidas} para obtener el resto, ${resto}. Como ${resto} es menor que ${divisor}, no alcanza para dar una ficha más a cada grupo.`,
+          `Subtract ${total} − ${repartidas} to find the remainder, ${resto}. Since ${resto} is less than ${divisor}, there are too few counters for one more in each group.`)
+        : t(`Resta ${total} − ${repartidas}. El resto es 0 porque repartiste todas las fichas.`,
+          `Subtract ${total} − ${repartidas}. The remainder is 0 because you shared all the counters.`)]
     ];
     for (const [id, valor] of Object.entries({Dividendo:total,Divisor:divisor,Cociente:cociente,Producto:`−${repartidas}`,Resto:resto})) {
       $(`sillita${id}`).textContent = valor;
@@ -238,7 +240,7 @@
     $('tituloPasoSillita').textContent = pasos[pasoSillita][0];
     $('textoSillita').textContent = pasos[pasoSillita][1];
     $('pruebaSillita').hidden = pasoSillita !== 3;
-    $('pruebaSillita').textContent = `${divisor} × ${cociente} + ${resto} = ${total}`;
+    $('pruebaSillita').textContent = `${divisor} × ${cociente}${resto ? ` + ${resto}` : ''} = ${total}`;
   }
 
   function iniciarRonda() {
@@ -465,7 +467,7 @@
       hablar(preguntaReparto());
       return;
     }
-    if (modo === 'resto') {
+    if (modo !== 'cajas') {
       fase = 'sillita';
       pasoSillita = 0;
       espacio.scrollTop = 0;
