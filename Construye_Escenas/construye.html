@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+  <title>Escucha y construye</title>
+  <link rel="stylesheet" href="../creditos.css">
+  <link rel="stylesheet" href="../idioma-voz.css">
+  <link rel="stylesheet" href="../pantalla-completa.css">
+  <link rel="stylesheet" href="../panel-plegable.css">
+  <link rel="stylesheet" href="construye.css">
+</head>
+<body>
+  <main id="appConstruye">
+    <aside class="herramientas">
+      <header>
+        <div class="titulo"><span aria-hidden="true">🧩</span><h1>Escucha y construye</h1></div>
+        <label for="nombre">Nombre del niño</label>
+        <input id="nombre" maxlength="40" placeholder="Ej.: Gabriel" autocomplete="given-name">
+        <a id="inicio" href="../index.html" aria-label="Todas las aplicaciones" title="Todas las aplicaciones">⌂</a>
+      </header>
+      <section class="guia">
+        <h2>Así jugamos</h2>
+        <p>Escucha un paso. Arrastra una pieza o tócala y toca su lugar. Al final, cuenta lo que construiste.</p>
+      </section>
+      <div class="herramientas-acciones">
+        <button type="button" id="abrirAjustes">⚙ Configuración</button>
+        <button type="button" id="reiniciar" aria-label="Reiniciar reto" title="Reiniciar reto" hidden>↺ <span>Reiniciar reto</span></button>
+      </div>
+    </aside>
+    <nav class="actividad tarjetas" id="modos" aria-label="Modos de construcción">
+      <button type="button" class="tarjeta" data-modo="bloques">
+        <canvas id="arteBloques" width="760" height="440" aria-hidden="true"></canvas>
+        <strong>Construye con bloques</strong>
+        <span>Apila cuadrados, rectángulos y triángulos para seguir cada instrucción.</span>
+      </button>
+      <button type="button" class="tarjeta" data-modo="paisajes">
+        <canvas id="artePaisajes" width="760" height="440" aria-hidden="true"></canvas>
+        <strong>Construye un paisaje</strong>
+        <span>Escoge objetos y ponlos delante, detrás o al lado de otros.</span>
+      </button>
+    </nav>
+    <section class="actividad juego" id="juego" hidden aria-label="Reto de construcción">
+      <header class="reto">
+        <div class="barra-reto">
+          <button type="button" id="volver">‹ Modos</button>
+          <select id="elegirReto" aria-label="Elegir reto" title="Elegir reto"></select>
+          <button type="button" id="escuchar" aria-label="Repetir instrucción" title="Repetir instrucción">🔊</button>
+        </div>
+        <div class="instruccion">
+          <span id="progreso" data-no-traducir></span>
+          <p id="indicacion" data-no-traducir></p>
+        </div>
+      </header>
+      <div class="escena" id="escena">
+        <canvas id="tablero" tabindex="0" aria-label="Escenario. Con el teclado, usa las flechas para mover el cursor y Enter para colocar la pieza."></canvas>
+      </div>
+      <div class="banco" id="banco" role="group" aria-label="Piezas para escoger"></div>
+      <footer class="respuesta">
+        <p id="estado" role="status" data-no-traducir></p>
+        <button type="button" id="siguiente" class="principal" hidden>Siguiente reto</button>
+      </footer>
+    </section>
+  </main>
+  <dialog id="ajustes" aria-labelledby="tituloAjustes">
+    <form method="dialog">
+      <div class="encabezado-dialogo">
+        <h2 id="tituloAjustes">Configuración</h2>
+        <button aria-label="Aplicar y cerrar">✕</button>
+      </div>
+      <label for="cantidad">Opciones por paso</label>
+      <select id="cantidad"><option value="4">4 opciones</option><option value="5">5 opciones</option></select>
+      <label class="casilla"><input type="checkbox" id="narracion"> Narrar las instrucciones automáticamente</label>
+      <label class="casilla"><input type="checkbox" id="texto"> Mostrar la instrucción escrita</label>
+      <label class="casilla"><input type="checkbox" id="pistas"> Marcar dónde se puede colocar cada pieza</label>
+      <div id="vozConstruye"></div>
+      <button class="principal">Aplicar y cerrar</button>
+    </form>
+  </dialog>
+  <footer id="creditos-aplicaciones">
+    <div class="creditos-dedicatoria"><span class="creditos-gabriel">Creado para <strong>Gabriel</strong></span><span class="creditos-familia">Por su familia, con ayuda de la IA.</span></div>
+    <div class="creditos-equipo"><span class="creditos-autores">M.Sc. Jeffry Chavarría-Molina y Ph.D. (c) Natalia Rodríguez-Granados</span><span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span></div>
+  </footer>
+  <script>window.IDIOMA_VOZ_APP = 'construyeEscenas';</script>
+  <script src="../idioma-voz-textos.js"></script>
+  <script src="textos.js"></script>
+  <script src="../idioma-voz.js"></script>
+  <script src="../matematicas-base.js"></script>
+  <script src="retos.js"></script>
+  <script src="escenario.js"></script>
+  <script src="construye.js"></script>
+  <script src="../pantalla-completa.js"></script>
+  <script src="../panel-plegable.js?v=construye-1"></script>
+  <script src="../nombre-compartido.js"></script>
+</body>
+</html>
