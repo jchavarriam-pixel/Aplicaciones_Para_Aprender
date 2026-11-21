@@ -13,6 +13,8 @@ Al comenzar a crear o modificar cualquier aplicación, aplicar este protocolo co
 
 Aplicar el protocolo progresivamente a las aplicaciones que se trabajen. No supone modificar de una vez todas las aplicaciones del repositorio. Las peticiones específicas de cada actividad se suman a este protocolo.
 
+Al practicar, registrar las respuestas y operaciones con teclados de la aplicación, fichas o selección. Los campos de ejercicio deben evitar que el teclado del dispositivo se abra al tocarlos y cambie el tamaño del área de juego.
+
 ## Aprovechar el espacio horizontal disponible
 
 - En toda aplicación nueva o modificada, incluido el índice, el contenido principal debe aprovechar todo el ancho disponible del navegador, con márgenes laterales pequeños y adaptables. Evitar límites fijos de `max-width` en el contenedor principal que dejen grandes franjas vacías en pantallas anchas.

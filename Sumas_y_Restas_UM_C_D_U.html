@@ -114,7 +114,7 @@
   </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="operaciones-pasos.css"><link rel="stylesheet" href="Abaco/cuentas.css"><link rel="stylesheet" href="Abaco/flotante-operaciones.css?v=libre-1"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-posicional.css?v=tablero-1"><script>window.IDIOMA_VOZ_APP='valorPosicional';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-operaciones-textos.js"></script><script src="idioma-voz.js"></script><script src="matematicas-base.js"></script><link rel="stylesheet" href="iconos/cabeceras.css"></head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="operaciones-pasos.css"><link rel="stylesheet" href="teclado-en-pantalla.css"><link rel="stylesheet" href="Abaco/cuentas.css"><link rel="stylesheet" href="Abaco/flotante-operaciones.css?v=libre-1"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-posicional.css?v=teclado-1"><script>window.IDIOMA_VOZ_APP='valorPosicional';</script><script src="idioma-voz-textos.js"></script><script src="matematicas-operaciones-textos.js"></script><script src="idioma-voz.js"></script><script src="matematicas-base.js"></script><script src="teclado-en-pantalla.js"></script><link rel="stylesheet" href="iconos/cabeceras.css"></head>
 <body>
 <div class="app" id="appPosicional">
   <main id="menu" class="screen actividad active">
@@ -149,9 +149,10 @@
     <section class="card">
       <p class="panel-title">Escribe la operación que quieres practicar.</p>
       <div class="name-row">
-        <input id="operationInput" class="operation-input" type="text" inputmode="text" placeholder="" autocomplete="off" />
+        <input id="operationInput" class="operation-input" type="text" inputmode="none" readonly data-campo-teclado maxlength="13" aria-label="Escribe la operación que quieres practicar." />
         <button class="btn ok" onclick="generateFromInput()">✅ Generar</button>
       </div>
+      <div id="tecladoOperacion" class="teclado-propio" role="group" aria-label="Teclado numérico"></div>
       <label class="option-check">
         <input id="showZerosCustom" type="checkbox" onchange="setShowLeadingZeros(this.checked)">
         <span>Mostrar ceros de apoyo para completar las cifras.</span>
@@ -232,7 +233,7 @@ function setShowLeadingZeros(checked){
 }
 function makeProblem(a,b,op,mode){const result=op==='+'?a+b:a-b;const maxLen=Math.max(numDigits(a),numDigits(b),numDigits(result));current={a,b,op,digits:Math.max(1,maxLen),mode,resultDigits:digitsArray(result,Math.max(1,maxLen)),topDigits:digitsArray(a,Math.max(1,maxLen)),bottomDigits:digitsArray(b,Math.max(1,maxLen)),answers:new Array(Math.max(1,maxLen)).fill(null),carrySlots:new Array(Math.max(1,maxLen)).fill(null),borrowed:new Array(Math.max(1,maxLen)).fill(false),currentTop:digitsArray(a,Math.max(1,maxLen)),leadingAnswer:null,expectedLeading:0,solved:false};if(op==='+')prepareCarries();renderSolver(mode==='custom'?'solverCustom':'houseArea')}
 function prepareCarries(){let carry=0;const expected=new Array(current.digits).fill(0);for(let i=current.digits-1;i>=0;i--){expected[i]=carry;const total=current.topDigits[i]+current.bottomDigits[i]+carry;carry=total>=10?1:0}current.expectedCarryIn=expected}
-function generateFromInput(){PasosOperaciones.limpiar();clearAudioGuide(false);const p=parseOperation($('operationInput').value);const msg=$('customMsg');if(!p.ok){msg.textContent=p.msg;msg.className='message bad';$('solverCustom').classList.add('hidden');return}msg.textContent='';msg.className='message info';makeProblem(p.a,p.b,p.op,'custom');$('solverCustom').classList.remove('hidden')}
+function generateFromInput(){PasosOperaciones.limpiar();clearAudioGuide(false);const p=parseOperation($('operationInput').value);const msg=$('customMsg');$('tecladoOperacion').hidden=p.ok;if(!p.ok){msg.textContent=p.msg;msg.className='message bad';$('solverCustom').classList.add('hidden');return}msg.textContent='';msg.className='message info';makeProblem(p.a,p.b,p.op,'custom');$('solverCustom').classList.remove('hidden')}
 function expectedAnswerDigits(){return digitsArray(current.op==='+'?current.a+current.b:current.a-current.b,current.digits)}
 function expectedCarryAt(i){if(current.op!=='+')return 0;return current.expectedCarryIn?current.expectedCarryIn[i]:0}
 function needsCarrySlot(i){return current.op==='+'&&expectedCarryAt(i)===1&&!bothOperandsPaddingAt(i,current.digits)}
@@ -557,7 +558,13 @@ for(let i=0;i<total;i++)setTimeout(()=>addParticle(i),Math.random()*3000);
 setTimeout(()=>{layer.style.transition='opacity 2s ease';layer.style.opacity='0'},6000);
 setTimeout(()=>layer.remove(),8200);
 }
-window.addEventListener('DOMContentLoaded',()=>{loadName();setShowLeadingZeros(false);$('operationInput').addEventListener('keydown',e=>{if(e.key==='Enter')generateFromInput()})});
+window.addEventListener('DOMContentLoaded',()=>{
+  loadName();setShowLeadingZeros(false);
+  TecladoEnPantalla.instalar($('customScreen'),$('tecladoOperacion'),{teclas:'1234567890+-',limpiar:true});
+  const campo=$('operationInput');
+  for(const evento of ['focus','click','input'])campo.addEventListener(evento,()=>{$('tecladoOperacion').hidden=false;});
+  campo.addEventListener('keydown',e=>{if(e.key==='Enter')generateFromInput();});
+});
 window.addEventListener('nombre-estudiante-cambiado',e=>{studentName=e.detail.nombre;});
 </script>
 
@@ -571,7 +578,7 @@ window.addEventListener('nombre-estudiante-cambiado',e=>{studentName=e.detail.no
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="operaciones-pasos.js?v=corregir-llevada-1"></script><script src="Abaco/cuentas.js"></script><script src="Abaco/flotante-operaciones.js?v=valor-posicional-1"></script><script src="matematicas-posicional.js?v=tablero-1"></script><script src="pantalla-completa.js"></script><script src="panel-plegable.js?v=valor-posicional-1"></script>
+<script src="operaciones-pasos.js?v=corregir-llevada-1"></script><script src="Abaco/cuentas.js"></script><script src="Abaco/flotante-operaciones.js?v=valor-posicional-1"></script><script src="matematicas-posicional.js?v=teclado-1"></script><script src="pantalla-completa.js"></script><script src="panel-plegable.js?v=valor-posicional-1"></script>
 <script src="nombre-compartido.js"></script>
 </body>
 </html>

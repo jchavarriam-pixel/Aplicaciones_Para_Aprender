@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
     else if (!$('solverCustom').classList.contains('hidden')) resetSolver('solverCustom');
   };
   $('escucharPosicional').onclick = () => startAudioGuide(getActiveContainerId());
-  $('operationInput').addEventListener('change',guardar);
+  $('operationInput').addEventListener('input',guardar);
   mensajeCasa.setAttribute('role','status');
 
   const observador = new ResizeObserver(() => fit());

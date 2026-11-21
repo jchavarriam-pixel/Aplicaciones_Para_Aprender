@@ -10,6 +10,9 @@
   const escena = get('escena');
   const regla = get('regla');
   const campos = get('campos');
+  const respuestasObjetos = get('respuestasObjetos');
+  const teclado = get('tecladoMedidas');
+  const entradaNumerica = TecladoEnPantalla.instalar(juego, teclado);
   const resultado = get('resultado');
   const ajustes = get('ajustes');
   const clave = 'medidas-longitud.v1';
@@ -57,13 +60,13 @@
       const objeto = {valor, largo, tipo, letra: letras[i], color: colores[i]};
       if (vertical) return {...objeto, x: 114 + i * 105, y: 253, angulo: -90};
       if (modo === 'diferencia') return {...objeto, x: 65, y: 64 + i * 67, angulo: 0};
-      if (medirVertical && i === 0) return {...objeto, x: 78, y: 183, angulo: -90};
-      const angulo = medirVertical ? angulos[0] : cantidad === 2 && i === 1 ? angulos[2] : angulos[i];
+      if (medirVertical && i === 0) return {...objeto, x: 62, y: 143, angulo: -90};
+      const angulo = medirVertical ? 0 : cantidad === 2 && i === 1 ? angulos[2] : angulos[i];
       const medio = rotar(largo / 2, 0, angulo);
       return {
         ...objeto,
-        x: (medirVertical ? 229 : 181) - medio.x,
-        y: (medirVertical ? 118 : cantidad === 2 ? 65 + i * 94 : 49 + i * 84) - medio.y,
+        x: (medirVertical ? 170 : modo === 'medir' ? 153 : 181) - medio.x,
+        y: (medirVertical ? 171 : cantidad === 2 ? 65 + i * 94 : 49 + i * 84) - medio.y,
         angulo
       };
     });
@@ -195,12 +198,22 @@
     }));
   }
   function camposNumericos() {
-    const claves = modo === 'medir' ? ronda.objetos.map(objeto => objeto.letra) : ['diferencia'];
-    campos.innerHTML = claves.map(claveCampo => `
-      <label class="campo"><span>${claveCampo === 'diferencia' ? t('Diferencia') : claveCampo}</span>
-        <input name="${claveCampo}" type="text" inputmode="numeric" autocomplete="off" maxlength="2">
+    function campo(claveCampo, rotulo) {
+      return `<label class="campo">${rotulo}
+        <input name="${claveCampo}" aria-label="${claveCampo === 'diferencia' ? t('Diferencia') : t('Medida del objeto') + ' ' + claveCampo}" type="text" inputmode="none" readonly data-campo-teclado maxlength="2" form="respuesta">
         <span>cm</span>
-      </label>`).join('');
+      </label>`;
+    }
+    if (modo === 'diferencia') campos.innerHTML = campo('diferencia', `<span>${t('Diferencia')}</span>`);
+    else {
+      respuestasObjetos.innerHTML = ronda.objetos.map(({letra, x, y, largo, angulo}) => {
+        const punta = rotar(largo, 0, angulo);
+        const izquierda = Math.min(282, Math.max(x, x + punta.x) + 16);
+        const centro = y + punta.y / 2;
+        return `<div class="respuesta-objeto" style="left:${izquierda}px;top:${centro}px">${campo(letra, '')}</div>`;
+      }).join('');
+    }
+    entradaNumerica.seleccionar(juego.querySelector('[data-campo-teclado]'));
   }
   function opcionesEstimacion() {
     campos.innerHTML = ronda.objetos.map(({letra}) => `<label class="opcion"><input type="radio" name="estimacion" value="${letra}"><span>${letra}</span></label>`).join('');
@@ -221,6 +234,9 @@
     resultado.textContent = '';
     resultado.classList.remove('exito');
     dibujarObjetos();
+    campos.replaceChildren();
+    respuestasObjetos.replaceChildren();
+    teclado.hidden = modo === 'estimar';
     if (modo === 'estimar') opcionesEstimacion();
     else camposNumericos();
     adaptarEscena();
@@ -267,7 +283,7 @@
       etiqueta.classList.toggle('incorrecto', !evaluado);
       if (evaluado) mensaje = ronda.orden === -1 ? esEn(`${seleccion} es el más corto.`, `${seleccion} is the shortest.`) : esEn(`${seleccion} es el más largo.`, `${seleccion} is the longest.`);
     } else {
-      const entradas = [...campos.querySelectorAll('input')];
+      const entradas = [...juego.querySelectorAll('[data-campo-teclado]')];
       const falta = entradas.find(entrada => !/^\d{1,2}$/.test(entrada.value.trim()));
       if (falta) {
         resultado.textContent = esEn('Escribe una medida en cada espacio.', 'Write a measurement in each box.');
@@ -295,6 +311,8 @@
         esEn('Revisa las medidas marcadas. ¿El 0 quedó en el extremo?', 'Check the marked measurements. Did you line up the 0 with the end?');
     if (evaluado) {
       campos.querySelectorAll('input').forEach(entrada => { entrada.disabled = true; });
+      respuestasObjetos.querySelectorAll('input').forEach(entrada => { entrada.disabled = true; });
+      teclado.hidden = true;
       get('revisar').hidden = true;
       get('siguiente').hidden = false;
       get('siguiente').focus({preventScroll:true});
@@ -330,8 +348,8 @@
     cargarRonda();
     regla.focus({preventScroll:true});
   });
-  campos.addEventListener('input', evento => {
-    if (evaluado) return;
+  juego.addEventListener('input', evento => {
+    if (evaluado || !evento.target.matches('#campos input, #respuestasObjetos input')) return;
     resultado.textContent = '';
     if (evento.target.type === 'radio') {
       seleccion = evento.target.value;

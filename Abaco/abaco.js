@@ -138,7 +138,8 @@
     const correcta = respuesta === 'correcta';
     $('operacion').textContent = `${inicio} ${operacion === 'suma' ? '+' : '−'} ${cambio} = ${correcta ? resultado : '?'}`;
     $('instruccion').textContent = instruccionPractica();
-    $('resultadoPractica').readOnly = correcta;
+    $('resultadoPractica').disabled = correcta;
+    $('tecladoAbaco').hidden = correcta;
     if (respuesta === 'respuesta') $('resultadoPractica').setAttribute('aria-invalid','true');
     else $('resultadoPractica').removeAttribute('aria-invalid');
     $('revisarPractica').hidden = correcta;
@@ -300,6 +301,7 @@
     pintarInterfaz();
     document.querySelector(`[data-modo="${anterior}"]`).focus({preventScroll:true});
   });
+  TecladoEnPantalla.instalar($('respuestaPractica'), $('tecladoAbaco'));
   $('respuestaPractica').addEventListener('submit',revisarPregunta);
   $('siguientePractica').addEventListener('click',nuevaPregunta);
   $('resultadoPractica').addEventListener('input',evento => {

@@ -100,12 +100,12 @@
           <form id="respuesta" novalidate hidden>
             <p id="tituloRespuesta">Escribe la división completa.</p>
             <div class="ecuacion" role="group" aria-labelledby="tituloRespuesta">
-              <label><span>Dividendo</span><input id="dividendo" inputmode="none" maxlength="2" size="2" autocomplete="off"></label>
+              <label><span>Dividendo</span><input id="dividendo" inputmode="none" readonly maxlength="2" size="2" autocomplete="off"></label>
               <b aria-hidden="true">÷</b>
-              <label><span>Divisor</span><input id="divisor" inputmode="none" maxlength="2" size="2" autocomplete="off"></label>
+              <label><span>Divisor</span><input id="divisor" inputmode="none" readonly maxlength="2" size="2" autocomplete="off"></label>
               <b aria-hidden="true">=</b>
-              <label><span>Cociente</span><input id="cociente" inputmode="none" maxlength="2" size="2" autocomplete="off"></label>
-              <label id="campoResto"><span>Resto</span><input id="residuo" inputmode="none" maxlength="2" size="2" autocomplete="off"></label>
+              <label><span>Cociente</span><input id="cociente" inputmode="none" readonly maxlength="2" size="2" autocomplete="off"></label>
+              <label id="campoResto"><span>Resto</span><input id="residuo" inputmode="none" readonly maxlength="2" size="2" autocomplete="off"></label>
             </div>
             <div id="tecladoReparto" role="group" aria-label="Teclado numérico"></div>
           </form>
@@ -148,7 +148,7 @@
   <script src="../idioma-voz.js"></script>
   <script src="../matematicas-base.js"></script>
   <script src="../Multiplicacion/grupos-magneticos.js?v=contornos-1"></script>
-  <script src="division.js?v=sillita-editable-1"></script>
+  <script src="division.js?v=teclado-1"></script>
   <script src="../pantalla-completa.js"></script>
   <script src="../panel-plegable.js?v=division-1"></script>
   <script src="../nombre-compartido.js"></script>

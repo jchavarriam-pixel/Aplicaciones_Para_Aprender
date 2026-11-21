@@ -1,0 +1,30 @@
+.teclado-propio {
+  --u-tecla: var(--u, var(--unidad, calc(1px * var(--inverso-panel-compartido, 1))));
+  display: grid;
+  grid-template-columns: repeat(var(--columnas-teclado, 11), minmax(0, 1fr));
+  gap: calc(3 * var(--u-tecla));
+  width: min(100%, calc(580 * var(--u-tecla)));
+  margin-inline: auto;
+}
+.teclado-propio[hidden] { display: none; }
+.teclado-propio button {
+  min-width: 0;
+  min-height: calc(33 * var(--u-tecla));
+  padding: 0;
+  border: 1px solid #bdd4e7;
+  border-radius: calc(8 * var(--u-tecla));
+  background: #eaf4fb;
+  color: #214c67;
+  font: inherit;
+  font-size: calc(16 * var(--u-tecla));
+  font-weight: 850;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.teclado-propio button:active { background: #c8e6f7; }
+.teclado-propio button:is([data-tecla="Backspace"],[data-tecla="Delete"]) { background: #f2eaff; color: #593493; }
+[data-campo-teclado] { cursor: pointer; }
+[data-campo-teclado][data-campo-activo]:not(:disabled) { outline: 2px solid #7446bb; outline-offset: 1px; }
+@media (max-width: 380px) {
+  .teclado-propio { --columnas-teclado: 6; }
+}

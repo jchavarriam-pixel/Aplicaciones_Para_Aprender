@@ -32,6 +32,7 @@ Object.assign(window.TEXTOS_INGLES ||= {}, {
   'Marcar los extremos al medir': 'Mark the endpoints when measuring',
   'Leer las preguntas y respuestas': 'Read questions and answers aloud',
   'Diferencia': 'Difference',
+  'Medida del objeto': 'Object measurement',
   'Lápiz': 'Pencil',
   'Cinta': 'Ribbon',
   'Poste': 'Post'

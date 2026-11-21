@@ -16,7 +16,14 @@
 #revisar,#siguiente{min-width:0}#siguiente{flex:0 1 auto}
 @media(max-height:650px) and (orientation:portrait){.app.compacta .grupo-banco h2{display:none}.app.compacta .banco{gap:calc(5*var(--u))}.app.compacta .acciones #siguiente{flex-shrink:1}}
 
-.teclado-abierto .texto-ejercicio{max-height:100%;overflow:auto}.teclado-abierto #rotuloRespuesta{display:none}.teclado-abierto .resto{font-size:calc(16*var(--u));line-height:1.2}
+body{width:var(--ancho-app,100%)!important}
+.app:not(.horizontal){grid-template-columns:minmax(0,1fr)}
+#tecladoSujeto{--columnas-teclado:10;flex-shrink:0}
+#tecladoSujeto button[data-tecla=" "]{grid-column:span 3;font-size:calc(12 * var(--u))}
+@media (orientation:landscape) and (max-height:440px){
+  #tecladoSujeto{--columnas-teclado:13}
+  #tecladoSujeto button{min-height:calc(27 * var(--u))}
+}
 
 .actividad{display:flex;flex-direction:column}.ejercicio{flex:1}.barra-reto,.banco,.estado,.acciones{flex-shrink:0}
 @media(max-height:650px) and (orientation:portrait){.app.avanzada .ficha.articulo{font-size:calc(14*var(--u));padding-left:calc(3*var(--u));padding-right:calc(3*var(--u))}.app.avanzada #articulos{gap:calc(3*var(--u))}}

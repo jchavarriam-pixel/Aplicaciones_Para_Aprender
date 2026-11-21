@@ -166,7 +166,6 @@
       : fase === 'repartir' ? 'Comprobar reparto' : 'Revisar división';
     $('revisar').textContent = IdiomaVoz.t(accion);
     $('revisar').disabled = fase === 'listo';
-    for (const campo of campos) campo.readOnly = !escribir;
     seleccionarCampo(campoActivo);
   }
 
@@ -504,12 +503,16 @@
   for (const campo of campos) {
     campo.addEventListener('focus', () => { if (fase === 'escribir') seleccionarCampo(campo); });
     campo.addEventListener('click', () => { if (fase === 'escribir') seleccionarCampo(campo); });
-    campo.addEventListener('input', () => {
-      campo.value = campo.value.replace(/\D/g,'');
-      campo.removeAttribute('aria-invalid');
-    });
     campo.addEventListener('keydown', evento => {
-      if (evento.key !== 'Enter' || fase !== 'escribir') return;
+      if (fase !== 'escribir' || evento.ctrlKey || evento.metaKey || evento.altKey) return;
+      if (/^\d$/.test(evento.key) || evento.key === 'Backspace') {
+        evento.preventDefault();
+        seleccionarCampo(campo);
+        if (evento.key === 'Backspace') borrar.click();
+        else teclado.children[Number(evento.key)].click();
+        return;
+      }
+      if (evento.key !== 'Enter') return;
       evento.preventDefault();
       $('respuesta').requestSubmit();
     });

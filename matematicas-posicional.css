@@ -76,6 +76,8 @@ body { width:100% !important; background:linear-gradient(150deg,#d8f5fb,#edf0ff 
   padding:calc(5 * var(--unidad)); font-size:calc(19 * var(--unidad));
 }
 .editor-posicional .btn { border-radius:9px; padding:calc(6 * var(--unidad)); font-size:calc(13 * var(--unidad)); }
+#tecladoOperacion { --columnas-teclado: 14; margin-top: var(--g); }
+@media (max-width: 540px) { #tecladoOperacion { --columnas-teclado: 7; } }
 #customMsg:empty,#houseMsg:empty { display:none; }
 #customMsg,#houseMsg {
   min-height:0; padding:calc(4 * var(--unidad)); margin:0; font-size:calc(12 * var(--unidad)); border-radius:7px;
