@@ -1,5 +1,6 @@
 (() => {
   const ancho = 760, alto = 440, piso = 396;
+  const altoCasaAbierta = 158;
   const escala = z => .58 + z * .58;
   const anchoVista = z => 600 + 120 * z;
   const proyectar = (x, z, h = 0) => [380 + (x - .5) * anchoVista(z), 145 + 246 * z - h * escala(z)];
@@ -7,6 +8,14 @@
     const z = (y - 145) / 246;
     return {x: .5 + (x - 380) / anchoVista(z), z};
   };
+  function dentroCasa(x, z, casa) {
+    const [px, py] = proyectar(x, z);
+    const [cx, cy] = proyectar(casa.x, casa.z);
+    const alto = altoCasaAbierta * escala(casa.z);
+    const profundidad = (cy - py) / alto;
+    return profundidad >= 0 && profundidad <= .26 &&
+      Math.abs(px - cx) / alto <= .39 - profundidad * .32;
+  }
   function poligono(ctx, puntos, relleno, borde, grosor = 2) {
     ctx.beginPath();
     puntos.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y));
@@ -94,17 +103,17 @@
       [25,345,259,218],[315,345,261,218],[605,345,265,218],
       [17,647,276,205],[309,647,276,206],[600,647,281,206]
     ],
-    recreopiezas: [[25,28,271,261],[305,46,290,231],[605,76,286,206],[7,341,289,224],[304,326,287,240],[604,352,289,218]],
+    recreopiezas: [[25,28,271,261],[305,46,290,231],[605,76,286,206],[7,341,289,224],[604,352,289,218]],
     extra: [[14,17,277,268],[326,7,239,278],[606,10,282,275],[9,291,288,282],[321,335,271,219],
       [605,291,287,285],[8,588,289,296],[310,590,279,276],[604,626,289,213]]
   };
   const ids = {
     coches: ['carro','camion','autobus'].flatMap(tipo => ['rojo','azul','amarillo'].map(color => tipo + '-' + color)),
-    recreopiezas: ['tobogan','columpios','trampolin','bicicleta','casa-abierta','cerca'],
+    recreopiezas: ['tobogan','columpios','trampolin','bicicleta','cerca'],
     extra: ['perro','gato','oveja','vaca','pajaro','caballo','escuela','sol','nube']
   };
   const alturas = {
-    coches: [73,73,73,90,90,90,92,92,92], recreopiezas: [105,93,67,62,158,79],
+    coches: [73,73,73,90,90,90,92,92,92], recreopiezas: [105,93,67,62,79],
     extra: [71,58,76,104,56,111,150,63,59]
   };
   const atlasPieza = {};
@@ -127,6 +136,14 @@
       imagen.onload = () => { atlas.set(grupo, imagen); alCargar('objetos'); };
       imagen.src = `paisajes/${grupo}.webp`;
     }
+    const casa = new Image();
+    casa.onload = () => {
+      recortes['casa-abierta'] = [0, 0, casa.naturalWidth, casa.naturalHeight, altoCasaAbierta];
+      atlasPieza['casa-abierta'] = 'casa-abierta';
+      atlas.set('casa-abierta', casa);
+      alCargar('objetos');
+    };
+    casa.src = 'paisajes/casa-abierta.webp';
   }
   function terreno(ctx, tipo, area = {x: 0, y: 0, ancho, alto}) {
     const imagen = fondos.get(tipo);
@@ -359,5 +376,5 @@
     }
     ctx.restore();
   }
-  return window.EscenarioConstruccion = {ancho,alto,piso,proyectar,desdePantalla,bloque,fondoBloques,cargarFondos,terreno,paisajeObjeto,ficha,poligono,elipse,linea};
+  return window.EscenarioConstruccion = {ancho,alto,piso,proyectar,desdePantalla,dentroCasa,bloque,fondoBloques,cargarFondos,terreno,paisajeObjeto,ficha,poligono,elipse,linea};
 })();

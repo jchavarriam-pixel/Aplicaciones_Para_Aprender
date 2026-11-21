@@ -135,7 +135,10 @@
     fuera: [par('fuera', 'outside'), (dx, dz, _, adentro) => !adentro && Math.hypot(dx, dz * .72) <= .31]
   };
   const contenedores = new Set(['casa-abierta','cerca']);
-  const interior = (x,z,a) => Math.abs(x - a.x) <= .087 && z >= a.z - .13 && z <= a.z + .012;
+  function interior(x, z, a) {
+    if (a.id === 'casa-abierta') return EscenarioConstruccion.dentroCasa(x,z,a);
+    return Math.abs(x - a.x) <= .087 && z >= a.z - .13 && z <= a.z + .012;
+  }
   const dist = (x,z,a) => Math.hypot(x - a.x, (z - a.z) * .83);
   const sueloPieza = (id, reto) => clima.split(' ').includes(id) ? 'cielo' :
     ['barco','pato'].includes(id) ? reto.terreno :
