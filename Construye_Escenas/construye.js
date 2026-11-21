@@ -2,33 +2,36 @@
   'use strict';
 
   const get = id => document.getElementById(id);
-  const {piezas, ...retos} = RetosConstruccion;
+  const {piezas, bloques, paisajes, zonaTablero, admite, siguientePaisaje, mallaPaisaje: malla, puntosPaisaje} = RetosConstruccion;
+  const retos = {bloques, paisajes};
   const escena = EscenarioConstruccion;
   const app = get('appConstruye'), juego = get('juego'), tablero = get('tablero'), banco = get('banco');
   const ctx = tablero.getContext('2d');
   const ajustes = get('ajustes'), selector = get('elegirReto');
-  const guiaDirecciones = get('direccionesEscena'), verZona = get('verZona');
-  const controlesConfigurables = ['narracion', 'texto', 'pistas', 'direcciones'];
-  const esEn = (es, en) => IdiomaVoz.ingles() ? en : es;
+  const verZona = get('verZona');
+  const controlesConfigurables = ['narracion', 'texto', 'pistas'];
+  const esEn = (es, en) => IdiomaVoz.idioma === 'en' ? en : es;
   const local = texto => texto[IdiomaVoz.idioma];
   const clave = 'construye-escenas.v1';
   const guardado = Matematicas.leer(clave);
   const config = {
     cantidad: guardado.cantidad === 5 ? 5 : 4,
-    narracion: guardado.narracion !== false,
+    narracion: guardado.narracion === true,
     texto: guardado.texto !== false,
-    direcciones: guardado.direcciones !== false,
+    longitudRonda: Number.isInteger(guardado.longitudRonda) && guardado.longitudRonda >= 3 &&
+      guardado.longitudRonda <= 12 ? guardado.longitudRonda : 6,
     pistas: guardado.pistas === true
   };
   const vista = {escala: 1, x: 0, y: 0, densidad: 1};
-  const malla = {columnas: 23, filas: 19};
   const colocadas = [];
+  const historial = [], fuegos = [];
   const cursor = {x: 380, y: 275};
   let modo, reto, indiceReto = 0, elegida, opciones = [], zonas = [], pistaManual = null;
   let arrastre, vistaPrevia, movimiento, teclado = false;
   let cuadroAnimacion = 0;
+  let pasoPaisaje, ordenPaisaje, puestasEnPaso = 0;
 
-  const paso = () => reto?.pasos[colocadas.length];
+  const paso = () => esBloques() ? reto?.pasos[colocadas.length] : pasoPaisaje;
   const esBloques = () => modo === 'bloques';
   const limites = (valor, min, max) => Math.max(min, Math.min(valor, max));
   const dentro = ({x, y}) => x >= 0 && x <= escena.ancho && y <= escena.alto &&
@@ -69,9 +72,11 @@
     const id = paso().id, datos = piezas[id];
     const mismoGrupo = Object.keys(piezas).filter(clavePieza => clavePieza !== id && Boolean(piezas[clavePieza].forma) === esBloques());
     if (!esBloques()) {
-      const proximos = [...new Set(reto.pasos.map(item => item.id).filter(item => item !== id))];
+      const familia = id.split('-')[0];
+      const similares = reto.objetos.filter(item => item !== id && item.startsWith(familia + '-'));
+      const proximos = mezclar(reto.objetos.filter(item => item !== id && !similares.includes(item)));
       const otros = mismoGrupo.filter(item => !proximos.includes(item));
-      return mezclar([id, ...mezclar(proximos).slice(0, 2), ...mezclar(otros)].slice(0, config.cantidad));
+      return mezclar([id, ...similares, ...proximos, ...otros].slice(0, config.cantidad));
     }
     const otraForma = mismoGrupo.filter(item => piezas[item].forma !== datos.forma && piezas[item].tinta === datos.tinta);
     const otroColor = mismoGrupo.filter(item => piezas[item].forma === datos.forma);
@@ -104,8 +109,13 @@
       pistaManual = null;
     }
     tablero.classList.toggle('colocando', !!elegida);
+    const indicePaso = (esBloques() ? colocadas.length : historial.length) + 1;
+    const total = esBloques() ? reto.pasos.length : config.longitudRonda;
     get('progreso').textContent = completar() ? esEn('¡Listo!', 'Done!') :
-      esEn(`Paso ${colocadas.length + 1} de ${reto.pasos.length}`, `Step ${colocadas.length + 1} of ${reto.pasos.length}`);
+      esEn(`Paso ${indicePaso} de ${total}`, `Step ${indicePaso} of ${total}`);
+    const cantidad = paso()?.cantidad || 1;
+    get('cantidadPuesta').hidden = cantidad === 1;
+    get('cantidadPuesta').textContent = esEn(`${puestasEnPaso} de ${cantidad} colocados`, `${puestasEnPaso} of ${cantidad} placed`);
     get('indicacion').hidden = !config.texto && !completar();
     get('indicacion').textContent = instruccion();
     get('siguiente').hidden = !completar();
@@ -124,6 +134,17 @@
     indiceReto = indice;
     reto = retos[modo][indice];
     colocadas.length = 0;
+    historial.length = 0;
+    fuegos.length = 0;
+    puestasEnPaso = 0;
+    if (!esBloques()) {
+      const [inicial, ...resto] = reto.objetos;
+      ordenPaisaje = reto.terreno === 'terminal' ? [
+        ...mezclar(reto.objetos.filter(id => /^(carro|camion|autobus)-/.test(id))).slice(0, 3),
+        ...mezclar(reto.objetos.filter(id => !/^(carro|camion|autobus)-/.test(id)))
+      ] : [inicial, ...mezclar(resto)];
+      pasoPaisaje = siguientePaisaje(reto, colocadas, historial, ordenPaisaje);
+    }
     opciones = [];
     vistaPrevia = null;
     arrastre = null;
@@ -164,18 +185,17 @@
     const objetivo = paso();
     if (destino.apoyos.length !== objetivo.apoyos.length || !objetivo.apoyos.every(indice => destino.apoyos.includes(indice))) return false;
     if (!objetivo.apoyos.length) {
-      const tolerancia = reto === retos.bloques[1] ? 19 : objetivo.x === 380 ? 40 : 36;
-      return Math.abs(destino.x - objetivo.x) <= tolerancia;
+      if (objetivo.espacio && destino.x > escena.ancho - objetivo.espacio) return false;
+      if (objetivo.desde === undefined) return true;
+      const distancia = destino.x - colocadas[objetivo.desde].x;
+      const [min,max] = objetivo.separacion;
+      return distancia >= min && distancia <= max;
     }
     const centro = objetivo.apoyos.reduce((total, indice) => total + colocadas[indice].x, 0) / objetivo.apoyos.length;
     return Math.abs(destino.x - centro) <= (objetivo.apoyos.length > 1 ? 27 : 31);
   }
-  function lugarPaisaje(x, z) {
-    return x >= .035 && x <= .965 && z >= .06 && z <= .94;
-  }
   function paisajeCorrecto(x, z) {
-    return lugarPaisaje(x,z) && paso().zona(x,z,colocadas) &&
-      colocadas.every(otra => Math.hypot(x - otra.x, (z - otra.z) * .72) >= .094);
+    return zonaTablero(x,z) && admite(paso(), x, z, colocadas, paso().cantidad - puestasEnPaso - 1);
   }
   function calcularPistas() {
     if (!mostrarZona() || !paso()) return [];
@@ -183,34 +203,13 @@
       const id = paso().id;
       return Array.from({length: 95}, (_, i) => destinoBloque(id, (i + 1) * 8, 0)).filter(bloqueCorrecto);
     }
-    const puntos = [];
-    for (let i = 1; i < malla.columnas; i++) {
-      for (let j = 1; j < malla.filas; j++) {
-        const x = i / malla.columnas, z = j / malla.filas;
-        if (paisajeCorrecto(x,z)) puntos.push({i,j,x,z});
-      }
-    }
-    return puntos;
+    return puntosPaisaje.filter(({x,z}) => paisajeCorrecto(x,z));
   }
   function actualizarGuias() {
-    guiaDirecciones.hidden = !config.direcciones;
     verZona.hidden = !paso();
     verZona.setAttribute('aria-pressed', String(mostrarZona()));
     verZona.title = IdiomaVoz.t(mostrarZona() ? 'Ocultar zona' : 'Mostrar zona');
     zonas = calcularPistas();
-  }
-  function dibujarDirecciones() {
-    if (!config.direcciones) return;
-    ctx.save();
-    ctx.setLineDash([8, 9]);
-    for (const limite of [.37, .63]) {
-      const x = escena.ancho * limite;
-      const puntos = esBloques() ? [[x, 20], [x, escena.piso]] :
-        [escena.proyectar(limite, .08), escena.proyectar(limite, .98)];
-      if (!esBloques()) escena.linea(ctx, puntos, '#223e3d7d', 3.9);
-      escena.linea(ctx, puntos, esBloques() ? '#7565a365' : '#ffffffe0', 2.3);
-    }
-    ctx.restore();
   }
   function dibujarPistas() {
     if (esBloques()) {
@@ -237,9 +236,49 @@
   }
   function dibujarPieza(item, elevacion = 0) {
     if (esBloques()) escena.bloque(ctx, piezas[item.id], item.x, item.y - elevacion);
-    else escena.paisajeObjeto(ctx, item.id, item.x, item.z, elevacion);
+    else escena.paisajeObjeto(ctx, item.id, item.x, item.z, elevacion, Boolean(item.contenedor));
+  }
+  const coloresFuegos = ['#ffe25e','#ff6ba2','#68edff','#caa0ff','#ff9652','#f9ffff'];
+  function celebrar() {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const ahora = performance.now();
+    const centros = mezclar([150, 380, 610]);
+    const cohetes = centros.map((x, i) => ({
+      x: x + Math.random() * 46 - 23, y: 62 + Math.random() * 42, inicio: ahora + i * 115,
+      chispas: Array.from({length: 20}, (_, j) => ({
+        angulo: j * Math.PI / 10 + Math.random() * .21, radio: 26 + Math.random() * 70,
+        color: coloresFuegos[(i * 2 + j) % coloresFuegos.length], tamano: 2 + Math.random() * 2
+      }))
+    }));
+    fuegos.push(...cohetes);
+    if (fuegos.length > 9) fuegos.splice(0, fuegos.length - 9);
+  }
+  function dibujarFuegos(tiempo) {
+    while (fuegos.length && tiempo - fuegos[0].inicio >= 1030) fuegos.shift();
+    if (!fuegos.length) return;
+    ctx.save();
+    for (const {x,y,inicio,chispas} of fuegos) {
+      const edad = tiempo - inicio;
+      if (edad < 0 || edad >= 1030) continue;
+      if (edad < 170) {
+        ctx.globalAlpha = .85;
+        escena.linea(ctx, [[x,y + 129 * (1 - edad / 170) + 12],[x,y + 129 * (1 - edad / 170)]], '#fff4ad', 3);
+        continue;
+      }
+      const avance = (edad - 170) / 860;
+      const expansion = 1 - (1 - avance) ** 2;
+      ctx.globalAlpha = 1 - avance;
+      for (const {angulo,radio,color,tamano} of chispas) {
+        const px = x + Math.cos(angulo) * radio * expansion;
+        const py = y + Math.sin(angulo) * radio * expansion + avance ** 2 * 28;
+        const r = tamano * (1 - avance * .5);
+        escena.poligono(ctx, [[px-r,py],[px,py-r*1.7],[px+r,py],[px,py+r*1.7]], color);
+      }
+    }
+    ctx.restore();
   }
   function dibujar(tiempo = performance.now()) {
+    cancelAnimationFrame(cuadroAnimacion);
     if (juego.hidden || !reto) return;
     const {escala, densidad, x, y} = vista;
     ctx.setTransform(densidad, 0, 0, densidad, 0, 0);
@@ -248,12 +287,13 @@
     const area = {x: -x / escala, y: -y / escala, ancho: tablero.width / densidad / escala, alto: tablero.height / densidad / escala};
     if (esBloques()) escena.fondoBloques(ctx, area);
     else escena.terreno(ctx,reto.terreno, area);
-    dibujarDirecciones();
+    dibujarFuegos(tiempo);
     dibujarPistas();
     const progreso = movimiento ? limites((tiempo - movimiento.inicio) / movimiento.duracion, 0, 1) : 0;
     const fantasma = movimiento?.pieza || vistaPrevia;
     const items = fantasma ? [...colocadas, fantasma] : colocadas;
-    const orden = esBloques() ? items : [...items].sort((a, b) => a.z - b.z);
+    const orden = esBloques() ? items : [...items].sort((a, b) =>
+      (a.contenedor ? a.contenedor.z + .001 : a.z) - (b.contenedor ? b.contenedor.z + .001 : b.z));
     for (const item of orden) {
       if (item !== fantasma) { dibujarPieza(item); continue; }
       ctx.save();
@@ -269,6 +309,7 @@
     }
     if (movimiento && progreso < 1) cuadroAnimacion = requestAnimationFrame(dibujar);
     else if (movimiento) finalizarCaida();
+    else if (fuegos.length) cuadroAnimacion = requestAnimationFrame(dibujar);
   }
   function adaptar() {
     const w = tablero.clientWidth, h = tablero.clientHeight;
@@ -276,8 +317,6 @@
     const densidad = Math.min(devicePixelRatio || 1, 2);
     const escala = Math.min(w / escena.ancho, h / escena.alto);
     Object.assign(vista, {densidad, escala, x: (w - escena.ancho * escala) / 2, y: (h - escena.alto * escala) / 2});
-    guiaDirecciones.style.setProperty('--ancho-guia', (w - 2 * vista.x) + 'px');
-    guiaDirecciones.style.setProperty('--fondo-guia', (vista.y + 5 / Matematicas.escala()) + 'px');
     if (tablero.width !== Math.round(w * densidad)) tablero.width = Math.round(w * densidad);
     if (tablero.height !== Math.round(h * densidad)) tablero.height = Math.round(h * densidad);
     cancelAnimationFrame(cuadroAnimacion);
@@ -303,7 +342,7 @@
     }
   }
   function errorPieza() {
-    const texto = esEn('Esa pieza es distinta. Escucha y elige otra.', 'That is a different piece. Listen and choose another.');
+    const texto = esEn('Revisa la instrucción y elige otra pieza.', 'Check the instruction and choose another piece.');
     mostrarEstado(texto);
     narrar(texto);
   }
@@ -331,11 +370,14 @@
     } else {
       const {x,z} = escena.desdePantalla(punto.x,punto.y);
       valido = paisajeCorrecto(x,z);
-      const ajuste = !valido && zonas.find(zona => Math.abs(x - zona.x) <= .5 / malla.columnas &&
-        Math.abs(z - zona.z) <= .5 / malla.filas);
-      if (!ajuste && !lugarPaisaje(x,z)) { errorLugar(); return; }
-      pieza = {id: elegida, x: ajuste?.x ?? x, z: ajuste?.z ?? z};
-      elevacion = 94;
+      // Un toque puede llegar redondeado al píxel más cercano, especialmente en pantallas pequeñas.
+      const toleranciaX = mostrarZona() ? .5 / malla.columnas : .009;
+      const toleranciaZ = mostrarZona() ? .5 / malla.filas : .018;
+      const ajuste = !valido && puntosPaisaje.find(zona => Math.abs(x - zona.x) <= toleranciaX &&
+        Math.abs(z - zona.z) <= toleranciaZ && paisajeCorrecto(zona.x,zona.z));
+      if (!ajuste && !zonaTablero(x,z)) { errorLugar(); return; }
+      pieza = {id: elegida, x: ajuste?.x ?? x, z: ajuste?.z ?? z, contenedor: paso().contenedor};
+      elevacion = z < 0 ? 14 : 94;
       valido ||= Boolean(ajuste);
     }
     vistaPrevia = null;
@@ -353,8 +395,21 @@
     detenerMovimiento();
     if (!valido) { errorLugar(); dibujar(); return; }
     colocadas.push(pieza);
+    let pasoCompleto = true;
+    if (!esBloques()) {
+      puestasEnPaso++;
+      pasoCompleto = puestasEnPaso === pasoPaisaje.cantidad;
+      if (pasoCompleto) {
+        historial.push(pasoPaisaje);
+        puestasEnPaso = 0;
+        pasoPaisaje = historial.length < config.longitudRonda ?
+          siguientePaisaje(reto, colocadas, historial, ordenPaisaje) : null;
+      }
+    }
+    celebrar();
     if (completar()) mostrarEstado(esEn('Escena completa', 'Scene complete'), true);
-    renderPaso();
+    else mostrarEstado(esEn('¡Bien colocado!', 'Well placed!'), true);
+    renderPaso(pasoCompleto, pasoCompleto);
     if (completar()) get('siguiente').focus({preventScroll: true});
     else if (teclado) banco.firstElementChild?.focus({preventScroll: true});
   }
@@ -377,7 +432,7 @@
       if (esBloques()) vistaPrevia = {id: elegida, ...punto};
       else {
         const {x,z} = escena.desdePantalla(punto.x,punto.y);
-        if (lugarPaisaje(x,z)) vistaPrevia = {id: elegida,x,z};
+        if (zonaTablero(x,z)) vistaPrevia = {id: elegida,x,z,contenedor: paso()?.contenedor};
       }
     }
     dibujar();
@@ -428,6 +483,7 @@
     window.speechSynthesis?.cancel();
     modo = null;
     reto = null;
+    fuegos.length = 0;
     juego.hidden = true;
     get('reiniciar').hidden = true;
     get('modos').hidden = false;
@@ -453,6 +509,7 @@
   });
   get('abrirAjustes').addEventListener('click', () => {
     get('cantidad').value = config.cantidad;
+    get('longitudRonda').value = config.longitudRonda;
     for (const claveControl of controlesConfigurables) get(claveControl).checked = config[claveControl];
     IdiomaVoz.iniciarEdicion();
     ajustes.showModal();
@@ -460,6 +517,9 @@
   ajustes.addEventListener('close', () => {
     const cantidad = Number(get('cantidad').value);
     const cambioCantidad = config.cantidad !== cantidad;
+    const longitud = Number(get('longitudRonda').value);
+    const cambioLongitud = config.longitudRonda !== longitud;
+    config.longitudRonda = longitud;
     config.cantidad = cantidad;
     for (const claveControl of controlesConfigurables) config[claveControl] = get(claveControl).checked;
     pistaManual = null;
@@ -471,6 +531,7 @@
       vistaPrevia = null;
     }
     renderLista();
+    if (cambioLongitud && !esBloques()) { iniciar(indiceReto); return; }
     mostrarEstado();
     renderPaso(cambioCantidad);
   });

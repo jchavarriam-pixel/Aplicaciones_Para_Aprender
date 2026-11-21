@@ -87,16 +87,46 @@
     tienda: [720, 522, 235, 153, 79],
     fogata: [995, 498, 167, 195, 68]
   };
-  let atlas;
+  const atlas = new Map();
+  const grupos = {
+    coches: [
+      [32,76,255,187],[322,76,256,187],[612,76,255,187],
+      [25,345,259,218],[315,345,261,218],[605,345,265,218],
+      [17,647,276,205],[309,647,276,206],[600,647,281,206]
+    ],
+    recreopiezas: [[25,28,271,261],[305,46,290,231],[605,76,286,206],[7,341,289,224],[304,326,287,240],[604,352,289,218]],
+    extra: [[14,17,277,268],[326,7,239,278],[606,10,282,275],[9,291,288,282],[321,335,271,219],
+      [605,291,287,285],[8,588,289,296],[310,590,279,276],[604,626,289,213]]
+  };
+  const ids = {
+    coches: ['carro','camion','autobus'].flatMap(tipo => ['rojo','azul','amarillo'].map(color => tipo + '-' + color)),
+    recreopiezas: ['tobogan','columpios','trampolin','bicicleta','casa-abierta','cerca'],
+    extra: ['perro','gato','oveja','vaca','pajaro','caballo','escuela','sol','nube']
+  };
+  const alturas = {
+    coches: [73,73,73,90,90,90,92,92,92], recreopiezas: [105,93,67,62,158,79],
+    extra: [71,58,76,104,56,111,150,63,59]
+  };
+  const atlasPieza = {};
+  for (const id of Object.keys(recortes)) atlasPieza[id] = 'objetos';
+  for (const [grupo, cajas] of Object.entries(grupos)) {
+    cajas.forEach((caja, i) => {
+      const id = ids[grupo][i];
+      recortes[id] = [...caja, alturas[grupo][i]];
+      atlasPieza[id] = grupo;
+    });
+  }
   function cargarFondos(alCargar) {
-    for (const tipo of ['rio', 'parque', 'playa', 'granja', 'campamento']) {
+    for (const tipo of ['rio','parque','playa','granja','campamento','barrio','terminal','recreo']) {
       const imagen = new Image();
       imagen.onload = () => { fondos.set(tipo, imagen); alCargar(tipo); };
       imagen.src = `paisajes/${tipo}.webp`;
     }
-    const objetos = new Image();
-    objetos.onload = () => { atlas = objetos; alCargar('objetos'); };
-    objetos.src = 'paisajes/objetos.webp';
+    for (const grupo of ['objetos', ...Object.keys(grupos)]) {
+      const imagen = new Image();
+      imagen.onload = () => { atlas.set(grupo, imagen); alCargar('objetos'); };
+      imagen.src = `paisajes/${grupo}.webp`;
+    }
   }
   function terreno(ctx, tipo, area = {x: 0, y: 0, ancho, alto}) {
     const imagen = fondos.get(tipo);
@@ -276,23 +306,26 @@
         break;
     }
   }
-  function paisajeObjeto(ctx, id, x, z, h = 0) {
+  function paisajeObjeto(ctx, id, x, z, h = 0, enInterior = false) {
     const [sx, sy] = proyectar(x, z);
-    ctx.save();
-    ctx.translate(sx + 7 * escala(z), sy + 3 * escala(z));
-    ctx.scale(escala(z), escala(z) * .27);
-    const sombra = ctx.createRadialGradient(0, 0, 4, 0, 0, 43 + h * .14);
-    sombra.addColorStop(0, h ? '#272f4b44' : '#272f4b69');
-    sombra.addColorStop(1, '#272f4b00');
-    elipse(ctx, 0, 0, 43 + h * .14, 43 + h * .14, sombra);
-    ctx.restore();
-    if (atlas && recortes[id]) {
+    if (z >= 0) {
+      ctx.save();
+      ctx.translate(sx + 7 * escala(z), sy + 3 * escala(z));
+      ctx.scale(escala(z), escala(z) * .27);
+      const sombra = ctx.createRadialGradient(0, 0, 4, 0, 0, 43 + h * .14);
+      sombra.addColorStop(0, h ? '#272f4b44' : '#272f4b69');
+      sombra.addColorStop(1, '#272f4b00');
+      elipse(ctx, 0, 0, 43 + h * .14, 43 + h * .14, sombra);
+      ctx.restore();
+    }
+    const imagen = atlas.get(atlasPieza[id]);
+    if (imagen) {
       const [origenX,origenY,anchoImagen,altoImagen,tamano] = recortes[id];
-      const alto = tamano * escala(z);
+      const alto = tamano * (z < 0 ? .74 : escala(z)) * (enInterior ? .56 : 1);
       const ancho = alto * anchoImagen / altoImagen;
       const agua = id === 'pato' ? .87 : 1;
       const [,base] = proyectar(x,z,h);
-      ctx.drawImage(atlas, origenX, origenY, anchoImagen, altoImagen * agua, sx - ancho/2, base - alto * agua, ancho, alto * agua);
+      ctx.drawImage(imagen, origenX, origenY, anchoImagen, altoImagen * agua, sx - ancho/2, base - alto * (z < 0 ? .16 : agua), ancho, alto * agua);
       return;
     }
     if (['casa','tienda','banco'].includes(id)) { construccion(ctx,id,x,z,h); return; }
@@ -311,10 +344,10 @@
       const factor = Math.min(canvas.width*.8/pieza.ancho,canvas.height*.72/pieza.alto);
       ctx.scale(factor,factor);
       bloque(ctx,pieza,0,0);
-    } else if (atlas && recortes[id]) {
+    } else if (atlas.has(atlasPieza[id])) {
       const [x,y,w,h] = recortes[id];
       const tamano = Math.min(canvas.width * .79 / w, canvas.height * .76 / h);
-      ctx.drawImage(atlas, x,y,w,h, (canvas.width-w*tamano)/2, (canvas.height-h*tamano)/2, w*tamano,h*tamano);
+      ctx.drawImage(atlas.get(atlasPieza[id]), x,y,w,h, (canvas.width-w*tamano)/2, (canvas.height-h*tamano)/2, w*tamano,h*tamano);
     } else {
       ctx.scale(canvas.width/760,canvas.width/760);
       const relacion = canvas.height/canvas.width;

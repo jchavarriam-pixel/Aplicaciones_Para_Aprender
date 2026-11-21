@@ -135,7 +135,15 @@ button { cursor: pointer; touch-action: manipulation; }
 .barra-reto button { flex: 0 0 auto; }
 #verZona[aria-pressed="true"] { background: #fff0b6; border-color: #b48534; color: #6c471d; }
 @media (max-width: 370px) { #verZona span { display: none; } }
-.instruccion { display: flex; align-items: baseline; gap: calc(7 * var(--u)); margin: calc(5 * var(--u)) 0 0; }
+.instruccion {
+  display: flex;
+  align-items: center;
+  gap: calc(9 * var(--u));
+  margin: calc(6 * var(--u)) 0 0;
+  padding: calc(4 * var(--u)) calc(7 * var(--u));
+  border-radius: calc(10 * var(--u));
+  background: #f1ebfc;
+}
 #progreso {
   flex: 0 0 auto;
   padding: calc(3 * var(--u)) calc(6 * var(--u));
@@ -145,7 +153,14 @@ button { cursor: pointer; touch-action: manipulation; }
   font-size: calc(12 * var(--u));
   font-weight: 800;
 }
-#indicacion { font-size: calc(15 * var(--u)); font-weight: 800; line-height: 1.22; }
+.texto-paso { flex: 1; min-width: 0; }
+#indicacion { font-size: calc(21 * var(--u)); font-weight: 850; line-height: 1.17; color: #332354; }
+#cantidadPuesta { font-size: calc(13 * var(--u)); font-weight: 800; color: #4d337e; }
+#escuchar { flex: 0 0 auto; min-width: calc(42 * var(--u)); }
+@media (max-width: 480px) {
+  .instruccion { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: calc(4 * var(--u)) calc(8 * var(--u)); }
+  #progreso { grid-column: 1 / -1; justify-self: start; }
+}
 .escena { position: relative; min-width: 0; min-height: 0; overflow: hidden; border: 1px solid #d1d9f0; border-radius: calc(14 * var(--u)); background: #e6edf8; }
 .escena canvas { display: block; width: 100%; height: 100%; touch-action: none; }
 .escena canvas[tabindex="0"]:focus-visible { outline-offset: -4px; }
@@ -158,30 +173,6 @@ button { cursor: pointer; touch-action: manipulation; }
   aspect-ratio: 760 / 440;
 }
 #appConstruye:not(.horizontal) .escena.paisaje canvas { position: absolute; inset: 0; }
-.direcciones {
-  position: absolute;
-  left: 50%;
-  bottom: var(--fondo-guia, 6px);
-  width: var(--ancho-guia, 100%);
-  display: grid;
-  grid-template-columns: 37fr 26fr 37fr;
-  justify-items: center;
-  gap: calc(2 * var(--u));
-  transform: translateX(-50%);
-  pointer-events: none;
-  color: #283b56;
-  font-size: calc(11 * var(--u));
-  font-weight: 850;
-  line-height: 1.15;
-}
-.direcciones span {
-  padding: calc(2 * var(--u)) calc(6 * var(--u));
-  border: 1px solid #ffffffa8;
-  border-radius: 12px;
-  background: #fffffff2;
-  white-space: nowrap;
-}
-.direcciones b { color: #6246a4; }
 .banco {
   display: grid;
   grid-template-columns: repeat(var(--opciones, 5), minmax(0, 1fr));
@@ -199,7 +190,7 @@ button { cursor: pointer; touch-action: manipulation; }
   border-radius: calc(10 * var(--u));
   background: #fff;
   color: #38376a;
-  font-size: calc(11 * var(--u));
+  font-size: calc(14 * var(--u));
   font-weight: 800;
   line-height: 1.07;
   overflow-wrap: anywhere;
