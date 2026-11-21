@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="../creditos.css">
   <link rel="stylesheet" href="../pantalla-completa.css">
   <link rel="stylesheet" href="../panel-plegable.css">
-  <link rel="stylesheet" href="division.css?v=sillita-1">
+  <link rel="stylesheet" href="division.css?v=preguntas-1">
 </head>
 <body>
   <main id="appDivision">
@@ -98,8 +98,12 @@
         <div class="entrega">
           <p id="mensaje" role="status"></p>
           <form id="respuestaCociente" novalidate hidden>
-            <label for="cocienteReto">¿Cuántas fichas hay en cada grupo?</label>
-            <input id="cocienteReto" inputmode="numeric" maxlength="2" size="2" autocomplete="off">
+            <p id="preguntaReparto" aria-live="polite"></p>
+            <div id="entradaReparto">
+              <input id="cocienteReto" aria-labelledby="preguntaReparto" inputmode="none" maxlength="1" size="1" autocomplete="off">
+              <div id="tecladoReparto" role="group" aria-label="Teclado numérico"></div>
+            </div>
+            <fieldset id="opcionesReparto" aria-labelledby="preguntaReparto" hidden></fieldset>
           </form>
           <form id="respuesta" novalidate hidden>
             <p>Escribe la división completa.</p>
@@ -137,6 +141,9 @@
         <label id="campoMetodo">Cómo unir las fichas
           <select id="metodo"><option value="barrido">Pasar sobre ellas</option><option value="soltar">Acercar y soltar</option></select>
         </label>
+        <label>Cómo responder las preguntas
+          <select id="tipoRespuesta"><option value="teclado">Teclado en pantalla</option><option value="opciones">Selección única (4 opciones)</option></select>
+        </label>
         <label class="preferencia"><input type="checkbox" id="guiaGrupos"> Marcar los grupos o cajas completos</label>
       </div>
       <button type="button" id="aplicarAjustes" class="principal">Aplicar y volver</button>
@@ -151,7 +158,7 @@
   <script src="../idioma-voz.js"></script>
   <script src="../matematicas-base.js"></script>
   <script src="../Multiplicacion/grupos-magneticos.js?v=contornos-1"></script>
-  <script src="division.js?v=sillita-1"></script>
+  <script src="division.js?v=preguntas-1"></script>
   <script src="../pantalla-completa.js"></script>
   <script src="../panel-plegable.js?v=division-1"></script>
   <script src="../nombre-compartido.js"></script>

@@ -18,6 +18,10 @@
     'Escribe la división completa.':'Write the complete division.', 'Dividendo':'Dividend', 'Divisor':'Divisor',
     '¿Cuántas fichas hay en cada grupo?':'How many counters are in each group?',
     '¿Cuántas fichas hay en cada caja?':'How many counters are in each box?',
+    '¿Cuántas fichas sobraron?':'How many counters were left over?',
+    'Cómo responder las preguntas':'How to answer questions',
+    'Teclado en pantalla':'On-screen keypad', 'Selección única (4 opciones)':'Multiple choice (4 options)',
+    'Teclado numérico':'Number keypad', 'Borrar respuesta':'Clear answer', 'Comprobar resto':'Check remainder',
     'División en sillita':'Long division', 'Partes de la división en sillita':'Parts of a long division',
     'Fichas repartidas':'Counters shared', 'Siguiente paso':'Next step', 'Escribir división':'Write the division',
     'Cociente':'Quotient', 'Resto':'Remainder', 'Editar reparto':'Edit sharing',
@@ -41,13 +45,15 @@
         maxPorGrupo:[2,3,4,5].includes(anterior.maxPorGrupo) ? anterior.maxPorGrupo : 3,
         tipoCajas:['exacta','resto','mixto'].includes(anterior.tipoCajas) ? anterior.tipoCajas : 'exacta',
         metodo:anterior.metodo === 'soltar' ? 'soltar' : 'barrido',
-        guiaGrupos:anterior.guiaGrupos === true
+        guiaGrupos:anterior.guiaGrupos === true,
+        tipoRespuesta:anterior.tipoRespuesta === 'opciones' ? 'opciones' : 'teclado'
       }];
     }))
   };
   const app = $('appDivision'), espacio = $('espacioDivision'), dialogo = $('ajustes');
   const campos = ['dividendo','divisor','cociente','residuo'].map($);
   const cocienteReto = $('cocienteReto');
+  const teclado = $('tecladoReparto'), opciones = $('opcionesReparto');
   const sillita = $('sillita');
   const celdasSillita = [...sillita.querySelectorAll('[data-paso]')];
   const repartosPrevios = new Map();
@@ -116,6 +122,7 @@
 
   function leerReto() {
     if (fase === 'sillita') { hablar($('textoSillita').textContent); return; }
+    if (fase === 'cociente' || fase === 'resto') { hablar(preguntaReparto()); return; }
     const {total,divisor} = ronda;
     hablar(`${t(`${total} dividido entre ${divisor}.`, `${total} divided by ${divisor}.`)} ${enunciado()}`);
   }
@@ -131,8 +138,6 @@
     if (!modo) return;
     $('modoActual').textContent = IdiomaVoz.t(titulos[modo]);
     $('pregunta').textContent = enunciado();
-    $('respuestaCociente').querySelector('label').textContent = IdiomaVoz.t(modo === 'cajas'
-      ? '¿Cuántas fichas hay en cada caja?' : '¿Cuántas fichas hay en cada grupo?');
     if (modo === 'cajas') pintarCajas();
     else {
       magneticos.nombreFigura = t(ronda.forma.es,ronda.forma.en);
@@ -149,18 +154,60 @@
     const mostrarResultado = mostrarEcuacion || (mostrarSillita && pasoSillita === 3);
     const resultado = mostrarResultado ? `${cociente}${resto ? t(`, resto ${resto}`, `, remainder ${resto}`) : ''}` : '?';
     $('operacionReto').textContent = `${total} ÷ ${divisor} = ${resultado}`;
-    $('respuestaCociente').hidden = fase !== 'cociente';
+    const preguntar = fase === 'cociente' || fase === 'resto';
+    const elegir = ajustes.modos[modo].tipoRespuesta === 'opciones';
+    $('respuestaCociente').hidden = !preguntar;
+    $('entradaReparto').hidden = elegir;
+    opciones.hidden = !elegir;
+    if (preguntar) $('preguntaReparto').textContent = preguntaReparto();
     $('respuesta').hidden = !mostrarEcuacion;
     sillita.hidden = !mostrarSillita;
     $('grupoDivision').hidden = modo === 'cajas' || mostrarSillita;
     if (mostrarSillita) pintarSillita();
     $('campoResto').hidden = !ronda.resto;
-    $('editarReparto').hidden = !['escribir','cociente','sillita'].includes(fase);
+    $('editarReparto').hidden = !['escribir','cociente','resto','sillita'].includes(fase);
     const accion = fase === 'sillita' ? pasoSillita === 3 ? 'Escribir división' : 'Siguiente paso'
-      : fase === 'repartir' ? 'Comprobar reparto' : fase === 'cociente' ? 'Comprobar cociente' : 'Revisar división';
+      : fase === 'repartir' ? 'Comprobar reparto' : fase === 'cociente' ? 'Comprobar cociente'
+        : fase === 'resto' ? 'Comprobar resto' : 'Revisar división';
     $('revisar').textContent = IdiomaVoz.t(accion);
     $('revisar').disabled = fase === 'listo';
     for (const campo of campos) campo.readOnly = fase === 'listo';
+  }
+
+  function preguntaReparto() {
+    return IdiomaVoz.t(fase === 'resto' ? '¿Cuántas fichas sobraron?' : modo === 'cajas'
+      ? '¿Cuántas fichas hay en cada caja?' : '¿Cuántas fichas hay en cada grupo?');
+  }
+
+  function iniciarPregunta(tipo) {
+    fase = tipo;
+    cocienteReto.value = '';
+    limpiarErrorPregunta();
+    const valor = ronda[tipo];
+    const distractores = tipo === 'resto' ? [0,ronda.divisor,ronda.cociente] : [valor-1,valor+1,ronda.divisor];
+    const cifras = [...new Set([valor,...distractores,valor-1,valor+1,valor+2,valor+3])]
+      .filter(n => n >= 0 && n <= 9).slice(0,4);
+    for (let i = cifras.length-1; i > 0; i--) {
+      const j = Math.floor(Math.random()*(i+1));
+      [cifras[i],cifras[j]] = [cifras[j],cifras[i]];
+    }
+    opciones.replaceChildren(...cifras.map(n => {
+      const label = document.createElement('label');
+      const radio = document.createElement('input');
+      radio.type = 'radio';
+      radio.name = 'opcionReparto';
+      radio.value = n;
+      const cifra = document.createElement('span');
+      cifra.textContent = n;
+      label.append(radio,cifra);
+      return label;
+    }));
+    actualizarFase();
+  }
+
+  function limpiarErrorPregunta() {
+    cocienteReto.removeAttribute('aria-invalid');
+    opciones.removeAttribute('aria-invalid');
   }
 
   function pintarSillita() {
@@ -386,27 +433,36 @@
       hablar(error);
       return;
     }
-    fase = 'cociente';
+    iniciarPregunta('cociente');
     if (modo === 'cajas') pintarCajas();
     else magneticos.bloquear();
-    actualizarFase();
     const bien = resto
       ? t('Repartiste por igual. Las fichas que sobran no alcanzan para dar una más a cada grupo.', 'You shared equally. There are too few leftovers to give one more to each group.')
       : t('¡Repartiste por igual!', 'You shared equally!');
     mensajeDirecto(bien,'bien');
-    hablar(bien);
+    hablar(`${bien} ${preguntaReparto()}`);
   }
 
   const coincide = (campo, valor) => /^\d+$/.test(campo.value) && Number(campo.value) === valor;
 
-  function comprobarCociente() {
-    if (!coincide(cocienteReto,ronda.cociente)) {
-      cocienteReto.setAttribute('aria-invalid','true');
-      const texto = modo === 'cajas'
+  function comprobarPregunta() {
+    const elegir = ajustes.modos[modo].tipoRespuesta === 'opciones';
+    const respuesta = elegir ? opciones.querySelector(':checked') : cocienteReto;
+    if (!respuesta || !coincide(respuesta,ronda[fase])) {
+      (elegir ? opciones : cocienteReto).setAttribute('aria-invalid','true');
+      const texto = fase === 'resto'
+        ? t('Cuenta las fichas que quedaron sin repartir.', 'Count the counters left over.')
+        : modo === 'cajas'
         ? t('Cuenta las fichas que hay dentro de una sola caja.', 'Count the counters in just one box.')
         : t('Cuenta las fichas que quedaron juntas en un solo grupo.', 'Count the counters joined in just one group.');
       mensajeDirecto(texto,'intenta');
       hablar(texto);
+      return;
+    }
+    if (fase === 'cociente' && ronda.resto) {
+      iniciarPregunta('resto');
+      mensajeDirecto('');
+      hablar(preguntaReparto());
       return;
     }
     if (modo === 'resto') {
@@ -470,7 +526,7 @@
   $('escuchar').onclick = leerReto;
   $('revisar').onclick = () => {
     if (fase === 'repartir') comprobarReparto();
-    else if (fase === 'cociente') comprobarCociente();
+    else if (fase === 'cociente' || fase === 'resto') comprobarPregunta();
     else if (fase === 'sillita') {
       if (pasoSillita === 3) abrirEscritura();
       else { pasoSillita++; actualizarFase(); leerReto(); }
@@ -478,7 +534,26 @@
     else if (fase === 'escribir') revisarDivision();
   };
   $('respuesta').onsubmit = event => {event.preventDefault();if(fase === 'escribir')revisarDivision();};
-  $('respuestaCociente').onsubmit = event => {event.preventDefault();if(fase === 'cociente')comprobarCociente();};
+  $('respuestaCociente').onsubmit = event => {event.preventDefault();if(fase === 'cociente' || fase === 'resto')comprobarPregunta();};
+  for (const cifra of '0123456789') {
+    const tecla = document.createElement('button');
+    tecla.type = 'button';
+    tecla.textContent = cifra;
+    tecla.onclick = () => { cocienteReto.value = cifra; limpiarErrorPregunta(); };
+    teclado.append(tecla);
+  }
+  const borrar = document.createElement('button');
+  borrar.type = 'button';
+  borrar.textContent = '⌫';
+  borrar.setAttribute('aria-label','Borrar respuesta');
+  borrar.onclick = () => { cocienteReto.value = ''; limpiarErrorPregunta(); };
+  teclado.append(borrar);
+  opciones.addEventListener('change',limpiarErrorPregunta);
+  opciones.addEventListener('keydown',evento => {
+    if (evento.key !== 'Enter') return;
+    evento.preventDefault();
+    $('respuestaCociente').requestSubmit();
+  });
   for (const campo of [cocienteReto,...campos]) campo.addEventListener('input', () => {
     campo.value = campo.value.replace(/\D/g,'');
     campo.removeAttribute('aria-invalid');
@@ -510,7 +585,7 @@
     $('tituloAjustes').textContent = IdiomaVoz.t(modo ? 'Ajustes del modo' : 'Configuración general');
     if (modo) {
       const config = ajustes.modos[modo];
-      for (const id of ['maxGrupos','maxPorGrupo','tipoCajas','metodo']) $(id).value = config[id];
+      for (const id of ['maxGrupos','maxPorGrupo','tipoCajas','metodo','tipoRespuesta']) $(id).value = config[id];
       $('guiaGrupos').checked = config.guiaGrupos;
       $('campoTipo').hidden = modo !== 'cajas';
       $('campoMetodo').hidden = modo === 'cajas';
@@ -525,8 +600,13 @@
     if (modo) {
       const antes = ajustes.modos[modo];
       const despues = {maxGrupos:+$('maxGrupos').value,maxPorGrupo:+$('maxPorGrupo').value,
-        tipoCajas:$('tipoCajas').value,metodo:$('metodo').value,guiaGrupos:$('guiaGrupos').checked};
-      cambiaRonda = Object.keys(despues).some(k => despues[k] !== antes[k]);
+        tipoCajas:$('tipoCajas').value,metodo:$('metodo').value,guiaGrupos:$('guiaGrupos').checked,
+        tipoRespuesta:$('tipoRespuesta').value};
+      cambiaRonda = Object.keys(despues).some(k => k !== 'tipoRespuesta' && despues[k] !== antes[k]);
+      if (despues.tipoRespuesta !== antes.tipoRespuesta && (fase === 'cociente' || fase === 'resto')) {
+        limpiarErrorPregunta();
+        mensajeDirecto('');
+      }
       ajustes.modos[modo] = despues;
     } else {
       ajustes.narracion = $('narracion').checked;

@@ -203,7 +203,24 @@ h1,h2,h3,p { margin:0; }
 #mensaje[data-estado=intenta] { color:#873e18; background:#fff0cb; }
 #mensaje[data-estado=bien] { color:#16614d; background:#def7e6; }
 #respuesta,#respuestaCociente { padding:5px 7px; background:#edf0ff; border:1px solid #c7cdf5; border-radius:10px; }
-#respuestaCociente { display:flex; flex-wrap:wrap; gap:4px 9px; justify-content:center; align-items:center; color:#51419b; font-size:14px; }
+#respuestaCociente {
+  --tecla:calc(34px * var(--iz,1));
+  display:grid; gap:4px; justify-items:center; color:#51419b; text-align:center; font-size:14px;
+}
+#entradaReparto { width:100%; display:flex; align-items:center; justify-content:center; gap:calc(6px * var(--iz,1)); }
+#tecladoReparto { display:grid; grid-template-columns:repeat(11,minmax(0,1fr)); gap:calc(3px * var(--iz,1)); }
+#tecladoReparto button,#opcionesReparto span {
+  display:grid; place-items:center; width:var(--tecla); min-height:var(--tecla); padding:0;
+  border:1px solid #b9b8ed; border-radius:8px; background:#fff; color:#3d2d89;
+  font-size:calc(16px * var(--iz,1)); font-weight:900; touch-action:manipulation;
+}
+#opcionesReparto { display:flex; justify-content:center; gap:calc(7px * var(--iz,1)); margin:0; padding:0; border:0; min-width:0; }
+#opcionesReparto label { position:relative; cursor:pointer; }
+#opcionesReparto input { position:absolute; width:1px; height:1px; opacity:0; }
+#opcionesReparto span { width:calc(46px * var(--iz,1)); }
+#opcionesReparto input:focus-visible + span { outline:2px solid #6944c9; outline-offset:2px; }
+#opcionesReparto input:checked + span { border-color:#4c3ca6; color:#fff; background:#5d48b5; }
+#opcionesReparto[aria-invalid=true] input:checked + span { border-color:#a94c25; color:#873e18; background:#ffe9d7; }
 #respuesta p { color:#51419b; font-size:13px; }
 .ecuacion { display:flex; gap:clamp(3px,1vw,14px); align-items:end; justify-content:center; }
 .ecuacion label { display:grid; text-align:center; gap:2px; min-width:0; color:#453b70; font-size:clamp(10px,1.3vw,13px); }
@@ -233,6 +250,9 @@ h1,h2,h3,p { margin:0; }
   .acciones button { min-height:32px; }
   .tarjetas-division { grid-template-columns:repeat(3,minmax(0,1fr)); align-content:start; }
 }
+@media (max-width:780px) {
+  #tecladoReparto { grid-template-columns:repeat(6,minmax(0,1fr)); }
+}
 #appDivision.compacta { gap:calc(6px * var(--iz)); padding:calc(6px * var(--iz)); }
 #appDivision.compacta.horizontal { grid-template-columns:minmax(0,25%) minmax(0,1fr); }
 #appDivision.compacta:not(.horizontal) .herramientas-division { max-height:min(calc(var(--alto-util) * .25),calc(140px * var(--iz))); }
@@ -258,6 +278,8 @@ h1,h2,h3,p { margin:0; }
 .compacta .ecuacion input,.compacta #cocienteReto {
   width:calc(43px * var(--iz)); padding:calc(3px * var(--iz)); font-size:calc(17px * var(--iz));
 }
+.compacta #respuestaCociente { --tecla:calc(30px * var(--iz)); }
+.compacta #tecladoReparto { grid-template-columns:repeat(6,minmax(0,1fr)); }
 .compacta .ecuacion b { font-size:calc(20px * var(--iz)); }
 .compacta .acciones { gap:calc(4px * var(--iz)); padding-inline-end:calc(48px * var(--iz)); }
 :fullscreen .compacta .acciones { padding-inline-end:calc(100px * var(--iz)); }
