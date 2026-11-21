@@ -238,8 +238,9 @@
         }
       }
     }
-    const preferido = indice === 0 ? orden[0] :
-      indice === 2 ? candidatos.find(id => contenedores.has(id)) :
+    const esTerminal = reto.terreno === 'terminal';
+    const preferido = indice === 0 || (esTerminal && indice < 3) ? candidatos[0] :
+      indice === (esTerminal ? 3 : 2) ? candidatos.find(id => contenedores.has(id)) :
       indice === 5 && reto.terreno === 'barrio' ? candidatos.find(id => vehiculos.includes(id)) :
       [5,9].includes(indice) ? candidatos.find(id => ['sol','nube'].includes(id)) : null;
     const opciones = preferido && candidatos.includes(preferido) ?

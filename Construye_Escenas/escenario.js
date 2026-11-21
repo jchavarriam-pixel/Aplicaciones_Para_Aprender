@@ -1,7 +1,6 @@
 (() => {
   const ancho = 760, alto = 440, piso = 396;
   const altoCasaAbierta = 205, proporcionCasaAbierta = 560 / 406;
-  const altoCamion = 104;
   const escala = z => .58 + z * .58;
   const anchoVista = z => 600 + 120 * z;
   const proyectar = (x, z, h = 0) => [380 + (x - .5) * anchoVista(z), 145 + 246 * z - h * escala(z)];
@@ -98,30 +97,34 @@
     fogata: [995, 498, 167, 195, 48]
   };
   const atlas = new Map();
+  const alturasVehiculos = {carro: 71, camion: 104, autobus: 111};
+  const coloresVehiculo = ['rojo','azul','amarillo'];
+  const vistasVehiculos = {
+    'carros-frente': ['carro','frente',[[9,10,282,280],[309,10,282,281],[609,10,282,280]]],
+    'carros-lado': ['carro','lado',[[9,58,282,184],[309,58,282,184],[609,59,282,183]]],
+    'camiones-frente': ['camion','frente',[[34,9,233,282],[334,9,233,282],[634,9,233,282]]],
+    'camiones-lado': ['camion','lado',[[9,46,282,209],[309,46,282,209],[609,46,282,209]]],
+    'autobuses-frente': ['autobus','frente',[[20,9,260,282],[320,9,260,282],[620,9,260,282]]],
+    'autobuses-lado': ['autobus','lado',[[9,65,282,171],[309,65,282,171],[609,65,282,170]]]
+  };
   const grupos = {
     coches: [
       [32,76,255,187],[322,76,256,187],[612,76,255,187],
       [25,345,259,218],[315,345,261,218],[605,345,265,218],
       [17,647,276,205],[309,647,276,206],[600,647,281,206]
     ],
-    'camiones-frente': [[34,9,233,282],[334,9,233,282],[634,9,233,282]],
-    'camiones-lado': [[9,46,282,209],[309,46,282,209],[609,46,282,209]],
     recreopiezas: [[25,28,271,261],[305,46,290,231],[605,76,286,206],[7,341,289,224],[604,352,289,218]],
     extra: [[14,17,277,268],[326,7,239,278],[606,10,282,275],[9,291,288,282],[321,335,271,219],
       [605,291,287,285],[8,588,289,296],[310,590,279,276],[604,626,289,213]]
   };
-  const coloresVehiculo = ['rojo','azul','amarillo'];
   const ids = {
-    coches: ['carro','camion','autobus'].flatMap(tipo => coloresVehiculo.map(color => tipo + '-' + color)),
-    'camiones-frente': coloresVehiculo.map(color => 'camion-' + color + '-frente'),
-    'camiones-lado': coloresVehiculo.map(color => 'camion-' + color + '-lado'),
+    coches: Object.keys(alturasVehiculos).flatMap(tipo => coloresVehiculo.map(color => tipo + '-' + color)),
     recreopiezas: ['tobogan','columpios','trampolin','bicicleta','cerca'],
     extra: ['perro','gato','oveja','vaca','pajaro','caballo','escuela','sol','nube']
   };
   const alturas = {
-    coches: [71,71,71,altoCamion,altoCamion,altoCamion,111,111,111], recreopiezas: [107,110,62,63,65],
-    'camiones-frente': [altoCamion,altoCamion,altoCamion],
-    'camiones-lado': [altoCamion,altoCamion,altoCamion],
+    coches: Object.values(alturasVehiculos).flatMap(alto => coloresVehiculo.map(() => alto)),
+    recreopiezas: [107,110,62,63,65],
     extra: [47,35,61,88,33,105,218,63,59]
   };
   const atlasPieza = {};
@@ -133,13 +136,20 @@
       atlasPieza[id] = grupo;
     });
   }
+  for (const [grupo, [tipo, vista, cajas]] of Object.entries(vistasVehiculos)) {
+    cajas.forEach((caja, i) => {
+      const id = tipo + '-' + coloresVehiculo[i] + '-' + vista;
+      recortes[id] = [...caja, alturasVehiculos[tipo]];
+      atlasPieza[id] = grupo;
+    });
+  }
   function dimensionesObjeto(id, z) {
     const [, , w, h, tamano] = recortes[id] ?? [0,0,proporcionCasaAbierta,1,altoCasaAbierta];
     const alto = tamano * (z < 0 ? .74 : escala(z));
     return {ancho: alto * w / h, alto};
   }
   function vistaObjeto(id, x, z, terreno) {
-    if (!id.startsWith('camion-')) return {id, reflejar: false};
+    if (!recortes[id + '-lado']) return {id, reflejar: false};
     // La calle del barrio es horizontal. En la terminal, el acceso central apunta al frente.
     if (terreno === 'terminal' && x >= .33 && x <= .67) return {id: id + '-frente', reflejar: false};
     const reflejar = terreno === 'barrio' ? z >= .615 : x < .33;
@@ -163,7 +173,7 @@
       imagen.onload = () => { fondos.set(tipo, imagen); alCargar(tipo); };
       imagen.src = `paisajes/${tipo}.webp`;
     }
-    for (const grupo of ['objetos', ...Object.keys(grupos)]) {
+    for (const grupo of ['objetos', ...Object.keys(grupos), ...Object.keys(vistasVehiculos)]) {
       const imagen = new Image();
       imagen.onload = () => { atlas.set(grupo, imagen); alCargar('objetos'); };
       imagen.src = `paisajes/${grupo}.webp`;
