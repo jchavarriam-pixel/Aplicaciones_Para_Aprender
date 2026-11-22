@@ -82,14 +82,16 @@
 
   const orillas = {
     rio: [168, 170, 154, 163, 191, 195, 187, 191],
-    playa: [223, 181, 170, 179, 143, 80, 48, 0]
+    playa: [223, 181, 170, 179, 143, 80, 48, 0],
+    lago: [367, 376, 359, 341, 339, 350, 354, 352, 343, 335]
   };
-  function agua(terreno, x, z) {
+  function distanciaOrilla(terreno, x, z) {
     const muestras = orillas[terreno];
-    const fila = Math.max(0, Math.min(muestras.length - 1, (z - .25) * 10));
+    const profundidadInicial = terreno === 'lago' ? .05 : .25;
+    const fila = Math.max(0, Math.min(muestras.length - 1, (z - profundidadInicial) * 10));
     const indice = Math.min(muestras.length - 2, Math.floor(fila));
     const orilla = muestras[indice] + (muestras[indice + 1] - muestras[indice]) * (fila - indice);
-    return EscenarioConstruccion.proyectar(x, z)[0] < orilla;
+    return EscenarioConstruccion.proyectar(x, z)[0] - orilla;
   }
 
   const lugar = {
@@ -99,6 +101,7 @@
     pavimento: par('en el pavimento', 'on the pavement'),
     rio: par('en el río', 'in the river'),
     playa: par('en el mar', 'in the sea'),
+    lago: par('en el lago', 'in the lake'),
     cielo: par('en el cielo', 'in the sky')
   };
   const juegos = 'tobogan columpios trampolin';
@@ -122,7 +125,9 @@
     {nombre: par('La terminal', 'The transport terminal'), terreno: 'terminal', suelo:'pavimento',
       objetos: lista('autobus-rojo camion-azul carro-amarillo banco nino nina escuela bicicleta', vehiculos.join(' '), 'casa-abierta fuente arbol flores pelota cerca perro gato', clima)},
     {nombre: par('El recreo', 'Playtime'), terreno: 'recreo', suelo:'cesped',
-      objetos: lista('tobogan columpios trampolin nina nino arbol escuela cerca casa-abierta', basicos, animales, clima)}
+      objetos: lista('tobogan columpios trampolin nina nino arbol escuela cerca casa-abierta', basicos, animales, clima)},
+    {nombre: par('Una visita al lago', 'A visit to the lake'), terreno: 'lago', suelo:'cesped',
+      objetos: lista('barco pato sombrilla tienda casa-abierta cerca fuente', basicos, animales, clima)}
   ];
 
   const relacion = {
@@ -131,6 +136,7 @@
     detras: [par('detrás', 'behind'), (dx, dz, pixelX) => dz <= -.15 && Math.abs(pixelX) <= 200],
     delante: [par('delante', 'in front of'), (dx, dz, pixelX) => dz >= .15 && Math.abs(pixelX) <= 200],
     lado: [par('al lado', 'next to'), (dx, dz) => Math.abs(dx) >= .085 && Math.abs(dx) <= .235 && Math.abs(dz) <= .14],
+    cerca: [par('cerca', 'near'), (dx, dz) => Math.hypot(dx, dz * .83) <= .205],
     dentro: [par('dentro', 'inside'), (_, __, ___, adentro) => adentro],
     fuera: [par('fuera', 'outside'), (dx, dz, _, adentro) => !adentro && Math.hypot(dx, dz * .72) <= .31]
   };
@@ -145,12 +151,15 @@
     ['barco','pato'].includes(id) ? reto.terreno :
     vehiculos.includes(id) && reto.terreno === 'barrio' ? 'calle' : reto.suelo;
 
-  function superficie(x,z,suelo,reto) {
+  function superficie(x,z,suelo,reto,id) {
     if (x < .055 || x > .945) return false;
     if (suelo === 'cielo') return z >= -.54 && z <= -.36;
     if (z < .08 || z > (reto.terreno === 'barrio' ? .985 : .935)) return false;
-    if (suelo === 'rio' || suelo === 'playa') return z >= .25 && agua(reto.terreno,x,z);
-    if (orillas[reto.terreno]) return !agua(reto.terreno,x,z);
+    if (orillas[suelo]) {
+      const margen = id === 'barco' ? EscenarioConstruccion.semiAnchoEnEscena(id,x,z,reto.terreno) : 0;
+      return z >= .25 && distanciaOrilla(reto.terreno,x,z) <= -margen;
+    }
+    if (orillas[reto.terreno]) return distanciaOrilla(reto.terreno,x,z) >= 0;
     if (reto.terreno === 'barrio') {
       return suelo === 'calle' ? z >= .465 && z <= .765 : z >= .94 || z <= .403;
     }
@@ -205,77 +214,125 @@
       (definido ? 'the ' : (/^[aeiou]/i.test(en) ? 'an ' : 'a ')) + en.toLowerCase());
   }
 
-  function instruccionPaisaje(reto,id,a,tipo,cantidad=1) {
+  const cantidades = {
+    arbol: par('árboles','trees'), banco: par('bancos','benches'), conejo: par('conejos','rabbits'),
+    pato: par('patos','ducks'), pelota: par('pelotas','balls'), nube: par('nubes','clouds')
+  };
+  const verbos = [
+    par('Pon','Put'), par('Coloca','Place'), par('Agrega','Add'), par('Ubica','Position')
+  ];
+  function instruccionPaisaje(reto,id,a,tipo,cantidad,verbo) {
     const suelo = sueloPieza(id,reto);
-    const objeto = cantidad === 3 ? par('tres árboles','three trees') : sustantivo(id);
+    const plural = cantidades[id];
+    const objeto = cantidad === 1 ? sustantivo(id) :
+      par((cantidad === 2 ? 'dos ' : 'tres ') + plural.es, (cantidad === 2 ? 'two ' : 'three ') + plural.en);
     const ref = a && sustantivo(a.id,true);
     const [direccion, coincide] = relacion[tipo] || [];
     const sitio = ref ? par(direccion.es + (ref.es.startsWith('el ') ? ' del ' + ref.es.slice(3) : ' de ' + ref.es),
-      direccion.en + ' ' + ref.en) : lugar[suelo];
+      direccion.en + ' ' + ref.en) : tipo === 'orilla' ? par(
+      orillas[suelo] ? lugar[suelo].es + ', cerca de la orilla' : 'en tierra, cerca de la orilla',
+      orillas[suelo] ? lugar[suelo].en + ', near the shore' : 'on land, near the shore'
+    ) : lugar[suelo];
     const contenedor = tipo === 'dentro' ? a : null;
-    const zona = (x,z) => superficie(x,z,suelo,reto) && (!a || (
+    const zona = (x,z) => superficie(x,z,suelo,reto,id) &&
+      (tipo !== 'orilla' || Math.abs(distanciaOrilla(reto.terreno,x,z)) <= 94) && (!a || (
       coincide(x-a.x,z-a.z,EscenarioConstruccion.proyectar(x,z)[0] - EscenarioConstruccion.proyectar(a.x,a.z)[0],interior(x,z,a)) &&
       (tipo !== 'fuera' || a.id !== 'casa-abierta' || EscenarioConstruccion.visibleFueraDeCasa(id,x,z,a))
     ));
     return {id,cantidad,contenedor,tipo,terreno:reto.terreno,ancla:a,zona,
       correccion:par('Mueve la pieza ' + sitio.es + '.', 'Move the piece ' + sitio.en + '.'),
-      texto:par('Pon ' + objeto.es + ' ' + sitio.es + '.',
-      'Put ' + objeto.en + ' ' + sitio.en + '.')};
+      texto:par(verbo.es + ' ' + objeto.es + ' ' + sitio.es + '.',
+      verbo.en + ' ' + objeto.en + ' ' + sitio.en + '.')};
   }
 
-  function siguientePaisaje(reto, colocadas, historial, orden) {
-    const usados = new Set(historial.map(paso => paso.id));
-    const anclas = colocadas.filter(a => [reto.suelo,'calle'].includes(sueloPieza(a.id,reto)) &&
-      !a.contenedor && colocadas.filter(b => a.id === b.id).length === 1).reverse();
-    const candidatos = orden.filter(id => !usados.has(id));
-    const mejor = (id,a,tipo,cantidad) => {
-      const paso = instruccionPaisaje(reto,id,a,tipo,cantidad);
-      if (a && tipo !== 'dentro' && malla.filter(({x,z}) => posicionValida(paso,x,z,colocadas)).length < 5) return null;
-      return hayEspacio(paso,colocadas,paso.cantidad) ? paso : null;
+
+  function barajar(lista) {
+    const mezcla = [...lista];
+    for (let i = mezcla.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [mezcla[i],mezcla[j]] = [mezcla[j],mezcla[i]];
+    }
+    return mezcla;
+  }
+  function crearRondaPaisaje(reto, inicio) {
+    return {
+      orden: [inicio,...barajar(reto.objetos.filter(id => id !== inicio))],
+      verbos: barajar(verbos),
+      tipos: barajar(['relacion','superficie','grupo','relacion','orilla','relacion']),
+      direcciones: barajar(Object.keys(relacion)),
+      turnoBarco: ['rio','lago'].includes(reto.terreno) ? 1 + Math.floor(Math.random() * 2) : Infinity
     };
+  }
+
+  function siguientePaisaje(reto, colocadas, historial, ronda) {
+    const {orden,tipos,direcciones,turnoBarco} = ronda;
     const indice = historial.length;
-    if (indice === 1 && anclas[0]?.id === 'nino' && candidatos.includes('arbol')) {
-      const paso = mejor('arbol',anclas[0],'detras',3);
+    const verbo = ronda.verbos[indice % ronda.verbos.length];
+    const usados = new Set(historial.map(paso => paso.id));
+    const candidatos = orden.filter(id => !usados.has(id));
+    const anclas = barajar(colocadas.filter(a => !a.contenedor &&
+      colocadas.filter(b => a.id === b.id).length === 1));
+    anclas.sort((a,b) => Number(a === historial.at(-1)?.ancla) - Number(b === historial.at(-1)?.ancla));
+    const mejor = (id,a,tipo,cantidad=1) => {
+      const paso = instruccionPaisaje(reto,id,a,tipo,cantidad,verbo);
+      if (a && tipo !== 'dentro' && malla.filter(({x,z}) => posicionValida(paso,x,z,colocadas)).length < 5) return null;
+      return hayEspacio(paso,colocadas,cantidad) ? paso : null;
+    };
+    if (indice >= turnoBarco && !usados.has('barco')) {
+      const paso = mejor('barco',null,tipos[(indice - 1) % tipos.length] === 'orilla' ? 'orilla' : null) ||
+        mejor('barco');
       if (paso) return paso;
     }
-    if (indice === 1 && anclas[0]?.id === 'arbol' && candidatos.includes('nino')) {
-      const paso = mejor('nino',anclas[0],'detras');
+    if (indice === 0) return mejor(orden[0]) || candidatos.map(id => mejor(id)).find(Boolean);
+
+    const perfil = tipos[(indice - 1) % tipos.length];
+    const recurrencias = tipo => historial.filter(paso => paso.tipo === tipo).length;
+    const variacion = [...direcciones].sort((a,b) => recurrencias(a) - recurrencias(b));
+    // Antes del turno reservado para el barco, deja el agua libre para su casco.
+    const disponibles = indice < turnoBarco && Number.isFinite(turnoBarco) && !usados.has('barco') ?
+      candidatos.filter(id => id !== 'pato') : candidatos;
+    function relacionado(ids, cantidad = 1) {
+      for (const tipo of variacion) for (const a of anclas) for (const id of ids) {
+        if (sueloPieza(a.id,reto) !== sueloPieza(id,reto)) continue;
+        if (tipo === 'dentro' || tipo === 'fuera') {
+          if (!contenedores.has(a.id) || !piezasDentro.includes(id)) continue;
+        }
+        const paso = mejor(id,a,tipo,cantidad);
+        if (paso) return paso;
+      }
+    }
+
+    if (perfil === 'grupo') {
+      const grupos = disponibles.filter(id => cantidades[id]);
+      const cantidad = Math.random() < .5 ? 2 : 3;
+      const paso = relacionado(grupos,cantidad);
+      if (paso) return paso;
+      for (const id of grupos) {
+        const abierto = mejor(id,null,null,cantidad);
+        if (abierto) return abierto;
+      }
+    }
+    if (perfil === 'orilla' && orillas[reto.terreno]) {
+      for (const id of disponibles) {
+        if (sueloPieza(id,reto) === 'cielo') continue;
+        const paso = mejor(id,null,'orilla');
+        if (paso) return paso;
+      }
+    }
+    if (perfil === 'relacion' || perfil === 'grupo') {
+      const paso = relacionado(disponibles);
       if (paso) return paso;
     }
-    for (const a of anclas.filter(a => contenedores.has(a.id))) {
-      for (const tipo of ['dentro','fuera']) {
-        if (historial.some(paso => paso.tipo === tipo)) continue;
-        for (const id of piezasDentro.filter(id => candidatos.includes(id))) {
-          const paso = mejor(id,a,tipo);
-          if (paso) return paso;
-        }
-      }
-    }
-    const esTerminal = reto.terreno === 'terminal';
-    const preferido = indice === 0 || (esTerminal && indice < 3) ? candidatos[0] :
-      indice === (esTerminal ? 3 : 2) ? candidatos.find(id => contenedores.has(id)) :
-      indice === 5 && reto.terreno === 'barrio' ? candidatos.find(id => vehiculos.includes(id)) :
-      [5,9].includes(indice) ? candidatos.find(id => ['sol','nube'].includes(id)) : null;
-    const opciones = preferido && candidatos.includes(preferido) ?
-      [preferido,...candidatos.filter(id => id !== preferido)] : candidatos;
-    const direcciones = ['delante','derecha','detras','izquierda','lado'];
-    direcciones.sort((a,b) => historial.filter(p => p.tipo === a).length - historial.filter(p => p.tipo === b).length);
-    for (const id of opciones) {
-      if (indice > 0 && id !== preferido && indice % 4 !== 3) {
-        for (const tipo of direcciones) for (const a of anclas.filter(a => sueloPieza(a.id,reto) === sueloPieza(id,reto))) {
-          const paso = mejor(id,a,tipo);
-          if (paso) return paso;
-        }
-      }
+    for (const id of disponibles) {
       const paso = mejor(id);
       if (paso) return paso;
     }
-    // La siguiente instrucción sigue siendo posible si se saturó una superficie.
+    // Conserva una salida jugable cuando el estudiante ha llenado parte del terreno.
     for (const id of orden) {
       const paso = mejor(id);
       if (paso) return paso;
     }
   }
-
-  window.RetosConstruccion = {piezas, bloques, paisajes, zonaTablero, piezaEnEspacioLibre, admite, siguientePaisaje, mallaPaisaje, puntosPaisaje: malla};
+  window.RetosConstruccion = {piezas, bloques, paisajes, zonaTablero, piezaEnEspacioLibre, admite, barajar,
+    crearRondaPaisaje, siguientePaisaje, mallaPaisaje, puntosPaisaje: malla};
 })();

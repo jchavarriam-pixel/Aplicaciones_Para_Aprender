@@ -2,7 +2,8 @@
   'use strict';
 
   const get = id => document.getElementById(id);
-  const {piezas, bloques, paisajes, piezaEnEspacioLibre, admite, siguientePaisaje, mallaPaisaje: malla, puntosPaisaje} = RetosConstruccion;
+  const {piezas, bloques, paisajes, piezaEnEspacioLibre, admite, crearRondaPaisaje, siguientePaisaje,
+    barajar: mezclar, mallaPaisaje: malla, puntosPaisaje} = RetosConstruccion;
   const retos = {bloques, paisajes};
   const escena = EscenarioConstruccion;
   const app = get('appConstruye'), juego = get('juego'), tablero = get('tablero'), banco = get('banco');
@@ -25,11 +26,13 @@
   const vista = {escala: 1, x: 0, y: 0, densidad: 1};
   const colocadas = [];
   const historial = [], fuegos = [];
+  const mazosInicio = new Map();
+  let ultimoPaisaje = -1;
   const cursor = {x: 380, y: 275};
   let modo, reto, indiceReto = 0, elegida, opciones = [], zonas = [], pistaManual = null;
   let arrastre, vistaPrevia, movimiento, piezaPendiente, teclado = false;
   let cuadroAnimacion = 0;
-  let pasoPaisaje, ordenPaisaje, puestasEnPaso = 0;
+  let pasoPaisaje, rondaPaisaje, puestasEnPaso = 0;
 
   const paso = () => esBloques() ? reto?.pasos[colocadas.length] : pasoPaisaje;
   const esBloques = () => modo === 'bloques';
@@ -38,12 +41,18 @@
     y >= (esBloques() ? -vista.y / vista.escala : 0);
   const completar = () => reto && !paso();
   const mostrarZona = () => pistaManual ?? config.pistas;
-  function mezclar(elementos) {
-    for (let i = elementos.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [elementos[i], elementos[j]] = [elementos[j], elementos[i]];
+  function sacarInicio(paisaje) {
+    if (!mazosInicio.has(paisaje)) mazosInicio.set(paisaje, {pendientes:[], ultimo:null});
+    const mazo = mazosInicio.get(paisaje);
+    if (!mazo.pendientes.length) {
+      mazo.pendientes = mezclar(paisaje.objetos);
+      const ultimo = mazo.pendientes.length - 1;
+      if (ultimo > 0 && mazo.pendientes[ultimo] === mazo.ultimo) {
+        [mazo.pendientes[0], mazo.pendientes[ultimo]] = [mazo.pendientes[ultimo], mazo.pendientes[0]];
+      }
     }
-    return elementos;
+    mazo.ultimo = mazo.pendientes.pop();
+    return mazo.ultimo;
   }
 
   function instruccion() {
@@ -131,15 +140,9 @@
     fuegos.length = 0;
     puestasEnPaso = 0;
     if (!esBloques()) {
-      const [inicial, ...resto] = reto.objetos;
-      if (reto.terreno === 'terminal') {
-        const llegada = ['camion','carro','autobus'].map(tipo =>
-          mezclar(reto.objetos.filter(id => id.startsWith(tipo + '-')))[0]);
-        ordenPaisaje = [...llegada, ...mezclar(reto.objetos.filter(id => !llegada.includes(id)))];
-      } else {
-        ordenPaisaje = [inicial, ...mezclar(resto)];
-      }
-      pasoPaisaje = siguientePaisaje(reto, colocadas, historial, ordenPaisaje);
+      ultimoPaisaje = indice;
+      rondaPaisaje = crearRondaPaisaje(reto,sacarInicio(reto));
+      pasoPaisaje = siguientePaisaje(reto, colocadas, historial, rondaPaisaje);
     }
     opciones = [];
     vistaPrevia = null;
@@ -155,12 +158,13 @@
     modo = nuevoModo;
     juego.dataset.modo = nuevoModo;
     get('escena').classList.toggle('paisaje', !esBloques());
-    indiceReto = 0;
+    const indices = paisajes.map((_, indice) => indice).filter(indice => indice !== ultimoPaisaje);
+    indiceReto = esBloques() ? 0 : mezclar(indices)[0];
     renderLista();
     get('modos').hidden = true;
     get('reiniciar').hidden = false;
     juego.hidden = false;
-    iniciar(0);
+    iniciar(indiceReto);
     adaptar();
     selector.focus({preventScroll: true});
   }
@@ -415,7 +419,7 @@
         historial.push(pasoPaisaje);
         puestasEnPaso = 0;
         pasoPaisaje = historial.length < config.longitudRonda ?
-          siguientePaisaje(reto, colocadas, historial, ordenPaisaje) : null;
+          siguientePaisaje(reto, colocadas, historial, rondaPaisaje) : null;
       }
     }
     celebrar();

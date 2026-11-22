@@ -168,10 +168,13 @@
     const reflejar = terreno === 'barrio' ? z >= .615 : x < .33;
     return {id: id + '-lado', reflejar};
   }
+  function semiAnchoEnEscena(id, x, z, terreno) {
+    const vista = vistaObjeto(id,x,z,terreno);
+    return dimensionesObjeto(vista.id,z).ancho / 2;
+  }
   function objetoEnEscena(id, x, z, terreno) {
     const [px] = proyectar(x,z);
-    const vista = vistaObjeto(id,x,z,terreno);
-    const mitad = dimensionesObjeto(vista.id,z).ancho / 2;
+    const mitad = semiAnchoEnEscena(id,x,z,terreno);
     return px - mitad >= 5 && px + mitad <= ancho - 5;
   }
   function tocarObjeto(punto, objeto, terreno) {
@@ -198,7 +201,7 @@
       dimensionesObjeto(id,z).ancho / 4;
   }
   function cargarFondos(alCargar) {
-    for (const tipo of ['rio','parque','playa','granja','campamento','barrio','terminal','recreo']) {
+    for (const tipo of ['rio','parque','playa','granja','campamento','barrio','terminal','recreo','lago']) {
       const imagen = new Image();
       imagen.onload = () => { fondos.set(tipo, imagen); alCargar(tipo); };
       imagen.src = `paisajes/${tipo}.webp`;
@@ -445,5 +448,5 @@
     }
     ctx.restore();
   }
-  return window.EscenarioConstruccion = {ancho,alto,piso,proyectar,desdePantalla,dentroCasa,dentroCerca,objetoEnEscena,visibleFueraDeCasa,tocarObjeto,marcaColocacion,bloque,fondoBloques,cargarFondos,terreno,paisajeObjeto,ficha,poligono,elipse,linea};
+  return window.EscenarioConstruccion = {ancho,alto,piso,proyectar,desdePantalla,dentroCasa,dentroCerca,semiAnchoEnEscena,objetoEnEscena,visibleFueraDeCasa,tocarObjeto,marcaColocacion,bloque,fondoBloques,cargarFondos,terreno,paisajeObjeto,ficha,poligono,elipse,linea};
 })();
