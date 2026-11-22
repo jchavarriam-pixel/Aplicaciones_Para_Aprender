@@ -375,6 +375,10 @@ h1 { font-size: calc(18 * var(--u)); line-height: 1.06; }
 .revision { display: flex; justify-content: center; padding-right: calc(100 * var(--u)); }
 .revision .principal, .principal { border-color: #155752; background: #186c64; color: white; }
 .revision .principal { width: min(100%, calc(365 * var(--u))); min-height: calc(39 * var(--u)); }
+#siguiente:focus-visible {
+  outline-color: #fff4bc;
+  outline-offset: calc(-5 * var(--u));
+}
 @media (min-width: 720px) {
   .revision { padding-left: calc(100 * var(--u)); }
 }

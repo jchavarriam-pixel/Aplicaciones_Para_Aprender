@@ -1,0 +1,221 @@
+.salto-celebracion {
+  --salto-base: 66%;
+  --salto-altura: min(17cqh, calc(74 * var(--u)));
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  overflow: hidden;
+  container-type: size;
+  pointer-events: none;
+  animation: salto-escena 3.55s both;
+}
+
+.salto-estanque {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 11% 2% at 24% 39%, transparent 75%, #cef9ff50 81% 92%, transparent 98%),
+    radial-gradient(ellipse 8% 1.4% at 72% 28%, transparent 75%, #cef9ff4a 81% 92%, transparent 98%),
+    radial-gradient(ellipse 9% 1.4% at 43% 82%, transparent 75%, #cef9ff4d 81% 92%, transparent 98%),
+    radial-gradient(ellipse at 20% 15%, #d6faff55, transparent 37%),
+    radial-gradient(ellipse at 78% 60%, #56dbca, transparent 45%),
+    linear-gradient(155deg, #179aaf, #087587 58%, #074c70);
+}
+
+.salto-nenufares, .salto-regla {
+  position: absolute;
+  inset-inline: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  justify-items: center;
+}
+
+.salto-nenufares {
+  top: var(--salto-base);
+  transform: translateY(-36%);
+}
+
+.salto-nenufares i {
+  width: min(17cqw, 21cqh, calc(104 * var(--u)));
+  aspect-ratio: 2.45;
+  border: max(1px, calc(2 * var(--u))) solid #baf375;
+  border-radius: 50%;
+  background: conic-gradient(from 52deg, #1d9c97 0 22deg, #91df57 22deg, #4db64f 215deg, #8fe35a 360deg);
+  box-shadow: 0 calc(4 * var(--u)) 0 #16745d;
+  animation: salto-hoja .36s .58s both;
+}
+
+.salto-nenufares i:first-child { animation-delay: 0s; }
+.salto-nenufares i:nth-child(3) { animation-delay: 1.16s; }
+.salto-nenufares i:nth-child(4) { animation-delay: 1.74s; }
+
+.salto-regla {
+  bottom: 6%;
+  padding-top: min(7cqh, calc(17 * var(--u)));
+  border-radius: calc(5 * var(--u));
+  color: #553719;
+  background: #ffe0a2;
+  box-shadow: 0 calc(3 * var(--u)) 0 #bd874d;
+  font-size: min(10cqh, calc(20 * var(--u)));
+  line-height: 1.12;
+}
+
+.salto-regla::before, .salto-regla::after {
+  content: "";
+  position: absolute;
+  inset: 0 12.5% auto;
+  right: calc(12.5% - 1px);
+  height: min(6cqh, calc(13 * var(--u)));
+  background: repeating-linear-gradient(90deg, #92602b 0 1px, transparent 1px 33.333%);
+}
+
+.salto-regla::after {
+  height: min(3cqh, calc(7 * var(--u)));
+  background: repeating-linear-gradient(90deg, #ad7d45 0 1px, transparent 1px 8.333%);
+}
+
+.salto-ruta {
+  position: absolute;
+  top: var(--salto-base);
+  left: 0;
+  width: 100%;
+  animation: salto-ruta 1.74s linear both;
+}
+
+.salto-rana {
+  position: absolute;
+  bottom: 0;
+  width: min(19cqw, 29cqh, calc(110 * var(--u)));
+  aspect-ratio: 1.42;
+  transform: translateX(-50%);
+  border: max(1px, calc(2 * var(--u))) solid #216d45;
+  border-radius: 48% 48% 37% 37%;
+  background:
+    radial-gradient(ellipse at 50% 87%, #d9f7a0 0 32%, transparent 34%),
+    radial-gradient(ellipse at 38% 25%, #b2ef6b, #70cd56 60%, #46a94d);
+  box-shadow: 0 calc(3 * var(--u)) calc(6 * var(--u)) #043e4a78;
+  animation: salto-rana .58s 3;
+}
+
+.salto-rana::before, .salto-rana::after {
+  content: "";
+  position: absolute;
+  top: -32%;
+  left: 8%;
+  width: 36%;
+  aspect-ratio: 1;
+  border: max(1px, calc(2 * var(--u))) solid #268248;
+  border-radius: 50%;
+  background: radial-gradient(circle at 59% 38%, #fff 0 8%, transparent 9%),
+    radial-gradient(circle at 53% 47%, #153a36 0 25%, #fffbea 27% 51%, #91db5b 53%);
+}
+
+.salto-rana::after { left: auto; right: 8%; }
+.salto-rana i {
+  position: absolute;
+  inset: 45% 26% 22%;
+  border-bottom: calc(3 * var(--u)) solid #215e45;
+  border-radius: 50%;
+}
+
+.salto-destello {
+  --radio-x: min(31cqw, 58cqh, calc(192 * var(--u)));
+  --radio-y: min(28cqw, 47cqh, calc(158 * var(--u)));
+  position: absolute;
+  top: var(--salto-base);
+  left: 87.5%;
+}
+
+.salto-destello i, .salto-destello span {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.salto-destello i {
+  width: min(23cqw, calc(150 * var(--u)));
+  aspect-ratio: 3.5;
+  border: calc(3 * var(--u)) solid #c8ffff;
+  border-radius: 50%;
+  animation: salto-onda .85s 1.74s both;
+}
+
+.salto-destello i:nth-child(2) { animation-delay: 1.92s; }
+.salto-destello span {
+  width: min(7cqh, calc(14 * var(--u)));
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--tono);
+  animation: salto-chispa 1.08s 1.74s both;
+}
+
+.salto-destello span:nth-of-type(3n) {
+  border-radius: 0;
+  clip-path: polygon(50% 0, 64% 36%, 100% 50%, 64% 64%, 50% 100%, 36% 64%, 0 50%, 36% 36%);
+}
+
+.salto-mensaje {
+  position: absolute;
+  top: 6%;
+  left: 50%;
+  max-width: 92%;
+  width: max-content;
+  padding: .15em .55em;
+  border: max(1px, calc(2 * var(--u))) solid #b8ffe5;
+  border-radius: 1em;
+  color: #fff8c5;
+  background: #12576d;
+  font-size: clamp(calc(15 * var(--u)), min(10cqw, 13cqh), calc(36 * var(--u)));
+  font-weight: 900;
+  text-align: center;
+  animation: salto-mensaje .3s 1.85s both;
+}
+
+@keyframes salto-escena {
+  0%, 91% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes salto-ruta {
+  from { transform: translateX(12.5%); }
+  to { transform: translateX(87.5%); }
+}
+
+@keyframes salto-rana {
+  0% { translate: 0 0; animation-timing-function: cubic-bezier(.2, .65, .52, 1); }
+  50% { translate: 0 calc(-1 * var(--salto-altura)); animation-timing-function: cubic-bezier(.48, 0, .8, .35); }
+  100% { translate: 0 0; }
+}
+
+@keyframes salto-hoja {
+  0%, 100% { transform: scale(1); }
+  30% { transform: scale(1.13, .82); }
+}
+
+@keyframes salto-onda {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(.25); }
+  14% { opacity: .85; }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.4); }
+}
+
+@keyframes salto-chispa {
+  0% { opacity: 1; transform: translate(-50%, -50%) scale(.3); }
+  56% { opacity: 1; }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--x) * var(--radio-x)), calc(-50% + var(--y) * var(--radio-y))) rotate(200deg);
+  }
+}
+
+@keyframes salto-mensaje {
+  from { opacity: 0; transform: translate(-50%, 20%) scale(.9); }
+  to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .salto-celebracion { animation-duration: 1.75s; animation-timing-function: step-end; }
+  .salto-ruta { animation: none; transform: translateX(87.5%); }
+  .salto-rana, .salto-nenufares i, .salto-destello i, .salto-destello span, .salto-mensaje { animation: none; }
+  .salto-destello { display: none; }
+  .salto-mensaje { transform: translateX(-50%); }
+}

@@ -15,6 +15,7 @@
   const entradaNumerica = TecladoEnPantalla.instalar(juego, teclado);
   const resultado = get('resultado');
   const ajustes = get('ajustes');
+  const celebracion = get('saltoCelebracion');
   const clave = 'medidas-longitud.v1';
   const guardado = Matematicas.leer(clave);
   const opciones = {cantidad: guardado.cantidad === 2 ? 2 : 3, extremos: guardado.extremos !== false, narracion: guardado.narracion !== false};
@@ -218,7 +219,24 @@
   function hablar(texto) {
     if (opciones.narracion) IdiomaVoz.hablar(texto);
   }
+  function prepararCelebracion() {
+    const tonos = ['#ffca36', '#fd64ad', '#5df6df', '#b7a5ff', '#fff4a6', '#9cff68'];
+    const figuras = Array.from({length: 30}, (_, i) => {
+      const figura = document.createElement('span');
+      const angulo = i * Math.PI * 2 / 30;
+      const distancia = 0.5 + ((i * 7) % 13) / 25;
+      figura.style.setProperty('--x', (Math.cos(angulo) * distancia - 0.24).toFixed(3));
+      figura.style.setProperty('--y', (Math.sin(angulo) * distancia - 0.22).toFixed(3));
+      figura.style.setProperty('--tono', tonos[(i + Math.floor(i / tonos.length)) % tonos.length]);
+      return figura;
+    });
+    get('saltoDestello').append(...figuras);
+    celebracion.addEventListener('animationend', evento => {
+      if (evento.target === celebracion) celebracion.hidden = true;
+    });
+  }
   function cargarRonda(leer = true) {
+    celebracion.hidden = true;
     ronda = crearRonda();
     seleccion = null;
     evaluado = false;
@@ -313,6 +331,7 @@
       get('revisar').hidden = true;
       get('siguiente').hidden = false;
       get('siguiente').focus({preventScroll:true});
+      celebracion.hidden = false;
     }
     if (evaluado && modo === 'diferencia') {
       hablar(esEn(`${elogio} La diferencia es de ${ronda.mayor - ronda.menor} centímetros.`, `${elogio} The difference is ${ronda.mayor - ronda.menor} centimetres.`));
@@ -332,6 +351,7 @@
     modo = null;
     ronda = null;
     window.speechSynthesis?.cancel();
+    celebracion.hidden = true;
     juego.hidden = true;
     get('modos').hidden = false;
     tarjeta?.focus({preventScroll:true});
@@ -401,6 +421,7 @@
   });
 
   graduarRegla();
+  prepararCelebracion();
   IdiomaVoz.instalar('#vozLongitud');
   Matematicas.pantalla(app, (_, zoom) => {
     const root = document.documentElement;

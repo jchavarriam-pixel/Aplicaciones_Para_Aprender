@@ -9,7 +9,8 @@
   <link rel="stylesheet" href="../pantalla-completa.css">
   <link rel="stylesheet" href="../panel-plegable.css">
   <link rel="stylesheet" href="../teclado-en-pantalla.css">
-  <link rel="stylesheet" href="longitud.css?v=respuestas-laterales">
+  <link rel="stylesheet" href="longitud.css?v=salto-perfecto">
+  <link rel="stylesheet" href="celebracion.css">
   <script src="../historial-modos.js"></script>
 </head>
 <body>
@@ -62,6 +63,15 @@
               <button class="giro" id="giro" type="button" aria-label="Arrastra para girar la regla" title="Arrastra para girar la regla">↻</button>
             </div>
           </div>
+          <div class="salto-celebracion" id="saltoCelebracion" aria-hidden="true" hidden>
+            <div class="salto-estanque">
+              <div class="salto-nenufares"><i></i><i></i><i></i><i></i></div>
+              <div class="salto-regla"><b>0</b><b>1</b><b>2</b><b>3</b></div>
+              <div class="salto-ruta"><div class="salto-rana"><i></i></div></div>
+              <div class="salto-destello" id="saltoDestello"><i></i><i></i></div>
+              <p class="salto-mensaje">¡Salto perfecto!</p>
+            </div>
+          </div>
         </div>
         <div id="respuestasObjetos" role="group" aria-label="Medidas de los objetos"></div>
       </div>
@@ -103,11 +113,11 @@
   </footer>
   <script>window.IDIOMA_VOZ_APP = 'longitud';</script>
   <script src="../idioma-voz-textos.js"></script>
-  <script src="longitud-textos.js?v=respuestas-laterales"></script>
+  <script src="longitud-textos.js?v=salto-perfecto"></script>
   <script src="../idioma-voz.js"></script>
   <script src="../matematicas-base.js"></script>
   <script src="../teclado-en-pantalla.js"></script>
-  <script src="longitud.js?v=respuestas-laterales"></script>
+  <script src="longitud.js?v=salto-perfecto"></script>
   <script src="../pantalla-completa.js"></script>
   <script src="../panel-plegable.js?v=longitud-1"></script>
   <script src="../nombre-compartido.js"></script>

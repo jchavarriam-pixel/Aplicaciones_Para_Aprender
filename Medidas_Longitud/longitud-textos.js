@@ -25,6 +25,7 @@ Object.assign(window.TEXTOS_INGLES ||= {}, {
   'Centrar regla': 'Centre ruler',
   '✓ Revisar': '✓ Check',
   'Siguiente pregunta': 'Next question',
+  '¡Salto perfecto!': 'Perfect jump!',
   'Configuración': 'Settings',
   'Aplicar y cerrar': 'Apply and close',
   'Objetos al medir o estimar': 'Objects to measure or estimate',
