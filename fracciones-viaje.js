@@ -1,11 +1,12 @@
 (() => {
   'use strict';
 
-  function instalar({tono, llegada, siguiente}) {
+  function instalar({tono, llegada, siguiente, etiquetaSiguiente}) {
     const dialogo = document.getElementById('viajeFracciones');
     const lienzo = document.getElementById('viajeLienzo');
     const estado = document.getElementById('viajeEstado');
     const repetir = document.getElementById('viajeRepetir');
+    const botonSiguiente = document.getElementById('viajeSiguiente');
     const ctx = lienzo.getContext('2d');
     const cohete = new Image();
     cohete.src = 'iconos/fracciones-cohete.webp';
@@ -146,6 +147,7 @@
     }
     function abrir() {
       if (!dialogo.open) dialogo.showModal();
+      botonSiguiente.textContent = etiquetaSiguiente();
       iniciar();
     }
     function cerrar() {
@@ -156,10 +158,9 @@
       if (!dialogo.open) cancelAnimationFrame(cuadro);
     });
     document.getElementById('viajeCerrar').addEventListener('click',cerrar);
-    document.getElementById('viajeSiguiente').addEventListener('click',() => {
+    botonSiguiente.addEventListener('click',() => {
       cerrar();
       siguiente();
-      document.getElementById('a3Check').focus({preventScroll:true});
     });
     repetir.addEventListener('click',iniciar);
     cohete.addEventListener('load', () => { if (dialogo.open) dibujar(momento); });

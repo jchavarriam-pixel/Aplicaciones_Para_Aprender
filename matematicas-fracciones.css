@@ -16,7 +16,7 @@ body { width:var(--ancho-fracciones,100%)!important; min-height:0!important; bac
 }
 #app:not(.horizontal) .herramientas-fracciones {
   grid-template-columns:1fr 1fr; padding:calc(5 * var(--unidad)) calc(5 * var(--unidad)) calc(5 * var(--unidad)) calc(42 * var(--unidad));
-  max-height:min(calc(var(--alto-util,100dvh) * .34),calc(160 * var(--unidad)));
+  max-height:min(calc(var(--alto-util,100dvh) * .37),calc(180 * var(--unidad)));
 }
 .topbar,.con-panel-plegable:not(.panel-lateral-oculto) .herramientas-fracciones>.topbar {
   display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:start; position:relative; top:auto;
@@ -74,24 +74,40 @@ body { width:var(--ancho-fracciones,100%)!important; min-height:0!important; bac
 .instruction .speaker { width:calc(31 * var(--unidad)); height:calc(29 * var(--unidad)); font-size:calc(14 * var(--unidad)); border-radius:calc(8 * var(--unidad)); }
 body.guidance-off .instruction { min-height:0; }
 body.guidance-off.voice-off .instruction { display:none; }
-.activity-work { flex:1; min-height:0; display:flex; flex-direction:column; gap:calc(5 * var(--unidad)); padding:calc(6 * var(--unidad)); border-radius:calc(15 * var(--unidad)); box-shadow:none; background:linear-gradient(135deg,#fff,#f2f5ff); }
-.two-pane,.a2-layout,.a4-grid { flex:1; min-height:0; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.17fr); gap:calc(8 * var(--unidad)); align-items:center; }
-.two-pane { grid-template-columns:minmax(0,1.47fr) minmax(0,.85fr); }
+.activity-work { flex:1; min-height:0; display:flex; flex-direction:column; gap:calc(5 * var(--unidad)); padding:calc(6 * var(--unidad)); border-width:calc(2 * var(--unidad)); border-radius:calc(15 * var(--unidad)); box-shadow:none; background:linear-gradient(135deg,#fff,#f2f5ff); }
+.two-pane,.a2-layout,.a4-grid {
+  flex:1;
+  min-height:0;
+  display:grid;
+  grid-template: "figura herramientas" minmax(0,1fr) / minmax(0,1.65fr) minmax(0,1fr);
+  gap:calc(8 * var(--unidad));
+}
 .figure-zone,.answer-zone { min-width:0; min-height:0; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:calc(4 * var(--unidad)); }
+.figure-zone,.paint-figure,.a4-figure { grid-area:figura; }
+.answer-zone,.a2-left,.a4-controls {
+  grid-area:herramientas;
+  min-width:0;
+  min-height:0;
+  display:grid;
+  align-content:center;
+  justify-items:center;
+  gap:calc(6 * var(--unidad));
+  padding:calc(4 * var(--unidad));
+}
+.a1-notation,.fraction-reference { display:grid; min-width:0; justify-items:center; gap:calc(3 * var(--unidad)); }
 .figure-box,.paint-figure,.a4-figure { min-height:0; width:100%; height:100%; margin:0; display:grid; place-items:center; }
-.figure-box { flex:1; }
+.figure-box { flex:1 1 0; overflow:hidden; }
 .figure-box svg,.paint-figure svg,.a4-figure svg { width:100%; height:100%; max-width:100%; max-height:100%; display:block; object-fit:contain; }
 .figure-box,.paint-figure,.a4-figure { border-radius:calc(11 * var(--unidad)); background:#eef4ff; }
-.arrow { display:none; }
-.fraction-build { width:min(100%,calc(157 * var(--unidad))); grid-template-rows:auto auto auto; gap:calc(4 * var(--unidad)); padding:calc(4 * var(--unidad)); }
+.fraction-build { width:max-content; max-width:100%; grid-template-rows:auto auto auto; gap:calc(4 * var(--unidad)); padding:calc(4 * var(--unidad)); }
 .drop-cell { width:calc(67 * var(--unidad)); min-width:0; height:calc(51 * var(--unidad)); min-height:0; border-width:calc(2 * var(--unidad)); border-color:#9588d0; border-radius:calc(10 * var(--unidad)); font-size:calc(30 * var(--unidad)); }
 .fraction-line { width:calc(72 * var(--unidad)); height:calc(4 * var(--unidad)); }
 .given-frac,.given-frac.big { min-width:0; grid-template-rows:auto auto auto; padding:calc(3 * var(--unidad)); font-size:calc(37 * var(--unidad)); }
 .given-frac .bar { width:calc(56 * var(--unidad)); height:calc(3 * var(--unidad)); margin:calc(2 * var(--unidad)) 0; }
 .fraction-name { min-height:0; max-width:100%; padding:calc(3 * var(--unidad)) calc(6 * var(--unidad)); margin:0; font-size:calc(14 * var(--unidad)); line-height:1.15; overflow-wrap:anywhere; }
-.a2-left,.a4-grid>div:first-child { min-width:0; min-height:0; display:flex; flex-direction:column; gap:calc(4 * var(--unidad)); align-items:center; }
+.a4-controls .step-card { width:min(100%,calc(255 * var(--unidad))); }
 .color-callout { font-size:calc(13 * var(--unidad)); line-height:1.18; margin:0; padding:calc(3 * var(--unidad)); }
-.paint-palette { margin:calc(3 * var(--unidad)) 0 0; gap:calc(4 * var(--unidad)); flex-wrap:wrap; justify-content:center; }
+.paint-palette { max-width:calc(136 * var(--unidad)); margin:calc(3 * var(--unidad)) auto 0; gap:calc(4 * var(--unidad)); flex-wrap:wrap; justify-content:center; }
 .paint-swatch { width:calc(30 * var(--unidad)); height:calc(30 * var(--unidad)); min-width:0; min-height:0; padding:0; border-width:2px; }
 .step-card { padding:calc(4 * var(--unidad)); border-radius:calc(8 * var(--unidad)); margin:0; width:100%; }
 .step-label,.slider-value { font-size:calc(12 * var(--unidad)); }
@@ -100,15 +116,17 @@ body.guidance-off.voice-off .instruction { display:none; }
 .step-dots { display:none; }
 .parts-choices { grid-template-columns:repeat(5,minmax(0,1fr)); gap:calc(3 * var(--unidad)); }
 .parts-choice { min-height:calc(28 * var(--unidad)); font-size:calc(14 * var(--unidad)); padding:0; border-radius:calc(6 * var(--unidad)); }
-.inventory-wrap { flex:none; margin:0; padding:calc(4 * var(--unidad)); }
+.inventory-wrap { width:min(100%,calc(300 * var(--unidad))); min-width:0; margin:0; padding:calc(5 * var(--unidad)); }
 .inventory-title { font-size:calc(12 * var(--unidad)); margin:0 0 calc(3 * var(--unidad)); }
-.number-inventory { display:grid; grid-template-columns:repeat(10,minmax(0,1fr)); gap:calc(3 * var(--unidad)); }
-.num-chip { width:100%; min-width:0; height:calc(34 * var(--unidad)); min-height:0; font-size:calc(18 * var(--unidad)); padding:0; border-radius:calc(8 * var(--unidad)); }
+.number-inventory { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:calc(4 * var(--unidad)); }
+.num-chip { width:100%; min-width:0; height:calc(38 * var(--unidad)); min-height:0; font-size:calc(19 * var(--unidad)); padding:0; border-radius:calc(8 * var(--unidad)); }
 .num-chip:nth-child(3n+1) { background:#ece5ff; }
 .num-chip:nth-child(3n+2) { background:#e4efff; }
 .num-chip:nth-child(3n+3) { background:#fff1d5; }
+.num-chip[aria-pressed="true"] { border-color:#4d32ae; background:#6744be; color:#fff; }
 .feedback { flex:none; min-height:0; max-height:calc(45 * var(--unidad)); margin:0; padding:calc(4 * var(--unidad)); overflow:auto; font-size:calc(12 * var(--unidad)); line-height:1.15; border-radius:calc(8 * var(--unidad)); }
-.activity-work>.actions { flex:none; gap:calc(4 * var(--unidad)); margin:0; padding-right:calc(84 * var(--unidad)); padding-left:calc(4 * var(--unidad)); }
+#a1Screen .activity-work:not(:has(.actions button:not(.hidden))) #a1Feedback { margin-right:calc(46 * var(--unidad)); }
+.activity-work>.actions { flex:none; gap:calc(4 * var(--unidad)); margin:0; padding-right:calc(49 * var(--unidad)); padding-left:calc(4 * var(--unidad)); }
 .activity-work>.actions:has(> button):not(:has(> button:not(.hidden))) { display:none; }
 .activity-work>.actions:empty { display:none; }
 .activity-work>.actions button { min-height:calc(35 * var(--unidad)); padding:calc(4 * var(--unidad)) calc(9 * var(--unidad)); border-radius:calc(9 * var(--unidad)); font-size:calc(14 * var(--unidad)); }
@@ -117,6 +135,43 @@ body.guidance-off.voice-off .instruction { display:none; }
 .count-summary-row { gap:calc(3 * var(--unidad)); }
 .count-summary-value { min-width:calc(24 * var(--unidad)); font-size:calc(14 * var(--unidad)); padding:calc(2 * var(--unidad)); }
 .compacta .given-frac,.compacta .given-frac.big { font-size:calc(29 * var(--unidad)); }
+
+#app:not(.horizontal) :is(.two-pane,.a2-layout,.a4-grid) {
+  grid-template: "figura" minmax(0,1fr) "herramientas" auto / minmax(0,1fr);
+}
+#app:not(.horizontal) :is(.a2-layout,.a4-grid) {
+  grid-template-rows:auto minmax(0,1fr);
+  grid-template-areas:"herramientas" "figura";
+}
+#app:not(.horizontal) :is(.answer-zone,.a2-left,.a4-controls) {
+  grid-template-columns:minmax(0,auto) minmax(0,1fr);
+  align-items:center;
+  justify-items:center;
+  height:auto;
+}
+#app:not(.horizontal) .answer-zone { width:min(100%,calc(480 * var(--unidad))); justify-self:center; }
+#app:not(.horizontal) .drop-cell { width:calc(50 * var(--unidad)); height:calc(36 * var(--unidad)); font-size:calc(24 * var(--unidad)); }
+#app:not(.horizontal) .fraction-line { width:calc(54 * var(--unidad)); }
+#app:not(.horizontal) .fraction-reference { max-width:calc(135 * var(--unidad)); }
+#app:not(.horizontal) :is(.a2-left,.a4-controls) { width:min(100%,calc(530 * var(--unidad))); justify-self:center; }
+@media (max-width:355px) {
+  #app:not(.horizontal) .herramientas-fracciones { max-height:calc(160 * var(--unidad)); }
+}
+.compacta.horizontal .drop-cell { height:calc(35 * var(--unidad)); font-size:calc(24 * var(--unidad)); }
+.compacta.horizontal .num-chip { height:calc(32 * var(--unidad)); }
+.compacta.horizontal .a4-grid { grid-template-columns:minmax(0,1.25fr) minmax(0,1fr); }
+@media (max-height:360px) {
+  #app.horizontal :is(.two-pane,.a2-layout,.a4-grid) {
+    grid-template-columns:minmax(0,1fr) minmax(0,1.22fr);
+  }
+  #app.horizontal :is(.answer-zone,.a2-left,.a4-controls) {
+    grid-template-columns:auto minmax(0,1fr);
+    align-items:center;
+  }
+  #app.horizontal .drop-cell { width:calc(49 * var(--unidad)); }
+  #app.horizontal .fraction-line { width:calc(52 * var(--unidad)); }
+  #app.horizontal .fraction-reference { max-width:calc(77 * var(--unidad)); }
+}
 
 .marco-pareo-fracciones { flex:1; min-height:0; overflow:auto; scrollbar-width:thin; overscroll-behavior:contain; }
 .match-board {
@@ -245,7 +300,6 @@ body.guidance-off.voice-off .instruction { display:none; }
 #preferenciasFracciones { padding:9px; border-radius:12px; background:#f4f0ff; }
 #creditos-aplicaciones { margin:0; }
 .celebration-layer { zoom:var(--inverso-panel-compartido,1); }
-html[lang=en] .celebration-object::after { content:"Tap me!"; }
 
 .activity-card::before,.activity-card::after{display:none}
 .topbar,.con-panel-plegable:not(.panel-lateral-oculto) .herramientas-fracciones>.topbar{min-height:max-content;box-shadow:none;z-index:1}
@@ -254,7 +308,6 @@ html[lang=en] .celebration-object::after { content:"Tap me!"; }
 #app:not(.horizontal) .topbar{padding:calc(5 * var(--unidad));}
 #app:not(.horizontal) .brand{font-size:calc(15 * var(--unidad));}
 #app:not(.horizontal) .home-link-fracciones{width:calc(23 * var(--unidad));height:calc(23 * var(--unidad));font-size:calc(19 * var(--unidad));}
-#a1Feedback{margin-right:calc(83 * var(--unidad));}
 .instruction{border-width:1px;border-left:calc(5 * var(--unidad)) solid #7c59c5;box-shadow:none}
 
 .herramientas-fracciones{grid-auto-rows:max-content}

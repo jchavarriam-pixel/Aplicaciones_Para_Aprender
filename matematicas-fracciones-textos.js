@@ -16,7 +16,8 @@ Object.assign(window.TEXTOS_INGLES,{
 
 Object.assign(window.TEXTOS_INGLES,{
   'Aplicaciones':'Applications','Actividades':'Activities','Así jugamos':'How to play','Aplicar y volver':'Apply and return','Cerrar':'Close',
-  'Viaje espacial':'Space flight','Repetir vuelo':'Replay flight','Volver al pareo':'Return to matching',
+  'Viaje espacial':'Space flight','Repetir vuelo':'Replay flight','Volver al ejercicio':'Return to exercise',
+  'Fichas numéricas':'Number tiles','Arrastra una ficha o tócala y elige dónde colocarla.':'Drag a tile, or tap it and choose where it goes.',
   'Elige una actividad y practica con fracciones propias.':'Choose an activity and practise proper fractions.',
   'Cuenta las partes pintadas y las partes del entero.':'Count the coloured parts and all the parts of the whole.',
   'Elige el color indicado y toca las partes.':'Choose the indicated colour and tap the parts.',

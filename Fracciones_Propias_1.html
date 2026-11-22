@@ -266,76 +266,15 @@
 
   /* celebraciones */
   .celebration-layer{position:fixed;inset:0;pointer-events:none;z-index:2000;overflow:hidden}
-  .number-pop{
-    position:fixed;font-size:clamp(26px,4vw,48px);font-weight:950;animation:numberBurst 1.25s ease-out forwards
-  }
-  @keyframes numberBurst{
-    0%{transform:translate(-50%,-50%) scale(.3);opacity:0}
-    15%{opacity:1}
-    100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) rotate(var(--rot)) scale(1.15);opacity:0}
-  }
-  .spark{
-    position:fixed;width:11px;height:11px;border-radius:50%;animation:sparkFly 1.35s cubic-bezier(.16,.75,.3,1) forwards;
-    box-shadow:0 0 12px currentColor;will-change:transform,opacity;contain:layout paint
-  }
-  .explosion-flash{
-    position:fixed;z-index:2170;width:190px;height:190px;border-radius:50%;pointer-events:none;
-    background:radial-gradient(circle,#fff 0 8%,#fff2a8 18%,rgba(255,139,35,.82) 38%,rgba(232,70,89,.28) 58%,transparent 72%);
-    animation:explosionFlash .62s ease-out forwards;transform:translate(-50%,-50%);will-change:transform,opacity
-  }
-  .shockwave{
-    position:fixed;z-index:2165;width:70px;height:70px;border:8px solid #ffe77a;border-radius:50%;pointer-events:none;
-    box-shadow:0 0 18px #ff9f3f,inset 0 0 14px #fff;animation:shockwave 1s ease-out forwards;
-    transform:translate(-50%,-50%);will-change:transform,opacity
-  }
-  .shockwave.second{border-color:#83dfff;animation-delay:.12s;animation-duration:1.15s}
-  @keyframes explosionFlash{
-    0%{opacity:0;transform:translate(-50%,-50%) scale(.12)}
-    18%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}
-    100%{opacity:0;transform:translate(-50%,-50%) scale(1.8)}
-  }
-  @keyframes shockwave{
-    from{opacity:1;transform:translate(-50%,-50%) scale(.2)}
-    to{opacity:0;transform:translate(-50%,-50%) scale(4.8)}
-  }
   .success-sticker{
     position:fixed;z-index:2100;pointer-events:none;font-size:clamp(34px,6vw,68px);
     animation:stickerPop 1.15s ease-out forwards;transform:translate(-50%,-50%)
-  }
-  .celebration-object{
-    position:fixed;z-index:2200;width:118px;height:118px;border:4px solid rgba(255,255,255,.92);border-radius:50%;
-    background:radial-gradient(circle,#fff 0%,#e9f4ff 62%,#cfe5ff 100%);font-size:70px;line-height:1;
-    display:grid;place-items:center;pointer-events:auto;cursor:pointer;box-shadow:0 16px 38px rgba(38,77,121,.28);
-    animation:objectRoam var(--roam-duration,5s) ease-in-out infinite;will-change:transform
-  }
-  .celebration-object::after{content:'¡Tócame!';position:absolute;top:105px;white-space:nowrap;padding:5px 10px;border-radius:10px;background:#6044aa;color:white;font-size:14px;font-weight:950}
-  @keyframes objectRoam{
-    0%,100%{transform:translate(0,0) rotate(-5deg) scale(1)}
-    25%{transform:translate(var(--roam-x1),var(--roam-y1)) rotate(8deg) scale(1.07)}
-    50%{transform:translate(var(--roam-x2),var(--roam-y2)) rotate(-8deg) scale(.98)}
-    75%{transform:translate(var(--roam-x3),var(--roam-y3)) rotate(6deg) scale(1.05)}
-  }
-  .flying-object{
-    position:fixed;z-index:2180;font-size:54px;line-height:1;pointer-events:none;
-    animation:flyAround var(--duration) cubic-bezier(.32,.05,.58,1) forwards
-  }
-  @keyframes flyAround{
-    0%{transform:translate(-50%,-50%) rotate(0deg) scale(.65);opacity:0}
-    10%{opacity:1;transform:translate(-50%,-50%) rotate(90deg) scale(1)}
-    55%{transform:translate(calc(-50% + var(--dx-mid)),calc(-50% + var(--dy-mid))) rotate(540deg) scale(1.15)}
-    100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) rotate(1080deg) scale(.75);opacity:1}
   }
   @keyframes stickerPop{
     0%{opacity:0;transform:translate(-50%,-50%) scale(.2) rotate(-18deg)}
     28%{opacity:1;transform:translate(-50%,-65%) scale(1.25) rotate(8deg)}
     100%{opacity:0;transform:translate(-50%,-125%) scale(.85) rotate(-4deg)}
   }
-  @keyframes sparkFly{
-    0%{transform:translate(-50%,-50%) rotate(0deg) scale(.35);opacity:1}
-    22%{opacity:1;transform:translate(calc(-50% + var(--dx-quarter)),calc(-50% + var(--dy-quarter))) rotate(calc(var(--spark-rot) * .25)) scale(1.2)}
-    100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) rotate(var(--spark-rot)) scale(.08);opacity:0}
-  }
-
   /* configuración */
   dialog{
     width:min(760px,calc(100% - 24px));max-height:90dvh;border:0;border-radius:28px;padding:0;box-shadow:0 30px 80px rgba(20,45,70,.3)
@@ -520,14 +459,14 @@
 </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-fracciones.css?v=viaje-1"><script>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-fracciones.css?v=viaje-2"><script>
 window.IDIOMA_VOZ_APP='fracciones';
 try {
   const key='idiomaVoz.fracciones.v1';
   const old=JSON.parse(localStorage.getItem('fraccionesPropias1Settings')||'{}');
   if(!localStorage.getItem(key)&&old.voice)localStorage.setItem(key,JSON.stringify({idioma:'es',voces:{es:old.voice}}));
 } catch {}
-</script><script src="idioma-voz-textos.js"></script><script src="matematicas-fracciones-textos.js?v=viaje-1"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script><link rel="stylesheet" href="iconos/cabeceras.css"><script src="historial-modos.js"></script></head>
+</script><script src="idioma-voz-textos.js"></script><script src="matematicas-fracciones-textos.js?v=viaje-2"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script><link rel="stylesheet" href="iconos/cabeceras.css"><script src="historial-modos.js"></script></head>
 <body>
 <div id="app">
   <header class="topbar">
@@ -584,22 +523,24 @@ try {
               </div>
             </div>
             <div class="answer-zone">
-              <div class="arrow">➜</div>
-              <div class="fraction-build" id="a1Fraction">
-                <div class="drop-cell" data-slot="num" aria-label="Numerador"></div>
-                <div class="fraction-line"></div>
-                <div class="drop-cell" data-slot="den" aria-label="Denominador"></div>
+              <div class="a1-notation">
+                <div class="fraction-build" id="a1Fraction">
+                  <button type="button" class="drop-cell" data-slot="num" aria-label="Numerador"></button>
+                  <div class="fraction-line"></div>
+                  <button type="button" class="drop-cell" data-slot="den" aria-label="Denominador"></button>
+                </div>
+                <div class="fraction-name hidden" id="a1FractionName" aria-live="polite"></div>
               </div>
-              <div class="fraction-name hidden" id="a1FractionName" aria-live="polite"></div>
+              <div class="inventory-wrap">
+                <div class="inventory-title">Fichas numéricas</div>
+                <div class="number-inventory" id="a1Inventory"></div>
+              </div>
             </div>
-          </div>
-          <div class="inventory-wrap">
-            <div class="inventory-title">Arrastra los números</div>
-            <div class="number-inventory" id="a1Inventory"></div>
           </div>
           <div class="feedback" id="a1Feedback">Arrastra un número arriba y otro abajo.</div>
           <div class="actions">
             <button class="secondary-btn count-help-btn" id="a1CountHelp">🔢 Ver conteo</button>
+            <button class="celebrate-btn hidden" id="a1Celebrate">🚀 Repetir vuelo</button>
             <button class="primary-btn hidden" id="a1Next">Otro ejercicio ➜</button>
           </div>
         </div>
@@ -612,8 +553,10 @@ try {
         <div class="activity-work">
           <div class="a2-layout">
             <div class="a2-left">
-              <div class="given-frac" id="a2Fraction"><span class="top"></span><span class="bar"></span><span class="bottom"></span></div>
-              <div class="fraction-name" id="a2FractionName"></div>
+              <div class="fraction-reference">
+                <div class="given-frac" id="a2Fraction"><span class="top"></span><span class="bar"></span><span class="bottom"></span></div>
+                <div class="fraction-name" id="a2FractionName"></div>
+              </div>
               <div>
                 <div class="color-callout" id="a2ColorText"></div>
                 <div class="paint-palette" id="a2Palette"></div>
@@ -624,7 +567,7 @@ try {
           <div class="feedback" id="a2Feedback">Selecciona el color indicado y toca las partes que deseas colorear.</div>
           <div class="actions">
             <button class="primary-btn" id="a2Check">✓ Revisar</button>
-            <button class="celebrate-btn hidden" id="a2Celebrate">🎆 ¡Celebrar!</button>
+            <button class="celebrate-btn hidden" id="a2Celebrate">🚀 Repetir vuelo</button>
             <button class="primary-btn hidden" id="a2Next">Siguiente ➜</button>
           </div>
         </div>
@@ -665,9 +608,11 @@ try {
         <div class="instruction"><button class="speaker" data-speak aria-label="Leer instrucción">🔊</button><span id="a4Instruction">Construye la fracción.</span><button class="activity-settings-btn" data-settings-scope="a4">⚙️ Ajustar actividad</button></div>
         <div class="activity-work">
           <div class="a4-grid">
-            <div>
-              <div class="given-frac big" id="a4Fraction"><span class="top"></span><span class="bar"></span><span class="bottom"></span></div>
-              <div class="fraction-name" id="a4FractionName"></div>
+            <div class="a4-controls">
+              <div class="fraction-reference">
+                <div class="given-frac big" id="a4Fraction"><span class="top"></span><span class="bar"></span><span class="bottom"></span></div>
+                <div class="fraction-name" id="a4FractionName"></div>
+              </div>
               <div class="step-card">
                 <div class="step-label" id="a4StepLabel">Paso 1 de 2</div>
                 <div class="step-title" id="a4StepTitle">Divide el entero</div>
@@ -685,7 +630,7 @@ try {
           <div class="actions">
             <button class="primary-btn" id="a4ConfirmParts">Ya dividí</button>
             <button class="primary-btn hidden" id="a4Check">✓ Revisar</button>
-            <button class="celebrate-btn hidden" id="a4Celebrate">🎆 ¡Celebrar!</button>
+            <button class="celebrate-btn hidden" id="a4Celebrate">🚀 Repetir vuelo</button>
             <button class="primary-btn hidden" id="a4Next">Otra fracción ➜</button>
           </div>
         </div>
@@ -699,7 +644,7 @@ try {
 <dialog id="viajeFracciones" aria-labelledby="viajeTitulo">
   <header class="viaje-encabezado">
     <h2 id="viajeTitulo">Viaje espacial</h2>
-    <button type="button" id="viajeCerrar" aria-label="Volver al pareo" autofocus>✕</button>
+    <button type="button" id="viajeCerrar" aria-label="Volver al ejercicio" autofocus>✕</button>
   </header>
   <div class="viaje-escena">
     <canvas id="viajeLienzo" aria-hidden="true"></canvas>
@@ -794,7 +739,7 @@ try {
   </div>
 </dialog>
 
-<script src="fracciones-viaje.js?v=1"></script>
+<script src="fracciones-viaje.js?v=2"></script>
 <script>
 (()=>{
 'use strict';
@@ -1101,6 +1046,11 @@ function renderFractionFigure(container,d,n,color,opts={}){
     }
   });
   container.appendChild(svg);
+  if(['a1Figure','a2Figure','a4Figure'].includes(container.id)){
+    const {x,y,width,height}=svg.getBBox();
+    const margen=16;
+    if(width&&height)svg.setAttribute('viewBox',`${x-margen} ${y-margen} ${width+margen*2} ${height+margen*2}`);
+  }
   return {svg,segments,shape};
 }
 function setPainted(seg,on,color){
@@ -1195,141 +1145,23 @@ function successSound(){
   setTimeout(()=>tone(1047,.22,'sine',.045),325);
 }
 function softError(){tone(250,.12,'sine',.035)}
-const viajeFracciones=ViajeFracciones.instalar({tono:tone,llegada:successSound,siguiente:startA3});
+const viajeFracciones=ViajeFracciones.instalar({
+  tono:tone,
+  llegada:successSound,
+  etiquetaSiguiente:()=>currentActivity==='a3'?'Nuevo pareo ➜':'Otro ejercicio ➜',
+  siguiente:()=>{
+    startActivity(currentActivity);
+    const entrada={a1:'#a1Inventory button',a2:'#a2Palette button',a3:'#a3Check',a4:'#a4PartsChoices button'};
+    $(entrada[currentActivity])?.focus({preventScroll:true});
+  }
+});
 
 /* celebrations */
-function numberExplosion(anchor){
-  const layer=$('#celebrationLayer'),r=anchor.getBoundingClientRect();
-  const x=r.left+r.width/2,y=r.top+r.height/2;
-  const colors=['#e85d75','#3b82f6','#22a06b','#f59e0b','#9a78d0','#45b8bd'];
-  for(let i=0;i<38;i++){
-    const el=document.createElement('div');el.className='number-pop';el.textContent=Math.floor(Math.random()*10);
-    el.style.left=x+'px';el.style.top=y+'px';el.style.color=rand(colors);
-    const a=Math.random()*Math.PI*2,dist=120+Math.random()*260;
-    el.style.setProperty('--dx',Math.cos(a)*dist+'px');el.style.setProperty('--dy',Math.sin(a)*dist+'px');
-    el.style.setProperty('--rot',(-180+Math.random()*360)+'deg');
-    layer.appendChild(el);setTimeout(()=>el.remove(),1400);
-  }
-}
-function fireworks(){
-  const layer=$('#celebrationLayer'),colors=['#e85d75','#3b82f6','#22a06b','#f59e0b','#9a78d0','#45b8bd','#ffd54a'];
-  for(let b=0;b<6;b++){
-    setTimeout(()=>{
-      const x=innerWidth*(.14+Math.random()*.72),y=innerHeight*(.14+Math.random()*.55);
-      for(let i=0;i<24;i++){
-        const el=document.createElement('div');el.className='spark';el.style.left=x+'px';el.style.top=y+'px';el.style.background=rand(colors);
-        const a=i/24*Math.PI*2+Math.random()*.1,dist=70+Math.random()*140;
-        el.style.setProperty('--dx',Math.cos(a)*dist+'px');el.style.setProperty('--dy',Math.sin(a)*dist+'px');
-        layer.appendChild(el);setTimeout(()=>el.remove(),1400);
-      }
-      tone(360+Math.random()*240,.12,'triangle',.04);
-    },b*170);
-  }
-}
-const CELEBRATION_OBJECTS=['🚀','✈️','🎈','🛸','🚁','🪁','🦋','🌟'];
-const EXPLOSION_THEMES=[
-  {name:'solar',colors:['#ff3b30','#ff9500','#ffd60a','#fff4ad'],flash:['#fff','#ffe56b','#ff6b22'],waves:['#ffe66d','#ff5d3a'],pattern:'burst',sound:'boom'},
-  {name:'galaxia',colors:['#7c3aed','#c026d3','#38bdf8','#f0abfc'],flash:['#fff','#d8b4fe','#2563eb'],waves:['#d8b4fe','#38bdf8'],pattern:'spiral',sound:'space'},
-  {name:'confeti',colors:['#ef476f','#ffd166','#06d6a0','#118ab2','#ffffff'],flash:['#fff','#a7f3d0','#06b6d4'],waves:['#34d399','#f472b6'],pattern:'confetti',sound:'pop'},
-  {name:'eléctrica',colors:['#ffffff','#67e8f9','#3b82f6','#a5f3fc'],flash:['#fff','#67e8f9','#2563eb'],waves:['#e0f2fe','#60a5fa'],pattern:'ring',sound:'electric'},
-  {name:'mágica',colors:['#f9a8d4','#c4b5fd','#fde68a','#ffffff'],flash:['#fff','#f5d0fe','#ec4899'],waves:['#f0abfc','#fde047'],pattern:'flower',sound:'magic'},
-  {name:'aurora',colors:['#2dd4bf','#818cf8','#e879f9','#ecfeff'],flash:['#fff','#99f6e4','#8b5cf6'],waves:['#5eead4','#c084fc'],pattern:'curtain',sound:'aurora'},
-  {name:'cascada',colors:['#38bdf8','#22d3ee','#fef08a','#ffffff'],flash:['#fff','#bae6fd','#0284c7'],waves:['#7dd3fc','#fde047'],pattern:'fountain',sound:'water'},
-  {name:'estelar',colors:['#fef3c7','#facc15','#fb7185','#ffffff'],flash:['#fff','#fef08a','#e11d48'],waves:['#facc15','#fb7185'],pattern:'star',sound:'star'},
-  {name:'selva',colors:['#4ade80','#facc15','#fb923c','#14b8a6'],flash:['#fff','#bbf7d0','#16a34a'],waves:['#86efac','#fb923c'],pattern:'double',sound:'jungle'}
-];
-let lastExplosionTheme=-1;
-function nextExplosionTheme(){
-  const choices=EXPLOSION_THEMES.map((_,i)=>i).filter(i=>i!==lastExplosionTheme);
-  lastExplosionTheme=rand(choices);return EXPLOSION_THEMES[lastExplosionTheme];
-}
-function explosionSound(theme){
-  const sequences={
-    boom:[[145,.22,'sawtooth',.11,0],[88,.32,'triangle',.095,65],[820,.13,'square',.065,155],[1160,.06,'triangle',.045,245]],
-    space:[[260,.28,'sine',.08,0],[520,.2,'triangle',.07,80],[1040,.18,'sine',.055,180],[1560,.09,'sine',.04,330]],
-    pop:[[420,.08,'square',.075,0],[690,.07,'triangle',.065,90],[920,.06,'square',.055,175],[1250,.07,'triangle',.045,260]],
-    electric:[[180,.12,'sawtooth',.08,0],[1380,.055,'square',.06,65],[1050,.06,'square',.055,135],[1680,.05,'triangle',.045,215]],
-    magic:[[520,.16,'sine',.065,0],[780,.14,'sine',.06,90],[1040,.13,'triangle',.055,180],[1390,.16,'sine',.045,285]],
-    aurora:[[310,.2,'sine',.06,0],[620,.22,'sine',.055,75],[930,.2,'triangle',.05,170],[1240,.18,'sine',.04,285]],
-    water:[[220,.1,'sine',.07,0],[740,.07,'sine',.05,85],[560,.08,'triangle',.05,155],[980,.09,'sine',.04,245]],
-    star:[[740,.1,'triangle',.065,0],[1110,.08,'sine',.055,80],[1480,.07,'triangle',.05,155],[1850,.07,'sine',.04,235]],
-    jungle:[[170,.16,'triangle',.085,0],[350,.1,'square',.06,95],[260,.11,'triangle',.065,185],[620,.08,'sine',.045,280]]
-  };
-  sequences[theme.sound].forEach(([frequency,duration,type,volume,delay])=>setTimeout(()=>tone(frequency,duration,type,volume),delay));
-}
-function explodeAt(x,y,emoji,theme){
-  const layer=$('#celebrationLayer'),compact=innerWidth<700;
-  const particleCount=compact?26:34,fragmentCount=compact?4:5,batch=document.createDocumentFragment(),effects=[];
-  const addEffect=el=>{effects.push(el);batch.appendChild(el)};
-  const flash=document.createElement('div');flash.className='explosion-flash';flash.style.left=x+'px';flash.style.top=y+'px';
-  flash.style.background=`radial-gradient(circle,${theme.flash[0]} 0 8%,${theme.flash[1]} 18%,${theme.flash[2]}cc 40%,transparent 72%)`;addEffect(flash);
-  for(let i=0;i<2;i++){
-    const wave=document.createElement('div');wave.className='shockwave'+(i?' second':'');wave.style.left=x+'px';wave.style.top=y+'px';wave.style.borderColor=theme.waves[i];wave.style.boxShadow=`0 0 20px ${theme.waves[i]},inset 0 0 14px #fff`;addEffect(wave);
-  }
-  for(let i=0;i<particleCount;i++){
-    const spark=document.createElement('div'),color=rand(theme.colors),size=7+Math.random()*8;
-    spark.className='spark';spark.style.left=x+'px';spark.style.top=y+'px';spark.style.background=color;spark.style.color=color;
-    spark.style.width=((theme.pattern==='confetti'||i%5===0)?size*1.8:size)+'px';spark.style.height=size+'px';spark.style.borderRadius=theme.pattern==='confetti'?'2px':'50%';
-    let angle=i/particleCount*Math.PI*2+Math.random()*.18,distance=90+Math.random()*(compact?150:210);
-    if(theme.pattern==='spiral')angle+=i*.19;
-    if(theme.pattern==='ring')distance=(compact?155:205)+Math.random()*35;
-    if(theme.pattern==='flower'){angle=Math.floor(i/5)*(Math.PI*2/Math.ceil(particleCount/5))+(i%5)*.055;distance=75+(i%5)*32+Math.random()*22}
-    if(theme.pattern==='confetti')distance=70+Math.random()*(compact?135:185);
-    if(theme.pattern==='curtain'){angle=Math.PI*.15+Math.random()*Math.PI*.7;distance=95+Math.random()*(compact?140:190)}
-    if(theme.pattern==='fountain'){angle=-Math.PI*.85+Math.random()*Math.PI*.7;distance=90+Math.random()*(compact?150:205)}
-    if(theme.pattern==='star'){angle=(i%5)*Math.PI*2/5-Math.PI/2+(Math.random()-.5)*.09;distance=75+Math.random()*(compact?165:220)}
-    if(theme.pattern==='double')distance=(i%2?95:compact?190:245)+Math.random()*28;
-    const dx=Math.cos(angle)*distance,dy=Math.sin(angle)*distance+(theme.pattern==='fountain'?70:0);
-    spark.style.setProperty('--dx',dx+'px');spark.style.setProperty('--dy',dy+'px');
-    spark.style.setProperty('--dx-quarter',dx*.23+'px');spark.style.setProperty('--dy-quarter',dy*.23+'px');
-    spark.style.setProperty('--spark-rot',(360+Math.random()*720)+'deg');addEffect(spark);
-  }
-  for(let i=0;i<fragmentCount;i++){
-    const fragment=document.createElement('div');fragment.className='number-pop';fragment.textContent=emoji;fragment.style.left=x+'px';fragment.style.top=y+'px';fragment.style.fontSize=(32+Math.random()*9)+'px';
-    const angle=Math.random()*Math.PI*2,distance=70+Math.random()*(compact?105:145);
-    fragment.style.setProperty('--dx',Math.cos(angle)*distance+'px');fragment.style.setProperty('--dy',Math.sin(angle)*distance+'px');fragment.style.setProperty('--rot',(-300+Math.random()*600)+'deg');addEffect(fragment);
-  }
-  layer.appendChild(batch);
-  setTimeout(()=>effects.forEach(el=>el.remove()),1500);
-  explosionSound(theme);
-}
-function launchObjectCopies(emoji,x,y,theme){
-  const layer=$('#celebrationLayer'),count=3+Math.floor(Math.random()*2);
-  for(let i=0;i<count;i++){
-    const flyer=document.createElement('div');flyer.className='flying-object';flyer.textContent=emoji;flyer.style.left=x+'px';flyer.style.top=y+'px';
-    const targetX=innerWidth*(.1+Math.random()*.8),targetY=innerHeight*(.15+Math.random()*.68);
-    const dx=targetX-x,dy=targetY-y,duration=2550+i*170+Math.random()*350;
-    flyer.style.setProperty('--dx',dx+'px');flyer.style.setProperty('--dy',dy+'px');
-    flyer.style.setProperty('--dx-mid',(dx*.45+(Math.random()-.5)*innerWidth*.42)+'px');
-    flyer.style.setProperty('--dy-mid',(dy*.45+(Math.random()-.5)*innerHeight*.42)+'px');
-    flyer.style.setProperty('--duration',duration+'ms');layer.appendChild(flyer);
-    setTimeout(()=>{flyer.remove();explodeAt(targetX,targetY,emoji,theme)},duration);
-  }
-  const flightBase={boom:330,space:460,pop:520,electric:610,magic:570,aurora:500,water:430,star:680,jungle:290}[theme.sound];
-  [0,430,860,1290,1720,2150].forEach((delay,index)=>setTimeout(()=>tone(flightBase+index*72,.09,index%2?'sine':'triangle',.045),delay));
-}
-function spawnCelebrationObjects(){
-  const layer=$('#celebrationLayer');
-  $$('.celebration-object,.flying-object',layer).forEach(element=>element.remove());
-  const objects=shuffle(CELEBRATION_OBJECTS).slice(0,2),theme=nextExplosionTheme();
-  objects.forEach((emoji,index)=>{
-    const button=document.createElement('button');button.className='celebration-object';button.textContent=emoji;button.setAttribute('aria-label',`Tocar ${emoji} para celebrar`);
-    button.style.left=`calc(${index===0?24:76}% - 59px)`;button.style.top=`calc(${index===0?38:48}% - 59px)`;
-    const direction=index===0?1:-1,roamX=Math.min(innerWidth*.14,145),roamY=Math.min(innerHeight*.12,95);
-    button.style.setProperty('--roam-x1',direction*roamX+'px');button.style.setProperty('--roam-y1',-roamY*.55+'px');
-    button.style.setProperty('--roam-x2',direction*roamX*.35+'px');button.style.setProperty('--roam-y2',roamY+'px');
-    button.style.setProperty('--roam-x3',-direction*roamX*.55+'px');button.style.setProperty('--roam-y3',roamY*.18+'px');
-    button.style.setProperty('--roam-duration',(4.6+Math.random()*1.8)+'s');
-    button.addEventListener('click',()=>{const r=button.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2;button.remove();launchObjectCopies(emoji,x,y,theme)},{once:true});
-    layer.appendChild(button);setTimeout(()=>button.remove(),12000);
-  });
-}
 function celebrateStep(anchor){
   successSound();const layer=$('#celebrationLayer'),r=anchor.getBoundingClientRect();
   const sticker=document.createElement('div');sticker.className='success-sticker';sticker.textContent='⭐';sticker.style.left=(r.left+r.width/2)+'px';sticker.style.top=Math.max(95,r.top+r.height/2)+'px';
   layer.appendChild(sticker);setTimeout(()=>sticker.remove(),1250);
 }
-function celebrateCorrect(){successSound();spawnCelebrationObjects()}
 
 /* Navegación */
 $('#studentNameInput').addEventListener('input',e=>setStudentName(e.target.value,true));
@@ -1357,15 +1189,16 @@ let a1ReviewTimer;
 function startA1(){
   clearTimeout(a1ReviewTimer);
   a1CountHelpRun++;clearRegionCountLabels();resetA1CountSummary();
-  const s=states.a1; s.num=null;s.den=null;s.attempts=0;s.fraction=randomFraction();
+  const s=states.a1; s.num=null;s.den=null;s.selected=null;s.attempts=0;s.done=false;s.fraction=randomFraction();
   const color=rand(COLORS).hex;
   const indices=shuffle([...Array(s.fraction.d).keys()]).slice(0,s.fraction.n);
   renderFractionFigure($('#a1Figure'),s.fraction.d,s.fraction.n,color,{coloredIndices:indices});
   $$('.drop-cell',$('#a1Fraction')).forEach(c=>{c.textContent='';c.classList.remove('filled')});
   $('#a1FractionName').textContent='';$('#a1FractionName').classList.add('hidden');
   $('#a1Next').classList.add('hidden');
+  $('#a1Celebrate').classList.add('hidden');
   $('#a1CountHelp').classList.toggle('hidden',!settings.a1CountHelp||!guidanceIsEnabled());$('#a1CountHelp').disabled=false;
-  feedback('a1Feedback','Arrastra un número arriba y otro abajo.');
+  feedback('a1Feedback','Arrastra una ficha o tócala y elige dónde colocarla.');
   setInstruction('Observa la figura. Forma la fracción que representa la parte coloreada.','a1Instruction');
   buildNumberInventory();
 }
@@ -1375,17 +1208,24 @@ function buildNumberInventory(){
   for(let i=1;i<=max;i++){
     const chip=document.createElement('button');chip.className='num-chip';chip.textContent=i;chip.dataset.value=i;
     chip.setAttribute('aria-label',`Número ${i}`);
+    chip.setAttribute('aria-pressed','false');
     chip.addEventListener('pointerdown',startNumberDrag);
+    chip.addEventListener('click',e=>{if(e.detail===0)selectNumber(i)});
     inv.appendChild(chip);
   }
 }
 let numDrag=null;
+function selectNumber(value){
+  if(states.a1.done)return;
+  states.a1.selected=value;
+  $$('#a1Inventory .num-chip').forEach(chip=>chip.setAttribute('aria-pressed',String(Number(chip.dataset.value)===value)));
+}
 function startNumberDrag(e){
-  if(numDrag||e.button!==0)return;
+  if(numDrag||states.a1.done||e.button!==0)return;
   e.preventDefault();
   const value=Number(e.currentTarget.dataset.value);
   const ghost=document.createElement("div");ghost.className="drag-ghost";ghost.textContent=value;document.body.appendChild(ghost);
-  numDrag={value,ghost,pointerId:e.pointerId};
+  numDrag={value,ghost,pointerId:e.pointerId,x:e.clientX,y:e.clientY};
   e.currentTarget.setPointerCapture(e.pointerId);
   moveNumberDrag(e);
   window.addEventListener("pointermove",moveNumberDrag,{passive:false});
@@ -1400,13 +1240,15 @@ function moveNumberDrag(e){
 }
 function endNumberDrag(e){
   if(numDrag?.pointerId!==e.pointerId)return;
-  const value=numDrag.value;
+  const {value,x,y}=numDrag;
   cancelActiveDrags();
   const cell=document.elementFromPoint(e.clientX,e.clientY)?.closest(".drop-cell");
   if(cell)placeNumber(cell,value);
+  else if(Math.hypot(e.clientX-x,e.clientY-y)<9)selectNumber(value);
 }
 function placeNumber(cell,value){
-  if(!cell||currentActivity!=='a1')return;
+  if(!cell||currentActivity!=='a1'||states.a1.done)return;
+  selectNumber(null);
   cell.textContent=value;cell.classList.add('filled');
   states.a1[cell.dataset.slot]=value;
   tone(500,.05);
@@ -1415,13 +1257,15 @@ function placeNumber(cell,value){
 }
 async function checkA1(){
   const s=states.a1,f=s.fraction;
-  if(currentActivity!=='a1'||s.num===null||s.den===null)return;
+  if(currentActivity!=='a1'||s.done||s.num===null||s.den===null)return;
   if(s.num===f.n&&s.den===f.d){
     const name=fractionText(f.n,f.d);
     $('#a1FractionName').textContent=name;$('#a1FractionName').classList.remove('hidden');
     giveReviewFeedback('a1Feedback',`${f.n} de las ${f.d} regiones están pintadas. La fracción es ${name}.`,true);
     a1CountHelpRun++;clearRegionCountLabels();$('#a1CountHelp').classList.add('hidden');
-    celebrateCorrect();$('#a1Next').classList.remove('hidden');
+    s.done=true;
+    $('#a1Next').classList.remove('hidden');$('#a1Celebrate').classList.remove('hidden');
+    viajeFracciones.abrir();
     return;
   }
   s.attempts++;softError();
@@ -1465,9 +1309,15 @@ function clearA1Slot(slot){
   states.a1[slot]=null;
   const c=$(`.drop-cell[data-slot="${slot}"]`,$('#a1Fraction'));c.textContent='';c.classList.remove('filled');
 }
-$$('.drop-cell',$('#a1Fraction')).forEach(c=>c.addEventListener('click',()=>clearA1Slot(c.dataset.slot)));
+$$('.drop-cell',$('#a1Fraction')).forEach(c=>c.addEventListener('click',()=>{
+  const s=states.a1;
+  if(s.done)return;
+  if(s.selected!==null)placeNumber(c,s.selected);
+  else clearA1Slot(c.dataset.slot);
+}));
 $('#a1CountHelp').addEventListener('click',showA1CountHelp);
 $('#a1Next').addEventListener('click',startA1);
+$('#a1Celebrate').addEventListener('click',viajeFracciones.abrir);
 
 /* Actividad 2 */
 function startA2(){
@@ -1519,7 +1369,8 @@ $('#a2Check').addEventListener('click',()=>{
   const s=states.a2;
   if(s.painted.size===s.fraction.n){
     s.done=true;giveReviewFeedback('a2Feedback',`Coloreaste ${s.fraction.n} de ${s.fraction.d} regiones y representaste ${fractionText(s.fraction.n,s.fraction.d)}.`,true);
-    celebrateCorrect();$('#a2Check').classList.add('hidden');$('#a2Celebrate').classList.remove('hidden');$('#a2Next').classList.remove('hidden');
+    $('#a2Check').classList.add('hidden');$('#a2Celebrate').classList.remove('hidden');$('#a2Next').classList.remove('hidden');
+    viajeFracciones.abrir();
   }else{
     s.attempts++;softError();
     if(s.painted.size<s.fraction.n){
@@ -1530,7 +1381,7 @@ $('#a2Check').addEventListener('click',()=>{
     $('#a2Fraction').classList.add('attention');setTimeout(()=>$('#a2Fraction').classList.remove('attention'),1400);
   }
 });
-$('#a2Celebrate').addEventListener('click',fireworks);
+$('#a2Celebrate').addEventListener('click',viajeFracciones.abrir);
 $('#a2Next').addEventListener('click',startA2);
 
 /* Actividad 3 */
@@ -1838,14 +1689,15 @@ $('#a4Check').addEventListener('click',()=>{
   const s=states.a4;
   if(s.painted.size===s.fraction.n){
     s.done=true;giveReviewFeedback('a4Feedback',`Construiste correctamente la fracción que se llama ${fractionText(s.fraction.n,s.fraction.d)}.`,true);
-    celebrateCorrect();$('#a4Check').classList.add('hidden');$('#a4Celebrate').classList.remove('hidden');$('#a4Next').classList.remove('hidden');
+    $('#a4Check').classList.add('hidden');$('#a4Celebrate').classList.remove('hidden');$('#a4Next').classList.remove('hidden');
+    viajeFracciones.abrir();
   }else{
     softError();
     const msg=s.painted.size<s.fraction.n?'Faltan partes por colorear. Mira el número de arriba.':'Hay partes de más. Mira el número de arriba y cuenta de nuevo.';
     giveReviewFeedback('a4Feedback',msg);$('#a4Fraction').classList.add('attention');setTimeout(()=>$('#a4Fraction').classList.remove('attention'),1400);
   }
 });
-$('#a4Celebrate').addEventListener('click',fireworks);
+$('#a4Celebrate').addEventListener('click',viajeFracciones.abrir);
 $('#a4Next').addEventListener('click',startA4);
 
 function startActivity(id){
