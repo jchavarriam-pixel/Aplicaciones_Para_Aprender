@@ -115,17 +115,20 @@
       [17,647,276,205],[309,647,276,206],[600,647,281,206]
     ],
     recreopiezas: [[25,28,271,261],[305,46,290,231],[605,76,286,206],[7,341,289,224]],
+    relieve: [[9,61,282,179],[309,71,282,158],[609,104,282,92]],
     extra: [[14,17,277,268],[326,7,239,278],[606,10,282,275],[9,291,288,282],[321,335,271,219],
       [605,291,287,285],[8,588,289,296],[310,590,279,276],[604,626,289,213]]
   };
   const ids = {
     coches: Object.keys(alturasVehiculos).flatMap(tipo => coloresVehiculo.map(color => tipo + '-' + color)),
     recreopiezas: ['tobogan','columpios','trampolin','bicicleta'],
+    relieve: ['volcan','montana','cerro'],
     extra: ['perro','gato','oveja','vaca','pajaro','caballo','escuela','sol','nube']
   };
   const alturas = {
     coches: Object.values(alturasVehiculos).flatMap(alto => coloresVehiculo.map(() => alto)),
     recreopiezas: [107,110,62,63],
+    relieve: [224,245,101],
     extra: [47,35,61,88,33,105,218,63,59]
   };
   const atlasPieza = {};
@@ -204,7 +207,7 @@
     for (const tipo of ['rio','parque','playa','granja','campamento','barrio','terminal','recreo','lago']) {
       const imagen = new Image();
       imagen.onload = () => { fondos.set(tipo, imagen); alCargar(tipo); };
-      imagen.src = `paisajes/${tipo}.webp`;
+      imagen.src = `paisajes/${tipo}.webp${tipo === 'parque' ? '?v=despejado' : ''}`;
     }
     for (const grupo of ['objetos', ...Object.keys(grupos), ...Object.keys(vistasVehiculos), ...Object.keys(piezasIndividuales)]) {
       const imagen = new Image();

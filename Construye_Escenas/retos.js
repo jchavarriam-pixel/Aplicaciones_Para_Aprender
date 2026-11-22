@@ -61,13 +61,14 @@
     ]}
   ];
 
-  const femeninos = new Set('fuente nina pelota flores casa sombrilla tienda fogata bicicleta cerca oveja vaca escuela nube'.split(' '));
+  const femeninos = new Set('fuente nina pelota flores casa sombrilla tienda fogata bicicleta cerca oveja vaca escuela nube montana'.split(' '));
   const variantes = [
     ['tobogan', 'Tobogán', 'Slide'], ['columpios', 'Columpios', 'Swing set'], ['trampolin', 'Trampolín', 'Trampoline'],
     ['bicicleta', 'Bicicleta', 'Bicycle'], ['casa-abierta', 'Casa abierta', 'Open house'], ['cerca', 'Cerca', 'Fence'],
     ['perro', 'Perro', 'Dog'], ['gato', 'Gato', 'Cat'], ['oveja', 'Oveja', 'Sheep'], ['vaca', 'Vaca', 'Cow'],
     ['pajaro', 'Pájaro', 'Bird'], ['caballo', 'Caballo', 'Horse'], ['escuela', 'Escuela', 'School'],
-    ['sol', 'Sol', 'Sun'], ['nube', 'Nube', 'Cloud']
+    ['sol', 'Sol', 'Sun'], ['nube', 'Nube', 'Cloud'],
+    ['volcan', 'Volcán', 'Volcano'], ['montana', 'Montaña', 'Mountain'], ['cerro', 'Cerro', 'Hill']
   ];
   const vehiculos = [];
   for (const [tipo, es, en] of [['carro','Carro','car'], ['camion','Camión','truck'], ['autobus','Autobús','bus']]) {
@@ -102,11 +103,13 @@
     rio: par('en el río', 'in the river'),
     playa: par('en el mar', 'in the sea'),
     lago: par('en el lago', 'in the lake'),
-    cielo: par('en el cielo', 'in the sky')
+    cielo: par('en el cielo', 'in the sky'),
+    relieve: par('al fondo del paisaje', 'at the back of the landscape')
   };
   const juegos = 'tobogan columpios trampolin';
   const animales = 'perro gato conejo oveja vaca caballo';
   const clima = 'sol nube pajaro';
+  const relieve = new Set(['volcan','montana','cerro']);
   const basicos = 'nino nina banco arbol flores pelota bicicleta';
   const lista = (...grupos) => [...new Set(grupos.flatMap(grupo => grupo.split(' ')))];
   const paisajes = [
@@ -117,9 +120,9 @@
     {nombre: par('Un día de playa', 'A day at the beach'), terreno: 'playa', suelo:'arena',
       objetos: lista('sombrilla barco castillo pato nino nina pelota banco bicicleta casa-abierta cerca perro gato arbol', clima)},
     {nombre: par('La casa de la granja', 'The farmhouse'), terreno: 'granja', suelo:'cesped',
-      objetos: lista('casa-abierta vaca oveja caballo cerca casa arbol nino nina', basicos, animales, clima)},
+      objetos: lista('casa-abierta vaca oveja caballo cerca casa arbol nino nina cerro', basicos, animales, clima)},
     {nombre: par('Campamento entre montañas', 'Mountain campsite'), terreno: 'campamento', suelo:'cesped',
-      objetos: lista('arbol tienda fogata nino nina cerca casa-abierta', basicos, animales, clima)},
+      objetos: lista('arbol tienda fogata nino nina cerca casa-abierta', [...relieve].join(' '), basicos, animales, clima)},
     {nombre: par('El barrio', 'The neighbourhood'), terreno: 'barrio', suelo:'cesped',
       objetos: lista('casa-abierta bicicleta nino nina casa escuela fuente cerca', basicos, juegos, animales, clima, vehiculos.join(' '))},
     {nombre: par('La terminal', 'The transport terminal'), terreno: 'terminal', suelo:'pavimento',
@@ -147,14 +150,27 @@
     return a.id === 'casa-abierta' && EscenarioConstruccion.dentroCasa(x,z,a);
   }
   const dist = (x,z,a) => Math.hypot(x - a.x, (z - a.z) * .83);
-  const sueloPieza = (id, reto) => clima.split(' ').includes(id) ? 'cielo' :
+  const sueloPieza = (id, reto) => relieve.has(id) ? 'relieve' : clima.split(' ').includes(id) ? 'cielo' :
     ['barco','pato'].includes(id) ? reto.terreno :
     vehiculos.includes(id) && reto.terreno === 'barrio' ? 'calle' : reto.suelo;
 
+  const senderoParque = [
+    [.08,701,724],[.12,661,702],[.16,675,729],[.20,694,760],[.25,709,760],[.35,716,760],
+    [.45,699,760],[.55,667,760],[.65,636,760],[.75,617,760],[.85,606,760],[.95,602,760]
+  ];
+  function cespedParque(x, z) {
+    const siguiente = Math.max(1, senderoParque.findIndex(([fondo]) => fondo >= z));
+    const [a, izqA, derA] = senderoParque[siguiente - 1];
+    const [b, izqB, derB] = senderoParque[siguiente];
+    const avance = (z - a) / (b - a);
+    const [px] = EscenarioConstruccion.proyectar(x,z);
+    return px < izqA + (izqB - izqA) * avance || px > derA + (derB - derA) * avance;
+  }
   function superficie(x,z,suelo,reto,id) {
     if (x < .055 || x > .945) return false;
     if (suelo === 'cielo') return z >= -.54 && z <= -.36;
     if (z < .08 || z > (reto.terreno === 'barrio' ? .985 : .935)) return false;
+    if (suelo === 'relieve') return z <= .30;
     if (orillas[suelo]) {
       const margen = id === 'barco' ? EscenarioConstruccion.semiAnchoEnEscena(id,x,z,reto.terreno) : 0;
       return z >= .25 && distanciaOrilla(reto.terreno,x,z) <= -margen;
@@ -163,10 +179,7 @@
     if (reto.terreno === 'barrio') {
       return suelo === 'calle' ? z >= .465 && z <= .765 : z >= .94 || z <= .403;
     }
-    if (reto.terreno === 'parque') {
-      const bordeSendero = .967 - .169 * Math.min(1, Math.max(0, (z - .29) / .68));
-      return EscenarioConstruccion.proyectar(x,z)[0] / EscenarioConstruccion.ancho < bordeSendero;
-    }
+    if (reto.terreno === 'parque') return cespedParque(x,z);
     return true;
   }
 
@@ -260,12 +273,13 @@
       verbos: barajar(verbos),
       tipos: barajar(['relacion','superficie','grupo','relacion','orilla','relacion']),
       direcciones: barajar(Object.keys(relacion)),
-      turnoBarco: ['rio','lago'].includes(reto.terreno) ? 1 + Math.floor(Math.random() * 2) : Infinity
+      turnoBarco: ['rio','lago'].includes(reto.terreno) ? 1 + Math.floor(Math.random() * 2) : Infinity,
+      turnoRelieve: reto.terreno === 'campamento' ? 1 + Math.floor(Math.random() * 2) : Infinity
     };
   }
 
   function siguientePaisaje(reto, colocadas, historial, ronda) {
-    const {orden,tipos,direcciones,turnoBarco} = ronda;
+    const {orden,tipos,direcciones,turnoBarco,turnoRelieve} = ronda;
     const indice = historial.length;
     const verbo = ronda.verbos[indice % ronda.verbos.length];
     const usados = new Set(historial.map(paso => paso.id));
@@ -282,6 +296,12 @@
       const paso = mejor('barco',null,tipos[(indice - 1) % tipos.length] === 'orilla' ? 'orilla' : null) ||
         mejor('barco');
       if (paso) return paso;
+    }
+    if (indice >= turnoRelieve && !historial.some(paso => relieve.has(paso.id))) {
+      for (const id of candidatos.filter(id => relieve.has(id))) {
+        const paso = mejor(id);
+        if (paso) return paso;
+      }
     }
     if (indice === 0) return mejor(orden[0]) || candidatos.map(id => mejor(id)).find(Boolean);
 
