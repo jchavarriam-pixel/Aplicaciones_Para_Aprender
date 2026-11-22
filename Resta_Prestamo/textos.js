@@ -1,0 +1,22 @@
+Object.assign(window.TEXTOS_INGLES ||= {}, {
+  'Resta con préstamo de abajo':'Subtraction: borrow from below',
+  'Nombre del niño':'Child’s name',
+  'Ej.: Gabriel':'E.g. Gabriel',
+  'Así jugamos':'How to play',
+  'Empieza por las unidades.':'Start with the ones.',
+  'Empieza por las unidades. Pide prestado si arriba hay menos.':'Start with the ones. Borrow if the top number is smaller.',
+  'Si arriba hay menos, suma 10 arriba en esta columna y 1 abajo en la siguiente.':'If the top number is smaller, add 10 at the top of this column and 1 at the bottom of the next.',
+  'Escribe el resultado de cada columna.':'Enter the result for each column.',
+  'Ejemplo 45 − 28':'Example 45 − 28',
+  'Escuchar instrucción':'Listen to the instruction',
+  'Ejercicio de resta':'Subtraction exercise',
+  'Resta en columnas':'Column subtraction',
+  'Pedir prestado':'Borrow',
+  'Teclado numérico':'Number keypad',
+  'Cifras del número de arriba':'Digits in the top number',
+  'Practicar solo restas con préstamo':'Practise only problems that require borrowing',
+  'Mostrar la guía de cada columna':'Show guidance for each column',
+  'Animar el préstamo':'Animate borrowing',
+  'Leer las instrucciones automáticamente':'Read the instructions aloud automatically',
+  'Aplicar y cerrar':'Apply and close'
+});

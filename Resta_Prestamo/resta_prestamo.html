@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+  <title>Resta con préstamo de abajo</title>
+  <link rel="stylesheet" href="../creditos.css">
+  <link rel="stylesheet" href="../idioma-voz.css">
+  <link rel="stylesheet" href="../pantalla-completa.css">
+  <link rel="stylesheet" href="../panel-plegable.css">
+  <link rel="stylesheet" href="resta.css">
+</head>
+<body>
+  <main id="appRestaPrestamo">
+    <aside class="herramientas-resta">
+      <header class="portada">
+        <a id="inicio" href="../index.html" aria-label="Aplicaciones" title="Aplicaciones">⌂</a>
+        <h1>Resta con préstamo de abajo</h1>
+        <label for="nombre">Nombre del niño</label>
+        <input id="nombre" autocomplete="given-name" maxlength="40" placeholder="Ej.: Gabriel">
+      </header>
+      <section class="guia">
+        <h2>Así jugamos</h2>
+        <ol>
+          <li>Empieza por las unidades.</li>
+          <li>Si arriba hay menos, suma 10 arriba en esta columna y 1 abajo en la siguiente.</li>
+          <li>Escribe el resultado de cada columna.</li>
+        </ol>
+        <p class="guia-breve">Empieza por las unidades. Pide prestado si arriba hay menos.</p>
+      </section>
+      <div class="opciones">
+        <button type="button" id="ejemplo">Ejemplo 45 − 28</button>
+        <button type="button" id="ajustes">⚙ Configuración</button>
+      </div>
+    </aside>
+    <section class="actividad" aria-label="Ejercicio de resta">
+      <header class="paso">
+        <div>
+          <p id="progreso" data-no-traducir></p>
+          <h2 id="indicacion" data-no-traducir></h2>
+        </div>
+        <button type="button" id="escuchar" aria-label="Escuchar instrucción" title="Escuchar instrucción">🔊</button>
+      </header>
+      <div class="practica">
+        <div class="planteamiento">
+          <div id="operacion" role="group" aria-label="Resta en columnas"></div>
+          <p id="resultado" role="status" data-no-traducir hidden></p>
+        </div>
+        <div class="responder">
+          <button type="button" id="prestamo">↑ Pedir prestado</button>
+          <div id="teclado" role="group" aria-label="Teclado numérico"></div>
+        </div>
+      </div>
+      <p id="estado" role="status" data-no-traducir></p>
+      <div class="acciones">
+        <button type="button" id="revisar" class="principal">✓ Revisar</button>
+        <button type="button" id="nueva">Nueva ronda</button>
+      </div>
+    </section>
+  </main>
+  <dialog id="configuracion" aria-labelledby="tituloConfig">
+    <form method="dialog">
+      <h2 id="tituloConfig">Configuración</h2>
+      <label for="cifras">Cifras del número de arriba</label>
+      <select id="cifras">
+        <option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option>
+      </select>
+      <label><input type="checkbox" id="siemprePrestamo"> Practicar solo restas con préstamo</label>
+      <label><input type="checkbox" id="guia"> Mostrar la guía de cada columna</label>
+      <label><input type="checkbox" id="animacion"> Animar el préstamo</label>
+      <label><input type="checkbox" id="narracion"> Leer las instrucciones automáticamente</label>
+      <div id="idiomaResta"></div>
+      <button class="principal">Aplicar y cerrar</button>
+    </form>
+  </dialog>
+  <div id="efectos" aria-hidden="true"></div>
+  <footer id="creditos-aplicaciones">
+    <div class="creditos-dedicatoria"><span class="creditos-gabriel">Creado para <strong>Gabriel</strong></span><span class="creditos-familia">Por su familia, con ayuda de la IA.</span></div>
+    <div class="creditos-equipo"><span class="creditos-autores">M.Sc. Jeffry Chavarría-Molina y Ph.D. (c) Natalia Rodríguez-Granados</span><span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span></div>
+  </footer>
+  <script>window.IDIOMA_VOZ_APP='restaPrestamoAbajo';</script>
+  <script src="../idioma-voz-textos.js"></script>
+  <script src="textos.js"></script>
+  <script src="../idioma-voz.js"></script>
+  <script src="../matematicas-base.js"></script>
+  <script src="resta.js"></script>
+  <script src="../pantalla-completa.js"></script>
+  <script src="../panel-plegable.js?v=resta-abajo"></script>
+  <script src="../nombre-compartido.js"></script>
+</body>
+</html>

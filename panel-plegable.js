@@ -15,6 +15,7 @@
    'construye.html':['#appConstruye','.herramientas','.actividad'],
    'sumas_y_restas.html':['#app','.herramientas-operaciones','#gameScreen'],
    'sumas_y_restas_um_c_d_u.html':['#appPosicional','.herramientas-posicional','.actividad'],
+   'resta_prestamo.html':['#appRestaPrestamo','.herramientas-resta','.actividad'],
    'mayor_menor_igual.html':['.app','.herramientas-signos','#gameArea'],
    'reconocer_numeros.html':['#game','#pareoSidebar,#herramientasJuego','#gameContent']
   }[archivo];if(!opciones)return;
