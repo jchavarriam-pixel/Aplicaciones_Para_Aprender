@@ -116,6 +116,7 @@
     ],
     recreopiezas: [[25,28,271,261],[305,46,290,231],[605,76,286,206],[7,341,289,224]],
     relieve: [[9,61,282,179],[309,71,282,158],[609,104,282,92]],
+    'caja-objetos': [[25,9,250,282],[326,9,249,282],[618,9,264,282]],
     extra: [[14,17,277,268],[326,7,239,278],[606,10,282,275],[9,291,288,282],[321,335,271,219],
       [605,291,287,285],[8,588,289,296],[310,590,279,276],[604,626,289,213]]
   };
@@ -123,16 +124,18 @@
     coches: Object.keys(alturasVehiculos).flatMap(tipo => coloresVehiculo.map(color => tipo + '-' + color)),
     recreopiezas: ['tobogan','columpios','trampolin','bicicleta'],
     relieve: ['volcan','montana','cerro'],
+    'caja-objetos': ['manzana','cubo-juguete','regalo'],
     extra: ['perro','gato','oveja','vaca','pajaro','caballo','escuela','sol','nube']
   };
   const alturas = {
     coches: Object.values(alturasVehiculos).flatMap(alto => coloresVehiculo.map(() => alto)),
     recreopiezas: [107,110,62,63],
     relieve: [224,245,101],
+    'caja-objetos': [27,31,37],
     extra: [47,35,61,88,33,105,218,63,59]
   };
   const atlasPieza = {};
-  const piezasIndividuales = {'casa-abierta': [560,406,altoCasaAbierta], cerca: [560,348,114]};
+  const piezasIndividuales = {'casa-abierta': [560,406,altoCasaAbierta], cerca: [560,348,114], caja: [440,194,73]};
   for (const id of Object.keys(recortes)) atlasPieza[id] = 'objetos';
   for (const [grupo, cajas] of Object.entries(grupos)) {
     cajas.forEach((caja, i) => {
@@ -164,6 +167,13 @@
     return profundidad >= .31 && profundidad <= .78 &&
       Math.abs(px - cx) / ancho <= .44 - profundidad * .18;
   }
+  function dentroCaja(x, z, caja) {
+    const [px, py] = proyectar(x,z), [cx, cy] = proyectar(caja.x,caja.z);
+    const {ancho, alto} = dimensionesObjeto('caja',caja.z);
+    const profundidad = (cy - py) / alto;
+    return profundidad >= .34 && profundidad <= .64 &&
+      Math.abs(px - cx) / ancho <= .39 - profundidad * .09;
+  }
   function vistaObjeto(id, x, z, terreno) {
     if (!recortes[id + '-lado']) return {id, reflejar: false};
     // La calle del barrio es horizontal. En la terminal, el acceso central apunta al frente.
@@ -190,7 +200,7 @@
   }
   function marcaColocacion(ctx, objeto, corregir) {
     const [x,y] = proyectar(objeto.x,objeto.z);
-    const radio = objeto.z < 0 ? 17 : 19 + 11 * objeto.z;
+    const radio = objeto.contenedor?.id === 'caja' ? 13 : objeto.z < 0 ? 17 : 19 + 11 * objeto.z;
     const altoMarca = objeto.z < 0 ? radio : radio * .48;
     const color = corregir ? '#a53e1f' : '#155575';
     elipse(ctx,x,y,radio + 3,altoMarca + 3,'#ffffffea',color);
@@ -451,5 +461,5 @@
     }
     ctx.restore();
   }
-  return window.EscenarioConstruccion = {ancho,alto,piso,proyectar,desdePantalla,dentroCasa,dentroCerca,semiAnchoEnEscena,objetoEnEscena,visibleFueraDeCasa,tocarObjeto,marcaColocacion,bloque,fondoBloques,cargarFondos,terreno,paisajeObjeto,ficha,poligono,elipse,linea};
+  return window.EscenarioConstruccion = {ancho,alto,piso,proyectar,desdePantalla,dentroCasa,dentroCerca,dentroCaja,semiAnchoEnEscena,objetoEnEscena,visibleFueraDeCasa,tocarObjeto,marcaColocacion,bloque,fondoBloques,cargarFondos,terreno,paisajeObjeto,ficha,poligono,elipse,linea};
 })();

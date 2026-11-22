@@ -61,14 +61,16 @@
     ]}
   ];
 
-  const femeninos = new Set('fuente nina pelota flores casa sombrilla tienda fogata bicicleta cerca oveja vaca escuela nube montana'.split(' '));
+  const femeninos = new Set('fuente nina pelota flores casa sombrilla tienda fogata bicicleta cerca oveja vaca escuela nube montana caja manzana'.split(' '));
   const variantes = [
     ['tobogan', 'Tobogán', 'Slide'], ['columpios', 'Columpios', 'Swing set'], ['trampolin', 'Trampolín', 'Trampoline'],
     ['bicicleta', 'Bicicleta', 'Bicycle'], ['casa-abierta', 'Casa abierta', 'Open house'], ['cerca', 'Cerca', 'Fence'],
     ['perro', 'Perro', 'Dog'], ['gato', 'Gato', 'Cat'], ['oveja', 'Oveja', 'Sheep'], ['vaca', 'Vaca', 'Cow'],
     ['pajaro', 'Pájaro', 'Bird'], ['caballo', 'Caballo', 'Horse'], ['escuela', 'Escuela', 'School'],
     ['sol', 'Sol', 'Sun'], ['nube', 'Nube', 'Cloud'],
-    ['volcan', 'Volcán', 'Volcano'], ['montana', 'Montaña', 'Mountain'], ['cerro', 'Cerro', 'Hill']
+    ['volcan', 'Volcán', 'Volcano'], ['montana', 'Montaña', 'Mountain'], ['cerro', 'Cerro', 'Hill'],
+    ['caja', 'Caja', 'Box'], ['manzana', 'Manzana', 'Apple'],
+    ['cubo-juguete', 'Cubo de juguete', 'Toy cube'], ['regalo', 'Regalo', 'Present']
   ];
   const vehiculos = [];
   for (const [tipo, es, en] of [['carro','Carro','car'], ['camion','Camión','truck'], ['autobus','Autobús','bus']]) {
@@ -116,11 +118,11 @@
     {nombre: par('Una tarde junto al río', 'An afternoon by the river'), terreno: 'rio', suelo:'cesped',
       objetos: lista('nino pato nina fuente barco arbol casa-abierta cerca', basicos, animales, clima)},
     {nombre: par('Paseo por el parque', 'A walk in the park'), terreno: 'parque', suelo:'cesped',
-      objetos: lista('nino arbol fuente casa-abierta cerca', juegos, basicos, animales, clima)},
+      objetos: lista('nino arbol fuente casa-abierta cerca caja manzana cubo-juguete regalo', juegos, basicos, animales, clima)},
     {nombre: par('Un día de playa', 'A day at the beach'), terreno: 'playa', suelo:'arena',
       objetos: lista('sombrilla barco castillo pato nino nina pelota banco bicicleta casa-abierta cerca perro gato arbol', clima)},
     {nombre: par('La casa de la granja', 'The farmhouse'), terreno: 'granja', suelo:'cesped',
-      objetos: lista('casa-abierta vaca oveja caballo cerca casa arbol nino nina cerro', basicos, animales, clima)},
+      objetos: lista('casa-abierta vaca oveja caballo cerca casa arbol nino nina cerro caja manzana', basicos, animales, clima)},
     {nombre: par('Campamento entre montañas', 'Mountain campsite'), terreno: 'campamento', suelo:'cesped',
       objetos: lista('arbol tienda fogata nino nina cerca casa-abierta', [...relieve].join(' '), basicos, animales, clima)},
     {nombre: par('El barrio', 'The neighbourhood'), terreno: 'barrio', suelo:'cesped',
@@ -128,7 +130,7 @@
     {nombre: par('La terminal', 'The transport terminal'), terreno: 'terminal', suelo:'pavimento',
       objetos: lista('autobus-rojo camion-azul carro-amarillo banco nino nina escuela bicicleta', vehiculos.join(' '), 'casa-abierta fuente arbol flores pelota cerca perro gato', clima)},
     {nombre: par('El recreo', 'Playtime'), terreno: 'recreo', suelo:'cesped',
-      objetos: lista('tobogan columpios trampolin nina nino arbol escuela cerca casa-abierta', basicos, animales, clima)},
+      objetos: lista('tobogan columpios trampolin nina nino arbol escuela cerca casa-abierta caja manzana cubo-juguete regalo', basicos, animales, clima)},
     {nombre: par('Una visita al lago', 'A visit to the lake'), terreno: 'lago', suelo:'cesped',
       objetos: lista('barco pato sombrilla tienda casa-abierta cerca fuente', basicos, animales, clima)}
   ];
@@ -143,9 +145,13 @@
     dentro: [par('dentro', 'inside'), (_, __, ___, adentro) => adentro],
     fuera: [par('fuera', 'outside'), (dx, dz, _, adentro) => !adentro && Math.hypot(dx, dz * .72) <= .31]
   };
-  const contenedores = new Set(['casa-abierta','cerca']);
+  const contenedores = new Set(['casa-abierta','cerca','caja']);
   const piezasDentro = ['nina','nino','pelota','perro','gato','conejo'];
+  const piezasCaja = ['pelota','manzana','cubo-juguete','regalo'];
+  const referenciasCaja = ['dentro','derecha','izquierda','lado','detras','delante'];
+  const cabeDentro = (id, caja) => (caja.id === 'caja' ? piezasCaja : piezasDentro).includes(id);
   function interior(x, z, a) {
+    if (a.id === 'caja') return EscenarioConstruccion.dentroCaja(x,z,a);
     if (a.id === 'cerca') return EscenarioConstruccion.dentroCerca(x,z,a);
     return a.id === 'casa-abierta' && EscenarioConstruccion.dentroCasa(x,z,a);
   }
@@ -195,15 +201,15 @@
   }
   function piezaEnEspacioLibre(id, reto, x, z, colocadas) {
     if (!zonaTablero(x,z)) return null;
-    if (sueloPieza(id,reto) === 'cielo' ? z < -.54 || z > -.36 : z < .08) return null;
-    const contenedor = piezasDentro.includes(id) && colocadas.find(a => interior(x,z,a));
+    const contenedor = colocadas.find(a => cabeDentro(id,a) && interior(x,z,a));
+    if (!contenedor && (sueloPieza(id,reto) === 'cielo' ? z < -.54 || z > -.36 : z < .08)) return null;
     return espacioDisponible(id,reto.terreno,x,z,colocadas,contenedor) ?
       {id,x,z,contenedor: contenedor || null} : null;
   }
 
   const mallaPaisaje = {columnas: 23, filas: 19};
   const malla = Array.from({length: 22}, (_,i) => i + 1).flatMap(i =>
-    [-10,-9,-8,-7, ...Array.from({length: 18}, (_,j) => j + 1), 19].map(j =>
+    [-10,-9,-8,-7, ...Array.from({length: 20}, (_,j) => j - 1), 19].map(j =>
       ({i,j,x:i / mallaPaisaje.columnas,z:j === 19 ? .966 : j / mallaPaisaje.filas})));
   function hayEspacio(paso, colocadas, cantidad, puntos = malla) {
     if (!cantidad) return true;
@@ -247,7 +253,7 @@
       orillas[suelo] ? lugar[suelo].en + ', near the shore' : 'on land, near the shore'
     ) : lugar[suelo];
     const contenedor = tipo === 'dentro' ? a : null;
-    const zona = (x,z) => superficie(x,z,suelo,reto,id) &&
+    const zona = (x,z) => (contenedor?.id === 'caja' || superficie(x,z,suelo,reto,id)) &&
       (tipo !== 'orilla' || Math.abs(distanciaOrilla(reto.terreno,x,z)) <= 94) && (!a || (
       coincide(x-a.x,z-a.z,EscenarioConstruccion.proyectar(x,z)[0] - EscenarioConstruccion.proyectar(a.x,a.z)[0],interior(x,z,a)) &&
       (tipo !== 'fuera' || a.id !== 'casa-abierta' || EscenarioConstruccion.visibleFueraDeCasa(id,x,z,a))
@@ -274,7 +280,8 @@
       tipos: barajar(['relacion','superficie','grupo','relacion','orilla','relacion']),
       direcciones: barajar(Object.keys(relacion)),
       turnoBarco: ['rio','lago'].includes(reto.terreno) ? 1 + Math.floor(Math.random() * 2) : Infinity,
-      turnoRelieve: reto.terreno === 'campamento' ? 1 + Math.floor(Math.random() * 2) : Infinity
+      turnoRelieve: reto.terreno === 'campamento' ? 1 + Math.floor(Math.random() * 2) : Infinity,
+      practicarCaja: reto.terreno === 'parque' && Math.random() < .55
     };
   }
 
@@ -304,6 +311,10 @@
       }
     }
     if (indice === 0) return mejor(orden[0]) || candidatos.map(id => mejor(id)).find(Boolean);
+    if (indice === 1 && ronda.practicarCaja && !usados.has('caja')) {
+      const paso = mejor('caja');
+      if (paso) return paso;
+    }
 
     const perfil = tipos[(indice - 1) % tipos.length];
     const recurrencias = tipo => historial.filter(paso => paso.tipo === tipo).length;
@@ -311,15 +322,21 @@
     // Antes del turno reservado para el barco, deja el agua libre para su casco.
     const disponibles = indice < turnoBarco && Number.isFinite(turnoBarco) && !usados.has('barco') ?
       candidatos.filter(id => id !== 'pato') : candidatos;
-    function relacionado(ids, cantidad = 1) {
-      for (const tipo of variacion) for (const a of anclas) for (const id of ids) {
+    function relacionado(ids, cantidad = 1, referencias = anclas, posiciones = variacion) {
+      for (const tipo of posiciones) for (const a of referencias) for (const id of ids) {
         if (sueloPieza(a.id,reto) !== sueloPieza(id,reto)) continue;
         if (tipo === 'dentro' || tipo === 'fuera') {
-          if (!contenedores.has(a.id) || !piezasDentro.includes(id)) continue;
+          if (!contenedores.has(a.id) || !cabeDentro(id,a)) continue;
         }
         const paso = mejor(id,a,tipo,cantidad);
         if (paso) return paso;
       }
+    }
+    const caja = anclas.find(a => a.id === 'caja');
+    if (caja && !historial.some(paso => paso.ancla === caja)) {
+      const posiciones = variacion.filter(tipo => referenciasCaja.includes(tipo));
+      const paso = relacionado(disponibles,1,[caja],posiciones);
+      if (paso) return paso;
     }
 
     if (perfil === 'grupo') {
