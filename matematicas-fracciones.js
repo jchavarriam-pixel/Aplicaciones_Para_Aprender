@@ -53,6 +53,7 @@
   foldedBar.hidden=true;
   main.prepend(foldedBar);
   const board=document.getElementById("matchBoard");
+  const matchColumns=["leftMatchCol","rightMatchCol"].map(id=>document.getElementById(id));
   const matchArea=document.createElement("div");
   matchArea.className="marco-pareo-fracciones";
   board.before(matchArea);
@@ -94,11 +95,15 @@
     app.classList.toggle("horizontal",width>height);
     app.classList.toggle("compacta",height<540);
     updateLayout();
-    const rows=Math.max(document.getElementById("leftMatchCol").children.length,document.getElementById("rightMatchCol").children.length)-1;
-    board.style.setProperty("--filas",Math.max(1,rows));
     if(FraccionesAPI.current==="a3")FraccionesAPI.redrawConnections();
   });
   new MutationObserver(fit).observe(app,{attributes:true,attributeFilter:["class","data-actividad"]});
-  for(const id of ["leftMatchCol","rightMatchCol"])new MutationObserver(fit).observe(document.getElementById(id),{childList:true});
+  const fitMatch=new MutationObserver(()=>{
+    const rows=matchColumns.map(column=>Math.max(1,column.childElementCount-1));
+    matchColumns.forEach((column,i)=>column.style.setProperty("--filas-columna",rows[i]));
+    board.style.setProperty("--filas",Math.max(...rows));
+    fit();
+  });
+  for(const column of matchColumns)fitMatch.observe(column,{childList:true});
   new ResizeObserver(fit).observe(board);
 })();

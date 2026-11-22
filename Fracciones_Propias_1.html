@@ -520,7 +520,7 @@
 </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-fracciones.css?v=tarjetas-1"><script>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-fracciones.css?v=pareo-2"><script>
 window.IDIOMA_VOZ_APP='fracciones';
 try {
   const key='idiomaVoz.fracciones.v1';
@@ -1666,7 +1666,7 @@ function dotCenter(dot,boardRect){
   const r=dot.getBoundingClientRect();return {x:r.left+r.width/2-boardRect.left,y:r.top+r.height/2-boardRect.top};
 }
 function curveD(a,b){
-  const bend=Math.max(55,Math.abs(b.x-a.x)*.48);
+  const bend=(b.x-a.x)*.48;
   return `M ${a.x} ${a.y} C ${a.x+bend} ${a.y}, ${b.x-bend} ${b.y}, ${b.x} ${b.y}`;
 }
 function redrawConnections(pointerX=null,pointerY=null){
@@ -2042,7 +2042,7 @@ window.addEventListener('nombre-estudiante-cambiado',e=>{setStudentName(e.detail
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="matematicas-fracciones.js?v=tarjetas-1"></script><script src="pantalla-completa.js"></script>
+<script src="matematicas-fracciones.js?v=pareo-2"></script><script src="pantalla-completa.js"></script>
 <script src="panel-plegable.js?v=fracciones-1"></script>
 <script src="nombre-compartido.js"></script>
 </body>
