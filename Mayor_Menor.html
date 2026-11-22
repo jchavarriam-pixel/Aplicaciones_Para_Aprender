@@ -6,13 +6,13 @@
   <title>Caja mayor y caja menor</title>
   <link rel="stylesheet" href="idioma-voz.css?v=20261108-1">
   <script src="idioma-voz-textos.js?v=20261108-1"></script>
-  <script src="mayor-menor-textos.js?v=20261118-panel-1"></script>
+  <script src="mayor-menor-textos.js?v=reintento-ronda"></script>
   <script src="idioma-voz.js?v=20261108-mayor-1"></script>
   <link rel="stylesheet" href="signos-celebraciones.css?v=20261118-5">
   <link rel="stylesheet" href="signos-escenas.css?v=20261118-1">
   <script src="signos-escenas.js?v=20261118-2" defer></script>
   <script src="signos-celebraciones.js?v=20261118-7" defer></script>
-  <script src="mayor-menor-ajustes.js?v=iconos-matematicas-1" defer></script>
+  <script src="mayor-menor-ajustes.js?v=reintento-ronda" defer></script>
   <script src="panel-ancho-ajustable.js?v=20261118-1" defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
   <style>
@@ -219,6 +219,13 @@
     .act-btn.reset { background: #ec4899; }
     .act-btn.help { background: #0ea5e9; }
 
+    #gameScreen.ronda-incorrecta .instruccion-mayor {
+      color: #874620;
+      font-size: clamp(12px, 4vw, 22px);
+    }
+    #gameScreen.ronda-incorrecta .actions #checkBtn {
+      font-size: clamp(13px, 4.4vw, 22px);
+    }
     .feedback { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 100; pointer-events: none; opacity: 0; transition: opacity 0.3s; }
     .feedback.show { opacity: 1; pointer-events: auto; }
     .feedback-card { background: #fff; border-radius: 28px; padding: 36px 28px; text-align: center; box-shadow: 0 12px 40px rgba(0,0,0,0.2); max-width: 410px; width: 90%; }
@@ -356,6 +363,7 @@
     let dragOrigin = null;
     let dragSourceExercise = null;
     let isPageSolved = false;
+    let rondaIncorrecta = false;
     let helpMode = false;
     let currentAudioUtterance = null;
 
@@ -597,13 +605,17 @@
       return shuffle(numbers);
     }
 
-    function generateExercises() {
+    function generateExercises(rondaAnterior = []) {
       const numbers = generateUniqueNumbers(exercisesPerPage * 2);
       const items = [];
       for (let i = 0; i < exercisesPerPage; i++) {
         const a = numbers[i * 2];
         const b = numbers[i * 2 + 1];
-        const mode = Math.random() < 0.5 ? 'mayor' : 'menor';
+        let mode = Math.random() < 0.5 ? 'mayor' : 'menor';
+        const anterior = rondaAnterior[i];
+        if (anterior?.mode === mode && anterior.numbers.includes(a) && anterior.numbers.includes(b)) {
+          mode = mode === 'mayor' ? 'menor' : 'mayor';
+        }
         const symbol = mode === 'mayor' ? '>' : '<';
         items.push({
           id: i,
@@ -615,8 +627,7 @@
             { id: `ex${i}-n0`, value: a, used: false },
             { id: `ex${i}-n1`, value: b, used: false }
           ],
-          solved: false,
-          touched: false
+          solved: false
         });
       }
       return items;
@@ -624,8 +635,9 @@
 
     function newPage() {
       window.FiestaSignos.cerrar();
-      exercises = generateExercises();
+      exercises = generateExercises(rondaIncorrecta ? exercises : []);
       isPageSolved = false;
+      rondaIncorrecta = false;
       document.getElementById('pageLabel').textContent = `${exercisesPerPage} ${IdiomaVoz.idioma==='en'?(exercisesPerPage===1?'exercise per round':'exercises per round'):(exercisesPerPage===1?'ejercicio por ronda':'ejercicios por ronda')} • ${window.seleccionNumerosMayor?.modo==='rango' ? (IdiomaVoz.idioma==='en'?'Range: ':'Rango: ')+window.seleccionNumerosMayor.min+'–'+window.seleccionNumerosMayor.max : (IdiomaVoz.idioma==='en'?'Up to ':'Hasta ')+selectedDigits+' '+(IdiomaVoz.idioma==='en'?(selectedDigits===1?'digit':'digits'):(selectedDigits===1?'dígito':'dígitos'))}`;
       renderExercises();
       updateHint();
@@ -635,12 +647,12 @@
     }
 
     function resetPage() {
+      if (rondaIncorrecta) return newPage();
       window.FiestaSignos.cerrar();
       exercises = exercises.map(ex => ({
         ...ex,
         slots: [null, null],
         solved: false,
-        touched: false,
         sources: ex.sources.map(s => ({ ...s, used: false }))
       }));
       isPageSolved = false;
@@ -675,30 +687,13 @@
       if (left === null || right === null) {
         return {
           text: 'Todavía falta acomodar este ejercicio. Coloca los dos números antes de escuchar la comparación.',
-          hint: 'Primero acomoda los dos números en las cajas para escuchar la comparación.',
-          correct: false
+          hint: 'Primero acomoda los dos números en las cajas para escuchar la comparación.'
         };
       }
 
       const phrase = ex.symbol === '>' ? 'es mayor que' : 'es menor que';
-      const base = `${left} ${phrase} ${right}.`;
-      const correct = isExerciseCorrect(ex);
-
-      if (correct) {
-        return {
-          text: `${base} Sí está correcta. ¡Muy bien!`,
-          hint: `✅ ${base} Está correcta.`,
-          correct: true
-        };
-      }
-
-      const relationWord = ex.symbol === '>' ? 'Mayor' : 'Menor';
-      const correction = `No es correcto. ${left} NO ES ${relationWord} que ${right}. Este acomodo es incorrecto, intenta de nuevo.`;
-      return {
-        text: correction,
-        hint: `❌ ${correction}`,
-        correct: false
-      };
+      const lectura = `Elegiste que ${left} ${phrase} ${right}.`;
+      return {text: lectura, hint: lectura};
     }
 
     function speakExercise(exId) {
@@ -832,7 +827,7 @@
     }
 
     function startDragFromSlot(e, exId, slotIndex) {
-      if (exercises[exId]?.slots?.[slotIndex] === null) return;
+      if (rondaIncorrecta || isPageSolved || exercises[exId]?.slots?.[slotIndex] === null) return;
       e.preventDefault();
       e.stopPropagation();
       const value = exercises[exId].slots[slotIndex];
@@ -888,7 +883,6 @@
         if (dragSourceExercise === null || targetExercise === dragSourceExercise) {
           placeNumber(targetExercise, Number(box.dataset.slot), dragItemId, dragValue, dragOrigin);
         } else if (dragOrigin) {
-          exercises[dragOrigin.exId].touched = true;
           renderExercises();
           speakText('Ese número solo puede colocarse en su propio ejercicio.');
         }
@@ -905,14 +899,13 @@
 
     function placeNumber(exId, slotIndex, sourceId, value, origin = null) {
       const ex = exercises[exId];
-      if (!ex) return;
+      if (!ex || rondaIncorrecta || isPageSolved) return;
 
       if (origin) {
         const originEx = exercises[origin.exId];
         if (originEx && originEx.slots[origin.slotIndex] === origin.value) {
           originEx.slots[origin.slotIndex] = null;
           originEx.solved = false;
-          originEx.touched = true;
         }
       }
 
@@ -928,32 +921,24 @@
       ex.slots[slotIndex] = value;
       ex.sources.forEach(s => { if (s.id === sourceId) s.used = true; });
       ex.solved = false;
-      ex.touched = true;
       isPageSolved = false;
       renderExercises();
-      clearCurrentColors();
       updateHint();
       updateCheckButton();
     }
 
     function clearSlot(exId, slotIndex) {
       const ex = exercises[exId];
-      if (!ex || ex.slots[slotIndex] === null) return;
+      if (!ex || rondaIncorrecta || isPageSolved || ex.slots[slotIndex] === null) return;
       const value = ex.slots[slotIndex];
       ex.slots[slotIndex] = null;
       const src = ex.sources.find(s => s.value === value);
       if (src) src.used = false;
       ex.solved = false;
-      ex.touched = true;
       isPageSolved = false;
       renderExercises();
-      clearCurrentColors();
       updateHint();
       updateCheckButton();
-    }
-
-    function clearCurrentColors() {
-      document.querySelectorAll('.drop-box').forEach(box => box.classList.remove('correct', 'wrong'));
     }
 
     function isExerciseFilled(ex) {
@@ -962,7 +947,15 @@
 
     function updateCheckButton() {
       const allFilled = exercises.every(isExerciseFilled);
-      document.getElementById('checkBtn').disabled = !allFilled || isPageSolved;
+      const boton = document.getElementById('checkBtn');
+      document.getElementById('gameScreen').classList.toggle('ronda-incorrecta', rondaIncorrecta);
+      boton.disabled = !rondaIncorrecta && (!allFilled || isPageSolved);
+      boton.textContent = rondaIncorrecta ? IdiomaVoz.t('Intentar otra ronda') : '✅ ' + IdiomaVoz.t('Revisar');
+      const instruccion = document.querySelector('.instruccion-mayor');
+      const texto = IdiomaVoz.t(rondaIncorrecta ?
+        'Mira el signo. Acierta todas para ver la animación.' :
+        'Completa las comparaciones.');
+      if (instruccion && instruccion.textContent !== texto) instruccion.textContent = texto;
     }
 
     function updateHint() {
@@ -974,12 +967,6 @@
           const pending = exercises.find(ex => !isExerciseFilled(ex));
           bar.textContent = pending ? 'Arrastra los números a las cajas.' : 'Pulsa Revisar ✅';
         }
-        return;
-      }
-
-      const wrongExists = exercises.some(ex => ex.touched && isExerciseFilled(ex) && !isExerciseCorrect(ex));
-      if (wrongExists) {
-        bar.textContent = 'Revisa las cajas en rojo. Puedes mover los números y corregir. También puedes tocar 🔊 para escuchar la comparación.';
         return;
       }
 
@@ -1001,52 +988,36 @@
     }
 
     function checkPage() {
-      if (isPageSolved||!exercises.every(isExerciseFilled)) return;
-      let allCorrect = true;
-
-      exercises.forEach(ex => {
-        ex.touched = true;
-        const ok = isExerciseCorrect(ex);
-        ex.solved = ok;
-        if (!ok) allCorrect = false;
-      });
-
-      colorBoxes();
-      updateHint();
-
-      if (allCorrect) {
-        isPageSolved = true;
-        score += exercises.length;
-        updateScore();
-        updateCheckButton();
-        const texto = getRandomMotivationalMessage();
-        const enfocarRonda = () => document.querySelector('.acciones-secundarias .new')?.focus({ preventScroll: true });
-        const celebracion = FiestaSignos.abrir({
-          nombre: studentName || obtenerNombreGuardado() || 'Gabriel',
-          texto,
-          nuevaRonda: newPage,
-          enfocarAlCerrar: enfocarRonda,
-          enfocarRonda
-        });
-        if (!celebracion) showFeedback('🎉', '¡Excelente trabajo!', texto, true);
-      } else {
-        updateCheckButton();
-        speakText('Revisa las cajas rojas y vuelve a intentarlo.');
+      if (rondaIncorrecta) {
+        newPage();
+        return;
       }
-    }
+      if (isPageSolved || !exercises.every(isExerciseFilled)) return;
+      if (!exercises.every(isExerciseCorrect)) {
+        rondaIncorrecta = true;
+        updateCheckButton();
+        document.getElementById('hintBar').textContent = IdiomaVoz.t('Hay comparaciones por practicar.');
+        speakText(document.querySelector('.instruccion-mayor').textContent);
+        return;
+      }
 
-    function colorBoxes() {
-      document.querySelectorAll('.drop-box').forEach(box => {
-        box.classList.remove('correct', 'wrong');
-        const ex = exercises[Number(box.dataset.exercise)];
-        const slot = Number(box.dataset.slot);
-        if (!isExerciseFilled(ex)) return;
-
-        const leftTarget = ex.mode === 'mayor' ? Math.max(...ex.numbers) : Math.min(...ex.numbers);
-        const rightTarget = ex.mode === 'mayor' ? Math.min(...ex.numbers) : Math.max(...ex.numbers);
-        const correctValue = slot === 0 ? leftTarget : rightTarget;
-        box.classList.add(ex.slots[slot] === correctValue ? 'correct' : 'wrong');
+      exercises.forEach(ex => { ex.solved = true; });
+      document.querySelectorAll('.drop-box').forEach(box => box.classList.add('correct'));
+      isPageSolved = true;
+      score += exercises.length;
+      updateScore();
+      updateHint();
+      updateCheckButton();
+      const texto = getRandomMotivationalMessage();
+      const enfocarRonda = () => document.querySelector('.acciones-secundarias .new')?.focus({ preventScroll: true });
+      const celebracion = FiestaSignos.abrir({
+        nombre: studentName || obtenerNombreGuardado() || 'Gabriel',
+        texto,
+        nuevaRonda: newPage,
+        enfocarAlCerrar: enfocarRonda,
+        enfocarRonda
       });
+      if (!celebracion) showFeedback('🎉', '¡Excelente trabajo!', texto, true);
     }
 
     function showFeedback(emoji, title, msg, isSuccess) {

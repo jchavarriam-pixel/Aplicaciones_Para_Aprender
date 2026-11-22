@@ -14,6 +14,9 @@ Arrastra cada número a su caja.|Drag each number to its box.
 Arrastra los números a las cajas.|Drag the numbers to the boxes.
 Coloca cada número en la caja correcta.|Place each number in the correct box.
 Completa las comparaciones.|Complete the comparisons.
+Mira el signo. Acierta todas para ver la animación.|Look at each sign. Get them all right to see the animation.
+Hay comparaciones por practicar.|Some comparisons need more practice.
+Intentar otra ronda|Try another round
 Nueva página|New page
 Reiniciar|Reset
 Mostrar ayuda en las cajas|Show help inside the boxes
@@ -75,6 +78,7 @@ Creado para Gabriel con ayuda de la IA y su familia|Created for Gabriel with hel
   if(/^[✅❌]\s/.test(s))return s.slice(0,2)+window.IdiomaVoz.t(s.slice(2));
   let m;if((m=s.match(/^(\d+) dígitos?$/)))return `${m[1]} ${m[1]==='1'?'digit':'digits'}`;
   if((m=s.match(/^Ejercicio (\d+)$/)))return 'Exercise '+m[1];
+  if((m=s.match(/^Elegiste que (\d+) es (mayor|menor) que (\d+)\.$/)))return `You chose that ${m[1]} is ${m[2]==='mayor'?'greater':'less'} than ${m[3]}.`;
   if((m=s.match(/^(\d+) ejercicios? por página • (\d+) dígitos?$/)))return `${m[1]} ${m[1]==='1'?'exercise':'exercises'} per page • ${m[2]} ${m[2]==='1'?'digit':'digits'}`;
   if((m=s.match(/^Al menos el 75% serán de (\d+) dígitos/)))return `At least 75% will have ${m[1]} digits; the rest will have between 1 and ${m[1]} digits.`;
   if((m=s.match(/^(\d+) es (mayor|menor) que (\d+)\.$/)))return `${m[1]} is ${m[2]==='mayor'?'greater':'less'} than ${m[3]}.`;

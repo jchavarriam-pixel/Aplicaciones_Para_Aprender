@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded',()=>{
  const secondary=document.createElement('div');secondary.className='acciones-secundarias';for(const e of [...game.querySelector('.actions').children])if(e.id!=='checkBtn')secondary.append(e);tools.append(secondary);
  secondary.querySelector('.new').textContent='🔄 Nueva ronda';
  game.querySelector('.footer-credit').remove();menu.querySelector('p[style]')?.remove();document.body.append(document.getElementById('creditos-aplicaciones'));
- const instruction=document.createElement('h2');instruction.className='instruccion-mayor';instruction.textContent='Completa las comparaciones.';game.prepend(instruction);
+ const instruction=document.createElement('h2');instruction.className='instruccion-mayor';instruction.setAttribute('aria-live','polite');instruction.textContent='Completa las comparaciones.';game.prepend(instruction);
  const hint=document.getElementById('hintBar'),marcaHint=document.createComment('mensaje de la actividad');hint.before(marcaHint);
  const key='mayorMenor.config.v1',help=document.getElementById('ayudaComparacion'),read=document.getElementById('lecturaComparacion');
  let saved={};try{saved=JSON.parse(localStorage.getItem(key)||'{}')||{};}catch{}
