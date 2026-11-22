@@ -165,8 +165,73 @@ body.guidance-off.voice-off .instruction { display:none; }
 .connector { width:calc(28 * var(--unidad)); height:calc(28 * var(--unidad)); min-height:0; min-width:0; border-width:calc(3 * var(--unidad)); padding:0; }
 .connector.left { right:calc(-16 * var(--unidad)); }
 .connector.right { left:calc(-16 * var(--unidad)); }
-#matchSvg path { stroke:#7158c0; stroke-width:4; }
-#matchSvg path.temp { stroke:#3a75bc; stroke-dasharray:7 7; }
+#matchSvg path { stroke:var(--color-linea,#7158c0); stroke-width:4; }
+#matchSvg path.temp { stroke:var(--color-linea,#3a75bc); stroke-dasharray:7 7; }
+
+#viajeFracciones {
+  zoom:var(--inverso-panel-compartido,1);
+  width:min(920px,calc(100% - 20px),max(220px,calc((100dvh - 126px) * 16 / 9)));
+  max-height:calc(100dvh - 16px);
+  padding:0;
+  overflow:auto;
+  border:1px solid #8272bd;
+  border-radius:clamp(13px,2.5vmin,22px);
+  color:#f7f0ff;
+  background:#23204e;
+  box-shadow:0 22px 78px #08041ccb;
+}
+#viajeFracciones::backdrop { background:#090720cd; }
+.viaje-encabezado,.viaje-acciones { display:flex; align-items:center; gap:8px; padding:7px clamp(8px,2vw,18px); }
+.viaje-encabezado { justify-content:space-between; }
+.viaje-encabezado h2 { margin:0; font-size:clamp(15px,3.3vmin,24px); color:#f7f0ff; }
+#viajeCerrar {
+  flex:none;
+  width:35px;
+  height:35px;
+  padding:0;
+  border:1px solid #9684c6;
+  border-radius:10px;
+  color:#fff;
+  background:#3d3475;
+}
+.viaje-escena {
+  position:relative;
+  aspect-ratio:16/9;
+  overflow:hidden;
+  background:#151035 url('iconos/fracciones-planetas.webp') center/100% 100% no-repeat;
+}
+#viajeLienzo { position:absolute; inset:0; width:100%; height:100%; display:block; }
+#viajeEstado {
+  position:absolute;
+  z-index:1;
+  bottom:5%;
+  left:50%;
+  max-width:90%;
+  margin:0;
+  padding:.25em .65em;
+  transform:translateX(-50%);
+  border:1px solid #c5afff;
+  border-radius:12px;
+  color:#fff2a5;
+  background:#201745eb;
+  box-shadow:0 3px 14px #13102fa8;
+  font-size:clamp(14px,3.5vmin,28px);
+  font-weight:900;
+  text-align:center;
+  pointer-events:none;
+}
+.viaje-acciones { justify-content:center; }
+.viaje-acciones button {
+  min-width:0;
+  min-height:36px;
+  padding:5px 11px;
+  border-radius:10px;
+  font-size:clamp(13px,2.7vmin,16px);
+  line-height:1.12;
+  white-space:normal;
+  box-shadow:none;
+}
+#viajeSiguiente { background:linear-gradient(120deg,#6849c2,#2f63be); }
 
 #settingsDialog { zoom:var(--inverso-panel-compartido,1); width:min(720px,calc(100% - 18px)); max-height:calc(100dvh - 18px); border-radius:18px; overflow:hidden; color:#293653; }
 #settingsDialog:not([open]) { display:none; }
