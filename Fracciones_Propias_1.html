@@ -1829,14 +1829,14 @@ function startActivity(id){
 /* Settings */
 const dialog=$('#settingsDialog');
 let settingsDialogScope='all',resetDraft=false;
-$('#settingsBtn').addEventListener('click',()=>openSettings('all',false));
+$('#settingsBtn').addEventListener('click',()=>openSettings());
 $('#modeBtn').addEventListener('click',()=>{
-  openSettings('all',false);
+  openSettings();
   const group=$('#assessmentSettingsGroup');
   requestAnimationFrame(()=>scrollSettingsTo(group));
 });
-$('#customizeMatch').addEventListener('click',()=>openSettings('a3',true));
-$$('[data-settings-scope]').forEach(button=>button.addEventListener('click',()=>openSettings(button.dataset.settingsScope,false)));
+$('#customizeMatch').addEventListener('click',()=>openSettings('match'));
+$$('[data-settings-scope]').forEach(button=>button.addEventListener('click',()=>openSettings(button.dataset.settingsScope)));
 $('#closeSettings').addEventListener('click',applySettingsForm);
 dialog.addEventListener('click',e=>{if(e.target===dialog)applySettingsForm()});
 dialog.addEventListener('cancel',e=>{e.preventDefault();applySettingsForm()});
@@ -1879,69 +1879,83 @@ function scrollSettingsTo(group){
 }
 function fillSettingsForm(config){
   const scope=settingsDialogScope;
+  if(scope==="match"){
+    for(const id of ["pairCount","matchMode","leftoverSide","leftoverCount"])$("#"+id).value=config[id];
+    return;
+  }
   const visibleDenominators=scope==="all"?config.denominators:config.activityDenominators?.[scope]||config.denominators;
   $$("#denomList input").forEach(input=>input.checked=visibleDenominators.includes(Number(input.value)));
   for(const id of ["a1CountHelpEnabled","examMode","voiceEnabled","guidanceText","autoRead","soundsOn"]){
     const key=id==="a1CountHelpEnabled"?"a1CountHelp":id;
     $("#"+id).checked=Boolean(config[key]);
   }
-  for(const id of ["pairCount","matchMode","leftoverSide","leftoverCount"])$("#"+id).value=config[id];
   $("#fontSelect").value=config.font;
   $("#soundVolume").value=Math.round((config.soundVolume??.7)*100);
   $("#soundVolumeValue").textContent=$("#soundVolume").value+"%";
   syncExamControls();
 }
-function openSettings(scope="all",focusMatch=false){
+function openSettings(scope="all"){
   if(dialog.open)return;
   cancelActiveDrags();
   settingsDialogScope=scope;resetDraft=false;
   fillSettingsForm(settings);
-  const isFull=scope==="all",titles={a1:"Actividad 1: identificar",a2:"Actividad 2: representar",a3:"Actividad 3: pareo",a4:"Actividad 4: construir"};
-  $("#settingsTitle").textContent=isFull?"⚙️ Configuración completa":"⚙️ "+titles[scope];
-  $("#settingsScopeNote").textContent=isFull?"":scope==="a3"?"Estos ajustes controlan las fracciones y las opciones del pareo.":scope==="a1"?"Aquí puedes elegir los denominadores y activar o desactivar la ayuda de conteo.":"Aquí puedes elegir qué denominadores aparecerán en esta actividad.";
+  const isFull=scope==="all",isMatch=scope==="match";
+  const titles={all:"Configuración completa",match:"Personalizar pareo",a1:"Actividad 1: identificar",a2:"Actividad 2: representar",a3:"Actividad 3: pareo",a4:"Actividad 4: construir"};
+  $("#settingsTitle").textContent="⚙️ "+titles[scope];
+  $("#settingsScopeNote").textContent=scope==="a1"?"Aquí puedes elegir los denominadores y activar o desactivar la ayuda de conteo.":"Aquí puedes elegir qué denominadores aparecerán en esta actividad.";
   $("#fractionSettingsNote").textContent=isFull?"Los denominadores elegidos aquí se aplicarán a todas las actividades. La aplicación genera únicamente fracciones propias.":"Estos denominadores se aplicarán solamente a esta actividad.";
-  $("#settingsScopeNote").classList.toggle("hidden",isFull);
+  $("#settingsScopeNote").classList.toggle("hidden",isFull||isMatch);
+  $("#fractionSettingsGroup").classList.toggle("scope-hidden",isMatch);
   $("#a1HelpSettingsGroup").classList.toggle("scope-hidden",!isFull&&scope!=="a1");
-  $("#matchSettingsGroup").classList.toggle("scope-hidden",!isFull&&scope!=="a3");
+  $("#matchSettingsGroup").classList.toggle("scope-hidden",!isMatch);
+  $("#assessmentSettingsGroup").classList.toggle("scope-hidden",isMatch);
   $("#appearanceSettingsGroup").classList.toggle("scope-hidden",!isFull);
   $("#preferenciasFracciones").hidden=!isFull;
   $("#resetSettings").classList.toggle("hidden",!isFull);
   $("#settingsFormError").hidden=true;
-  IdiomaVoz.iniciarEdicion();
+  if(isFull)IdiomaVoz.iniciarEdicion();
   dialog.showModal();
   $(".settings-body",dialog).scrollTop=0;
-  if(focusMatch)requestAnimationFrame(()=>scrollSettingsTo($("#matchSettingsGroup")));
 }
 function applySettingsForm(){
-  const scope=settingsDialogScope,isFull=scope==="all";
-  const dens=$$("#denomList input:checked").map(input=>Number(input.value));
+  const scope=settingsDialogScope,isFull=scope==="all",isMatch=scope==="match";
   const error=$("#settingsFormError");
   function invalid(message){
     error.textContent=IdiomaVoz.t(message);error.hidden=false;
     error.focus({preventScroll:true});
     scrollSettingsTo(error);
   }
-  if(!dens.length){invalid("Selecciona al menos un denominador.");return;}
   const previous=getRoundPreferences();
-  const matchScope=isFull||scope==="a3";
-  const pairCount=Number($("#pairCount").value),leftoverSide=$("#leftoverSide").value,leftoverCount=Number($("#leftoverCount").value);
-  const globalDenomsChanged=isFull&&(resetDraft||settings.denominators.join()!==dens.join());
-  if(matchScope){
-    const extraGroups=(leftoverSide==="both"?2:leftoverSide==="none"?0:1)*leftoverCount;
-    const required=pairCount+extraGroups;
-    const available=availableEquivalentFractions(isFull&&!globalDenomsChanged?denominatorsFor("a3"):dens);
+  function validateMatch(denominators,{pairCount,leftoverSide,leftoverCount}){
+    const sides=leftoverSide==="both"?2:leftoverSide==="none"?0:1;
+    const required=pairCount+sides*leftoverCount;
+    const available=availableEquivalentFractions(denominators);
     if(available<required){
-      invalid("Esta configuración necesita "+required+" fracciones distintas, pero los denominadores elegidos solo permiten "+available+". Selecciona más denominadores o reduce las parejas y sobrantes.");return;
+      invalid("Esta configuración necesita "+required+" fracciones distintas, pero los denominadores elegidos solo permiten "+available+". Selecciona más denominadores o reduce las parejas y sobrantes.");
+      return false;
     }
-    Object.assign(settings,{pairCount,matchMode:$("#matchMode").value,leftoverSide,leftoverCount});
+    return true;
   }
-  if(globalDenomsChanged){settings.denominators=dens;settings.activityDenominators={};}
-  if(!isFull&&denominatorsFor(scope).join()!==dens.join())settings.activityDenominators={...settings.activityDenominators,[scope]:dens};
-  if(isFull||scope==="a1")settings.a1CountHelp=$("#a1CountHelpEnabled").checked;
-  for(const id of ["examMode","voiceEnabled","guidanceText"])settings[id]=$("#"+id).checked;
-  if(isFull){
-    settings.font=$("#fontSelect").value;settings.autoRead=$("#autoRead").checked;
-    settings.soundsOn=$("#soundsOn").checked;settings.soundVolume=Number($("#soundVolume").value)/100;
+  if(isMatch){
+    const match={
+      pairCount:Number($("#pairCount").value),matchMode:$("#matchMode").value,
+      leftoverSide:$("#leftoverSide").value,leftoverCount:Number($("#leftoverCount").value)
+    };
+    if(!validateMatch(denominatorsFor("a3"),match))return;
+    Object.assign(settings,match);
+  }else{
+    const dens=$$("#denomList input:checked").map(input=>Number(input.value));
+    if(!dens.length){invalid("Selecciona al menos un denominador.");return;}
+    const globalDenomsChanged=isFull&&(resetDraft||settings.denominators.join()!==dens.join());
+    if((globalDenomsChanged||scope==="a3")&&!validateMatch(dens,settings))return;
+    if(globalDenomsChanged){settings.denominators=dens;settings.activityDenominators={};}
+    if(!isFull&&denominatorsFor(scope).join()!==dens.join())settings.activityDenominators={...settings.activityDenominators,[scope]:dens};
+    if(isFull||scope==="a1")settings.a1CountHelp=$("#a1CountHelpEnabled").checked;
+    for(const id of ["examMode","voiceEnabled","guidanceText"])settings[id]=$("#"+id).checked;
+    if(isFull){
+      settings.font=$("#fontSelect").value;settings.autoRead=$("#autoRead").checked;
+      settings.soundsOn=$("#soundsOn").checked;settings.soundVolume=Number($("#soundVolume").value)/100;
+    }
   }
   saveSettings();applySettings();
   if(!settings.a1CountHelp||!guidanceIsEnabled()){
@@ -1949,7 +1963,7 @@ function applySettingsForm(){
   }
   $("#a1CountHelp").classList.toggle("hidden",!settings.a1CountHelp||!guidanceIsEnabled()||!$("#a1Next").classList.contains("hidden"));
   if(currentActivity==='a4'&&states.a4.step===2)$('#a4StepTitle').textContent=a4PaintPrompt(states.a4);
-  IdiomaVoz.aplicarEdicion();
+  if(isFull)IdiomaVoz.aplicarEdicion();
   if(currentActivity&&getRoundPreferences()!==previous)startActivity(currentActivity);
   dialog.close();
 }
