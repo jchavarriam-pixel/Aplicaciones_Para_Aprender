@@ -16,6 +16,7 @@ Object.assign(window.TEXTOS_INGLES ||= {}, {
   '‹ Modos': '‹ Activities',
   'Leer instrucción': 'Read instruction',
   'Mesa de medición': 'Measuring table',
+  'Medidas de los objetos': 'Object measurements',
   'Regla en centímetros': 'Centimetre ruler',
   'Arrastra para girar la regla': 'Drag to turn the ruler',
   'Controles de la regla': 'Ruler controls',

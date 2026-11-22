@@ -164,6 +164,16 @@ h1 { font-size: calc(18 * var(--u)); line-height: 1.06; }
   color: #22516d;
   font-weight: 800;
 }
+.mesa-medicion {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+}
+.mesa-medicion:has(#respuestasObjetos:not(:empty)) {
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: calc(5 * var(--u));
+}
 .escena {
   position: relative;
   min-width: 0;
@@ -317,13 +327,20 @@ h1 { font-size: calc(18 * var(--u)); line-height: 1.06; }
 .respuesta-entrada { display: grid; grid-template-columns: minmax(0, 1fr); gap: calc(4 * var(--u)); min-width: 0; }
 #campos { display: flex; justify-content: center; flex-wrap: wrap; gap: calc(5 * var(--u)); min-width: 0; }
 #campos:empty { display: none; }
-.respuesta-objeto {
-  position: absolute;
-  transform: translateY(-50%);
-  z-index: 3;
+#respuestasObjetos {
+  display: grid;
+  align-content: center;
+  gap: calc(4 * var(--u));
+  font-size: calc(13 * var(--u));
 }
-.respuesta-objeto .campo { min-height: 42px; gap: 4px; padding: 4px 6px; font-size: 13px; }
-.respuesta-objeto .campo input { width: 34px; min-height: 30px; font-size: 18px; }
+#respuestasObjetos:empty { display: none; }
+#respuestasObjetos .campo { padding: calc(1 * var(--u)) calc(5 * var(--u)); }
+#respuestasObjetos input { width: calc(33 * var(--u)); min-height: calc(29 * var(--u)); font-size: calc(17 * var(--u)); }
+.letra-respuesta {
+  min-width: 1em;
+  text-align: center;
+  border-bottom: calc(3 * var(--u)) solid var(--color-respuesta);
+}
 .campo, .opcion {
   display: flex;
   align-items: center;
@@ -367,7 +384,7 @@ h1 { font-size: calc(18 * var(--u)); line-height: 1.06; }
     grid-template-rows: auto auto minmax(calc(86 * var(--u)), 1fr) auto;
   }
   .horizontal .reto { grid-column: 1 / -1; }
-  .horizontal .escena { grid-column: 1; grid-row: 2 / 4; }
+  .horizontal .mesa-medicion { grid-column: 1; grid-row: 2 / 4; }
   .horizontal .regla-acciones { grid-column: 2; grid-row: 2; flex-wrap: wrap; }
   .horizontal #respuesta { display: contents; }
   .horizontal .respuesta-entrada { grid-column: 2; grid-row: 3; align-self: start; }

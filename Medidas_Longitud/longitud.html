@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="../pantalla-completa.css">
   <link rel="stylesheet" href="../panel-plegable.css">
   <link rel="stylesheet" href="../teclado-en-pantalla.css">
-  <link rel="stylesheet" href="longitud.css?v=teclado-1">
+  <link rel="stylesheet" href="longitud.css?v=respuestas-laterales">
   <script src="../historial-modos.js"></script>
 </head>
 <body>
@@ -52,16 +52,18 @@
         </div>
         <p id="pregunta" data-no-traducir></p>
       </header>
-      <div class="escena" id="escena" role="group" aria-label="Mesa de medición">
-        <div class="plano" id="plano">
-          <div id="objetos"></div>
-          <div id="respuestasObjetos"></div>
-          <div class="regla" id="regla" tabindex="0" role="group" aria-label="Regla en centímetros">
-            <div class="graduacion" id="graduacion" aria-hidden="true"></div>
-            <span class="unidad" aria-hidden="true">cm</span>
-            <button class="giro" id="giro" type="button" aria-label="Arrastra para girar la regla" title="Arrastra para girar la regla">↻</button>
+      <div class="mesa-medicion">
+        <div class="escena" id="escena" role="group" aria-label="Mesa de medición">
+          <div class="plano" id="plano">
+            <div id="objetos"></div>
+            <div class="regla" id="regla" tabindex="0" role="group" aria-label="Regla en centímetros">
+              <div class="graduacion" id="graduacion" aria-hidden="true"></div>
+              <span class="unidad" aria-hidden="true">cm</span>
+              <button class="giro" id="giro" type="button" aria-label="Arrastra para girar la regla" title="Arrastra para girar la regla">↻</button>
+            </div>
           </div>
         </div>
+        <div id="respuestasObjetos" role="group" aria-label="Medidas de los objetos"></div>
       </div>
       <div class="regla-acciones" role="group" aria-label="Controles de la regla">
         <button type="button" id="giroIzquierdo" title="Girar a la izquierda" aria-label="Girar a la izquierda">↶ 15°</button>
@@ -101,11 +103,11 @@
   </footer>
   <script>window.IDIOMA_VOZ_APP = 'longitud';</script>
   <script src="../idioma-voz-textos.js"></script>
-  <script src="longitud-textos.js?v=teclado-1"></script>
+  <script src="longitud-textos.js?v=respuestas-laterales"></script>
   <script src="../idioma-voz.js"></script>
   <script src="../matematicas-base.js"></script>
   <script src="../teclado-en-pantalla.js"></script>
-  <script src="longitud.js?v=historial-1"></script>
+  <script src="longitud.js?v=respuestas-laterales"></script>
   <script src="../pantalla-completa.js"></script>
   <script src="../panel-plegable.js?v=longitud-1"></script>
   <script src="../nombre-compartido.js"></script>

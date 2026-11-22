@@ -3,7 +3,7 @@
 
   const get = id => document.getElementById(id);
   const t = text => IdiomaVoz.t(text);
-  const esEn = (es, en) => IdiomaVoz.ingles() ? en : es;
+  const esEn = (es, en) => IdiomaVoz.idioma === 'en' ? en : es;
   const app = get('appLongitud');
   const juego = get('juego');
   const plano = get('plano');
@@ -65,7 +65,7 @@
       const medio = rotar(largo / 2, 0, angulo);
       return {
         ...objeto,
-        x: (medirVertical ? 170 : modo === 'medir' ? 153 : 181) - medio.x,
+        x: (medirVertical ? 170 : 181) - medio.x,
         y: (medirVertical ? 171 : cantidad === 2 ? 65 + i * 94 : 49 + i * 84) - medio.y,
         angulo
       };
@@ -206,12 +206,9 @@
     }
     if (modo === 'diferencia') campos.innerHTML = campo('diferencia', `<span>${t('Diferencia')}</span>`);
     else {
-      respuestasObjetos.innerHTML = ronda.objetos.map(({letra, x, y, largo, angulo}) => {
-        const punta = rotar(largo, 0, angulo);
-        const izquierda = Math.min(282, Math.max(x, x + punta.x) + 16);
-        const centro = y + punta.y / 2;
-        return `<div class="respuesta-objeto" style="left:${izquierda}px;top:${centro}px">${campo(letra, '')}</div>`;
-      }).join('');
+      respuestasObjetos.innerHTML = ronda.objetos.map(({letra, color}) =>
+        campo(letra, `<span class="letra-respuesta" style="--color-respuesta:${color}">${letra}</span>`)
+      ).join('');
     }
     entradaNumerica.seleccionar(juego.querySelector('[data-campo-teclado]'));
   }
