@@ -135,6 +135,7 @@
     fuera: [par('fuera', 'outside'), (dx, dz, _, adentro) => !adentro && Math.hypot(dx, dz * .72) <= .31]
   };
   const contenedores = new Set(['casa-abierta','cerca']);
+  const piezasDentro = ['nina','nino','pelota','perro','gato','conejo'];
   function interior(x, z, a) {
     if (a.id === 'cerca') return EscenarioConstruccion.dentroCerca(x,z,a);
     return a.id === 'casa-abierta' && EscenarioConstruccion.dentroCasa(x,z,a);
@@ -161,11 +162,21 @@
   }
 
   const zonaTablero = (x,z) => x >= .035 && x <= .965 && z >= -.57 && z <= .99;
-  function posicionValida(paso, x, z, colocadas) {
-    if (!paso.zona(x,z) || !EscenarioConstruccion.objetoEnEscena(paso.id,x,z,paso.terreno)) return false;
-    return colocadas.every(a => a === paso.contenedor ||
+  function espacioDisponible(id, terreno, x, z, colocadas, contenedor) {
+    if (!EscenarioConstruccion.objetoEnEscena(id,x,z,terreno)) return false;
+    return colocadas.every(a => a === contenedor ||
       (contenedores.has(a.id) ? !interior(x,z,a) && dist(x,z,a) >= .095 :
-        dist(x,z,a) >= (paso.contenedor ? .05 : .088)));
+        dist(x,z,a) >= (contenedor ? .05 : .088)));
+  }
+  function posicionValida(paso, x, z, colocadas) {
+    return paso.zona(x,z) && espacioDisponible(paso.id,paso.terreno,x,z,colocadas,paso.contenedor);
+  }
+  function piezaEnEspacioLibre(id, reto, x, z, colocadas) {
+    if (!zonaTablero(x,z)) return null;
+    if (sueloPieza(id,reto) === 'cielo' ? z < -.54 || z > -.36 : z < .08) return null;
+    const contenedor = piezasDentro.includes(id) && colocadas.find(a => interior(x,z,a));
+    return espacioDisponible(id,reto.terreno,x,z,colocadas,contenedor) ?
+      {id,x,z,contenedor: contenedor || null} : null;
   }
 
   const mallaPaisaje = {columnas: 23, filas: 19};
@@ -206,7 +217,9 @@
       coincide(x-a.x,z-a.z,EscenarioConstruccion.proyectar(x,z)[0] - EscenarioConstruccion.proyectar(a.x,a.z)[0],interior(x,z,a)) &&
       (tipo !== 'fuera' || a.id !== 'casa-abierta' || EscenarioConstruccion.visibleFueraDeCasa(id,x,z,a))
     ));
-    return {id,cantidad,contenedor,tipo,terreno:reto.terreno,ancla:a,zona,texto:par('Pon ' + objeto.es + ' ' + sitio.es + '.',
+    return {id,cantidad,contenedor,tipo,terreno:reto.terreno,ancla:a,zona,
+      correccion:par('Mueve la pieza ' + sitio.es + '.', 'Move the piece ' + sitio.en + '.'),
+      texto:par('Pon ' + objeto.es + ' ' + sitio.es + '.',
       'Put ' + objeto.en + ' ' + sitio.en + '.')};
   }
 
@@ -232,7 +245,7 @@
     for (const a of anclas.filter(a => contenedores.has(a.id))) {
       for (const tipo of ['dentro','fuera']) {
         if (historial.some(paso => paso.tipo === tipo)) continue;
-        for (const id of ['nina','nino','pelota','perro','gato','conejo'].filter(id => candidatos.includes(id))) {
+        for (const id of piezasDentro.filter(id => candidatos.includes(id))) {
           const paso = mejor(id,a,tipo);
           if (paso) return paso;
         }
@@ -264,5 +277,5 @@
     }
   }
 
-  window.RetosConstruccion = {piezas, bloques, paisajes, zonaTablero, admite, siguientePaisaje, mallaPaisaje, puntosPaisaje: malla};
+  window.RetosConstruccion = {piezas, bloques, paisajes, zonaTablero, piezaEnEspacioLibre, admite, siguientePaisaje, mallaPaisaje, puntosPaisaje: malla};
 })();

@@ -2,8 +2,9 @@
   const ancho = 760, alto = 440, piso = 396;
   const altoCasaAbierta = 205;
   const escala = z => .40 + z * .94;
+  const escalaObjeto = z => z < 0 ? .74 : escala(z);
   const anchoVista = z => 600 + 120 * z;
-  const proyectar = (x, z, h = 0) => [380 + (x - .5) * anchoVista(z), 145 + 246 * z - h * escala(z)];
+  const proyectar = (x, z, h = 0) => [380 + (x - .5) * anchoVista(z), 145 + 246 * z - h * escalaObjeto(z)];
   const desdePantalla = (x, y) => {
     const z = (y - 145) / 246;
     return {x: .5 + (x - 380) / anchoVista(z), z};
@@ -150,7 +151,7 @@
   }
   function dimensionesObjeto(id, z) {
     const [, , w, h, tamano] = recortes[id];
-    const alto = tamano * (z < 0 ? .74 : escala(z));
+    const alto = tamano * escalaObjeto(z);
     return {ancho: alto * w / h, alto};
   }
   function dentroCerca(x, z, cerca) {
@@ -172,6 +173,23 @@
     const vista = vistaObjeto(id,x,z,terreno);
     const mitad = dimensionesObjeto(vista.id,z).ancho / 2;
     return px - mitad >= 5 && px + mitad <= ancho - 5;
+  }
+  function tocarObjeto(punto, objeto, terreno) {
+    const [x,y] = proyectar(objeto.x,objeto.z);
+    const vista = vistaObjeto(objeto.id,objeto.x,objeto.z,terreno);
+    const {ancho,alto} = dimensionesObjeto(vista.id,objeto.z);
+    const borde = objeto.z < 0 ? .16 : 1;
+    return Math.abs(punto.x - x) <= Math.max(ancho / 2,22) + 10 &&
+      punto.y >= y - alto * borde - 9 && punto.y <= y + alto * (1 - borde) + 16;
+  }
+  function marcaColocacion(ctx, objeto, corregir) {
+    const [x,y] = proyectar(objeto.x,objeto.z);
+    const radio = objeto.z < 0 ? 17 : 19 + 11 * objeto.z;
+    const altoMarca = objeto.z < 0 ? radio : radio * .48;
+    const color = corregir ? '#a53e1f' : '#155575';
+    elipse(ctx,x,y,radio + 3,altoMarca + 3,'#ffffffea',color);
+    elipse(ctx,x,y,radio - 1,altoMarca - 1,corregir ? '#ffb862' : '#5ed5ef',color);
+    elipse(ctx,x,y,3.5,3.5,color);
   }
   function visibleFueraDeCasa(id, x, z, casa) {
     if (z >= casa.z) return true;
@@ -369,9 +387,9 @@
         break;
     }
   }
-  function paisajeObjeto(ctx, id, x, z, h = 0, terreno) {
+  function paisajeObjeto(ctx, id, x, z, h = 0, terreno, sombraVisible = true) {
     const [sx, sy] = proyectar(x, z);
-    if (z >= 0) {
+    if (z >= 0 && sombraVisible) {
       ctx.save();
       ctx.translate(sx + 7 * escala(z), sy + 3 * escala(z));
       ctx.scale(escala(z), escala(z) * .27);
@@ -427,5 +445,5 @@
     }
     ctx.restore();
   }
-  return window.EscenarioConstruccion = {ancho,alto,piso,proyectar,desdePantalla,dentroCasa,dentroCerca,objetoEnEscena,visibleFueraDeCasa,bloque,fondoBloques,cargarFondos,terreno,paisajeObjeto,ficha,poligono,elipse,linea};
+  return window.EscenarioConstruccion = {ancho,alto,piso,proyectar,desdePantalla,dentroCasa,dentroCerca,objetoEnEscena,visibleFueraDeCasa,tocarObjeto,marcaColocacion,bloque,fondoBloques,cargarFondos,terreno,paisajeObjeto,ficha,poligono,elipse,linea};
 })();

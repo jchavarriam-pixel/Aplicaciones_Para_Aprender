@@ -1,10 +1,10 @@
 Object.assign(window.TEXTOS_INGLES ||= {}, {
-  'Escucha y construye': 'Listen and build',
+  'Lee y construye': 'Read and build',
   'Nombre del niño': 'Child’s name',
   'Ej.: Gabriel': 'E.g. Gabriel',
   'Todas las aplicaciones': 'All apps',
   'Así jugamos': 'How to play',
-  'Lee o escucha cada paso. Arrastra una pieza o tócala y toca su lugar. Al final, cuenta lo que construiste.': 'Read or listen to each step. Drag a piece or tap it and then tap its place. At the end, tell someone what you built.',
+  'Lee cada paso. Arrastra una pieza o tócala y toca su lugar.': 'Read each step. Drag a piece or tap it and then tap its place.',
   '⚙ Configuración': '⚙ Settings',
   'Reiniciar reto': 'Restart challenge',
   'Modos de construcción': 'Building activities',

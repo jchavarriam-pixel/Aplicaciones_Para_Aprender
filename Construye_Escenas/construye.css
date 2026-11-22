@@ -205,6 +205,13 @@ button { cursor: pointer; touch-action: manipulation; }
 .respuesta { display: flex; align-items: center; justify-content: center; gap: calc(6 * var(--u)); min-height: calc(25 * var(--u)); padding-right: calc(97 * var(--u)); }
 #estado { color: #8a3d43; font-size: calc(12 * var(--u)); font-weight: 800; line-height: 1.2; }
 #estado.correcto { color: #146849; }
+#estado.corregir {
+  padding:calc(4 * var(--u)) calc(8 * var(--u));
+  border-radius:calc(8 * var(--u));
+  color:#753516;
+  background:#ffeecc;
+  font-size:calc(14 * var(--u));
+}
 .principal { border-color: #554094; background: #6744a7; color: #fff; }
 .respuesta .principal { min-height: calc(36 * var(--u)); }
 @media (orientation: landscape) and (max-height: 490px) {

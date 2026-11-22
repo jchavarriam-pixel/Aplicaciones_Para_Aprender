@@ -2,7 +2,7 @@
   'use strict';
 
   const get = id => document.getElementById(id);
-  const {piezas, bloques, paisajes, zonaTablero, admite, siguientePaisaje, mallaPaisaje: malla, puntosPaisaje} = RetosConstruccion;
+  const {piezas, bloques, paisajes, piezaEnEspacioLibre, admite, siguientePaisaje, mallaPaisaje: malla, puntosPaisaje} = RetosConstruccion;
   const retos = {bloques, paisajes};
   const escena = EscenarioConstruccion;
   const app = get('appConstruye'), juego = get('juego'), tablero = get('tablero'), banco = get('banco');
@@ -27,7 +27,7 @@
   const historial = [], fuegos = [];
   const cursor = {x: 380, y: 275};
   let modo, reto, indiceReto = 0, elegida, opciones = [], zonas = [], pistaManual = null;
-  let arrastre, vistaPrevia, movimiento, teclado = false;
+  let arrastre, vistaPrevia, movimiento, piezaPendiente, teclado = false;
   let cuadroAnimacion = 0;
   let pasoPaisaje, ordenPaisaje, puestasEnPaso = 0;
 
@@ -49,23 +49,16 @@
   function instruccion() {
     if (paso()) return local(paso().texto);
     const nombre = window.NombreCompartido?.obtener();
-    if (esBloques()) return nombre ?
-      esEn(`¡Bien hecho, ${nombre}! Cuenta en voz alta qué pusiste primero y qué bloque quedó encima.`,
-        `Well done, ${nombre}! Say what you put down first and which block ended up on top.`) :
-      esEn('¡Bien hecho! Cuenta en voz alta qué pusiste primero y qué bloque quedó encima.',
-        'Well done! Say what you put down first and which block ended up on top.');
-    return nombre ?
-      esEn(`¡Bien hecho, ${nombre}! Describe tu paisaje en voz alta. ¿Qué pusiste y dónde quedó?`,
-        `Well done, ${nombre}! Describe your landscape aloud. What did you put down, and where?`) :
-      esEn('¡Bien hecho! Describe tu paisaje en voz alta. ¿Qué pusiste y dónde quedó?',
-        'Well done! Describe your landscape aloud. What did you put down, and where?');
+    return nombre ? esEn(`¡Bien hecho, ${nombre}!`, `Well done, ${nombre}!`) : esEn('¡Bien hecho!', 'Well done!');
   }
   function narrar(texto, manual = false) {
     if (manual || config.narracion) IdiomaVoz.hablar(texto);
   }
   function mostrarEstado(texto = '', esCorrecto = false) {
-    get('estado').textContent = texto;
-    get('estado').classList.toggle('correcto', esCorrecto);
+    const estado = get('estado');
+    estado.textContent = texto;
+    estado.classList.toggle('correcto', esCorrecto);
+    estado.classList.toggle('corregir', Boolean(texto && piezaPendiente));
   }
   function generarOpciones() {
     if (!paso()) return [];
@@ -103,7 +96,7 @@
     }));
   }
   function renderPaso(nuevoBanco = true, leer = true) {
-    elegida = nuevoBanco ? null : elegida;
+    if (nuevoBanco) elegida = piezaPendiente?.id || null;
     if (nuevoBanco) {
       opciones = generarOpciones();
       pistaManual = null;
@@ -151,6 +144,7 @@
     opciones = [];
     vistaPrevia = null;
     arrastre = null;
+    piezaPendiente = null;
     teclado = false;
     cursor.x = 380; cursor.y = 275;
     selector.value = indice;
@@ -198,7 +192,7 @@
     return Math.abs(destino.x - centro) <= (objetivo.apoyos.length > 1 ? 27 : 31);
   }
   function paisajeCorrecto(x, z) {
-    return zonaTablero(x,z) && admite(paso(), x, z, colocadas, paso().cantidad - puestasEnPaso - 1);
+    return admite(paso(), x, z, colocadas, paso().cantidad - puestasEnPaso - 1);
   }
   function calcularPistas() {
     if (!mostrarZona() || !paso()) return [];
@@ -237,9 +231,9 @@
       }
     }
   }
-  function dibujarPieza(item, elevacion = 0) {
+  function dibujarPieza(item, elevacion = 0, sombra = true) {
     if (esBloques()) escena.bloque(ctx, piezas[item.id], item.x, item.y - elevacion);
-    else escena.paisajeObjeto(ctx, item.id, item.x, item.z, elevacion, reto.terreno);
+    else escena.paisajeObjeto(ctx, item.id, item.x, item.z, elevacion, reto.terreno, sombra);
   }
   const coloresFuegos = ['#ffe25e','#ff6ba2','#68edff','#caa0ff','#ff9652','#f9ffff'];
   function celebrar() {
@@ -294,6 +288,10 @@
     dibujarPistas();
     const progreso = movimiento ? limites((tiempo - movimiento.inicio) / movimiento.duracion, 0, 1) : 0;
     const fantasma = movimiento?.pieza || vistaPrevia;
+    const pendienteVisible = fantasma ? null : piezaPendiente;
+    if (!esBloques() && (fantasma || pendienteVisible)) {
+      escena.marcaColocacion(ctx, fantasma || pendienteVisible, Boolean(pendienteVisible));
+    }
     const items = fantasma ? [...colocadas, fantasma] : colocadas;
     const orden = esBloques() ? items : [...items].sort((a, b) =>
       (a.contenedor ? a.contenedor.z + .001 : a.z) - (b.contenedor ? b.contenedor.z + .001 : b.z));
@@ -302,9 +300,10 @@
       ctx.save();
       if (!movimiento) ctx.globalAlpha = .62;
       const elevacion = movimiento ? movimiento.elevacion * (1 - progreso * progreso) : esBloques() ? 0 : 24;
-      dibujarPieza(item, elevacion);
+      dibujarPieza(item, elevacion, false);
       ctx.restore();
     }
+    if (pendienteVisible) dibujarPieza(pendienteVisible, 0, false);
     if (teclado && elegida && !movimiento) {
       escena.elipse(ctx, cursor.x, cursor.y, 10, 10, '#fff9', '#53239d');
       escena.linea(ctx, [[cursor.x - 7,cursor.y],[cursor.x + 7,cursor.y]], '#53239d', 2);
@@ -333,9 +332,9 @@
     return {x: (x - vista.x) / vista.escala, y: (y - vista.y) / vista.escala};
   }
   function seleccionar(id, enfocar = false) {
-    if (movimiento || completar()) return;
+    if (movimiento || completar() || (piezaPendiente && id !== piezaPendiente.id)) return false;
     elegida = id;
-    mostrarEstado();
+    if (!piezaPendiente) mostrarEstado();
     tablero.classList.add('colocando');
     for (const boton of banco.children) boton.setAttribute('aria-pressed', String(boton.dataset.pieza === id));
     if (enfocar) {
@@ -343,14 +342,17 @@
       tablero.focus({preventScroll: true});
       dibujar();
     }
+    return true;
   }
   function errorPieza() {
     const texto = esEn('Revisa la instrucción y elige otra pieza.', 'Check the instruction and choose another piece.');
     mostrarEstado(texto);
     narrar(texto);
   }
-  function errorLugar() {
-    const texto = esEn('La pieza es correcta. Prueba en otro lugar.', 'That is the right piece. Try a different place.');
+  function errorLugar(espacioOcupado = false) {
+    const texto = piezaPendiente ? local(paso().correccion) : espacioOcupado ?
+      esEn('Busca un espacio libre para colocar la pieza.', 'Find an open space for the piece.') :
+      esEn('La pieza es correcta. Prueba en otro lugar.', 'That is the right piece. Try a different place.');
     mostrarEstado(texto);
     narrar(texto);
   }
@@ -372,15 +374,16 @@
       elevacion = pieza.y - pieza.origen;
     } else {
       const {x,z} = escena.desdePantalla(punto.x,punto.y);
+      pieza = piezaEnEspacioLibre(elegida, reto, x, z, colocadas);
+      if (!pieza) { errorLugar(true); return; }
       valido = paisajeCorrecto(x,z);
       // Un toque puede llegar redondeado al píxel más cercano, especialmente en pantallas pequeñas.
       const toleranciaX = mostrarZona() ? .5 / malla.columnas : .009;
       const toleranciaZ = mostrarZona() ? .5 / malla.filas : .018;
       const ajuste = !valido && puntosPaisaje.find(zona => Math.abs(x - zona.x) <= toleranciaX &&
         Math.abs(z - zona.z) <= toleranciaZ && paisajeCorrecto(zona.x,zona.z));
-      if (!ajuste && !zonaTablero(x,z)) { errorLugar(); return; }
-      pieza = {id: elegida, x: ajuste?.x ?? x, z: ajuste?.z ?? z, contenedor: paso().contenedor};
-      elevacion = z < 0 ? 14 : 94;
+      if (ajuste) pieza = {...pieza, x: ajuste.x, z: ajuste.z, contenedor: paso().contenedor};
+      elevacion = piezaPendiente ? 18 : z < 0 ? 14 : 94;
       valido ||= Boolean(ajuste);
     }
     vistaPrevia = null;
@@ -396,7 +399,13 @@
   function finalizarCaida() {
     const {pieza, valido} = movimiento;
     detenerMovimiento();
-    if (!valido) { errorLugar(); dibujar(); return; }
+    if (!valido) {
+      if (!esBloques()) piezaPendiente = pieza;
+      errorLugar();
+      dibujar();
+      return;
+    }
+    piezaPendiente = null;
     colocadas.push(pieza);
     let pasoCompleto = true;
     if (!esBloques()) {
@@ -420,46 +429,66 @@
   banco.addEventListener('pointerdown', evento => {
     const boton = evento.target.closest('[data-pieza]');
     if (evento.button !== 0 || arrastre || movimiento || !boton) return;
+    if (!seleccionar(boton.dataset.pieza)) return;
     boton.setPointerCapture(evento.pointerId);
     teclado = false;
-    seleccionar(boton.dataset.pieza);
     arrastre = {puntero: evento.pointerId, x: evento.clientX, y: evento.clientY, movido: false};
   });
-  banco.addEventListener('pointermove', evento => {
-    if (arrastre?.puntero !== evento.pointerId) return;
-    if (!arrastre.movido && Math.hypot(arrastre.x - evento.clientX, arrastre.y - evento.clientY) < 6) return;
-    arrastre.movido = true;
+  tablero.addEventListener('pointerdown', evento => {
+    if (evento.button !== 0 || arrastre || movimiento || !paso()) return;
     const punto = encimaTablero(evento);
+    if (!elegida) { colocar(punto); return; }
+    teclado = false;
+    const desdePieza = piezaPendiente && escena.tocarObjeto(punto, piezaPendiente, reto.terreno);
+    tablero.setPointerCapture(evento.pointerId);
+    arrastre = {puntero: evento.pointerId, x: evento.clientX, y: evento.clientY, desdePieza, movido: false};
+    if (!desdePieza && !esBloques()) actualizarPrevia(punto);
+  });
+  function actualizarPrevia(punto) {
     vistaPrevia = null;
     if (dentro(punto)) {
       if (esBloques()) vistaPrevia = {id: elegida, ...punto};
       else {
         const {x,z} = escena.desdePantalla(punto.x,punto.y);
-        if (zonaTablero(x,z)) vistaPrevia = {id: elegida,x,z,contenedor: paso()?.contenedor};
+        vistaPrevia = piezaEnEspacioLibre(elegida,reto,x,z,colocadas);
       }
     }
     dibujar();
-  });
-  for (const nombreEvento of ['pointerup','pointercancel','lostpointercapture']) {
-    banco.addEventListener(nombreEvento, evento => {
-      if (arrastre?.puntero !== evento.pointerId) return;
-      const soltar = nombreEvento === 'pointerup' && arrastre.movido;
-      arrastre = null;
-      vistaPrevia = null;
-      if (soltar) {
-        const punto = encimaTablero(evento);
-        if (dentro(punto)) colocar(punto);
-      }
-      if (!movimiento) dibujar();
-    });
   }
+  function moverArrastre(evento) {
+    if (arrastre?.puntero !== evento.pointerId) return;
+    if (!arrastre.movido && Math.hypot(arrastre.x - evento.clientX, arrastre.y - evento.clientY) < 6) return;
+    arrastre.movido = true;
+    actualizarPrevia(encimaTablero(evento));
+  }
+  for (const control of [banco,tablero]) {
+    control.addEventListener('pointermove', moverArrastre);
+    for (const nombreEvento of ['pointerup','pointercancel','lostpointercapture']) {
+      control.addEventListener(nombreEvento, evento => {
+        if (arrastre?.puntero !== evento.pointerId) return;
+        const soltar = nombreEvento === 'pointerup' && (arrastre.movido || (control === tablero && !arrastre.desdePieza));
+        arrastre = null;
+        vistaPrevia = null;
+        if (soltar) {
+          const punto = encimaTablero(evento);
+          if (dentro(punto)) colocar(punto);
+        }
+        if (!movimiento) dibujar();
+      });
+    }
+  }
+  tablero.addEventListener('pointermove', evento => {
+    if (esBloques() || evento.pointerType !== 'mouse' || arrastre || movimiento || piezaPendiente || !elegida) return;
+    actualizarPrevia(encimaTablero(evento));
+  });
+  tablero.addEventListener('pointerleave', () => {
+    if (arrastre || !vistaPrevia) return;
+    vistaPrevia = null;
+    dibujar();
+  });
   banco.addEventListener('click', evento => {
     const boton = evento.target.closest('[data-pieza]');
     if (boton && evento.detail === 0) seleccionar(boton.dataset.pieza, true);
-  });
-  tablero.addEventListener('click', evento => {
-    teclado = false;
-    colocar(encimaTablero(evento));
   });
   tablero.addEventListener('keydown', evento => {
     const pasos = {ArrowLeft: [-1,0], ArrowRight: [1,0], ArrowUp: [0,-1], ArrowDown: [0,1]};
@@ -469,7 +498,8 @@
       teclado = true;
       cursor.x = limites(cursor.x + delta[0] * 12, 8, escena.ancho - 8);
       cursor.y = limites(cursor.y + delta[1] * 12, 8, escena.alto - 8);
-      dibujar();
+      if (esBloques()) dibujar();
+      else actualizarPrevia(cursor);
     }
     if (evento.key === 'Enter' || evento.key === ' ') {
       evento.preventDefault();
@@ -535,7 +565,7 @@
     }
     renderLista();
     if (cambioLongitud && !esBloques()) { iniciar(indiceReto); return; }
-    mostrarEstado();
+    mostrarEstado(piezaPendiente ? local(paso().correccion) : '');
     renderPaso(cambioCantidad);
   });
 
