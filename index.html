@@ -310,6 +310,23 @@
       width: 92%;
       height: 92%;
     }
+    .icono-operaciones {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px;
+      width: 86%;
+      height: 86%;
+      font-size: .8em;
+      line-height: 1;
+    }
+    .icono-operaciones b {
+      display: grid;
+      place-items: center;
+      border-radius: 4px;
+      color: #fff;
+      background: #5545b6;
+    }
+    .icono-operaciones b:nth-child(2n) { background: #227772; }
 
     .card h3 {
       position: relative;
@@ -519,7 +536,7 @@
     @media(prefers-reduced-motion:reduce){.burbuja{animation:none}}
   </style>
   <link rel="stylesheet" href="creditos.css">
-  <link rel="stylesheet" href="pantalla-completa.css"><link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="indice.css?v=tarjetas-compactas-1"><script>window.IDIOMA_VOZ_APP='indiceAprender';</script><script src="idioma-voz-textos.js"></script><script src="indice-textos.js?v=resta-abajo"></script><script src="idioma-voz.js"></script><script src="indice-catalogo.js?v=tarjetas-compactas-1"></script>
+  <link rel="stylesheet" href="pantalla-completa.css"><link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="indice.css?v=tarjetas-compactas-1"><script>window.IDIOMA_VOZ_APP='indiceAprender';</script><script src="idioma-voz-textos.js"></script><script src="indice-textos.js?v=combina-operaciones"></script><script src="idioma-voz.js"></script><script src="indice-catalogo.js?v=tarjetas-compactas-1"></script>
 </head>
 
 <body>
@@ -703,6 +720,13 @@
         color: "verde"
       },
       {
+        nombre: "Combina operaciones",
+        archivo: "Operaciones_Combinadas/operaciones.html",
+        icono: '<span class="icono-operaciones" aria-hidden="true"><b>+</b><b>−</b><b>×</b><b>÷</b></span>',
+        descripcion: "Practica suma, resta, multiplicación y división con pareo y respuesta corta. Encuentra resultados o completa el número que falta.",
+        color: "morado"
+      },
+      {
         nombre: "Mi reloj mágico",
         archivo: "Reloj_Analogico/reloj.html",
         imagenIcono: "iconos/reloj-magico.webp",
@@ -827,6 +851,7 @@
     const clasificacion = {
       'Multiplicacion/multiplicacion.html':['matematicas',['Multiplicación','Conteo','Agrupación','Tablas de multiplicar','Pareo']],
       'Division/division.html':['matematicas',['División','Operaciones matemáticas','Agrupación']],
+      'Operaciones_Combinadas/operaciones.html':['matematicas',['Operaciones matemáticas','Suma y resta','Multiplicación','División','Pareo']],
       'Abaco/abaco.html':['matematicas',['Ábaco','Conteo','Operaciones matemáticas']],
       'Reloj_Analogico/reloj.html':['matematicas',['Tiempo y reloj']],
       'aprende_a_restar_quitando.html':['matematicas',['Operaciones matemáticas','Conteo']],
@@ -874,6 +899,7 @@
       'Sumas_y_restas.html',
       'Multiplicacion/multiplicacion.html',
       'Division/division.html',
+      'Operaciones_Combinadas/operaciones.html',
       'Sumas_y_Restas_UM_C_D_U.html',
       'Resta_Prestamo/resta_prestamo.html',
       'Situaciones_Problema_Sumas_Restas.html',

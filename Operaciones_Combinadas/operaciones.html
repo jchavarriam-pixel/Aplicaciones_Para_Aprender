@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Combina operaciones</title>
+  <link rel="stylesheet" href="../creditos.css">
+  <link rel="stylesheet" href="../idioma-voz.css">
+  <link rel="stylesheet" href="../pantalla-completa.css">
+  <link rel="stylesheet" href="../panel-plegable.css">
+  <link rel="stylesheet" href="../teclado-en-pantalla.css">
+  <link rel="stylesheet" href="operaciones.css">
+</head>
+<body>
+  <main id="appOperaciones">
+    <aside class="herramientas-operaciones">
+      <header class="cabecera">
+        <h1><span class="emblema" aria-hidden="true">✦</span> Combina operaciones</h1>
+        <a class="casa" id="inicio" href="../index.html" aria-label="Todas las aplicaciones" title="Todas las aplicaciones">⌂</a>
+        <label class="nombre" for="nombre">Nombre del niño
+          <input type="text" id="nombre" maxlength="40" autocomplete="given-name" placeholder="Ej.: Gabriel">
+        </label>
+      </header>
+      <section class="guia">
+        <h2>Así jugamos</h2>
+        <p>Calcula qué número va en la casilla.</p>
+      </section>
+      <div class="herramientas-acciones">
+        <button type="button" id="abrirAjustes">⚙ Configuración</button>
+        <button type="button" id="volver" hidden>‹ Modos</button>
+        <button type="button" id="nueva" hidden>↻ Nueva ronda</button>
+      </div>
+    </aside>
+    <nav class="actividad modos" id="modos" aria-label="Modos de práctica">
+      <button class="tarjeta modo-respuesta" type="button" data-modo="respuesta">
+        <span class="arte" aria-hidden="true"><i>5</i><i>+</i><i>?</i><i>20</i></span>
+        <strong>Respuesta corta</strong>
+        <span>Completa una operación a la vez con el teclado del juego.</span>
+      </button>
+      <button class="tarjeta modo-pareo" type="button" data-modo="pareo">
+        <span class="arte" aria-hidden="true"><i>🚀</i><i>10</i><i>🚀</i><i>15</i></span>
+        <strong>Pareo de operaciones</strong>
+        <span>Une cada operación con el número que la completa.</span>
+      </button>
+    </nav>
+    <section class="actividad juego" id="juego" hidden aria-labelledby="tituloReto">
+      <header class="reto">
+        <h2 id="tituloReto"></h2>
+        <p id="instruccion"></p>
+        <div class="reto-acciones">
+          <span id="progreso" aria-live="polite"></span>
+          <button type="button" id="escuchar" aria-label="Escuchar ejercicio" title="Escuchar ejercicio">🔊</button>
+          <button type="button" id="volverPlegado" hidden>‹ Modos</button>
+        </div>
+      </header>
+      <div id="respuestaCorta" class="respuesta-corta" hidden>
+        <div id="ecuacion" class="ecuacion"></div>
+        <div id="teclado" class="teclado-propio" role="group" aria-label="Teclado numérico"></div>
+      </div>
+      <div id="vistaPareo" class="vista-pareo" hidden>
+        <div id="tablero" class="tablero">
+          <h3>Operaciones</h3><h3>Números</h3>
+          <div id="salidas" class="columna-pareo"></div>
+          <div id="metas" class="columna-pareo"></div>
+          <svg id="lineas" aria-hidden="true"></svg>
+        </div>
+      </div>
+      <div class="acciones-juego">
+        <p id="mensaje" role="status"></p>
+        <button type="button" class="principal" id="revisar">✓ Revisar</button>
+        <button type="button" class="principal" id="siguiente" hidden>Siguiente pregunta</button>
+      </div>
+    </section>
+  </main>
+  <dialog id="ajustes" aria-labelledby="tituloAjustes">
+    <form id="formAjustes" method="dialog">
+      <header class="encabezado-ajustes">
+        <h2 id="tituloAjustes">Configuración</h2>
+        <button aria-label="Aplicar y cerrar" title="Aplicar y cerrar">✕</button>
+      </header>
+      <p>Activa las operaciones que quieras practicar. Los límites se aplican a los dos números que se suman, restan, multiplican o dividen.</p>
+      <div id="ajustesOperaciones"></div>
+      <p>Las restas no dan resultados negativos y las divisiones son exactas.</p>
+      <div class="opciones-ronda">
+        <label>Preguntas por ronda de respuesta corta<select id="preguntas"></select></label>
+        <label>Pares por ronda<select id="pares"></select></label>
+        <label class="opcion-casilla"><input type="checkbox" id="narracion"> Leer preguntas y comentarios automáticamente</label>
+      </div>
+      <div id="vozOperaciones"></div>
+      <button class="principal aplicar">Aplicar y cerrar</button>
+    </form>
+  </dialog>
+  <div id="celebracionOperaciones" aria-hidden="true"></div>
+  <footer id="creditos-aplicaciones">
+    <div class="creditos-dedicatoria"><span class="creditos-gabriel">Creado para <strong>Gabriel</strong></span><span class="creditos-familia">Por su familia, con ayuda de la IA.</span></div>
+    <div class="creditos-equipo"><span class="creditos-autores">M.Sc. Jeffry Chavarría-Molina y Ph.D. (c) Natalia Rodríguez-Granados</span><span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span></div>
+  </footer>
+  <script>window.IDIOMA_VOZ_APP = 'operaciones-combinadas';</script>
+  <script src="../idioma-voz-textos.js"></script>
+  <script src="../idioma-voz.js"></script>
+  <script src="../matematicas-base.js"></script>
+  <script src="../historial-modos.js"></script>
+  <script src="../teclado-en-pantalla.js"></script>
+  <script src="../Multiplicacion/efectos-tablas.js"></script>
+  <script src="../pantalla-completa.js"></script>
+  <script src="../panel-plegable.js?v=operaciones-combinadas"></script>
+  <script src="../nombre-compartido.js"></script>
+  <script src="retos.js"></script>
+  <script src="operaciones.js"></script>
+</body>
+</html>
