@@ -87,7 +87,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnAbaco = document.createElement('button');
   btnAbaco.type = 'button';
   btnAbaco.className = 'boton-abaco-operaciones';
-  btnAbaco.textContent = '🧮 Ábaco';
   const abaco = AbacoOperaciones.instalar(btnAbaco, () => {
     if (activeScreen === 'menu' || !current.topDigits.length) return null;
     const tarea = findTask();
@@ -204,7 +203,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const encabezado = document.createElement('header');
       encabezado.className = 'cabecera-ejercicio-posicional';
       preview.before(encabezado);
-      encabezado.append(preview,btnAbaco);
+      encabezado.append(preview);
+      board.append(btnAbaco);
       observador.disconnect();
       observador.observe(board);
       guardar();

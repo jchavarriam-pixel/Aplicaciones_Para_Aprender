@@ -5,6 +5,7 @@ Object.assign(window.TEXTOS_INGLES ||= {}, {
   'Mover el ábaco con las flechas': 'Move the abacus with the arrow keys',
   'Arrastra para mover el ábaco': 'Drag to move the abacus',
   'Cerrar ábaco': 'Close abacus',
+  'Mostrar botón del ábaco': 'Show abacus button',
   'Ayuda del ábaco': 'Abacus hints',
   'Tamaño del ábaco': 'Abacus size',
   'Libre': 'Free play',
@@ -24,10 +25,14 @@ window.AbacoOperaciones = (() => {
   const distribuir = n => [Math.min(n,10),Math.max(0,n-10)];
 
   function instalar(boton, obtenerOperacion, clave = 'operaciones.abaco.v1') {
+    boton.innerHTML = '<span aria-hidden="true">🧮</span> <span class="rotulo-boton-abaco">Ábaco</span>';
+    boton.setAttribute('aria-label','Ábaco');
+    boton.title = 'Ábaco';
     const configuracion = document.createElement('fieldset');
     configuracion.className = 'ajustes-abaco-operaciones';
     configuracion.innerHTML = `
       <legend>Ábaco</legend>
+      <label class="opcion-abaco-visible"><input type="checkbox" id="mostrarBotonAbaco"> Mostrar botón del ábaco</label>
       <label>Ayuda del ábaco
         <select id="modoAbacoFlotante">
           <option value="libre">Libre</option>
@@ -42,6 +47,7 @@ window.AbacoOperaciones = (() => {
           <option value="grande">Grande</option>
         </select>
       </label>`;
+    const selectorVisible = configuracion.querySelector('#mostrarBotonAbaco');
     const selectorModo = configuracion.querySelector('#modoAbacoFlotante');
     const selectorTamano = configuracion.querySelector('#tamanoAbacoFlotante');
 
@@ -71,6 +77,7 @@ window.AbacoOperaciones = (() => {
       return rotulo;
     });
     const guardado = Matematicas.leer(clave);
+    boton.hidden = guardado.mostrarBoton === false;
     let modo = modos.includes(guardado.modo) ? guardado.modo : 'guiado';
     let tamano = Object.hasOwn(anchos,guardado.tamano) ? guardado.tamano : 'pequeno';
     let cantidades = [0,0], operacion, firma, filaBase = null, restaPreparada = false;
@@ -175,7 +182,8 @@ window.AbacoOperaciones = (() => {
     }
 
     const ajustar = posicionarAbaco(panel,cancelarCuentas,() => anchos[tamano]);
-    function mostrar(visible) {
+    function mostrar(visible, enfocarBoton = true) {
+      if (visible && boton.hidden) return;
       panel.hidden = !visible;
       boton.setAttribute('aria-expanded',visible);
       if (visible) {
@@ -184,7 +192,7 @@ window.AbacoOperaciones = (() => {
         panel.querySelector('.mover-abaco').focus({preventScroll:true});
       } else {
         cancelarCuentas();
-        boton.focus({preventScroll:true});
+        if (enfocarBoton) boton.focus({preventScroll:true});
       }
     }
     boton.setAttribute('aria-controls',panel.id);
@@ -197,11 +205,17 @@ window.AbacoOperaciones = (() => {
     document.addEventListener('operacion-cambiada',evento => actualizar(evento.detail?.nuevaRonda));
     return {
       configuracion,
-      prepararConfiguracion() { selectorModo.value = modo; selectorTamano.value = tamano; },
+      prepararConfiguracion() {
+        selectorVisible.checked = !boton.hidden;
+        selectorModo.value = modo;
+        selectorTamano.value = tamano;
+      },
       aplicarConfiguracion() {
         modo = selectorModo.value;
         tamano = selectorTamano.value;
-        Matematicas.guardar(clave,{modo,tamano});
+        boton.hidden = !selectorVisible.checked;
+        if (boton.hidden && !panel.hidden) mostrar(false, false);
+        Matematicas.guardar(clave,{modo,tamano,mostrarBoton:!boton.hidden});
         pintar();
         ajustar();
       },

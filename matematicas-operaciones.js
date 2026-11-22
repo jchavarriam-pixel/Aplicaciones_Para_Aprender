@@ -51,8 +51,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const botonAbaco = document.createElement('button');
   botonAbaco.type = 'button';
   botonAbaco.className = 'boton-abaco-operaciones';
-  botonAbaco.textContent = '🧮 Ábaco';
-  cabeceraTablero.append(instruccion, botonAbaco);
+  cabeceraTablero.append(instruccion);
+  const board = document.getElementById('board');
+  board.append(botonAbaco);
   game.prepend(cabeceraTablero, hint);
   const abaco = AbacoOperaciones.instalar(botonAbaco, () => {
     if (!topDigits.length) return null;
@@ -186,7 +187,6 @@ document.addEventListener('DOMContentLoaded', () => {
   updateModeVisibility();
   initBackgroundMusic();
 
-  const board = document.getElementById('board');
   const fit = Matematicas.pantalla(app, (alto, zoom) => {
     app.style.setProperty('--unidad', 1/zoom + 'px');
     app.classList.toggle('compacta', alto*zoom < 460);

@@ -36,6 +36,11 @@
 }
 .ajustes-abaco-operaciones legend { padding:0 5px; font-weight:900; }
 .ajustes-abaco-operaciones label { display:grid; gap:4px; }
+.ajustes-abaco-operaciones .opcion-abaco-visible {
+  grid-column:1/-1; display:flex; align-items:center; gap:7px; min-height:32px; font-weight:800;
+}
+.opcion-abaco-visible input { width:18px; height:18px; flex:none; }
+.ajustes-abaco-operaciones:has(#mostrarBotonAbaco:not(:checked)) > label:not(.opcion-abaco-visible) { display:none; }
 .ajustes-abaco-operaciones select { border:1px solid #a8bbe5; border-radius:8px; background:#fff; color:#273b68; padding:5px; font:inherit; }
 .boton-abaco-operaciones {
   border: 1px solid #a5acef;
@@ -48,6 +53,28 @@
   cursor: pointer;
 }
 .boton-abaco-operaciones[aria-expanded="true"] { background: #e4dcfd; }
+.board > .boton-abaco-operaciones {
+  position:absolute; inset-inline-end:calc(5 * var(--unidad)); bottom:calc(5 * var(--unidad));
+  max-width:calc(66 * var(--unidad)); padding-inline:calc(4 * var(--unidad)); z-index:1;
+}
+.boton-abaco-operaciones[hidden] { display:none; }
+@media (max-height: 540px), (max-width: 500px) {
+  .board > .boton-abaco-operaciones {
+    width:calc(34 * var(--unidad)); padding:0; font-size:calc(18 * var(--unidad));
+  }
+  .rotulo-boton-abaco { display:none; }
+  .board:has(> .boton-abaco-operaciones:not([hidden])) .borrow-btn-container {
+    padding-inline-end:calc(37 * var(--unidad));
+  }
+  .board:has(> .boton-abaco-operaciones) {
+    --reserva:calc(102 * var(--unidad));
+    --reserva-prestamo:calc(106 * var(--unidad));
+  }
+  .board:has(> .boton-abaco-operaciones:not([hidden])) .borrow-btn-container :is(.act-btn.borrow,#borrowBtn) {
+    padding-inline:calc(3 * var(--unidad));
+    font-size:calc(12 * var(--unidad));
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   #abaco-flotante .cuenta { transition: none; }
 }
