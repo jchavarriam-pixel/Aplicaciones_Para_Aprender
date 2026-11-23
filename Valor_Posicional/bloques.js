@@ -62,19 +62,8 @@
     ctx.lineWidth = lugar === 2 ? .86 : .7;
     ctx.stroke();
   }
-  function pintar(canvas, lugar, cantidad, agrupado = false) {
-    const {width, height} = canvas.getBoundingClientRect();
-    if(!width || !height) return;
-    const escala = Math.min(devicePixelRatio || 1, 2);
-    canvas.width = Math.round(width*escala);
-    canvas.height = Math.round(height*escala);
-    const ctx = canvas.getContext('2d');
-    ctx.scale(escala,escala);
-    if(!cantidad) return;
-    if(!agrupado) {
-      pieza(ctx,lugar,width/2,height/2,width*.84,height*.86);
-      return;
-    }
+  function distribucion(lugar, cantidad, width, height) {
+    const posiciones = [];
     if(lugar >= 2) {
       const grupos = cantidad > 5 ? 2 : 1;
       const placa = lugar === 2;
@@ -86,9 +75,9 @@
       for(let g=0;g<grupos;g++){
         const total = Math.min(5,cantidad-g*5);
         const x = width * (grupos === 1 ? .5 : g === 0 ? .25 : .75);
-        for(let i=0;i<total;i++) pieza(ctx,lugar,x,height/2+((total-1)/2-i)*paso,w,h);
+        for(let i=0;i<total;i++) posiciones.push({x,y:height/2+((total-1)/2-i)*paso,ancho:w,alto:h});
       }
-      return;
+      return posiciones;
     }
     const filas = cantidad > 5 ? 2 : 1;
     const unidad = lugar === 0;
@@ -102,8 +91,63 @@
     for(let i=0;i<cantidad;i++){
       const x = unidad ? (i%5+.5)*pasoX : width/2+(i%5-(Math.min(cantidad,5)-1)/2)*pasoX;
       const y = height/2+(Math.floor(i/5)-(filas-1)/2)*pasoY;
-      pieza(ctx,lugar,x,y,ancho,alto);
+      posiciones.push({x,y,ancho,alto});
     }
+    return posiciones;
   }
-  window.BloquesMultibase = {pintar};
+  function superficie(canvas) {
+    const rect = canvas.getBoundingClientRect();
+    if(!rect.width || !rect.height) return null;
+    const escala = Math.min(devicePixelRatio || 1, 2);
+    const ancho = Math.round(rect.width*escala), alto = Math.round(rect.height*escala);
+    if(canvas.width !== ancho) canvas.width = ancho;
+    if(canvas.height !== alto) canvas.height = alto;
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(escala,0,0,escala,0,0);
+    ctx.clearRect(0,0,rect.width,rect.height);
+    return {ctx,rect};
+  }
+  function pintar(canvas, lugar, cantidad, agrupado = false) {
+    const dibujo = superficie(canvas);
+    if(!dibujo || !cantidad) return;
+    const {ctx,rect:{width,height}} = dibujo;
+    if(!agrupado) pieza(ctx,lugar,width/2,height/2,width*.84,height*.86);
+    else for(const p of distribucion(lugar,cantidad,width,height)) pieza(ctx,lugar,p.x,p.y,p.ancho,p.alto);
+  }
+  function pintarCanje(canvas, lugar, origen, destino, cantidadDestino, avance) {
+    const dibujo = superficie(canvas);
+    if(!dibujo) return;
+    const {ctx,rect} = dibujo;
+    const a = origen.getBoundingClientRect(), b = destino.getBoundingClientRect();
+    const x = a.left - rect.left + a.width/2, y = a.top - rect.top + a.height/2;
+    const llegada = distribucion(lugar+1,cantidadDestino,b.width,b.height).at(-1);
+    const ancho = Math.min(a.width*.65,llegada.ancho*1.3);
+    const alto = Math.min(a.height*.85,llegada.alto*1.3);
+    const limitar = n => Math.max(0,Math.min(1,n));
+    const juntar = 1 - (1 - limitar(avance/.48))**3;
+    const cambio = limitar((avance-.48)/.14);
+    if(cambio < 1) {
+      ctx.globalAlpha = 1-cambio;
+      distribucion(lugar,10,a.width,a.height).forEach((p,i) => {
+        const fila = lugar === 0 ? (i-4.5)*alto/10 : (i-4.5)*alto/26;
+        const anchoPieza = lugar === 0 ? Math.min(p.ancho,alto*.14) : p.ancho*.52;
+        const altoPieza = lugar === 0 ? alto/10 : p.alto*.48;
+        pieza(ctx,lugar,
+          a.left-rect.left+p.x+(a.width/2-p.x)*juntar,
+          a.top-rect.top+p.y+(a.height/2+fila-p.y)*juntar,
+          p.ancho+(anchoPieza-p.ancho)*juntar,p.alto+(altoPieza-p.alto)*juntar);
+      });
+    }
+    if(cambio > 0) {
+      ctx.globalAlpha = cambio;
+      const t = limitar((avance-.62)/.38);
+      const viaje = t*t*(3-2*t);
+      pieza(ctx,lugar+1,
+        x+(b.left-rect.left+llegada.x-x)*viaje,
+        y+(b.top-rect.top+llegada.y-y)*viaje - Math.sin(Math.PI*viaje)*18,
+        ancho+(llegada.ancho-ancho)*viaje,alto+(llegada.alto-alto)*viaje);
+    }
+    ctx.globalAlpha = 1;
+  }
+  window.BloquesMultibase = {pintar,pintarCanje};
 })();

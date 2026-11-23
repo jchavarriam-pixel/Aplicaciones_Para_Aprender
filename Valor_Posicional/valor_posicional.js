@@ -17,7 +17,10 @@
     'Arrastra cada bloque a su caja o toca ambos.':'Drag each block to its tray or tap both.',
     'Bloques para arrastrar':'Blocks to drag',
     'Lleva ese bloque a la caja de su mismo tipo.':'Move that block to the tray for its type.',
-    'La caja ya tiene nueve bloques.':'This tray already has nine blocks.',
+    'El número ya no cabe en las cajas de esta ronda.':'The number no longer fits in this round’s trays.',
+    'Diez unidades forman una decena.':'Ten ones make one ten.',
+    'Diez decenas forman una centena.':'Ten tens make one hundred.',
+    'Diez centenas forman un millar.':'Ten hundreds make one thousand.',
     'Sigue las flechas y escribe cuánto vale cada cifra.':'Follow the arrows and write the value of each digit.',
     'Mira los valores y escribe la cifra que falta.':'Look at the values and write the missing digit.',
     'Compara las bandejas marcadas con el número de arriba.':'Compare the marked trays with the number above.',
@@ -34,10 +37,12 @@
   const bandejas = get('bandejas');
   const banco = get('bancoBloques');
   const fantasma = get('fantasmaBloque');
+  const animacionCanje = get('animacionCanje');
   const lineas = get('lineas');
   const teclado = TecladoEnPantalla.instalar(juego, get('teclado'));
   const efectos = new EfectosTablas(get('celebracionValor'));
   const nombres = ['Unidades','Decenas','Centenas','Millares'];
+  const mensajesCanje = ['Diez unidades forman una decena.','Diez decenas forman una centena.','Diez centenas forman un millar.'];
   const abreviaturas = [['U','D','C','UM'], ['O','T','H','Th']];
   const tonos = ['#a26213','#286b9d','#296f59','#6b42a2'];
   const clave = 'valor-posicional-practica.v1';
@@ -49,7 +54,7 @@
     narracion: guardado?.narracion !== false
   };
   let modo, numero, cifras = [], piezas = [], hueco = null, direccion = 'cifra', resuelto = false;
-  let seleccionado = null, gesto = null, pulsacion = null;
+  let seleccionado = null, gesto = null, pulsacion = null, canje = null;
   const observador = new ResizeObserver(entradas => {
     for (const {target} of entradas) pintarCanvas(target);
   });
@@ -96,9 +101,9 @@
     const destino = bandeja.querySelector('.soltar-bloque');
     destino.setAttribute('aria-label', bilingue(`Caja de ${nombres[i].toLowerCase()}, ${cantidad} bloques`,
       `${t(nombres[i])} tray, ${cantidad} blocks`));
-    destino.disabled = resuelto;
+    destino.disabled = resuelto || Boolean(canje);
     const quitar = bandeja.querySelector('.quitar-bloque');
-    quitar.disabled = resuelto || cantidad === 0;
+    quitar.disabled = resuelto || Boolean(canje) || cantidad === 0;
     quitar.setAttribute('aria-label', bilingue(`Quitar un bloque de ${nombres[i].toLowerCase()}`,
       `Remove one ${t(nombres[i]).toLowerCase()} block`));
   }
@@ -107,7 +112,7 @@
       const i = Number(ficha.dataset.lugar);
       ficha.setAttribute('aria-label', bilingue(`Bloque de ${nombres[i].toLowerCase()}`, `${t(nombres[i])} block`));
       ficha.setAttribute('aria-pressed',String(seleccionado === i));
-      ficha.disabled = resuelto;
+      ficha.disabled = resuelto || Boolean(canje);
     }
   }
   function dibujarBloques() {
@@ -141,25 +146,84 @@
     }).reverse());
     for(const grupo of bandejas.children) rotularBandeja(grupo, Number(grupo.dataset.lugar));
   }
+  function quitarMarca(grupo) {
+    grupo.classList.remove('correcta','incorrecta');
+    grupo.removeAttribute('aria-description');
+  }
   function cambiarCantidad(grupo,delta) {
     const i = Number(grupo.dataset.lugar);
     piezas[i] += delta;
-    grupo.classList.remove('correcta','incorrecta');
-    grupo.removeAttribute('aria-description');
+    quitarMarca(grupo);
+    if(piezas[i] === 10){
+      iniciarCanje(i,document.activeElement);
+      return;
+    }
     rotularBandeja(grupo,i);
     avisar();
   }
+  function rotularCanje() {
+    rotularBanco();
+    for(const grupo of bandejas.children) rotularBandeja(grupo,Number(grupo.dataset.lugar));
+    get('revisar').disabled = Boolean(canje);
+  }
+  function cancelarCanje() {
+    if(!canje) return;
+    cancelAnimationFrame(canje.frame);
+    canje.origen.classList.remove('canje-origen');
+    canje.destino.classList.remove('canje-destino');
+    animacionCanje.hidden = true;
+    canje = null;
+  }
+  function completarCanje() {
+    const {i,foco} = canje;
+    cancelarCanje();
+    piezas[i] = 0;
+    piezas[i+1]++;
+    if(piezas[i+1] === 10) iniciarCanje(i+1,foco);
+    else {
+      rotularCanje();
+      if(foco && !foco.disabled && foco.isConnected &&
+        document.activeElement === document.body && (banco.contains(foco) || bandejas.contains(foco))) foco.focus({preventScroll:true});
+    }
+  }
+  function iniciarCanje(i,foco) {
+    const origen = bandejas.querySelector(`[data-lugar="${i}"]`);
+    const destino = bandejas.querySelector(`[data-lugar="${i+1}"]`);
+    canje = {i,foco,origen,destino,frame:0};
+    quitarMarca(destino);
+    avisar(mensajesCanje[i]);
+    if(document.hidden || matchMedia('(prefers-reduced-motion: reduce)').matches){
+      completarCanje();
+      return;
+    }
+    rotularCanje();
+    origen.classList.add('canje-origen');
+    destino.classList.add('canje-destino');
+    animacionCanje.hidden = false;
+    const desde = origen.querySelector('.piezas'), hasta = destino.querySelector('.piezas');
+    const inicio = performance.now();
+    function paso(ahora) {
+      const avance = Math.min(1,(ahora-inicio)/1650);
+      BloquesMultibase.pintarCanje(animacionCanje,i,desde,hasta,piezas[i+1]+1,avance);
+      if(avance === 1) completarCanje();
+      else canje.frame = requestAnimationFrame(paso);
+    }
+    canje.frame = requestAnimationFrame(paso);
+  }
+  document.addEventListener('visibilitychange',() => {
+    if(document.hidden && canje) completarCanje();
+  });
   function soltar(i,grupo) {
-    if(resuelto) return;
+    if(resuelto || canje) return;
     const destino = Number(grupo.dataset.lugar);
     if(i !== destino) avisar('Lleva ese bloque a la caja de su mismo tipo.');
-    else if(piezas[i] === 9) avisar('La caja ya tiene nueve bloques.');
+    else if(piezas.slice(i).every(n => n === 9)) avisar('El número ya no cabe en las cajas de esta ronda.');
     else cambiarCantidad(grupo,1);
     seleccionado = null;
     rotularBanco();
   }
   function activarBandeja(boton) {
-    if(!boton || resuelto || boton.disabled) return;
+    if(!boton || resuelto || canje || boton.disabled) return;
     const grupo = boton.closest('.bandeja');
     if(boton.matches('.quitar-bloque')) cambiarCantidad(grupo,-1);
     else if(seleccionado !== null) soltar(seleccionado,grupo);
@@ -191,11 +255,11 @@
   }
   banco.addEventListener('click', evento => {
     const ficha = evento.target.closest('.origen-bloque');
-    if(ficha && !resuelto && evento.detail === 0) seleccionarBloque(Number(ficha.dataset.lugar));
+    if(ficha && !resuelto && !canje && evento.detail === 0) seleccionarBloque(Number(ficha.dataset.lugar));
   });
   banco.addEventListener('pointerdown', evento => {
     const ficha = evento.target.closest('.origen-bloque');
-    if(!ficha || resuelto || gesto || evento.button !== 0) return;
+    if(!ficha || resuelto || canje || gesto || evento.button !== 0) return;
     banco.setPointerCapture(evento.pointerId);
     gesto = {id:evento.pointerId,i:Number(ficha.dataset.lugar),x:evento.clientX,y:evento.clientY};
   });
@@ -310,6 +374,7 @@
   function siguiente() {
     efectos.detener();
     limpiarGesto();
+    cancelarCanje();
     seleccionado = null;
     resuelto = false;
     const minimo = 10 ** (opciones.digitos-1);
@@ -337,7 +402,7 @@
     return ok;
   }
   function revisar() {
-    if(resuelto) return;
+    if(resuelto || canje) return;
     const campos = [...tablero.querySelectorAll('input')];
     const pruebas = modo === 'bloques' ? [...bandejas.children].map(grupo => {
       const i = Number(grupo.dataset.lugar);
@@ -373,6 +438,7 @@
   });
   function mostrarModo(vista) {
     limpiarGesto();
+    cancelarCanje();
     modo = vista;
     get('modos').hidden = Boolean(vista);
     juego.hidden = !vista;
@@ -396,6 +462,7 @@
     .observe(app,{attributes:true,attributeFilter:['class']});
 
   get('abrirAjustes').onclick = () => {
+    while(canje) completarCanje();
     get('digitos').value = opciones.digitos;
     get('practica').value = opciones.practica;
     get('ayudas').checked = opciones.ayudas;
