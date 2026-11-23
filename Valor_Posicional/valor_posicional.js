@@ -14,7 +14,10 @@
     'Mostrar el nombre de las posiciones y el conteo de bloques':'Show place names and block counts',
     'Leer automáticamente las instrucciones y los resultados':'Automatically read instructions and feedback aloud',
     'Aplicar y cerrar':'Apply and close', 'Unidades':'Ones', 'Decenas':'Tens', 'Centenas':'Hundreds', 'Millares':'Thousands',
-    'Construye el número con los botones + y −.':'Build the number with the + and − buttons.',
+    'Arrastra cada bloque a su caja o toca ambos.':'Drag each block to its tray or tap both.',
+    'Bloques para arrastrar':'Blocks to drag',
+    'Lleva ese bloque a la caja de su mismo tipo.':'Move that block to the tray for its type.',
+    'La caja ya tiene nueve bloques.':'This tray already has nine blocks.',
     'Sigue las flechas y escribe cuánto vale cada cifra.':'Follow the arrows and write the value of each digit.',
     'Mira los valores y escribe la cifra que falta.':'Look at the values and write the missing digit.',
     'Compara las bandejas marcadas con el número de arriba.':'Compare the marked trays with the number above.',
@@ -29,10 +32,13 @@
   const dialogo = get('ajustes');
   const tablero = get('diagrama');
   const bandejas = get('bandejas');
+  const banco = get('bancoBloques');
+  const fantasma = get('fantasmaBloque');
   const lineas = get('lineas');
   const teclado = TecladoEnPantalla.instalar(juego, get('teclado'));
   const efectos = new EfectosTablas(get('celebracionValor'));
   const nombres = ['Unidades','Decenas','Centenas','Millares'];
+  const abreviaturas = [['U','D','C','UM'], ['O','T','H','Th']];
   const tonos = ['#a26213','#286b9d','#296f59','#6b42a2'];
   const clave = 'valor-posicional-practica.v1';
   const guardado = Matematicas.leer(clave);
@@ -43,12 +49,14 @@
     narracion: guardado?.narracion !== false
   };
   let modo, numero, cifras = [], piezas = [], hueco = null, direccion = 'cifra', resuelto = false;
+  let seleccionado = null, gesto = null, pulsacion = null;
   const observador = new ResizeObserver(entradas => {
     for (const {target} of entradas) pintarCanvas(target);
   });
   function pintarCanvas(canvas) {
     const lugar = Number(canvas.dataset.lugar);
-    BloquesMultibase.pintar(canvas, lugar, canvas.classList.contains('piezas') ? piezas[lugar] : 1);
+    const esBandeja = canvas.classList.contains('piezas');
+    BloquesMultibase.pintar(canvas, lugar, esBandeja ? piezas[lugar] : 1, esBandeja);
   }
   [...document.querySelectorAll('.arte-bloques canvas')].forEach((canvas,i) => {
     canvas.dataset.lugar = 2-i;
@@ -56,14 +64,14 @@
   });
 
   function instruccion() {
-    if(modo === 'bloques') return t('Construye el número con los botones + y −.');
+    if(modo === 'bloques') return t('Arrastra cada bloque a su caja o toca ambos.');
     return t(direccion === 'valores' ? 'Sigue las flechas y escribe cuánto vale cada cifra.' :
       'Mira los valores y escribe la cifra que falta.');
   }
   function escuchar() {
     let lectura = instruccion();
     if(modo === 'bloques') lectura += ' ' + numero + '.';
-    else if(direccion === 'valores') lectura += ' ' + cifras.slice().reverse().join(', ') + '.';
+    else if(direccion === 'valores') lectura += ' ' + numero + '.';
     else lectura += ' ' + bilingue(`El valor que buscas es ${cifras[hueco] * 10 ** hueco}.`,
       `The value you are working with is ${cifras[hueco] * 10 ** hueco}.`);
     IdiomaVoz.hablar(lectura);
@@ -84,25 +92,45 @@
     const cantidad = piezas[i];
     bandeja.querySelector('small').textContent = cantidad;
     const canvas = bandeja.querySelector('.piezas');
-    canvas.setAttribute('aria-label', `${t(nombres[i])}: ${cantidad}`);
     pintarCanvas(canvas);
-    for(const boton of bandeja.querySelectorAll('button')) {
-      const delta = Number(boton.dataset.delta);
-      boton.disabled = resuelto || (delta < 0 ? cantidad === 0 : cantidad === 9);
-      boton.setAttribute('aria-label', bilingue(
-        `${delta > 0 ? 'Añadir' : 'Quitar'} un bloque de ${nombres[i].toLowerCase()}`,
-        `${delta > 0 ? 'Add' : 'Remove'} one ${t(nombres[i]).toLowerCase()} block`));
+    const destino = bandeja.querySelector('.soltar-bloque');
+    destino.setAttribute('aria-label', bilingue(`Caja de ${nombres[i].toLowerCase()}, ${cantidad} bloques`,
+      `${t(nombres[i])} tray, ${cantidad} blocks`));
+    destino.disabled = resuelto;
+    const quitar = bandeja.querySelector('.quitar-bloque');
+    quitar.disabled = resuelto || cantidad === 0;
+    quitar.setAttribute('aria-label', bilingue(`Quitar un bloque de ${nombres[i].toLowerCase()}`,
+      `Remove one ${t(nombres[i]).toLowerCase()} block`));
+  }
+  function rotularBanco() {
+    for(const ficha of banco.children){
+      const i = Number(ficha.dataset.lugar);
+      ficha.setAttribute('aria-label', bilingue(`Bloque de ${nombres[i].toLowerCase()}`, `${t(nombres[i])} block`));
+      ficha.setAttribute('aria-pressed',String(seleccionado === i));
+      ficha.disabled = resuelto;
     }
   }
   function dibujarBloques() {
-    for(const canvas of bandejas.querySelectorAll('canvas')) observador.unobserve(canvas);
+    for(const canvas of get('bloques').querySelectorAll('canvas')) observador.unobserve(canvas);
     bandejas.dataset.cantidad = cifras.length;
     get('numeroMeta').textContent = numero;
+    banco.replaceChildren(...cifras.map((_,i) => {
+      const boton = lugar('button','origen-bloque',i);
+      boton.type = 'button';
+      const muestra = lugar('canvas','muestra-bloque',i);
+      muestra.setAttribute('aria-hidden','true');
+      const etiqueta = document.createElement('span');
+      etiqueta.textContent = 10 ** i;
+      boton.append(muestra, etiqueta);
+      observador.observe(muestra);
+      return boton;
+    }).reverse());
+    rotularBanco();
     bandejas.replaceChildren(...cifras.map((_,i) => {
       const grupo = lugar('section','bandeja',i);
-      grupo.innerHTML = `<header class="rotulo-bandeja"><canvas aria-hidden="true"></canvas><h3></h3><small></small></header>
-        <canvas class="piezas" role="img"></canvas>
-        <div class="ajustar-piezas"><button type="button" data-delta="-1">−</button><button type="button" data-delta="1">+</button></div>`;
+      grupo.innerHTML = `<header class="rotulo-bandeja"><h3></h3><small></small>
+        <button type="button" class="quitar-bloque">−</button></header>
+        <button type="button" class="soltar-bloque"><canvas class="piezas" aria-hidden="true"></canvas></button>`;
       grupo.querySelector('h3').textContent = nombres[i];
       grupo.querySelector('h3').hidden = grupo.querySelector('small').hidden = !opciones.ayudas;
       for(const canvas of grupo.querySelectorAll('canvas')){
@@ -113,16 +141,89 @@
     }).reverse());
     for(const grupo of bandejas.children) rotularBandeja(grupo, Number(grupo.dataset.lugar));
   }
-  bandejas.addEventListener('click', evento => {
-    const boton = evento.target.closest('[data-delta]');
-    if(!boton || resuelto || boton.disabled) return;
-    const grupo = boton.closest('.bandeja'), i = Number(grupo.dataset.lugar);
-    piezas[i] += Number(boton.dataset.delta);
+  function cambiarCantidad(grupo,delta) {
+    const i = Number(grupo.dataset.lugar);
+    piezas[i] += delta;
     grupo.classList.remove('correcta','incorrecta');
     grupo.removeAttribute('aria-description');
-    rotularBandeja(grupo, i);
+    rotularBandeja(grupo,i);
     avisar();
+  }
+  function soltar(i,grupo) {
+    if(resuelto) return;
+    const destino = Number(grupo.dataset.lugar);
+    if(i !== destino) avisar('Lleva ese bloque a la caja de su mismo tipo.');
+    else if(piezas[i] === 9) avisar('La caja ya tiene nueve bloques.');
+    else cambiarCantidad(grupo,1);
+    seleccionado = null;
+    rotularBanco();
+  }
+  function activarBandeja(boton) {
+    if(!boton || resuelto || boton.disabled) return;
+    const grupo = boton.closest('.bandeja');
+    if(boton.matches('.quitar-bloque')) cambiarCantidad(grupo,-1);
+    else if(seleccionado !== null) soltar(seleccionado,grupo);
+  }
+  bandejas.addEventListener('click', evento => {
+    if(evento.detail === 0) activarBandeja(evento.target.closest('button'));
   });
+  bandejas.addEventListener('pointerdown', evento => {
+    const boton = evento.target.closest('button');
+    if(boton && evento.button === 0) pulsacion = {boton,id:evento.pointerId,x:evento.clientX,y:evento.clientY};
+  });
+  bandejas.addEventListener('pointerup', evento => {
+    if(pulsacion?.id !== evento.pointerId) return;
+    const {boton,x,y} = pulsacion;
+    pulsacion = null;
+    const destino = document.elementFromPoint(evento.clientX,evento.clientY)?.closest('button');
+    if(destino === boton && Math.hypot(evento.clientX-x,evento.clientY-y) < 12) activarBandeja(boton);
+  });
+  bandejas.addEventListener('pointercancel', () => { pulsacion = null; });
+  function seleccionarBloque(i) {
+    seleccionado = seleccionado === i ? null : i;
+    rotularBanco();
+  }
+  function limpiarGesto() {
+    gesto?.destino?.classList.remove('sobre-bandeja');
+    gesto = null;
+    pulsacion = null;
+    fantasma.hidden = true;
+  }
+  banco.addEventListener('click', evento => {
+    const ficha = evento.target.closest('.origen-bloque');
+    if(ficha && !resuelto && evento.detail === 0) seleccionarBloque(Number(ficha.dataset.lugar));
+  });
+  banco.addEventListener('pointerdown', evento => {
+    const ficha = evento.target.closest('.origen-bloque');
+    if(!ficha || resuelto || gesto || evento.button !== 0) return;
+    banco.setPointerCapture(evento.pointerId);
+    gesto = {id:evento.pointerId,i:Number(ficha.dataset.lugar),x:evento.clientX,y:evento.clientY};
+  });
+  banco.addEventListener('pointermove', evento => {
+    if(gesto?.id !== evento.pointerId) return;
+    const {clientX:x,clientY:y} = evento;
+    if(fantasma.hidden) {
+      if(Math.hypot(x-gesto.x,y-gesto.y) < 7) return;
+      fantasma.hidden = false;
+      Matematicas.fantasma(fantasma,x,y);
+      BloquesMultibase.pintar(fantasma,gesto.i,1);
+    } else Matematicas.fantasma(fantasma,x,y);
+    gesto.destino?.classList.remove('sobre-bandeja');
+    gesto.destino = document.elementFromPoint(x,y)?.closest('.bandeja');
+    gesto.destino?.classList.add('sobre-bandeja');
+  });
+  banco.addEventListener('pointerup', evento => {
+    if(gesto?.id !== evento.pointerId) return;
+    const {i} = gesto;
+    const arrastrado = !fantasma.hidden;
+    const grupo = document.elementFromPoint(evento.clientX,evento.clientY)?.closest('.bandeja');
+    limpiarGesto();
+    if(arrastrado && grupo) soltar(i,grupo);
+    else if(!arrastrado) seleccionarBloque(i);
+  });
+  for(const tipo of ['pointercancel','lostpointercapture']) banco.addEventListener(tipo,limpiarGesto);
+  addEventListener('resize',limpiarGesto);
+  document.addEventListener('fullscreenchange',limpiarGesto);
 
   function rotularEntrada(campo,i,esValor) {
     campo.setAttribute('aria-label', bilingue(
@@ -142,27 +243,42 @@
   function dibujarDiagrama() {
     get('cifras').replaceChildren(...cifras.map((n,i) => {
       const nodo = lugar('span','digito',i);
+      const rotulo = document.createElement('small');
+      rotulo.className = 'abreviatura';
+      rotulo.setAttribute('aria-hidden','true');
+      nodo.append(rotulo);
       if(hueco === i) nodo.append(entrada(i,false));
-      else nodo.textContent = n;
+      else {
+        const cifra = document.createElement('span');
+        cifra.className = 'glifo';
+        cifra.textContent = n;
+        nodo.append(cifra);
+      }
       return nodo;
     }).reverse());
+    rotularCifras();
     get('valores').replaceChildren(...cifras.map((n,i) => {
       const nodo = lugar('div','valor',i);
-      if(direccion === 'valores') nodo.append(entrada(i,true));
-      else {
-        const valor = document.createElement('span');
-        valor.textContent = n * 10 ** i;
-        nodo.append(valor);
-      }
-      if(opciones.ayudas){
-        const rotulo = document.createElement('small');
-        rotulo.textContent = nombres[i];
-        nodo.prepend(rotulo);
-      }
+      const valor = direccion === 'valores' ? entrada(i,true) : document.createElement('span');
+      valor.classList.add('dato-valor');
+      if(direccion === 'cifra') valor.textContent = n * 10 ** i;
+      const unidad = document.createElement('small');
+      unidad.textContent = 'Unidades';
+      nodo.append(valor,unidad);
       return nodo;
     }));
     teclado.seleccionar(tablero.querySelector('input'));
     requestAnimationFrame(dibujarLineas);
+  }
+  function rotularCifras() {
+    const codigos = abreviaturas[IdiomaVoz.idioma === 'en' ? 1 : 0];
+    get('cifras').setAttribute('aria-label', direccion === 'valores' ?
+      bilingue(`Número ${numero}`,`Number ${numero}`) : t('Cifras del número'));
+    for(const nodo of get('cifras').children){
+      const rotulo = nodo.querySelector('.abreviatura');
+      rotulo.textContent = codigos[Number(nodo.dataset.lugar)];
+      rotulo.hidden = !opciones.ayudas;
+    }
   }
   function dibujarLineas() {
     if(modo !== 'flechas') return;
@@ -171,7 +287,7 @@
     lineas.setAttribute('viewBox', `0 0 ${rect.width} ${rect.height}`);
     const trazos = cifras.map((_,i) => {
       const desde = get('cifras').querySelector(`[data-lugar="${i}"]`).getBoundingClientRect();
-      const hasta = get('valores').children[i].getBoundingClientRect();
+      const hasta = get('valores').children[i].querySelector('.dato-valor').getBoundingClientRect();
       const x = desde.left + desde.width/2 - rect.left, y = desde.bottom - rect.top;
       const finX = hasta.left - rect.left - 4, finY = hasta.top + hasta.height/2 - rect.top;
       const punta = direccion === 'valores'
@@ -193,6 +309,8 @@
   }
   function siguiente() {
     efectos.detener();
+    limpiarGesto();
+    seleccionado = null;
     resuelto = false;
     const minimo = 10 ** (opciones.digitos-1);
     const cantidad = minimo*9;
@@ -236,6 +354,9 @@
       return;
     }
     resuelto = true;
+    limpiarGesto();
+    seleccionado = null;
+    rotularBanco();
     for(const control of (modo === 'bloques' ? bandejas.querySelectorAll('button') : campos)) control.disabled = true;
     const nombre = window.NombreCompartido?.obtener();
     avisar(nombre ? bilingue(`¡Muy bien, ${nombre}!`,`Well done, ${nombre}!`) : '¡Muy bien!', true);
@@ -251,6 +372,7 @@
     avisar();
   });
   function mostrarModo(vista) {
+    limpiarGesto();
     modo = vista;
     get('modos').hidden = Boolean(vista);
     juego.hidden = !vista;
@@ -291,15 +413,7 @@
     if(modo && nueva) siguiente();
     else if(modo) {
       for(const rotulo of bandejas.querySelectorAll('h3,small')) rotulo.hidden = !ayudas;
-      for(const valor of get('valores').children) {
-        let rotulo = valor.querySelector('small');
-        if(!rotulo && ayudas) {
-          rotulo = document.createElement('small');
-          rotulo.textContent = nombres[Number(valor.dataset.lugar)];
-          valor.prepend(rotulo);
-        }
-        if(rotulo) rotulo.hidden = !ayudas;
-      }
+      rotularCifras();
       requestAnimationFrame(dibujarLineas);
     }
   });
@@ -312,8 +426,10 @@
     if(!modo) return;
     actualizarRotulos();
     if(modo === 'bloques') {
+      rotularBanco();
       for(const grupo of bandejas.children) rotularBandeja(grupo,Number(grupo.dataset.lugar));
     } else {
+      rotularCifras();
       for(const campo of tablero.querySelectorAll('input')) {
         rotularEntrada(campo,Number(campo.parentElement.dataset.lugar),direccion === 'valores');
       }

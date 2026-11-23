@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="../pantalla-completa.css">
   <link rel="stylesheet" href="../panel-plegable.css">
   <link rel="stylesheet" href="../teclado-en-pantalla.css">
-  <link rel="stylesheet" href="valor_posicional.css">
+  <link rel="stylesheet" href="valor_posicional.css?v=piezas-tactiles">
 </head>
 <body>
   <main id="appValor">
@@ -53,6 +53,7 @@
       </header>
       <div class="bloques" id="bloques" hidden>
         <p id="numeroMeta" class="meta"></p>
+        <div id="bancoBloques" class="banco-bloques" role="group" aria-label="Bloques para arrastrar"></div>
         <div id="bandejas" class="bandejas"></div>
       </div>
       <div id="flechas" class="flechas" hidden>
@@ -82,6 +83,7 @@
     </form>
   </dialog>
   <div id="celebracionValor" aria-hidden="true"></div>
+  <canvas id="fantasmaBloque" aria-hidden="true" hidden></canvas>
   <footer id="creditos-aplicaciones">
     <div class="creditos-dedicatoria"><span class="creditos-gabriel">Creado para <strong>Gabriel</strong></span><span class="creditos-familia">Por su familia, con ayuda de la IA.</span></div>
     <div class="creditos-equipo"><span class="creditos-autores">M.Sc. Jeffry Chavarría-Molina y Ph.D. (c) Natalia Rodríguez-Granados</span><span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span></div>
@@ -96,7 +98,7 @@
   <script src="../pantalla-completa.js"></script>
   <script src="../panel-plegable.js?v=valor-posicional"></script>
   <script src="../nombre-compartido.js"></script>
-  <script src="bloques.js"></script>
-  <script src="valor_posicional.js"></script>
+  <script src="bloques.js?v=piezas-tactiles"></script>
+  <script src="valor_posicional.js?v=piezas-tactiles"></script>
 </body>
 </html>
