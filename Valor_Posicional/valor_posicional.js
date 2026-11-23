@@ -40,7 +40,7 @@
   const animacionCanje = get('animacionCanje');
   const lineas = get('lineas');
   const teclado = TecladoEnPantalla.instalar(juego, get('teclado'));
-  const efectos = new EfectosTablas(get('celebracionValor'));
+  const sorpresas = SorpresasValor.instalar(get('sorpresas'));
   const nombres = ['Unidades','Decenas','Centenas','Millares'];
   const mensajesCanje = ['Diez unidades forman una decena.','Diez decenas forman una centena.','Diez centenas forman un millar.'];
   const abreviaturas = [['U','D','C','UM'], ['O','T','H','Th']];
@@ -373,7 +373,7 @@
     if(modo === 'bloques') get('numeroMeta').setAttribute('aria-label', bilingue(`Número por construir ${numero}`, `Number to build ${numero}`));
   }
   function siguiente() {
-    efectos.detener();
+    sorpresas.cerrar();
     limpiarGesto();
     cancelarCanje();
     seleccionado = null;
@@ -428,8 +428,7 @@
     avisar(nombre ? bilingue(`¡Muy bien, ${nombre}!`,`Well done, ${nombre}!`) : '¡Muy bien!', true);
     get('revisar').hidden = true;
     get('siguiente').hidden = false;
-    get('siguiente').focus({preventScroll:true});
-    efectos.canones(false);
+    sorpresas.abrir(modo === 'bloques' ? get('bloques') : get('flechas'));
   }
   tablero.addEventListener('input', evento => {
     evento.target.removeAttribute('aria-invalid');
@@ -446,7 +445,7 @@
     get('bloques').hidden = vista !== 'bloques';
     get('flechas').hidden = vista !== 'flechas';
     get('volver').hidden = get('nueva').hidden = !vista;
-    efectos.detener();
+    sorpresas.cerrar();
     window.speechSynthesis?.cancel();
     if(vista) siguiente();
   }
@@ -491,6 +490,7 @@
     AppsFullscreen.navigate(get('inicio').href);
   });
   IdiomaVoz.instalar('#vozValor',{cambioIdioma:() => {
+    sorpresas.localizar();
     if(!modo) return;
     actualizarRotulos();
     if(modo === 'bloques') {

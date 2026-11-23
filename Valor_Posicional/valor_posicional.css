@@ -56,6 +56,8 @@ button:disabled { cursor:default; }
   padding:calc(7 * var(--u)); border:1px solid #d6e1f3; border-radius:calc(15 * var(--u)); background:#fffe;
 }
 .reto { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:calc(3 * var(--u)); }
+.juego > :is(.bloques,.flechas,#sorpresas) { grid-area:2/1; }
+.juego > .acciones-juego { grid-row:3; }
 .reto h2 { font-size:calc(19 * var(--u)); line-height:1.1; }
 .reto p { grid-column:1/-1; grid-row:2; font-size:calc(14 * var(--u)); line-height:1.2; }
 .acciones-reto { grid-column:2; grid-row:1; justify-content:end; }
@@ -132,8 +134,6 @@ button:disabled { cursor:default; }
 .principal { width:min(100%,calc(315 * var(--u,1px))); min-height:calc(39 * var(--u,1px)); padding:calc(4 * var(--u,1px)) calc(8 * var(--u,1px)); border:0; border-radius:calc(9 * var(--u,1px)); color:white; background:#48429f; font-weight:850; }
 .principal:disabled { color:#555d76; background:#e4e7f1; }
 #siguiente:focus-visible { outline-color:#fff1b6; outline-offset:-4px; }
-#celebracionValor { position:fixed; inset:0; z-index:1003; pointer-events:none; zoom:var(--inverso-panel-compartido,1); }
-#celebracionValor canvas { display:block; width:100%; height:100%; }
 @media (orientation:landscape) and (max-height:540px) {
   .bloques { grid-template-areas:"meta banco" "bandejas bandejas"; grid-template-columns:auto minmax(0,1fr); grid-template-rows:auto minmax(0,1fr); }
   .meta { font-size:calc(53 * var(--u)); }

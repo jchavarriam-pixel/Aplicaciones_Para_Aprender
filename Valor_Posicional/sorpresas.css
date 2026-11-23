@@ -1,0 +1,66 @@
+#sorpresas {
+  position:relative; isolation:isolate; container-type:size; overflow:hidden;
+  display:grid; align-content:center; justify-items:center; gap:calc(5 * var(--u));
+  min-height:0; padding:calc(8 * var(--u)); border:1px solid #a1c4ef;
+  border-radius:calc(14 * var(--u)); text-align:center; color:#fff8d8;
+  background:
+    radial-gradient(circle at 17% 29%, #fff8ba 0 2px, transparent 3px),
+    radial-gradient(circle at 85% 36%, #d7f9ff 0 2px, transparent 3px),
+    radial-gradient(circle at 72% 14%, #fff5ba 0 1px, transparent 3px),
+    radial-gradient(circle at 31% 18%, #d9eaff 0 1px, transparent 3px),
+    radial-gradient(ellipse at 50% 102%, #687de1, transparent 62%),
+    linear-gradient(155deg,#201958,#284c92 62%,#4376bc);
+}
+#tituloSorpresas { font-size:clamp(calc(18 * var(--u)),9cqh,calc(37 * var(--u))); line-height:1.1; }
+#sorpresas > p:not(.solo-lector) { font-size:calc(14 * var(--u)); line-height:1.2; }
+.huevos { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); align-items:center; justify-items:center; gap:calc(9 * var(--u)); width:min(100%,calc(510 * var(--u))); padding-top:calc(9 * var(--u)); }
+.huevo-sorpresa {
+  --borde-huevo:#7539ab; --color-huevo:#a95aff; --luz-huevo:#e3bfff;
+  position:relative; display:grid; place-items:center; width:min(100%,calc(136 * var(--u)),52cqh);
+  aspect-ratio:.81; min-height:calc(43 * var(--u)); padding:0; border:0; border-radius:50%;
+  background:transparent; touch-action:manipulation; color:#fffcec;
+}
+.huevo-sorpresa:nth-child(2) { --borde-huevo:#087a75; --color-huevo:#25b9aa; --luz-huevo:#b2fff0; }
+.huevo-sorpresa:nth-child(3) { --borde-huevo:#a94e22; --color-huevo:#f09b35; --luz-huevo:#ffe285; }
+.huevo-sorpresa:focus-visible { outline:3px solid #fff1a7; outline-offset:3px; }
+.huevo-sorpresa:active:not([aria-disabled=true]) .cascaron { scale:.93; }
+.huevo-sorpresa[aria-disabled=true] { cursor:default; }
+.cascaron { position:absolute; inset:0; border-radius:50% 50% 46% 46% / 60% 60% 38% 38%; transition:scale .15s ease; }
+.cascaron::before,.cascaron::after {
+  content:""; position:absolute; inset:0; border-radius:inherit;
+  border:calc(2 * var(--u)) solid var(--borde-huevo);
+  background:
+    radial-gradient(ellipse at 32% 23%, #fff9 0 8%, transparent 10%),
+    radial-gradient(ellipse at 81% 66%, var(--borde-huevo) 0 8%, transparent 9%),
+    radial-gradient(ellipse at 23% 61%, #fff6 0 7%, transparent 8%),
+    repeating-linear-gradient(149deg,transparent 0 18%,#fff4 19% 24%,transparent 25% 37%),
+    linear-gradient(125deg,var(--luz-huevo),var(--color-huevo) 65%,var(--borde-huevo));
+}
+.cascaron::before { clip-path:polygon(0 0,100% 0,100% 57%,77% 53%,64% 61%,48% 54%,33% 60%,18% 53%,0 57%); }
+.cascaron::after { clip-path:polygon(0 56%,18% 52%,33% 59%,48% 53%,64% 60%,77% 52%,100% 56%,100% 100%,0 100%); }
+.pregunta-huevo,.premio-huevo { z-index:1; font-weight:900; line-height:1; text-shadow:0 2px 0 #45267a99; }
+.pregunta-huevo { font-size:clamp(calc(18 * var(--u)),15cqh,calc(48 * var(--u))); }
+.premio-huevo { position:absolute; top:25%; font-size:clamp(calc(18 * var(--u)),15cqh,calc(47 * var(--u))); }
+.huevo-sorpresa[aria-disabled=true] .pregunta-huevo { visibility:hidden; }
+.huevo-sorpresa[aria-disabled=true] .cascaron::before { animation:abrir-cascaron .52s ease-out both; }
+.huevo-sorpresa[aria-disabled=true] .cascaron::after { animation:temblor-cascaron .4s ease-out both; }
+.huevo-sorpresa[aria-disabled=true] .premio-huevo { animation:mostrar-premio 1.5s both; }
+.huevo-sorpresa[data-regalo=avion][aria-disabled=true] .premio-huevo { animation-duration:2.6s; }
+#animacionSorpresas { display:block; position:absolute; inset:0; width:100%; height:100%; z-index:2; pointer-events:none; }
+.solo-lector { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+@keyframes abrir-cascaron {
+  0% { opacity:1; transform:translate(0,0) rotate(0); }
+  70% { opacity:1; }
+  100% { opacity:0; transform:translate(-30%,-48%) rotate(-29deg); }
+}
+@keyframes temblor-cascaron {
+  35% { transform:rotate(7deg); }
+  65% { transform:rotate(-5deg); }
+}
+@keyframes mostrar-premio { 0%,72% { opacity:0; scale:.6; } 100% { opacity:1; scale:1; } }
+@media (prefers-reduced-motion:reduce) {
+  .cascaron { transition:none; }
+  .huevo-sorpresa[aria-disabled=true] .cascaron::before { animation:none; opacity:0; }
+  .huevo-sorpresa[aria-disabled=true] .cascaron::after,
+  .huevo-sorpresa[aria-disabled=true] .premio-huevo { animation:none; }
+}

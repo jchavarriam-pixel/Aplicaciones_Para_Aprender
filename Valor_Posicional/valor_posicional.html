@@ -9,7 +9,8 @@
   <link rel="stylesheet" href="../pantalla-completa.css">
   <link rel="stylesheet" href="../panel-plegable.css">
   <link rel="stylesheet" href="../teclado-en-pantalla.css">
-  <link rel="stylesheet" href="valor_posicional.css?v=armar-centena-millar">
+  <link rel="stylesheet" href="valor_posicional.css?v=huevos-sorpresa">
+  <link rel="stylesheet" href="sorpresas.css">
 </head>
 <body>
   <main id="appValor">
@@ -64,6 +65,13 @@
         </div>
         <div id="teclado" class="teclado-propio" role="group" aria-label="Teclado numérico"></div>
       </div>
+      <section id="sorpresas" hidden aria-labelledby="tituloSorpresas">
+        <h3 id="tituloSorpresas">¡Huevos sorpresa!</h3>
+        <p>Toca cada huevo para descubrir qué hay dentro.</p>
+        <div id="huevos" class="huevos"></div>
+        <p class="solo-lector" id="sorpresaDescubierta" role="status"></p>
+        <canvas id="animacionSorpresas" aria-hidden="true"></canvas>
+      </section>
       <div class="acciones-juego">
         <p id="mensaje" role="status"></p>
         <button type="button" class="principal" id="revisar">✓ Revisar</button>
@@ -82,7 +90,6 @@
       <button class="principal aplicar">Aplicar y cerrar</button>
     </form>
   </dialog>
-  <div id="celebracionValor" aria-hidden="true"></div>
   <canvas id="fantasmaBloque" aria-hidden="true" hidden></canvas>
   <canvas id="animacionCanje" aria-hidden="true" hidden></canvas>
   <footer id="creditos-aplicaciones">
@@ -95,11 +102,11 @@
   <script src="../matematicas-base.js"></script>
   <script src="../historial-modos.js"></script>
   <script src="../teclado-en-pantalla.js"></script>
-  <script src="../Multiplicacion/efectos-tablas.js"></script>
   <script src="../pantalla-completa.js"></script>
   <script src="../panel-plegable.js?v=valor-posicional"></script>
   <script src="../nombre-compartido.js"></script>
   <script src="bloques.js?v=armar-centena-millar"></script>
-  <script src="valor_posicional.js?v=armar-centena-millar"></script>
+  <script src="sorpresas.js"></script>
+  <script src="valor_posicional.js?v=huevos-sorpresa"></script>
 </body>
 </html>
