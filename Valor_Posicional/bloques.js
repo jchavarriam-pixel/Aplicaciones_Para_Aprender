@@ -9,13 +9,19 @@
   const tamanos = [[1,1,1], [1,1,10], [10,10,1], [10,10,10]];
 
   // Proyecta las tres caras visibles y dibuja una cuadrícula por cada cubito.
-  function pieza(ctx, lugar, centroX, centroY, ancho, alto) {
+  function pieza(ctx, lugar, centroX, centroY, ancho, alto, inclinacion = 0) {
     const [x,y,z] = tamanos[lugar];
     const [arriba, frente, lado] = caras[lugar];
-    const escala = Math.min(ancho / ((x+y)*.84), alto / ((x+y)*.42+z));
-    const origenX = centroX - (x-y)*.42*escala;
-    const origenY = centroY - ((x+y)*.42-z)*escala/2;
-    const proyectar = ([a,b,c]) => [origenX+(a-b)*.84*escala, origenY+((a+b)*.42-c)*escala];
+    const coseno = Math.cos(inclinacion), seno = Math.sin(inclinacion);
+    const ex = [.84*coseno,.42*coseno+seno], ey = [-.84,.42], ez = [.84*seno,.42*seno-coseno];
+    const anchura = Math.abs(ex[0])*x + Math.abs(ey[0])*y + Math.abs(ez[0])*z;
+    const altura = Math.abs(ex[1])*x + Math.abs(ey[1])*y + Math.abs(ez[1])*z;
+    const escala = Math.min(ancho/anchura,alto/altura);
+    const ladoVisible = coseno >= .84*seno ? x : 0;
+    const proyectar = ([a,b,c]) => {
+      const dx=a-x/2, dy=b-y/2, dz=c-z/2;
+      return [centroX+(dx*ex[0]+dy*ey[0]+dz*ez[0])*escala, centroY+(dx*ex[1]+dy*ey[1]+dz*ez[1])*escala];
+    };
     function poligono(puntos, color) {
       ctx.beginPath();
       ctx.moveTo(...proyectar(puntos[0]));
@@ -32,7 +38,7 @@
       ctx.lineTo(...proyectar(b));
     }
     poligono([[0,y,0],[x,y,0],[x,y,z],[0,y,z]], frente);
-    poligono([[x,0,0],[x,y,0],[x,y,z],[x,0,z]], lado);
+    poligono([[ladoVisible,0,0],[ladoVisible,y,0],[ladoVisible,y,z],[ladoVisible,0,z]], lado);
     poligono([[0,0,z],[x,0,z],[x,y,z],[0,y,z]], arriba);
     if(lugar === 2 && escala >= 3){
       // Un borde luminoso dentro de cada celda hace visible el relieve de los cubitos.
@@ -51,12 +57,12 @@
       trazo([a,0,z],[a,y,z]);
     }
     for(let b=1;b<y;b++){
-      trazo([x,b,0],[x,b,z]);
+      trazo([ladoVisible,b,0],[ladoVisible,b,z]);
       trazo([0,b,z],[x,b,z]);
     }
     for(let c=1;c<z;c++){
       trazo([0,y,c],[x,y,c]);
-      trazo([x,0,c],[x,y,c]);
+      trazo([ladoVisible,0,c],[ladoVisible,y,c]);
     }
     ctx.strokeStyle = lugar === 2 ? '#214c48a3' : '#26354c75';
     ctx.lineWidth = lugar === 2 ? .86 : .7;
@@ -114,6 +120,28 @@
     if(!agrupado) pieza(ctx,lugar,width/2,height/2,width*.84,height*.86);
     else for(const p of distribucion(lugar,cantidad,width,height)) pieza(ctx,lugar,p.x,p.y,p.ancho,p.alto);
   }
+  const fraccion = n => Math.max(0,Math.min(1,n));
+  const suavizar = t => t*t*(3-2*t);
+  const entre = (a,b,t) => a+(b-a)*t;
+
+  function ensamblar(ctx,lugar,a,x,y,escala,avance) {
+    const barras = lugar === 1;
+    const anchoFinal = (barras ? 9.24 : 16.8)*escala;
+    const altoFinal = (barras ? 5.62 : 9.4)*escala;
+    distribucion(lugar,10,a.width,a.height).forEach((p,i) => {
+      const demora = i*.012;
+      const posicion = suavizar(fraccion((avance-demora)/.53));
+      const giro = barras ? Math.PI/2 * suavizar(fraccion((avance-demora-.05)/.42)) : 0;
+      const distancia = (i-4.5)*escala;
+      // Las barras se juntan de atrás hacia delante y las placas de abajo hacia arriba.
+      const finalX = barras ? -.84*distancia : 0;
+      const finalY = barras ? .42*distancia : -distancia;
+      pieza(ctx,lugar,
+        x+entre(p.x-a.width/2,finalX,posicion),
+        y+entre(p.y-a.height/2,finalY,posicion),
+        entre(p.ancho,anchoFinal,posicion),entre(p.alto,altoFinal,posicion),giro);
+    });
+  }
   function pintarCanje(canvas, lugar, origen, destino, cantidadDestino, avance) {
     const dibujo = superficie(canvas);
     if(!dibujo) return;
@@ -121,31 +149,45 @@
     const a = origen.getBoundingClientRect(), b = destino.getBoundingClientRect();
     const x = a.left - rect.left + a.width/2, y = a.top - rect.top + a.height/2;
     const llegada = distribucion(lugar+1,cantidadDestino,b.width,b.height).at(-1);
+    const finX = b.left-rect.left+llegada.x, finY = b.top-rect.top+llegada.y;
+    if(lugar > 0) {
+      const altura = lugar === 1 ? 9.4 : 18.4;
+      const escala = Math.min(a.width*.82/16.8,a.height*.77/altura);
+      const cambio = fraccion((avance-.68)/.13);
+      if(cambio < 1) {
+        ctx.globalAlpha = 1-cambio;
+        ensamblar(ctx,lugar,a,x,y,escala,avance);
+      }
+      if(cambio > 0) {
+        ctx.globalAlpha = cambio;
+        const viaje = suavizar(fraccion((avance-.81)/.19));
+        pieza(ctx,lugar+1,entre(x,finX,viaje),entre(y,finY,viaje)-Math.sin(Math.PI*viaje)*18,
+          entre(16.8*escala,llegada.ancho,viaje),entre(altura*escala,llegada.alto,viaje));
+      }
+      ctx.globalAlpha = 1;
+      return;
+    }
     const ancho = Math.min(a.width*.65,llegada.ancho*1.3);
     const alto = Math.min(a.height*.85,llegada.alto*1.3);
-    const limitar = n => Math.max(0,Math.min(1,n));
-    const juntar = 1 - (1 - limitar(avance/.48))**3;
-    const cambio = limitar((avance-.48)/.14);
+    const juntar = 1 - (1 - fraccion(avance/.48))**3;
+    const cambio = fraccion((avance-.48)/.14);
     if(cambio < 1) {
       ctx.globalAlpha = 1-cambio;
       distribucion(lugar,10,a.width,a.height).forEach((p,i) => {
-        const fila = lugar === 0 ? (i-4.5)*alto/10 : (i-4.5)*alto/26;
-        const anchoPieza = lugar === 0 ? Math.min(p.ancho,alto*.14) : p.ancho*.52;
-        const altoPieza = lugar === 0 ? alto/10 : p.alto*.48;
+        const fila = (i-4.5)*alto/10;
+        const anchoPieza = Math.min(p.ancho,alto*.14);
         pieza(ctx,lugar,
           a.left-rect.left+p.x+(a.width/2-p.x)*juntar,
           a.top-rect.top+p.y+(a.height/2+fila-p.y)*juntar,
-          p.ancho+(anchoPieza-p.ancho)*juntar,p.alto+(altoPieza-p.alto)*juntar);
+          entre(p.ancho,anchoPieza,juntar),entre(p.alto,alto/10,juntar));
       });
     }
     if(cambio > 0) {
       ctx.globalAlpha = cambio;
-      const t = limitar((avance-.62)/.38);
-      const viaje = t*t*(3-2*t);
+      const viaje = suavizar(fraccion((avance-.62)/.38));
       pieza(ctx,lugar+1,
-        x+(b.left-rect.left+llegada.x-x)*viaje,
-        y+(b.top-rect.top+llegada.y-y)*viaje - Math.sin(Math.PI*viaje)*18,
-        ancho+(llegada.ancho-ancho)*viaje,alto+(llegada.alto-alto)*viaje);
+        entre(x,finX,viaje),entre(y,finY,viaje)-Math.sin(Math.PI*viaje)*18,
+        entre(ancho,llegada.ancho,viaje),entre(alto,llegada.alto,viaje));
     }
     ctx.globalAlpha = 1;
   }

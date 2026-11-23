@@ -202,8 +202,9 @@
     animacionCanje.hidden = false;
     const desde = origen.querySelector('.piezas'), hasta = destino.querySelector('.piezas');
     const inicio = performance.now();
+    const duracion = i === 0 ? 1650 : 3200;
     function paso(ahora) {
-      const avance = Math.min(1,(ahora-inicio)/1650);
+      const avance = Math.min(1,(ahora-inicio)/duracion);
       BloquesMultibase.pintarCanje(animacionCanje,i,desde,hasta,piezas[i+1]+1,avance);
       if(avance === 1) completarCanje();
       else canje.frame = requestAnimationFrame(paso);
