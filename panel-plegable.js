@@ -13,6 +13,7 @@
    'abaco.html':['#appAbaco','.herramientas-abaco','.actividad'],
    'longitud.html':['#appLongitud','.herramientas-longitud','.actividad'],
    'operaciones.html':['#appOperaciones','.herramientas-operaciones','.actividad'],
+   'valor_posicional.html':['#appValor','.herramientas-valor','.actividad'],
    'construye.html':['#appConstruye','.herramientas','.actividad'],
    'sumas_y_restas.html':['#app','.herramientas-operaciones','#gameScreen'],
    'sumas_y_restas_um_c_d_u.html':['#appPosicional','.herramientas-posicional','.actividad'],

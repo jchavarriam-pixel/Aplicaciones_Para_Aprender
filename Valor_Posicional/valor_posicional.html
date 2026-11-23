@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Construye el valor posicional</title>
+  <link rel="stylesheet" href="../creditos.css">
+  <link rel="stylesheet" href="../idioma-voz.css">
+  <link rel="stylesheet" href="../pantalla-completa.css">
+  <link rel="stylesheet" href="../panel-plegable.css">
+  <link rel="stylesheet" href="../teclado-en-pantalla.css">
+  <link rel="stylesheet" href="valor_posicional.css">
+</head>
+<body>
+  <main id="appValor">
+    <aside class="herramientas-valor">
+      <header class="cabecera">
+        <h1>Construye el valor posicional</h1>
+        <a id="inicio" class="casa" href="../index.html" aria-label="Todas las aplicaciones" title="Todas las aplicaciones">⌂</a>
+        <label for="nombre">Nombre del niño</label>
+        <input id="nombre" type="text" maxlength="40" autocomplete="given-name" placeholder="Ej.: Gabriel">
+      </header>
+      <section class="guia">
+        <h2>Así jugamos</h2>
+        <p>Una cifra cambia de valor según el lugar donde está.</p>
+      </section>
+      <div class="acciones-panel">
+        <button type="button" id="abrirAjustes">⚙ Configuración</button>
+        <button type="button" id="volver" hidden>‹ Modos</button>
+        <button type="button" id="nueva" hidden>↻ Nueva ronda</button>
+      </div>
+    </aside>
+    <nav class="actividad modos" id="modos" aria-label="Modos de práctica">
+      <button class="tarjeta" type="button" data-modo="bloques">
+        <span class="arte-bloques" aria-hidden="true"><canvas width="220" height="120"></canvas><canvas width="120" height="120"></canvas><canvas width="90" height="90"></canvas></span>
+        <strong>Bloques multibase</strong>
+        <span>Construye el número con piezas de uno, diez, cien o mil.</span>
+      </button>
+      <button class="tarjeta" type="button" data-modo="flechas">
+        <span class="arte-flechas" aria-hidden="true"><b>2</b><b>5</b><b>6</b><i>↳</i><i>↳</i><i>↳</i><b>200</b><b>50</b><b>6</b></span>
+        <strong>Cifras y flechas</strong>
+        <span>Encuentra el valor de una cifra o usa su valor para descubrirla.</span>
+      </button>
+    </nav>
+    <section class="actividad juego" id="juego" hidden aria-labelledby="tituloReto">
+      <header class="reto">
+        <h2 id="tituloReto"></h2>
+        <p id="instruccion"></p>
+        <div class="acciones-reto">
+          <button type="button" id="escuchar" aria-label="Escuchar ejercicio" title="Escuchar ejercicio">🔊</button>
+          <button type="button" id="volverPlegado" hidden>‹ Modos</button>
+        </div>
+      </header>
+      <div class="bloques" id="bloques" hidden>
+        <p id="numeroMeta" class="meta"></p>
+        <div id="bandejas" class="bandejas"></div>
+      </div>
+      <div id="flechas" class="flechas" hidden>
+        <div id="diagrama" class="diagrama">
+          <div id="cifras" class="cifras" role="group" aria-label="Cifras del número"></div>
+          <div id="valores" class="valores" role="group" aria-label="Valores de las cifras"></div>
+          <svg id="lineas" aria-hidden="true"></svg>
+        </div>
+        <div id="teclado" class="teclado-propio" role="group" aria-label="Teclado numérico"></div>
+      </div>
+      <div class="acciones-juego">
+        <p id="mensaje" role="status"></p>
+        <button type="button" class="principal" id="revisar">✓ Revisar</button>
+        <button type="button" class="principal" id="siguiente" hidden>Siguiente pregunta</button>
+      </div>
+    </section>
+  </main>
+  <dialog id="ajustes" aria-labelledby="tituloAjustes">
+    <form method="dialog">
+      <header><h2 id="tituloAjustes">Configuración</h2><button aria-label="Aplicar y cerrar" title="Aplicar y cerrar">✕</button></header>
+      <label>Cifras del número<select id="digitos"><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></label>
+      <label>Práctica con flechas<select id="practica"><option value="ambas">Alternar los dos ejercicios</option><option value="valores">Escribir el valor de cada cifra</option><option value="cifra">Encontrar la cifra que falta</option></select></label>
+      <label class="casilla"><input type="checkbox" id="ayudas"> Mostrar el nombre de las posiciones y el conteo de bloques</label>
+      <label class="casilla"><input type="checkbox" id="narracion"> Leer automáticamente las instrucciones y los resultados</label>
+      <section id="vozValor"></section>
+      <button class="principal aplicar">Aplicar y cerrar</button>
+    </form>
+  </dialog>
+  <div id="celebracionValor" aria-hidden="true"></div>
+  <footer id="creditos-aplicaciones">
+    <div class="creditos-dedicatoria"><span class="creditos-gabriel">Creado para <strong>Gabriel</strong></span><span class="creditos-familia">Por su familia, con ayuda de la IA.</span></div>
+    <div class="creditos-equipo"><span class="creditos-autores">M.Sc. Jeffry Chavarría-Molina y Ph.D. (c) Natalia Rodríguez-Granados</span><span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span></div>
+  </footer>
+  <script>window.IDIOMA_VOZ_APP = 'valor-posicional';</script>
+  <script src="../idioma-voz-textos.js"></script>
+  <script src="../idioma-voz.js"></script>
+  <script src="../matematicas-base.js"></script>
+  <script src="../historial-modos.js"></script>
+  <script src="../teclado-en-pantalla.js"></script>
+  <script src="../Multiplicacion/efectos-tablas.js"></script>
+  <script src="../pantalla-completa.js"></script>
+  <script src="../panel-plegable.js?v=valor-posicional"></script>
+  <script src="../nombre-compartido.js"></script>
+  <script src="bloques.js"></script>
+  <script src="valor_posicional.js"></script>
+</body>
+</html>
