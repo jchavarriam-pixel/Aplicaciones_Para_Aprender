@@ -84,10 +84,10 @@
 <link rel="stylesheet" href="idioma-voz.css">
 <link rel="stylesheet" href="matematicas-signos.css">
 <script>window.IDIOMA_VOZ_APP='signos';</script>
-<script src="idioma-voz-textos.js"></script><script src="matematicas-signos-textos.js?v=20261118-celebraciones-7"></script>
+<script src="idioma-voz-textos.js"></script><script src="matematicas-signos-textos.js?v=correccion-opcional"></script>
 <script src="idioma-voz.js"></script><script src="matematicas-base.js"></script>
 <script src="panel-ancho-ajustable.js?v=20261118-1" defer></script>
-<link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-signos-panel.css?v=20261118-resultados-3"><link rel="stylesheet" href="signos-celebraciones.css?v=20261118-5"><link rel="stylesheet" href="signos-escenas.css?v=20261118-1">
+<link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-signos-panel.css?v=correccion-opcional"><link rel="stylesheet" href="signos-celebraciones.css?v=20261118-5"><link rel="stylesheet" href="signos-escenas.css?v=20261118-1">
 <link rel="stylesheet" href="panel-ancho-ajustable.css?v=20261118-1">
 </head>
 <body>
@@ -142,7 +142,7 @@
       <div class="symbols-small">Mayor que &gt; &nbsp;&nbsp; Menor que &lt; &nbsp;&nbsp; Igual =</div>
 
       <div class="exercises" id="exercisesContainer"></div>
-      <div class="message" id="messageBox"></div>
+      <div class="message" id="messageBox" role="status"></div>
 
       <div class="buttons">
         <button class="game-btn" id="btnCheck" style="background:#34d399;color:#064e3b">✓ Revisar</button>
@@ -171,6 +171,7 @@
     exercises: [],
     answers: [],
     checked: false,
+    permitirCorreccion: false,
     selectedSymbol: null,
     helpMode: 0,
     drag: null
@@ -364,20 +365,22 @@
   function hideMessage(){ const m = $('#messageBox'); m.classList.remove('show'); m.textContent = ''; }
 
   function checkAnswers(){
-    if(state.answers.some(v=>v===null)) return;
-    state.checked = true;
-    let allCorrect = true;
-    state.exercises.forEach((ex,i)=>{
-      const ok = state.answers[i] === correctSymbol(ex.a, ex.b);
-      mostrarResultado(i,ok);
-      if(!ok) allCorrect = false;
-    });
+    if(state.checked || state.answers.some(v=>v===null)) return;
+    cleanupDrag();
+    const resultados = state.exercises.map((ex, i) => state.answers[i] === correctSymbol(ex.a, ex.b));
+    const allCorrect = resultados.every(Boolean);
+    state.checked = allCorrect || !state.permitirCorreccion;
+    resultados.forEach((ok, i) => mostrarResultado(i, ok));
 
     if(allCorrect){
       const nombre = state.childName || obtenerNombreGuardado() || 'campeón';
       const text = phrases[Math.floor(Math.random()*phrases.length)].replace('{name}', nombre);
       showMessage(text, 'ok');
       if(!celebrate(text)) speak(text);
+    }else if(!state.permitirCorreccion){
+      showMessage('Compara los números con calma e inténtalo en una nueva ronda.', 'bad');
+      mostrarSoloNuevaRonda(true);
+      $('#btnNew').focus();
     }else{
       showMessage('Revisa esta ronda. Los signos marcados con ✗ deben corregirse.', 'bad');
       if(state.helpMode === 2){
@@ -389,8 +392,14 @@
         }
       }
     }
-    state.checked = allCorrect;
     updateCheckButton();
+  }
+
+  function guardarConfiguracion(){
+    Matematicas.guardar('signos.config.v1', {
+      digitos:state.maxDigits, ayuda:state.helpMode, modo:state.numberMode, minimo:state.rangeMin,
+      maximo:state.rangeMax, cantidad:state.comparisonCount, permitirCorreccion:state.permitirCorreccion
+    });
   }
 
   function startGame(digits){
@@ -411,7 +420,7 @@
     input.style.borderColor = '#3b82f6';
     state.childName = name;
     state.maxDigits = digits;
-    Matematicas.guardar('signos.config.v1',{digitos:digits,ayuda:state.helpMode,modo:state.numberMode,minimo:state.rangeMin,maximo:state.rangeMax,cantidad:state.comparisonCount});
+    guardarConfiguracion();
     $('#startScreen').style.display = 'flex';
 
     $('#gameArea').classList.add('active');
@@ -422,6 +431,8 @@
 
   function newRound(){
     FiestaSignos.cerrar();
+    cleanupDrag();
+    mostrarSoloNuevaRonda(false);
     window.speechSynthesis && window.speechSynthesis.cancel();
     state.selectedSymbol = null;
     $$('.symbol-card').forEach(c => c.classList.remove('selected'));
@@ -435,7 +446,7 @@
 
   function setHelpMode(mode){
     state.helpMode = mode;
-    Matematicas.guardar('signos.config.v1',{digitos:state.maxDigits,ayuda:mode,modo:state.numberMode,minimo:state.rangeMin,maximo:state.rangeMax,cantidad:state.comparisonCount});
+    guardarConfiguracion();
     $('#helpOff').classList.toggle('active', mode === 0);
     $('#helpRead').classList.toggle('active', mode === 1);
     $('#helpLive').classList.toggle('active', mode === 2);
@@ -582,7 +593,11 @@
   function attachEvents(){
     $$('.level-btn').forEach(btn => btn.addEventListener('click', () => startGame(Number(btn.dataset.digits))));
     $('#btnCheck').addEventListener('click', checkAnswers);
-    $('#btnNew').addEventListener('click', newRound);
+    $('#btnNew').addEventListener('click', () => {
+      const trasError = $('#btnCheck').hidden;
+      newRound();
+      if(trasError) $('#symbolTray .symbol-card').focus();
+    });
     $('#btnReset').addEventListener('click', newRound);
     $('#btnLevel').addEventListener('click', changeLevel);
     $('#helpOff').addEventListener('click', () => setHelpMode(0));
@@ -634,6 +649,11 @@
   const opciones=document.createElement('section');opciones.className='seleccion-signos';opciones.innerHTML='<h3>Selección de números</h3><div class="casillas-signos"><label><input type="checkbox" id="digitosSignos"> Hasta N dígitos</label><label><input type="checkbox" id="rangoSignos"> Rango definido</label></div><div id="limitesSignos"><label>Mínimo<input type="number" id="minimoSignos" min="0" max="999998" step="1" required></label><label>Máximo<input type="number" id="maximoSignos" min="1" max="999999" step="1" required></label></div>';
   contenido.prepend(opciones);
   const cantidadLabel=document.createElement('label');cantidadLabel.className='cantidad-comparaciones';cantidadLabel.textContent='Comparaciones por ronda';const cantidad=document.createElement('select');cantidad.id='cantidadComparaciones';for(let n=1;n<=12;n++)cantidad.append(new Option(String(n),String(n)));cantidadLabel.append(cantidad);opciones.append(cantidadLabel);
+  const correccionLabel=document.createElement('label');
+  correccionLabel.className='opcion-correccion-signos';
+  correccionLabel.innerHTML='<input type="checkbox" id="permitirCorreccionSignos"> Permitir corregir después de revisar';
+  opciones.append(correccionLabel);
+  const permitirCorreccion=$('#permitirCorreccionSignos');
   for(const n of [5,6]){const b=document.createElement('button');b.type='button';b.className='level-btn';b.dataset.digits=n;b.textContent='Hasta '+n+' dígitos';$('#startScreen .level-grid').append(b);}
   $$('.level-btn').forEach(b=>b.removeAttribute('style'));
   const casillaDigitos=$('#digitosSignos'),casillaRango=$('#rangoSignos'),minimo=$('#minimoSignos'),maximo=$('#maximoSignos');
@@ -648,22 +668,29 @@
   tools.append(document.querySelector('.topbar'),$('#btnNew'),$('#btnReset'));
   $('#btnLevel').hidden=true;
   let digitosPendientes=1,ayudaPendiente=0,aplicando=false;const cambiosPendientes=new Set();
-  function abrirConfiguracion(){FiestaSignos.cerrar();FiestaSignos.prepararConfiguracion();cantidad.value=String(state.comparisonCount);mostrarModoSignos(state.numberMode==='rango');minimo.value=state.rangeMin;maximo.value=state.rangeMax;digitosPendientes=state.maxDigits;ayudaPendiente=state.helpMode;cambiosPendientes.clear();config.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('seleccionado',Number(b.dataset.digits)===digitosPendientes));config.style.zoom=String(1/(parseFloat(getComputedStyle(document.body).zoom)||1));config.showModal();}
+  function abrirConfiguracion(){FiestaSignos.cerrar();FiestaSignos.prepararConfiguracion();cantidad.value=String(state.comparisonCount);permitirCorreccion.checked=state.permitirCorreccion;mostrarModoSignos(state.numberMode==='rango');minimo.value=state.rangeMin;maximo.value=state.rangeMax;digitosPendientes=state.maxDigits;ayudaPendiente=state.helpMode;cambiosPendientes.clear();config.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('seleccionado',Number(b.dataset.digits)===digitosPendientes));config.style.zoom=String(1/(parseFloat(getComputedStyle(document.body).zoom)||1));config.showModal();}
   const accesos=document.createElement('nav');accesos.className='accesos-signos';accesos.setAttribute('aria-label','Aplicaciones y configuración');abrir.before(accesos);const casa=document.createElement('a');casa.className='inicio-signos';casa.href='index.html';casa.textContent='⌂';casa.setAttribute('aria-label','Volver a las aplicaciones');casa.title='Volver a las aplicaciones';accesos.append(abrir);
   const cabecera=document.createElement('header');cabecera.className='cabecera-comparacion';tools.prepend(cabecera);const insignia=document.createElement('span');insignia.className='insignia-comparacion';insignia.innerHTML='<img src="iconos/mayor-menor-igual.svg" width="44" height="42" alt="">';insignia.setAttribute('aria-hidden','true');cabecera.append(insignia,tools.querySelector('.title'),nombre,tools.querySelector('.subtitle'),casa);const descripcion=cabecera.querySelector('.subtitle');descripcion.remove();
   const guia=document.createElement('section');guia.className='guia-signos';guia.setAttribute('aria-labelledby','tituloGuiaSignos');guia.innerHTML='<h2 id="tituloGuiaSignos">Así jugamos</h2><ol><li><span>Mira los dos números.</span></li><li><span>Elige o arrastra el signo.</span></li><li><span>Pulsa <strong>Revisar</strong>.</span></li></ol>';cabecera.after(guia,accesos);
   const barra=tools.querySelector('.topbar'),consejo=barra.querySelector('.help-text');contenido.append(consejo);consejo.classList.add('consejo-signos');
   barra.classList.add('resumen-signos');const rotulo=document.createElement('span');rotulo.className='rotulo-ronda-signos';rotulo.textContent='Tu ronda';barra.prepend(rotulo);const resumenCantidad=document.createElement('span');resumenCantidad.id='cantidadResumenSignos';resumenCantidad.setAttribute('aria-live','polite');barra.append(resumenCantidad);
   const acciones=document.createElement('div');acciones.className='acciones-signos';acciones.append($('#btnNew'),$('#btnReset'));tools.append(acciones);
+  const botonNueva=$('#btnNew');
+  function mostrarSoloNuevaRonda(soloNueva){
+    $('#btnCheck').hidden = $('#symbolTray').hidden = acciones.hidden = soloNueva;
+    if(soloNueva) $('#gameArea > .buttons').append(botonNueva);
+    else if(botonNueva.parentElement !== acciones) acciones.prepend(botonNueva);
+  }
   abrir.onclick=abrirConfiguracion;
   config.addEventListener('click',e=>{const nivel=e.target.closest('.level-btn'),ayuda=e.target.closest('.control-btn');if(nivel||ayuda){e.preventDefault();e.stopImmediatePropagation();if(nivel){digitosPendientes=Number(nivel.dataset.digits);config.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('seleccionado',b===nivel));}else{ayudaPendiente=['helpOff','helpRead','helpLive'].indexOf(ayuda.id);config.querySelectorAll('.control-btn').forEach(b=>b.classList.toggle('active',b===ayuda));}}},true);
   config.addEventListener('change',e=>{if(!aplicando){e.stopImmediatePropagation();cambiosPendientes.add(e.target);}},true);
   config.querySelector('#cerrarConfiguracionSignos').onclick=cerrarAjustesSignos;
   config.querySelector('#aplicarConfiguracionSignos').onclick=cerrarAjustesSignos;
-  config.addEventListener('close',()=>{FiestaSignos.aplicarConfiguracion();state.comparisonCount=Math.max(1,Math.min(12,+cantidad.value||6));state.numberMode=casillaRango.checked?'rango':'digitos';state.rangeMin=+minimo.value;state.rangeMax=+maximo.value;aplicando=true;for(const el of cambiosPendientes)el.dispatchEvent(new Event('change',{bubbles:true}));aplicando=false;setHelpMode(ayudaPendiente);startGame(digitosPendientes);});
+  config.addEventListener('close',()=>{FiestaSignos.aplicarConfiguracion();state.comparisonCount=Math.max(1,Math.min(12,+cantidad.value||6));state.permitirCorreccion=permitirCorreccion.checked;state.numberMode=casillaRango.checked?'rango':'digitos';state.rangeMin=+minimo.value;state.rangeMax=+maximo.value;aplicando=true;for(const el of cambiosPendientes)el.dispatchEvent(new Event('change',{bubbles:true}));aplicando=false;setHelpMode(ayudaPendiente);startGame(digitosPendientes);});
   $('#nameInput').addEventListener('change',()=>{state.childName=guardarNombreEstudiante($('#nameInput').value)||state.childName;});
   document.querySelectorAll('.decor,.family-legend,.footer').forEach(el=>el.remove());
   const saved=Matematicas.leer('signos.config.v1');
+  state.permitirCorreccion=saved.permitirCorreccion===true;
   cargarNombreDesdeIndex();attachEvents();
   $('#nameInput').value||= 'Gabriel';
   state.comparisonCount=Math.max(1,Math.min(12,Math.floor(+saved.cantidad||6)));state.maxDigits=[1,2,3,4,5,6].includes(saved.digitos)?saved.digitos:1;state.numberMode=saved.modo==='rango'?'rango':'digitos';state.rangeMin=Math.max(0,Math.min(999998,Math.floor(+saved.minimo||0)));state.rangeMax=Math.max(state.rangeMin+1,Math.min(999999,Math.floor(+saved.maximo||100)));

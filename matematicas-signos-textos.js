@@ -11,6 +11,8 @@ Object.assign(window.TEXTOS_INGLES,{
  'Mayor que >   Menor que <   Igual =':'Greater than >   Less than <   Equal to =',
  'Mayor que >    Menor que <    Igual =':'Greater than >    Less than <    Equal to =',
  'Cambiar nivel':'Change level',
+ 'Permitir corregir después de revisar':'Allow corrections after checking',
+ 'Compara los números con calma e inténtalo en una nueva ronda.':'Take your time comparing the numbers and try a new round.',
  'Revisa esta ronda. Los signos marcados con ✗ deben corregirse.':'Check this round. Correct the signs marked with ✗.'
 });
 window.traducirActividad=s=>{

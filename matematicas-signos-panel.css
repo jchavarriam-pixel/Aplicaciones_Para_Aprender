@@ -54,3 +54,7 @@
 #exercisesContainer .exercise-row.resultado-incorrecto{background:#fff0e8!important;border-color:#aa5943;box-shadow:0 0 0 calc(2 * var(--unidad-signos,1px)) #a8553933,0 0 calc(18 * var(--unidad-signos,1px)) #a8553955}
 #exercisesContainer .drop-zone.correct{border-color:#21985a!important;background:#d4f8df!important;box-shadow:0 0 calc(12 * var(--unidad-signos,1px)) #37bc7577}
 #exercisesContainer .drop-zone.incorrect{border-color:#a55239!important;background:#f5d9ca!important;box-shadow:0 0 calc(12 * var(--unidad-signos,1px)) #a8553977}
+.opcion-correccion-signos{display:flex;align-items:center;gap:8px;min-height:44px;margin-top:12px;font-size:14px;font-weight:650}
+.opcion-correccion-signos input{width:20px;height:20px;flex:none;accent-color:#5265c9}
+#symbolTray[hidden],#btnCheck[hidden],.acciones-signos[hidden]{display:none!important}
+#gameArea>.buttons #btnNew{min-height:calc(44 * var(--unidad-signos,1px));font-size:calc(18 * var(--unidad-signos,1px))}
