@@ -3,6 +3,8 @@
   const altoCasaAbierta = 205;
   const medidasCalle = {mitad:34,acera:22,cruce:46};
   const esObra = id => ['calle','acera','paso-peatonal'].includes(id);
+  const escalaTamano = {pequeno:.68,mediano:1,grande:1.24};
+  const factorTamano = tamano => escalaTamano[tamano] || 1;
   const escala = z => .40 + z * .94;
   const escalaObjeto = z => z < 0 ? .74 : escala(z);
   const anchoVista = z => 600 + 120 * z;
@@ -243,7 +245,7 @@
     poligono(ctx,[[51,-12],[61,-18],[61,-37],[51,-31]],'#bdedf5',borde,1.4);
     ctx.restore();
   }
-  function semiAnchoEnEscena(id, x, z, terreno) {
+  function semiAnchoEnEscena(id, x, z, terreno, tamano) {
     if (esObra(id)) return 45;
     if (id === 'semaforo') return 15 * escala(z);
     if (id === 'tienda-barrio' || id === 'taller') return 65 * escala(z);
@@ -251,12 +253,13 @@
     if (id === 'puente') return 65;
     if (esEdificio(id)) return 65 * escala(z);
     const vista = vistaObjeto(id,x,z,terreno);
-    return dimensionesObjeto(vista.id,z).ancho / 2;
+    return dimensionesObjeto(vista.id,z).ancho * factorTamano(tamano) / 2;
   }
-  function objetoEnEscena(id, x, z, terreno) {
-    const [px] = proyectar(x,z);
-    const mitad = semiAnchoEnEscena(id,x,z,terreno);
-    return px - mitad >= 5 && px + mitad <= ancho - 5;
+  function objetoEnEscena(id, x, z, terreno, tamano) {
+    const [px,py] = proyectar(x,z);
+    const mitad = semiAnchoEnEscena(id,x,z,terreno,tamano);
+    const cabeEnAlto = !tamano || py - dimensionesObjeto(vistaObjeto(id,x,z,terreno).id,z).alto * factorTamano(tamano) >= 4;
+    return cabeEnAlto && px - mitad >= 5 && px + mitad <= ancho - 5;
   }
   function tocarObjeto(punto, objeto, terreno) {
     const [x,y] = proyectar(objeto.x,objeto.z);
@@ -277,9 +280,10 @@
     }
     const vista = vistaObjeto(objeto.id,objeto.x,objeto.z,terreno);
     const {ancho,alto} = dimensionesObjeto(vista.id,objeto.z);
+    const tamano = factorTamano(objeto.tamano);
     const borde = objeto.id === 'lago-pieza' ? .5 : objeto.z < 0 ? .16 : 1;
-    return Math.abs(punto.x - x) <= Math.max(ancho / 2,22) + 10 &&
-      punto.y >= y - alto * borde - 9 && punto.y <= y + alto * (1 - borde) + 16;
+    return Math.abs(punto.x - x) <= Math.max(ancho * tamano / 2,22) + 10 &&
+      punto.y >= y - alto * tamano * borde - 9 && punto.y <= y + alto * tamano * (1 - borde) + 16;
   }
   function marcaColocacion(ctx, objeto, corregir) {
     const [x,y] = proyectar(objeto.x,objeto.z);
@@ -530,7 +534,21 @@
         break;
     }
   }
-  function paisajeObjeto(ctx, id, x, z, h = 0, terreno, sombraVisible = true) {
+  function paisajeObjeto(ctx, id, x, z, h = 0, terreno, sombraVisible = true, tamano) {
+    const factor = factorTamano(tamano);
+    if (factor === 1) {
+      dibujarObjeto(ctx,id,x,z,h,terreno,sombraVisible);
+      return;
+    }
+    const [px,py] = proyectar(x,z,h);
+    ctx.save();
+    ctx.translate(px,py);
+    ctx.scale(factor,factor);
+    ctx.translate(-px,-py);
+    dibujarObjeto(ctx,id,x,z,h,terreno,sombraVisible);
+    ctx.restore();
+  }
+  function dibujarObjeto(ctx, id, x, z, h, terreno, sombraVisible) {
     const [sx, sy] = proyectar(x, z);
     if (z >= 0 && sombraVisible && id !== 'lago-pieza') {
       ctx.save();
@@ -628,7 +646,7 @@
     }
     ctx.restore();
   }
-  function ficha(canvas, id, pieza) {
+  function ficha(canvas, id, pieza, tamanoPieza) {
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0,0,canvas.width,canvas.height);
     ctx.save();
@@ -654,8 +672,11 @@
       pisoEdificio(ctx,id,.5,1,0);
     } else if (atlas.has(atlasPieza[id])) {
       const [x,y,w,h] = recortes[id];
-      const tamano = Math.min(canvas.width * .79 / w, canvas.height * .76 / h);
-      ctx.drawImage(atlas.get(atlasPieza[id]), x,y,w,h, (canvas.width-w*tamano)/2, (canvas.height-h*tamano)/2, w*tamano,h*tamano);
+      const factor = tamanoPieza ?
+        Math.min(canvas.width*.9/w,canvas.height*.9/h)*factorTamano(tamanoPieza)/escalaTamano.grande :
+        Math.min(canvas.width*.79/w,canvas.height*.76/h);
+      const base = tamanoPieza ? canvas.height*.95 : (canvas.height+h*factor)/2;
+      ctx.drawImage(atlas.get(atlasPieza[id]), x,y,w,h, (canvas.width-w*factor)/2, base-h*factor, w*factor,h*factor);
     } else {
       ctx.scale(canvas.width/760,canvas.width/760);
       const relacion = canvas.height/canvas.width;
@@ -663,10 +684,10 @@
       ctx.translate(380, relacion * 760 * .91);
       ctx.scale(factor,factor);
       ctx.translate(-380,-391);
-      paisajeObjeto(ctx,id,.5,1);
+      paisajeObjeto(ctx,id,.5,1,0,undefined,true,tamanoPieza);
     }
     ctx.restore();
   }
   return window.EscenarioConstruccion = {ancho,alto,piso,proyectar,desdePantalla,dentroCasa,dentroCerca,dentroCaja,dentroLago,bordesLago,semiAnchoEnEscena,objetoEnEscena,visibleFueraDeCasa,tocarObjeto,marcaColocacion,bloque,fondoBloques,cargarFondos,terreno,paisajeObjeto,ficha,poligono,elipse,linea,
-    esEdificio,cimaEdificio,sobreEdificio,pisoEdificio,puente,miniRio,orillasRioCentral,medidasCalle,esObra,obra};
+    esEdificio,cimaEdificio,sobreEdificio,pisoEdificio,puente,miniRio,orillasRioCentral,medidasCalle,esObra,obra,factorTamano};
 })();

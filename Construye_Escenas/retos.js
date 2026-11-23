@@ -88,6 +88,23 @@
   }
   for (const [id, es, en] of variantes) piezas[id] = {nombre: par(es,en)};
   femeninos.add('casa-abierta');
+  const adjetivosTamano = {
+    pequeno:['pequeño','pequeña','small'],
+    mediano:['mediano','mediana','medium-sized'],
+    grande:['grande','grande','large']
+  };
+  const tamanos = Object.keys(adjetivosTamano);
+  const piezasConTamano = new Set([
+    'arbol','arbusto','pelota','banco','fuente','casa','sombrilla','castillo','bicicleta',
+    'perro','gato','conejo','caballo','vaca','oveja','sapo','zorro','venado',...vehiculos
+  ]);
+  function nombrePieza(id, tamano) {
+    const nombre = piezas[id].nombre;
+    if (!tamano) return nombre;
+    const [masculino,femenino,ingles] = adjetivosTamano[tamano];
+    return par(nombre.es + ' ' + (femeninos.has(id) ? femenino : masculino),
+      ingles[0].toUpperCase() + ingles.slice(1) + ' ' + nombre.en.toLowerCase());
+  }
 
   const escena = EscenarioConstruccion;
   // Bordes trazados sobre los fondos originales de 1280 × 720, antes de escalarlos al tablero.
@@ -261,30 +278,31 @@
     const [px] = escena.proyectar(x,z);
     return Math.abs(z-zPuente) < .12 && px >= tramo[0]-8 && px <= tramo[1]+8;
   }
-  function espacioDisponible(id, terreno, x, z, colocadas, contenedor) {
-    if (!EscenarioConstruccion.objetoEnEscena(id,x,z,terreno)) return false;
+  function espacioDisponible(id, terreno, x, z, colocadas, contenedor, tamano) {
+    if (!escena.objetoEnEscena(id,x,z,terreno,tamano)) return false;
     const tramo = id === 'puente' && tramoPuente(x,z);
     return colocadas.every(a => {
       if (a === contenedor || escena.esObra(a.id)) return true;
       if (tramo) return !ocupaCruce(a.x,a.z,tramo,z);
       if (a.tramo) return !ocupaCruce(x,z,a.tramo,a.z);
+      const proporcion = (escena.factorTamano(tamano)+escena.factorTamano(a.tamano))/2;
       return (id !== 'lago-pieza' || !escena.dentroLago(a.x,a.z,{x,z})) &&
       (contenedores.has(a.id) ? !interior(x,z,a) && dist(x,z,a) >= .095 :
-        dist(x,z,a) >= (contenedor ? .05 : .088));
+        dist(x,z,a) >= (contenedor ? .05 : .088)*proporcion);
     });
   }
   function posicionValida(paso, x, z, colocadas) {
-    return paso.zona(x,z) && espacioDisponible(paso.id,paso.terreno,x,z,colocadas,paso.contenedor);
+    return paso.zona(x,z) && espacioDisponible(paso.id,paso.terreno,x,z,colocadas,paso.contenedor,paso.tamano);
   }
-  function piezaEnEspacioLibre(id, reto, x, z, colocadas) {
+  function piezaEnEspacioLibre(id, reto, x, z, colocadas, tamano) {
     if (!zonaTablero(x,z)) return null;
     const contenedor = colocadas.find(a => cabeDentro(id,a) && interior(x,z,a));
     const [u,v] = puntoImagen(x,z);
     if (!contenedor && (sueloPieza(id,reto) === 'cielo' ? !superficie(x,z,'cielo',reto,id) :
       v < Math.min(243,alComienzoDelSuelo(reto.terreno,u)))) return null;
-    if (!espacioDisponible(id,reto.terreno,x,z,colocadas,contenedor)) return null;
+    if (!espacioDisponible(id,reto.terreno,x,z,colocadas,contenedor,tamano)) return null;
     const tramo = id === 'puente' ? tramoPuente(x,z) : null;
-    return {id,x,z,contenedor: contenedor || null,...(tramo && {tramo})};
+    return {id,x,z,tamano,contenedor: contenedor || null,...(tramo && {tramo})};
   }
 
   // La malla se usa al planear instrucciones con varias piezas, nunca para limitar un punto de colocación.
@@ -303,8 +321,8 @@
     return posicionValida(paso,x,z,colocadas) && hayEspacio(paso,[...colocadas,{x,z}],pendientes);
   }
 
-  function sustantivo(id, definido = false) {
-    const {es,en} = piezas[id].nombre;
+  function sustantivo(id, definido = false, tamano) {
+    const {es,en} = nombrePieza(id,tamano);
     const fem = femeninos.has(id);
     if (id === 'flores') return par(definido ? 'las flores' : 'unas flores', definido ? 'the flowers' : 'some flowers');
     if (id === 'rocas') return par(definido ? 'las rocas' : 'unas rocas', definido ? 'the rocks' : 'some rocks');
@@ -320,7 +338,7 @@
   const verbos = [
     par('Pon','Put'), par('Coloca','Place'), par('Agrega','Add'), par('Ubica','Position')
   ];
-  function instruccionPaisaje(reto,id,a,tipo,cantidad,verbo,pisos) {
+  function instruccionPaisaje(reto,id,a,tipo,cantidad,verbo,pisos,tamano) {
     if (id === 'rio') return {
       id,cantidad,terreno:reto.terreno,tipo,preparacion:true,
       zona(x,z) {
@@ -332,9 +350,9 @@
     };
     const suelo = sueloPieza(id,reto);
     const plural = cantidades[id];
-    const objeto = cantidad === 1 ? sustantivo(id) :
+    const objeto = cantidad === 1 ? sustantivo(id,false,tamano) :
       par((cantidad === 2 ? 'dos ' : 'tres ') + plural.es, (cantidad === 2 ? 'two ' : 'three ') + plural.en);
-    const ref = a && sustantivo(a.id,true);
+    const ref = a && sustantivo(a.id,true,a.tamano);
     const [direccion, coincide] = relacion[tipo] || [];
     const ladoRio = tipo === 'izquierda-rio' || tipo === 'derecha-rio';
     function enLadoDelRio(x,z) {
@@ -365,7 +383,7 @@
       par('Construye ' + objeto.es + ' de ' + pisos + ' pisos. Coloca el primer piso ' + sitio.es + '.',
         'Build ' + objeto.en + ' with ' + pisos + ' floors. Place the first floor ' + sitio.en + '.') :
       par(verbo.es + ' ' + objeto.es + ' ' + sitio.es + '.', verbo.en + ' ' + objeto.en + ' ' + sitio.en + '.');
-    return {id,cantidad,pisos,contenedor,tipo,terreno:reto.terreno,ancla:a,zona,texto,
+    return {id,cantidad,pisos,tamano,contenedor,tipo,terreno:reto.terreno,ancla:a,zona,texto,
       correccion:par('Coloca la pieza ' + sitio.es + '.', 'Place the piece ' + sitio.en + '.'),
     };
   }
@@ -379,8 +397,8 @@
     }
     return mezcla;
   }
-  function pasoUrbano(reto,id,texto,zona,ajustar) {
-    return {id,cantidad:1,terreno:reto.terreno,texto,correccion:texto,preparacion:escena.esObra(id),
+  function pasoUrbano(reto,id,texto,zona,ajustar,tamano) {
+    return {id,cantidad:1,tamano,terreno:reto.terreno,texto,correccion:texto,preparacion:escena.esObra(id),
       zona:(x,z) => zona(...escena.proyectar(x,z),x,z),ajustar};
   }
   function siguienteCalle(reto,colocadas,historial,ronda) {
@@ -428,7 +446,7 @@
         px >= 114 && px <= escena.ancho-114 && Math.abs(py-centro) <= mitad && libreDeCruces(px,133) &&
         colocadas.every(pieza => !vehiculos.includes(pieza.id) ||
           Math.abs(px-escena.proyectar(pieza.x,pieza.z)[0]) >
-            cruce/2+escena.semiAnchoEnEscena(pieza.id,pieza.x,pieza.z,reto.terreno)+8),
+            cruce/2+escena.semiAnchoEnEscena(pieza.id,pieza.x,pieza.z,reto.terreno,pieza.tamano)+8),
       (px,py) => [px,centro]);
       paso.preparacion = false;
       if (hayEspacio(paso,colocadas,1)) return paso;
@@ -440,7 +458,8 @@
     const orden = ['semaforo',primerComercio,ronda.vehiculo,ronda.edificio,segundoComercio,...ronda.orden];
     for (const id of new Set(orden)) {
       if (escena.esObra(id) || pedidos.has(id)) continue;
-      const objeto = sustantivo(id);
+      const tamano = ronda.tamanosPieza[id];
+      const objeto = sustantivo(id,false,tamano);
       let paso;
       if (id === 'semaforo') {
         paso = pasoUrbano(reto,id,par('Pon un semáforo en una acera, cerca del paso peatonal.',
@@ -448,15 +467,16 @@
       } else if (vehiculos.includes(id)) {
         paso = pasoUrbano(reto,id,par('Coloca '+objeto.es+' en la calle y deja libre el paso peatonal.',
           'Place '+objeto.en+' on the road and keep the crosswalk clear.'), (px,py,x,z) =>
-          Math.abs(py-centro) <= mitad-7 && libreDeCruces(px,escena.semiAnchoEnEscena(id,x,z,reto.terreno)+6));
+          Math.abs(py-centro) <= mitad-7 && libreDeCruces(px,escena.semiAnchoEnEscena(id,x,z,reto.terreno,tamano)+6),
+          undefined,tamano);
       } else {
         const edificio = escena.esEdificio(id);
         const verbo = par('Coloca','Place');
         paso = edificio ? instruccionPaisaje(reto,id,null,null,1,verbo,ronda.pisosEdificio) :
           piezasBajas.includes(id) ? pasoUrbano(reto,id,par('Coloca '+objeto.es+' en el césped, lejos de la calle.',
-            'Place '+objeto.en+' on the grass, away from the road.'), (px,py) => trasLaAcera(px,py) || py >= centro+borde+40) :
+            'Place '+objeto.en+' on the grass, away from the road.'), (px,py) => trasLaAcera(px,py) || py >= centro+borde+40,undefined,tamano) :
           pasoUrbano(reto,id,par('Coloca '+objeto.es+' en el césped, detrás de la acera de arriba.',
-            'Place '+objeto.en+' on the grass behind the top sidewalk.'), trasLaAcera);
+            'Place '+objeto.en+' on the grass behind the top sidewalk.'), trasLaAcera,undefined,tamano);
         if (edificio) {
           const zonaEdificio = paso.zona;
           paso.texto = par('Construye '+objeto.es+' de '+paso.pisos+' pisos. Coloca el primer piso detrás de la acera de arriba.',
@@ -469,6 +489,8 @@
     }
   }
   function crearRondaPaisaje(reto, inicio) {
+    const familias = barajar(reto.objetos.filter(id => piezasConTamano.has(id)));
+    const ordenTamanos = barajar(tamanos);
     const ronda = {
       orden: [inicio,...barajar(reto.objetos.filter(id => id !== inicio))],
       verbos: barajar(verbos),
@@ -477,6 +499,7 @@
       turnoBarco: ['rio','lago'].includes(reto.terreno) ? 1 + Math.floor(Math.random() * 2) : Infinity,
       turnoRelieve: reto.terreno === 'campamento' ? 1 + Math.floor(Math.random() * 2) : Infinity,
       pisosEdificio: 2 + Math.floor(Math.random() * 3),
+      tamanosPieza:Object.fromEntries(familias.map((id,i) => [id,ordenTamanos[i%ordenTamanos.length]])),
       ladosRio: reto.terreno === 'rio-central' ? barajar(['izquierda-rio','derecha-rio']) : null,
       practicarCaja: reto.terreno === 'parque' && Math.random() < .55
     };
@@ -491,17 +514,19 @@
 
   function siguientePaisaje(reto, colocadas, historial, ronda) {
     if (reto.terreno === 'calle-nueva') return siguienteCalle(reto,colocadas,historial,ronda);
-    const {orden,tipos,direcciones,turnoBarco,turnoRelieve,pisosEdificio} = ronda;
+    const {orden,tipos,direcciones,turnoBarco,turnoRelieve,pisosEdificio,tamanosPieza} = ronda;
     const indice = historial.length;
     const verbo = ronda.verbos[indice % ronda.verbos.length];
     const usados = new Set(historial.map(paso => paso.id));
     const candidatos = orden.filter(id => !usados.has(id));
+    const sinTamano = !historial.some(paso => paso.tamano);
     const anclas = barajar(colocadas.filter(a => !a.contenedor &&
       colocadas.filter(b => a.id === b.id).length === 1));
     anclas.sort((a,b) => Number(a === historial.at(-1)?.ancla) - Number(b === historial.at(-1)?.ancla));
     const mejor = (id,a,tipo,cantidad=1) => {
       const paso = instruccionPaisaje(reto,id,a,tipo,cantidad,verbo,
-        escena.esEdificio(id) ? pisosEdificio : undefined);
+        escena.esEdificio(id) ? pisosEdificio : undefined,
+        cantidad === 1 && tipo !== 'dentro' && tipo !== 'fuera' ? tamanosPieza[id] : undefined);
       if (a && tipo !== 'dentro' && malla.filter(({x,z}) => posicionValida(paso,x,z,colocadas)).length < 5) return null;
       return hayEspacio(paso,colocadas,cantidad) ? paso : null;
     };
@@ -516,9 +541,16 @@
         const barco = mejor('barco');
         if (barco) return barco;
       }
-      for (const offset of [0,1]) for (const id of candidatos) {
+      const piezasOrilla = sinTamano ? [...candidatos].sort((a,b) => Boolean(tamanosPieza[b])-Boolean(tamanosPieza[a])) : candidatos;
+      for (const offset of [0,1]) for (const id of piezasOrilla) {
         if (sueloPieza(id,reto) !== reto.suelo) continue;
         const paso = mejor(id,null,ronda.ladosRio[(turno+offset)%2]);
+        if (paso) return paso;
+      }
+    }
+    if (sinTamano && (indice === 2 || (indice === 1 && turnoBarco === 2))) {
+      for (const id of candidatos.filter(id => tamanosPieza[id])) {
+        const paso = mejor(id);
         if (paso) return paso;
       }
     }
@@ -603,6 +635,6 @@
       if (paso) return paso;
     }
   }
-  window.RetosConstruccion = {piezas, bloques, paisajes, zonaTablero, piezaEnEspacioLibre, admite, barajar,
+  window.RetosConstruccion = {piezas, bloques, paisajes, zonaTablero, piezaEnEspacioLibre, admite, barajar,tamanos,nombrePieza,
     crearRondaPaisaje, siguientePaisaje};
 })();

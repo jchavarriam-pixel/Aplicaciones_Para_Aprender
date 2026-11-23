@@ -3,7 +3,7 @@
 
   const get = id => document.getElementById(id);
   const {piezas, bloques, paisajes, piezaEnEspacioLibre, admite, crearRondaPaisaje, siguientePaisaje,
-    barajar: mezclar} = RetosConstruccion;
+    tamanos, nombrePieza, barajar: mezclar} = RetosConstruccion;
   const retos = {bloques, paisajes};
   const escena = EscenarioConstruccion;
   const app = get('appConstruye'), juego = get('juego'), tablero = get('tablero'), banco = get('banco');
@@ -38,6 +38,8 @@
   const rioAgregado = () => reto?.terreno === 'rio-central' && historial[0]?.id === 'rio';
   const pasosPaisaje = () => historial.filter(paso => !paso.preparacion).length;
   const limites = (valor, min, max) => Math.max(min, Math.min(valor, max));
+  const fichaDelBoton = boton => ({id:boton.dataset.pieza,tamano:boton.dataset.tamano});
+  const mismaFicha = (a,b) => a?.id === b?.id && a?.tamano === b?.tamano;
   const dentro = ({x, y}) => x >= 0 && x <= escena.ancho && y <= escena.alto &&
     y >= (esBloques() ? -vista.y / vista.escala : 0);
   const completar = () => reto && !paso();
@@ -83,36 +85,45 @@
       const similares = reto.objetos.filter(item => item !== id && item.startsWith(familia + '-'));
       const proximos = mezclar(reto.objetos.filter(item => item !== id && !similares.includes(item)));
       const otros = mismoGrupo.filter(item => !proximos.includes(item));
-      return mezclar([id, ...similares, ...proximos, ...otros].slice(0, config.cantidad));
+      const distractores = [...similares,...proximos,...otros];
+      if (paso().tamano) {
+        const variantes = mezclar(tamanos).map(tamano => ({id,tamano}));
+        const extras = distractores.slice(0,config.cantidad-variantes.length).map(id => ({id}));
+        extras.splice(Math.floor(Math.random()*(extras.length+1)),0,...variantes);
+        return extras;
+      }
+      return mezclar([id,...distractores].slice(0,config.cantidad)).map(id => ({id}));
     }
     const otraForma = mismoGrupo.filter(item => piezas[item].forma !== datos.forma && piezas[item].tinta === datos.tinta);
     const otroColor = mismoGrupo.filter(item => piezas[item].forma === datos.forma);
     const otros = mismoGrupo.filter(item => !otraForma.includes(item) && !otroColor.includes(item));
-    return mezclar([id, mezclar(otraForma)[0], mezclar(otroColor)[0], ...mezclar(otros)].slice(0, config.cantidad));
+    return mezclar([id, mezclar(otraForma)[0], mezclar(otroColor)[0], ...mezclar(otros)].slice(0, config.cantidad)).map(id => ({id}));
   }
   function renderBanco() {
     banco.hidden = completar();
     banco.style.setProperty('--opciones', config.cantidad);
-    banco.replaceChildren(...opciones.map(id => {
+    banco.replaceChildren(...opciones.map(ficha => {
+      const {id,tamano} = ficha;
       const boton = document.createElement('button');
       boton.type = 'button';
       boton.className = 'ficha';
       boton.dataset.pieza = id;
-      boton.setAttribute('aria-pressed', String(elegida === id));
+      if (tamano) boton.dataset.tamano = tamano;
+      boton.setAttribute('aria-pressed', String(mismaFicha(ficha,elegida)));
       const imagen = document.createElement('canvas');
       imagen.width = 128; imagen.height = 96;
       imagen.setAttribute('aria-hidden', 'true');
-      escena.ficha(imagen, id, piezas[id]);
+      escena.ficha(imagen,id,piezas[id],tamano);
       const rotulo = document.createElement('span');
       rotulo.textContent = escena.esEdificio(id) ?
         (id === 'apartamentos' ? esEn('Piso de apartamentos', 'Apartment floor') : esEn('Piso de oficinas', 'Office floor')) :
-        local(piezas[id].nombre);
+        local(nombrePieza(id,tamano));
       boton.append(imagen, rotulo);
       return boton;
     }));
   }
   function renderPaso(nuevoBanco = true, leer = true) {
-    if (nuevoBanco) elegida = piezaPendiente?.id || null;
+    if (nuevoBanco) elegida = piezaPendiente || null;
     if (nuevoBanco) {
       opciones = generarOpciones();
     }
@@ -234,7 +245,7 @@
         escena.pisoEdificio(ctx,item.id,item.x,item.z,piso,elevacion);
       }
     }
-    else escena.paisajeObjeto(ctx, item.id, item.x, item.z, elevacion, reto.terreno, sombra);
+    else escena.paisajeObjeto(ctx, item.id, item.x, item.z, elevacion, reto.terreno, sombra,item.tamano);
   }
   function destinoPiso(punto) {
     if (!escena.sobreEdificio(punto, edificioEnCurso)) return null;
@@ -353,12 +364,12 @@
     const y = (evento.clientY - rect.top) * tablero.clientHeight / rect.height;
     return {x: (x - vista.x) / vista.escala, y: (y - vista.y) / vista.escala};
   }
-  function seleccionar(id, enfocar = false) {
-    if (movimiento || completar() || (piezaPendiente && id !== piezaPendiente.id)) return false;
-    elegida = id;
+  function seleccionar(ficha, enfocar = false) {
+    if (movimiento || completar() || (piezaPendiente && !mismaFicha(ficha,piezaPendiente))) return false;
+    elegida = ficha;
     if (!piezaPendiente) mostrarEstado();
     tablero.classList.add('colocando');
-    for (const boton of banco.children) boton.setAttribute('aria-pressed', String(boton.dataset.pieza === id));
+    for (const boton of banco.children) boton.setAttribute('aria-pressed', String(mismaFicha(fichaDelBoton(boton),ficha)));
     if (enfocar) {
       teclado = true;
       tablero.focus({preventScroll: true});
@@ -367,7 +378,9 @@
     return true;
   }
   function errorPieza() {
-    const texto = esEn('Revisa la instrucción y elige otra pieza.', 'Check the instruction and choose another piece.');
+    const texto = elegida.id === paso().id ?
+      esEn('Revisa el tamaño que pide la instrucción.', 'Check the size in the instruction.') :
+      esEn('Revisa la instrucción y elige otra pieza.', 'Check the instruction and choose another piece.');
     mostrarEstado(texto);
     narrar(texto);
   }
@@ -383,10 +396,10 @@
       if (!elegida && paso()) mostrarEstado(esEn('Escoge una pieza primero.', 'Choose a piece first.'));
       return;
     }
-    if (elegida !== paso().id) { errorPieza(); return; }
+    if (!mismaFicha(elegida,paso())) { errorPieza(); return; }
     let pieza, elevacion, valido;
     if (esBloques()) {
-      pieza = destinoBloque(elegida, punto.x, punto.y);
+      pieza = destinoBloque(elegida.id, punto.x, punto.y);
       valido = bloqueCorrecto(pieza);
       elevacion = pieza.y - pieza.origen;
     } else if (edificioEnCurso) {
@@ -401,7 +414,7 @@
       elevacion = 56;
     } else {
       const {x,z} = escena.desdePantalla(punto.x,punto.y);
-      pieza = piezaEnEspacioLibre(elegida, reto, x, z, colocadas);
+      pieza = piezaEnEspacioLibre(elegida.id,reto,x,z,colocadas,elegida.tamano);
       if (!pieza) { errorLugar(true); return; }
       valido = paisajeCorrecto(x,z);
       if (valido) pieza = ajustarObra(pieza);
@@ -466,7 +479,7 @@
   banco.addEventListener('pointerdown', evento => {
     const boton = evento.target.closest('[data-pieza]');
     if (evento.button !== 0 || arrastre || movimiento || !boton) return;
-    if (!seleccionar(boton.dataset.pieza)) return;
+    if (!seleccionar(fichaDelBoton(boton))) return;
     boton.setPointerCapture(evento.pointerId);
     teclado = false;
     arrastre = {puntero: evento.pointerId, x: evento.clientX, y: evento.clientY, movido: false};
@@ -484,12 +497,12 @@
   function actualizarPrevia(punto) {
     vistaPrevia = null;
     if (dentro(punto)) {
-      if (esBloques()) vistaPrevia = {id: elegida, ...punto};
-      else if (edificioEnCurso) vistaPrevia = elegida === edificioEnCurso.id ? destinoPiso(punto) : null;
+      if (esBloques()) vistaPrevia = {id:elegida.id,...punto};
+      else if (edificioEnCurso) vistaPrevia = elegida.id === edificioEnCurso.id ? destinoPiso(punto) : null;
       else {
         const {x,z} = escena.desdePantalla(punto.x,punto.y);
-        vistaPrevia = piezaEnEspacioLibre(elegida,reto,x,z,colocadas);
-        if (vistaPrevia && paso()?.ajustar && elegida === paso().id && paisajeCorrecto(x,z)) {
+        vistaPrevia = piezaEnEspacioLibre(elegida.id,reto,x,z,colocadas,elegida.tamano);
+        if (vistaPrevia && paso()?.ajustar && mismaFicha(elegida,paso()) && paisajeCorrecto(x,z)) {
           vistaPrevia = ajustarObra(vistaPrevia);
         }
       }
@@ -529,7 +542,7 @@
   });
   banco.addEventListener('click', evento => {
     const boton = evento.target.closest('[data-pieza]');
-    if (boton && evento.detail === 0) seleccionar(boton.dataset.pieza, true);
+    if (boton && evento.detail === 0) seleccionar(fichaDelBoton(boton),true);
   });
   tablero.addEventListener('keydown', evento => {
     const pasos = {ArrowLeft: [-1,0], ArrowRight: [1,0], ArrowUp: [0,-1], ArrowDown: [0,1]};
@@ -633,7 +646,10 @@
   escena.cargarFondos(tipo => {
     if (tipo === 'rio' || tipo === 'objetos') dibujarTarjetas();
     if (tipo === 'objetos') {
-      for (const boton of banco.children) escena.ficha(boton.firstElementChild, boton.dataset.pieza, piezas[boton.dataset.pieza]);
+      for (const boton of banco.children) {
+        const {id,tamano} = fichaDelBoton(boton);
+        escena.ficha(boton.firstElementChild,id,piezas[id],tamano);
+      }
     }
     if (reto?.terreno === tipo || (['rio-central','calle-nueva'].includes(reto?.terreno) && tipo === 'pradera-rio') ||
         (modo === 'paisajes' && tipo === 'objetos')) {

@@ -200,7 +200,7 @@ button { cursor: pointer; touch-action: manipulation; }
 .ficha canvas { width: 100%; height: clamp(calc(33 * var(--u)), 6.5vh, calc(59 * var(--u))); object-fit: contain; pointer-events: none; }
 .ficha[aria-pressed="true"] { border-color: #8054d3; background: #efe4ff; color: #552796; }
 .ficha:active { cursor: grabbing; }
-.respuesta { display: flex; align-items: center; justify-content: center; gap: calc(6 * var(--u)); min-height: calc(25 * var(--u)); padding-right: calc(97 * var(--u)); }
+.respuesta { display: flex; align-items: center; justify-content: center; gap: calc(6 * var(--u)); min-height: calc(52 * var(--u)); padding-right: calc(97 * var(--u)); }
 #estado { color: #8a3d43; font-size: calc(12 * var(--u)); font-weight: 800; line-height: 1.2; }
 #estado.correcto { color: #146849; }
 #estado.corregir {
