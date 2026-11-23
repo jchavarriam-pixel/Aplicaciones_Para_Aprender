@@ -133,8 +133,6 @@ button { cursor: pointer; touch-action: manipulation; }
 .barra-reto { display: flex; gap: calc(5 * var(--u)); }
 .barra-reto select { flex: 1; min-width: 0; }
 .barra-reto button { flex: 0 0 auto; }
-#verZona[aria-pressed="true"] { background: #fff0b6; border-color: #b48534; color: #6c471d; }
-@media (max-width: 370px) { #verZona span { display: none; } }
 .instruccion {
   display: flex;
   align-items: center;

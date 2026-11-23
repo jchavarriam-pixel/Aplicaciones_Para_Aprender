@@ -15,10 +15,6 @@ Object.assign(window.TEXTOS_INGLES ||= {}, {
   'Reto de construcción': 'Building challenge',
   '‹ Modos': '‹ Activities',
   'Elegir reto': 'Choose a challenge',
-  'Zona': 'Zone',
-  'Zona de colocación': 'Placement area',
-  'Mostrar zona': 'Show placement area',
-  'Ocultar zona': 'Hide placement area',
   'Escuchar instrucción': 'Listen to the instruction',
   'Escenario. Con el teclado, usa las flechas para mover el cursor y Enter para colocar la pieza.': 'Building area. On a keyboard, use the arrow keys to move the cursor and Enter to place a piece.',
   'Piezas para escoger': 'Pieces to choose from',
@@ -30,6 +26,5 @@ Object.assign(window.TEXTOS_INGLES ||= {}, {
   '4 opciones': '4 choices',
   '5 opciones': '5 choices',
   'Narrar las instrucciones automáticamente': 'Read instructions aloud automatically',
-  'Mostrar la instrucción escrita': 'Show the written instruction',
-  'Marcar dónde se puede colocar cada pieza': 'Mark where each piece can go'
+  'Mostrar la instrucción escrita': 'Show the written instruction'
 });

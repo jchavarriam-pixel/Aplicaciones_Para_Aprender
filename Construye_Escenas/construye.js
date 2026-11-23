@@ -3,14 +3,13 @@
 
   const get = id => document.getElementById(id);
   const {piezas, bloques, paisajes, piezaEnEspacioLibre, admite, crearRondaPaisaje, siguientePaisaje,
-    barajar: mezclar, mallaPaisaje: malla, puntosPaisaje} = RetosConstruccion;
+    barajar: mezclar} = RetosConstruccion;
   const retos = {bloques, paisajes};
   const escena = EscenarioConstruccion;
   const app = get('appConstruye'), juego = get('juego'), tablero = get('tablero'), banco = get('banco');
   const ctx = tablero.getContext('2d');
   const ajustes = get('ajustes'), selector = get('elegirReto');
-  const verZona = get('verZona');
-  const controlesConfigurables = ['narracion', 'texto', 'pistas'];
+  const controlesConfigurables = ['narracion', 'texto'];
   const esEn = (es, en) => IdiomaVoz.idioma === 'en' ? en : es;
   const local = texto => texto[IdiomaVoz.idioma];
   const clave = 'construye-escenas.v1';
@@ -20,8 +19,7 @@
     narracion: guardado.narracion === true,
     texto: guardado.texto !== false,
     longitudRonda: Number.isInteger(guardado.longitudRonda) && guardado.longitudRonda >= 3 &&
-      guardado.longitudRonda <= 12 ? guardado.longitudRonda : 6,
-    pistas: guardado.pistas === true
+      guardado.longitudRonda <= 12 ? guardado.longitudRonda : 6
   };
   const vista = {escala: 1, x: 0, y: 0, densidad: 1};
   const colocadas = [];
@@ -29,7 +27,7 @@
   const mazosInicio = new Map();
   let ultimoPaisaje = -1;
   const cursor = {x: 380, y: 275};
-  let modo, reto, indiceReto = 0, elegida, opciones = [], zonas = [], pistaManual = null;
+  let modo, reto, indiceReto = 0, elegida, opciones = [];
   let arrastre, vistaPrevia, movimiento, piezaPendiente, teclado = false;
   let cuadroAnimacion = 0;
   let pasoPaisaje, rondaPaisaje, puestasEnPaso = 0;
@@ -40,7 +38,6 @@
   const dentro = ({x, y}) => x >= 0 && x <= escena.ancho && y <= escena.alto &&
     y >= (esBloques() ? -vista.y / vista.escala : 0);
   const completar = () => reto && !paso();
-  const mostrarZona = () => pistaManual ?? config.pistas;
   function sacarInicio(paisaje) {
     if (!mazosInicio.has(paisaje)) mazosInicio.set(paisaje, {pendientes:[], ultimo:null});
     const mazo = mazosInicio.get(paisaje);
@@ -108,7 +105,6 @@
     if (nuevoBanco) elegida = piezaPendiente?.id || null;
     if (nuevoBanco) {
       opciones = generarOpciones();
-      pistaManual = null;
     }
     tablero.classList.toggle('colocando', !!elegida);
     const indicePaso = (esBloques() ? colocadas.length : historial.length) + 1;
@@ -122,7 +118,6 @@
     get('indicacion').textContent = instruccion();
     get('siguiente').hidden = !completar();
     renderBanco();
-    actualizarGuias();
     dibujar();
     if (leer) narrar(instruccion());
   }
@@ -198,43 +193,6 @@
   function paisajeCorrecto(x, z) {
     return admite(paso(), x, z, colocadas, paso().cantidad - puestasEnPaso - 1);
   }
-  function calcularPistas() {
-    if (!mostrarZona() || !paso()) return [];
-    if (esBloques()) {
-      const id = paso().id;
-      return Array.from({length: 95}, (_, i) => destinoBloque(id, (i + 1) * 8, 0)).filter(bloqueCorrecto);
-    }
-    return puntosPaisaje.filter(({x,z}) => paisajeCorrecto(x,z));
-  }
-  function actualizarGuias() {
-    verZona.hidden = !paso();
-    verZona.setAttribute('aria-pressed', String(mostrarZona()));
-    verZona.title = IdiomaVoz.t(mostrarZona() ? 'Ocultar zona' : 'Mostrar zona');
-    zonas = calcularPistas();
-  }
-  function dibujarPistas() {
-    if (esBloques()) {
-      for (const zona of zonas) {
-        ctx.fillStyle = '#6644b4c9';
-        ctx.fillRect(zona.x - 4, zona.y - 7, 8, 7);
-      }
-    } else {
-      const casillas = new Set(zonas.map(({i,j}) => `${i}:${j}`));
-      const dx = .5 / malla.columnas, dz = .5 / malla.filas;
-      const bordes = [];
-      for (const {i,j,x,z} of zonas) {
-        const vertices = [[x-dx,z-dz],[x+dx,z-dz],[x+dx,z+dz],[x-dx,z+dz]].map(([px,pz]) => escena.proyectar(px,pz));
-        escena.poligono(ctx, vertices, '#ecdaffae');
-        const vecinos = [[i,j-1],[i+1,j],[i,j+1],[i-1,j]];
-        vecinos.forEach(([vi,vj], arista) => {
-          if (!casillas.has(`${vi}:${vj}`)) bordes.push([vertices[arista], vertices[(arista+1)%4]]);
-        });
-      }
-      for (const borde of bordes) {
-        escena.linea(ctx, borde, '#67419b', 2.8);
-      }
-    }
-  }
   function dibujarPieza(item, elevacion = 0, sombra = true) {
     if (esBloques()) escena.bloque(ctx, piezas[item.id], item.x, item.y - elevacion);
     else escena.paisajeObjeto(ctx, item.id, item.x, item.z, elevacion, reto.terreno, sombra);
@@ -289,7 +247,6 @@
     if (esBloques()) escena.fondoBloques(ctx, area);
     else escena.terreno(ctx,reto.terreno, area);
     dibujarFuegos(tiempo);
-    dibujarPistas();
     const progreso = movimiento ? limites((tiempo - movimiento.inicio) / movimiento.duracion, 0, 1) : 0;
     const fantasma = movimiento?.pieza || vistaPrevia;
     const pendienteVisible = fantasma ? null : piezaPendiente;
@@ -370,25 +327,13 @@
     if (esBloques()) {
       pieza = destinoBloque(elegida, punto.x, punto.y);
       valido = bloqueCorrecto(pieza);
-      const ajuste = !valido && zonas.find(zona => Math.abs(pieza.x - zona.x) <= 4);
-      if (ajuste) {
-        pieza = destinoBloque(elegida, ajuste.x, punto.y);
-        valido = true;
-      }
       elevacion = pieza.y - pieza.origen;
     } else {
       const {x,z} = escena.desdePantalla(punto.x,punto.y);
       pieza = piezaEnEspacioLibre(elegida, reto, x, z, colocadas);
       if (!pieza) { errorLugar(true); return; }
       valido = paisajeCorrecto(x,z);
-      // Un toque puede llegar redondeado al píxel más cercano, especialmente en pantallas pequeñas.
-      const toleranciaX = mostrarZona() ? .5 / malla.columnas : .009;
-      const toleranciaZ = mostrarZona() ? .5 / malla.filas : .018;
-      const ajuste = !valido && puntosPaisaje.find(zona => Math.abs(x - zona.x) <= toleranciaX &&
-        Math.abs(z - zona.z) <= toleranciaZ && paisajeCorrecto(zona.x,zona.z));
-      if (ajuste) pieza = {...pieza, x: ajuste.x, z: ajuste.z, contenedor: paso().contenedor};
       elevacion = piezaPendiente ? 18 : z < 0 ? 14 : 94;
-      valido ||= Boolean(ajuste);
     }
     vistaPrevia = null;
     mostrarEstado();
@@ -529,12 +474,6 @@
   selector.addEventListener('change', () => iniciar(Number(selector.value)));
   get('reiniciar').addEventListener('click', () => iniciar(indiceReto));
   get('escuchar').addEventListener('click', () => narrar(instruccion(), true));
-  verZona.addEventListener('click', () => {
-    if (!paso() || movimiento) return;
-    pistaManual = !mostrarZona();
-    actualizarGuias();
-    dibujar();
-  });
   get('siguiente').addEventListener('click', () => {
     iniciar((indiceReto + 1) % retos[modo].length);
     selector.focus({preventScroll: true});
@@ -559,7 +498,6 @@
     config.longitudRonda = longitud;
     config.cantidad = cantidad;
     for (const claveControl of controlesConfigurables) config[claveControl] = get(claveControl).checked;
-    pistaManual = null;
     Matematicas.guardar(clave,config);
     IdiomaVoz.aplicarEdicion();
     if (!modo) return;

@@ -118,21 +118,30 @@
     relieve: [[9,61,282,179],[309,71,282,158],[609,104,282,92]],
     'caja-objetos': [[25,9,250,282],[326,9,249,282],[618,9,264,282]],
     extra: [[14,17,277,268],[326,7,239,278],[606,10,282,275],[9,291,288,282],[321,335,271,219],
-      [605,291,287,285],[8,588,289,296],[310,590,279,276],[604,626,289,213]]
+      [605,291,287,285],[8,588,289,296],[310,590,279,276],[604,626,289,213]],
+    'edificios-nuevos': [[78,21,300,451],[457,45,398,414],[38,560,362,254],[465,536,381,276]],
+    'vehiculos-aereos': [[34,96,387,236],[518,30,281,384],[101,471,238,370],[546,467,226,385]],
+    'naturaleza-nueva': [[73,100,281,250],[475,34,369,348],[84,451,297,387],[454,585,406,154]]
   };
   const ids = {
     coches: Object.keys(alturasVehiculos).flatMap(tipo => coloresVehiculo.map(color => tipo + '-' + color)),
     recreopiezas: ['tobogan','columpios','trampolin','bicicleta'],
     relieve: ['volcan','montana','cerro'],
     'caja-objetos': ['manzana','cubo-juguete','regalo'],
-    extra: ['perro','gato','oveja','vaca','pajaro','caballo','escuela','sol','nube']
+    extra: ['perro','gato','oveja','vaca','pajaro','caballo','escuela','sol','nube'],
+    'edificios-nuevos': ['apartamentos','oficinas','rocas','arbusto'],
+    'vehiculos-aereos': ['avion','globo','cohete','poste'],
+    'naturaleza-nueva': ['sapo','zorro','venado','lago-pieza']
   };
   const alturas = {
     coches: Object.values(alturasVehiculos).flatMap(alto => coloresVehiculo.map(() => alto)),
     recreopiezas: [107,110,62,63],
     relieve: [224,245,101],
     'caja-objetos': [27,31,37],
-    extra: [47,35,61,88,33,105,218,63,59]
+    extra: [47,35,61,88,33,105,218,63,59],
+    'edificios-nuevos': [187,171,34,58],
+    'vehiculos-aereos': [60,93,86,130],
+    'naturaleza-nueva': [26,47,79,76]
   };
   const atlasPieza = {};
   const piezasIndividuales = {'casa-abierta': [560,406,altoCasaAbierta], cerca: [560,348,114], caja: [440,194,73]};
@@ -174,6 +183,18 @@
     return profundidad >= .34 && profundidad <= .64 &&
       Math.abs(px - cx) / ancho <= .39 - profundidad * .09;
   }
+  function dentroLago(x,z,lago) {
+    const [px,py] = proyectar(x,z), [cx,cy] = proyectar(lago.x,lago.z);
+    const d = dimensionesObjeto('lago-pieza',lago.z);
+    return Math.hypot((px-cx)/(d.ancho*.42),(py-cy)/(d.alto*.4)) <= 1;
+  }
+  function bordesLago(x,z) {
+    const [px,py] = proyectar(x,z), d = dimensionesObjeto('lago-pieza',z);
+    return Array.from({length:8},(_,i) => {
+      const angulo = i*Math.PI/4;
+      return desdePantalla(px+Math.cos(angulo)*d.ancho*.48,py+Math.sin(angulo)*d.alto*.47);
+    });
+  }
   function vistaObjeto(id, x, z, terreno) {
     if (!recortes[id + '-lado']) return {id, reflejar: false};
     // La calle del barrio es horizontal. En la terminal, el acceso central apunta al frente.
@@ -194,7 +215,7 @@
     const [x,y] = proyectar(objeto.x,objeto.z);
     const vista = vistaObjeto(objeto.id,objeto.x,objeto.z,terreno);
     const {ancho,alto} = dimensionesObjeto(vista.id,objeto.z);
-    const borde = objeto.z < 0 ? .16 : 1;
+    const borde = objeto.id === 'lago-pieza' ? .5 : objeto.z < 0 ? .16 : 1;
     return Math.abs(punto.x - x) <= Math.max(ancho / 2,22) + 10 &&
       punto.y >= y - alto * borde - 9 && punto.y <= y + alto * (1 - borde) + 16;
   }
@@ -405,7 +426,7 @@
   }
   function paisajeObjeto(ctx, id, x, z, h = 0, terreno, sombraVisible = true) {
     const [sx, sy] = proyectar(x, z);
-    if (z >= 0 && sombraVisible) {
+    if (z >= 0 && sombraVisible && id !== 'lago-pieza') {
       ctx.save();
       ctx.translate(sx + 7 * escala(z), sy + 3 * escala(z));
       ctx.scale(escala(z), escala(z) * .27);
@@ -422,11 +443,12 @@
       const [origenX,origenY,anchoImagen,altoImagen] = recortes[spriteId];
       const {ancho, alto} = dimensionesObjeto(spriteId,z);
       const agua = id === 'pato' ? .87 : 1;
+      const borde = id === 'lago-pieza' ? .5 : z < 0 ? .16 : agua;
       const [,base] = proyectar(x,z,h);
       ctx.save();
       ctx.translate(sx, base);
       if (vista.reflejar) ctx.scale(-1, 1);
-      ctx.drawImage(imagen, origenX, origenY, anchoImagen, altoImagen * agua, -ancho/2, -alto * (z < 0 ? .16 : agua), ancho, alto * agua);
+      ctx.drawImage(imagen, origenX, origenY, anchoImagen, altoImagen * agua, -ancho/2, -alto * borde, ancho, alto * agua);
       ctx.restore();
       return;
     }
@@ -461,5 +483,5 @@
     }
     ctx.restore();
   }
-  return window.EscenarioConstruccion = {ancho,alto,piso,proyectar,desdePantalla,dentroCasa,dentroCerca,dentroCaja,semiAnchoEnEscena,objetoEnEscena,visibleFueraDeCasa,tocarObjeto,marcaColocacion,bloque,fondoBloques,cargarFondos,terreno,paisajeObjeto,ficha,poligono,elipse,linea};
+  return window.EscenarioConstruccion = {ancho,alto,piso,proyectar,desdePantalla,dentroCasa,dentroCerca,dentroCaja,dentroLago,bordesLago,semiAnchoEnEscena,objetoEnEscena,visibleFueraDeCasa,tocarObjeto,marcaColocacion,bloque,fondoBloques,cargarFondos,terreno,paisajeObjeto,ficha,poligono,elipse,linea};
 })();
