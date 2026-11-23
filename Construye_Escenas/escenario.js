@@ -1,6 +1,8 @@
 (() => {
   const ancho = 760, alto = 440, piso = 396;
   const altoCasaAbierta = 205;
+  const medidasCalle = {mitad:34,acera:22,cruce:46};
+  const esObra = id => ['calle','acera','paso-peatonal'].includes(id);
   const escala = z => .40 + z * .94;
   const escalaObjeto = z => z < 0 ? .74 : escala(z);
   const anchoVista = z => 600 + 120 * z;
@@ -79,6 +81,13 @@
     for (let x = area.x - area.x % 33 + 27; x < area.x + area.ancho; x += 33) linea(ctx, [[x, piso + 13], [x - 9, piso + 26]], '#a1b2d47c', 2);
   }
   const orilla = (tipo, z) => (tipo === 'rio' ? .247 : .32) + .018 * Math.sin(z * 9);
+  // Coordenadas de las dos orillas en la ilustración de 1280 × 720.
+  const orillasRioCentral = [
+    [212,634,644],[242,617,663],[272,590,669],[302,577,690],[332,573,698],
+    [362,552,707],[392,524,725],[422,512,745],[452,503,758],[482,498,764],
+    [512,478,773],[542,458,793],[572,433,816],[602,422,829],[632,400,849],
+    [662,383,861],[692,374,876],[720,361,890]
+  ];
   const fondos = new Map();
   const recortes = {
     fuente: [23, 25, 211, 199, 81],
@@ -235,6 +244,11 @@
     ctx.restore();
   }
   function semiAnchoEnEscena(id, x, z, terreno) {
+    if (esObra(id)) return 45;
+    if (id === 'semaforo') return 15 * escala(z);
+    if (id === 'tienda-barrio' || id === 'taller') return 65 * escala(z);
+    if (id === 'rio') return 36;
+    if (id === 'puente') return 65;
     if (esEdificio(id)) return 65 * escala(z);
     const vista = vistaObjeto(id,x,z,terreno);
     return dimensionesObjeto(vista.id,z).ancho / 2;
@@ -246,6 +260,16 @@
   }
   function tocarObjeto(punto, objeto, terreno) {
     const [x,y] = proyectar(objeto.x,objeto.z);
+    if (esObra(objeto.id)) return Math.abs(punto.x-x) <= 56 && Math.abs(punto.y-y) <= 40;
+    if (['tienda-barrio','taller','semaforo'].includes(objeto.id)) {
+      return Math.abs(punto.x-x) <= semiAnchoEnEscena(objeto.id,objeto.x,objeto.z,terreno)+10 &&
+        punto.y <= y+12 && punto.y >= y-94*escala(objeto.z)-10;
+    }
+    if (objeto.id === 'rio') return Math.abs(punto.x-x) <= 45 && Math.abs(punto.y-y) <= 37;
+    if (objeto.id === 'puente') {
+      const [inicio,fin] = objeto.tramo || [x-65,x+65];
+      return punto.x >= inicio-10 && punto.x <= fin+10 && punto.y >= y-38 && punto.y <= y+14;
+    }
     if (esEdificio(objeto.id)) {
       const factor = escala(objeto.z);
       return Math.abs(punto.x-x) <= 65*factor+10 && punto.y <= y+12 &&
@@ -273,7 +297,7 @@
       dimensionesObjeto(id,z).ancho / 4;
   }
   function cargarFondos(alCargar) {
-    for (const tipo of ['rio','parque','playa','granja','campamento','barrio','terminal','recreo','lago']) {
+    for (const tipo of ['rio','parque','playa','granja','campamento','barrio','terminal','recreo','lago','rio-central','pradera-rio']) {
       const imagen = new Image();
       imagen.onload = () => { fondos.set(tipo, imagen); alCargar(tipo); };
       imagen.src = `paisajes/${tipo}.webp${tipo === 'parque' ? '?v=despejado' : ''}`;
@@ -306,6 +330,17 @@
       const nube = y + area.y * .29;
       elipse(ctx, x, nube, 40, 11, '#ffffffbb');
       elipse(ctx, x + 8, nube - 7, 20, 14, '#ffffffbb');
+    }
+    if (tipo === 'rio-central' || tipo === 'pradera-rio') {
+      const horizonte = orillasRioCentral[0][0]*alto/720;
+      ctx.fillStyle = '#acd76f';
+      ctx.fillRect(0,horizonte,ancho,alto-horizonte);
+      if (tipo === 'rio-central') {
+        const orillaIzquierda = orillasRioCentral.map(([y,x]) => [x*ancho/1280,y*alto/720]);
+        const orillaDerecha = orillasRioCentral.map(([y,,x]) => [x*ancho/1280,y*alto/720]).reverse();
+        poligono(ctx,[...orillaIzquierda,...orillaDerecha],'#37b2eb');
+      }
+      return;
     }
     if (tipo === 'campamento' || tipo === 'granja') {
       poligono(ctx, [[0,211],[0,149],[102,61],[179,143],[281,50],[422,160],[532,73],[645,153],[760,89],[760,218]], '#8796c2');
@@ -392,6 +427,39 @@
   }
   function sprite(ctx, id) {
     switch (id) {
+      case 'semaforo':
+        elipse(ctx,0,0,12,4,'#80919d');
+        rect(ctx,-4,-57,8,57,3,'#6c8496','#314657');
+        rect(ctx,-15,-96,30,58,7,'#344761','#243146');
+        for (const [y,color] of [[-84,'#ff6859'],[-67,'#ffca52'],[-50,'#78d880']]) {
+          elipse(ctx,0,y,7,7,color,'#263448');
+          elipse(ctx,-2,y-2,2,2,'#ffffff9e');
+        }
+        break;
+      case 'tienda-barrio':
+      case 'taller': {
+        const taller = id === 'taller';
+        const pared = taller ? '#92abd9' : '#f8d3a5', borde = taller ? '#42597a' : '#9a5945';
+        poligono(ctx,[[48,0],[65,-12],[65,-71],[48,-59]],taller ? '#5e79ae' : '#d89265',borde);
+        rect(ctx,-62,-62,111,62,2,pared,borde);
+        poligono(ctx,[[-65,-63],[-48,-77],[65,-77],[51,-63]],taller ? '#4e6ca6' : '#d68166',borde);
+        if (taller) {
+          rect(ctx,-46,-49,77,49,5,'#3c4a65',borde);
+          rect(ctx,-46,-49,77,15,3,'#becde3',borde);
+          linea(ctx,[[-45,-41],[31,-41]],'#7585a0',2);
+          linea(ctx,[[-20,-10],[-10,-25],[0,-17]],'#f2bf58',5);
+          elipse(ctx,15,-10,5,5,'#7ec9c9');
+        } else {
+          rect(ctx,-51,-41,42,27,3,'#82bed3',borde);
+          rect(ctx,5,-40,25,40,3,'#529bb4',borde);
+          linea(ctx,[[-30,-41],[-30,-14]],'#eef7fc',2);
+          for (let i=0;i<7;i++) {
+            const x=-63+i*16;
+            poligono(ctx,[[x,-56],[x+16,-56],[x+13,-37],[x-3,-37]],i%2?'#fff4d8':'#f46e65');
+          }
+        }
+        break;
+      }
       case 'nino': case 'nina': persona(ctx, id === 'nina'); break;
       case 'arbol':
         rect(ctx,-7,-69,14,69,4,'#9c6448','#714335');
@@ -497,6 +565,69 @@
     sprite(ctx, id);
     ctx.restore();
   }
+  function miniRio(ctx,x,y,factor=1) {
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.scale(factor,factor);
+    poligono(ctx,[[-35,15],[-9,-26],[8,-26],[35,15],[22,24],[-26,24]],'#8ad367','#488b3d',2);
+    poligono(ctx,[[-24,23],[-5,-26],[4,-26],[23,23]],'#3baee7','#217eaf',2);
+    for (const [horizontal,a] of [[-14,14],[-10,1],[-5,-12]]) {
+      linea(ctx,[[horizontal,a],[horizontal*.15,a+2],[-horizontal,a]],'#9ce9ff',2.5);
+    }
+    ctx.restore();
+  }
+  function obra(ctx,id,x,y,instalada = false) {
+    const {mitad,acera,cruce} = medidasCalle;
+    ctx.save();
+    ctx.translate(x,y);
+    if (!instalada) ctx.scale(.8,.8);
+    const largo = instalada ? ancho : 112;
+    const inicio = -largo/2;
+    if (id === 'calle') {
+      rect(ctx,inicio,-mitad,largo,mitad*2,instalada?0:7,'#515868','#374052');
+      rect(ctx,inicio,-mitad,largo,4,0,'#a9b0ba');
+      rect(ctx,inicio,mitad-4,largo,4,0,'#a9b0ba');
+      ctx.setLineDash([22,16]);
+      linea(ctx,[[inicio+3,0],[largo/2-3,0]],'#f9da81',3);
+    } else if (id === 'acera') {
+      rect(ctx,inicio,-acera/2,largo,acera,instalada?0:5,'#ebcdb3','#866b58');
+      linea(ctx,[[inicio,-acera/2+3],[largo/2,-acera/2+3]],'#fff3da',3);
+      for(let i=inicio+35;i<largo/2-2;i+=35) linea(ctx,[[i,-acera/2+2],[i,acera/2]],'#b79980',1);
+    } else {
+      rect(ctx,-cruce/2-3,-mitad,cruce+6,mitad*2,3,'#545969');
+      for(let i=-mitad+7;i<mitad-4;i+=12) rect(ctx,-cruce/2,i,cruce,7,2,'#fffcee');
+    }
+    ctx.restore();
+  }
+  function puente(ctx, inicio, fin, base, factor = 1) {
+    const profundidad = 20*factor;
+    const tablero = base-9*factor;
+    const baranda = 15*factor;
+    ctx.save();
+    ctx.lineJoin = 'round';
+    for (const x of [inicio+2*factor,fin-15*factor]) {
+      rect(ctx,x,base-5*factor,13*factor,13*factor,2,'#968477','#6c5546');
+    }
+    poligono(ctx,[[inicio,tablero],[fin,tablero],[fin,base],[inicio,base]],'#a55b36','#713f2a',2);
+    poligono(ctx,[[inicio+6*factor,tablero-profundidad],[fin+6*factor,tablero-profundidad],[fin,tablero],[inicio,tablero]],
+      '#edbc79','#713f2a',2);
+    const tablas = Math.max(4,Math.round((fin-inicio)/(12*factor)));
+    for (let i = 1; i < tablas; i++) {
+      const x = inicio+(fin-inicio)*i/tablas;
+      linea(ctx,[[x,tablero],[x+6*factor,tablero-profundidad]],'#ac643b',1);
+    }
+    for (const [desplazamiento,y] of [[6*factor,tablero-profundidad],[0,tablero]]) {
+      const izquierda = inicio+desplazamiento+3, derecha = fin+desplazamiento-3;
+      linea(ctx,[[izquierda,y-baranda],[derecha,y-baranda]],'#85492e',Math.max(2,4*factor));
+      const postes = Math.max(3,Math.round((fin-inicio)/(34*factor)));
+      for (let i = 0; i <= postes; i++) {
+        const x = izquierda+(derecha-izquierda)*i/postes;
+        linea(ctx,[[x,y+2*factor],[x,y-baranda-2*factor]],'#985430',Math.max(2,5*factor));
+        linea(ctx,[[x-factor,y],[x-factor,y-baranda-2*factor]],'#ce8b53',Math.max(1,1.5*factor));
+      }
+    }
+    ctx.restore();
+  }
   function ficha(canvas, id, pieza) {
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -506,6 +637,16 @@
       const factor = Math.min(canvas.width*.8/pieza.ancho,canvas.height*.72/pieza.alto);
       ctx.scale(factor,factor);
       bloque(ctx,pieza,0,0);
+    } else if (esObra(id)) {
+      obra(ctx,id,canvas.width/2,canvas.height/2);
+    } else if (['tienda-barrio','taller','semaforo'].includes(id)) {
+      ctx.translate(canvas.width/2,canvas.height*.83);
+      ctx.scale(.73,.73);
+      sprite(ctx,id);
+    } else if (id === 'rio') {
+      miniRio(ctx,canvas.width/2,canvas.height/2,1.3);
+    } else if (id === 'puente') {
+      puente(ctx,17,canvas.width-19,canvas.height*.68,.83);
     } else if (esEdificio(id)) {
       ctx.translate(canvas.width/2,canvas.height*.73);
       ctx.scale(.69,.69);
@@ -527,5 +668,5 @@
     ctx.restore();
   }
   return window.EscenarioConstruccion = {ancho,alto,piso,proyectar,desdePantalla,dentroCasa,dentroCerca,dentroCaja,dentroLago,bordesLago,semiAnchoEnEscena,objetoEnEscena,visibleFueraDeCasa,tocarObjeto,marcaColocacion,bloque,fondoBloques,cargarFondos,terreno,paisajeObjeto,ficha,poligono,elipse,linea,
-    esEdificio,cimaEdificio,sobreEdificio,pisoEdificio};
+    esEdificio,cimaEdificio,sobreEdificio,pisoEdificio,puente,miniRio,orillasRioCentral,medidasCalle,esObra,obra};
 })();

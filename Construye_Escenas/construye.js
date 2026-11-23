@@ -35,6 +35,8 @@
 
   const paso = () => esBloques() ? reto?.pasos[colocadas.length] : pasoPaisaje;
   const esBloques = () => modo === 'bloques';
+  const rioAgregado = () => reto?.terreno === 'rio-central' && historial[0]?.id === 'rio';
+  const pasosPaisaje = () => historial.filter(paso => !paso.preparacion).length;
   const limites = (valor, min, max) => Math.max(min, Math.min(valor, max));
   const dentro = ({x, y}) => x >= 0 && x <= escena.ancho && y <= escena.alto &&
     y >= (esBloques() ? -vista.y / vista.escala : 0);
@@ -115,10 +117,11 @@
       opciones = generarOpciones();
     }
     tablero.classList.toggle('colocando', !!elegida);
-    const indicePaso = (esBloques() ? colocadas.length : historial.length) + 1;
+    const indicePaso = (esBloques() ? colocadas.length : pasosPaisaje()) + 1;
     const total = esBloques() ? reto.pasos.length : config.longitudRonda;
     get('progreso').textContent = completar() ? esEn('¡Listo!', 'Done!') :
-      esEn(`Paso ${indicePaso} de ${total}`, `Step ${indicePaso} of ${total}`);
+      paso()?.preparacion ? esEn('Prepara el paisaje', 'Set up the landscape') :
+        esEn(`Paso ${indicePaso} de ${total}`, `Step ${indicePaso} of ${total}`);
     const pisos = paso()?.pisos;
     const cantidad = pisos || paso()?.cantidad || 1;
     get('cantidadPuesta').hidden = cantidad === 1;
@@ -205,8 +208,26 @@
   function paisajeCorrecto(x, z) {
     return admite(paso(), x, z, colocadas, paso().cantidad - puestasEnPaso - 1);
   }
+  function ajustarObra(pieza) {
+    if (!paso()?.ajustar || !escena.esObra(pieza.id)) return pieza;
+    const destino = paso().ajustar(...escena.proyectar(pieza.x,pieza.z));
+    return {...pieza,...escena.desdePantalla(...destino),instalada:true};
+  }
   function dibujarPieza(item, elevacion = 0, sombra = true) {
     if (esBloques()) escena.bloque(ctx, piezas[item.id], item.x, item.y - elevacion);
+    else if (escena.esObra(item.id)) {
+      const [x,y] = escena.proyectar(item.x,item.z);
+      escena.obra(ctx,item.id,x,y-elevacion,item.instalada);
+    }
+    else if (item.id === 'rio') {
+      const [x,y] = escena.proyectar(item.x,item.z);
+      escena.miniRio(ctx,x,y-elevacion);
+    }
+    else if (item.id === 'puente') {
+      const [x,y] = escena.proyectar(item.x,item.z);
+      const [inicio,fin] = item.tramo || [x-65,x+65];
+      escena.puente(ctx,inicio,fin,y-elevacion,.68+item.z*.32);
+    }
     else if (escena.esEdificio(item.id)) {
       if (item.apoyo) escena.pisoEdificio(ctx,item.id,item.x,item.z,item.apoyo.pisos,elevacion);
       else for (let piso = 0; piso < (item.pisos || 1); piso++) {
@@ -267,17 +288,33 @@
     ctx.clearRect(0,0,tablero.width/densidad,tablero.height/densidad);
     ctx.translate(x,y); ctx.scale(escala,escala);
     const area = {x: -x / escala, y: -y / escala, ancho: tablero.width / densidad / escala, alto: tablero.height / densidad / escala};
-    if (esBloques()) escena.fondoBloques(ctx, area);
-    else escena.terreno(ctx,reto.terreno, area);
-    dibujarFuegos(tiempo);
     const progreso = movimiento ? limites((tiempo - movimiento.inicio) / movimiento.duracion, 0, 1) : 0;
-    const fantasma = movimiento?.pieza || vistaPrevia;
-    const pendienteVisible = fantasma ? null : piezaPendiente;
+    const revelandoRio = movimiento?.pieza.id === 'rio' && movimiento.valido;
+    if (esBloques()) escena.fondoBloques(ctx, area);
+    else {
+      const pradera = reto.terreno === 'calle-nueva' || (reto.terreno === 'rio-central' && !rioAgregado());
+      escena.terreno(ctx,pradera ? 'pradera-rio' : reto.terreno,area);
+      for (const obra of colocadas.filter(pieza => pieza.instalada)) dibujarPieza(obra);
+    }
+    if (revelandoRio) {
+      const horizonte = escena.orillasRioCentral[0][0]*escena.alto/720;
+      const bordeAgua = horizonte+(escena.alto-horizonte)*progreso;
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(0,0,escena.ancho,bordeAgua);
+      ctx.clip();
+      escena.terreno(ctx,'rio-central',area);
+      ctx.restore();
+    }
+    dibujarFuegos(tiempo);
+    const fantasma = revelandoRio ? null : movimiento?.pieza || vistaPrevia;
+    const pendienteVisible = fantasma || revelandoRio ? null : piezaPendiente;
     const marca = fantasma || pendienteVisible;
-    if (!esBloques() && marca && !marca.apoyo) {
+    if (!esBloques() && marca && !marca.apoyo && !marca.instalada) {
       escena.marcaColocacion(ctx, marca, Boolean(pendienteVisible));
     }
-    const items = fantasma ? [...colocadas, fantasma] : colocadas;
+    const piezasVisibles = colocadas.filter(pieza => !pieza.instalada);
+    const items = fantasma ? [...piezasVisibles, fantasma] : piezasVisibles;
     const orden = esBloques() ? items : [...items].sort((a, b) =>
       (a.contenedor ? a.contenedor.z + .001 : a.z) - (b.contenedor ? b.contenedor.z + .001 : b.z));
     for (const item of orden) {
@@ -367,7 +404,8 @@
       pieza = piezaEnEspacioLibre(elegida, reto, x, z, colocadas);
       if (!pieza) { errorLugar(true); return; }
       valido = paisajeCorrecto(x,z);
-      elevacion = piezaPendiente ? 18 : z < 0 ? 14 : 94;
+      if (valido) pieza = ajustarObra(pieza);
+      elevacion = pieza.instalada ? 24 : piezaPendiente ? 18 : z < 0 ? 14 : 94;
     }
     vistaPrevia = null;
     mostrarEstado();
@@ -391,7 +429,7 @@
     piezaPendiente = null;
     const pisos = paso()?.pisos;
     if (pieza.apoyo) pieza.apoyo.pisos++;
-    else colocadas.push(pieza);
+    else if (pieza.id !== 'rio') colocadas.push(pieza);
     if (pisos) {
       if (!pieza.apoyo) {
         pieza.pisos = 1;
@@ -411,12 +449,13 @@
       if (pasoCompleto) {
         historial.push(pasoPaisaje);
         puestasEnPaso = 0;
-        pasoPaisaje = historial.length < config.longitudRonda ?
+        pasoPaisaje = pasosPaisaje() < config.longitudRonda ?
           siguientePaisaje(reto, colocadas, historial, rondaPaisaje) : null;
       }
     }
     celebrar();
     if (completar()) mostrarEstado(esEn('Escena completa', 'Scene complete'), true);
+    else if (pieza.id === 'rio') mostrarEstado(esEn('¡Río colocado!', 'River placed!'), true);
     else if (pisos) mostrarEstado(esEn(`¡Edificio de ${pisos} pisos listo!`, `Your ${pisos}-floor building is ready!`), true);
     else mostrarEstado(esEn('¡Bien colocado!', 'Well placed!'), true);
     renderPaso(pasoCompleto, pasoCompleto);
@@ -450,6 +489,9 @@
       else {
         const {x,z} = escena.desdePantalla(punto.x,punto.y);
         vistaPrevia = piezaEnEspacioLibre(elegida,reto,x,z,colocadas);
+        if (vistaPrevia && paso()?.ajustar && elegida === paso().id && paisajeCorrecto(x,z)) {
+          vistaPrevia = ajustarObra(vistaPrevia);
+        }
       }
     }
     dibujar();
@@ -593,7 +635,8 @@
     if (tipo === 'objetos') {
       for (const boton of banco.children) escena.ficha(boton.firstElementChild, boton.dataset.pieza, piezas[boton.dataset.pieza]);
     }
-    if (reto?.terreno === tipo || (modo === 'paisajes' && tipo === 'objetos')) {
+    if (reto?.terreno === tipo || (['rio-central','calle-nueva'].includes(reto?.terreno) && tipo === 'pradera-rio') ||
+        (modo === 'paisajes' && tipo === 'objetos')) {
       cancelAnimationFrame(cuadroAnimacion);
       dibujar();
     }

@@ -61,7 +61,7 @@
     ]}
   ];
 
-  const femeninos = new Set('fuente nina pelota flores casa sombrilla tienda fogata bicicleta cerca oveja vaca escuela nube montana caja manzana'.split(' '));
+  const femeninos = new Set('fuente nina pelota flores casa sombrilla tienda fogata bicicleta cerca oveja vaca escuela nube montana caja manzana calle acera tienda-barrio'.split(' '));
   const variantes = [
     ['tobogan', 'Tobogán', 'Slide'], ['columpios', 'Columpios', 'Swing set'], ['trampolin', 'Trampolín', 'Trampoline'],
     ['bicicleta', 'Bicicleta', 'Bicycle'], ['casa-abierta', 'Casa abierta', 'Open house'], ['cerca', 'Cerca', 'Fence'],
@@ -69,7 +69,9 @@
     ['pajaro', 'Pájaro', 'Bird'], ['caballo', 'Caballo', 'Horse'], ['escuela', 'Escuela', 'School'],
     ['sol', 'Sol', 'Sun'], ['nube', 'Nube', 'Cloud'],
     ['volcan', 'Volcán', 'Volcano'], ['montana', 'Montaña', 'Mountain'], ['cerro', 'Cerro', 'Hill'],
-    ['caja', 'Caja', 'Box'], ['manzana', 'Manzana', 'Apple'],
+    ['caja', 'Caja', 'Box'], ['manzana', 'Manzana', 'Apple'], ['rio', 'Río', 'River'], ['puente', 'Puente', 'Bridge'],
+    ['calle','Calle','Road'], ['acera','Acera','Sidewalk'], ['paso-peatonal','Paso peatonal','Crosswalk'],
+    ['semaforo','Semáforo','Traffic light'], ['tienda-barrio','Tienda','Shop'], ['taller','Taller mecánico','Repair shop'],
     ['cubo-juguete', 'Cubo de juguete', 'Toy cube'], ['regalo', 'Regalo', 'Present'],
     ['apartamentos', 'Edificio de apartamentos', 'Apartment building'], ['oficinas', 'Edificio de oficinas', 'Office building'],
     ['avion', 'Avión', 'Airplane'], ['globo', 'Globo aerostático', 'Hot air balloon'], ['cohete', 'Cohete', 'Rocket'],
@@ -96,6 +98,7 @@
       [440,0,261],[470,0,283],[510,0,315],[545,0,332],[590,0,324],
       [640,0,318],[680,0,328],[720,0,359]
     ],
+    'rio-central': escena.orillasRioCentral,
     playa: [
       [234,0,490],[250,0,394],[272,0,408],[300,0,405],[325,0,432],
       [353,0,405],[400,0,352],[435,0,382],[470,0,360],[500,0,317],
@@ -121,8 +124,20 @@
   function distanciaOrilla(terreno,x,z) {
     const [u,v] = puntoImagen(x,z);
     const [izquierda,derecha] = interpolar(orillas[terreno],v);
-    const distancia = terreno === 'rio' ? Math.max(izquierda-u,u-derecha) : u-derecha;
+    const distancia = terreno === 'rio' || terreno === 'rio-central' ? Math.max(izquierda-u,u-derecha) : u-derecha;
     return distancia*escena.ancho/1280;
+  }
+  function tramoPuente(x,z) {
+    const [u,v] = puntoImagen(x,z);
+    if (v < 290 || v > 686) return null;
+    const [izquierda,derecha] = interpolar(orillas['rio-central'],v);
+    if (u < izquierda || u > derecha) return null;
+    const [izquierdaFondo,derechaFondo] = interpolar(orillas['rio-central'],v-30);
+    const margen = 20;
+    return [
+      Math.min(izquierda,izquierdaFondo)*escena.ancho/1280-margen,
+      Math.max(derecha,derechaFondo)*escena.ancho/1280+margen
+    ];
   }
 
   const lugar = {
@@ -131,6 +146,7 @@
     calle: par('en la calle', 'on the road'),
     pavimento: par('en el pavimento', 'on the pavement'),
     rio: par('en el río', 'in the river'),
+    'rio-central': par('en el río', 'in the river'),
     playa: par('en el mar', 'in the sea'),
     lago: par('en el lago', 'in the lake'),
     cielo: par('en el cielo', 'in the sky'),
@@ -161,7 +177,11 @@
     {nombre: par('El recreo', 'Playtime'), terreno: 'recreo', suelo:'cesped',
       objetos: lista('tobogan columpios trampolin nina nino arbol escuela cerca casa-abierta caja manzana cubo-juguete regalo', basicos, animales, cielo)},
     {nombre: par('Una visita al lago', 'A visit to the lake'), terreno: 'lago', suelo:'cesped',
-      objetos: lista('barco pato sombrilla tienda casa-abierta cerca fuente', basicos, animales, cielo)}
+      objetos: lista('barco pato sombrilla tienda casa-abierta cerca fuente', basicos, animales, cielo)},
+    {nombre: par('El río y el puente', 'The river and the bridge'), terreno: 'rio-central', suelo:'cesped',
+      objetos: lista('rio puente barco pato fuente casa poste', basicos, animales, juegos)},
+    {nombre: par('Construye una calle', 'Build a street'), terreno: 'calle-nueva', suelo:'cesped',
+      objetos: lista('calle acera paso-peatonal semaforo tienda-barrio taller apartamentos oficinas escuela poste', basicos, vehiculos.join(' '))}
   ];
 
   const relacion = {
@@ -190,7 +210,7 @@
   }
   const dist = (x,z,a) => Math.hypot(x - a.x, (z - a.z) * .83);
   const sueloPieza = (id, reto) => relieve.has(id) ? 'relieve' : aereos.has(id) ? 'cielo' :
-    ['barco','pato'].includes(id) ? reto.terreno :
+    ['barco','pato','rio','puente'].includes(id) ? reto.terreno :
     vehiculos.includes(id) && reto.terreno === 'barrio' ? 'calle' : reto.suelo;
 
   const senderoParque = [
@@ -200,6 +220,8 @@
   ];
   const inicioSuelo = {
     rio: [[0,279],[115,265],[205,252],[600,254],[1100,253],[1280,268]],
+    'rio-central': [[0,214],[1280,214]],
+    'calle-nueva': [[0,214],[1280,214]],
     parque: [[0,274],[400,267],[850,263],[1280,267]],
     playa: [[0,249],[455,245],[750,234],[1280,225]],
     granja: [[0,277],[235,273],[330,280],[535,263],[678,261],[924,280],[1040,275],[1280,274]],
@@ -235,11 +257,21 @@
     return true;
   }
 
+  function ocupaCruce(x,z,tramo,zPuente) {
+    const [px] = escena.proyectar(x,z);
+    return Math.abs(z-zPuente) < .12 && px >= tramo[0]-8 && px <= tramo[1]+8;
+  }
   function espacioDisponible(id, terreno, x, z, colocadas, contenedor) {
     if (!EscenarioConstruccion.objetoEnEscena(id,x,z,terreno)) return false;
-    return colocadas.every(a => a === contenedor || ((id !== 'lago-pieza' || !escena.dentroLago(a.x,a.z,{x,z})) &&
+    const tramo = id === 'puente' && tramoPuente(x,z);
+    return colocadas.every(a => {
+      if (a === contenedor || escena.esObra(a.id)) return true;
+      if (tramo) return !ocupaCruce(a.x,a.z,tramo,z);
+      if (a.tramo) return !ocupaCruce(x,z,a.tramo,a.z);
+      return (id !== 'lago-pieza' || !escena.dentroLago(a.x,a.z,{x,z})) &&
       (contenedores.has(a.id) ? !interior(x,z,a) && dist(x,z,a) >= .095 :
-        dist(x,z,a) >= (contenedor ? .05 : .088))));
+        dist(x,z,a) >= (contenedor ? .05 : .088));
+    });
   }
   function posicionValida(paso, x, z, colocadas) {
     return paso.zona(x,z) && espacioDisponible(paso.id,paso.terreno,x,z,colocadas,paso.contenedor);
@@ -250,8 +282,9 @@
     const [u,v] = puntoImagen(x,z);
     if (!contenedor && (sueloPieza(id,reto) === 'cielo' ? !superficie(x,z,'cielo',reto,id) :
       v < Math.min(243,alComienzoDelSuelo(reto.terreno,u)))) return null;
-    return espacioDisponible(id,reto.terreno,x,z,colocadas,contenedor) ?
-      {id,x,z,contenedor: contenedor || null} : null;
+    if (!espacioDisponible(id,reto.terreno,x,z,colocadas,contenedor)) return null;
+    const tramo = id === 'puente' ? tramoPuente(x,z) : null;
+    return {id,x,z,contenedor: contenedor || null,...(tramo && {tramo})};
   }
 
   // La malla se usa al planear instrucciones con varias piezas, nunca para limitar un punto de colocación.
@@ -288,20 +321,40 @@
     par('Pon','Put'), par('Coloca','Place'), par('Agrega','Add'), par('Ubica','Position')
   ];
   function instruccionPaisaje(reto,id,a,tipo,cantidad,verbo,pisos) {
+    if (id === 'rio') return {
+      id,cantidad,terreno:reto.terreno,tipo,preparacion:true,
+      zona(x,z) {
+        const [u,v] = puntoImagen(x,z);
+        return u >= 512 && u <= 768 && v >= 214 && v <= 700;
+      },
+      texto:par('Coloca el río en el centro del paisaje.', 'Place the river in the middle of the landscape.'),
+      correccion:par('Mueve el río hacia el centro del paisaje.', 'Move the river to the middle of the landscape.')
+    };
     const suelo = sueloPieza(id,reto);
     const plural = cantidades[id];
     const objeto = cantidad === 1 ? sustantivo(id) :
       par((cantidad === 2 ? 'dos ' : 'tres ') + plural.es, (cantidad === 2 ? 'two ' : 'three ') + plural.en);
     const ref = a && sustantivo(a.id,true);
     const [direccion, coincide] = relacion[tipo] || [];
-    const sitio = ref ? par(direccion.es + (ref.es.startsWith('el ') ? ' del ' + ref.es.slice(3) : ' de ' + ref.es),
+    const ladoRio = tipo === 'izquierda-rio' || tipo === 'derecha-rio';
+    function enLadoDelRio(x,z) {
+      const [u,v] = puntoImagen(x,z);
+      const [izquierda,derecha] = interpolar(orillas['rio-central'],v);
+      return tipo === 'izquierda-rio' ? u < izquierda : u > derecha;
+    }
+    const sitio = id === 'puente' ? par('sobre el río para unir las dos orillas', 'across the river to join both banks') :
+      ladoRio ? (tipo === 'izquierda-rio' ? par('a la izquierda del río', 'to the left of the river') :
+        par('a la derecha del río', 'to the right of the river')) :
+      ref ? par(direccion.es + (ref.es.startsWith('el ') ? ' del ' + ref.es.slice(3) : ' de ' + ref.es),
       direccion.en + ' ' + ref.en) : tipo === 'orilla' ? par(
       orillas[suelo] ? lugar[suelo].es + ', cerca de la orilla' : 'en tierra, cerca de la orilla',
       orillas[suelo] ? lugar[suelo].en + ', near the shore' : 'on land, near the shore'
     ) : lugar[suelo];
     const contenedor = tipo === 'dentro' ? a : null;
     const esInterior = contenedor?.id === 'caja' || contenedor?.id === 'lago-pieza';
-    const zona = (x,z) => (esInterior || superficie(x,z,suelo,reto,id)) &&
+    const zona = id === 'puente' ? (x,z) => zonaTablero(x,z) && Boolean(tramoPuente(x,z)) :
+      (x,z) => (esInterior || superficie(x,z,suelo,reto,id)) &&
+      (!ladoRio || enLadoDelRio(x,z)) &&
       (!pisos || escena.cimaEdificio(x,z,pisos)[1] >= 20) &&
       (id !== 'lago-pieza' || escena.bordesLago(x,z).every(p => superficie(p.x,p.z,suelo,reto,id))) &&
       (tipo !== 'orilla' || Math.abs(distanciaOrilla(reto.terreno,x,z)) <= 94) && (!a || (
@@ -326,8 +379,97 @@
     }
     return mezcla;
   }
+  function pasoUrbano(reto,id,texto,zona,ajustar) {
+    return {id,cantidad:1,terreno:reto.terreno,texto,correccion:texto,preparacion:escena.esObra(id),
+      zona:(x,z) => zona(...escena.proyectar(x,z),x,z),ajustar};
+  }
+  function siguienteCalle(reto,colocadas,historial,ronda) {
+    const {mitad,acera,cruce} = escena.medidasCalle;
+    const buscar = id => colocadas.find(pieza => pieza.id === id);
+    const calle = buscar('calle');
+    if (!calle) return pasoUrbano(reto,'calle',par('Coloca una calle en el centro del terreno.','Place a road across the middle of the field.'),
+      (px,py) => py >= 260 && py <= 310,
+      (px,py) => [escena.ancho/2,py]);
+    const [,centro] = escena.proyectar(calle.x,calle.z);
+    const borde = mitad+acera;
+    const aceras = colocadas.filter(pieza => pieza.id === 'acera').length;
+    if (aceras < 2) {
+      const lado = ronda.ladosAcera[aceras];
+      const texto = lado < 0 ? par('Pon una acera junto al borde de arriba de la calle.','Place a sidewalk along the top edge of the road.') :
+        par('Pon una acera junto al borde de abajo de la calle.','Place a sidewalk along the bottom edge of the road.');
+      return pasoUrbano(reto,'acera',texto, (px,py) => {
+        const distancia = (py-centro)*lado;
+        return distancia >= mitad-9 && distancia <= borde+20;
+      }, (px,py) => [escena.ancho/2,centro+lado*(mitad+acera/2)]);
+    }
+    const cruces = colocadas.filter(pieza => pieza.id === 'paso-peatonal');
+    const crucePuesto = cruces[0];
+    if (!crucePuesto) return pasoUrbano(reto,'paso-peatonal',
+      par('Coloca el paso peatonal sobre la calle para unir las aceras.','Place the crosswalk across the road to connect the sidewalks.'),
+      (px,py) => px >= 114 && px <= escena.ancho-114 && Math.abs(py-centro) <= mitad,
+      (px,py) => [px,centro]);
+    const [pasoX] = escena.proyectar(crucePuesto.x,crucePuesto.z);
+    const semaforos = colocadas.filter(pieza => pieza.id === 'semaforo');
+    const pasosPractica = historial.filter(paso => !paso.preparacion).length;
+    const cercaDelCruce = px => Math.abs(px-pasoX) >= cruce/2+11 && Math.abs(px-pasoX) <= 128;
+    const enAcera = py => Math.abs(py-centro) >= mitad+1 && Math.abs(py-centro) <= borde+7;
+    if (pasosPractica >= 5 && semaforos.length === 1) {
+      const [,semaforoY] = escena.proyectar(semaforos[0].x,semaforos[0].z);
+      const segundo = pasoUrbano(reto,'semaforo',par('Pon otro semáforo cerca del paso peatonal, en la otra acera.',
+        'Put another traffic light near the crosswalk, on the opposite sidewalk.'),
+        (px,py) => cercaDelCruce(px) && enAcera(py) && (py-centro)*(semaforoY-centro) < 0);
+      if (hayEspacio(segundo,colocadas,1)) return segundo;
+    }
+    const libreDeCruces = (px,margen) => cruces.every(pieza =>
+      Math.abs(px-escena.proyectar(pieza.x,pieza.z)[0]) > cruce/2+margen);
+    if (pasosPractica >= 6 && cruces.length === 1) {
+      const paso = pasoUrbano(reto,'paso-peatonal',par('Agrega otro paso peatonal en un tramo libre de la calle.',
+        'Add another crosswalk on a clear stretch of the road.'), (px,py) =>
+        px >= 114 && px <= escena.ancho-114 && Math.abs(py-centro) <= mitad && libreDeCruces(px,133) &&
+        colocadas.every(pieza => !vehiculos.includes(pieza.id) ||
+          Math.abs(px-escena.proyectar(pieza.x,pieza.z)[0]) >
+            cruce/2+escena.semiAnchoEnEscena(pieza.id,pieza.x,pieza.z,reto.terreno)+8),
+      (px,py) => [px,centro]);
+      paso.preparacion = false;
+      if (hayEspacio(paso,colocadas,1)) return paso;
+    }
+    const pedidos = new Set(historial.map(paso => paso.id));
+    const trasLaAcera = (px,py) => py >= 158 && py <= centro-borde-8;
+    const piezasBajas = ['rocas','pelota','flores','arbusto','banco','bicicleta'];
+    const [primerComercio,segundoComercio] = ronda.comercios;
+    const orden = ['semaforo',primerComercio,ronda.vehiculo,ronda.edificio,segundoComercio,...ronda.orden];
+    for (const id of new Set(orden)) {
+      if (escena.esObra(id) || pedidos.has(id)) continue;
+      const objeto = sustantivo(id);
+      let paso;
+      if (id === 'semaforo') {
+        paso = pasoUrbano(reto,id,par('Pon un semáforo en una acera, cerca del paso peatonal.',
+          'Put a traffic light on a sidewalk near the crosswalk.'), (px,py) => cercaDelCruce(px) && enAcera(py));
+      } else if (vehiculos.includes(id)) {
+        paso = pasoUrbano(reto,id,par('Coloca '+objeto.es+' en la calle y deja libre el paso peatonal.',
+          'Place '+objeto.en+' on the road and keep the crosswalk clear.'), (px,py,x,z) =>
+          Math.abs(py-centro) <= mitad-7 && libreDeCruces(px,escena.semiAnchoEnEscena(id,x,z,reto.terreno)+6));
+      } else {
+        const edificio = escena.esEdificio(id);
+        const verbo = par('Coloca','Place');
+        paso = edificio ? instruccionPaisaje(reto,id,null,null,1,verbo,ronda.pisosEdificio) :
+          piezasBajas.includes(id) ? pasoUrbano(reto,id,par('Coloca '+objeto.es+' en el césped, lejos de la calle.',
+            'Place '+objeto.en+' on the grass, away from the road.'), (px,py) => trasLaAcera(px,py) || py >= centro+borde+40) :
+          pasoUrbano(reto,id,par('Coloca '+objeto.es+' en el césped, detrás de la acera de arriba.',
+            'Place '+objeto.en+' on the grass behind the top sidewalk.'), trasLaAcera);
+        if (edificio) {
+          const zonaEdificio = paso.zona;
+          paso.texto = par('Construye '+objeto.es+' de '+paso.pisos+' pisos. Coloca el primer piso detrás de la acera de arriba.',
+            'Build '+objeto.en+' with '+paso.pisos+' floors. Place the first floor behind the top sidewalk.');
+          paso.correccion = paso.texto;
+          paso.zona = (x,z) => zonaEdificio(x,z) && trasLaAcera(...escena.proyectar(x,z));
+        }
+      }
+      if (hayEspacio(paso,colocadas,1)) return paso;
+    }
+  }
   function crearRondaPaisaje(reto, inicio) {
-    return {
+    const ronda = {
       orden: [inicio,...barajar(reto.objetos.filter(id => id !== inicio))],
       verbos: barajar(verbos),
       tipos: barajar(['relacion','superficie','grupo','relacion','orilla','relacion']),
@@ -335,11 +477,20 @@
       turnoBarco: ['rio','lago'].includes(reto.terreno) ? 1 + Math.floor(Math.random() * 2) : Infinity,
       turnoRelieve: reto.terreno === 'campamento' ? 1 + Math.floor(Math.random() * 2) : Infinity,
       pisosEdificio: 2 + Math.floor(Math.random() * 3),
+      ladosRio: reto.terreno === 'rio-central' ? barajar(['izquierda-rio','derecha-rio']) : null,
       practicarCaja: reto.terreno === 'parque' && Math.random() < .55
     };
+    if (reto.terreno === 'calle-nueva') {
+      ronda.ladosAcera = barajar([-1,1]);
+      ronda.comercios = barajar(['tienda-barrio','taller']);
+      ronda.vehiculo = barajar(vehiculos)[0];
+      ronda.edificio = barajar(['apartamentos','oficinas'])[0];
+    }
+    return ronda;
   }
 
   function siguientePaisaje(reto, colocadas, historial, ronda) {
+    if (reto.terreno === 'calle-nueva') return siguienteCalle(reto,colocadas,historial,ronda);
     const {orden,tipos,direcciones,turnoBarco,turnoRelieve,pisosEdificio} = ronda;
     const indice = historial.length;
     const verbo = ronda.verbos[indice % ronda.verbos.length];
@@ -354,6 +505,23 @@
       if (a && tipo !== 'dentro' && malla.filter(({x,z}) => posicionValida(paso,x,z,colocadas)).length < 5) return null;
       return hayEspacio(paso,colocadas,cantidad) ? paso : null;
     };
+    if (ronda.ladosRio) {
+      if (indice === 0) return mejor('rio');
+      const turno = indice - 1;
+      if (turno >= 2 && !usados.has('puente')) {
+        const puente = mejor('puente');
+        if (puente) return puente;
+      }
+      if (turno >= 3 && !usados.has('barco')) {
+        const barco = mejor('barco');
+        if (barco) return barco;
+      }
+      for (const offset of [0,1]) for (const id of candidatos) {
+        if (sueloPieza(id,reto) !== reto.suelo) continue;
+        const paso = mejor(id,null,ronda.ladosRio[(turno+offset)%2]);
+        if (paso) return paso;
+      }
+    }
     if (indice >= turnoBarco && !usados.has('barco')) {
       const paso = mejor('barco',null,tipos[(indice - 1) % tipos.length] === 'orilla' ? 'orilla' : null) ||
         mejor('barco');
