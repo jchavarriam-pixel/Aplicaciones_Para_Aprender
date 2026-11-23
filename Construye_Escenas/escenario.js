@@ -202,7 +202,40 @@
     const reflejar = terreno === 'barrio' ? z >= .615 : x < .33;
     return {id: id + '-lado', reflejar};
   }
+  const estilosEdificio = {
+    apartamentos: ['#f8c481','#e28c61','#b95346','#65384d'],
+    oficinas: ['#a7e8ef','#639ccb','#426ba9','#304874']
+  };
+  const esEdificio = id => Object.hasOwn(estilosEdificio,id);
+  const altoPiso = 44;
+  const cimaEdificio = (x,z,pisos) => proyectar(x,z,pisos*altoPiso);
+  function sobreEdificio({x,y}, edificio) {
+    const [cx,cy] = cimaEdificio(edificio.x,edificio.z,edificio.pisos);
+    const factor = escala(edificio.z);
+    return Math.abs(x-cx) <= Math.max(27,70*factor) &&
+      y >= cy-Math.max(27,42*factor) && y <= cy+Math.max(24,30*factor);
+  }
+  function pisoEdificio(ctx,id,x,z,indice,elevacion = 0) {
+    const [frente,lado,marco,borde] = estilosEdificio[id];
+    ctx.save();
+    ctx.translate(...proyectar(x,z,indice*altoPiso+elevacion));
+    ctx.scale(escala(z),escala(z));
+    poligono(ctx,[[47,0],[65,-11],[65,-55],[47,-44]],lado,borde,1.6);
+    rect(ctx,-63,-44,110,44,0,frente,borde);
+    poligono(ctx,[[-63,-44],[-45,-55],[65,-55],[47,-44]],marco,borde,1.6);
+    rect(ctx,-64,-44,113,5,1,marco);
+    for (const i of [-50,-18,14]) {
+      const puerta = id === 'apartamentos' && indice === 0 && i === -18;
+      const alto = puerta ? 28 : 20;
+      rect(ctx,i,-alto-1,22,alto,3,'#eff6ff',borde);
+      rect(ctx,i+3,-alto+2,16,alto-6,1,'#5d9fbe');
+      linea(ctx,[[i+11,-alto+3],[i+11,-5]],'#d9f2fa',1.6);
+    }
+    poligono(ctx,[[51,-12],[61,-18],[61,-37],[51,-31]],'#bdedf5',borde,1.4);
+    ctx.restore();
+  }
   function semiAnchoEnEscena(id, x, z, terreno) {
+    if (esEdificio(id)) return 65 * escala(z);
     const vista = vistaObjeto(id,x,z,terreno);
     return dimensionesObjeto(vista.id,z).ancho / 2;
   }
@@ -213,6 +246,11 @@
   }
   function tocarObjeto(punto, objeto, terreno) {
     const [x,y] = proyectar(objeto.x,objeto.z);
+    if (esEdificio(objeto.id)) {
+      const factor = escala(objeto.z);
+      return Math.abs(punto.x-x) <= 65*factor+10 && punto.y <= y+12 &&
+        punto.y >= y-((objeto.pisos || 1)*altoPiso+11)*factor-10;
+    }
     const vista = vistaObjeto(objeto.id,objeto.x,objeto.z,terreno);
     const {ancho,alto} = dimensionesObjeto(vista.id,objeto.z);
     const borde = objeto.id === 'lago-pieza' ? .5 : objeto.z < 0 ? .16 : 1;
@@ -468,6 +506,11 @@
       const factor = Math.min(canvas.width*.8/pieza.ancho,canvas.height*.72/pieza.alto);
       ctx.scale(factor,factor);
       bloque(ctx,pieza,0,0);
+    } else if (esEdificio(id)) {
+      ctx.translate(canvas.width/2,canvas.height*.73);
+      ctx.scale(.69,.69);
+      ctx.translate(-380,-391);
+      pisoEdificio(ctx,id,.5,1,0);
     } else if (atlas.has(atlasPieza[id])) {
       const [x,y,w,h] = recortes[id];
       const tamano = Math.min(canvas.width * .79 / w, canvas.height * .76 / h);
@@ -483,5 +526,6 @@
     }
     ctx.restore();
   }
-  return window.EscenarioConstruccion = {ancho,alto,piso,proyectar,desdePantalla,dentroCasa,dentroCerca,dentroCaja,dentroLago,bordesLago,semiAnchoEnEscena,objetoEnEscena,visibleFueraDeCasa,tocarObjeto,marcaColocacion,bloque,fondoBloques,cargarFondos,terreno,paisajeObjeto,ficha,poligono,elipse,linea};
+  return window.EscenarioConstruccion = {ancho,alto,piso,proyectar,desdePantalla,dentroCasa,dentroCerca,dentroCaja,dentroLago,bordesLago,semiAnchoEnEscena,objetoEnEscena,visibleFueraDeCasa,tocarObjeto,marcaColocacion,bloque,fondoBloques,cargarFondos,terreno,paisajeObjeto,ficha,poligono,elipse,linea,
+    esEdificio,cimaEdificio,sobreEdificio,pisoEdificio};
 })();

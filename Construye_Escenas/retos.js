@@ -287,7 +287,7 @@
   const verbos = [
     par('Pon','Put'), par('Coloca','Place'), par('Agrega','Add'), par('Ubica','Position')
   ];
-  function instruccionPaisaje(reto,id,a,tipo,cantidad,verbo) {
+  function instruccionPaisaje(reto,id,a,tipo,cantidad,verbo,pisos) {
     const suelo = sueloPieza(id,reto);
     const plural = cantidades[id];
     const objeto = cantidad === 1 ? sustantivo(id) :
@@ -302,15 +302,19 @@
     const contenedor = tipo === 'dentro' ? a : null;
     const esInterior = contenedor?.id === 'caja' || contenedor?.id === 'lago-pieza';
     const zona = (x,z) => (esInterior || superficie(x,z,suelo,reto,id)) &&
+      (!pisos || escena.cimaEdificio(x,z,pisos)[1] >= 20) &&
       (id !== 'lago-pieza' || escena.bordesLago(x,z).every(p => superficie(p.x,p.z,suelo,reto,id))) &&
       (tipo !== 'orilla' || Math.abs(distanciaOrilla(reto.terreno,x,z)) <= 94) && (!a || (
       coincide(x-a.x,z-a.z,EscenarioConstruccion.proyectar(x,z)[0] - EscenarioConstruccion.proyectar(a.x,a.z)[0],interior(x,z,a)) &&
       (tipo !== 'fuera' || a.id !== 'casa-abierta' || EscenarioConstruccion.visibleFueraDeCasa(id,x,z,a))
     ));
-    return {id,cantidad,contenedor,tipo,terreno:reto.terreno,ancla:a,zona,
+    const texto = pisos ?
+      par('Construye ' + objeto.es + ' de ' + pisos + ' pisos. Coloca el primer piso ' + sitio.es + '.',
+        'Build ' + objeto.en + ' with ' + pisos + ' floors. Place the first floor ' + sitio.en + '.') :
+      par(verbo.es + ' ' + objeto.es + ' ' + sitio.es + '.', verbo.en + ' ' + objeto.en + ' ' + sitio.en + '.');
+    return {id,cantidad,pisos,contenedor,tipo,terreno:reto.terreno,ancla:a,zona,texto,
       correccion:par('Coloca la pieza ' + sitio.es + '.', 'Place the piece ' + sitio.en + '.'),
-      texto:par(verbo.es + ' ' + objeto.es + ' ' + sitio.es + '.',
-      verbo.en + ' ' + objeto.en + ' ' + sitio.en + '.')};
+    };
   }
 
 
@@ -330,12 +334,13 @@
       direcciones: barajar(Object.keys(relacion)),
       turnoBarco: ['rio','lago'].includes(reto.terreno) ? 1 + Math.floor(Math.random() * 2) : Infinity,
       turnoRelieve: reto.terreno === 'campamento' ? 1 + Math.floor(Math.random() * 2) : Infinity,
+      pisosEdificio: 2 + Math.floor(Math.random() * 3),
       practicarCaja: reto.terreno === 'parque' && Math.random() < .55
     };
   }
 
   function siguientePaisaje(reto, colocadas, historial, ronda) {
-    const {orden,tipos,direcciones,turnoBarco,turnoRelieve} = ronda;
+    const {orden,tipos,direcciones,turnoBarco,turnoRelieve,pisosEdificio} = ronda;
     const indice = historial.length;
     const verbo = ronda.verbos[indice % ronda.verbos.length];
     const usados = new Set(historial.map(paso => paso.id));
@@ -344,7 +349,8 @@
       colocadas.filter(b => a.id === b.id).length === 1));
     anclas.sort((a,b) => Number(a === historial.at(-1)?.ancla) - Number(b === historial.at(-1)?.ancla));
     const mejor = (id,a,tipo,cantidad=1) => {
-      const paso = instruccionPaisaje(reto,id,a,tipo,cantidad,verbo);
+      const paso = instruccionPaisaje(reto,id,a,tipo,cantidad,verbo,
+        escena.esEdificio(id) ? pisosEdificio : undefined);
       if (a && tipo !== 'dentro' && malla.filter(({x,z}) => posicionValida(paso,x,z,colocadas)).length < 5) return null;
       return hayEspacio(paso,colocadas,cantidad) ? paso : null;
     };
@@ -360,6 +366,11 @@
       }
     }
     if (indice === 0) return mejor(orden[0]) || candidatos.map(id => mejor(id)).find(Boolean);
+    if (indice === 1 && !historial.some(paso => paso.pisos)) {
+      const edificio = candidatos.find(escena.esEdificio);
+      const paso = edificio && mejor(edificio);
+      if (paso) return paso;
+    }
     if (indice === 1 && ronda.practicarCaja && !usados.has('caja')) {
       const paso = mejor('caja');
       if (paso) return paso;

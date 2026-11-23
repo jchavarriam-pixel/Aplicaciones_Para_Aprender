@@ -31,6 +31,7 @@
   let arrastre, vistaPrevia, movimiento, piezaPendiente, teclado = false;
   let cuadroAnimacion = 0;
   let pasoPaisaje, rondaPaisaje, puestasEnPaso = 0;
+  let edificioEnCurso;
 
   const paso = () => esBloques() ? reto?.pasos[colocadas.length] : pasoPaisaje;
   const esBloques = () => modo === 'bloques';
@@ -53,6 +54,11 @@
   }
 
   function instruccion() {
+    if (edificioEnCurso) {
+      const numero = edificioEnCurso.pisos + 1;
+      return esEn(`Coloca el piso ${numero} de ${pasoPaisaje.pisos} encima del edificio.`,
+        `Place floor ${numero} of ${pasoPaisaje.pisos} on top of the building.`);
+    }
     if (paso()) return local(paso().texto);
     const nombre = window.NombreCompartido?.obtener();
     return nombre ? esEn(`¡Bien hecho, ${nombre}!`, `Well done, ${nombre}!`) : esEn('¡Bien hecho!', 'Well done!');
@@ -96,7 +102,9 @@
       imagen.setAttribute('aria-hidden', 'true');
       escena.ficha(imagen, id, piezas[id]);
       const rotulo = document.createElement('span');
-      rotulo.textContent = local(piezas[id].nombre);
+      rotulo.textContent = escena.esEdificio(id) ?
+        (id === 'apartamentos' ? esEn('Piso de apartamentos', 'Apartment floor') : esEn('Piso de oficinas', 'Office floor')) :
+        local(piezas[id].nombre);
       boton.append(imagen, rotulo);
       return boton;
     }));
@@ -111,9 +119,12 @@
     const total = esBloques() ? reto.pasos.length : config.longitudRonda;
     get('progreso').textContent = completar() ? esEn('¡Listo!', 'Done!') :
       esEn(`Paso ${indicePaso} de ${total}`, `Step ${indicePaso} of ${total}`);
-    const cantidad = paso()?.cantidad || 1;
+    const pisos = paso()?.pisos;
+    const cantidad = pisos || paso()?.cantidad || 1;
     get('cantidadPuesta').hidden = cantidad === 1;
-    get('cantidadPuesta').textContent = esEn(`${puestasEnPaso} de ${cantidad} colocados`, `${puestasEnPaso} of ${cantidad} placed`);
+    const hechos = edificioEnCurso?.pisos || 0;
+    get('cantidadPuesta').textContent = pisos ? esEn(`${hechos} de ${pisos} pisos`, `${hechos} of ${pisos} floors`) :
+      esEn(`${puestasEnPaso} de ${cantidad} colocados`, `${puestasEnPaso} of ${cantidad} placed`);
     get('indicacion').hidden = !config.texto && !completar();
     get('indicacion').textContent = instruccion();
     get('siguiente').hidden = !completar();
@@ -134,6 +145,7 @@
     historial.length = 0;
     fuegos.length = 0;
     puestasEnPaso = 0;
+    edificioEnCurso = null;
     if (!esBloques()) {
       ultimoPaisaje = indice;
       rondaPaisaje = crearRondaPaisaje(reto,sacarInicio(reto));
@@ -195,7 +207,18 @@
   }
   function dibujarPieza(item, elevacion = 0, sombra = true) {
     if (esBloques()) escena.bloque(ctx, piezas[item.id], item.x, item.y - elevacion);
+    else if (escena.esEdificio(item.id)) {
+      if (item.apoyo) escena.pisoEdificio(ctx,item.id,item.x,item.z,item.apoyo.pisos,elevacion);
+      else for (let piso = 0; piso < (item.pisos || 1); piso++) {
+        escena.pisoEdificio(ctx,item.id,item.x,item.z,piso,elevacion);
+      }
+    }
     else escena.paisajeObjeto(ctx, item.id, item.x, item.z, elevacion, reto.terreno, sombra);
+  }
+  function destinoPiso(punto) {
+    if (!escena.sobreEdificio(punto, edificioEnCurso)) return null;
+    const {id,x,z} = edificioEnCurso;
+    return {id,x,z,apoyo:edificioEnCurso};
   }
   const coloresFuegos = ['#ffe25e','#ff6ba2','#68edff','#caa0ff','#ff9652','#f9ffff'];
   function celebrar() {
@@ -250,8 +273,9 @@
     const progreso = movimiento ? limites((tiempo - movimiento.inicio) / movimiento.duracion, 0, 1) : 0;
     const fantasma = movimiento?.pieza || vistaPrevia;
     const pendienteVisible = fantasma ? null : piezaPendiente;
-    if (!esBloques() && (fantasma || pendienteVisible)) {
-      escena.marcaColocacion(ctx, fantasma || pendienteVisible, Boolean(pendienteVisible));
+    const marca = fantasma || pendienteVisible;
+    if (!esBloques() && marca && !marca.apoyo) {
+      escena.marcaColocacion(ctx, marca, Boolean(pendienteVisible));
     }
     const items = fantasma ? [...colocadas, fantasma] : colocadas;
     const orden = esBloques() ? items : [...items].sort((a, b) =>
@@ -328,6 +352,16 @@
       pieza = destinoBloque(elegida, punto.x, punto.y);
       valido = bloqueCorrecto(pieza);
       elevacion = pieza.y - pieza.origen;
+    } else if (edificioEnCurso) {
+      pieza = destinoPiso(punto);
+      if (!pieza) {
+        const texto = esEn('Coloca este piso encima del edificio.', 'Place this floor on top of the building.');
+        mostrarEstado(texto);
+        narrar(texto);
+        return;
+      }
+      valido = true;
+      elevacion = 56;
     } else {
       const {x,z} = escena.desdePantalla(punto.x,punto.y);
       pieza = piezaEnEspacioLibre(elegida, reto, x, z, colocadas);
@@ -355,7 +389,21 @@
       return;
     }
     piezaPendiente = null;
-    colocadas.push(pieza);
+    const pisos = paso()?.pisos;
+    if (pieza.apoyo) pieza.apoyo.pisos++;
+    else colocadas.push(pieza);
+    if (pisos) {
+      if (!pieza.apoyo) {
+        pieza.pisos = 1;
+        edificioEnCurso = pieza;
+      }
+      if (edificioEnCurso.pisos < pisos) {
+        mostrarEstado(esEn('¡Piso colocado!', 'Floor placed!'), true);
+        renderPaso(false);
+        return;
+      }
+      edificioEnCurso = null;
+    }
     let pasoCompleto = true;
     if (!esBloques()) {
       puestasEnPaso++;
@@ -369,6 +417,7 @@
     }
     celebrar();
     if (completar()) mostrarEstado(esEn('Escena completa', 'Scene complete'), true);
+    else if (pisos) mostrarEstado(esEn(`¡Edificio de ${pisos} pisos listo!`, `Your ${pisos}-floor building is ready!`), true);
     else mostrarEstado(esEn('¡Bien colocado!', 'Well placed!'), true);
     renderPaso(pasoCompleto, pasoCompleto);
     if (completar()) get('siguiente').focus({preventScroll: true});
@@ -397,6 +446,7 @@
     vistaPrevia = null;
     if (dentro(punto)) {
       if (esBloques()) vistaPrevia = {id: elegida, ...punto};
+      else if (edificioEnCurso) vistaPrevia = elegida === edificioEnCurso.id ? destinoPiso(punto) : null;
       else {
         const {x,z} = escena.desdePantalla(punto.x,punto.y);
         vistaPrevia = piezaEnEspacioLibre(elegida,reto,x,z,colocadas);
