@@ -1,3 +1,8 @@
+function cantidadEnRelato(n, visual = false, femenino = false) {
+  const cantidad = Number(n) === 1 ? (isEnglish() ? "one" : femenino ? "una" : "un") : n;
+  return visual ? `<strong>${cantidad}</strong>` : cantidad;
+}
+
 const usarIlustracionesSituaciones = typeof esperarEnEscena === "function";
 const esperarAnimacionSituacion = usarIlustracionesSituaciones ? esperarEnEscena : setTimeout.bind(window);
 
@@ -33,7 +38,7 @@ if (usarIlustracionesSituaciones) {
   const llegan = () => state.operation === "addition";
 
   function datosEstacionamiento(total, cambio, visual = false, resaltar = false) {
-    const numero = n => visual ? `<strong>${n}</strong>` : n;
+    const numero = n => cantidadEnRelato(n,visual);
     const cantidad = itemWord(problems[id], cambio);
     const verbo = isEnglish()
       ? (llegan() ? (cambio === 1 ? "arrives" : "arrive") : (cambio === 1 ? "leaves" : "leave"))
@@ -199,7 +204,7 @@ if (usarIlustracionesSituaciones) {
   function datosAutobus(total, cambio, visual = false, resaltar = false) {
     const suben = state.operation === "addition";
     const plural = cambio !== 1;
-    const cantidad = n => visual ? `<strong>${n}</strong>` : n;
+    const cantidad = n => cantidadEnRelato(n,visual,true);
     const persona = itemWord(problems[id], cambio);
     const accion = isEnglish() ? (suben ? "get on" : "get off") : (suben ? "se sube" : "se baja") + (plural ? "n" : "");
     const verbo = isEnglish() && !plural ? accion.replace("get", "gets") : accion;
@@ -278,7 +283,7 @@ if (usarIlustracionesSituaciones) {
   }
 
   function enunciado(total, cambio, visual = false, resaltar = false) {
-    const numero = n => visual ? `<strong>${n}</strong>` : n;
+    const numero = n => cantidadEnRelato(n,visual);
     const palabra = itemWord(problems[id], cambio);
     const accion = resaltar ? `<span class="keyAction">${verbo(cambio)}</span>` : verbo(cambio);
     const entrada = llegan();
@@ -415,8 +420,8 @@ if (usarIlustracionesSituaciones) {
     story: (_, total, cambio, resaltar) => enunciado(total, cambio, true, resaltar),
     speak: (_, total, cambio) => enunciado(total, cambio),
     hintData: (total, cambio) => isEnglish()
-      ? `At the start: <strong>${total}</strong> birds. Then <strong>${cambio}</strong> ${itemWord(problems[id], cambio)} ${verbo(cambio)}.`
-      : `Al inicio: <strong>${total}</strong> pajaritos. Luego ${verbo(cambio)} <strong>${cambio}</strong> ${itemWord(problems[id], cambio)}.`,
+      ? `At the start: <strong>${total}</strong> birds. Then ${cantidadEnRelato(cambio,true)} ${itemWord(problems[id], cambio)} ${verbo(cambio)}.`
+      : `Al inicio: <strong>${total}</strong> pajaritos. Luego ${verbo(cambio)} ${cantidadEnRelato(cambio,true)} ${itemWord(problems[id], cambio)}.`,
     hintKeyword: () => isEnglish()
       ? `Look for <strong>${verbo(state.change)}</strong> to see whether the number goes up or down.`
       : `Fíjate en <strong>${verbo(state.change)}</strong> para saber si la cantidad aumenta o disminuye.`,
@@ -564,7 +569,7 @@ if (usarIlustracionesSituaciones) {
   function datosRecreo(total, cambio, visual = false, resaltar = false) {
     const entran = state.operation === "addition";
     const uno = cambio === 1;
-    const cantidad = n => visual ? `<strong>${n}</strong>` : n;
+    const cantidad = n => cantidadEnRelato(n,visual);
     const verbo = isEnglish()
       ? (entran ? (uno ? "returns from recess" : "return from recess") : (uno ? "goes out to recess" : "go out to recess"))
       : (entran ? (uno ? "regresa del recreo" : "regresan del recreo") : (uno ? "sale al recreo" : "salen al recreo"));
@@ -1218,48 +1223,44 @@ Los globos y los cordeles se dibujan desde el código.
     animate: animateDanielGlobosWindV3,
 
     story: (name, total, change, highlight = false) => {
-      const remaining = total - change;
-
       if (isEnglish()) {
-        return `Daniel is in the park playing with his balloons. He has <strong>${total}</strong> ${itemWord(problems.danielGlobosParque, total)}, and a strong wind <span class="${highlight ? "keyAction" : ""}">carries away</span> <strong>${change}</strong> ${itemWord(problems.danielGlobosParque, change)}. How many balloons does Daniel have left?`;
+        return `Daniel is in the park playing with his balloons. He has <strong>${total}</strong> ${itemWord(problems.danielGlobosParque, total)}, and a strong wind <span class="${highlight ? "keyAction" : ""}">carries away</span> ${cantidadEnRelato(change, true)} ${itemWord(problems.danielGlobosParque, change)}. How many balloons does Daniel have left?`;
       }
 
-      return `Daniel está en el parque jugando con sus globos. Tiene <strong>${total}</strong> ${itemWord(problems.danielGlobosParque, total)} y un fuerte viento <span class="${highlight ? "keyAction" : ""}">se lleva</span> <strong>${change}</strong> ${itemWord(problems.danielGlobosParque, change)}. ¿Cuántos globos ${remaining === 1 ? "le queda" : "le quedan"} a Daniel?`;
+      return `Daniel está en el parque jugando con sus globos. Tiene <strong>${total}</strong> ${itemWord(problems.danielGlobosParque, total)} y un fuerte viento <span class="${highlight ? "keyAction" : ""}">se lleva</span> ${cantidadEnRelato(change, true)} ${itemWord(problems.danielGlobosParque, change)}. ¿Cuántos globos le quedan a Daniel?`;
     },
 
     speak: (name, total, change) => {
-      const remaining = total - change;
-
       if (isEnglish()) {
-        return `Daniel is in the park playing with his balloons. He has ${total} ${itemWord(problems.danielGlobosParque, total)}, and a strong wind carries away ${change} ${itemWord(problems.danielGlobosParque, change)}. How many balloons does Daniel have left?`;
+        return `Daniel is in the park playing with his balloons. He has ${total} ${itemWord(problems.danielGlobosParque, total)}, and a strong wind carries away ${cantidadEnRelato(change, false)} ${itemWord(problems.danielGlobosParque, change)}. How many balloons does Daniel have left?`;
       }
 
-      return `Daniel está en el parque jugando con sus globos. Tiene ${total} ${itemWord(problems.danielGlobosParque, total)} y un fuerte viento se lleva ${change} ${itemWord(problems.danielGlobosParque, change)}. ¿Cuántos globos ${remaining === 1 ? "le queda" : "le quedan"} a Daniel?`;
+      return `Daniel está en el parque jugando con sus globos. Tiene ${total} ${itemWord(problems.danielGlobosParque, total)} y un fuerte viento se lleva ${cantidadEnRelato(change, false)} ${itemWord(problems.danielGlobosParque, change)}. ¿Cuántos globos le quedan a Daniel?`;
     },
 
     resultText: (total, change, answer, symbol) => {
       if (isEnglish()) {
         const word = answer === 1 ? "balloon" : "balloons";
-        return `${total} − ${change} is ${answer}. Daniel has ${answer} ${word} left.`;
+        return `${total} − ${change} is ${answer}. Daniel has ${cantidadEnRelato(answer)} ${word} left.`;
       }
 
       const globo = answer === 1 ? "globo" : "globos";
-      return `${total} − ${change} es ${answer}. A Daniel le quedan ${answer} ${globo}.`;
+      return `${total} − ${change} es ${answer}. A Daniel le ${answer === 1 ? "queda" : "quedan"} ${cantidadEnRelato(answer)} ${globo}.`;
     },
 
     resultSpeak: (total, change, answer, symbol) => {
       if (isEnglish()) {
         const word = answer === 1 ? "balloon" : "balloons";
-        return `${total} minus ${change} is ${answer}. Daniel has ${answer} ${word} left.`;
+        return `${total} minus ${change} is ${answer}. Daniel has ${cantidadEnRelato(answer)} ${word} left.`;
       }
 
       const globo = answer === 1 ? "globo" : "globos";
-      return `${total} menos ${change} es ${answer}. A Daniel le quedan ${answer} ${globo}.`;
+      return `${total} menos ${change} es ${answer}. A Daniel le ${answer === 1 ? "queda" : "quedan"} ${cantidadEnRelato(answer)} ${globo}.`;
     },
 
     hintData: (total, change) => isEnglish()
-      ? `Start amount: Daniel has <strong>${total}</strong> ${itemWord(problems.danielGlobosParque, total)}. Change: the wind carries away <strong>${change}</strong> ${itemWord(problems.danielGlobosParque, change)}.`
-      : `Dato inicial: Daniel tiene <strong>${total}</strong> ${itemWord(problems.danielGlobosParque, total)}. Cambio: el viento se lleva <strong>${change}</strong> ${itemWord(problems.danielGlobosParque, change)}.`,
+      ? `Start amount: Daniel has <strong>${total}</strong> ${itemWord(problems.danielGlobosParque, total)}. Change: the wind carries away ${cantidadEnRelato(change, true)} ${itemWord(problems.danielGlobosParque, change)}.`
+      : `Dato inicial: Daniel tiene <strong>${total}</strong> ${itemWord(problems.danielGlobosParque, total)}. Cambio: el viento se lleva ${cantidadEnRelato(change, true)} ${itemWord(problems.danielGlobosParque, change)}.`,
 
     hintKeyword: () => isEnglish()
       ? `The key words are <strong>carries away</strong>. When something is carried away, the amount decreases.`
@@ -1838,7 +1839,7 @@ Versión ajustada:
     const resta = restaDulces();
     const nombre = nombresDulces[resta ? duenoDulces : "andres"];
     const otro = nombresDulces[resta ? quienQuita() : "maria"];
-    const numero = n => visual ? `<strong>${n}</strong>` : n;
+    const numero = n => cantidadEnRelato(n,visual);
     const palabra = n => itemWord(problems.andresMariaDulcesPlato,n);
     const verbo = isEnglish() ? (resta ? "takes away" : "adds") : (resta ? "le quita" : "agrega");
     const accion = resaltar ? `<span class="keyAction">${verbo}</span>` : verbo;
@@ -2040,8 +2041,8 @@ Versión ajustada:
       return;
     }
     feedback.textContent = isEnglish()
-      ? `Watch how Andrés places ${state.total} ${itemWord(problems.andresMariaDulcesPlato, state.total)} and then María places ${state.change} more ${itemWord(problems.andresMariaDulcesPlato, state.change)} on the same plate.`
-      : `Observa cómo Andrés coloca ${state.total} ${itemWord(problems.andresMariaDulcesPlato, state.total)} y luego María coloca ${state.change} ${itemWord(problems.andresMariaDulcesPlato, state.change)} en el mismo plato.`;
+      ? `Watch how Andrés places ${state.total} ${itemWord(problems.andresMariaDulcesPlato, state.total)} and then María places ${cantidadEnRelato(state.change)} more ${itemWord(problems.andresMariaDulcesPlato, state.change)} on the same plate.`
+      : `Observa cómo Andrés coloca ${state.total} ${itemWord(problems.andresMariaDulcesPlato, state.total)} y luego María coloca ${cantidadEnRelato(state.change)} ${itemWord(problems.andresMariaDulcesPlato, state.change)} más en el mismo plato.`;
 
     updateText();
 
@@ -2660,6 +2661,16 @@ ImagenesSituacionesProblemas/Aula/N4.png
     if (isEnglish()) return Number(count) === 1 ? "student" : "students";
     return Number(count) === 1 ? "estudiante" : "estudiantes";
   }
+  function verboPupitres(cantidad) {
+    if (isEnglish()) return cantidad === 1 ? "comes to sit down" : "come to sit down";
+    return cantidad === 1 ? "llega a sentarse" : "llegan a sentarse";
+  }
+  function llegadaAlPupitre(cantidad, visual = false, resaltar = false) {
+    const verbo = verboPupitres(cantidad);
+    const accion = resaltar ? `<span class="keyAction">${verbo}</span>` : verbo;
+    const estudiantes = `${cantidadEnRelato(cantidad,visual)} ${aulaStudentWordV6(cantidad)}`;
+    return isEnglish() ? `${estudiantes} ${accion}` : `${accion} ${estudiantes}`;
+  }
 
   function createAulaDeskV6(id, pos) {
     const desk = document.createElement("div");
@@ -2878,18 +2889,18 @@ ImagenesSituacionesProblemas/Aula/N4.png
 
     story: (name, total, change, highlight = false) => {
       if (isEnglish()) {
-        return `In a classroom there are <strong>${total}</strong> ${aulaDeskWordV6(total)}, and <strong>${change}</strong> ${aulaStudentWordV6(change)} <span class="${highlight ? "keyAction" : ""}">come to sit down</span>. How many desks are left empty?`;
+        return `In a classroom there are <strong>${total}</strong> ${aulaDeskWordV6(total)}, and ${llegadaAlPupitre(change,true,highlight)}. How many desks are left empty?`;
       }
     
-      return `En un aula hay <strong>${total}</strong> ${aulaDeskWordV6(total)} y <span class="${highlight ? "keyAction" : ""}">llegan a sentarse</span> <strong>${change}</strong> ${aulaStudentWordV6(change)}. ¿Cuántos pupitres quedan desocupados?`;
+      return `En un aula hay <strong>${total}</strong> ${aulaDeskWordV6(total)} y ${llegadaAlPupitre(change,true,highlight)}. ¿Cuántos pupitres quedan desocupados?`;
     },
     
     speak: (name, total, change) => {
       if (isEnglish()) {
-        return `In a classroom there are ${total} ${aulaDeskWordV6(total)}, and ${change} ${aulaStudentWordV6(change)} come to sit down. How many desks are left empty?`;
+        return `In a classroom there are ${total} ${aulaDeskWordV6(total)}, and ${llegadaAlPupitre(change)}. How many desks are left empty?`;
       }
     
-      return `En un aula hay ${total} ${aulaDeskWordV6(total)} y llegan a sentarse ${change} ${aulaStudentWordV6(change)}. ¿Cuántos pupitres quedan desocupados?`;
+      return `En un aula hay ${total} ${aulaDeskWordV6(total)} y ${llegadaAlPupitre(change)}. ¿Cuántos pupitres quedan desocupados?`;
     },
     
     
@@ -2897,35 +2908,35 @@ ImagenesSituacionesProblemas/Aula/N4.png
     resultText: (total, change, answer, symbol) => {
           if (isEnglish()) {
             const deskWord = answer === 1 ? "desk" : "desks";
-            return `${total} − ${change} is ${answer}. ${answer} ${deskWord} are left empty in the classroom.`;
+            return `${total} − ${change} is ${answer}. ${answer === 1 ? "One" : answer} ${deskWord} ${answer === 1 ? "is" : "are"} left empty in the classroom.`;
           }
         
           const verbo = answer === 1 ? "Queda" : "Quedan";
           const pupitre = answer === 1 ? "pupitre desocupado" : "pupitres desocupados";
         
-          return `${total} − ${change} es ${answer}. ${verbo} ${answer} ${pupitre} en el aula.`;
+          return `${total} − ${change} es ${answer}. ${verbo} ${cantidadEnRelato(answer)} ${pupitre} en el aula.`;
         },
         
         resultSpeak: (total, change, answer, symbol) => {
           if (isEnglish()) {
             const deskWord = answer === 1 ? "desk" : "desks";
-            return `${total} minus ${change} is ${answer}. ${answer} ${deskWord} are left empty in the classroom.`;
+            return `${total} minus ${change} is ${answer}. ${answer === 1 ? "One" : answer} ${deskWord} ${answer === 1 ? "is" : "are"} left empty in the classroom.`;
           }
         
           const verbo = answer === 1 ? "Queda" : "Quedan";
           const pupitre = answer === 1 ? "pupitre desocupado" : "pupitres desocupados";
         
-          return `${total} menos ${change} es ${answer}. ${verbo} ${answer} ${pupitre} en el aula.`;
+          return `${total} menos ${change} es ${answer}. ${verbo} ${cantidadEnRelato(answer)} ${pupitre} en el aula.`;
         },
     
 
     hintData: (total, change) => isEnglish()
-      ? `Dato inicial: there are <strong>${total}</strong> ${aulaDeskWordV6(total)}. Change: <strong>${change}</strong> ${aulaStudentWordV6(change)} enter and sit down.`
-      : `Dato inicial: hay <strong>${total}</strong> ${aulaDeskWordV6(total)}. Cambio: se sientan <strong>${change}</strong> ${aulaStudentWordV6(change)}.`,
+      ? `Start amount: there are <strong>${total}</strong> ${aulaDeskWordV6(total)}. Change: ${llegadaAlPupitre(change,true)}.`
+      : `Dato inicial: hay <strong>${total}</strong> ${aulaDeskWordV6(total)}. Cambio: ${llegadaAlPupitre(change,true)}.`,
 
     hintKeyword: () => isEnglish()
-      ? `The key words are <strong>sit down</strong>. Each student uses one desk, so the number of empty desks decreases.`
-      : `La palabra clave es <strong>se sientan</strong>. Cada estudiante ocupa un pupitre, por eso disminuyen los pupitres desocupados.`,
+      ? `Look for <strong>${verboPupitres(state.change)}</strong>. Each student uses one desk, so the number of empty desks decreases.`
+      : `Fíjate en <strong>${verboPupitres(state.change)}</strong>. Cada estudiante ocupa un pupitre, por eso disminuyen los pupitres desocupados.`,
 
     hintOperation: (total, change) => isEnglish()
       ? `Because some desks become occupied, use <strong>subtraction</strong>: <strong>${total} − ${change}</strong>.`
@@ -3546,45 +3557,45 @@ ImagenesSituacionesProblemas/Aula/N4.png
 
     story: (name, total, change, highlight = false) => {
       if (isEnglish()) {
-        return `In a classroom there are <strong>${total}</strong> ${aulaRecreoStudentWord(total)}, and <strong>${change}</strong> ${aulaRecreoStudentWord(change)} <span class="${highlight ? "keyAction" : ""}">go to recess</span>. How many students stay in the classroom?`;
+        return `In a classroom there are <strong>${total}</strong> ${aulaRecreoStudentWord(total)}, and ${cantidadEnRelato(change, true)} ${aulaRecreoStudentWord(change)} <span class="${highlight ? "keyAction" : ""}">${change === 1 ? "goes to recess" : "go to recess"}</span>. How many students stay in the classroom?`;
       }
     
-      return `En un aula hay <strong>${total}</strong> ${aulaRecreoStudentWord(total)} y <span class="${highlight ? "keyAction" : ""}">se van al recreo</span> <strong>${change}</strong> ${aulaRecreoStudentWord(change)}. ¿Cuántos estudiantes quedan en el aula?`;
+      return `En un aula hay <strong>${total}</strong> ${aulaRecreoStudentWord(total)} y <span class="${highlight ? "keyAction" : ""}">${change === 1 ? "se va al recreo" : "se van al recreo"}</span> ${cantidadEnRelato(change, true)} ${aulaRecreoStudentWord(change)}. ¿Cuántos estudiantes quedan en el aula?`;
     },
     
     speak: (name, total, change) => {
       if (isEnglish()) {
-        return `In a classroom there are ${total} ${aulaRecreoStudentWord(total)}, and ${change} ${aulaRecreoStudentWord(change)} go to recess. How many students stay in the classroom?`;
+        return `In a classroom there are ${total} ${aulaRecreoStudentWord(total)}, and ${cantidadEnRelato(change, false)} ${aulaRecreoStudentWord(change)} ${change === 1 ? "goes to recess" : "go to recess"}. How many students stay in the classroom?`;
       }
     
-      return `En un aula hay ${total} ${aulaRecreoStudentWord(total)} y se van al recreo ${change} ${aulaRecreoStudentWord(change)}. ¿Cuántos estudiantes quedan en el aula?`;
+      return `En un aula hay ${total} ${aulaRecreoStudentWord(total)} y ${change === 1 ? "se va al recreo" : "se van al recreo"} ${cantidadEnRelato(change, false)} ${aulaRecreoStudentWord(change)}. ¿Cuántos estudiantes quedan en el aula?`;
     },
 
     resultText: (total, change, answer, symbol) => {
       if (isEnglish()) {
         const word = answer === 1 ? "student stays" : "students stay";
-        return `${total} − ${change} is ${answer}. ${answer} ${word} in the classroom.`;
+        return `${total} − ${change} is ${answer}. ${answer === 1 ? "One" : answer} ${word} in the classroom.`;
       }
 
       const verbo = answer === 1 ? "Queda" : "Quedan";
       const estudiante = answer === 1 ? "estudiante" : "estudiantes";
-      return `${total} − ${change} es ${answer}. ${verbo} ${answer} ${estudiante} en el aula.`;
+      return `${total} − ${change} es ${answer}. ${verbo} ${cantidadEnRelato(answer)} ${estudiante} en el aula.`;
     },
 
     resultSpeak: (total, change, answer, symbol) => {
       if (isEnglish()) {
         const word = answer === 1 ? "student stays" : "students stay";
-        return `${total} minus ${change} is ${answer}. ${answer} ${word} in the classroom.`;
+        return `${total} minus ${change} is ${answer}. ${answer === 1 ? "One" : answer} ${word} in the classroom.`;
       }
 
       const verbo = answer === 1 ? "Queda" : "Quedan";
       const estudiante = answer === 1 ? "estudiante" : "estudiantes";
-      return `${total} menos ${change} es ${answer}. ${verbo} ${answer} ${estudiante} en el aula.`;
+      return `${total} menos ${change} es ${answer}. ${verbo} ${cantidadEnRelato(answer)} ${estudiante} en el aula.`;
     },
 
     hintData: (total, change) => isEnglish()
-      ? `Start amount: there are <strong>${total}</strong> ${aulaRecreoStudentWord(total)} sitting in the classroom. Change: <strong>${change}</strong> ${aulaRecreoStudentWord(change)} go to recess.`
-      : `Dato inicial: hay <strong>${total}</strong> ${aulaRecreoStudentWord(total)} sentados en el aula. Cambio: se van al recreo <strong>${change}</strong> ${aulaRecreoStudentWord(change)}.`,
+      ? `Start amount: there are <strong>${total}</strong> ${aulaRecreoStudentWord(total)} sitting in the classroom. Change: ${cantidadEnRelato(change, true)} ${aulaRecreoStudentWord(change)} ${change === 1 ? "goes to recess" : "go to recess"}.`
+      : `Dato inicial: hay <strong>${total}</strong> ${aulaRecreoStudentWord(total)} sentados en el aula. Cambio: ${change === 1 ? "se va al recreo" : "se van al recreo"} ${cantidadEnRelato(change, true)} ${aulaRecreoStudentWord(change)}.`,
 
     hintKeyword: () => isEnglish()
       ? `The key words are <strong>go to recess</strong>. When students leave the classroom, the amount decreases.`
@@ -4082,8 +4093,8 @@ ImagenesSituacionesProblemas/Aula/N4.png
 
     feedback.className = "feedback";
     feedback.textContent = isEnglish()
-      ? `Watch how ${state.change === 1 ? "one student arrives" : "some students arrive"} and sit down. The students in the classroom are the answer.`
-      : `Observa cómo ${state.change === 1 ? "llega un estudiante" : "llegan algunos estudiantes"} y se sientan. Los estudiantes que hay ahora en el aula son la respuesta.`;
+      ? `Watch how ${state.change === 1 ? "one student arrives and sits down" : "some students arrive and sit down"}. The students in the classroom are the answer.`
+      : `Observa cómo ${state.change === 1 ? "llega un estudiante y se sienta" : "llegan algunos estudiantes y se sientan"}. Los estudiantes que hay ahora en el aula son la respuesta.`;
 
     updateText();
     if (usarIlustracionesSituaciones) return aulaCenital.animar();
@@ -4209,43 +4220,43 @@ ImagenesSituacionesProblemas/Aula/N4.png
 
     story: (name, total, change, highlight = false) => {
       if (isEnglish()) {
-        return `In a classroom there are <strong>${total}</strong> ${aulaLleganStudentWord(total)}, and <strong>${change}</strong> more ${aulaLleganStudentWord(change)} <span class="${highlight ? "keyAction" : ""}">arrive</span>. How many students are now in the classroom?`;
+        return `In a classroom there are <strong>${total}</strong> ${aulaLleganStudentWord(total)}, and ${cantidadEnRelato(change, true)} more ${aulaLleganStudentWord(change)} <span class="${highlight ? "keyAction" : ""}">${change === 1 ? "arrives" : "arrive"}</span>. How many students are now in the classroom?`;
       }
 
-      return `En un aula hay <strong>${total}</strong> ${aulaLleganStudentWord(total)} y <span class="${highlight ? "keyAction" : ""}">llegan</span> <strong>${change}</strong> ${aulaLleganStudentWord(change)} más. ¿Cuántos estudiantes hay ahora en el aula?`;
+      return `En un aula hay <strong>${total}</strong> ${aulaLleganStudentWord(total)} y <span class="${highlight ? "keyAction" : ""}">${change === 1 ? "llega" : "llegan"}</span> ${cantidadEnRelato(change, true)} ${aulaLleganStudentWord(change)} más. ¿Cuántos estudiantes hay ahora en el aula?`;
     },
 
     speak: (name, total, change) => {
       if (isEnglish()) {
-        return `In a classroom there are ${total} ${aulaLleganStudentWord(total)}, and ${change} more ${aulaLleganStudentWord(change)} arrive. How many students are now in the classroom?`;
+        return `In a classroom there are ${total} ${aulaLleganStudentWord(total)}, and ${cantidadEnRelato(change, false)} more ${aulaLleganStudentWord(change)} ${change === 1 ? "arrives" : "arrive"}. How many students are now in the classroom?`;
       }
 
-      return `En un aula hay ${total} ${aulaLleganStudentWord(total)} y llegan ${change} ${aulaLleganStudentWord(change)} más. ¿Cuántos estudiantes hay ahora en el aula?`;
+      return `En un aula hay ${total} ${aulaLleganStudentWord(total)} y ${change === 1 ? "llega" : "llegan"} ${cantidadEnRelato(change, false)} ${aulaLleganStudentWord(change)} más. ¿Cuántos estudiantes hay ahora en el aula?`;
     },
 
     resultText: (total, change, answer, symbol) => {
       if (isEnglish()) {
         const word = answer === 1 ? "student" : "students";
-        return `${total} + ${change} is ${answer}. There are ${answer} ${word} now in the classroom.`;
+        return `${total} + ${change} is ${answer}. ${answer === 1 ? "There is" : "There are"} ${cantidadEnRelato(answer)} ${word} now in the classroom.`;
       }
 
       const estudiante = answer === 1 ? "estudiante" : "estudiantes";
-      return `${total} + ${change} es ${answer}. Hay ${answer} ${estudiante} ahora en el aula.`;
+      return `${total} + ${change} es ${answer}. Hay ${cantidadEnRelato(answer)} ${estudiante} ahora en el aula.`;
     },
 
     resultSpeak: (total, change, answer, symbol) => {
       if (isEnglish()) {
         const word = answer === 1 ? "student" : "students";
-        return `${total} plus ${change} is ${answer}. There are ${answer} ${word} now in the classroom.`;
+        return `${total} plus ${change} is ${answer}. ${answer === 1 ? "There is" : "There are"} ${cantidadEnRelato(answer)} ${word} now in the classroom.`;
       }
 
       const estudiante = answer === 1 ? "estudiante" : "estudiantes";
-      return `${total} más ${change} es ${answer}. Hay ${answer} ${estudiante} ahora en el aula.`;
+      return `${total} más ${change} es ${answer}. Hay ${cantidadEnRelato(answer)} ${estudiante} ahora en el aula.`;
     },
 
     hintData: (total, change) => isEnglish()
-      ? `Start amount: there are <strong>${total}</strong> ${aulaLleganStudentWord(total)} in the classroom. Change: <strong>${change}</strong> more ${aulaLleganStudentWord(change)} arrive.`
-      : `Dato inicial: hay <strong>${total}</strong> ${aulaLleganStudentWord(total)} en el aula. Cambio: llegan <strong>${change}</strong> ${aulaLleganStudentWord(change)} más.`,
+      ? `Start amount: there are <strong>${total}</strong> ${aulaLleganStudentWord(total)} in the classroom. Change: ${cantidadEnRelato(change, true)} more ${aulaLleganStudentWord(change)} ${change === 1 ? "arrives" : "arrive"}.`
+      : `Dato inicial: hay <strong>${total}</strong> ${aulaLleganStudentWord(total)} en el aula. Cambio: ${change === 1 ? "llega" : "llegan"} ${cantidadEnRelato(change, true)} ${aulaLleganStudentWord(change)} más.`,
 
     hintKeyword: () => isEnglish()
       ? `The key word is <strong>arrive</strong>. When more students arrive, the amount increases.`

@@ -2250,21 +2250,21 @@
         animate: animateApplesFall,
         story: (name, total, change, highlight = false) => {
           if (isEnglish()) {
-            return `On a tree ${thereIs(total)} <strong>${total}</strong> ${itemWord(problems.applesTree, total)}, and <strong>${change}</strong> ${itemWord(problems.applesTree, change)} <span class="${highlight ? 'keyAction' : ''}">${fallVerb(change)}</span> to the ground. How many apples are left on the tree?`;
+            return `On a tree ${thereIs(total)} <strong>${total}</strong> ${itemWord(problems.applesTree, total)}, and ${cantidadEnRelato(change, true, true)} ${itemWord(problems.applesTree, change)} <span class="${highlight ? 'keyAction' : ''}">${fallVerb(change)}</span> to the ground. How many apples are left on the tree?`;
           }
-          return `En un árbol hay <strong>${total}</strong> ${itemWord(problems.applesTree, total)} y <span class="${highlight ? 'keyAction' : ''}">${fallVerb(change)}</span> <strong>${change}</strong> ${itemWord(problems.applesTree, change)} al suelo. ¿Cuántas manzanas quedan en el árbol?`;
+          return `En un árbol hay <strong>${total}</strong> ${itemWord(problems.applesTree, total)} y <span class="${highlight ? 'keyAction' : ''}">${fallVerb(change)}</span> ${cantidadEnRelato(change, true, true)} ${itemWord(problems.applesTree, change)} al suelo. ¿Cuántas manzanas quedan en el árbol?`;
         },
         speak: (name, total, change) => {
           if (isEnglish()) {
-            return `On a tree ${thereIs(total)} ${total} ${itemWord(problems.applesTree, total)}, and ${change} ${itemWord(problems.applesTree, change)} ${fallVerb(change)} to the ground. How many apples are left on the tree?`;
+            return `On a tree ${thereIs(total)} ${total} ${itemWord(problems.applesTree, total)}, and ${cantidadEnRelato(change, false, true)} ${itemWord(problems.applesTree, change)} ${fallVerb(change)} to the ground. How many apples are left on the tree?`;
           }
-          return `En un árbol hay ${total} ${itemWord(problems.applesTree, total)} y ${fallVerb(change)} ${change} ${itemWord(problems.applesTree, change)} al suelo. ¿Cuántas manzanas quedan en el árbol?`;
+          return `En un árbol hay ${total} ${itemWord(problems.applesTree, total)} y ${fallVerb(change)} ${cantidadEnRelato(change, false, true)} ${itemWord(problems.applesTree, change)} al suelo. ¿Cuántas manzanas quedan en el árbol?`;
         },
         answerQuestion: "¿Cuántas manzanas quedan en el árbol?",
         sceneTitle: "Observa cuántas manzanas quedan en el árbol",
         hintData: (total, change) => isEnglish()
-          ? `Start amount: ${thereIs(total)} <strong>${total}</strong> ${itemWord(problems.applesTree, total)} on the tree. Change: <strong>${change}</strong> ${itemWord(problems.applesTree, change)} ${fallVerb(change)}.`
-          : `Dato inicial: hay <strong>${total}</strong> ${itemWord(problems.applesTree, total)} en el árbol. Cambio: <strong>${change}</strong> ${itemWord(problems.applesTree, change)} ${fallVerb(change)}.`,
+          ? `Start amount: ${thereIs(total)} <strong>${total}</strong> ${itemWord(problems.applesTree, total)} on the tree. Change: ${cantidadEnRelato(change, true, true)} ${itemWord(problems.applesTree, change)} ${fallVerb(change)}.`
+          : `Dato inicial: hay <strong>${total}</strong> ${itemWord(problems.applesTree, total)} en el árbol. Cambio: ${cantidadEnRelato(change, true, true)} ${itemWord(problems.applesTree, change)} ${fallVerb(change)}.`,
         hintKeyword: () => isEnglish()
           ? `The key word is <strong>fall</strong>. When something falls or is taken away, the amount decreases.`
           : `La palabra clave es <strong>se caen</strong>. Cuando algo se cae o se quita, la cantidad disminuye.`,
@@ -2293,21 +2293,21 @@
         animate: animatePearsTaken,
         story: (name, total, change, highlight = false) => {
           if (isEnglish()) {
-            return `On a plate ${thereIs(total)} <strong>${total}</strong> ${itemWord(problems.pearsBasket, total)}, and Ana <span class="${highlight ? 'keyAction' : ''}">takes</span> <strong>${change}</strong> ${itemWord(problems.pearsBasket, change)}. How many pears are left on the plate?`;
+            return `On a plate ${thereIs(total)} <strong>${total}</strong> ${itemWord(problems.pearsBasket, total)}, and Ana <span class="${highlight ? 'keyAction' : ''}">takes</span> ${cantidadEnRelato(change, true, true)} ${itemWord(problems.pearsBasket, change)}. How many pears are left on the plate?`;
           }
-          return `En un plato hay <strong>${total}</strong> ${itemWord(problems.pearsBasket, total)} y Ana <span class="${highlight ? 'keyAction' : ''}">toma</span> <strong>${change}</strong> ${itemWord(problems.pearsBasket, change)}. ¿Cuántas peras quedan en el plato?`;
+          return `En un plato hay <strong>${total}</strong> ${itemWord(problems.pearsBasket, total)} y Ana <span class="${highlight ? 'keyAction' : ''}">toma</span> ${cantidadEnRelato(change, true, true)} ${itemWord(problems.pearsBasket, change)}. ¿Cuántas peras quedan en el plato?`;
         },
         speak: (name, total, change) => {
           if (isEnglish()) {
-            return `On a plate ${thereIs(total)} ${total} ${itemWord(problems.pearsBasket, total)}, and Ana takes ${change} ${itemWord(problems.pearsBasket, change)}. How many pears are left on the plate?`;
+            return `On a plate ${thereIs(total)} ${total} ${itemWord(problems.pearsBasket, total)}, and Ana takes ${cantidadEnRelato(change, false, true)} ${itemWord(problems.pearsBasket, change)}. How many pears are left on the plate?`;
           }
-          return `En un plato hay ${total} ${itemWord(problems.pearsBasket, total)} y Ana toma ${change} ${itemWord(problems.pearsBasket, change)}. ¿Cuántas peras quedan en el plato?`;
+          return `En un plato hay ${total} ${itemWord(problems.pearsBasket, total)} y Ana toma ${cantidadEnRelato(change, false, true)} ${itemWord(problems.pearsBasket, change)}. ¿Cuántas peras quedan en el plato?`;
         },
         answerQuestion: "¿Cuántas peras quedan en el plato?",
         sceneTitle: "Observa cuántas peras quedan en el plato",
         hintData: (total, change) => isEnglish()
-          ? `Start amount: ${thereIs(total)} <strong>${total}</strong> ${itemWord(problems.pearsBasket, total)} on the plate. Change: Ana takes <strong>${change}</strong> ${itemWord(problems.pearsBasket, change)}.`
-          : `Dato inicial: hay <strong>${total}</strong> ${itemWord(problems.pearsBasket, total)} en el plato. Cambio: Ana toma <strong>${change}</strong> ${itemWord(problems.pearsBasket, change)}.`,
+          ? `Start amount: ${thereIs(total)} <strong>${total}</strong> ${itemWord(problems.pearsBasket, total)} on the plate. Change: Ana takes ${cantidadEnRelato(change, true, true)} ${itemWord(problems.pearsBasket, change)}.`
+          : `Dato inicial: hay <strong>${total}</strong> ${itemWord(problems.pearsBasket, total)} en el plato. Cambio: Ana toma ${cantidadEnRelato(change, true, true)} ${itemWord(problems.pearsBasket, change)}.`,
         hintKeyword: () => isEnglish()
           ? `The key word is <strong>takes</strong>. If Ana takes pears from the plate, fewer pears are left.`
           : `La palabra clave es <strong>toma</strong>. Si Ana toma peras del plato, quedan menos peras.`,
@@ -4048,7 +4048,7 @@
       renderMenu();
     }
   </script>
-  <script src="escenas.js"></script>
+  <script src="escenas.js?v=concordancia-relatos"></script>
   <script>
     startApp();
   </script>
