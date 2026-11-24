@@ -55,11 +55,11 @@
     {
       id:"patosEstanque", clase:"estanque", emoji:"🦆", lugares:lugaresAgua(20, 15, [25,37,49,62,75]),
       fichas:["pato-sprite"], transito:"pato-vuelo",
-      es:{title:"Patos en el estanque", lugar:"en el estanque", plural:"patos", singular:"pato",
+      es:{title:"Patos en el estanque", lugar:"en el estanque", plural:"patos", singular:"pato", unidad:"un",
         entra:["aterriza","aterrizan"], sale:["se va volando","se van volando"],
         short:"Mira cómo nadan, aterrizan o despegan los patos.", animateLabel:"▶ Mover patos",
         sceneTitle:"Observa los patos del estanque", answerQuestion:"¿Cuántos patos hay ahora en el estanque?"},
-      en:{title:"Ducks in the pond", lugar:"in the pond", plural:"ducks", singular:"duck",
+      en:{title:"Ducks in the pond", lugar:"in the pond", plural:"ducks", singular:"duck", unidad:"one",
         entra:["lands","land"], sale:["flies away","fly away"],
         short:"Watch the ducks swim, land or take off.", animateLabel:"▶ Move the ducks",
         sceneTitle:"Watch the ducks in the pond", answerQuestion:"How many ducks are in the pond now?"}
@@ -68,23 +68,23 @@
       id:"frutasNevera", clase:"nevera", emoji:"🍎",
       lugares:lugaresNevera,
       fichas:["manzana","pera"],
-      es:{title:"Frutas en la nevera", lugar:"en la nevera", plural:"frutas", singular:"fruta",
+      es:{title:"Frutas en la nevera", lugar:"en la nevera", plural:"frutas", singular:"fruta", unidad:"una",
         entra:["se guarda","se guardan"], sale:["se saca","se sacan"],
         short:"Mira cómo se guardan o se sacan frutas de la nevera.", animateLabel:"▶ Mover frutas",
         sceneTitle:"Observa las frutas de la nevera", answerQuestion:"¿Cuántas frutas hay ahora en la nevera?"},
-      en:{title:"Fruit in the fridge", lugar:"in the fridge", plural:"pieces of fruit", singular:"piece of fruit",
+      en:{title:"Fruit in the fridge", lugar:"in the fridge", plural:"pieces of fruit", singular:"piece of fruit", unidad:"one",
         entra:["is put in","are put in"], sale:["is taken out","are taken out"],
         short:"Watch fruit go into or come out of the fridge.", animateLabel:"▶ Move the fruit",
         sceneTitle:"Watch the fruit in the fridge", answerQuestion:"How many pieces of fruit are in the fridge now?"}
     },
     {
       id:"ninosPiscina", clase:"piscina", emoji:"🏊", lugares:lugaresAgua(13, 12.1, [19,33,47,61,75]),
-      es:{title:"Niños en la piscina", lugar:"en la piscina", plural:"niños", singular:"niño",
+      es:{title:"Niños en la piscina", lugar:"en la piscina", plural:"niños", singular:"niño", unidad:"un",
         entra:["entra","entran"], sale:["sale","salen"],
         avisoEntrada:"Mira cómo bajan por la escalera uno por uno.", avisoSalida:"Cuenta solo a los niños que siguen en el agua.",
         short:"Mira cómo nadan los niños y usan las escaleras para entrar o salir.", animateLabel:"▶ Mover nadadores",
         sceneTitle:"Observa los niños en la piscina", answerQuestion:"¿Cuántos niños hay ahora en la piscina?"},
-      en:{title:"Children in the pool", lugar:"in the pool", plural:"children", singular:"child",
+      en:{title:"Children in the pool", lugar:"in the pool", plural:"children", singular:"child", unidad:"one",
         entra:["gets in","get in"], sale:["gets out","get out"],
         avisoEntrada:"Watch them use the steps one at a time.", avisoSalida:"Count only the children still in the water.",
         short:"Watch the children swim and use the steps to get in or out.", animateLabel:"▶ Move the swimmers",
@@ -111,10 +111,12 @@
 
     function cambioExplicado(cantidad, visual, resaltar) {
       const palabras = texto();
-      const verbo = palabras[recienLlegan() ? "entra" : "sale"][cantidad === 1 ? 0 : 1];
+      const esUno = cantidad === 1;
+      const verbo = palabras[recienLlegan() ? "entra" : "sale"][esUno ? 0 : 1];
       const accion = resaltar ? `<span class="keyAction">${verbo}</span>` : verbo;
-      const numero = visual ? `<strong>${cantidad}</strong>` : cantidad;
-      const objetos = cantidad === 1 ? palabras.singular : palabras.plural;
+      const cuantificador = esUno ? palabras.unidad : cantidad;
+      const numero = visual ? `<strong>${cuantificador}</strong>` : cuantificador;
+      const objetos = esUno ? palabras.singular : palabras.plural;
       return isEnglish() ? `${numero} ${objetos} ${accion}` : `${accion} ${numero} ${objetos}`;
     }
 
