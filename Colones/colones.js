@@ -34,6 +34,7 @@
     vueltoCaja:tiposVuelto.includes(guardado.vueltoCaja)?guardado.vueltoCaja:'correcto'};
   let modo = null, fase, oferta, elegidos, piezas, sobre, dineroCliente, pagado;
   let compraCaja=null;
+  let audioLector;
   let arrastre = null, ignorarClic = false;
   let mesa, posicionesMesa, fichaElegida, animarSobre, cartera, mercanciaCliente, recibidos;
   let avancePasillo=0, animacionPasillo=0, empuje=null, llegadaCaja=null;
@@ -453,16 +454,16 @@
       const menor=opciones.activas[0];
       cartera.set(menor,cartera.get(menor)+1);
     }
-    compraCaja={cartera,empacados:[],pasando:null,cobrado:null,importe:0,vuelto:[],temporizadores:[]};
+    compraCaja={cartera,escaneados:[],pasando:null,cobrado:null,importe:0,vuelto:[],temporizadores:[]};
     cambiarFase('cobro-productos');
     contenido.querySelector('[data-poner-caja]')?.focus({preventScroll:true});
   }
   function verCajaCompra() {
-    const {empacados,pasando,cobrado,importe,vuelto}=compraCaja;
+    const {escaneados,pasando,cobrado,importe,vuelto}=compraCaja;
     const escaneando=fase==='cobro-productos';
     const entregando=fase==='entregando';
     const paso=pasando===null?'':`<span class="producto-en-caja" aria-hidden="true" style="--pasado:${performance.now()-pasando.inicio}ms">${producto(oferta[pasando.i])}</span>`;
-    const restantes=elegidos.filter(i=>!empacados.includes(i)&&i!==pasando?.i);
+    const restantes=elegidos.filter(i=>!escaneados.includes(i)&&i!==pasando?.i);
     const entrega=entregando?`<div class="dinero-en-camino" aria-hidden="true">${vuelto.slice(0,3).map(pieza).join('')}</div>`:'';
     const carrito=escaneando?`<section class="carrito-en-caja" aria-label="${t('Tu carrito')}">
       ${restantes.map(i=>`<button type="button" data-poner-caja="${i}" aria-label="${t('Poner en el mostrador')} · ${t(oferta[i].nombre)}" ${pasando!==null?'disabled':''}>${producto(oferta[i])}<span>${t(oferta[i].nombre)}</span></button>`).join('')}</section>`:'';
@@ -475,7 +476,9 @@
         ${pantalla}
         <div class="lector-caja" aria-hidden="true" ${pasando!==null?`data-escaneando style="--pasado:${performance.now()-pasando.inicio}ms"`:''}></div>
         ${escaneando&&pasando===null?`<div class="zona-colocar">${t('Pon el producto aquí')}</div>`:''}
-        <div class="bolsa-caja" role="group" aria-label="${t('Productos empacados')}">${empacados.map(i=>`<span role="img" aria-label="${t(oferta[i].nombre)}">${producto(oferta[i])}</span>`).join('')}</div>
+        <div class="bandeja-productos-caja" role="group" aria-label="${t('Bandeja de productos escaneados')}">
+          ${escaneados.map(i=>`<span role="img" aria-label="${t(oferta[i].nombre)}">${producto(oferta[i])}</span>`).join('')}
+        </div>
         ${paso}${entrega}
       </div>
       ${carrito}
@@ -500,23 +503,52 @@
       ${fase==='listo'&&mostrandoVuelto?`<p class="resultado-vuelto">${t('Vuelto correcto')} <strong>${formato(aCambio())}</strong></p>`:''}
     </section>`;
   }
+  function prepararSonidoLector() {
+    const Audio=window.AudioContext||window.webkitAudioContext;
+    if(!Audio)return;
+    try{
+      audioLector??=new Audio();
+      if(audioLector.state!=='running')audioLector.resume().catch(()=>{});
+    }catch{}
+  }
+  function sonarLector() {
+    if(!audioLector)return;
+    try{
+      const inicio=audioLector.currentTime;
+      const tono=audioLector.createOscillator(), volumen=audioLector.createGain();
+      tono.frequency.value=2340;
+      volumen.gain.setValueAtTime(.001,inicio);
+      volumen.gain.linearRampToValueAtTime(.08,inicio+.004);
+      volumen.gain.setValueAtTime(.08,inicio+.062);
+      volumen.gain.exponentialRampToValueAtTime(.001,inicio+.087);
+      tono.connect(volumen);
+      volumen.connect(audioLector.destination);
+      tono.onended=()=>{tono.disconnect();volumen.disconnect();};
+      tono.start(inicio);
+      tono.stop(inicio+.09);
+    }catch{}
+  }
   function ponerProductoCaja(i) {
-    if(fase!=='cobro-productos'||compraCaja.pasando!==null||!elegidos.includes(i)||compraCaja.empacados.includes(i))return;
+    if(fase!=='cobro-productos'||compraCaja.pasando!==null||!elegidos.includes(i)||compraCaja.escaneados.includes(i))return;
+    prepararSonidoLector();
     const item=oferta[i];
-    const ultimo=compraCaja.empacados.length+1===elegidos.length;
+    const ultimo=compraCaja.escaneados.length+1===elegidos.length;
     const pasoInmediato=movimientoReducido.matches;
     const registrar=()=>{
       compraCaja.cobrado=i;
       compraCaja.importe+=item.precio;
       contenido.querySelector('[data-costo-producto]').textContent=t(item.nombre)+' · '+formato(item.precio);
       contenido.querySelector('[data-importe-caja]').textContent=formato(compraCaja.importe);
+      sonarLector();
       const costo=idioma(`${item.nombre}, ${formato(item.precio)}.`,`${t(item.nombre)}, ${formato(item.precio)}.`);
       const total=ultimo?idioma(` El total es ${formato(compraCaja.importe)}.`,` The total is ${formato(compraCaja.importe)}.`):'';
-      if(opciones.narracion&&!ajustes.open)leer(costo+total,{interrumpir:false});
+      compraCaja.temporizadores.push(setTimeout(()=>{
+        if(opciones.narracion&&!ajustes.open)leer(costo+total,{interrumpir:false});
+      },110));
     };
-    const empacar=()=>{
+    const colocarEnBandeja=()=>{
       compraCaja.pasando=null;
-      compraCaja.empacados.push(i);
+      compraCaja.escaneados.push(i);
       if(ultimo)cambiarFase('pagar',false);
       else actualizarContenido();
       if(!ajustes.open)(ultimo?banco.firstElementChild:contenido.querySelector('[data-poner-caja]'))?.focus({preventScroll:true});
@@ -525,8 +557,8 @@
     actualizarContenido();
     if(pasoInmediato){
       registrar();
-      empacar();
-    }else compraCaja.temporizadores.push(setTimeout(registrar,540),setTimeout(empacar,1250));
+      colocarEnBandeja();
+    }else compraCaja.temporizadores.push(setTimeout(registrar,540),setTimeout(colocarEnBandeja,1250));
   }
   function entregarVuelto(efectivo) {
     const incorrecto=opciones.vueltoCaja==='incorrecto'||(opciones.vueltoCaja==='mixto'&&entero(0,1)===1);

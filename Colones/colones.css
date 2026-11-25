@@ -624,9 +624,16 @@ button.ficha-mesa { cursor:grab; }
 }
 .lector-caja::after { content:""; position:absolute; inset:46% 13% 36%; background:#8d3333; border-radius:20%; }
 .lector-caja[data-escaneando]::after { animation:destelloCajera 1250ms linear both; animation-delay:calc(-1 * var(--pasado,0ms)); }
-.bolsa-caja { position:absolute; left:7%; top:46%; width:17%; display:flex; align-items:center; justify-content:center; }
-.bolsa-caja span { width:47%; min-width:0; filter:drop-shadow(0 1px 1px #62392b); }
-.bolsa-caja .foto-producto { width:100%; }
+.bandeja-productos-caja {
+  position:absolute; z-index:1; inset:37% auto 30% 1.5%; width:29%;
+  display:flex; align-items:center; justify-content:center; gap:3%; padding:4% 3% 3%;
+  border:clamp(2px,1cqi,5px) solid #42a399; border-bottom-color:#257c78;
+  border-radius:13% 13% 16% 16% / 17% 17% 21% 21%;
+  background:linear-gradient(165deg,#fff4d5 5%,#e6edcf 68%,#cbdfbd);
+  box-shadow:inset 0 0 0 clamp(1px,.45cqi,3px) #1d646144,0 clamp(2px,1cqi,6px) 0 #185c5a,0 clamp(3px,1.3cqi,8px) 2px #59402c65;
+}
+.bandeja-productos-caja span { flex:1 1 0; min-width:0; max-width:53%; filter:drop-shadow(0 1px 1px #62392b85); }
+.bandeja-productos-caja .foto-producto { width:100%; }
 .producto-en-caja {
   position:absolute; z-index:3; width:19%; left:59%; top:59%; pointer-events:none;
   transform:translate(-50%,-58%); animation:escanearCompra 1250ms ease-in-out both; animation-delay:calc(-1 * var(--pasado,0ms));
@@ -636,8 +643,8 @@ button.ficha-mesa { cursor:grab; }
   0% { left:59%; top:61%; transform:translate(-50%,-45%) scale(.86); }
   16% { left:59%; top:59%; transform:translate(-50%,-58%) scale(1); }
   39%,53% { left:37%; top:56%; transform:translate(-50%,-62%) scale(.98); }
-  80% { left:16%; top:40%; transform:translate(-50%,-50%) scale(.85); }
-  100% { left:16%; top:54%; transform:translate(-50%,-50%) scale(.30); }
+  80% { left:16%; top:41%; transform:translate(-50%,-50%) scale(.85); }
+  100% { left:16%; top:53%; transform:translate(-50%,-50%) scale(.47); }
 }
 @keyframes destelloCajera {
   0%,31%,57%,100% { background:#8d3333; box-shadow:none; }
