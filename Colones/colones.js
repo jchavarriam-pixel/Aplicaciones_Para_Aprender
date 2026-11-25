@@ -254,10 +254,13 @@
     const nombre=t(item.nombre);
     const monto=formato(item.precio);
     const mercancia=elegidos.includes(i)?'<span class="hueco-estante" aria-hidden="true"></span>':
-      `<button type="button" class="producto ${opciones.nombresProductos?'con-globo':''}" data-producto="${i}" aria-label="${nombre}, ${monto}">
+      `<button type="button" class="producto" data-producto="${i}" aria-label="${nombre}, ${monto}">
         ${producto(item)}${opciones.nombresProductos?`<span class="globo-producto" aria-hidden="true">${nombre}</span>`:''}
       </button>`;
-    return `<div class="puesto-estante" data-tramo="${Math.floor(i/2)}">${mercancia}<div class="precio-estante"><b>${monto}</b></div></div>`;
+    return `<div class="puesto-estante" data-tramo="${Math.floor(i/2)}" data-lado="${i%2===0?-1:1}">
+      <svg class="mesa-exhibicion" preserveAspectRatio="none" aria-hidden="true">
+        <path class="sombra-mesa"></path><path class="patas-mesa"></path><path class="canto-mesa"></path><path class="tablero-exhibicion"></path>
+      </svg>${mercancia}<div class="precio-estante"><b>${monto}</b></div></div>`;
   }
   function productosEnCesta() {
     return elegidos.map(i=>`<button type="button" data-devolver="${i}" aria-label="${idioma('Devolver '+oferta[i].nombre,'Return '+t(oferta[i].nombre))}">${producto(oferta[i])}</button>`).join('');
@@ -283,20 +286,63 @@
     </div>`;
   }
   const cicloPasillo=valor=>((valor%3)+3)%3;
-  const proyectarAltura=profundidad=>profundidad*(.83+.17*profundidad);
+  // Cámara a 60 grados sobre el piso. La coordenada longitudinal crece hacia el carrito.
+  const senoCamara=Math.sin(Math.PI/3),cosenoCamara=Math.cos(Math.PI/3);
+  function perspectiva(profundidad,altura) {
+    const distancia=2.9-2.28*profundidad,vertical=1.3-altura;
+    const fondo=distancia*cosenoCamara+vertical*senoCamara;
+    return {fondo,vertical:(vertical*cosenoCamara-distancia*senoCamara)/fondo};
+  }
+  const horizonte=perspectiva(-.24,.13).vertical, recorteCercano=perspectiva(1,0).vertical;
+  const proyectar=(x,profundidad,altura=0)=>{
+    const p=perspectiva(profundidad,altura);
+    return {x:50+45*x/p.fondo,y:100*(p.vertical-horizonte)/(recorteCercano-horizonte),fondo:p.fondo};
+  };
+  const trazar= puntos=>puntos.map(({x,y},i)=>`${i?'L':'M'}${x.toFixed(2)} ${y.toFixed(2)}`).join('')+'Z';
   function pintarSuelo(pasillo,avance) {
     const caminos=[];
     const desfase=avance*2%2;
-    const punto=(columna,profundidad)=>
-      `${(50+columna*(8+12*profundidad)).toFixed(2)} ${(100*proyectarAltura(profundidad)).toFixed(2)}`;
+    const punto=(columna,profundidad)=>proyectar(columna*.47,profundidad);
     for(let fila=-2;fila<6;fila++){
       const lejano=(fila+desfase)/6,cercano=lejano+1/6;
       for(let columna=-7;columna<7;columna++){
-        if((fila+columna)%2===0)caminos.push(
-          `M${punto(columna,lejano)}L${punto(columna+1,lejano)} ${punto(columna+1,cercano)} ${punto(columna,cercano)}Z`);
+        if((fila+columna)%2===0)caminos.push(trazar([
+          punto(columna,lejano),punto(columna+1,lejano),punto(columna+1,cercano),punto(columna,cercano)]));
       }
     }
     pasillo.querySelector('.suelo-en-marcha path').setAttribute('d',caminos.join(''));
+  }
+  function pintarMesa(puesto,profundidad) {
+    const lado=Number(puesto.dataset.lado);
+    const interior=lado*.59,exterior=lado*1.48;
+    const lejos=profundidad-.116,cerca=profundidad+.116,altura=.27;
+    const esquinas=[[interior,lejos],[exterior,lejos],[exterior,cerca],[interior,cerca]];
+    const plano=elevacion=>esquinas.map(([x,z])=>proyectar(x,z,elevacion));
+    const tablero=plano(altura),canto=plano(altura-.043),piso=plano(0);
+    const xs=[...tablero,...piso].map(p=>p.x),ys=[...tablero,...piso].map(p=>p.y);
+    const x=Math.min(...xs)-.8,y=Math.min(...ys)-.8;
+    const ancho=Math.max(...xs)-x+.8,alto=Math.max(...ys)-y+.8;
+    const svg=puesto.querySelector('svg');
+    svg.setAttribute('viewBox',`${x} ${y} ${ancho} ${alto}`);
+    svg.querySelector('.sombra-mesa').setAttribute('d',trazar(piso.map(p=>({x:p.x+.65,y:p.y+.7}))));
+    const patas=esquinas.map(([a,z],i)=>{
+      const haciaDentro=i===0||i===3 ? lado*.07 : -lado*.07;
+      return trazar([tablero[i],proyectar(a+haciaDentro,z,altura),proyectar(a+haciaDentro,z),piso[i]]);
+    });
+    svg.querySelector('.patas-mesa').setAttribute('d',patas.join(''));
+    svg.querySelector('.canto-mesa').setAttribute('d',trazar([tablero[0],tablero[3],tablero[2],canto[2],canto[3],canto[0]]));
+    svg.querySelector('.tablero-exhibicion').setAttribute('d',trazar(tablero));
+    const producto=proyectar((interior+exterior)/2,profundidad,altura);
+    const precio=proyectar((interior+exterior)/2,cerca,altura-.045);
+    puesto.style.left=(x-(lado===1?50:0))*2+'%';
+    puesto.style.top=y+'%';
+    puesto.style.width=ancho*2+'%';
+    puesto.style.height=alto+'%';
+    puesto.style.setProperty('--producto-x',(producto.x-x)/ancho*100+'%');
+    puesto.style.setProperty('--producto-y',(Math.max(13,producto.y)-y)/alto*100+'%');
+    puesto.style.setProperty('--precio-x',(precio.x-x)/ancho*100+'%');
+    puesto.style.setProperty('--precio-y',(precio.y-y)/alto*100+'%');
+    puesto.style.setProperty('--escala-producto',Math.min(1.15,1.65/producto.fondo));
   }
   function pintarPasillo() {
     const pasillo=contenido.querySelector('.pasillo');
@@ -306,9 +352,7 @@
     pintarSuelo(pasillo,avance);
     for(const puesto of pasillo.querySelectorAll('[data-tramo]')){
       const profundidad=cicloPasillo(Number(puesto.dataset.tramo)+avancePasillo+.5)/3;
-      puesto.style.setProperty('--bajada-puesto',proyectarAltura(profundidad));
-      puesto.style.setProperty('--hacia-centro',(1-profundidad)*26+'%');
-      puesto.style.setProperty('--escala-puesto',.63+.40*profundidad);
+      pintarMesa(puesto,profundidad);
       const opacidad=Math.min(1,profundidad*12,(1-profundidad)*12);
       puesto.style.opacity=opacidad;
       if(puesto.inert!==(opacidad<.35))puesto.inert=opacidad<.35;
