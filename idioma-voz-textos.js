@@ -402,7 +402,7 @@ Estamos muy felices por tu logro.|We are very happy about your achievement.
 Dedicatoria y créditos|Dedication and credits
 Creado para|Created for
 Por su familia, con ayuda de la IA.|By his family, with help from AI.
-M.Sc. Jeffry Chavarría-Molina y Ph.D. (c) Natalia Rodríguez-Granados|M.Sc. Jeffry Chavarría-Molina and Ph.D. (c) Natalia Rodríguez-Granados
+M.Sc. Jeffry Chavarría-Molina y M.Sc. Natalia Rodríguez-Granados|M.Sc. Jeffry Chavarría-Molina and M.Sc. Natalia Rodríguez-Granados
 Instituto Tecnológico de Costa Rica|Costa Rica Institute of Technology
 Todas las aplicaciones|All apps
 Ajustar zoom|Adjust zoom
