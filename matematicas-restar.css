@@ -55,4 +55,8 @@ body.plegado .reto{padding-top:calc(4*var(--u))}body.plegado .reto h2{width:100%
   width:100%; min-height:40px; padding:5px 8px; border:1px solid #b7c6e2; border-radius:8px;
   background:#f6f8ff; color:var(--tinta); font:inherit;
 }
-.rango-restar .nota-config { grid-column:1/-1; }
+.rango-restar .nota-config,.distribucion-restar { grid-column:1/-1; }
+#configuracionRestar .casilla-config:has(:disabled) { opacity:.6; }
+body { width:var(--ancho-util,100%) !important; min-height:var(--alto) !important; }
+#playArea { display:block; position:relative; }
+#playArea .obj-item { position:absolute; transform:translate(-50%,-50%); }

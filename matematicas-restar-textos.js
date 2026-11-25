@@ -5,6 +5,8 @@ Object.assign(window.TEXTOS_INGLES,{
  'Cómo quitar los objetos':'How to take objects away','Agrupar':'Group objects','Separar el grupo':'Separate the group','Arrastra un objeto sobre otros o muy cerca para juntarlos. Luego lleva el grupo a la cesta. También puedes tocar los objetos para unirlos.':'Drag an object over or near others to join them. Then drag the group into the basket. You can also tap objects to join them.','Herramientas de la actividad':'Activity tools','Volver a las aplicaciones':'Back to applications','Tipo de práctica':'Practice type','Restar quitando objetos':'Subtract by taking objects away','Resta del ejercicio':'Subtraction problem','Objetos y cesta':'Objects and basket','Cesta para quitar objetos':'Basket for objects taken away',
  'Ayudas':'Hints','Mostrar cuánto hay que quitar y cuántos se han quitado':'Show how many to take away and how many have been taken away','Mostrar cuántos objetos quedan':'Show how many objects are left','Leer instrucciones y mensajes':'Read instructions and messages',
  'Cantidad inicial de objetos':'Starting number of objects','Desde':'From','Hasta':'To',
+ 'Distribución de los objetos':'Object layout','En filas':'In rows','En columnas':'In columns','Dispersos':'Scattered',
+ 'Permitir grupos mayores que la cantidad que falta quitar':'Allow groups larger than the amount still to take away',
  'Elige los dos límites. Si son iguales, todas las rondas comienzan con esa cantidad.':'Choose both limits. If they match, every round starts with that number.',
  'Aplicar y volver al juego':'Apply and return to play','Aplicar y cerrar':'Apply and close','Reiniciar este ejercicio':'Restart this question','Ocultar panel':'Hide panel','Mostrar panel':'Show panel'
 });

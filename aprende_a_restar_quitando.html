@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Aprende a restar quitando</title>
-  <link rel="stylesheet" href="creditos.css"><link rel="stylesheet" href="pantalla-completa.css"><link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-restar.css?v=rango-1">
-  <script>window.IDIOMA_VOZ_APP='restarQuitando';</script><script src="idioma-voz-textos.js?v=creditos-msc"></script><script src="matematicas-restar-textos.js?v=rango-1"></script><script src="idioma-voz.js"></script><script src="matematicas-base.js"></script>
+  <link rel="stylesheet" href="creditos.css"><link rel="stylesheet" href="pantalla-completa.css"><link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="matematicas-restar.css?v=distribucion-1">
+  <script>window.IDIOMA_VOZ_APP='restarQuitando';</script><script src="idioma-voz-textos.js?v=creditos-msc"></script><script src="matematicas-restar-textos.js?v=distribucion-1"></script><script src="idioma-voz.js"></script><script src="matematicas-base.js"></script>
 <link rel="stylesheet" href="iconos/cabeceras.css"></head>
 <body>
 <main class="app-wrapper" id="app">
@@ -42,13 +42,25 @@
       <legend>Cantidad inicial de objetos</legend>
       <label>Desde <select id="minimoInicialRestar"></select></label>
       <label>Hasta <select id="maximoInicialRestar"></select></label>
+      <label class="distribucion-restar">Distribución de los objetos
+        <select id="distribucionRestar">
+          <option value="filas">En filas</option>
+          <option value="columnas">En columnas</option>
+          <option value="desorden">Dispersos</option>
+        </select>
+      </label>
       <p class="nota-config">Elige los dos límites. Si son iguales, todas las rondas comienzan con esa cantidad.</p>
     </fieldset>
-    <fieldset><legend>Cómo quitar los objetos</legend><label class="casilla-config"><input type="checkbox" id="agruparRestar">Agrupar</label><p class="nota-config">Arrastra un objeto sobre otros o muy cerca para juntarlos. Luego lleva el grupo a la cesta. También puedes tocar los objetos para unirlos.</p></fieldset>
+    <fieldset>
+      <legend>Cómo quitar los objetos</legend>
+      <label class="casilla-config"><input type="checkbox" id="agruparRestar">Agrupar</label>
+      <label class="casilla-config"><input type="checkbox" id="permitirExcesoRestar">Permitir grupos mayores que la cantidad que falta quitar</label>
+      <p class="nota-config">Arrastra un objeto sobre otros o muy cerca para juntarlos. Luego lleva el grupo a la cesta. También puedes tocar los objetos para unirlos.</p>
+    </fieldset>
     <fieldset><legend>Ayudas</legend><label class="casilla-config"><input type="checkbox" id="mostrarContadores">Mostrar cuánto hay que quitar y cuántos se han quitado</label><label class="casilla-config"><input type="checkbox" id="mostrarRestantes">Mostrar cuántos objetos quedan</label><label class="casilla-config"><input type="checkbox" id="narracionRestar">Leer instrucciones y mensajes</label></fieldset>
     <section id="preferenciasRestar"></section><button class="principal" type="submit">Aplicar y volver al juego</button>
   </form>
 </dialog>
 <footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos"><div class="creditos-dedicatoria"><span class="creditos-gabriel">Creado para <strong>Gabriel</strong></span><span class="creditos-familia">Por su familia, con ayuda de la IA.</span></div><div class="creditos-equipo"><span class="creditos-autores">M.Sc. Jeffry Chavarría-Molina y M.Sc. Natalia Rodríguez-Granados</span><span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span></div></footer>
-<script src="restar-grupos.js"></script><script src="matematicas-restar.js?v=concordancia"></script><script src="pantalla-completa.js"></script><script src="nombre-compartido.js"></script>
+<script src="restar-grupos.js?v=distribucion-1"></script><script src="matematicas-restar.js?v=distribucion-1"></script><script src="pantalla-completa.js"></script><script src="nombre-compartido.js"></script>
 </body></html>

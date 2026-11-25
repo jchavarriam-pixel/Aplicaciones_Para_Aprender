@@ -5,13 +5,17 @@ let numA=0,numB=0,removed=0,emoji='🍎',done=false,lastAudio='',activeDrag=null
 const savedRestar=Matematicas.leer('restarQuitando.config.v1');
 let mode=['mix','yes','no'].includes(savedRestar.mode)?savedRestar.mode:'mix',muted=savedRestar.muted===true;
 let agrupar=savedRestar.agrupar===true,agrupadorRestar=null,avisoAgrupacion=null;
+let permitirExceso=savedRestar.permitirExceso!==false;
+const distribucionesRestar=['filas','columnas','desorden'];
+let distribucion=distribucionesRestar.includes(savedRestar.distribucion)?savedRestar.distribucion:'filas';
+let semillaDistribucion=0;
 let mostrarContadores=savedRestar.mostrarContadores!==false,mostrarRestantes=savedRestar.mostrarRestantes!==false;
-const limiteInicialRestar = 9;
+const limiteInicialRestar = 50;
 const minimoInicialRestar = $('#minimoInicialRestar'), maximoInicialRestar = $('#maximoInicialRestar');
 const esCantidadInicial = n => Number.isInteger(n) && n >= 1 && n <= limiteInicialRestar;
 const rangoGuardado = savedRestar.rangoInicial;
 let rangoInicial = esCantidadInicial(rangoGuardado?.desde) && esCantidadInicial(rangoGuardado?.hasta) && rangoGuardado.desde <= rangoGuardado.hasta
-  ? rangoGuardado : {desde:1,hasta:limiteInicialRestar};
+  ? rangoGuardado : {desde:1,hasta:9};
 for (let n = 1; n <= limiteInicialRestar; n++) {
   minimoInicialRestar.add(new Option(n,n));
   maximoInicialRestar.add(new Option(n,n));
@@ -20,9 +24,10 @@ for (const selector of [minimoInicialRestar,maximoInicialRestar]) {
   selector.addEventListener('change',() => maximoInicialRestar.setCustomValidity(''));
 }
 const t=(es,en)=>IdiomaVoz.idioma==='en'?en:es,rand=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
-const numWords=['cero','uno','dos','tres','cuatro','cinco','seis','siete','ocho','nueve','diez'];
 function obtenerNombreNino(){return $('#nombre').value.trim()||window.NombreCompartido?.obtener()||'Gabriel';}
-function guardarRestar(){Matematicas.guardar('restarQuitando.config.v1',{mode,muted,mostrarContadores,mostrarRestantes,agrupar,rangoInicial});}
+function guardarRestar(){Matematicas.guardar('restarQuitando.config.v1',{mode,muted,mostrarContadores,mostrarRestantes,agrupar,rangoInicial,distribucion,permitirExceso});}
+const ordenarObjetos=(n,w,h)=>distribuirRestar(n,w,h,distribucion,semillaDistribucion);
+const limiteDeGrupo=()=>permitirExceso?Infinity:numB-removed;
 function speak(text){lastAudio=text;if(!muted)IdiomaVoz.hablar(text);}
 function cantidadObjetos(cantidad) {
  if(cantidad===1) return t('un objeto','one object');
@@ -39,7 +44,7 @@ function mensajeResultado(){
  return t(`¡Muy bien, ${nombre}! ${resultado}`,`Well done, ${nombre}! ${resultado}`);
 }
 function audioActual(){
- if(done)return numB<=numA?t(`${mensajeResultado()} ${numWords[numA]} menos ${numWords[numB]} es igual a ${numWords[numA-numB]}.`,`${mensajeResultado()} ${IdiomaVoz.ingles(numA)} minus ${IdiomaVoz.ingles(numB)} equals ${IdiomaVoz.ingles(numA-numB)}.`):mensajeResultado();
+ if(done)return numB<=numA?t(`${mensajeResultado()} ${numA} menos ${numB} es igual a ${numA-numB}.`,`${mensajeResultado()} ${IdiomaVoz.ingles(numA)} minus ${IdiomaVoz.ingles(numB)} equals ${IdiomaVoz.ingles(numA-numB)}.`):mensajeResultado();
  if(removed>0){
   const quedan=numB-removed;
   return t(`Debes quitar ${cantidadObjetos(quedan)} más.`,`Take away ${quedan===1?'one more object':`${quedan} more objects`}.`);
@@ -61,11 +66,11 @@ function actualizarVista(){
 function generateNumbers() {
   const alcanza = mode === 'yes' || (mode === 'mix' && Math.random() < .5);
   numA = rand(rangoInicial.desde,rangoInicial.hasta);
-  numB = alcanza ? rand(1,numA) : rand(numA+1,Math.max(limiteInicialRestar,numA+1));
+  numB = alcanza ? rand(1,numA) : rand(numA+1,Math.max(rangoInicial.hasta,numA+1));
 }
 function buildObjects(){const pa=$('#playArea');pa.replaceChildren();for(let i=0;i<numA;i++){const b=document.createElement('button');b.type='button';b.className='obj-item';b.textContent=emoji;b.dataset.idx=i;b.draggable=false;b.addEventListener('pointerdown',startPointerDrag);b.addEventListener('click',e=>{if(e.detail===0&&!done){if(agrupar)agrupadorRestar.tocar(b);else handleDrop(b);}});pa.append(b);}}
 function resetExercise(){cleanupPointerDrag();agrupadorRestar?.desactivar();avisoAgrupacion=null;done=false;removed=0;$('#objetosQuitados').replaceChildren();buildObjects();if(agrupar)agrupadorRestar.iniciar();actualizarVista();}
-function newExercise(){generateNumbers();emoji=EMOJIS[rand(0,EMOJIS.length-1)];resetExercise();speak(audioActual());}
+function newExercise(){generateNumbers();emoji=EMOJIS[rand(0,EMOJIS.length-1)];semillaDistribucion=Math.random()*1000;resetExercise();speak(audioActual());}
 function setMode(m){if(!['mix','yes','no'].includes(m))return;mode=m;guardarRestar();newExercise();}
 function textoAvisoAgrupacion(){if(!avisoAgrupacion)return '';const {cantidad,faltan}=avisoAgrupacion;return t(`El grupo tiene ${cantidadObjetos(cantidad)}. Solo falta quitar ${cantidadObjetos(faltan)}. Sepáralo para escoger menos.`,`The group has ${cantidadObjetos(cantidad)}. You only need to take away ${cantidadObjetos(faltan)}. Separate it to choose fewer.`);}
 function quitarElementos(items){const valid=[...new Set(items)].filter(b=>b&&!b.classList.contains('removed'));if(done||!valid.length)return false;const faltan=numB-removed;if(valid.length>faltan){avisoAgrupacion={cantidad:valid.length,faltan};actualizarVista();speak(textoAvisoAgrupacion());return false;}avisoAgrupacion=null;for(const item of valid){item.classList.add('removed');item.disabled=true;const s=document.createElement('span');s.className='obj-in';s.textContent=emoji;$('#objetosQuitados').append(s);}removed+=valid.length;done=removed===numB||removed===numA;actualizarVista();speak(audioActual());return true;}
@@ -84,7 +89,10 @@ function abrirConfiguracion() {
   cleanupPointerDrag();
   minimoInicialRestar.value = rangoInicial.desde;
   maximoInicialRestar.value = rangoInicial.hasta;
+  $('#distribucionRestar').value = distribucion;
   $('#agruparRestar').checked = agrupar;
+  $('#permitirExcesoRestar').checked = permitirExceso;
+  actualizarOpcionDeGrupo();
   $('#mostrarContadores').checked = mostrarContadores;
   $('#mostrarRestantes').checked = mostrarRestantes;
   $('#narracionRestar').checked = !muted;
@@ -99,9 +107,13 @@ function cerrarConfiguracion() {
     return;
   }
   const cambioRango = desde !== rangoInicial.desde || hasta !== rangoInicial.hasta;
+  const orden = $('#distribucionRestar').value;
+  const cambioOrden = orden !== distribucion;
   rangoInicial = {desde,hasta};
+  distribucion = orden;
   const anterior = agrupar;
   agrupar = $('#agruparRestar').checked;
+  permitirExceso = $('#permitirExcesoRestar').checked;
   mostrarContadores = $('#mostrarContadores').checked;
   mostrarRestantes = $('#mostrarRestantes').checked;
   muted = !$('#narracionRestar').checked;
@@ -116,18 +128,42 @@ function cerrarConfiguracion() {
     avisoAgrupacion = null;
     if (agrupar) agrupadorRestar.iniciar();
     else agrupadorRestar.desactivar();
-  }
+  } else if (agrupar && cambioOrden) agrupadorRestar.adaptar(false,true);
   actualizarVista();
 }
+function actualizarOpcionDeGrupo(){ $('#permitirExcesoRestar').disabled=!$('#agruparRestar').checked; }
+$('#agruparRestar').addEventListener('change',actualizarOpcionDeGrupo);
 function plegarPanel(){cleanupPointerDrag();plegado=!plegado;document.body.classList.toggle('plegado',plegado);$('#plegarRestar').setAttribute('aria-expanded',String(!plegado));const label=t(plegado?'Mostrar panel':'Ocultar panel',plegado?'Show panel':'Hide panel');$('#plegarRestar').setAttribute('aria-label',label);$('#plegarRestar').title=label;$('#flotantesRestar').hidden=!plegado;(plegado?$('#flotantesRestar'):$('#herramientasRestar')).append($('#ayudasRestar'));(plegado?$('#accionesRestar'):$('#cabeceraRestar')).append($('#volverAplicaciones'));programarAjuste();}
 let frameAjuste=0;
 function programarAjuste(){if(frameAjuste)return;frameAjuste=requestAnimationFrame(()=>{frameAjuste=0;ajustarObjetos();});}
-function ajustarObjetos(){if(agrupar)agrupadorRestar.adaptar();const z=Matematicas.escala();for(const [selector,count,max]of [...(agrupar?[]:[['#playArea',done?numA-removed:numA,92]]),['#objetosQuitados',removed,42]]){const board=$(selector),r=board.getBoundingClientRect(),gap=parseFloat(getComputedStyle(board).gap)*z||0;let best={size:0,cols:1};for(let cols=1;cols<=Math.max(1,count);cols++){const rows=Math.ceil(Math.max(1,count)/cols),size=Math.min(max,(r.width-gap*(cols-1))/cols,(r.height-gap*(rows-1))/rows);if(size>best.size)best={size,cols};}board.style.setProperty('--columnas',best.cols);board.style.setProperty('--obj-size',Math.max(8,best.size)/z+'px');}}
-agrupadorRestar=new AgrupadorRestar({board:$('#playArea'),cesta:$('#dropZone'),alQuitar:quitarElementos,alCambiar:actualizarGrupoRestar,alIniciar:iniciarGestoGrupo,t});
+function ajustarObjetos(){
+ const z=Matematicas.escala();
+ if(agrupar)agrupadorRestar.adaptar();
+ else{
+  const board=$('#playArea'),r=board.getBoundingClientRect();
+  const objetos=[...board.querySelectorAll(done?'.obj-item:not(.removed)':'.obj-item')];
+  const {size,centros}=ordenarObjetos(objetos.length,r.width,r.height);
+  board.style.setProperty('--obj-size',size/z+'px');
+  objetos.forEach((item,i)=>{
+   item.style.left=centros[i].x/z+'px';
+   item.style.top=centros[i].y/z+'px';
+  });
+ }
+ const cesta=$('#objetosQuitados'),r=cesta.getBoundingClientRect(),gap=parseFloat(getComputedStyle(cesta).gap)*z||0;
+ let mejor={size:0,cols:1};
+ for(let cols=1;cols<=removed;cols++){
+  const rows=Math.ceil(removed/cols);
+  const size=Math.min(42,(r.width-gap*(cols-1))/cols,(r.height-gap*(rows-1))/rows);
+  if(size>mejor.size)mejor={size,cols};
+ }
+ cesta.style.setProperty('--columnas',mejor.cols);
+ cesta.style.setProperty('--obj-size',Math.max(1,mejor.size)/z+'px');
+}
+agrupadorRestar=new AgrupadorRestar({board:$('#playArea'),cesta:$('#dropZone'),alQuitar:quitarElementos,alCambiar:actualizarGrupoRestar,alIniciar:iniciarGestoGrupo,ordenar:ordenarObjetos,limite:limiteDeGrupo,t});
 $('#separarGrupoRestar').onclick=()=>agrupadorRestar.separar();$('#dropZone').onclick=()=>{if(agrupar&&!done)agrupadorRestar.quitarSeleccion();};$('#dropZone').onkeydown=e=>{if(agrupar&&['Enter',' '].includes(e.key)){e.preventDefault();agrupadorRestar.quitarSeleccion();}};
 $('#nombre').value=(()=>{try{return localStorage.getItem('nombreNinoGabrielApps')||'Gabriel';}catch{return 'Gabriel';}})();
 $('#nuevaRestar').onclick=newExercise;$('#reiniciarRestar').onclick=()=>{resetExercise();repeatAudio();};$('#repetirRestar').onclick=repeatAudio;$('#configurarRestar').onclick=abrirConfiguracion;$('#cerrarConfiguracionRestar').onclick=cerrarConfiguracion;$('#ajustesRestar').onsubmit=e=>{e.preventDefault();cerrarConfiguracion();};$('#configuracionRestar').addEventListener('cancel',e=>{e.preventDefault();cerrarConfiguracion();});$('#plegarRestar').onclick=plegarPanel;document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
 IdiomaVoz.instalar('#preferenciasRestar',{cambioIdioma:()=>{cleanupPointerDrag();actualizarVista();}});
-Matematicas.pantalla($('#app'),(h,z)=>{const root=document.documentElement,w=innerWidth;root.style.setProperty('--u',1/z+'px');root.style.setProperty('--iz',1/z);root.style.setProperty('--alto',h+'px');root.style.setProperty('--ancho-panel',(innerHeight<450?190:Math.max(240,Math.min(320,w*.25)))/z+'px');$('#app').classList.toggle('compacta',innerHeight<650);programarAjuste();});
+Matematicas.pantalla($('#app'),(h,z)=>{const root=document.documentElement,w=innerWidth;root.style.setProperty('--u',1/z+'px');root.style.setProperty('--iz',1/z);root.style.setProperty('--alto',h+'px');root.style.setProperty('--ancho-util',w/z+'px');root.style.setProperty('--ancho-panel',(innerHeight<450?190:Math.max(240,Math.min(320,w*.25)))/z+'px');$('#app').classList.toggle('compacta',innerHeight<650);programarAjuste();});
 const observarEscena=new ResizeObserver(programarAjuste);observarEscena.observe($('#playArea'));observarEscena.observe($('#objetosQuitados'));addEventListener('resize',cleanupPointerDrag);document.addEventListener('fullscreenchange',cleanupPointerDrag);window.addEventListener('nombre-estudiante-cambiado',()=>{if(numA)actualizarVista();});
 newExercise();
