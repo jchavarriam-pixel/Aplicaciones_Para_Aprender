@@ -40,7 +40,7 @@
   const animacionCanje = get('animacionCanje');
   const lineas = get('lineas');
   const teclado = TecladoEnPantalla.instalar(juego, get('teclado'));
-  const sorpresas = SorpresasValor.instalar(get('sorpresas'));
+  const sorpresas = SorpresasValor.instalar(get('sorpresas'),get('animacionSorpresas'));
   const nombres = ['Unidades','Decenas','Centenas','Millares'];
   const mensajesCanje = ['Diez unidades forman una decena.','Diez decenas forman una centena.','Diez centenas forman un millar.'];
   const abreviaturas = [['U','D','C','UM'], ['O','T','H','Th']];

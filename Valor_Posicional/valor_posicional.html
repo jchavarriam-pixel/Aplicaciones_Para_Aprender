@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="../panel-plegable.css">
   <link rel="stylesheet" href="../teclado-en-pantalla.css">
   <link rel="stylesheet" href="valor_posicional.css?v=plastico">
-  <link rel="stylesheet" href="sorpresas.css?v=12-premios">
+  <link rel="stylesheet" href="sorpresas.css?v=10-sorpresas">
 </head>
 <body>
   <main id="appValor">
@@ -74,7 +74,6 @@
         <p>Toca cada huevo para descubrir qué hay dentro.</p>
         <div id="huevos" class="huevos"></div>
         <p class="solo-lector" id="sorpresaDescubierta" role="status"></p>
-        <canvas id="animacionSorpresas" aria-hidden="true"></canvas>
       </section>
       <div class="acciones-juego">
         <p id="mensaje" role="status"></p>
@@ -96,6 +95,7 @@
   </dialog>
   <canvas id="fantasmaBloque" aria-hidden="true" hidden></canvas>
   <canvas id="animacionCanje" aria-hidden="true" hidden></canvas>
+  <canvas id="animacionSorpresas" aria-hidden="true" hidden></canvas>
   <footer id="creditos-aplicaciones">
     <div class="creditos-dedicatoria"><span class="creditos-gabriel">Creado para <strong>Gabriel</strong></span><span class="creditos-familia">Por su familia, con ayuda de la IA.</span></div>
     <div class="creditos-equipo"><span class="creditos-autores">M.Sc. Jeffry Chavarría-Molina y M.Sc. Natalia Rodríguez-Granados</span><span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span></div>
@@ -110,7 +110,7 @@
   <script src="../panel-plegable.js?v=valor-posicional"></script>
   <script src="../nombre-compartido.js"></script>
   <script src="bloques.js?v=plastico"></script>
-  <script src="sorpresas.js?v=12-premios"></script>
-  <script src="valor_posicional.js?v=concordancia"></script>
+  <script src="sorpresas.js?v=10-sorpresas"></script>
+  <script src="valor_posicional.js?v=sorpresas-pantalla"></script>
 </body>
 </html>
