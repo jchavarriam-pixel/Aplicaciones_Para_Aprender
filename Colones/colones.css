@@ -128,7 +128,10 @@ body:has(#control-pantalla-completa[data-fullscreen=true]) .acciones-juego { pad
   display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:calc(5 * var(--u)); padding-block:calc(4 * var(--u));
 }
 .dinero { position:relative; display:grid; place-items:center; width:var(--ficha-ancho); height:var(--ficha-alto); max-width:100%; }
-.moneda { --ficha-ancho:calc(51 * var(--u)); --ficha-alto:calc(47 * var(--u)); }
+.moneda {
+  --ficha-ancho:calc(min(calc(var(--base-moneda,47) * var(--u) * var(--escala-monedas,1)),var(--tope-moneda,100vw)) * var(--diametro-moneda));
+  --ficha-alto:var(--ficha-ancho);
+}
 .billete {
   --ficha-alto:min(calc(var(--base-billete,48) * var(--u) * var(--escala-billetes,1)),var(--tope-billete,100vw));
   --ficha-ancho:calc(var(--ficha-alto) * var(--largo-billete) / 67);
@@ -141,15 +144,12 @@ body:has(#control-pantalla-completa[data-fullscreen=true]) .acciones-juego { pad
 .origen-dinero,.producto { touch-action:none; cursor:grab; user-select:none; }
 .origen-dinero:active,.producto:active { cursor:grabbing }
 .pieza-colocada { position:relative; }
+button.pieza-colocada:has(.moneda) { min-width:calc(29 * var(--u)); min-height:calc(29 * var(--u)); place-items:center; }
 .piezas-pago { gap:calc(5 * var(--u)); }
-.piezas-pago .moneda {
-  --ficha-alto:calc(38 * var(--u)); --ficha-ancho:calc(38 * var(--u));
-}
+.piezas-pago .moneda { --base-moneda:38; }
 .piezas-pago .billete { --base-billete:38; }
 .pago-entregado { background:#f2f9f4; border-radius:calc(7 * var(--u)); }
-.pago-entregado .moneda,.piezas-pago:has(>:nth-child(7)) .moneda {
-  --ficha-alto:calc(31 * var(--u)); --ficha-ancho:calc(31 * var(--u));
-}
+.pago-entregado .moneda,.piezas-pago:has(>:nth-child(7)) .moneda { --base-moneda:31; }
 .pago-entregado .billete,.piezas-pago:has(>:nth-child(7)) .billete { --base-billete:31; }
 .pila-billetes {
   --borde-pila:calc(6 * var(--u));
@@ -202,7 +202,7 @@ body:has(#control-pantalla-completa[data-fullscreen=true]) .acciones-juego { pad
 .recibo ul { list-style:none; margin:0; padding:0; display:grid; gap:calc(2 * var(--u)); }
 .recibo li { display:grid; align-items:center; grid-template-columns:auto minmax(0,1fr) auto; gap:calc(6 * var(--u)); }
 .pago-cliente { display:flex; justify-content:center; flex-wrap:wrap; gap:calc(4 * var(--u)); padding-bottom:calc(3 * var(--u)); }
-.pago-cliente .moneda { --ficha-ancho:calc(30 * var(--u)); --ficha-alto:calc(30 * var(--u)); }
+.pago-cliente .moneda { --base-moneda:30; }
 .pago-cliente .billete { --base-billete:30; }
 .respuesta { justify-self:center; width:min(100%,calc(380 * var(--u))); display:grid; justify-items:center; gap:calc(4 * var(--u)); font-weight:800 }
 .monto {
@@ -235,12 +235,16 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
 .opciones-dinero label { container-type:inline-size; display:grid; justify-items:center; gap:3px; padding:3px; border-radius:8px; background:#f5f8f0; cursor:pointer; }
 .opciones-dinero input,.casilla input { width:19px; height:19px; accent-color:var(--teal); }
 .opciones-dinero .billete { --base-billete:38; --tope-billete:calc(100cqi * 67 / 153); }
-.ajustes-billetes { display:grid; gap:7px; }
-.escala-billetes { display:flex; align-items:center; gap:9px; }
-.escala-billetes input { flex:1; min-width:0; accent-color:var(--teal); }
-.escala-billetes output { width:4em; text-align:right; font-variant-numeric:tabular-nums; }
-#muestraBilletes { container-type:inline-size; display:flex; align-items:center; justify-content:center; gap:8px; min-height:62px; }
+.opciones-dinero .moneda { --base-moneda:42; --tope-moneda:100cqi; }
+.ajustes-escala { display:grid; gap:7px; }
+.control-escala { display:flex; align-items:center; gap:9px; }
+.control-escala input { flex:1; min-width:0; accent-color:var(--teal); }
+.control-escala output { width:4em; text-align:right; font-variant-numeric:tabular-nums; }
+.muestra-escala { container-type:inline-size; display:flex; align-items:center; justify-content:center; gap:8px; min-height:62px; }
 #muestraBilletes .billete { --base-billete:42; --tope-billete:calc((100cqi - 8px) * 67 / 278); }
+#muestraMonedas { min-height:102px; }
+#muestraMonedas .moneda { --base-moneda:40; --tope-moneda:calc((100cqi - 8px)/2); }
+#banco button:has(.moneda) { min-width:calc(38 * var(--u)); min-height:calc(38 * var(--u)); place-items:center; }
 .casilla { display:flex; align-items:center; gap:6px; }
 .casilla input { flex:none; }
 #errorAjustes { color:#a93020; font-weight:bold; }
@@ -267,7 +271,8 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
   #banco:has(>:nth-child(6)) { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); }
   #banco:has(>:nth-child(6)) .origen-dinero { container-type:inline-size; width:100%; justify-items:center; }
   #banco:has(>:nth-child(6)) .billete { --tope-billete:calc(100cqi * 67 / 153); }
-  #banco .moneda { --ficha-ancho:calc(36 * var(--u)); --ficha-alto:calc(36 * var(--u)); }
+  #banco .moneda { --base-moneda:36; }
+  #banco:has(>:nth-child(6)) .moneda { --tope-moneda:100cqi; }
   .recibo .foto-producto { width:calc(19 * var(--u)); }
   .recibo ul { gap:calc(1 * var(--u)); }
   .recibo li { font-size:calc(13 * var(--u)); }
@@ -286,16 +291,17 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
   .reto p,.guia p { font-size:calc(13 * var(--u)); }
   .juego { padding:calc(5 * var(--u)); }
   .producto .foto-producto { width:calc(42 * var(--u)); }
-  .moneda { --ficha-ancho:calc(42 * var(--u)); --ficha-alto:calc(42 * var(--u)); }
+  #appColones { --base-moneda:42; }
   #appColones { --base-billete:38; }
   .dinero-en-sobre { padding-block:calc(2 * var(--u)); gap:calc(4 * var(--u)); }
   .banco { padding:calc(4 * var(--u)); }
   .banco h3 { font-size:calc(13 * var(--u)); margin-bottom:calc(3 * var(--u)); }
-  .banco .moneda { --ficha-ancho:calc(38 * var(--u)); --ficha-alto:calc(38 * var(--u)); }
+  .banco .moneda { --base-moneda:38; }
   #banco { column-gap:calc(3 * var(--u)); }
   #banco:has(>:nth-child(6)) { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); justify-items:center; }
   #banco:has(>:nth-child(6)) .origen-dinero { container-type:inline-size; width:100%; justify-items:center; }
   #banco:has(>:nth-child(6)) .billete { --tope-billete:calc(100cqi * 67 / 153); }
+  #banco:has(>:nth-child(6)) .moneda { --tope-moneda:100cqi; }
   #banco > button { max-width:100%; }
   .recibo .foto-producto { width:calc(22 * var(--u)); }
   .escena[data-fase=pagar] .recibo ul,.escena[data-fase=dar] .recibo ul { grid-template-columns:repeat(auto-fit,minmax(calc(72 * var(--u)),1fr)); gap:calc(4 * var(--u)); }
@@ -347,7 +353,8 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
   border:1px solid #b88754; border-radius:calc(7 * var(--u)); padding:calc(3 * var(--u)); background:#fff6de;
 }
 .mesa-libre {
-  position:relative; container-type:inline-size; height:clamp(calc(133 * var(--u)),calc(var(--alto,100dvh)*.29),calc(246 * var(--u)));
+  --altura-mesa:clamp(calc(133 * var(--u)),calc(var(--alto,100dvh)*.29),calc(246 * var(--u)));
+  position:relative; container-type:inline-size; height:var(--altura-mesa);
   min-width:0; border-radius:calc(8 * var(--u));
   background:repeating-linear-gradient(5deg,#a66e3f13 0 1px,transparent 1px 17px),#f4d6a3;
   touch-action:none;
@@ -363,8 +370,7 @@ button.ficha-mesa { cursor:grab; }
 .ficha-mesa .dinero { filter:drop-shadow(0 calc(2 * var(--u)) calc(1 * var(--u)) #5f391f66); }
 .ficha-mesa .billete { --tope-billete:min(calc((100cqi - 26 * var(--u)) * 67 / 459),calc(36 * var(--u))); }
 .ficha-mesa .moneda {
-  --ficha-ancho:min(calc(37 * var(--u)),calc((100cqi - 26 * var(--u))/3));
-  --ficha-alto:var(--ficha-ancho);
+  --base-moneda:37; --tope-moneda:min(calc((var(--altura-mesa) - 28 * var(--u))/3),calc((100cqi - 26 * var(--u))/3));
 }
 .contador-caja { border:calc(3 * var(--u)) solid #064b4e; border-radius:calc(18 * var(--u)); padding:calc(8 * var(--u)); background:linear-gradient(#3fafaa,#147977); }
 .pantalla-contador { display:grid; gap:calc(3 * var(--u)); padding:calc(4 * var(--u)); border-radius:calc(9 * var(--u)); background:#09373b; color:#defcbb; }
@@ -441,18 +447,17 @@ button.ficha-mesa { cursor:grab; }
 .cesta-caja .carrito-real > i,.cesta-caja .rejilla-carrito::before,.cesta-caja .rejilla-carrito::after { display:none; }
 .pasillo {
   --alto-pasillo:clamp(calc(219 * var(--u)),calc(var(--alto,100dvh)*.38),calc(350 * var(--u)));
-  --paso-suelo:calc(12 * var(--u));
   position:relative; isolation:isolate; height:var(--alto-pasillo); min-width:0; overflow:hidden;
   border:1px solid #cda575; border-radius:calc(15 * var(--u));
-  background:#f7e2c3 url("imagenes/pasillo-perspectiva.webp") center/100% 100% no-repeat;
+  background:radial-gradient(ellipse at 50% 0,#fbe3b5,#ceb093 64%,#917251);
 }
 .escena[data-fase=elegir] { align-content:safe center; }
 .suelo-en-marcha {
-  position:absolute; inset:0; pointer-events:none; clip-path:polygon(43% 8%,57% 8%,73% 100%,27% 100%);
-  background:repeating-linear-gradient(0deg,transparent 0 calc(3 * var(--paso-suelo) - 1px),#93694e4f calc(3 * var(--paso-suelo) - 1px) calc(3 * var(--paso-suelo)));
-  background-position:0 calc(var(--rodar,0) * var(--paso-suelo));
+  position:absolute; inset:0; width:100%; height:100%; z-index:-1; pointer-events:none;
+  background:#f8d8a9;
 }
-.lado-estante { position:absolute; inset:0 auto 0 1%; width:34%; min-width:0; }
+.suelo-en-marcha path { fill:#e4aa78; }
+.lado-estante { position:absolute; inset:0 auto 0 1%; z-index:1; width:34%; min-width:0; }
 .lado-estante.derecho { left:auto; right:1%; }
 .puesto-estante {
   --caida-puesto:calc(var(--alto-pasillo) * var(--bajada-puesto,.5) - 50%);
@@ -460,11 +465,16 @@ button.ficha-mesa { cursor:grab; }
   transform:translate(var(--hacia-centro,0),var(--caida-puesto)) scale(var(--escala-puesto,1));
   transform-origin:left center;
   display:grid; grid-template-rows:minmax(0,1fr) auto; min-width:0; min-height:0;
-  border:1px solid #875138; border-radius:calc(8 * var(--u)); overflow:hidden;
-  background:linear-gradient(170deg,#a96a3d,#e4ac72 36%,#ce894b);
-  box-shadow:inset 0 calc(4 * var(--u)) calc(5 * var(--u)) #58301c48,0 calc(2 * var(--u)) 0 #673a2480;
+  border:calc(3 * var(--u)) solid #34877d; border-radius:calc(8 * var(--u)); overflow:hidden;
+  background:linear-gradient(165deg,#155753 5%,#287d70 44%,#8acfad 53%,#6eaf8b);
+  box-shadow:inset 0 calc(5 * var(--u)) calc(6 * var(--u)) #13483f99,
+    calc(-3 * var(--u)) calc(5 * var(--u)) 0 #245949,0 calc(8 * var(--u)) calc(10 * var(--u)) #54392580;
 }
-.derecho .puesto-estante { transform-origin:right center; transform:translate(calc(-1 * var(--hacia-centro,0%)),var(--caida-puesto)) scale(var(--escala-puesto,1)); }
+.derecho .puesto-estante {
+  transform-origin:right center; transform:translate(calc(-1 * var(--hacia-centro,0%)),var(--caida-puesto)) scale(var(--escala-puesto,1));
+  box-shadow:inset 0 calc(5 * var(--u)) calc(6 * var(--u)) #13483f99,
+    calc(3 * var(--u)) calc(5 * var(--u)) 0 #245949,0 calc(8 * var(--u)) calc(10 * var(--u)) #54392580;
+}
 .lado-estante .producto {
   display:flex; align-items:center; justify-content:center; gap:calc(5 * var(--u)); padding:calc(3 * var(--u));
   min-width:0; min-height:0; border:0; border-radius:0; background:transparent;
@@ -486,21 +496,21 @@ button.ficha-mesa { cursor:grab; }
 }
 .precio-estante {
   min-height:calc(16 * var(--u)); display:grid; place-items:center;
-  background:linear-gradient(#81512e,#56311f); color:#3d2a19; text-align:center;
-  border-top:1px solid #f8c180; font-size:calc(13 * var(--u)); font-variant-numeric:tabular-nums; line-height:1.07;
+  background:linear-gradient(#318c79,#1a5b51); color:#3d2a19; text-align:center;
+  border-top:1px solid #a5e3c3; font-size:calc(13 * var(--u)); font-variant-numeric:tabular-nums; line-height:1.07;
 }
 .precio-estante b { padding:0 calc(5 * var(--u)); border-radius:calc(3 * var(--u)); background:#ffe3a6; white-space:nowrap; }
-.lado-estante .hueco-estante { border-radius:0; background:#80451d29; }
+.lado-estante .hueco-estante { border-radius:0; background:#174d4930; }
 .camino-carrito {
   --alto-carrito:clamp(calc(107 * var(--u)),calc(var(--alto-pasillo)/2.12),calc(167 * var(--u)));
-  position:absolute; inset:0 34%; display:grid; justify-items:center; z-index:1;
+  position:absolute; inset:0 34%; display:grid; justify-items:center; z-index:2;
   cursor:grab; touch-action:none;
 }
 .camino-carrito:active { cursor:grabbing; }
 .carrito-pasillo {
   position:absolute; bottom:2%;
   height:var(--alto-carrito); width:min(100%,calc(149 * var(--u))); isolation:isolate; border-radius:calc(10 * var(--u));
-  transform:translateY(calc(var(--balance-carrito,0) * var(--u)));
+  transform:translateY(calc(sin(var(--rodar,0) * 1turn) * 2 * var(--u)));
   filter:drop-shadow(0 calc(5 * var(--u)) calc(4 * var(--u)) #51362559);
 }
 .carrito-pasillo > img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; pointer-events:none; }
@@ -566,6 +576,7 @@ button.ficha-mesa { cursor:grab; }
   .precio-estante { min-height:calc(13 * var(--u)); font-size:calc(11 * var(--u)); }
 }
 @media (prefers-reduced-motion:reduce) {
+  .carrito-pasillo { transform:none; }
   .abriendo .solapa-sobre,.abriendo .mesa-libre .dinero,.llega-cliente,.llega-cliente + .mostrador-cliente .producto,
   .entrega-cliente.efectivo-nuevo .pago-cliente .origen-dinero { animation:none; }
 }

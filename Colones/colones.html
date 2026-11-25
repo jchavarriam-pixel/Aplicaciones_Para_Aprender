@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="../idioma-voz.css">
   <link rel="stylesheet" href="../pantalla-completa.css">
   <link rel="stylesheet" href="../panel-plegable.css?v=colones">
-  <link rel="stylesheet" href="colones.css?v=pasillo-continuo">
+  <link rel="stylesheet" href="colones.css?v=estantes-moviles">
 </head>
 <body>
   <main id="appColones">
@@ -64,12 +64,18 @@
         <div id="denominaciones" class="opciones-dinero"></div>
         <p id="errorAjustes" role="alert" hidden>Selecciona al menos una moneda o un billete.</p>
       </fieldset>
-      <fieldset class="ajustes-billetes">
+      <fieldset class="ajustes-escala">
         <legend>Billetes</legend>
         <label class="casilla"><input type="checkbox" id="apilarBilletes"> Apilar billetes del mismo valor</label>
         <label for="tamanoBilletes">Tamaño de los billetes</label>
-        <div class="escala-billetes"><input id="tamanoBilletes" type="range" min="70" max="150" step="5" value="100"><output id="porcentajeBilletes" for="tamanoBilletes">100 %</output></div>
-        <div id="muestraBilletes" aria-hidden="true"></div>
+        <div class="control-escala"><input id="tamanoBilletes" type="range" min="70" max="150" step="5" value="100"><output id="porcentajeBilletes" for="tamanoBilletes">100 %</output></div>
+        <div class="muestra-escala" id="muestraBilletes" aria-hidden="true"></div>
+      </fieldset>
+      <fieldset class="ajustes-escala">
+        <legend>Monedas</legend>
+        <label for="tamanoMonedas">Tamaño de las monedas</label>
+        <div class="control-escala"><input id="tamanoMonedas" type="range" min="50" max="250" step="5" value="100"><output id="porcentajeMonedas" for="tamanoMonedas">100 %</output></div>
+        <div class="muestra-escala" id="muestraMonedas" aria-hidden="true"></div>
       </fieldset>
       <label class="casilla"><input type="checkbox" id="nombresProductos"> Mostrar los nombres de los productos en globos</label>
       <label class="casilla"><input type="checkbox" id="ayudas"> Mostrar pistas y el total del dinero que colocas</label>
@@ -84,7 +90,7 @@
   </footer>
   <script>window.IDIOMA_VOZ_APP = 'colones';</script>
   <script src="../idioma-voz-textos.js?v=creditos-msc"></script>
-  <script src="textos.js?v=pasillo-continuo"></script>
+  <script src="textos.js?v=estantes-moviles"></script>
   <script src="../idioma-voz.js"></script>
   <script src="../matematicas-base.js"></script>
   <script src="../historial-modos.js"></script>
@@ -92,6 +98,6 @@
   <script src="../pantalla-completa.js"></script>
   <script src="../panel-plegable.js?v=colones"></script>
   <script src="../nombre-compartido.js"></script>
-  <script src="colones.js?v=pasillo-continuo"></script>
+  <script src="colones.js?v=estantes-moviles"></script>
 </body>
 </html>

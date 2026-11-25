@@ -122,5 +122,7 @@ Object.assign(window.TEXTOS_INGLES,{
   'Avanzar':'Move forward',
   'Retroceder':'Move back',
   'Mostrar los nombres de los productos en globos':'Show product names in speech bubbles',
-  'Empuja el carrito':'Push the cart'
+  'Empuja el carrito':'Push the cart',
+  'Monedas':'Coins',
+  'Tamaño de las monedas':'Coin size'
 });

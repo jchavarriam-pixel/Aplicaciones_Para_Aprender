@@ -6,6 +6,7 @@
   const clave = 'colones.practica.v1';
   const valores = [10,25,50,100,500,1000,2000,5000,10000,20000];
   const largosBillete = {1000:125,2000:132,5000:139,10000:146,20000:153};
+  const diametrosMoneda = {10:.76,25:.81,50:.87,100:.92,500:1};
   const tipoDinero = valor => valor<1000 ? 'moneda' : 'billete';
   const modos = {
     contador:{nombre:'Contador de dinero',guia:'Agrega dinero y escucha cuánto pusiste y cuánto hay en total.'},
@@ -24,10 +25,11 @@
   const iniciales = [10,25,50,100,500,1000,2000];
   const guardado = Matematicas.leer(clave);
   const activas = valores.filter(valor => Array.isArray(guardado.activas) && guardado.activas.includes(valor));
-  const limitarEscala = valor => Number.isFinite(valor) ? Math.max(70,Math.min(150,valor)) : 100;
+  const limitarEscala = (valor,minimo,maximo) => Number.isFinite(valor) ? Math.max(minimo,Math.min(maximo,valor)) : 100;
   let opciones = {activas:activas.length ? activas : iniciales, ayudas:guardado.ayudas!==false,
     narracion:guardado.narracion!==false, apilarBilletes:guardado.apilarBilletes===true,
-    tamanoBilletes:limitarEscala(guardado.tamanoBilletes), nombresProductos:guardado.nombresProductos!==false};
+    tamanoBilletes:limitarEscala(guardado.tamanoBilletes,70,150),
+    tamanoMonedas:limitarEscala(guardado.tamanoMonedas,50,250), nombresProductos:guardado.nombresProductos!==false};
   let modo = null, fase, oferta, elegidos, piezas, sobre, dineroCliente, pagado;
   let arrastre = null, ignorarClic = false;
   let mesa, posicionesMesa, fichaElegida, animarSobre, cartera, mercanciaCliente, recibidos;
@@ -132,8 +134,8 @@
     cambiarFase(({contador:'medir',contar:'cerrado',llenar:'llenar',alcanza:'decidir',cajero:'escanear'})[modo]||'elegir');
   }
   function pieza(valor) {
-    const medida=largosBillete[valor]?` style="--largo-billete:${largosBillete[valor]}"`:'';
-    return `<span class="dinero ${tipoDinero(valor)}" data-valor="${valor}"${medida} aria-hidden="true"><img src="imagenes/dinero-${valor}.webp" alt="" draggable="false"></span>`;
+    const medida=largosBillete[valor]?`--largo-billete:${largosBillete[valor]}`:`--diametro-moneda:${diametrosMoneda[valor]}`;
+    return `<span class="dinero ${tipoDinero(valor)}" data-valor="${valor}" style="${medida}" aria-hidden="true"><img src="imagenes/dinero-${valor}.webp" alt="" draggable="false"></span>`;
   }
   const etiquetaDinero = valor => idioma(`${formato(valor)} en ${tipoDinero(valor)}`,`${formato(valor)} ${valor<1000?'coin':'banknote'}`);
   function mostrarBanco() {
@@ -263,7 +265,7 @@
   function verPasillo() {
     const columna=(lado,indices)=>`<div class="lado-estante ${lado}" data-estante>${indices.map(verPuesto).join('')}</div>`;
     return `<div class="pasillo" id="estante">
-      <div class="suelo-en-marcha" aria-hidden="true"></div>
+      <svg class="suelo-en-marcha" aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none"><path></path></svg>
       ${columna('izquierdo',[0,2,4])}
       <div class="camino-carrito">
         <div id="cesta" class="carrito-pasillo" role="group" aria-label="${t('Tu carrito')}">
@@ -281,14 +283,30 @@
     </div>`;
   }
   const cicloPasillo=valor=>((valor%3)+3)%3;
+  const proyectarAltura=profundidad=>profundidad*(.83+.17*profundidad);
+  function pintarSuelo(pasillo,avance) {
+    const caminos=[];
+    const desfase=avance*2%2;
+    const punto=(columna,profundidad)=>
+      `${(50+columna*(8+12*profundidad)).toFixed(2)} ${(100*proyectarAltura(profundidad)).toFixed(2)}`;
+    for(let fila=-2;fila<6;fila++){
+      const lejano=(fila+desfase)/6,cercano=lejano+1/6;
+      for(let columna=-7;columna<7;columna++){
+        if((fila+columna)%2===0)caminos.push(
+          `M${punto(columna,lejano)}L${punto(columna+1,lejano)} ${punto(columna+1,cercano)} ${punto(columna,cercano)}Z`);
+      }
+    }
+    pasillo.querySelector('.suelo-en-marcha path').setAttribute('d',caminos.join(''));
+  }
   function pintarPasillo() {
     const pasillo=contenido.querySelector('.pasillo');
     if(!pasillo)return;
-    pasillo.style.setProperty('--rodar',cicloPasillo(avancePasillo));
-    pasillo.style.setProperty('--balance-carrito',movimientoReducido.matches?0:Math.sin(avancePasillo*Math.PI*2)*2);
+    const avance=cicloPasillo(avancePasillo);
+    pasillo.style.setProperty('--rodar',avance);
+    pintarSuelo(pasillo,avance);
     for(const puesto of pasillo.querySelectorAll('[data-tramo]')){
       const profundidad=cicloPasillo(Number(puesto.dataset.tramo)+avancePasillo+.5)/3;
-      puesto.style.setProperty('--bajada-puesto',profundidad*(.83+.17*profundidad));
+      puesto.style.setProperty('--bajada-puesto',proyectarAltura(profundidad));
       puesto.style.setProperty('--hacia-centro',(1-profundidad)*26+'%');
       puesto.style.setProperty('--escala-puesto',.63+.40*profundidad);
       const opacidad=Math.min(1,profundidad*12,(1-profundidad)*12);
@@ -777,16 +795,24 @@
   TecladoEnPantalla.instalar($('respuesta'),$('teclado'),{limpiar:true});
 
   const ajustes=$('ajustes');
-  const deslizador=$('tamanoBilletes');
+  const controlesTamano=[
+    {control:$('tamanoBilletes'),salida:$('porcentajeBilletes'),clase:'billetes',preferencia:'tamanoBilletes'},
+    {control:$('tamanoMonedas'),salida:$('porcentajeMonedas'),clase:'monedas',preferencia:'tamanoMonedas'}
+  ];
   $('muestraBilletes').innerHTML=[1000,20000].map(pieza).join('');
+  $('muestraMonedas').innerHTML=[25,500].map(pieza).join('');
   function previsualizarTamano() {
-    const valor=Number(deslizador.value);
-    ajustes.style.setProperty('--escala-billetes',valor/100);
-    $('porcentajeBilletes').value=valor+' %';
+    for(const {control,salida,clase} of controlesTamano){
+      const valor=Number(control.value);
+      ajustes.style.setProperty('--escala-'+clase,valor/100);
+      salida.value=valor+' %';
+    }
   }
-  deslizador.addEventListener('input',previsualizarTamano);
+  for(const {control} of controlesTamano)control.addEventListener('input',previsualizarTamano);
   function aplicarTamano() {
-    document.documentElement.style.setProperty('--escala-billetes',opciones.tamanoBilletes/100);
+    for(const {clase,preferencia} of controlesTamano){
+      document.documentElement.style.setProperty('--escala-'+clase,opciones[preferencia]/100);
+    }
   }
   function rotularAjustes() {
     $('denominaciones').innerHTML=valores.map(valor=>`<label><input type="checkbox" value="${valor}" aria-label="${etiquetaDinero(valor)}" ${opciones.activas.includes(valor)?'checked':''}>${pieza(valor)}</label>`).join('');
@@ -803,7 +829,7 @@
     $('narracion').checked=opciones.narracion;
     $('apilarBilletes').checked=opciones.apilarBilletes;
     $('nombresProductos').checked=opciones.nombresProductos;
-    deslizador.value=opciones.tamanoBilletes;
+    for(const {control,preferencia} of controlesTamano)control.value=opciones[preferencia];
     previsualizarTamano();
     $('errorAjustes').hidden=true;
     IdiomaVoz.iniciarEdicion();
@@ -814,7 +840,9 @@
     if(!activas.length){$('errorAjustes').hidden=false;return;}
     const cambio=activas.join()!==opciones.activas.join();
     opciones={activas,ayudas:$('ayudas').checked,narracion:$('narracion').checked,
-      apilarBilletes:$('apilarBilletes').checked,tamanoBilletes:limitarEscala(Number(deslizador.value)),
+      apilarBilletes:$('apilarBilletes').checked,
+      tamanoBilletes:limitarEscala(Number($('tamanoBilletes').value),70,150),
+      tamanoMonedas:limitarEscala(Number($('tamanoMonedas').value),50,250),
       nombresProductos:$('nombresProductos').checked};
     Matematicas.guardar(clave,opciones);
     aplicarTamano();
