@@ -339,10 +339,16 @@
     puesto.style.width=ancho*2+'%';
     puesto.style.height=alto+'%';
     puesto.style.setProperty('--producto-x',(producto.x-x)/ancho*100+'%');
-    puesto.style.setProperty('--producto-y',(Math.max(13,producto.y)-y)/alto*100+'%');
+    puesto.style.setProperty('--producto-y',(producto.y+2.5-y)/alto*100+'%');
     puesto.style.setProperty('--precio-x',(precio.x-x)/ancho*100+'%');
     puesto.style.setProperty('--precio-y',(precio.y-y)/alto*100+'%');
     puesto.style.setProperty('--escala-producto',Math.min(1.15,1.65/producto.fondo));
+  }
+  function profundidadMesa(fase) {
+    // El ciclo se cierra fuera del encuadre para que el recorte de la escena oculte el salto.
+    const entrada=Math.max(0,1-fase*6);
+    const salida=Math.max(0,fase*6-5);
+    return fase-.66*entrada**2+.50*salida**2;
   }
   function pintarPasillo() {
     const pasillo=contenido.querySelector('.pasillo');
@@ -351,11 +357,11 @@
     pasillo.style.setProperty('--rodar',avance);
     pintarSuelo(pasillo,avance);
     for(const puesto of pasillo.querySelectorAll('[data-tramo]')){
-      const profundidad=cicloPasillo(Number(puesto.dataset.tramo)+avancePasillo+.5)/3;
+      const faseMesa=cicloPasillo(Number(puesto.dataset.tramo)+avancePasillo+.5)/3;
+      const profundidad=profundidadMesa(faseMesa);
       pintarMesa(puesto,profundidad);
-      const opacidad=Math.min(1,profundidad*12,(1-profundidad)*12);
-      puesto.style.opacity=opacidad;
-      if(puesto.inert!==(opacidad<.35))puesto.inert=opacidad<.35;
+      const fuera=profundidad<-.55||profundidad>1.39;
+      if(puesto.inert!==fuera)puesto.inert=fuera;
     }
   }
   function detenerPasillo() {
