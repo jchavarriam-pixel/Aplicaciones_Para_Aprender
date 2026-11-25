@@ -4,34 +4,28 @@
   const app = $('appColones'), escena = $('escena');
   const contenido = $('contenido'), banco = $('banco'), monto = $('monto');
   const clave = 'colones.practica.v1';
-  const dinero = {
-    10:{tipo:'moneda',tema:'plata',marca:'◆'},
-    25:{tipo:'moneda',tema:'laton',marca:'✿'},
-    50:{tipo:'moneda',tema:'plata',marca:'✦'},
-    100:{tipo:'moneda',tema:'oro',marca:'❖'},
-    500:{tipo:'moneda',tema:'bimetal',marca:'✺'},
-    1000:{tipo:'billete',tema:'rojo',marca:'🦌'},
-    2000:{tipo:'billete',tema:'azul',marca:'🦈'},
-    5000:{tipo:'billete',tema:'amarillo',marca:'🐒'},
-    10000:{tipo:'billete',tema:'verde',marca:'🦥'},
-    20000:{tipo:'billete',tema:'coral',marca:'🐦'}
-  };
-  const valores = Object.keys(dinero).map(Number);
+  const valores = [10,25,50,100,500,1000,2000,5000,10000,20000];
+  const tipoDinero = valor => valor<1000 ? 'moneda' : 'billete';
   const modos = {
-    contar:{nombre:'Cantidad en el sobre',guia:'Abre el sobre, cuenta y escribe cuánto dinero hay.',icono:'✉',tema:'lila'},
-    llenar:{nombre:'Preparar un sobre',guia:'Elige monedas y billetes para formar una cantidad.',icono:'✉',tema:'cielo'},
-    exacto:{nombre:'Compra exacta',guia:'Elige un producto y paga su precio exacto en la caja.',icono:'🍎',tema:'menta'},
-    compra:{nombre:'Compra con vuelto',guia:'Compra un producto, paga de más y calcula el vuelto.',icono:'🧾',tema:'durazno'},
-    carrito:{nombre:'Carrito de compras',guia:'Compra de dos a tres productos, paga y calcula el vuelto.',icono:'🛒',tema:'rosa'},
-    cajero:{nombre:'Soy el cajero',guia:'Cobra los productos y entrega el vuelto al cliente.',icono:'🔔',tema:'oro'}
+    contador:{nombre:'Contador de dinero',guia:'Agrega dinero y escucha cuánto pusiste y cuánto hay en total.'},
+    contar:{nombre:'Cantidad en el sobre',guia:'Abre el sobre, cuenta y escribe cuánto dinero hay.'},
+    llenar:{nombre:'Preparar un sobre',guia:'Elige monedas y billetes para formar una cantidad.'},
+    alcanza:{nombre:'¿Me alcanza?',guia:'Compara tu dinero con el precio de un producto.'},
+    exacto:{nombre:'Compra exacta',guia:'Elige un producto y paga su precio exacto en la caja.'},
+    compra:{nombre:'Compra con vuelto',guia:'Compra un producto, paga de más y calcula el vuelto.'},
+    carrito:{nombre:'Carrito de compras',guia:'Compra de dos a tres productos, paga y calcula el vuelto.'},
+    cajero:{nombre:'Soy el cajero',guia:'Pasa los productos, recibe el pago y entrega el vuelto.'}
   };
   const productos = ['Manzana','Pan','Leche','Jugo','Cuaderno','Lápiz','Bananas','Pelota','Mochila'];
+  const rangosPrecio = [[250,650],[350,1000],[700,1450],[400,1100],[800,3800],
+    [100,550],[175,525],[1800,8000],[6500,24500]];
   const iniciales = [10,25,50,100,500,1000,2000];
   const guardado = Matematicas.leer(clave);
   const activas = valores.filter(valor => Array.isArray(guardado.activas) && guardado.activas.includes(valor));
   let opciones = {activas:activas.length ? activas : iniciales, ayudas:guardado.ayudas!==false, narracion:guardado.narracion!==false};
   let modo = null, fase, oferta, elegidos, piezas, sobre, dineroCliente, pagado;
   let arrastre = null, ignorarClic = false;
+  let mesa, fichaElegida, animarSobre, cartera, mercanciaCliente, recibidos;
   const t = texto => IdiomaVoz.t(texto);
   const en = () => IdiomaVoz.idioma==='en';
   const idioma = (es,ingles) => en() ? ingles : es;
@@ -52,17 +46,26 @@
   function formar(cantidad,disponibles=opciones.activas) {
     return Array.from({length:cantidad},()=>tomar(disponibles));
   }
-  function escalaPrecios(indice) {
-    const disponibles=opciones.activas;
-    // Los productos baratos usan el tramo inicial de las denominaciones activas.
-    const tope=Math.min(disponibles.length,indice<4?Math.max(1,disponibles.length-3):disponibles.length);
-    const maximo=disponibles.slice(0,tope);
-    return formar(entero(1,indice<4?2:3),maximo);
-  }
   function prepararProductos() {
+    const candidatos=new Map([[0,[]]]);
+    // Tres piezas por producto dejan espacio para pagar varios artículos con el mismo banco.
+    for(let n=0;n<3;n++){
+      for(const [actual,piezas] of [...candidatos]){
+        for(const valor of opciones.activas){
+          const monto=actual+valor;
+          if(!candidatos.has(monto))candidatos.set(monto,[...piezas,valor]);
+        }
+      }
+    }
+    candidatos.delete(0);
+    const montos=[...candidatos.keys()];
     return barajar(productos.map((nombre,id)=>{
-      const monedas=escalaPrecios(id);
-      return {nombre,id,monedas,precio:sumar(monedas)};
+      const [min,max]=rangosPrecio[id];
+      const dentro=montos.filter(x=>x>=min&&x<=max);
+      const distancia=x=>Math.max(min-x,x-max,0);
+      const cercanos=dentro.length?dentro:[...montos].sort((a,b)=>distancia(a)-distancia(b)).slice(0,2);
+      const precio=tomar(cercanos);
+      return {nombre,id,monedas:candidatos.get(precio),precio};
     })).slice(0,6);
   }
   // Busca combinaciones de vuelto sin asumir que las denominaciones son múltiplos entre sí.
@@ -90,25 +93,44 @@
     elegidos=[];
     piezas=[];
     sobre=formar(modo==='contar'?entero(3,7):entero(2,5));
+    mesa=Array.from({length:10},(_,i)=>sobre[i]??null);
+    fichaElegida=null;
+    animarSobre=false;
+    cartera=[];
     pagado=0;
     dineroCliente=[];
     if(modo==='cajero'){
-      elegidos=oferta.slice(0,entero(2,3)).map((_,i)=>i);
-      dineroCliente=compactar(elegidos.flatMap(i=>oferta[i].monedas).concat(formar(entero(1,3))));
+      mercanciaCliente=oferta.slice(0,entero(2,3)).map((_,i)=>i);
+      recibidos=new Set();
+      const extra=entero(1,4)===1?[]:formar(entero(1,3));
+      dineroCliente=compactar(mercanciaCliente.flatMap(i=>oferta[i].monedas).concat(extra));
     }
-    cambiarFase(({contar:'cerrado',llenar:'llenar',cajero:'cobrar'})[modo]||'elegir');
+    if(modo==='alcanza'){
+      const item=oferta[0];
+      const tieneSuficiente=entero(0,1)===0;
+      if(tieneSuficiente){
+        cartera=item.monedas.concat(formar(entero(0,1)));
+      }else if(item.monedas.length>1){
+        cartera=item.monedas.slice(0,-1);
+      }else{
+        const valorMenor=opciones.activas[0];
+        cartera=[valorMenor];
+        if(valorMenor>=item.precio)item.precio+=valorMenor;
+      }
+      cartera=barajar(cartera);
+    }
+    cambiarFase(({contador:'medir',contar:'cerrado',llenar:'llenar',alcanza:'decidir',cajero:'escanear'})[modo]||'elegir');
   }
   function pieza(valor) {
-    const {tipo,tema,marca}=dinero[valor];
-    return `<span class="dinero ${tipo} ${tema}" aria-hidden="true"><i>${marca}</i><b>${formato(valor)}</b><small>${t('Práctica')}</small></span>`;
+    return `<span class="dinero ${tipoDinero(valor)}" data-valor="${valor}" aria-hidden="true"><img src="imagenes/dinero-${valor}.webp" alt="" draggable="false"></span>`;
   }
-  const etiquetaDinero = valor => idioma(`${formato(valor)} en ${dinero[valor].tipo==='moneda'?'moneda':'billete'}`,`${formato(valor)} ${dinero[valor].tipo==='moneda'?'coin':'banknote'}`);
+  const etiquetaDinero = valor => idioma(`${formato(valor)} en ${tipoDinero(valor)}`,`${formato(valor)} ${valor<1000?'coin':'banknote'}`);
   function mostrarBanco() {
     banco.innerHTML=opciones.activas.map(valor=>`<button type="button" class="origen-dinero" data-dinero="${valor}" aria-label="${etiquetaDinero(valor)}">${pieza(valor)}</button>`).join('');
   }
   function mostrarModos() {
-    $('modos').innerHTML=Object.entries(modos).map(([id,{nombre,guia,icono,tema}]) =>
-      `<button type="button" class="tarjeta ${tema}" data-modo="${id}"><span class="arte-modo" aria-hidden="true"><span>${icono}</span><i>₡</i></span><strong>${t(nombre)}</strong><span>${t(guia)}</span></button>`
+    $('modos').innerHTML=Object.entries(modos).map(([id,{nombre,guia}],i) =>
+      `<button type="button" class="tarjeta" data-modo="${id}"><span class="arte-modo" style="--col:${i%4};--fila:${Math.floor(i/4)}" aria-hidden="true"></span><strong>${t(nombre)}</strong><span>${t(guia)}</span></button>`
     ).join('');
   }
   function producto(item) {
@@ -117,19 +139,48 @@
   function etiquetaTotal(texto,valor) {
     return `<div class="dato-total"><span>${t(texto)}</span><strong>${formato(valor)}</strong></div>`;
   }
-  const fasesDinero = new Set(['llenar','pagar','dar']);
-  const fasesNumericas = new Set(['contar','cobrar','vuelto']);
+  const fasesDinero = new Set(['medir','llenar','pagar','dar']);
+  const fasesNumericas = new Set(['contar','vuelto']);
+  function envoltura() {
+    return '<span class="cuerpo-sobre" aria-hidden="true"><span class="solapa-sobre"></span><span class="sello">₡</span></span>';
+  }
+  function verMesa() {
+    const editable=fase==='contar';
+    const fichas=mesa.map((valor,i)=>{
+      const interior=valor?pieza(valor):'';
+      const etiqueta=valor?etiquetaDinero(valor):idioma(`Espacio ${i+1}`,`Space ${i+1}`);
+      const marca=`class="celda-mesa" data-celda="${i}" style="--turno:${i}" aria-label="${etiqueta}"`;
+      return editable
+        ? `<button type="button" ${marca} aria-pressed="${fichaElegida===i}">${interior}</button>`
+        : `<span ${marca} ${valor?'role="img"':''}>${interior}</span>`;
+    }).join('');
+    return `<section class="tablero-mesa ${animarSobre?'abriendo':''}">
+      <header><div class="sobre-mini">${envoltura()}</div><h3>${t('Dinero sobre la mesa')}</h3>
+      ${editable?`<button type="button" id="ordenarMesa">${t('Agrupar por valor')}</button>`:''}</header>
+      <div class="dinero-en-sobre mesa" aria-label="${t('Dinero sobre la mesa')}">${fichas}</div>
+      ${editable?'':etiquetaTotal('Monto del sobre',sumar(sobre))}
+      </section>`;
+  }
   function verSobre() {
-    if(fase==='cerrado') return `<button type="button" class="sobre cerrado" id="abrirSobre"><span class="sello" aria-hidden="true">₡</span><strong>${t('Abrir sobre')}</strong></button>`;
-    if(modo==='contar'){
-      const total=fase==='listo'?etiquetaTotal('Monto del sobre',sumar(sobre)):'';
-      return `<section class="sobre abierto"><h3>${t('Dinero en el sobre')}</h3><div class="dinero-en-sobre">${sobre.map(valor=>`<span aria-label="${etiquetaDinero(valor)}" role="img">${pieza(valor)}</span>`).join('')}</div>${total}</section>`;
-    }
+    if(fase==='cerrado') return `<button type="button" class="sobre cerrado" id="abrirSobre">${envoltura()}<strong>${t('Abrir sobre')}</strong></button>`;
+    if(modo==='contar')return verMesa();
     return `<div class="meta-sobre">${etiquetaTotal('Tu sobre',sumar(sobre))}</div>`+destino('Dinero en el sobre','sobre abierto');
+  }
+  function verContador() {
+    return `<section class="contador-caja"><div class="pantalla-contador">
+      ${etiquetaTotal('Última pieza',piezas.at(-1)??0)}${etiquetaTotal('Total contado',sumar(piezas))}</div>
+      ${destino('Pon aquí el dinero')}</section>`;
+  }
+  function verAlcance() {
+    const item=oferta[0];
+    return `<div class="reto-alcance"><section class="producto-alcance">${producto(item)}<h3>${t(item.nombre)}</h3><b class="etiqueta-precio">${formato(item.precio)}</b></section>
+      <section class="cartera"><h3>${t('Tu dinero')}</h3><div class="dinero-en-sobre">${cartera.map(valor=>`<span role="img" aria-label="${etiquetaDinero(valor)}">${pieza(valor)}</span>`).join('')}</div>
+      ${opciones.ayudas||fase==='listo'?etiquetaTotal('Total disponible',sumar(cartera)):''}</section></div>
+      ${fase==='decidir'?`<div class="decidir"><button type="button" data-alcanza="si">${t('Sí me alcanza')}</button><button type="button" data-alcanza="no">${t('No me alcanza')}</button></div>`:''}`;
   }
   function destino(rotulo,estilo='mostrador') {
     const conteos=contarPiezas(piezas);
-    const editable=fase!=='listo';
+    const editable=fasesDinero.has(fase);
     const fichas=opciones.activas.filter(valor=>conteos.has(valor)).map(valor=>{
       const cantidad=conteos.get(valor);
       const interior=pieza(valor)+(cantidad>1?`<b class="cantidad-piezas">×${cantidad}</b>`:'');
@@ -137,8 +188,8 @@
       return editable?`<button type="button" class="pieza-colocada" data-quitar="${valor}" aria-label="${quitar}">${interior}</button>`:
         `<span class="pieza-colocada" role="img" aria-label="${cantidad} × ${etiquetaDinero(valor)}">${interior}</span>`;
     }).join('');
-    return `<section id="destinoDinero" class="${estilo} zona-dinero"><header><h3>${t(rotulo)}</h3>${(opciones.ayudas||!editable)&&fichas?`<b>${formato(sumar(piezas))}</b>`:''}</header>
-      <div class="piezas-colocadas">${fichas||`<span>${t('Toca o arrastra una pieza.')}</span>`}</div></section>`;
+    return `<section id="destinoDinero" class="${estilo} zona-dinero"><header><h3>${t(rotulo)}</h3>${modo!=='contador'&&(opciones.ayudas||fase==='listo')&&fichas?`<b>${formato(sumar(piezas))}</b>`:''}</header>
+      <div class="piezas-colocadas">${fichas||`<span>${t(fase==='recibir'?'Guarda aquí el pago del cliente.':'Toca o arrastra una pieza.')}</span>`}</div></section>`;
   }
   function contarPiezas(lista) {
     const conteos=new Map();
@@ -157,16 +208,24 @@
     }
     return [...conteos].sort(([a],[b])=>b-a).flatMap(([valor,n])=>Array(n).fill(valor));
   }
-  function verPagoCliente() {
-    const pago=[...contarPiezas(dineroCliente)].map(([valor,n])=>
-      `<span class="pieza-colocada" role="img" aria-label="${n} × ${etiquetaDinero(valor)}">${pieza(valor)}${n>1?`<b class="cantidad-piezas">×${n}</b>`:''}</span>`).join('');
-    return etiquetaTotal('El cliente paga',sumar(dineroCliente))+`<div class="pago-cliente">${pago}</div>`;
-  }
   function estante() {
-    return `<div class="estante">${oferta.map((item,i)=>{
-      const seleccionado=elegidos.includes(i);
-      return `<button type="button" class="producto" data-producto="${i}" aria-pressed="${seleccionado}">${producto(item)}<span><strong>${t(item.nombre)}</strong><b>${formato(item.precio)}</b></span></button>`;
-    }).join('')}</div><section class="cesta" id="cesta"><h3>${t(elegidos.length?'Productos elegidos':'Pon aquí los productos')}</h3><div>${elegidos.map(i=>producto(oferta[i])).join('')}</div>${elegidos.length?`<strong>${formato(precio())}</strong>`:''}</section>`;
+    const somosCajero=modo==='cajero';
+    const indices=somosCajero?mercanciaCliente:oferta.map((_,i)=>i);
+    return `<div class="estante ${somosCajero?'mostrador-cliente':''}" id="estante">${indices.map(i=>elegidos.includes(i)
+      ? '<span class="hueco-estante" aria-hidden="true"></span>'
+      : `<button type="button" class="producto" data-producto="${i}">${producto(oferta[i])}<span><strong>${t(oferta[i].nombre)}</strong><b class="etiqueta-precio">${formato(oferta[i].precio)}</b></span></button>`
+    ).join('')}</div><section class="cesta ${somosCajero?'cesta-caja':''}" id="cesta"><header><h3>${t(somosCajero?'Cesta de la caja':elegidos.length?'Tu carrito':'Pon aquí los productos')}</h3>${elegidos.length||somosCajero?`<strong data-total-carrito>${formato(precio())}</strong>`:''}</header>
+      <div class="carrito-real"><div class="rejilla-carrito">${elegidos.map(i=>`<button type="button" data-devolver="${i}" aria-label="${idioma('Devolver '+oferta[i].nombre,'Return '+t(oferta[i].nombre))}">${producto(oferta[i])}</button>`).join('')}</div><i aria-hidden="true"></i></div></section>`;
+  }
+  function vistaCliente(mensaje) {
+    return `<div class="cliente ${fase==='escanear'&&!elegidos.length?'llega-cliente':''}"><img src="imagenes/cliente.webp" alt=""><p>${t(mensaje)}</p></div>`;
+  }
+  function recibirPago() {
+    const efectivo=dineroCliente.map((valor,i)=>recibidos.has(i)?'':
+      `<button type="button" class="origen-dinero" data-recibir="${i}" aria-label="${etiquetaDinero(valor)}">${pieza(valor)}</button>`).join('');
+    return vistaCliente('Aquí está mi pago.')+
+      `<div class="entrega-cliente ${recibidos.size?'':'efectivo-nuevo'}"><h3>${t('Dinero en el mostrador')}</h3><div class="pago-cliente">${efectivo||`<span>${t('Pago guardado en la caja.')}</span>`}</div></div>`+
+      destino('Caja registradora','mostrador caja-registradora');
   }
   function comprobante() {
     const esCajero=modo==='cajero';
@@ -176,32 +235,39 @@
     }).join('');
     return `<section class="recibo">
       <ul ${esCajero?'aria-label="'+t('Productos del cliente')+'"':''}>${listado}</ul>
-      ${fase==='cobrar'?'':etiquetaTotal('Precio total',precio())}
-      ${fase==='dar'||(esCajero&&fase==='listo')?verPagoCliente():''}
+      ${etiquetaTotal('Precio total',precio())}
+      ${esCajero&&(fase==='dar'||fase==='listo')?etiquetaTotal('El cliente paga',pagado):''}
       ${!esCajero&&(fase==='vuelto'||(fase==='listo'&&pagado))?etiquetaTotal('Pagaste',pagado):''}
       ${fase==='listo'&&pagado?etiquetaTotal('Vuelto',aCambio()):''}
       </section>`;
   }
   function instruccion() {
     switch(fase){
+      case 'medir': return t('Toca o arrastra monedas y billetes al contador.');
+      case 'decidir': return t('¿Te alcanza el dinero para comprarlo?');
       case 'cerrado': return t('Toca el sobre para abrirlo.');
-      case 'contar': return t('¿Cuánto dinero hay en total?');
+      case 'contar': return t('Acomoda el dinero y escribe cuánto hay en total.');
       case 'llenar': return idioma(`Pon ${formato(sumar(sobre))} en el sobre.`,`Put ${formato(sumar(sobre))} in the envelope.`);
       case 'elegir': return t(modo==='carrito'?'Escoge de dos a tres productos y llévalos a la caja.':'Escoge un producto y llévalo a la caja.');
       case 'pagar': return t(modo==='exacto'?'Pon el pago exacto en la caja.':'Paga más que el total y calcula el vuelto.');
       case 'vuelto': return t('¿Cuánto vuelto deben darte?');
-      case 'cobrar': return t('¿Cuánto debes cobrar por los productos?');
+      case 'escanear': return t('Pasa a la cesta cada producto que puso el cliente.');
+      case 'recibir': return t('Toma el dinero del mostrador y guárdalo en la caja.');
       case 'dar': return t('Forma el vuelto y entrégaselo al cliente.');
       default: return t('¡Lo lograste!');
     }
   }
   function actualizarContenido() {
     if(modo==='contar'||modo==='llenar') contenido.innerHTML=verSobre();
+    else if(modo==='contador') contenido.innerHTML=verContador();
+    else if(modo==='alcanza') contenido.innerHTML=verAlcance();
     else if(fase==='elegir') contenido.innerHTML=estante();
+    else if(fase==='escanear') contenido.innerHTML=vistaCliente('Estos son mis productos.')+estante();
+    else if(fase==='recibir') contenido.innerHTML=recibirPago();
     else{
-      contenido.innerHTML=comprobante()+
+      contenido.innerHTML=(fase==='dar'?vistaCliente('¿Me das el vuelto?'):'')+comprobante()+
         (fase==='pagar'?destino('Tu pago'):fase==='dar'?destino('Vuelto para el cliente'):
-          fase==='listo'&&modo==='cajero'?destino('Vuelto para el cliente'):'');
+          fase==='listo'&&modo==='cajero'&&aCambio()>0?destino('Vuelto para el cliente'):'');
     }
   }
   function render() {
@@ -209,11 +275,12 @@
     $('tituloModo').textContent=t(modos[modo].nombre);
     $('instruccion').textContent=instruccion();
     $('bancoPanel').hidden=!fasesDinero.has(fase);
+    $('bancoTitulo').textContent=t(fase==='dar'?'Caja registradora':'Banco de dinero');
     $('respuesta').hidden=!fasesNumericas.has(fase);
     escena.dataset.fase=fase;
     actualizarContenido();
-    $('accion').hidden=fase==='cerrado';
-    $('accion').textContent=t(({elegir:'Ir a la caja',cobrar:'Cobrar',pagar:'Pagar',dar:'Dar vuelto',listo:'Siguiente ronda'})[fase]||'Revisar');
+    $('accion').hidden=fase==='cerrado'||fase==='decidir';
+    $('accion').textContent=t(({medir:'Vaciar contador',elegir:'Ir a la caja',escanear:'Cobrar',recibir:'Registrar pago',pagar:'Pagar',dar:'Dar vuelto',listo:'Siguiente ronda'})[fase]||'Revisar');
   }
   function anunciar(texto='',correcto=false) {
     const mensaje=t(texto);
@@ -240,22 +307,29 @@
     $('accion').focus({preventScroll:true});
   }
   function revisar() {
-    if(fase==='listo') return nuevaRonda();
-    if(fase==='cerrado') return;
+    if(fase==='listo'||fase==='medir') return nuevaRonda();
+    if(fase==='cerrado'||fase==='decidir') return;
     if(fase==='elegir'){
       if(elegidos.length<(modo==='carrito'?2:1)) return anunciar(modo==='carrito'?'Elige dos o tres productos.':'Elige un producto primero.');
       cambiarFase('pagar');
       $('banco').firstElementChild.focus({preventScroll:true});
       return;
     }
+    if(fase==='escanear'){
+      if(elegidos.length!==mercanciaCliente.length)return anunciar('Pasa todos los productos a la cesta antes de cobrar.');
+      return cambiarFase('recibir');
+    }
+    if(fase==='recibir'){
+      if(recibidos.size!==dineroCliente.length)return anunciar('Todavía queda dinero del cliente en el mostrador.');
+      pagado=sumar(piezas);
+      piezas=[];
+      if(pagado===precio())return completar();
+      return cambiarFase('dar');
+    }
     if(fasesNumericas.has(fase)){
       if(!monto.value)return anunciar('Escribe un monto con el teclado.');
-      const meta=({contar:()=>sumar(sobre),cobrar:precio,vuelto:aCambio})[fase]();
-      if(Number(monto.value)!==meta)return anunciar(({contar:'Cuenta el dinero otra vez.',cobrar:'Suma los precios para encontrar cuánto cobrar.',vuelto:'Resta el precio total al dinero que pagaste.'})[fase]);
-      if(fase==='cobrar') {
-        pagado=sumar(dineroCliente);
-        return cambiarFase('dar');
-      }
+      const meta=fase==='contar'?sumar(sobre):aCambio();
+      if(Number(monto.value)!==meta)return anunciar(fase==='contar'?'Cuenta el dinero otra vez.':'Resta el precio total al dinero que pagaste.');
       return completar();
     }
     const total=sumar(piezas);
@@ -276,21 +350,47 @@
     piezas.push(valor);
     anunciar();
     actualizarContenido();
+    if(modo==='contador'&&opciones.narracion)leer(idioma(
+      `Pusiste ${formato(valor)}. Hay ${formato(sumar(piezas))} en total.`,
+      `You added ${formato(valor)}. The total is ${formato(sumar(piezas))}.`));
   }
-  function elegirProducto(i,porArrastre=false) {
-    if(fase!=='elegir'||!oferta[i])return;
-    const posicion=elegidos.indexOf(i);
-    if(posicion!==-1){
-      if(porArrastre)return;
-      elegidos.splice(posicion,1);
-    }else{
-      if(modo==='carrito'&&elegidos.length===3)return anunciar('Puedes llevar hasta tres productos.');
-      if(modo!=='carrito')elegidos=[];
-      elegidos.push(i);
-    }
+  function elegirProducto(i) {
+    if(!['elegir','escanear'].includes(fase)||!oferta[i]||elegidos.includes(i))return;
+    if(modo==='carrito'&&elegidos.length===3)return anunciar('Puedes llevar hasta tres productos.');
+    if(modo!=='carrito'&&modo!=='cajero')elegidos=[];
+    elegidos.push(i);
     anunciar();
     actualizarContenido();
-    if(!porArrastre)contenido.querySelector(`[data-producto="${i}"]`).focus({preventScroll:true});
+  }
+  function devolverProducto(i) {
+    if(!['elegir','escanear'].includes(fase)||!elegidos.includes(i))return;
+    elegidos=elegidos.filter(id=>id!==i);
+    anunciar();
+    actualizarContenido();
+  }
+  function guardarPago(i) {
+    if(fase!=='recibir'||!dineroCliente[i]||recibidos.has(i))return;
+    const valor=dineroCliente[i];
+    recibidos.add(i);
+    piezas.push(valor);
+    anunciar();
+    actualizarContenido();
+  }
+  function moverEnMesa(origen,destino) {
+    if(fase!=='contar'||!mesa[origen])return;
+    [mesa[origen],mesa[destino]]=[mesa[destino],mesa[origen]];
+    fichaElegida=null;
+    animarSobre=false;
+    actualizarContenido();
+  }
+  function tocarMesa(i) {
+    if(fichaElegida!==null&&fichaElegida!==i)moverEnMesa(fichaElegida,i);
+    else{
+      fichaElegida=mesa[i]&&fichaElegida!==i ? i : null;
+      animarSobre=false;
+      actualizarContenido();
+    }
+    contenido.querySelector(`[data-celda="${i}"]`).focus({preventScroll:true});
   }
   function quitarDinero(valor) {
     const i=piezas.lastIndexOf(valor);
@@ -305,13 +405,21 @@
     arrastre?.destino?.classList.remove('sobre-destino');
     arrastre=null;
   }
+  const fuentesArrastre = [
+    {clave:'dinero',destino:'#destinoDinero',soltar:agregarDinero},
+    {clave:'producto',destino:'#cesta',soltar:elegirProducto},
+    {clave:'devolver',destino:'#estante',soltar:devolverProducto},
+    {clave:'recibir',destino:'#destinoDinero',soltar:guardarPago},
+    {clave:'celda',destino:'button[data-celda]',soltar:(i,nodo)=>moverEnMesa(i,Number(nodo.dataset.celda))}
+  ];
   escena.addEventListener('pointerdown',evento=>{
     ignorarClic=false;
-    const origen=evento.target.closest('[data-dinero],[data-producto]');
+    const origen=evento.target.closest('button[data-dinero],button[data-producto],button[data-devolver],button[data-recibir],button[data-celda]');
     if(!origen||evento.button!==0||evento.isPrimary===false||arrastre)return;
-    const esDinero=origen.hasAttribute('data-dinero');
-    arrastre={id:evento.pointerId,origen,esDinero,
-      x:evento.clientX,y:evento.clientY,valor:Number(esDinero?origen.dataset.dinero:origen.dataset.producto)};
+    const fuente=fuentesArrastre.find(({clave})=>Object.hasOwn(origen.dataset,clave));
+    if(!origen.firstElementChild)return;
+    arrastre={id:evento.pointerId,origen,fuente,
+      x:evento.clientX,y:evento.clientY,valor:Number(origen.dataset[fuente.clave])};
     origen.setPointerCapture(evento.pointerId);
   });
   escena.addEventListener('pointermove',evento=>{
@@ -332,7 +440,7 @@
     }
     Matematicas.fantasma(d.fantasma,x,y);
     d.destino?.classList.remove('sobre-destino');
-    d.destino=document.elementFromPoint(x,y)?.closest(d.esDinero?'#destinoDinero':'#cesta');
+    d.destino=document.elementFromPoint(x,y)?.closest(d.fuente.destino);
     d.destino?.classList.add('sobre-destino');
   });
   addEventListener('pointerup',evento=>{
@@ -340,11 +448,8 @@
     if(d?.id!==evento.pointerId)return;
     if(d.fantasma){
       ignorarClic=true;
-      const destino=document.elementFromPoint(evento.clientX,evento.clientY)?.closest(d.esDinero?'#destinoDinero':'#cesta');
-      if(destino){
-        if(d.esDinero)agregarDinero(d.valor);
-        else elegirProducto(d.valor,true);
-      }
+      const destino=document.elementFromPoint(evento.clientX,evento.clientY)?.closest(d.fuente.destino);
+      if(destino)d.fuente.soltar(d.valor,destino);
     }
     limpiarArrastre();
   });
@@ -358,10 +463,45 @@
     if(ignorarClic&&evento.detail){ignorarClic=false;return;}
     const boton=evento.target.closest('button');
     if(!boton)return;
-    if(boton.id==='abrirSobre') {cambiarFase('contar');monto.focus({preventScroll:true});}
+    if(boton.id==='abrirSobre') {
+      animarSobre=true;
+      cambiarFase('contar');
+      monto.focus({preventScroll:true});
+    }
+    else if(boton.id==='ordenarMesa') {
+      const ordenadas=mesa.filter(Boolean).sort((a,b)=>a-b);
+      mesa=mesa.map((_,i)=>ordenadas[i]??null);
+      fichaElegida=null;
+      animarSobre=false;
+      actualizarContenido();
+      $('ordenarMesa').focus({preventScroll:true});
+    }
+    else if(boton.hasAttribute('data-alcanza')){
+      const afirmativa=boton.dataset.alcanza==='si';
+      if(afirmativa===(sumar(cartera)>=oferta[0].precio)){
+        completar();
+      }else anunciar('Compara tu dinero con la etiqueta de precio.');
+    }
     else if(boton.hasAttribute('data-dinero')) agregarDinero(Number(boton.dataset.dinero));
-    else if(boton.hasAttribute('data-producto')) elegirProducto(Number(boton.dataset.producto));
+    else if(boton.hasAttribute('data-producto')) {
+      const i=Number(boton.dataset.producto);
+      elegirProducto(i);
+      contenido.querySelector(`[data-devolver="${i}"]`)?.focus({preventScroll:true});
+    }
+    else if(boton.hasAttribute('data-devolver')) {
+      const i=Number(boton.dataset.devolver);
+      devolverProducto(i);
+      contenido.querySelector(`[data-producto="${i}"]`)?.focus({preventScroll:true});
+    }
+    else if(boton.hasAttribute('data-celda')) tocarMesa(Number(boton.dataset.celda));
+    else if(boton.hasAttribute('data-recibir')){
+      guardarPago(Number(boton.dataset.recibir));
+      escena.querySelector('[data-recibir]')?.focus({preventScroll:true});
+    }
     else if(boton.hasAttribute('data-quitar')) quitarDinero(Number(boton.dataset.quitar));
+  });
+  escena.addEventListener('animationend',evento=>{
+    if(evento.animationName==='abrirSolapa')animarSobre=false;
   });
   function mostrarModo(vista) {
     limpiarArrastre();

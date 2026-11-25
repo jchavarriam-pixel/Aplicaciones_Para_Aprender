@@ -43,7 +43,7 @@ Object.assign(window.TEXTOS_INGLES||={}, {
  'Ejercicios combinados para practicar cálculo básico.':'Mixed exercises to practise basic arithmetic.',
  'La tiendita de colones':'The Colón Shop',
  'Dinero y compras':'Money and shopping',
- 'Cuenta monedas y billetes de Costa Rica, compra en la tienda y practica cómo dar vuelto.':'Count Costa Rican coins and banknotes, shop for items, and practise giving change.',
+ 'Cuenta colones, averigua si te alcanza para comprar y practica cómo cobrar y dar vuelto.':'Count colones, check what you can afford, and practise taking payments and giving change.',
  'Práctica de sumas, restas y valor posicional en formato UM | C | D | U.':'Practise addition, subtraction and place value with thousands, hundreds, tens and units.',
  'Situaciones problema animadas para plantear y resolver sumas y restas paso a paso.':'Animated word problems to set up and solve addition and subtraction step by step.',
  'Actividad para escuchar y clasificar sonidos agradables y desagradables.':'Listen and sort pleasant and unpleasant sounds.',
