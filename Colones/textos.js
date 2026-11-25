@@ -124,5 +124,10 @@ Object.assign(window.TEXTOS_INGLES,{
   'Mostrar los nombres de los productos en globos':'Show product names in speech bubbles',
   'Empuja el carrito':'Push the cart',
   'Monedas':'Coins',
-  'Tamaño de las monedas':'Coin size'
+  'Tamaño de las monedas':'Coin size',
+  'Empuja hacia arriba. Hala hacia abajo.':'Push up. Pull down.',
+  'Escoge dos o tres productos y empuja el carrito hasta la caja.':'Choose two or three items and push the cart to the checkout.',
+  'Escoge un producto y empuja el carrito hasta la caja.':'Choose an item and push the cart to the checkout.',
+  'Retrocede y recoge dos o tres productos.':'Go back and pick up two or three items.',
+  'Retrocede y recoge un producto.':'Go back and pick up an item.'
 });

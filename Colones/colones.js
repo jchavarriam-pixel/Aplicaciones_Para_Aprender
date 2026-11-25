@@ -34,6 +34,7 @@
   let arrastre = null, ignorarClic = false;
   let mesa, posicionesMesa, fichaElegida, animarSobre, cartera, mercanciaCliente, recibidos;
   let avancePasillo=0, animacionPasillo=0, empuje=null;
+  const finPasillo=3, avancePorPaso=.42;
   const movimientoReducido=matchMedia('(prefers-reduced-motion: reduce)');
   const t = texto => IdiomaVoz.t(texto);
   const en = () => IdiomaVoz.idioma==='en';
@@ -271,6 +272,7 @@
       <svg class="suelo-en-marcha" aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none"><path></path></svg>
       ${columna('izquierdo',[0,2,4])}
       <div class="camino-carrito">
+        <div class="caja-al-fondo"><img src="imagenes/caja-destino.webp" alt="" draggable="false"><span>${t('Caja registradora')}</span></div>
         <div id="cesta" class="carrito-pasillo" role="group" aria-label="${t('Tu carrito')}">
           <img src="imagenes/carrito-perspectiva.webp" alt="" draggable="false">
           <div class="carga-carrito">${productosEnCesta()}</div>
@@ -281,11 +283,11 @@
     </div>
     <div class="controles-pasillo">
       <button type="button" data-paso="-1">${t('Retroceder')}</button>
-      <span><b>${formato(precio())}</b><small>${t('Empuja el carrito')}</small></span>
+      <span><b>${formato(precio())}</b><small>${t('Empuja hacia arriba. Hala hacia abajo.')}</small></span>
       <button type="button" data-paso="1">${t('Avanzar')}</button>
     </div>`;
   }
-  const cicloPasillo=valor=>((valor%3)+3)%3;
+  const limitarPasillo=valor=>Math.min(finPasillo,Math.max(0,valor));
   // Cámara a 60 grados sobre el piso. La coordenada longitudinal crece hacia el carrito.
   const senoCamara=Math.sin(Math.PI/3),cosenoCamara=Math.cos(Math.PI/3);
   function perspectiva(profundidad,altura) {
@@ -301,7 +303,7 @@
   const trazar= puntos=>puntos.map(({x,y},i)=>`${i?'L':'M'}${x.toFixed(2)} ${y.toFixed(2)}`).join('')+'Z';
   function pintarSuelo(pasillo,avance) {
     const caminos=[];
-    const desfase=avance*2%2;
+    const desfase=avance*avancePorPaso*6%2;
     const punto=(columna,profundidad)=>proyectar(columna*.47,profundidad);
     for(let fila=-2;fila<6;fila++){
       const lejano=(fila+desfase)/6,cercano=lejano+1/6;
@@ -344,25 +346,20 @@
     puesto.style.setProperty('--precio-y',(precio.y-y)/alto*100+'%');
     puesto.style.setProperty('--escala-producto',Math.min(1.15,1.65/producto.fondo));
   }
-  function profundidadMesa(fase) {
-    // El ciclo se cierra fuera del encuadre para que el recorte de la escena oculte el salto.
-    const entrada=Math.max(0,1-fase*6);
-    const salida=Math.max(0,fase*6-5);
-    return fase-.66*entrada**2+.50*salida**2;
-  }
   function pintarPasillo() {
     const pasillo=contenido.querySelector('.pasillo');
     if(!pasillo)return;
-    const avance=cicloPasillo(avancePasillo);
+    const avance=avancePasillo;
     pasillo.style.setProperty('--rodar',avance);
+    pasillo.style.setProperty('--marcha-carrito',avance/finPasillo);
     pintarSuelo(pasillo,avance);
     for(const puesto of pasillo.querySelectorAll('[data-tramo]')){
-      const faseMesa=cicloPasillo(Number(puesto.dataset.tramo)+avancePasillo+.5)/3;
-      const profundidad=profundidadMesa(faseMesa);
-      pintarMesa(puesto,profundidad);
-      const fuera=profundidad<-.55||profundidad>1.39;
-      if(puesto.inert!==fuera)puesto.inert=fuera;
+      const profundidad=(Number(puesto.dataset.tramo)+.5)/3+avance*avancePorPaso;
+      puesto.hidden=profundidad>1.48;
+      if(!puesto.hidden)pintarMesa(puesto,profundidad);
     }
+    contenido.querySelector('[data-paso="-1"]').disabled=avance<=0;
+    contenido.querySelector('[data-paso="1"]').disabled=avance>=finPasillo;
   }
   function detenerPasillo() {
     cancelAnimationFrame(animacionPasillo);
@@ -371,10 +368,12 @@
   }
   function desplazarPasillo(destino) {
     detenerPasillo();
+    destino=limitarPasillo(destino);
     const inicio=avancePasillo;
     if(movimientoReducido.matches||Math.abs(inicio-destino)<.015){
-      avancePasillo=cicloPasillo(destino);
+      avancePasillo=destino;
       pintarPasillo();
+      if(destino===finPasillo)llegarCaja();
       return;
     }
     const comenzar=performance.now();
@@ -384,10 +383,11 @@
       avancePasillo=inicio+(destino-inicio)*avance;
       if(p<1)animacionPasillo=requestAnimationFrame(mover);
       else{
-        avancePasillo=cicloPasillo(destino);
+        avancePasillo=destino;
         animacionPasillo=0;
       }
       pintarPasillo();
+      if(p===1&&destino===finPasillo)llegarCaja();
     };
     animacionPasillo=requestAnimationFrame(mover);
   }
@@ -429,7 +429,7 @@
       case 'cerrado': return t('Toca el sobre para abrirlo.');
       case 'contar': return t('Acomoda el dinero y escribe cuánto hay en total.');
       case 'llenar': return idioma(`Pon ${formato(sumar(sobre))} en el sobre.`,`Put ${formato(sumar(sobre))} in the envelope.`);
-      case 'elegir': return t(modo==='carrito'?'Escoge de dos a tres productos y llévalos a la caja.':'Escoge un producto y llévalo a la caja.');
+      case 'elegir': return t(modo==='carrito'?'Escoge dos o tres productos y empuja el carrito hasta la caja.':'Escoge un producto y empuja el carrito hasta la caja.');
       case 'pagar': return t(modo==='exacto'?'Pon el pago exacto en la caja.':'Paga más que el total y calcula el vuelto.');
       case 'vuelto': return t('¿Cuánto vuelto deben darte?');
       case 'escanear': return t('Pasa a la cesta cada producto que puso el cliente.');
@@ -466,8 +466,8 @@
     $('respuesta').hidden=!fasesNumericas.has(fase);
     escena.dataset.fase=fase;
     actualizarContenido();
-    $('accion').hidden=fase==='cerrado'||fase==='decidir';
-    $('accion').textContent=t(({medir:'Vaciar contador',elegir:'Ir a la caja',escanear:'Cobrar',recibir:'Registrar pago',pagar:'Pagar',dar:'Dar vuelto',listo:'Siguiente ronda'})[fase]||'Revisar');
+    $('accion').hidden=['cerrado','decidir','elegir'].includes(fase);
+    $('accion').textContent=t(({medir:'Vaciar contador',escanear:'Cobrar',recibir:'Registrar pago',pagar:'Pagar',dar:'Dar vuelto',listo:'Siguiente ronda'})[fase]||'Revisar');
   }
   function anunciar(texto='',correcto=false) {
     const mensaje=t(texto);
@@ -494,15 +494,18 @@
     anunciar(mensaje,true);
     $('accion').focus({preventScroll:true});
   }
-  function revisar() {
-    if(fase==='listo'||fase==='medir') return nuevaRonda();
-    if(fase==='cerrado'||fase==='decidir') return;
-    if(fase==='elegir'){
-      if(elegidos.length<(modo==='carrito'?2:1)) return anunciar(modo==='carrito'?'Elige dos o tres productos.':'Elige un producto primero.');
-      cambiarFase('pagar');
-      $('banco').firstElementChild.focus({preventScroll:true});
+  function llegarCaja() {
+    if(fase!=='elegir'||avancePasillo<finPasillo)return;
+    if(elegidos.length<(modo==='carrito'?2:1)){
+      anunciar(modo==='carrito'?'Retrocede y recoge dos o tres productos.':'Retrocede y recoge un producto.');
       return;
     }
+    cambiarFase('pagar');
+    banco.firstElementChild.focus({preventScroll:true});
+  }
+  function revisar() {
+    if(fase==='listo'||fase==='medir') return nuevaRonda();
+    if(['cerrado','decidir','elegir'].includes(fase)) return;
     if(fase==='escanear'){
       if(elegidos.length!==mercanciaCliente.length)return anunciar('Pasa todos los productos a la cesta antes de cobrar.');
       return cambiarFase('recibir');
@@ -705,7 +708,8 @@
       const distancia=empuje.y-evento.clientY;
       empuje.recorrido=Math.max(empuje.recorrido,Math.abs(distancia));
       if(empuje.recorrido>=5){
-        avancePasillo=empuje.carrera+distancia*3/empuje.alto;
+        avancePasillo=limitarPasillo(empuje.carrera+distancia*4/empuje.alto);
+        if(avancePasillo<finPasillo&&$('mensaje').textContent)anunciar();
         pintarPasillo();
       }
       return;
@@ -737,7 +741,7 @@
       empuje=null;
       if(movido){
         ignorarClic=true;
-        desplazarPasillo(Math.round(avancePasillo));
+        if(avancePasillo>=finPasillo-.10)desplazarPasillo(finPasillo);
       }
       return;
     }
@@ -749,14 +753,13 @@
       if(destino)d.fuente.soltar(d.valor,destino,evento);
     }
     limpiarArrastre();
-    if(fase==='elegir'&&!Number.isInteger(avancePasillo))desplazarPasillo(Math.round(avancePasillo));
   });
   escena.addEventListener('pointercancel',evento=>{
-    if(empuje?.id===evento.pointerId)desplazarPasillo(Math.round(avancePasillo));
+    if(empuje?.id===evento.pointerId)empuje=null;
     limpiarArrastre();
   });
   escena.addEventListener('lostpointercapture',evento=>{
-    if(evento.target===empuje?.camino&&evento.pointerId===empuje.id)desplazarPasillo(Math.round(avancePasillo));
+    if(evento.target===empuje?.camino&&evento.pointerId===empuje.id)empuje=null;
     if(evento.target===arrastre?.origen&&evento.pointerId===arrastre.id)limpiarArrastre();
   });
   addEventListener('resize',limpiarArrastre);
@@ -765,7 +768,6 @@
     if(ignorarClic&&evento.detail){ignorarClic=false;return;}
     const boton=evento.target.closest('button');
     if(!boton){
-      if(evento.target.closest('.camino-carrito'))desplazarPasillo(Math.round(avancePasillo)+1);
       if(fichaElegida!==null&&evento.target.closest('.mesa-libre'))moverEnMesa(fichaElegida,evento.clientX,evento.clientY);
       return;
     }
@@ -789,7 +791,8 @@
       }else anunciar('Compara tu dinero con la etiqueta de precio.');
     }
     else if(boton.hasAttribute('data-paso')||boton.id==='empujarCarrito'){
-      desplazarPasillo(Math.round(avancePasillo)+Number(boton.dataset.paso||1));
+      anunciar();
+      desplazarPasillo(avancePasillo+Number(boton.dataset.paso||1));
     }
     else if(boton.hasAttribute('data-dinero')) agregarDinero(Number(boton.dataset.dinero));
     else if(boton.hasAttribute('data-producto')) {
@@ -813,6 +816,12 @@
     if(evento.animationName==='abrirSolapa')animarSobre=false;
   });
   escena.addEventListener('keydown',evento=>{
+    if(evento.target.id==='empujarCarrito'&&['ArrowUp','ArrowDown'].includes(evento.key)){
+      evento.preventDefault();
+      anunciar();
+      desplazarPasillo(avancePasillo+(evento.key==='ArrowUp'?1:-1));
+      return;
+    }
     const ficha=evento.target.closest('button[data-ficha-mesa]');
     const paso={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]}[evento.key];
     if(!ficha||!paso)return;
@@ -870,10 +879,6 @@
   $('configurar').onclick=()=>{
     limpiarArrastre();
     detenerPasillo();
-    if(fase==='elegir'){
-      avancePasillo=cicloPasillo(Math.round(avancePasillo));
-      pintarPasillo();
-    }
     rotularAjustes();
     $('ayudas').checked=opciones.ayudas;
     $('narracion').checked=opciones.narracion;
