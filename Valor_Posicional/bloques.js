@@ -1,11 +1,12 @@
 (() => {
   'use strict';
   const caras = [
-    [['#fff5bd','#ffd463'],['#ffc659','#df921f'],['#efaa35','#ad611b']],
-    [['#d3f7ff','#8bdfff'],['#74d7f4','#359dd7'],['#47acd8','#20659d']],
-    [['#e2fff2','#a1eccb'],['#83dfb9','#46ad86'],['#50bc96','#247761']],
-    [['#f2eaff','#cbbbff'],['#c6b4fa','#9778df'],['#aa8cf0','#6746aa']]
+    [['#fff4a6','#ffc63b'],['#ffcf42','#ef8b13'],['#fda93b','#b85a13']],
+    [['#c3f8ff','#41d8ff'],['#42d8ff','#008bd9'],['#1cb8ec','#0b57a2']],
+    [['#d3ffb2','#6ae56d'],['#78e46e','#16a563'],['#35c478','#097148']],
+    [['#f3d4ff','#bc83ff'],['#c694ff','#8650eb'],['#a472f7','#5624aa']]
   ];
+  const contornos = ['#985215','#0a5396','#146846','#57268f'];
   const tamanos = [[1,1,1], [1,1,10], [10,10,1], [10,10,10]];
 
   // Proyecta las tres caras visibles y dibuja una cuadrícula por cada cubito.
@@ -22,8 +23,9 @@
       const dx=a-x/2, dy=b-y/2, dz=c-z/2;
       return [centroX+(dx*ex[0]+dy*ey[0]+dz*ez[0])*escala, centroY+(dx*ex[1]+dy*ey[1]+dz*ez[1])*escala];
     };
-    function poligono(puntos, colores) {
+    function poligono(puntos, colores, cara) {
       const vertices = puntos.map(proyectar);
+      const xs = vertices.map(([x]) => x);
       const ys = vertices.map(([,y]) => y);
       const gradiente = ctx.createLinearGradient(0,Math.min(...ys),0,Math.max(...ys));
       gradiente.addColorStop(0,colores[0]);
@@ -34,8 +36,20 @@
       ctx.closePath();
       ctx.fillStyle = gradiente;
       ctx.fill();
-      ctx.strokeStyle = '#26354caa';
-      ctx.lineWidth = 1;
+      if(escala >= 1.4) {
+        // La franja blanca reproduce un reflejo especular sin tapar las divisiones.
+        const brillo = ctx.createLinearGradient(Math.min(...xs),Math.min(...ys),Math.max(...xs),Math.max(...ys));
+        const intensidad = cara === 'arriba' ? .8 : cara === 'frente' ? .59 : .31;
+        brillo.addColorStop(0,'#ffffff00');
+        brillo.addColorStop(.17,`rgba(255,255,255,${intensidad * .42})`);
+        brillo.addColorStop(.29,`rgba(255,255,255,${intensidad})`);
+        brillo.addColorStop(.43,`rgba(255,255,255,${intensidad * .25})`);
+        brillo.addColorStop(.56,'#ffffff00');
+        ctx.fillStyle = brillo;
+        ctx.fill();
+      }
+      ctx.strokeStyle = contornos[lugar];
+      ctx.lineWidth = .9;
       ctx.lineJoin = 'round';
       ctx.stroke();
     }
@@ -43,9 +57,9 @@
       ctx.moveTo(...proyectar(a));
       ctx.lineTo(...proyectar(b));
     }
-    poligono([[0,y,0],[x,y,0],[x,y,z],[0,y,z]], frente);
-    poligono([[ladoVisible,0,0],[ladoVisible,y,0],[ladoVisible,y,z],[ladoVisible,0,z]], lado);
-    poligono([[0,0,z],[x,0,z],[x,y,z],[0,y,z]], arriba);
+    poligono([[0,y,0],[x,y,0],[x,y,z],[0,y,z]], frente, 'frente');
+    poligono([[ladoVisible,0,0],[ladoVisible,y,0],[ladoVisible,y,z],[ladoVisible,0,z]], lado, 'lado');
+    poligono([[0,0,z],[x,0,z],[x,y,z],[0,y,z]], arriba, 'arriba');
     if(lugar === 2 && escala >= 3){
       // Un borde luminoso dentro de cada celda hace visible el relieve de los cubitos.
       ctx.beginPath();
@@ -70,8 +84,8 @@
       trazo([0,y,c],[x,y,c]);
       trazo([ladoVisible,0,c],[ladoVisible,y,c]);
     }
-    ctx.strokeStyle = lugar === 2 ? '#214c48a3' : '#26354c75';
-    ctx.lineWidth = lugar === 2 ? .86 : .7;
+    ctx.strokeStyle = contornos[lugar]+'a8';
+    ctx.lineWidth = lugar === 2 ? .86 : .72;
     ctx.stroke();
     if (escala >= 3) {
       ctx.beginPath();
