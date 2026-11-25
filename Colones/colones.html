@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>La tiendita de colones</title>
+  <link rel="stylesheet" href="../creditos.css">
+  <link rel="stylesheet" href="../idioma-voz.css">
+  <link rel="stylesheet" href="../pantalla-completa.css">
+  <link rel="stylesheet" href="../panel-plegable.css?v=colones">
+  <link rel="stylesheet" href="colones.css">
+</head>
+<body>
+  <main id="appColones">
+    <aside class="herramientas">
+      <header class="cabecera">
+        <a class="casa" href="../index.html" aria-label="Todas las aplicaciones" title="Todas las aplicaciones">⌂</a>
+        <h1>La tiendita de colones</h1>
+        <label for="nombre">Nombre del estudiante</label>
+        <input id="nombre" maxlength="40" autocomplete="given-name" placeholder="Ej.: Gabriel">
+      </header>
+      <section class="guia">
+        <h2>Así jugamos</h2>
+        <p id="guiaModo">Elige una actividad para practicar con monedas y billetes de Costa Rica.</p>
+      </section>
+      <div class="acciones-panel">
+        <button type="button" id="configurar">⚙ Configuración</button>
+        <button type="button" id="modosVolver" hidden>Modos</button>
+        <button type="button" id="nueva" hidden>Nueva ronda</button>
+      </div>
+      <img class="mercado-lateral" src="imagenes/mercado.webp" alt="">
+    </aside>
+    <nav class="actividad modos" id="modos" aria-label="Modos de práctica"></nav>
+    <section class="actividad juego" id="juego" hidden aria-labelledby="tituloModo">
+      <header class="reto">
+        <div><h2 id="tituloModo"></h2><p id="instruccion"></p></div>
+        <button type="button" id="escuchar" aria-label="Escuchar ejercicio" title="Escuchar ejercicio">🔊</button>
+        <button type="button" id="volverPlegado" hidden>Modos</button>
+      </header>
+      <div id="escena" class="escena">
+        <div id="contenido"></div>
+        <section id="bancoPanel" class="banco" hidden aria-labelledby="bancoTitulo">
+          <h3 id="bancoTitulo">Banco de dinero</h3>
+          <div id="banco"></div>
+        </section>
+        <div id="respuesta" class="respuesta" hidden>
+          <label for="monto">Tu respuesta</label>
+          <div class="monto"><span aria-hidden="true">₡</span><input id="monto" readonly inputmode="none" maxlength="6" data-campo-teclado></div>
+          <div id="teclado" aria-label="Teclado numérico"></div>
+        </div>
+      </div>
+      <footer class="acciones-juego">
+        <p id="mensaje" role="status"></p>
+        <button type="button" id="accion" class="principal">Revisar</button>
+      </footer>
+    </section>
+  </main>
+  <dialog id="ajustes" aria-labelledby="tituloAjustes">
+    <form>
+      <header><h2 id="tituloAjustes">Configuración</h2><button class="cerrar" id="cerrar" type="button" aria-label="Aplicar y cerrar">✕</button></header>
+      <fieldset>
+        <legend>Denominaciones para practicar</legend>
+        <p>Activa las monedas y billetes que quieres usar en los seis modos.</p>
+        <div id="denominaciones" class="opciones-dinero"></div>
+        <p id="errorAjustes" role="alert" hidden>Selecciona al menos una moneda o un billete.</p>
+      </fieldset>
+      <label class="casilla"><input type="checkbox" id="ayudas"> Mostrar pistas y el total del dinero que colocas</label>
+      <label class="casilla"><input type="checkbox" id="narracion"> Leer las instrucciones y los resultados</label>
+      <section id="vozColones"></section>
+      <button type="submit" class="principal">Aplicar y cerrar</button>
+    </form>
+  </dialog>
+  <footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos">
+    <div class="creditos-dedicatoria"><span class="creditos-gabriel">Creado para <strong>Gabriel</strong></span><span class="creditos-familia">Por su familia, con ayuda de la IA.</span></div>
+    <div class="creditos-equipo"><span class="creditos-autores">M.Sc. Jeffry Chavarría-Molina y M.Sc. Natalia Rodríguez-Granados</span><span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span></div>
+  </footer>
+  <script>window.IDIOMA_VOZ_APP = 'colones';</script>
+  <script src="../idioma-voz-textos.js?v=creditos-msc"></script>
+  <script src="textos.js"></script>
+  <script src="../idioma-voz.js"></script>
+  <script src="../matematicas-base.js"></script>
+  <script src="../historial-modos.js"></script>
+  <script src="../teclado-en-pantalla.js"></script>
+  <script src="../pantalla-completa.js"></script>
+  <script src="../panel-plegable.js?v=colones"></script>
+  <script src="../nombre-compartido.js"></script>
+  <script src="colones.js"></script>
+</body>
+</html>
