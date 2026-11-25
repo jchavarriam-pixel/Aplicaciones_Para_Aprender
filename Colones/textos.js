@@ -120,5 +120,6 @@ Object.assign(window.TEXTOS_INGLES,{
   'Apilar billetes del mismo valor':'Stack banknotes of the same value',
   'Tamaño de los billetes':'Banknote size',
   'Avanzar':'Move forward',
-  'Retroceder':'Move back'
+  'Retroceder':'Move back',
+  'Mostrar los nombres de los productos en globos':'Show product names in speech bubbles'
 });

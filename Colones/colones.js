@@ -18,6 +18,7 @@
     cajero:{nombre:'Soy el cajero',guia:'Pasa los productos, recibe el pago y entrega el vuelto.'}
   };
   const productos = ['Manzana','Pan','Leche','Jugo','Cuaderno','Lápiz','Bananas','Pelota','Mochila'];
+  const imagenesProductos = ['manzana','pan','leche','jugo','cuaderno','lapiz','bananas','pelota','mochila'];
   const rangosPrecio = [[250,650],[350,1000],[700,1450],[400,1100],[800,3800],
     [100,550],[175,525],[1800,8000],[6500,24500]];
   const iniciales = [10,25,50,100,500,1000,2000];
@@ -25,10 +26,11 @@
   const activas = valores.filter(valor => Array.isArray(guardado.activas) && guardado.activas.includes(valor));
   const limitarEscala = valor => Number.isFinite(valor) ? Math.max(70,Math.min(150,valor)) : 100;
   let opciones = {activas:activas.length ? activas : iniciales, ayudas:guardado.ayudas!==false,
-    narracion:guardado.narracion!==false, apilarBilletes:guardado.apilarBilletes===true, tamanoBilletes:limitarEscala(guardado.tamanoBilletes)};
+    narracion:guardado.narracion!==false, apilarBilletes:guardado.apilarBilletes===true,
+    tamanoBilletes:limitarEscala(guardado.tamanoBilletes), nombresProductos:guardado.nombresProductos!==false};
   let modo = null, fase, oferta, elegidos, piezas, sobre, dineroCliente, pagado;
   let arrastre = null, ignorarClic = false;
-  let mesa, fichaElegida, animarSobre, cartera, mercanciaCliente, recibidos;
+  let mesa, posicionesMesa, fichaElegida, animarSobre, cartera, mercanciaCliente, recibidos;
   let estacionCarrito=0, estacionAnterior=0;
   const t = texto => IdiomaVoz.t(texto);
   const en = () => IdiomaVoz.idioma==='en';
@@ -98,7 +100,8 @@
     estacionAnterior=estacionCarrito=0;
     piezas=[];
     sobre=formar(modo==='contar'?entero(3,7):entero(2,5));
-    mesa=Array.from({length:10},(_,i)=>sobre[i]??null);
+    mesa=[...sobre];
+    posicionesMesa=posicionesIniciales();
     fichaElegida=null;
     animarSobre=false;
     cartera=[];
@@ -143,7 +146,7 @@
     ).join('');
   }
   function producto(item) {
-    return `<span class="foto-producto" style="--col:${item.id%3};--fila:${Math.floor(item.id/3)}" aria-hidden="true"></span>`;
+    return `<img class="foto-producto" src="imagenes/productos/${imagenesProductos[item.id]}.png" alt="" draggable="false">`;
   }
   function etiquetaTotal(texto,valor) {
     return `<div class="dato-total"><span>${t(texto)}</span><strong>${formato(valor)}</strong></div>`;
@@ -156,17 +159,16 @@
   function verMesa() {
     const editable=fase==='contar';
     const fichas=mesa.map((valor,i)=>{
-      const interior=valor?pieza(valor):'';
-      const etiqueta=valor?etiquetaDinero(valor):idioma(`Espacio ${i+1}`,`Space ${i+1}`);
-      const marca=`class="celda-mesa" data-celda="${i}" style="--turno:${i}" aria-label="${etiqueta}"`;
+      const interior=pieza(valor);
+      const marca=`class="ficha-mesa" data-ficha-mesa="${i}" style="--turno:${i}" aria-label="${etiquetaDinero(valor)}"`;
       return editable
         ? `<button type="button" ${marca} aria-pressed="${fichaElegida===i}">${interior}</button>`
-        : `<span ${marca} ${valor?'role="img"':''}>${interior}</span>`;
+        : `<span ${marca} role="img">${interior}</span>`;
     }).join('');
     return `<section class="tablero-mesa ${animarSobre?'abriendo':''}">
       <header><div class="sobre-mini">${envoltura()}</div><h3>${t('Dinero sobre la mesa')}</h3>
       ${editable?`<button type="button" id="ordenarMesa">${t('Agrupar por valor')}</button>`:''}</header>
-      <div class="dinero-en-sobre mesa" aria-label="${t('Dinero sobre la mesa')}">${fichas}</div>
+      <div class="mesa-libre" role="group" aria-label="${t('Dinero sobre la mesa')}">${fichas}</div>
       ${editable?'':etiquetaTotal('Monto del sobre',sumar(sobre))}
       </section>`;
   }
@@ -243,11 +245,21 @@
     const item=oferta[i];
     return `<button type="button" class="producto" data-producto="${i}">${producto(item)}<span><strong>${t(item.nombre)}</strong><b class="etiqueta-precio">${formato(item.precio)}</b></span></button>`;
   }
+  function verPuesto(i) {
+    const item=oferta[i];
+    const nombre=t(item.nombre);
+    const monto=formato(item.precio);
+    const mercancia=elegidos.includes(i)?'<span class="hueco-estante" aria-hidden="true"></span>':
+      `<button type="button" class="producto ${opciones.nombresProductos?'con-globo':''}" data-producto="${i}" aria-label="${nombre}, ${monto}">
+        ${producto(item)}${opciones.nombresProductos?`<span class="globo-producto" aria-hidden="true">${nombre}</span>`:''}
+      </button>`;
+    return `<div class="puesto-estante">${mercancia}<div class="precio-estante"><b>${monto}</b></div></div>`;
+  }
   function productosEnCesta() {
     return elegidos.map(i=>`<button type="button" data-devolver="${i}" aria-label="${idioma('Devolver '+oferta[i].nombre,'Return '+t(oferta[i].nombre))}">${producto(oferta[i])}</button>`).join('');
   }
   function verPasillo() {
-    const columna=(lado,indices)=>`<div class="lado-estante ${lado}" data-estante>${indices.map(verProductoEnEstante).join('')}</div>`;
+    const columna=(lado,indices)=>`<div class="lado-estante ${lado}" data-estante>${indices.map(verPuesto).join('')}</div>`;
     const moviendo=estacionAnterior!==estacionCarrito?' paseando':'';
     return `<div class="pasillo" id="estante">
       ${columna('izquierdo',[0,2,4])}
@@ -317,7 +329,10 @@
     }
   }
   function actualizarContenido() {
-    if(modo==='contar'||modo==='llenar') contenido.innerHTML=verSobre();
+    if(modo==='contar'||modo==='llenar'){
+      contenido.innerHTML=verSobre();
+      distribuirMesa();
+    }
     else if(modo==='contador') contenido.innerHTML=verContador();
     else if(modo==='alcanza') contenido.innerHTML=verAlcance();
     else if(fase==='elegir'){
@@ -442,21 +457,97 @@
     anunciar();
     actualizarContenido();
   }
-  function moverEnMesa(origen,destino) {
+  function posicionesIniciales(dispersar=true) {
+    const puntos=Array.from({length:9},(_,i)=>({x:(i%3+.5)/3,y:(Math.floor(i/3)+.5)/3}));
+    const orden=dispersar?barajar(puntos):puntos;
+    return orden.slice(0,mesa.length).map(punto=>dispersar?{
+      x:punto.x+(Math.random()-.5)*.10,y:punto.y+(Math.random()-.5)*.13
+    }:punto);
+  }
+  function posicionLibre(punto,ficha,ocupadas,ancho,alto) {
+    const margen=3, separacion=5;
+    const minX=ficha.ancho/2+margen,maxX=ancho-minX;
+    const minY=ficha.alto/2+margen,maxY=alto-minY;
+    const limitar=(valor,min,max)=>Math.min(max,Math.max(min,valor));
+    const xOpciones=[punto.x,minX,maxX],yOpciones=[punto.y,minY,maxY];
+    for(const otra of ocupadas){
+      const dx=(otra.ancho+ficha.ancho)/2+separacion;
+      const dy=(otra.alto+ficha.alto)/2+separacion;
+      xOpciones.push(otra.x-dx,otra.x+dx);
+      yOpciones.push(otra.y-dy,otra.y+dy);
+    }
+    let mejor=null,distancia=Infinity;
+    for(const candidatoX of xOpciones)for(const candidatoY of yOpciones){
+      const x=limitar(candidatoX,minX,maxX),y=limitar(candidatoY,minY,maxY);
+      const distancia2=(x-punto.x)**2+(y-punto.y)**2;
+      if(distancia2>=distancia)continue;
+      if(ocupadas.some(otra=>Math.abs(x-otra.x)<(otra.ancho+ficha.ancho)/2+separacion-.01&&Math.abs(y-otra.y)<(otra.alto+ficha.alto)/2+separacion-.01))continue;
+      mejor={x,y};
+      distancia=distancia2;
+    }
+    return mejor;
+  }
+  function distribuirMesa(movida=-1,destino=null) {
+    const superficie=contenido.querySelector('.mesa-libre');
+    if(!superficie)return;
+    const rect=superficie.getBoundingClientRect();
+    if(!rect.width||!rect.height)return;
+    const fichas=[...superficie.children].map((nodo,i)=>{
+      const {width,height}=nodo.getBoundingClientRect();
+      return {i,nodo,ancho:width,alto:height};
+    });
+    const orden=fichas.filter(ficha=>ficha.i!==movida);
+    if(movida>=0)orden.push(fichas[movida]);
+    const {width:ancho,height:alto}=rect;
+    const ocupadas=[];
+    for(const ficha of orden){
+      const p=posicionesMesa[ficha.i];
+      const preferida=ficha.i===movida?destino:{x:p.x*ancho,y:p.y*alto};
+      const lugar=posicionLibre(preferida,ficha,ocupadas,ancho,alto)||
+        posicionLibre({x:p.x*ancho,y:p.y*alto},ficha,ocupadas,ancho,alto);
+      if(!lugar){
+        posicionesMesa=posicionesIniciales(false);
+        dibujarMesa(fichas,rect);
+        return;
+      }
+      ocupadas.push({...ficha,...lugar});
+    }
+    for(const p of ocupadas)posicionesMesa[p.i]={x:p.x/ancho,y:p.y/alto};
+    dibujarMesa(fichas,rect);
+  }
+  function dibujarMesa(fichas,rect) {
+    const sobreAbierto=contenido.querySelector('.sobre-mini').getBoundingClientRect();
+    const escala=Matematicas.escala();
+    for(const {i,nodo} of fichas){
+      const {x,y}=posicionesMesa[i];
+      nodo.style.left=x*100+'%';
+      nodo.style.top=y*100+'%';
+      if(animarSobre){
+        nodo.style.setProperty('--desde-x',(sobreAbierto.x+sobreAbierto.width/2-rect.x-x*rect.width)/escala+'px');
+        nodo.style.setProperty('--desde-y',(sobreAbierto.bottom-rect.y-y*rect.height)/escala+'px');
+      }
+    }
+  }
+  function moverEnMesa(origen,x,y) {
     if(fase!=='contar'||!mesa[origen])return;
-    [mesa[origen],mesa[destino]]=[mesa[destino],mesa[origen]];
+    const rect=contenido.querySelector('.mesa-libre').getBoundingClientRect();
     fichaElegida=null;
     animarSobre=false;
-    actualizarContenido();
+    contenido.querySelector('.tablero-mesa').classList.remove('abriendo');
+    contenido.querySelector('[data-ficha-mesa][aria-pressed=true]')?.setAttribute('aria-pressed','false');
+    distribuirMesa(origen,{x:x-rect.x,y:y-rect.y});
   }
-  function tocarMesa(i) {
-    if(fichaElegida!==null&&fichaElegida!==i)moverEnMesa(fichaElegida,i);
-    else{
-      fichaElegida=mesa[i]&&fichaElegida!==i ? i : null;
-      animarSobre=false;
-      actualizarContenido();
+  function tocarMesa(i,boton) {
+    if(fichaElegida!==null&&fichaElegida!==i){
+      const r=boton.getBoundingClientRect();
+      moverEnMesa(fichaElegida,r.x+r.width/2,r.y+r.height/2);
     }
-    contenido.querySelector(`[data-celda="${i}"]`).focus({preventScroll:true});
+    else{
+      fichaElegida=fichaElegida!==i ? i : null;
+      animarSobre=false;
+      contenido.querySelector('.tablero-mesa').classList.remove('abriendo');
+      boton.setAttribute('aria-pressed',String(fichaElegida===i));
+    }
   }
   function quitarDinero(valor) {
     const i=piezas.lastIndexOf(valor);
@@ -469,6 +560,7 @@
   function limpiarArrastre() {
     arrastre?.fantasma?.remove();
     arrastre?.destino?.classList.remove('sobre-destino');
+    arrastre?.origen?.classList.remove('moviendo-ficha');
     arrastre=null;
   }
   const fuentesArrastre = [
@@ -476,11 +568,11 @@
     {clave:'producto',destino:'#cesta',soltar:elegirProducto},
     {clave:'devolver',destino:'[data-estante],.mostrador-cliente',soltar:devolverProducto},
     {clave:'recibir',destino:'#destinoDinero',soltar:guardarPago},
-    {clave:'celda',destino:'button[data-celda]',soltar:(i,nodo)=>moverEnMesa(i,Number(nodo.dataset.celda))}
+    {clave:'fichaMesa',destino:'.mesa-libre',soltar:(i,nodo,evento)=>moverEnMesa(i,evento.clientX,evento.clientY)}
   ];
   escena.addEventListener('pointerdown',evento=>{
     ignorarClic=false;
-    const origen=evento.target.closest('button[data-dinero],button[data-producto],button[data-devolver],button[data-recibir],button[data-celda]');
+    const origen=evento.target.closest('button[data-dinero],button[data-producto],button[data-devolver],button[data-recibir],button[data-ficha-mesa]');
     if(!origen||evento.button!==0||evento.isPrimary===false||arrastre)return;
     const fuente=fuentesArrastre.find(({clave})=>Object.hasOwn(origen.dataset,clave));
     if(!origen.firstElementChild)return;
@@ -503,6 +595,7 @@
       d.fantasma.style.height=rect.height+'px';
       d.fantasma.append(original.cloneNode(true));
       document.body.append(d.fantasma);
+      if(d.fuente.clave==='fichaMesa')d.origen.classList.add('moviendo-ficha');
     }
     Matematicas.fantasma(d.fantasma,x,y);
     d.destino?.classList.remove('sobre-destino');
@@ -515,7 +608,7 @@
     if(d.fantasma){
       ignorarClic=true;
       const destino=document.elementFromPoint(evento.clientX,evento.clientY)?.closest(d.fuente.destino);
-      if(destino)d.fuente.soltar(d.valor,destino);
+      if(destino)d.fuente.soltar(d.valor,destino,evento);
     }
     limpiarArrastre();
   });
@@ -528,15 +621,18 @@
   escena.addEventListener('click',evento=>{
     if(ignorarClic&&evento.detail){ignorarClic=false;return;}
     const boton=evento.target.closest('button');
-    if(!boton)return;
+    if(!boton){
+      if(fichaElegida!==null&&evento.target.closest('.mesa-libre'))moverEnMesa(fichaElegida,evento.clientX,evento.clientY);
+      return;
+    }
     if(boton.id==='abrirSobre') {
       animarSobre=true;
       cambiarFase('contar');
       monto.focus({preventScroll:true});
     }
     else if(boton.id==='ordenarMesa') {
-      const ordenadas=mesa.filter(Boolean).sort((a,b)=>a-b);
-      mesa=mesa.map((_,i)=>ordenadas[i]??null);
+      mesa.sort((a,b)=>a-b);
+      posicionesMesa=posicionesIniciales(false);
       fichaElegida=null;
       animarSobre=false;
       actualizarContenido();
@@ -565,7 +661,7 @@
       devolverProducto(i);
       contenido.querySelector(`[data-producto="${i}"]`)?.focus({preventScroll:true});
     }
-    else if(boton.hasAttribute('data-celda')) tocarMesa(Number(boton.dataset.celda));
+    else if(boton.hasAttribute('data-ficha-mesa')) tocarMesa(Number(boton.dataset.fichaMesa),boton);
     else if(boton.hasAttribute('data-recibir')){
       guardarPago(Number(boton.dataset.recibir));
       escena.querySelector('[data-recibir]')?.focus({preventScroll:true});
@@ -574,6 +670,14 @@
   });
   escena.addEventListener('animationend',evento=>{
     if(evento.animationName==='abrirSolapa')animarSobre=false;
+  });
+  escena.addEventListener('keydown',evento=>{
+    const ficha=evento.target.closest('button[data-ficha-mesa]');
+    const paso={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]}[evento.key];
+    if(!ficha||!paso)return;
+    evento.preventDefault();
+    const r=ficha.getBoundingClientRect();
+    moverEnMesa(Number(ficha.dataset.fichaMesa),r.x+r.width/2+paso[0]*16,r.y+r.height/2+paso[1]*16);
   });
   function mostrarModo(vista) {
     limpiarArrastre();
@@ -619,6 +723,7 @@
     $('ayudas').checked=opciones.ayudas;
     $('narracion').checked=opciones.narracion;
     $('apilarBilletes').checked=opciones.apilarBilletes;
+    $('nombresProductos').checked=opciones.nombresProductos;
     deslizador.value=opciones.tamanoBilletes;
     previsualizarTamano();
     $('errorAjustes').hidden=true;
@@ -630,7 +735,8 @@
     if(!activas.length){$('errorAjustes').hidden=false;return;}
     const cambio=activas.join()!==opciones.activas.join();
     opciones={activas,ayudas:$('ayudas').checked,narracion:$('narracion').checked,
-      apilarBilletes:$('apilarBilletes').checked,tamanoBilletes:limitarEscala(Number(deslizador.value))};
+      apilarBilletes:$('apilarBilletes').checked,tamanoBilletes:limitarEscala(Number(deslizador.value)),
+      nombresProductos:$('nombresProductos').checked};
     Matematicas.guardar(clave,opciones);
     aplicarTamano();
     ajustes.close();
@@ -659,6 +765,7 @@
     estilo.setProperty('--u',1/z+'px');
     estilo.setProperty('--alto',alto+'px');
     estilo.setProperty('--ancho',document.documentElement.clientWidth/z+'px');
+    distribuirMesa();
   });
   aplicarTamano();
   localizar();
