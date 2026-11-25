@@ -129,7 +129,10 @@ body:has(#control-pantalla-completa[data-fullscreen=true]) .acciones-juego { pad
 }
 .dinero { position:relative; display:grid; place-items:center; width:var(--ficha-ancho); height:var(--ficha-alto); max-width:100%; }
 .moneda { --ficha-ancho:calc(51 * var(--u)); --ficha-alto:calc(47 * var(--u)); }
-.billete { --ficha-ancho:calc(107 * var(--u)); --ficha-alto:calc(49 * var(--u)); }
+.billete {
+  --ficha-alto:min(calc(var(--base-billete,48) * var(--u) * var(--escala-billetes,1)),var(--tope-billete,100vw));
+  --ficha-ancho:calc(var(--ficha-alto) * var(--largo-billete) / 67);
+}
 .banco { background:#edf8f0; border:1px solid #c9e2d6; border-radius:calc(13 * var(--u)); padding:calc(5 * var(--u)); }
 .banco h3,.zona-dinero h3,.sobre h3,.cesta h3 { font-size:calc(15 * var(--u)); }
 .banco h3 { text-align:center; margin-bottom:calc(4 * var(--u)); }
@@ -139,15 +142,23 @@ body:has(#control-pantalla-completa[data-fullscreen=true]) .acciones-juego { pad
 .origen-dinero:active,.producto:active { cursor:grabbing }
 .pieza-colocada { position:relative; }
 .piezas-pago { gap:calc(5 * var(--u)); }
-.piezas-pago .dinero {
+.piezas-pago .moneda {
   --ficha-alto:calc(38 * var(--u)); --ficha-ancho:calc(38 * var(--u));
 }
-.piezas-pago .billete { --ficha-ancho:calc(75 * var(--u)); }
+.piezas-pago .billete { --base-billete:38; }
 .pago-entregado { background:#f2f9f4; border-radius:calc(7 * var(--u)); }
-.pago-entregado .dinero,.piezas-pago:has(>:nth-child(7)) .dinero {
+.pago-entregado .moneda,.piezas-pago:has(>:nth-child(7)) .moneda {
   --ficha-alto:calc(31 * var(--u)); --ficha-ancho:calc(31 * var(--u));
 }
-.pago-entregado .billete,.piezas-pago:has(>:nth-child(7)) .billete { --ficha-ancho:calc(63 * var(--u)); }
+.pago-entregado .billete,.piezas-pago:has(>:nth-child(7)) .billete { --base-billete:31; }
+.pila-billetes {
+  --borde-pila:calc(6 * var(--u));
+  display:grid; padding-bottom:calc(var(--cantidad-pila) * var(--borde-pila));
+}
+.pila-billetes > span {
+  grid-area:1/1; transform:translateY(calc(var(--capa) * var(--borde-pila)));
+}
+.pila-billetes .billete { outline:1px solid #2c484d; }
 .cantidad-piezas {
   position:absolute; right:calc(-3 * var(--u)); top:0; background:#174541; color:white; padding:0 calc(3 * var(--u));
   border-radius:calc(8 * var(--u)); font-size:calc(10 * var(--u)); text-shadow:none;
@@ -191,10 +202,8 @@ body:has(#control-pantalla-completa[data-fullscreen=true]) .acciones-juego { pad
 .recibo ul { list-style:none; margin:0; padding:0; display:grid; gap:calc(2 * var(--u)); }
 .recibo li { display:grid; align-items:center; grid-template-columns:auto minmax(0,1fr) auto; gap:calc(6 * var(--u)); }
 .pago-cliente { display:flex; justify-content:center; flex-wrap:wrap; gap:calc(4 * var(--u)); padding-bottom:calc(3 * var(--u)); }
-.pago-cliente .dinero { --ficha-alto:calc(30 * var(--u)); --ficha-numero:calc(12 * var(--u)); }
-.pago-cliente .moneda { --ficha-ancho:calc(30 * var(--u)); }
-.pago-cliente .billete { --ficha-ancho:calc(63 * var(--u)); }
-.pago-cliente .dinero small { display:none; }
+.pago-cliente .moneda { --ficha-ancho:calc(30 * var(--u)); --ficha-alto:calc(30 * var(--u)); }
+.pago-cliente .billete { --base-billete:30; }
 .respuesta { justify-self:center; width:min(100%,calc(380 * var(--u))); display:grid; justify-items:center; gap:calc(4 * var(--u)); font-weight:800 }
 .monto {
   display:flex; align-items:center; width:min(100%,calc(170 * var(--u))); background:#eff8f5; border:2px solid #769f95;
@@ -223,8 +232,15 @@ dialog fieldset { min-width:0; border:1px solid #c5dbce; border-radius:10px; pad
 dialog legend { font-weight:800; }
 dialog fieldset > p { font-size:14px; margin-bottom:6px; }
 .opciones-dinero { display:grid; grid-template-columns:repeat(auto-fit,minmax(90px,1fr)); gap:4px; }
-.opciones-dinero label { display:grid; justify-items:center; gap:3px; padding:3px; border-radius:8px; background:#f5f8f0; cursor:pointer; }
+.opciones-dinero label { container-type:inline-size; display:grid; justify-items:center; gap:3px; padding:3px; border-radius:8px; background:#f5f8f0; cursor:pointer; }
 .opciones-dinero input,.casilla input { width:19px; height:19px; accent-color:var(--teal); }
+.opciones-dinero .billete { --base-billete:38; --tope-billete:calc(100cqi * 67 / 153); }
+.ajustes-billetes { display:grid; gap:7px; }
+.escala-billetes { display:flex; align-items:center; gap:9px; }
+.escala-billetes input { flex:1; min-width:0; accent-color:var(--teal); }
+.escala-billetes output { width:4em; text-align:right; font-variant-numeric:tabular-nums; }
+#muestraBilletes { container-type:inline-size; display:flex; align-items:center; justify-content:center; gap:8px; min-height:62px; }
+#muestraBilletes .billete { --base-billete:42; --tope-billete:calc((100cqi - 8px) * 67 / 278); }
 .casilla { display:flex; align-items:center; gap:6px; }
 .casilla input { flex:none; }
 #errorAjustes { color:#a93020; font-weight:bold; }
@@ -247,11 +263,11 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
   .reto p { font-size:calc(14 * var(--u)); }
   .producto .foto-producto { width:min(100%,calc(58 * var(--u))); }
   .estante { grid-template-columns:repeat(3,minmax(0,1fr)); }
-  .billete { --ficha-ancho:calc(70 * var(--u)); --ficha-alto:calc(40 * var(--u)); --ficha-numero:calc(13 * var(--u)); }
+  #banco .billete { --base-billete:37; }
   #banco:has(>:nth-child(6)) { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); }
-  #banco .billete { --ficha-numero:calc(11 * var(--u)); }
-  #banco .dinero { --ficha-alto:calc(36 * var(--u)); }
-  #banco .moneda { --ficha-ancho:calc(36 * var(--u)); }
+  #banco:has(>:nth-child(6)) .origen-dinero { container-type:inline-size; width:100%; justify-items:center; }
+  #banco:has(>:nth-child(6)) .billete { --tope-billete:calc(100cqi * 67 / 153); }
+  #banco .moneda { --ficha-ancho:calc(36 * var(--u)); --ficha-alto:calc(36 * var(--u)); }
   .recibo .foto-producto { width:calc(19 * var(--u)); }
   .recibo ul { gap:calc(1 * var(--u)); }
   .recibo li { font-size:calc(13 * var(--u)); }
@@ -271,14 +287,15 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
   .juego { padding:calc(5 * var(--u)); }
   .producto .foto-producto { width:calc(42 * var(--u)); }
   .moneda { --ficha-ancho:calc(42 * var(--u)); --ficha-alto:calc(42 * var(--u)); }
-  .billete { --ficha-ancho:calc(71 * var(--u)); --ficha-alto:calc(41 * var(--u)); --ficha-numero:calc(13 * var(--u)); }
+  #appColones { --base-billete:38; }
   .dinero-en-sobre { padding-block:calc(2 * var(--u)); gap:calc(4 * var(--u)); }
   .banco { padding:calc(4 * var(--u)); }
   .banco h3 { font-size:calc(13 * var(--u)); margin-bottom:calc(3 * var(--u)); }
-  .banco .billete { --ficha-ancho:calc(54 * var(--u)); --ficha-alto:calc(38 * var(--u)); --ficha-numero:calc(11 * var(--u)); border-width:1.5px; }
   .banco .moneda { --ficha-ancho:calc(38 * var(--u)); --ficha-alto:calc(38 * var(--u)); }
   #banco { column-gap:calc(3 * var(--u)); }
   #banco:has(>:nth-child(6)) { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); justify-items:center; }
+  #banco:has(>:nth-child(6)) .origen-dinero { container-type:inline-size; width:100%; justify-items:center; }
+  #banco:has(>:nth-child(6)) .billete { --tope-billete:calc(100cqi * 67 / 153); }
   #banco > button { max-width:100%; }
   .recibo .foto-producto { width:calc(22 * var(--u)); }
   .escena[data-fase=pagar] .recibo ul,.escena[data-fase=dar] .recibo ul { grid-template-columns:repeat(auto-fit,minmax(calc(72 * var(--u)),1fr)); gap:calc(4 * var(--u)); }
@@ -327,12 +344,13 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
 }
 .mesa { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); }
 .celda-mesa {
-  display:grid; place-items:center; width:100%; height:calc(59 * var(--u)); min-width:0; padding:calc(3 * var(--u));
+  container-type:inline-size; display:grid; place-items:center; width:100%; min-height:calc(59 * var(--u)); min-width:0; padding:calc(3 * var(--u));
   overflow:hidden; touch-action:none; border:1px dashed #a1674092; border-radius:calc(8 * var(--u)); background:#fff7e63b;
 }
 .celda-mesa:has(>.dinero) { cursor:grab; }
 .celda-mesa[aria-pressed=true],.celda-mesa.sobre-destino { background:#fff2b7; border-color:#766220; }
 .celda-mesa .dinero { max-height:100%; }
+.celda-mesa .billete { --tope-billete:calc(100cqi * 67 / 153); }
 .contador-caja { border:calc(3 * var(--u)) solid #064b4e; border-radius:calc(18 * var(--u)); padding:calc(8 * var(--u)); background:linear-gradient(#3fafaa,#147977); }
 .pantalla-contador { display:grid; gap:calc(3 * var(--u)); padding:calc(4 * var(--u)); border-radius:calc(9 * var(--u)); background:#09373b; color:#defcbb; }
 .pantalla-contador .dato-total { background:transparent; color:inherit; }
@@ -406,6 +424,56 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
 }
 .cesta-caja .carrito-real { padding-bottom:calc(3 * var(--u)); padding-right:0; }
 .cesta-caja .carrito-real > i,.cesta-caja .rejilla-carrito::before,.cesta-caja .rejilla-carrito::after { display:none; }
+.pasillo {
+  --alto-pasillo:clamp(calc(219 * var(--u)),calc(var(--alto,100dvh)*.38),calc(350 * var(--u)));
+  display:grid; grid-template-columns:minmax(0,1fr) minmax(calc(85 * var(--u)),.9fr) minmax(0,1fr);
+  grid-template-rows:minmax(0,1fr);
+  gap:calc(5 * var(--u)); height:var(--alto-pasillo); min-width:0; overflow:hidden;
+  padding:calc(5 * var(--u)); border:1px solid #cda575; border-radius:calc(15 * var(--u));
+  background:#f7e2c3 url("imagenes/pasillo.webp") center/100% 100% no-repeat;
+}
+.escena[data-fase=elegir] { align-content:safe center; }
+.lado-estante { display:grid; grid-template-rows:repeat(3,minmax(0,1fr)); gap:calc(4 * var(--u)); min-width:0; }
+.lado-estante .producto {
+  display:grid; grid-template-columns:minmax(calc(35 * var(--u)),.9fr) minmax(0,1fr);
+  align-items:center; justify-items:start; gap:calc(4 * var(--u)); padding:calc(4 * var(--u)); min-height:0;
+  border-color:#c3a274; background:#fffcf3f5;
+}
+.lado-estante .producto .foto-producto { width:min(100%,calc(66 * var(--u))); justify-self:center; }
+.lado-estante .producto > span:last-child { min-width:0; text-align:left; }
+.lado-estante .producto strong { overflow-wrap:anywhere; }
+.lado-estante .hueco-estante { background:#8b653324; border:1px dashed #835f34a8; }
+.camino-carrito {
+  --alto-carrito:clamp(calc(77 * var(--u)),calc(var(--alto-pasillo)/2.75),calc(127 * var(--u)));
+  position:relative; display:grid; justify-items:center;
+}
+.carrito-pasillo {
+  position:absolute; top:calc(var(--estacion) * (100% - var(--alto-carrito)) / 2);
+  height:var(--alto-carrito); width:min(100%,calc(112 * var(--u))); isolation:isolate; border-radius:calc(10 * var(--u));
+}
+.carrito-pasillo.paseando { animation:moverPorPasillo .38s ease-out; }
+@keyframes moverPorPasillo { from { top:calc(var(--estacion-origen) * (100% - var(--alto-carrito)) / 2); } }
+.carrito-pasillo img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; pointer-events:none; }
+.carga-carrito {
+  position:absolute; inset:15% 18% 32%; display:flex; flex-wrap:wrap; place-content:center; gap:calc(2 * var(--u));
+}
+.carga-carrito button {
+  padding:0; border:0; border-radius:calc(5 * var(--u)); background:#fff;
+  width:calc(26 * var(--u)); touch-action:none; cursor:grab;
+}
+.carga-carrito .foto-producto { width:100%; }
+.carrito-pasillo.sobre-destino { outline:calc(3 * var(--u)) dashed #186f56; background:#bdebd973; }
+.controles-pasillo {
+  display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); align-items:center; justify-self:center;
+  gap:calc(7 * var(--u)); width:min(100%,calc(420 * var(--u))); text-align:center;
+}
+.controles-pasillo span { display:grid; line-height:1.1; }
+.controles-pasillo small { font-size:calc(12 * var(--u)); }
+.controles-pasillo button {
+  min-height:calc(36 * var(--u)); padding:calc(3 * var(--u)); border:1px solid #b4dbce;
+  border-radius:calc(9 * var(--u)); background:#e4f6ee; font-size:calc(13 * var(--u)); font-weight:bold;
+}
+.controles-pasillo button:disabled { opacity:.52; cursor:default; }
 @media (orientation:landscape) {
   .escena:is([data-fase=escanear],[data-fase=recibir]) #contenido {
     grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);
@@ -418,17 +486,32 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
 }
 @media (orientation:portrait) and (max-width:460px) {
   .mesa { gap:calc(3 * var(--u)); }
-  .celda-mesa { height:calc(48 * var(--u)); padding:calc(2 * var(--u)); }
+  .celda-mesa { min-height:calc(48 * var(--u)); padding:calc(2 * var(--u)); }
   .celda-mesa .moneda { --ficha-ancho:calc(39 * var(--u)); }
+  .pasillo { grid-template-columns:minmax(0,1fr) minmax(calc(74 * var(--u)),.8fr) minmax(0,1fr); }
+  .lado-estante .producto { grid-template-columns:1fr; justify-items:center; align-content:center; gap:calc(1 * var(--u)); }
+  .lado-estante .producto .foto-producto { width:calc(36 * var(--u)); }
+  .lado-estante .producto > span:last-child { text-align:center; }
+  .lado-estante .producto strong,.lado-estante .etiqueta-precio { font-size:calc(12 * var(--u)); }
 }
 @media (max-height:550px) and (orientation:landscape) {
-  .celda-mesa { height:calc(43 * var(--u)); }
+  .celda-mesa { min-height:calc(43 * var(--u)); }
+  .pasillo { --alto-pasillo:clamp(calc(153 * var(--u)),calc(var(--alto,100dvh)*.48),calc(220 * var(--u))); }
+  .camino-carrito { --alto-carrito:clamp(calc(66 * var(--u)),calc(var(--alto-pasillo)/2.4),calc(84 * var(--u))); }
+  .controles-pasillo button { min-height:calc(30 * var(--u)); }
+  .lado-estante .producto .foto-producto { width:calc(34 * var(--u)); }
+  .lado-estante .producto strong,.lado-estante .etiqueta-precio { font-size:calc(12 * var(--u)); }
   .estante .producto .foto-producto { width:calc(35 * var(--u)); }
   .estante { grid-template-columns:repeat(6,minmax(0,1fr)); }
   .estante strong,.estante .etiqueta-precio { font-size:calc(12 * var(--u)); }
   .cliente img { width:calc(38 * var(--u)); height:calc(38 * var(--u)); }
 }
+@media (max-height:370px) and (orientation:landscape) {
+  .pasillo { --alto-pasillo:clamp(calc(116 * var(--u)),calc(var(--alto,100dvh)*.39),calc(144 * var(--u))); }
+  .lado-estante .producto { padding:calc(2 * var(--u)); }
+  .lado-estante .producto .foto-producto { width:calc(29 * var(--u)); }
+}
 @media (prefers-reduced-motion:reduce) {
   .abriendo .solapa-sobre,.abriendo .mesa .dinero,.llega-cliente,.llega-cliente + .mostrador-cliente .producto,
-  .entrega-cliente.efectivo-nuevo .pago-cliente .origen-dinero { animation:none; }
+  .entrega-cliente.efectivo-nuevo .pago-cliente .origen-dinero,.carrito-pasillo.paseando { animation:none; }
 }

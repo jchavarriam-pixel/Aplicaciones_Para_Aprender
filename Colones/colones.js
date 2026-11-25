@@ -5,6 +5,7 @@
   const contenido = $('contenido'), banco = $('banco'), monto = $('monto');
   const clave = 'colones.practica.v1';
   const valores = [10,25,50,100,500,1000,2000,5000,10000,20000];
+  const largosBillete = {1000:125,2000:132,5000:139,10000:146,20000:153};
   const tipoDinero = valor => valor<1000 ? 'moneda' : 'billete';
   const modos = {
     contador:{nombre:'Contador de dinero',guia:'Agrega dinero y escucha cuánto pusiste y cuánto hay en total.'},
@@ -22,10 +23,13 @@
   const iniciales = [10,25,50,100,500,1000,2000];
   const guardado = Matematicas.leer(clave);
   const activas = valores.filter(valor => Array.isArray(guardado.activas) && guardado.activas.includes(valor));
-  let opciones = {activas:activas.length ? activas : iniciales, ayudas:guardado.ayudas!==false, narracion:guardado.narracion!==false};
+  const limitarEscala = valor => Number.isFinite(valor) ? Math.max(70,Math.min(150,valor)) : 100;
+  let opciones = {activas:activas.length ? activas : iniciales, ayudas:guardado.ayudas!==false,
+    narracion:guardado.narracion!==false, apilarBilletes:guardado.apilarBilletes===true, tamanoBilletes:limitarEscala(guardado.tamanoBilletes)};
   let modo = null, fase, oferta, elegidos, piezas, sobre, dineroCliente, pagado;
   let arrastre = null, ignorarClic = false;
   let mesa, fichaElegida, animarSobre, cartera, mercanciaCliente, recibidos;
+  let estacionCarrito=0, estacionAnterior=0;
   const t = texto => IdiomaVoz.t(texto);
   const en = () => IdiomaVoz.idioma==='en';
   const idioma = (es,ingles) => en() ? ingles : es;
@@ -91,6 +95,7 @@
     if(!modo)return;
     oferta=prepararProductos();
     elegidos=[];
+    estacionAnterior=estacionCarrito=0;
     piezas=[];
     sobre=formar(modo==='contar'?entero(3,7):entero(2,5));
     mesa=Array.from({length:10},(_,i)=>sobre[i]??null);
@@ -122,7 +127,8 @@
     cambiarFase(({contador:'medir',contar:'cerrado',llenar:'llenar',alcanza:'decidir',cajero:'escanear'})[modo]||'elegir');
   }
   function pieza(valor) {
-    return `<span class="dinero ${tipoDinero(valor)}" data-valor="${valor}" aria-hidden="true"><img src="imagenes/dinero-${valor}.webp" alt="" draggable="false"></span>`;
+    const medida=largosBillete[valor]?` style="--largo-billete:${largosBillete[valor]}"`:'';
+    return `<span class="dinero ${tipoDinero(valor)}" data-valor="${valor}"${medida} aria-hidden="true"><img src="imagenes/dinero-${valor}.webp" alt="" draggable="false"></span>`;
   }
   const etiquetaDinero = valor => idioma(`${formato(valor)} en ${tipoDinero(valor)}`,`${formato(valor)} ${valor<1000?'coin':'banknote'}`);
   function mostrarBanco() {
@@ -182,10 +188,27 @@
       ${fase==='decidir'?`<div class="decidir"><button type="button" data-alcanza="si">${t('Sí me alcanza')}</button><button type="button" data-alcanza="no">${t('No me alcanza')}</button></div>`:''}`;
   }
   function fichasPago(editable=false) {
-    return piezas.map(valor=>{
-      const imagen=pieza(valor);
-      const etiqueta=etiquetaDinero(valor);
-      const quitar=idioma(`Quitar ${etiqueta}`,`Remove ${etiqueta}`);
+    const agruparMonedas=modo==='contador'||modo==='llenar';
+    const grupos=[];
+    const agrupados=new Map();
+    for(const valor of piezas){
+      const agrupar=largosBillete[valor]?opciones.apilarBilletes:agruparMonedas;
+      if(agrupar&&agrupados.has(valor))agrupados.get(valor).cantidad++;
+      else{
+        const ficha={valor,cantidad:1};
+        grupos.push(ficha);
+        if(agrupar)agrupados.set(valor,ficha);
+      }
+    }
+    return grupos.map(({valor,cantidad})=>{
+      const apilado=cantidad>1&&largosBillete[valor];
+      const imagen=apilado
+        ? `<span class="pila-billetes" style="--cantidad-pila:${cantidad-1}" aria-hidden="true">${Array.from({length:cantidad},(_,i)=>
+          `<span style="--capa:${cantidad-1-i}">${pieza(valor)}</span>`).join('')}</span>`
+        : pieza(valor)+(cantidad>1?`<b class="cantidad-piezas">×${cantidad}</b>`:'');
+      const etiqueta=cantidad>1?`${cantidad} × ${etiquetaDinero(valor)}`:etiquetaDinero(valor);
+      const quitar=cantidad>1?idioma(`${etiqueta}. Quitar una pieza.`,`${etiqueta}. Remove one piece.`):
+        idioma(`Quitar ${etiqueta}`,`Remove ${etiqueta}`);
       return editable
         ? `<button type="button" class="pieza-colocada" data-quitar="${valor}" aria-label="${quitar}">${imagen}</button>`
         : `<span class="pieza-colocada" role="img" aria-label="${etiqueta}">${imagen}</span>`;
@@ -194,14 +217,7 @@
   function destino(rotulo,estilo='mostrador') {
     const editable=fasesDinero.has(fase);
     const esPago=modo!=='contador'&&modo!=='llenar';
-    const conteos=esPago?null:contarPiezas(piezas);
-    const fichas=esPago?fichasPago(editable):opciones.activas.filter(valor=>conteos.has(valor)).map(valor=>{
-      const cantidad=conteos.get(valor);
-      const interior=pieza(valor)+(cantidad>1?`<b class="cantidad-piezas">×${cantidad}</b>`:'');
-      const quitar=idioma(`Quitar ${etiquetaDinero(valor)}`,`Remove ${etiquetaDinero(valor)}`);
-      return editable?`<button type="button" class="pieza-colocada" data-quitar="${valor}" aria-label="${quitar}">${interior}</button>`:
-        `<span class="pieza-colocada" role="img" aria-label="${cantidad} × ${etiquetaDinero(valor)}">${interior}</span>`;
-    }).join('');
+    const fichas=fichasPago(editable);
     return `<section id="destinoDinero" class="${estilo} zona-dinero"><header><h3>${t(rotulo)}</h3>${modo!=='contador'&&(opciones.ayudas||fase==='listo')&&fichas?`<b>${formato(sumar(piezas))}</b>`:''}</header>
       <div class="piezas-colocadas ${esPago?'piezas-pago':''}">${fichas||`<span>${t(fase==='recibir'?'Guarda aquí el pago del cliente.':'Toca o arrastra una pieza.')}</span>`}</div></section>`;
   }
@@ -222,14 +238,42 @@
     }
     return [...conteos].sort(([a],[b])=>b-a).flatMap(([valor,n])=>Array(n).fill(valor));
   }
+  function verProductoEnEstante(i) {
+    if(elegidos.includes(i))return '<span class="hueco-estante" aria-hidden="true"></span>';
+    const item=oferta[i];
+    return `<button type="button" class="producto" data-producto="${i}">${producto(item)}<span><strong>${t(item.nombre)}</strong><b class="etiqueta-precio">${formato(item.precio)}</b></span></button>`;
+  }
+  function productosEnCesta() {
+    return elegidos.map(i=>`<button type="button" data-devolver="${i}" aria-label="${idioma('Devolver '+oferta[i].nombre,'Return '+t(oferta[i].nombre))}">${producto(oferta[i])}</button>`).join('');
+  }
+  function verPasillo() {
+    const columna=(lado,indices)=>`<div class="lado-estante ${lado}" data-estante>${indices.map(verProductoEnEstante).join('')}</div>`;
+    const moviendo=estacionAnterior!==estacionCarrito?' paseando':'';
+    return `<div class="pasillo" id="estante">
+      ${columna('izquierdo',[0,2,4])}
+      <div class="camino-carrito">
+        <div id="cesta" class="carrito-pasillo${moviendo}" style="--estacion:${estacionCarrito};--estacion-origen:${estacionAnterior}" role="group" aria-label="${t('Tu carrito')}">
+          <img src="imagenes/carrito-arriba.webp" alt="" draggable="false">
+          <div class="carga-carrito">${productosEnCesta()}</div>
+        </div>
+      </div>
+      ${columna('derecho',[1,3,5])}
+    </div>
+    <div class="controles-pasillo">
+      <button type="button" data-paso="-1" ${estacionCarrito===0?'disabled':''}>${t('Retroceder')}</button>
+      <span><b>${formato(precio())}</b><small>${idioma(`Parada ${estacionCarrito+1} de 3`,`Stop ${estacionCarrito+1} of 3`)}</small></span>
+      <button type="button" data-paso="1" ${estacionCarrito===2?'disabled':''}>${t('Avanzar')}</button>
+    </div>`;
+  }
+  function situarCarrito(estacion) {
+    estacionAnterior=estacionCarrito;
+    estacionCarrito=Math.max(0,Math.min(2,estacion));
+  }
   function estante() {
-    const somosCajero=modo==='cajero';
-    const indices=somosCajero?mercanciaCliente:oferta.map((_,i)=>i);
-    return `<div class="estante ${somosCajero?'mostrador-cliente':''}" id="estante">${indices.map(i=>elegidos.includes(i)
-      ? '<span class="hueco-estante" aria-hidden="true"></span>'
-      : `<button type="button" class="producto" data-producto="${i}">${producto(oferta[i])}<span><strong>${t(oferta[i].nombre)}</strong><b class="etiqueta-precio">${formato(oferta[i].precio)}</b></span></button>`
-    ).join('')}</div><section class="cesta ${somosCajero?'cesta-caja':''}" id="cesta"><header><h3>${t(somosCajero?'Cesta de la caja':elegidos.length?'Tu carrito':'Pon aquí los productos')}</h3>${elegidos.length||somosCajero?`<strong data-total-carrito>${formato(precio())}</strong>`:''}</header>
-      <div class="carrito-real"><div class="rejilla-carrito">${elegidos.map(i=>`<button type="button" data-devolver="${i}" aria-label="${idioma('Devolver '+oferta[i].nombre,'Return '+t(oferta[i].nombre))}">${producto(oferta[i])}</button>`).join('')}</div><i aria-hidden="true"></i></div></section>`;
+    if(modo!=='cajero')return verPasillo();
+    return `<div class="estante mostrador-cliente" id="estante">${mercanciaCliente.map(verProductoEnEstante).join('')}</div>
+      <section class="cesta cesta-caja" id="cesta"><header><h3>${t('Cesta de la caja')}</h3><strong data-total-carrito>${formato(precio())}</strong></header>
+      <div class="carrito-real"><div class="rejilla-carrito">${productosEnCesta()}</div></div></section>`;
   }
   function vistaCliente(mensaje) {
     return `<div class="cliente ${fase==='escanear'&&!elegidos.length?'llega-cliente':''}"><img src="imagenes/cliente.webp" alt=""><p>${t(mensaje)}</p></div>`;
@@ -276,7 +320,10 @@
     if(modo==='contar'||modo==='llenar') contenido.innerHTML=verSobre();
     else if(modo==='contador') contenido.innerHTML=verContador();
     else if(modo==='alcanza') contenido.innerHTML=verAlcance();
-    else if(fase==='elegir') contenido.innerHTML=estante();
+    else if(fase==='elegir'){
+      contenido.innerHTML=estante();
+      estacionAnterior=estacionCarrito;
+    }
     else if(fase==='escanear') contenido.innerHTML=vistaCliente('Estos son mis productos.')+estante();
     else if(fase==='recibir') contenido.innerHTML=recibirPago();
     else{
@@ -377,6 +424,7 @@
     if(modo==='carrito'&&elegidos.length===3)return anunciar('Puedes llevar hasta tres productos.');
     if(modo!=='carrito'&&modo!=='cajero')elegidos=[];
     elegidos.push(i);
+    if(fase==='elegir')situarCarrito(Math.floor(i/2));
     anunciar();
     actualizarContenido();
   }
@@ -426,7 +474,7 @@
   const fuentesArrastre = [
     {clave:'dinero',destino:'#destinoDinero',soltar:agregarDinero},
     {clave:'producto',destino:'#cesta',soltar:elegirProducto},
-    {clave:'devolver',destino:'#estante',soltar:devolverProducto},
+    {clave:'devolver',destino:'[data-estante],.mostrador-cliente',soltar:devolverProducto},
     {clave:'recibir',destino:'#destinoDinero',soltar:guardarPago},
     {clave:'celda',destino:'button[data-celda]',soltar:(i,nodo)=>moverEnMesa(i,Number(nodo.dataset.celda))}
   ];
@@ -500,6 +548,12 @@
         completar();
       }else anunciar('Compara tu dinero con la etiqueta de precio.');
     }
+    else if(boton.hasAttribute('data-paso')){
+      const paso=Number(boton.dataset.paso);
+      situarCarrito(estacionCarrito+paso);
+      actualizarContenido();
+      (contenido.querySelector(`[data-paso="${paso}"]:enabled`)||contenido.querySelector('[data-paso]:enabled'))?.focus({preventScroll:true});
+    }
     else if(boton.hasAttribute('data-dinero')) agregarDinero(Number(boton.dataset.dinero));
     else if(boton.hasAttribute('data-producto')) {
       const i=Number(boton.dataset.producto);
@@ -545,6 +599,17 @@
   TecladoEnPantalla.instalar($('respuesta'),$('teclado'),{limpiar:true});
 
   const ajustes=$('ajustes');
+  const deslizador=$('tamanoBilletes');
+  $('muestraBilletes').innerHTML=[1000,20000].map(pieza).join('');
+  function previsualizarTamano() {
+    const valor=Number(deslizador.value);
+    ajustes.style.setProperty('--escala-billetes',valor/100);
+    $('porcentajeBilletes').value=valor+' %';
+  }
+  deslizador.addEventListener('input',previsualizarTamano);
+  function aplicarTamano() {
+    document.documentElement.style.setProperty('--escala-billetes',opciones.tamanoBilletes/100);
+  }
   function rotularAjustes() {
     $('denominaciones').innerHTML=valores.map(valor=>`<label><input type="checkbox" value="${valor}" aria-label="${etiquetaDinero(valor)}" ${opciones.activas.includes(valor)?'checked':''}>${pieza(valor)}</label>`).join('');
   }
@@ -553,6 +618,9 @@
     rotularAjustes();
     $('ayudas').checked=opciones.ayudas;
     $('narracion').checked=opciones.narracion;
+    $('apilarBilletes').checked=opciones.apilarBilletes;
+    deslizador.value=opciones.tamanoBilletes;
+    previsualizarTamano();
     $('errorAjustes').hidden=true;
     IdiomaVoz.iniciarEdicion();
     ajustes.showModal();
@@ -561,8 +629,10 @@
     const activas=[...$('denominaciones').querySelectorAll('input:checked')].map(input=>Number(input.value));
     if(!activas.length){$('errorAjustes').hidden=false;return;}
     const cambio=activas.join()!==opciones.activas.join();
-    opciones={activas,ayudas:$('ayudas').checked,narracion:$('narracion').checked};
+    opciones={activas,ayudas:$('ayudas').checked,narracion:$('narracion').checked,
+      apilarBilletes:$('apilarBilletes').checked,tamanoBilletes:limitarEscala(Number(deslizador.value))};
     Matematicas.guardar(clave,opciones);
+    aplicarTamano();
     ajustes.close();
     IdiomaVoz.aplicarEdicion();
     mostrarBanco();
@@ -590,6 +660,7 @@
     estilo.setProperty('--alto',alto+'px');
     estilo.setProperty('--ancho',document.documentElement.clientWidth/z+'px');
   });
+  aplicarTamano();
   localizar();
   historial.restaurar();
 })();

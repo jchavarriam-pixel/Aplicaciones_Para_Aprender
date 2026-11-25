@@ -115,5 +115,10 @@ Object.assign(window.TEXTOS_INGLES,{
   'Registrar pago':'Record payment',
   'Caja registradora':'Cash register',
   'Pago guardado en la caja.':'Payment is in the register.',
-  '¿Me das el vuelto?':'Can I have my change?'
+  '¿Me das el vuelto?':'Can I have my change?',
+  'Billetes':'Banknotes',
+  'Apilar billetes del mismo valor':'Stack banknotes of the same value',
+  'Tamaño de los billetes':'Banknote size',
+  'Avanzar':'Move forward',
+  'Retroceder':'Move back'
 });
