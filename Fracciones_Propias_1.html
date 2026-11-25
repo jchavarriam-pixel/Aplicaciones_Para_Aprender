@@ -466,7 +466,7 @@ try {
   const old=JSON.parse(localStorage.getItem('fraccionesPropias1Settings')||'{}');
   if(!localStorage.getItem(key)&&old.voice)localStorage.setItem(key,JSON.stringify({idioma:'es',voces:{es:old.voice}}));
 } catch {}
-</script><script src="idioma-voz-textos.js?v=creditos-msc"></script><script src="matematicas-fracciones-textos.js?v=viaje-2"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script><link rel="stylesheet" href="iconos/cabeceras.css"><script src="historial-modos.js"></script></head>
+</script><script src="idioma-voz-textos.js?v=creditos-msc"></script><script src="matematicas-fracciones-textos.js?v=concordancia"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script><link rel="stylesheet" href="iconos/cabeceras.css"><script src="historial-modos.js"></script></head>
 <body>
 <div id="app">
   <header class="topbar">
@@ -859,6 +859,7 @@ function setScreen(id){
   document.body.classList.toggle('in-activity',!!currentActivity);
   if(id==='home'){currentInstruction=''; window.speechSynthesis?.cancel()}
 }
+function fraseRegionesPintadas(n,d){ return n===1 ? `Una de las ${d} regiones está pintada.` : `${n} de las ${d} regiones están pintadas.`; }
 function setInstruction(text, elId){
   clearTimeout(instructionSpeakTimer);instructionSpeakTimer=null;
   currentInstruction=text;
@@ -1261,7 +1262,7 @@ async function checkA1(){
   if(s.num===f.n&&s.den===f.d){
     const name=fractionText(f.n,f.d);
     $('#a1FractionName').textContent=name;$('#a1FractionName').classList.remove('hidden');
-    giveReviewFeedback('a1Feedback',`${f.n} de las ${f.d} regiones están pintadas. La fracción es ${name}.`,true);
+    giveReviewFeedback('a1Feedback',`${fraseRegionesPintadas(f.n,f.d)} La fracción es ${name}.`,true);
     a1CountHelpRun++;clearRegionCountLabels();$('#a1CountHelp').classList.add('hidden');
     s.done=true;
     $('#a1Next').classList.remove('hidden');$('#a1Celebrate').classList.remove('hidden');
@@ -1895,7 +1896,7 @@ function refreshActivityLanguage(){
   if(id==="a1"){
     if(!$("#a1FractionName").classList.contains("hidden")){
       $("#a1FractionName").textContent=name;
-      feedback("a1Feedback",s.fraction.n+" de las "+s.fraction.d+" regiones están pintadas. La fracción es "+name+".","good");
+      feedback("a1Feedback",fraseRegionesPintadas(s.fraction.n,s.fraction.d)+" La fracción es "+name+".","good");
     }
   }else if(id==="a2"){
     $("#a2FractionName").textContent=name;

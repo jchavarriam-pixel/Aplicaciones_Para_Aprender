@@ -64,7 +64,10 @@
       const excluir=new Set([...productos,...extraIzq.map(p=>p.c)]),extraDer=this.distractores([...productos],der,144,excluir);
       this.left=shuffle([...base.map((p,i)=>({...p,id:'l'+i,requerido:true})),...extraIzq.map((p,i)=>({...p,id:'lx'+i,requerido:false}))]);
       this.right=shuffle([...base.map((p,i)=>({valor:p.c,id:'r'+i})),...extraDer.map((valor,i)=>({valor,id:'rx'+i}))]);
-      if(base.length<c.cantidad||izq+extraDer.length<sobrantes)this.nota=t(`Esta selección permite ${base.length} ${base.length===1?'pareja':'parejas'} y ${izq+extraDer.length} sobrantes.`,`This selection provides ${base.length} ${base.length===1?'pair':'pairs'} and ${izq+extraDer.length} extra cards.`);
+      const extras=izq+extraDer.length;
+      if(base.length<c.cantidad||extras<sobrantes)this.nota=t(
+        `Esta selección permite ${base.length} ${base.length===1?'pareja':'parejas'} y ${extras===1?'una ficha sobrante':`${extras} fichas sobrantes`}.`,
+        `This selection provides ${base.length} ${base.length===1?'pair':'pairs'} and ${extras===1?'one extra card':`${extras} extra cards`}.`);
     }
     crearPreguntas(pool,c){
       const disponibles=c.tipo==='factor'?pool.filter(p=>this.posiciones(p,c).length):pool;
@@ -76,7 +79,9 @@
         if(this.modo==='seleccion')q.choices=shuffle([q.esperado,...this.distractores([q.esperado],c.opciones-1,campo==='c'?144:12)]);
         return q;
       });
-      if(this.questions.length<c.cantidad)this.nota=t(`Con esta selección hay ${this.questions.length} ejercicios distintos.`,`This selection has ${this.questions.length} different questions.`);
+      if(this.questions.length<c.cantidad)this.nota=this.questions.length===1
+        ? t('Con esta selección hay un ejercicio.','This selection has one question.')
+        : t(`Con esta selección hay ${this.questions.length} ejercicios distintos.`,`This selection has ${this.questions.length} different questions.`);
       this.tokens=new Map();this.poolFichas=this.questions.map(q=>({id:'f-'+q.id,valor:q.esperado}));if(this.modo==='completar')this.seleccion=this.questions[0]?.id||null;
     }
     distractores(correctos,cantidad,max,excluir=new Set(correctos)){
@@ -223,7 +228,7 @@
     revisarPareo(){
       let good=0,bad=0;const vuelos=[];this.estados={};
       for(const[l,r]of this.links){const left=this.left.find(p=>p.id===l),right=this.right.find(p=>p.id===r),ok=left.requerido&&left.c===right.valor;this.estados[l]=ok?'bien':'mal';if(ok){good++;vuelos.push({a:this.punto(l,true),b:this.punto(r,true)});}else bad++;}
-      this.resuelto=good===this.necesarios&&bad===0;const text=this.resuelto?t(`¡Buen trabajo, ${this.nombre()}! Todas las parejas están correctas.`,`Great work, ${this.nombre()}! All the pairs are correct.`):t(`${good} de ${this.necesarios} parejas correctas. Revisa las uniones y deja libres los sobrantes.`,`${good} of ${this.necesarios} pairs correct. Check the links and leave the extra cards unpaired.`);
+      this.resuelto=good===this.necesarios&&bad===0;const text=this.resuelto?t(`¡Buen trabajo, ${this.nombre()}! Todas las parejas están correctas.`,`Great work, ${this.nombre()}! All the pairs are correct.`):t(`Parejas correctas: ${good} de ${this.necesarios}. Revisa las uniones y deja libres los sobrantes.`,`Correct pairs: ${good} of ${this.necesarios}. Check the links and leave the extra cards unpaired.`);
       this.estado(text,this.resuelto);this.decir(text);this.refrescarPareo();if(!vuelos.length)return;
       this.revisando=true;$('#revisar').disabled=true;const round=this.ronda;this.efectos.cohetes(vuelos,this.configuracion().sonidos,()=>{if(this.activo&&this.ronda===round){this.revisando=false;this.refrescarPareo();}});
     }

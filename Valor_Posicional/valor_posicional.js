@@ -99,8 +99,9 @@
     const canvas = bandeja.querySelector('.piezas');
     pintarCanvas(canvas);
     const destino = bandeja.querySelector('.soltar-bloque');
-    destino.setAttribute('aria-label', bilingue(`Caja de ${nombres[i].toLowerCase()}, ${cantidad} bloques`,
-      `${t(nombres[i])} tray, ${cantidad} blocks`));
+    destino.setAttribute('aria-label', bilingue(
+      `Caja de ${nombres[i].toLowerCase()}, ${cantidad === 1 ? 'un bloque' : `${cantidad} bloques`}`,
+      `${t(nombres[i])} tray, ${cantidad === 1 ? 'one block' : `${cantidad} blocks`}`));
     destino.disabled = resuelto || Boolean(canje);
     const quitar = bandeja.querySelector('.quitar-bloque');
     quitar.disabled = resuelto || Boolean(canje) || cantidad === 0;

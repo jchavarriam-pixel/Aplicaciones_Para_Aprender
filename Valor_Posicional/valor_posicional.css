@@ -36,18 +36,44 @@ button:disabled { cursor:default; }
 }
 #appValor:not(.horizontal) .herramientas-valor { grid-template-columns:minmax(0,1.13fr) minmax(0,1fr); }
 #appValor:not(.horizontal) .herramientas-valor .cabecera { grid-row:span 2; }
+#appValor:not(.horizontal):has(.modos:not([hidden])) .herramientas-valor { max-height:none; overflow:visible; }
 .actividad { min-width:0; min-height:0; }
-.modos { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,calc(225 * var(--u))),1fr)); gap:calc(8 * var(--u)); overflow:auto; }
-.tarjeta { display:grid; place-content:center; justify-items:center; gap:calc(7 * var(--u)); min-height:calc(136 * var(--u)); padding:calc(10 * var(--u)); border:1px solid #a9cfe6; border-radius:calc(18 * var(--u)); color:#234a75; background:linear-gradient(142deg,#e5f9ff,#fafdff); text-align:center; }
-.tarjeta[data-modo=flechas] { border-color:#cbb9ea; background:linear-gradient(142deg,#eee5ff,#fbf7ff); color:#453476; }
-.tarjeta strong { font-size:calc(23 * var(--u)); }
-.tarjeta > span:last-child { max-width:36ch; }
-.arte-bloques { display:flex; align-items:end; gap:calc(6 * var(--u)); }
-.arte-bloques canvas { width:calc(52 * var(--u)); height:calc(48 * var(--u)); }
-.arte-bloques canvas:first-child { width:calc(78 * var(--u)); }
-.arte-flechas { display:grid; grid-template-columns:repeat(3,1fr); gap:calc(3 * var(--u)) calc(5 * var(--u)); color:#4b3581; }
-.arte-flechas b { border-radius:calc(6 * var(--u)); background:#e0d4fa; padding:calc(2 * var(--u)) calc(6 * var(--u)); }
-.arte-flechas i { line-height:1; font-style:normal; }
+.modos {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,calc(240 * var(--u))),1fr));
+  align-content:safe center; gap:calc(14 * var(--u)); padding:calc(10 * var(--u)); overflow:auto;
+}
+.tarjeta {
+  --acento:#237a8d; --tinta:#17465d; --claro:#e1f8fb; --borde:#8cd3dc;
+  display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:calc(10 * var(--u));
+  padding:calc(10 * var(--u)); border:1px solid var(--borde); border-radius:calc(17 * var(--u));
+  color:var(--tinta); background:#fff; text-align:left; box-shadow:0 3px 0 var(--borde),0 6px 14px #23306415;
+}
+.tarjeta[data-modo=flechas] { --acento:#6847a7; --tinta:#473477; --claro:#efe7ff; --borde:#c8afe8; }
+.tarjeta:is(:hover,:focus-visible) { background:var(--claro); border-color:var(--acento); }
+.texto-tarjeta { display:grid; gap:calc(4 * var(--u)); min-width:0; padding-inline-start:calc(3 * var(--u)); }
+.tarjeta strong { font-size:calc(18 * var(--u)); line-height:1.13; }
+.texto-tarjeta > span { max-width:42ch; font-size:calc(13 * var(--u)); line-height:1.3; }
+.ir-tarjeta { display:grid; place-items:center; width:calc(31 * var(--u)); height:calc(31 * var(--u)); border-radius:50%; background:var(--acento); color:white; font-size:calc(25 * var(--u)); line-height:1; }
+.arte-bloques,.arte-flechas {
+  grid-column:1/-1; display:flex; min-width:0; height:calc(88 * var(--u)); justify-content:center;
+  align-items:center; gap:calc(5 * var(--u)); border-radius:calc(11 * var(--u)); background:linear-gradient(145deg,var(--claro),#fff);
+}
+.arte-bloques canvas { width:min(23%,calc(45 * var(--u))); height:calc(49 * var(--u)); }
+.arte-bloques canvas:first-child { width:min(42%,calc(98 * var(--u))); height:calc(63 * var(--u)); }
+.arte-flechas { display:grid; grid-template-columns:repeat(3,auto); align-content:center; gap:calc(2 * var(--u)) calc(5 * var(--u)); color:var(--tinta); text-align:center; }
+.arte-flechas b { border-radius:calc(5 * var(--u)); background:#e5d8fa; padding:calc(2 * var(--u)) calc(6 * var(--u)); }
+.arte-flechas i { line-height:1; font-style:normal; color:var(--acento); }
+@media (max-width:510px), (orientation:landscape) and (max-height:400px) {
+  .modos { gap:calc(10 * var(--u)); }
+  .tarjeta { grid-template-columns:minmax(calc(88 * var(--u)),32%) minmax(0,1fr) auto; }
+  .arte-bloques,.arte-flechas { grid-column:auto; height:calc(71 * var(--u)); font-size:calc(12 * var(--u)); }
+  .arte-flechas b { padding-inline:calc(3 * var(--u)); }
+  .arte-bloques canvas { height:calc(41 * var(--u)); }
+  .arte-bloques canvas:first-child { height:calc(47 * var(--u)); }
+}
+@media (orientation:portrait) and (max-width:510px) {
+  .modos { align-content:start; }
+}
 .panel-lateral-oculto :is(.modos,.juego) { padding-top:calc(48 * var(--u)); }
 .con-panel-plegable.panel-lateral-oculto .juego .reto { margin-top:0; }
 

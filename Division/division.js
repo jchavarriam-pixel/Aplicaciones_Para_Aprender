@@ -446,7 +446,8 @@
     const felicitacion = nombre ? t(`¡Muy bien, ${nombre}!`,`Well done, ${nombre}!`) : t('¡Muy bien!', 'Well done!');
     const ecuacion = `${total} ÷ ${divisor} = ${cociente}${resto ? t(`, resto ${resto}`, `, remainder ${resto}`) : ''}`;
     mensajeDirecto(`${felicitacion} ${ecuacion}`,'bien');
-    hablar(t(`${felicitacion} ${total} dividido entre ${divisor} es ${cociente}.${resto ? ` Sobran ${resto}.` : ''}`,`${felicitacion} ${total} divided by ${divisor} is ${cociente}.${resto ? ` The remainder is ${resto}.` : ''}`));
+    const fraseResto = resto === 1 ? ' Sobra una ficha.' : resto ? ` Sobran ${resto} fichas.` : '';
+    hablar(t(`${felicitacion} ${total} dividido entre ${divisor} es ${cociente}.${fraseResto}`,`${felicitacion} ${total} divided by ${divisor} is ${cociente}.${resto ? ` The remainder is ${resto}.` : ''}`));
     if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
       const retroalimentacion = modo === 'resto' ? sillita : $('respuesta');
       retroalimentacion.animate([{transform:'scale(1)'},{transform:'scale(1.025)'},{transform:'scale(1)'}],{duration:470,easing:'ease-out'});

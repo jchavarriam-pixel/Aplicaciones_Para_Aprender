@@ -24,19 +24,34 @@ const numWords=['cero','uno','dos','tres','cuatro','cinco','seis','siete','ocho'
 function obtenerNombreNino(){return $('#nombre').value.trim()||window.NombreCompartido?.obtener()||'Gabriel';}
 function guardarRestar(){Matematicas.guardar('restarQuitando.config.v1',{mode,muted,mostrarContadores,mostrarRestantes,agrupar,rangoInicial});}
 function speak(text){lastAudio=text;if(!muted)IdiomaVoz.hablar(text);}
-function instruccion(){return t(`Quita ${numB} ${emoji}. ¿Cuántos quedan?`,`Take away ${numB} ${emoji}. How many are left?`);}
-function mensajeResultado(){const nombre=obtenerNombreNino();return numB<=numA?t(`¡Muy bien, ${nombre}! Quedan ${numA-removed}.`,`Well done, ${nombre}! ${numA-removed} are left.`):t(`${nombre}, no hay suficientes: tienes ${numA} y necesitas quitar ${numB}.`,`${nombre}, there are not enough: you have ${numA} and need to take away ${numB}.`);}
+function cantidadObjetos(cantidad) {
+ if(cantidad===1) return t('un objeto','one object');
+ return t(`${cantidad} objetos`,`${cantidad} objects`);
+}
+function instruccion(){return t(`Quita ${cantidadObjetos(numB)}. ¿Cuántos quedan?`,`Take away ${cantidadObjetos(numB)}. How many are left?`);}
+function mensajeResultado(){
+ const nombre=obtenerNombreNino(), quedan=numA-removed;
+ if(numB>numA) return t(`${nombre}, tienes ${cantidadObjetos(numA)} y necesitas quitar ${cantidadObjetos(numB)}. No hay suficientes.`,
+  `${nombre}, you have ${cantidadObjetos(numA)} and need to take away ${cantidadObjetos(numB)}. There are not enough.`);
+ const resultado=quedan===0?t('No queda ningún objeto.','No objects are left.'):
+  quedan===1?t('Queda un objeto.','One object is left.'):
+   t(`Quedan ${cantidadObjetos(quedan)}.`,`${cantidadObjetos(quedan)} are left.`);
+ return t(`¡Muy bien, ${nombre}! ${resultado}`,`Well done, ${nombre}! ${resultado}`);
+}
 function audioActual(){
- if(done)return numB<=numA?t(`¡Muy bien, ${obtenerNombreNino()}! ${numWords[numA]} menos ${numWords[numB]} es igual a ${numWords[numA-numB]}.`,`Well done, ${obtenerNombreNino()}! ${IdiomaVoz.ingles(numA)} minus ${IdiomaVoz.ingles(numB)} equals ${IdiomaVoz.ingles(numA-numB)}.`):t(`${obtenerNombreNino()}, no, no, no. A ${numWords[numA]} no se le puede quitar ${numWords[numB]}. No hay suficientes.`,`${obtenerNombreNino()}, no, no, no. You cannot take ${IdiomaVoz.ingles(numB)} away from ${IdiomaVoz.ingles(numA)}. There are not enough.`);
- if(removed>0)return t(`Debes quitar ${numB-removed} más.`,`Take away ${numB-removed} more.`);
- return t(`Tienes ${numA} objetos. Quita ${numB}. ¿Cuántos quedan?`,`You have ${numA} objects. Take away ${numB}. How many are left?`);
+ if(done)return numB<=numA?t(`${mensajeResultado()} ${numWords[numA]} menos ${numWords[numB]} es igual a ${numWords[numA-numB]}.`,`${mensajeResultado()} ${IdiomaVoz.ingles(numA)} minus ${IdiomaVoz.ingles(numB)} equals ${IdiomaVoz.ingles(numA-numB)}.`):mensajeResultado();
+ if(removed>0){
+  const quedan=numB-removed;
+  return t(`Debes quitar ${cantidadObjetos(quedan)} más.`,`Take away ${quedan===1?'one more object':`${quedan} more objects`}.`);
+ }
+ return t(`Tienes ${cantidadObjetos(numA)}. ${instruccion()}`,`You have ${cantidadObjetos(numA)}. ${instruccion()}`);
 }
 function repeatAudio(){speak(audioActual());}
 function actualizarVista(){
  $('#pasoQuitar').textContent=agrupar?t('Junta objetos y lleva el grupo a la cesta.','Join objects and drag the group into the basket.'):t('Arrastra o toca los objetos para quitarlos.','Drag or tap the objects to take them away.');$('#accionesGruposRestar').hidden=!agrupar;$('#app').classList.toggle('agrupacion-activa',agrupar);
  $('#instruccionRestar').textContent=instruccion();$('#numAEl').textContent=numA;$('#numBEl').textContent=numB;$('#wantRemove').textContent=numB;$('#removedCount').textContent=removed;
  $('#resultadoNumero').textContent=done?(numB<=numA?numA-numB:'—'):'?';$('#contadoresRestar').hidden=!mostrarContadores;
- $('#remainLabel').textContent=t(`Quedan: ${numA-removed}`,`Left: ${numA-removed}`);$('#remainLabel').hidden=!mostrarRestantes;
+ $('#remainLabel').textContent=t(`Objetos en la caja: ${numA-removed}`,`Objects in the box: ${numA-removed}`);$('#remainLabel').hidden=!mostrarRestantes;
  $('#ayudasRestar').hidden=muted;$('#objectsBox').classList.toggle('empty',removed===numA);$('#dropZone').classList.toggle('completa',done);
  document.querySelectorAll('.mode-btn').forEach(b=>{b.classList.toggle('active',b.dataset.mode===mode);b.setAttribute('aria-pressed',String(b.dataset.mode===mode));});
  if(!agrupar)document.querySelectorAll('#playArea .obj-item').forEach((b,i)=>b.setAttribute('aria-label',t(`Quitar objeto ${i+1}`,`Take away object ${i+1}`)));
@@ -52,7 +67,7 @@ function buildObjects(){const pa=$('#playArea');pa.replaceChildren();for(let i=0
 function resetExercise(){cleanupPointerDrag();agrupadorRestar?.desactivar();avisoAgrupacion=null;done=false;removed=0;$('#objetosQuitados').replaceChildren();buildObjects();if(agrupar)agrupadorRestar.iniciar();actualizarVista();}
 function newExercise(){generateNumbers();emoji=EMOJIS[rand(0,EMOJIS.length-1)];resetExercise();speak(audioActual());}
 function setMode(m){if(!['mix','yes','no'].includes(m))return;mode=m;guardarRestar();newExercise();}
-function textoAvisoAgrupacion(){if(!avisoAgrupacion)return '';return t(`El grupo tiene ${avisoAgrupacion.cantidad} objetos. Solo falta quitar ${avisoAgrupacion.faltan}. Sepáralo para escoger menos.`,`The group has ${avisoAgrupacion.cantidad} objects. You only need to take away ${avisoAgrupacion.faltan}. Separate it to choose fewer.`);}
+function textoAvisoAgrupacion(){if(!avisoAgrupacion)return '';const {cantidad,faltan}=avisoAgrupacion;return t(`El grupo tiene ${cantidadObjetos(cantidad)}. Solo falta quitar ${cantidadObjetos(faltan)}. Sepáralo para escoger menos.`,`The group has ${cantidadObjetos(cantidad)}. You only need to take away ${cantidadObjetos(faltan)}. Separate it to choose fewer.`);}
 function quitarElementos(items){const valid=[...new Set(items)].filter(b=>b&&!b.classList.contains('removed'));if(done||!valid.length)return false;const faltan=numB-removed;if(valid.length>faltan){avisoAgrupacion={cantidad:valid.length,faltan};actualizarVista();speak(textoAvisoAgrupacion());return false;}avisoAgrupacion=null;for(const item of valid){item.classList.add('removed');item.disabled=true;const s=document.createElement('span');s.className='obj-in';s.textContent=emoji;$('#objetosQuitados').append(s);}removed+=valid.length;done=removed===numB||removed===numA;actualizarVista();speak(audioActual());return true;}
 function handleDrop(item){return quitarElementos([item]);}
 function actualizarGrupoRestar(count){const n=count??agrupadorRestar?.drag?.ids.length??agrupadorRestar?.seleccionado()?.ids.length??0;$('#estadoGrupoRestar').textContent=avisoAgrupacion?t(`Grupo ${avisoAgrupacion.cantidad} · quita ${avisoAgrupacion.faltan}`,`Group ${avisoAgrupacion.cantidad} · need ${avisoAgrupacion.faltan}`):n?(n===1?t('1 objeto','1 object'):t(`${n} juntos`,`${n} together`)):t('Agrupa','Make a group');$('#estadoGrupoRestar').title=textoAvisoAgrupacion();$('#objectsBox').classList.toggle('grupo-excedido',!!avisoAgrupacion);$('#separarGrupoRestar').disabled=n<2||!!agrupadorRestar?.drag;const basket=$('#dropZone');if(agrupar){basket.setAttribute('role','button');basket.tabIndex=0;basket.setAttribute('aria-label',n?(n===1?t('Quitar 1 objeto','Take away 1 object'):t(`Quitar grupo de ${n} objetos`,`Take away the group of ${n} objects`)):t('Cesta para quitar objetos','Basket for objects taken away'));}else{basket.removeAttribute('role');basket.removeAttribute('tabindex');basket.setAttribute('aria-label',t('Cesta para quitar objetos','Basket for objects taken away'));}}

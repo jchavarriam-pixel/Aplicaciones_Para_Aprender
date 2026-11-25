@@ -49,23 +49,26 @@
     $('decenas').hidden = !ajustes.mostrarDecenas || modo === 'practica';
   }
 
+  function cantidadCuentas(n) {
+    return n === 1 ? t('una cuenta','one bead') : t(`${n} cuentas`,`${n} beads`);
+  }
   function textoPaso() {
     if (modo === 'libre') {
       return t('Toca una cuenta o arrástrala a la izquierda para añadir. Llévala a la derecha para quitar.',
         'Tap a bead or drag it left to add. Move it right to take away.');
     }
     const {inicio, cambio, resultado} = ejemplo;
-    if (fase === 'inicio') return t(`Vamos a empezar con ${inicio} ${inicio === 1 ? 'cuenta' : 'cuentas'}.`,
-      `Let’s start with ${inicio} ${inicio === 1 ? 'bead' : 'beads'}.`);
+    if (fase === 'inicio') return t(`Vamos a empezar con ${cantidadCuentas(inicio)}.`,
+      `Let’s start with ${cantidadCuentas(inicio)}.`);
     if (fase === 'cambio') return modo === 'suma'
-      ? t(`Tenemos ${inicio}. Mueve ${cambio} ${cambio === 1 ? 'cuenta' : 'cuentas'} más hacia la izquierda.`,
-        `We have ${inicio}. Move ${cambio} more ${cambio === 1 ? 'bead' : 'beads'} to the left.`)
-      : t(`Tenemos ${inicio}. Devuelve ${cambio} ${cambio === 1 ? 'cuenta' : 'cuentas'} a la derecha.`,
-        `We have ${inicio}. Move ${cambio} ${cambio === 1 ? 'bead' : 'beads'} back to the right.`);
+      ? t(`Tenemos ${inicio}. Mueve ${cantidadCuentas(cambio)} más hacia la izquierda.`,
+        `We have ${inicio}. Move ${cambio === 1 ? 'one more bead' : `${cambio} more beads`} to the left.`)
+      : t(`Tenemos ${inicio}. Devuelve ${cantidadCuentas(cambio)} a la derecha.`,
+        `We have ${inicio}. Move ${cantidadCuentas(cambio)} back to the right.`);
     return modo === 'suma'
-      ? t(`${inicio} más ${cambio} da ${resultado}. Ahora hay ${resultado} cuentas.`, `${inicio} plus ${cambio} equals ${resultado}. There are now ${resultado} beads.`)
-      : t(`${inicio} menos ${cambio} da ${resultado}. ${resultado === 1 ? 'Queda 1 cuenta' : `Quedan ${resultado} cuentas`}.`,
-        `${inicio} minus ${cambio} equals ${resultado}. There ${resultado === 1 ? 'is 1 bead' : `are ${resultado} beads`} left.`);
+      ? t(`${inicio} más ${cambio} da ${resultado}. Ahora hay ${cantidadCuentas(resultado)}.`, `${inicio} plus ${cambio} equals ${resultado}. There ${resultado === 1 ? 'is' : 'are'} now ${cantidadCuentas(resultado)}.`)
+      : t(`${inicio} menos ${cambio} da ${resultado}. ${resultado === 1 ? 'Queda' : 'Quedan'} ${cantidadCuentas(resultado)}.`,
+        `${inicio} minus ${cambio} equals ${resultado}. There ${resultado === 1 ? 'is' : 'are'} ${cantidadCuentas(resultado)} left.`);
   }
 
   function pintarInterfaz() {
@@ -129,8 +132,8 @@
     if (respuesta === 'respuesta') return t('Vuelve a contar y corrige tu respuesta.', 'Count again and correct your answer.');
     if (respuesta === 'tablero') return t('Revisa las cuentas a la izquierda. Deben mostrar tu resultado.', 'Check the beads on the left. They should show your answer.');
     return operacion === 'suma'
-      ? t(`Empieza con ${inicio}. Agrega ${cambio} cuentas y escribe el total.`, `Start with ${inicio}. Add ${cambio} beads and enter the total.`)
-      : t(`Empieza con ${inicio}. Quita ${cambio} cuentas y escribe cuántas quedan.`, `Start with ${inicio}. Take away ${cambio} beads and enter how many are left.`);
+      ? t(`Empieza con ${cantidadCuentas(inicio)}. Agrega ${cantidadCuentas(cambio)} y escribe el total.`, `Start with ${cantidadCuentas(inicio)}. Add ${cantidadCuentas(cambio)} and enter the total.`)
+      : t(`Empieza con ${cantidadCuentas(inicio)}. Quita ${cantidadCuentas(cambio)} y escribe cuántas quedan.`, `Start with ${cantidadCuentas(inicio)}. Take away ${cantidadCuentas(cambio)} and enter how many are left.`);
   }
 
   function pintarPregunta() {

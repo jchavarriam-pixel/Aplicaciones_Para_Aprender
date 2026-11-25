@@ -334,7 +334,10 @@
       celebracion.hidden = false;
     }
     if (evaluado && modo === 'diferencia') {
-      hablar(esEn(`${elogio} La diferencia es de ${ronda.mayor - ronda.menor} centímetros.`, `${elogio} The difference is ${ronda.mayor - ronda.menor} centimetres.`));
+      const diferencia = ronda.mayor - ronda.menor;
+      const medida = diferencia === 1 ? esEn('un centímetro','one centimetre') :
+        esEn(`${diferencia} centímetros`,`${diferencia} centimetres`);
+      hablar(esEn(`${elogio} La diferencia es de ${medida}.`, `${elogio} The difference is ${medida}.`));
     } else hablar(resultado.textContent);
   }
   function iniciar(nuevoModo) {

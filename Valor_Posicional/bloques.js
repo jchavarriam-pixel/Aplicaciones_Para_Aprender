@@ -1,10 +1,10 @@
 (() => {
   'use strict';
   const caras = [
-    ['#fbe48f', '#edac3e', '#d58b24'],
-    ['#9de4ff', '#4aafdf', '#277bb3'],
-    ['#a8e8ca', '#57bd98', '#258371'],
-    ['#dcd0ff', '#aa8fea', '#8061bf']
+    [['#fff5bd','#ffd463'],['#ffc659','#df921f'],['#efaa35','#ad611b']],
+    [['#d3f7ff','#8bdfff'],['#74d7f4','#359dd7'],['#47acd8','#20659d']],
+    [['#e2fff2','#a1eccb'],['#83dfb9','#46ad86'],['#50bc96','#247761']],
+    [['#f2eaff','#cbbbff'],['#c6b4fa','#9778df'],['#aa8cf0','#6746aa']]
   ];
   const tamanos = [[1,1,1], [1,1,10], [10,10,1], [10,10,10]];
 
@@ -22,15 +22,21 @@
       const dx=a-x/2, dy=b-y/2, dz=c-z/2;
       return [centroX+(dx*ex[0]+dy*ey[0]+dz*ez[0])*escala, centroY+(dx*ex[1]+dy*ey[1]+dz*ez[1])*escala];
     };
-    function poligono(puntos, color) {
+    function poligono(puntos, colores) {
+      const vertices = puntos.map(proyectar);
+      const ys = vertices.map(([,y]) => y);
+      const gradiente = ctx.createLinearGradient(0,Math.min(...ys),0,Math.max(...ys));
+      gradiente.addColorStop(0,colores[0]);
+      gradiente.addColorStop(1,colores[1]);
       ctx.beginPath();
-      ctx.moveTo(...proyectar(puntos[0]));
-      puntos.slice(1).forEach(p => ctx.lineTo(...proyectar(p)));
+      ctx.moveTo(...vertices[0]);
+      vertices.slice(1).forEach(p => ctx.lineTo(...p));
       ctx.closePath();
-      ctx.fillStyle = color;
+      ctx.fillStyle = gradiente;
       ctx.fill();
-      ctx.strokeStyle = '#26354c9c';
+      ctx.strokeStyle = '#26354caa';
       ctx.lineWidth = 1;
+      ctx.lineJoin = 'round';
       ctx.stroke();
     }
     function trazo(a,b) {
@@ -67,6 +73,14 @@
     ctx.strokeStyle = lugar === 2 ? '#214c48a3' : '#26354c75';
     ctx.lineWidth = lugar === 2 ? .86 : .7;
     ctx.stroke();
+    if (escala >= 3) {
+      ctx.beginPath();
+      trazo([.12,y-.18,z],[.12,.14,z]);
+      trazo([.12,.14,z],[x-.14,.14,z]);
+      ctx.strokeStyle = '#ffffffad';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
   }
   function distribucion(lugar, cantidad, width, height) {
     const posiciones = [];

@@ -236,7 +236,8 @@ window.PasosOperaciones = (() => {
           ecuacion: `${total} = 10 + ${resto}`,
           narracion: [
             {texto: en ? `This column adds up to ${total}.` : `En esta columna, la suma da ${total}.`},
-            {texto: en ? `We separate one ten. That leaves ${resto} ones.` : `Separamos una decena. Nos quedan ${resto} unidades.`, minimo:3400}
+            {texto: en ? `We separate one ten. That leaves ${resto === 1 ? 'one unit' : `${resto} units`}.` :
+              `Separamos una decena. ${resto === 1 ? 'Nos queda una unidad' : `Nos quedan ${resto} unidades`}.`, minimo:3400}
           ]
         },
         {

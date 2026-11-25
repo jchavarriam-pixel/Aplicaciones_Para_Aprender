@@ -209,7 +209,7 @@ function updateEvalFeedback(){
   const result=state.evalResult;
   $("#evalFeedback").textContent=!result?tr("Una todas las figuras antes de revisar."):
     result.good===result.total?tr("¡Excelente! Todos los pareos son correctos.","Excellent! All matches are correct."):
-    isEnglish()?`${result.good} of ${result.total} matches are correct.`:`${result.good} de ${result.total} pareos son correctos.`;
+    isEnglish()?`Correct matches: ${result.good} of ${result.total}.`:`Pareos correctos: ${result.good} de ${result.total}.`;
 }
 
 function installSolidMatching(mode){

@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="../pantalla-completa.css">
   <link rel="stylesheet" href="../panel-plegable.css">
   <link rel="stylesheet" href="../teclado-en-pantalla.css">
-  <link rel="stylesheet" href="valor_posicional.css?v=huevos-sorpresa">
+  <link rel="stylesheet" href="valor_posicional.css?v=tarjetas-multibase">
   <link rel="stylesheet" href="sorpresas.css">
 </head>
 <body>
@@ -34,13 +34,17 @@
     <nav class="actividad modos" id="modos" aria-label="Modos de práctica">
       <button class="tarjeta" type="button" data-modo="bloques">
         <span class="arte-bloques" aria-hidden="true"><canvas width="220" height="120"></canvas><canvas width="120" height="120"></canvas><canvas width="90" height="90"></canvas></span>
-        <strong>Bloques multibase</strong>
-        <span>Construye el número con piezas de uno, diez, cien o mil.</span>
+        <span class="texto-tarjeta"><strong>Bloques multibase</strong>
+          <span>Construye el número con piezas de uno, diez, cien o mil.</span>
+        </span>
+        <span class="ir-tarjeta" aria-hidden="true">›</span>
       </button>
       <button class="tarjeta" type="button" data-modo="flechas">
-        <span class="arte-flechas" aria-hidden="true"><b>2</b><b>5</b><b>6</b><i>↳</i><i>↳</i><i>↳</i><b>200</b><b>50</b><b>6</b></span>
-        <strong>Cifras y flechas</strong>
-        <span>Encuentra el valor de una cifra o usa su valor para descubrirla.</span>
+        <span class="arte-flechas" aria-hidden="true"><b>2</b><b>5</b><b>6</b><i>↓</i><i>↓</i><i>↓</i><b>200</b><b>50</b><b>6</b></span>
+        <span class="texto-tarjeta"><strong>Cifras y flechas</strong>
+          <span>Encuentra el valor de una cifra o usa su valor para descubrirla.</span>
+        </span>
+        <span class="ir-tarjeta" aria-hidden="true">›</span>
       </button>
     </nav>
     <section class="actividad juego" id="juego" hidden aria-labelledby="tituloReto">
@@ -105,8 +109,8 @@
   <script src="../pantalla-completa.js"></script>
   <script src="../panel-plegable.js?v=valor-posicional"></script>
   <script src="../nombre-compartido.js"></script>
-  <script src="bloques.js?v=armar-centena-millar"></script>
+  <script src="bloques.js?v=tarjetas-multibase"></script>
   <script src="sorpresas.js"></script>
-  <script src="valor_posicional.js?v=huevos-sorpresa"></script>
+  <script src="valor_posicional.js?v=concordancia"></script>
 </body>
 </html>
