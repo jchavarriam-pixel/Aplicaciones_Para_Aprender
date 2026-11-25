@@ -117,6 +117,16 @@ body:has(#control-pantalla-completa[data-fullscreen=true]) .acciones-juego { pad
 .origen-dinero,.producto { touch-action:none; cursor:grab; user-select:none; }
 .origen-dinero:active,.producto:active { cursor:grabbing }
 .pieza-colocada { position:relative; }
+.piezas-pago { gap:calc(5 * var(--u)); }
+.piezas-pago .dinero {
+  --ficha-alto:calc(38 * var(--u)); --ficha-ancho:calc(38 * var(--u));
+}
+.piezas-pago .billete { --ficha-ancho:calc(75 * var(--u)); }
+.pago-entregado { background:#f2f9f4; border-radius:calc(7 * var(--u)); }
+.pago-entregado .dinero,.piezas-pago:has(>:nth-child(7)) .dinero {
+  --ficha-alto:calc(31 * var(--u)); --ficha-ancho:calc(31 * var(--u));
+}
+.pago-entregado .billete,.piezas-pago:has(>:nth-child(7)) .billete { --ficha-ancho:calc(63 * var(--u)); }
 .cantidad-piezas {
   position:absolute; right:calc(-3 * var(--u)); top:0; background:#174541; color:white; padding:0 calc(3 * var(--u));
   border-radius:calc(8 * var(--u)); font-size:calc(10 * var(--u)); text-shadow:none;

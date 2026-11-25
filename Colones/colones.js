@@ -178,10 +178,21 @@
       ${opciones.ayudas||fase==='listo'?etiquetaTotal('Total disponible',sumar(cartera)):''}</section></div>
       ${fase==='decidir'?`<div class="decidir"><button type="button" data-alcanza="si">${t('Sí me alcanza')}</button><button type="button" data-alcanza="no">${t('No me alcanza')}</button></div>`:''}`;
   }
+  function fichasPago(editable=false) {
+    return piezas.map(valor=>{
+      const imagen=pieza(valor);
+      const etiqueta=etiquetaDinero(valor);
+      const quitar=idioma(`Quitar ${etiqueta}`,`Remove ${etiqueta}`);
+      return editable
+        ? `<button type="button" class="pieza-colocada" data-quitar="${valor}" aria-label="${quitar}">${imagen}</button>`
+        : `<span class="pieza-colocada" role="img" aria-label="${etiqueta}">${imagen}</span>`;
+    }).join('');
+  }
   function destino(rotulo,estilo='mostrador') {
-    const conteos=contarPiezas(piezas);
     const editable=fasesDinero.has(fase);
-    const fichas=opciones.activas.filter(valor=>conteos.has(valor)).map(valor=>{
+    const esPago=modo!=='contador'&&modo!=='llenar';
+    const conteos=esPago?null:contarPiezas(piezas);
+    const fichas=esPago?fichasPago(editable):opciones.activas.filter(valor=>conteos.has(valor)).map(valor=>{
       const cantidad=conteos.get(valor);
       const interior=pieza(valor)+(cantidad>1?`<b class="cantidad-piezas">×${cantidad}</b>`:'');
       const quitar=idioma(`Quitar ${etiquetaDinero(valor)}`,`Remove ${etiquetaDinero(valor)}`);
@@ -189,7 +200,7 @@
         `<span class="pieza-colocada" role="img" aria-label="${cantidad} × ${etiquetaDinero(valor)}">${interior}</span>`;
     }).join('');
     return `<section id="destinoDinero" class="${estilo} zona-dinero"><header><h3>${t(rotulo)}</h3>${modo!=='contador'&&(opciones.ayudas||fase==='listo')&&fichas?`<b>${formato(sumar(piezas))}</b>`:''}</header>
-      <div class="piezas-colocadas">${fichas||`<span>${t(fase==='recibir'?'Guarda aquí el pago del cliente.':'Toca o arrastra una pieza.')}</span>`}</div></section>`;
+      <div class="piezas-colocadas ${esPago?'piezas-pago':''}">${fichas||`<span>${t(fase==='recibir'?'Guarda aquí el pago del cliente.':'Toca o arrastra una pieza.')}</span>`}</div></section>`;
   }
   function contarPiezas(lista) {
     const conteos=new Map();
@@ -238,7 +249,8 @@
       ${etiquetaTotal('Precio total',precio())}
       ${esCajero&&(fase==='dar'||fase==='listo')?etiquetaTotal('El cliente paga',pagado):''}
       ${!esCajero&&(fase==='vuelto'||(fase==='listo'&&pagado))?etiquetaTotal('Pagaste',pagado):''}
-      ${fase==='listo'&&pagado?etiquetaTotal('Vuelto',aCambio()):''}
+      ${!esCajero&&pagado?`<div class="piezas-colocadas piezas-pago pago-entregado" role="group" aria-label="${t('Tu pago')}">${fichasPago()}</div>`:''}
+      ${fase==='listo'&&pagado&&modo!=='exacto'?etiquetaTotal('Vuelto',aCambio()):''}
       </section>`;
   }
   function instruccion() {
@@ -341,7 +353,10 @@
       pagado=total;
       return cambiarFase('vuelto');
     }
-    if(total===meta) return completar();
+    if(total===meta){
+      if(fase==='pagar')pagado=total;
+      return completar();
+    }
     anunciar(fase==='dar'?'El cliente necesita un vuelto distinto. Revisa la diferencia.':total<meta?'Falta dinero.':'Hay dinero de más. Quita alguna pieza.');
   }
   function agregarDinero(valor) {
