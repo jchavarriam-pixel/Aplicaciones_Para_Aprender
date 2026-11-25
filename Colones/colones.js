@@ -31,7 +31,8 @@
   let modo = null, fase, oferta, elegidos, piezas, sobre, dineroCliente, pagado;
   let arrastre = null, ignorarClic = false;
   let mesa, posicionesMesa, fichaElegida, animarSobre, cartera, mercanciaCliente, recibidos;
-  let estacionCarrito=0, estacionAnterior=0;
+  let avancePasillo=0, animacionPasillo=0, empuje=null;
+  const movimientoReducido=matchMedia('(prefers-reduced-motion: reduce)');
   const t = texto => IdiomaVoz.t(texto);
   const en = () => IdiomaVoz.idioma==='en';
   const idioma = (es,ingles) => en() ? ingles : es;
@@ -97,7 +98,8 @@
     if(!modo)return;
     oferta=prepararProductos();
     elegidos=[];
-    estacionAnterior=estacionCarrito=0;
+    detenerPasillo();
+    avancePasillo=0;
     piezas=[];
     sobre=formar(modo==='contar'?entero(3,7):entero(2,5));
     mesa=[...sobre];
@@ -253,33 +255,73 @@
       `<button type="button" class="producto ${opciones.nombresProductos?'con-globo':''}" data-producto="${i}" aria-label="${nombre}, ${monto}">
         ${producto(item)}${opciones.nombresProductos?`<span class="globo-producto" aria-hidden="true">${nombre}</span>`:''}
       </button>`;
-    return `<div class="puesto-estante">${mercancia}<div class="precio-estante"><b>${monto}</b></div></div>`;
+    return `<div class="puesto-estante" data-tramo="${Math.floor(i/2)}">${mercancia}<div class="precio-estante"><b>${monto}</b></div></div>`;
   }
   function productosEnCesta() {
     return elegidos.map(i=>`<button type="button" data-devolver="${i}" aria-label="${idioma('Devolver '+oferta[i].nombre,'Return '+t(oferta[i].nombre))}">${producto(oferta[i])}</button>`).join('');
   }
   function verPasillo() {
     const columna=(lado,indices)=>`<div class="lado-estante ${lado}" data-estante>${indices.map(verPuesto).join('')}</div>`;
-    const moviendo=estacionAnterior!==estacionCarrito?' paseando':'';
     return `<div class="pasillo" id="estante">
+      <div class="suelo-en-marcha" aria-hidden="true"></div>
       ${columna('izquierdo',[0,2,4])}
       <div class="camino-carrito">
-        <div id="cesta" class="carrito-pasillo${moviendo}" style="--estacion:${estacionCarrito};--estacion-origen:${estacionAnterior}" role="group" aria-label="${t('Tu carrito')}">
-          <img src="imagenes/carrito-arriba.webp" alt="" draggable="false">
+        <div id="cesta" class="carrito-pasillo" role="group" aria-label="${t('Tu carrito')}">
+          <img src="imagenes/carrito-perspectiva.webp" alt="" draggable="false">
           <div class="carga-carrito">${productosEnCesta()}</div>
+          <button id="empujarCarrito" type="button" aria-label="${t('Empuja el carrito')}"></button>
         </div>
       </div>
       ${columna('derecho',[1,3,5])}
     </div>
     <div class="controles-pasillo">
-      <button type="button" data-paso="-1" ${estacionCarrito===0?'disabled':''}>${t('Retroceder')}</button>
-      <span><b>${formato(precio())}</b><small>${idioma(`Parada ${estacionCarrito+1} de 3`,`Stop ${estacionCarrito+1} of 3`)}</small></span>
-      <button type="button" data-paso="1" ${estacionCarrito===2?'disabled':''}>${t('Avanzar')}</button>
+      <button type="button" data-paso="-1">${t('Retroceder')}</button>
+      <span><b>${formato(precio())}</b><small>${t('Empuja el carrito')}</small></span>
+      <button type="button" data-paso="1">${t('Avanzar')}</button>
     </div>`;
   }
-  function situarCarrito(estacion) {
-    estacionAnterior=estacionCarrito;
-    estacionCarrito=Math.max(0,Math.min(2,estacion));
+  const cicloPasillo=valor=>((valor%3)+3)%3;
+  function pintarPasillo() {
+    const pasillo=contenido.querySelector('.pasillo');
+    if(!pasillo)return;
+    pasillo.style.setProperty('--rodar',cicloPasillo(avancePasillo));
+    pasillo.style.setProperty('--balance-carrito',movimientoReducido.matches?0:Math.sin(avancePasillo*Math.PI*2)*2);
+    for(const puesto of pasillo.querySelectorAll('[data-tramo]')){
+      const profundidad=cicloPasillo(Number(puesto.dataset.tramo)+avancePasillo+.5)/3;
+      puesto.style.setProperty('--bajada-puesto',profundidad*(.83+.17*profundidad));
+      puesto.style.setProperty('--hacia-centro',(1-profundidad)*26+'%');
+      puesto.style.setProperty('--escala-puesto',.63+.40*profundidad);
+      const opacidad=Math.min(1,profundidad*12,(1-profundidad)*12);
+      puesto.style.opacity=opacidad;
+      if(puesto.inert!==(opacidad<.35))puesto.inert=opacidad<.35;
+    }
+  }
+  function detenerPasillo() {
+    cancelAnimationFrame(animacionPasillo);
+    animacionPasillo=0;
+    empuje=null;
+  }
+  function desplazarPasillo(destino) {
+    detenerPasillo();
+    const inicio=avancePasillo;
+    if(movimientoReducido.matches||Math.abs(inicio-destino)<.015){
+      avancePasillo=cicloPasillo(destino);
+      pintarPasillo();
+      return;
+    }
+    const comenzar=performance.now();
+    const mover=tiempo=>{
+      const p=Math.min(1,(tiempo-comenzar)/360);
+      const avance=1-(1-p)**3;
+      avancePasillo=inicio+(destino-inicio)*avance;
+      if(p<1)animacionPasillo=requestAnimationFrame(mover);
+      else{
+        avancePasillo=cicloPasillo(destino);
+        animacionPasillo=0;
+      }
+      pintarPasillo();
+    };
+    animacionPasillo=requestAnimationFrame(mover);
   }
   function estante() {
     if(modo!=='cajero')return verPasillo();
@@ -337,7 +379,7 @@
     else if(modo==='alcanza') contenido.innerHTML=verAlcance();
     else if(fase==='elegir'){
       contenido.innerHTML=estante();
-      estacionAnterior=estacionCarrito;
+      pintarPasillo();
     }
     else if(fase==='escanear') contenido.innerHTML=vistaCliente('Estos son mis productos.')+estante();
     else if(fase==='recibir') contenido.innerHTML=recibirPago();
@@ -369,6 +411,7 @@
     IdiomaVoz.hablar(texto.replace(/₡([\d.,\s\u00a0\u202f]*\d)/g,(_,n)=>n.replace(/\D/g,'')+' colones'));
   }
   function cambiarFase(nueva) {
+    detenerPasillo();
     fase=nueva;
     monto.value='';
     escena.scrollTop=0;
@@ -439,7 +482,6 @@
     if(modo==='carrito'&&elegidos.length===3)return anunciar('Puedes llevar hasta tres productos.');
     if(modo!=='carrito'&&modo!=='cajero')elegidos=[];
     elegidos.push(i);
-    if(fase==='elegir')situarCarrito(Math.floor(i/2));
     anunciar();
     actualizarContenido();
   }
@@ -573,7 +615,17 @@
   escena.addEventListener('pointerdown',evento=>{
     ignorarClic=false;
     const origen=evento.target.closest('button[data-dinero],button[data-producto],button[data-devolver],button[data-recibir],button[data-ficha-mesa]');
-    if(!origen||evento.button!==0||evento.isPrimary===false||arrastre)return;
+    if(evento.button!==0||evento.isPrimary===false||arrastre||empuje)return;
+    if(fase==='elegir')detenerPasillo();
+    const camino=evento.target.closest('.camino-carrito');
+    if(!origen&&camino){
+      const alto=camino.getBoundingClientRect().height;
+      if(!alto)return;
+      empuje={id:evento.pointerId,camino,y:evento.clientY,carrera:avancePasillo,recorrido:0,alto};
+      camino.setPointerCapture(evento.pointerId);
+      return;
+    }
+    if(!origen)return;
     const fuente=fuentesArrastre.find(({clave})=>Object.hasOwn(origen.dataset,clave));
     if(!origen.firstElementChild)return;
     arrastre={id:evento.pointerId,origen,fuente,
@@ -581,6 +633,15 @@
     origen.setPointerCapture(evento.pointerId);
   });
   escena.addEventListener('pointermove',evento=>{
+    if(empuje?.id===evento.pointerId){
+      const distancia=empuje.y-evento.clientY;
+      empuje.recorrido=Math.max(empuje.recorrido,Math.abs(distancia));
+      if(empuje.recorrido>=5){
+        avancePasillo=empuje.carrera+distancia*3/empuje.alto;
+        pintarPasillo();
+      }
+      return;
+    }
     const d=arrastre;
     if(d?.id!==evento.pointerId)return;
     const {clientX:x,clientY:y}=evento;
@@ -603,6 +664,15 @@
     d.destino?.classList.add('sobre-destino');
   });
   addEventListener('pointerup',evento=>{
+    if(empuje?.id===evento.pointerId){
+      const movido=empuje.recorrido>=5;
+      empuje=null;
+      if(movido){
+        ignorarClic=true;
+        desplazarPasillo(Math.round(avancePasillo));
+      }
+      return;
+    }
     const d=arrastre;
     if(d?.id!==evento.pointerId)return;
     if(d.fantasma){
@@ -611,9 +681,14 @@
       if(destino)d.fuente.soltar(d.valor,destino,evento);
     }
     limpiarArrastre();
+    if(fase==='elegir'&&!Number.isInteger(avancePasillo))desplazarPasillo(Math.round(avancePasillo));
   });
-  escena.addEventListener('pointercancel',limpiarArrastre);
+  escena.addEventListener('pointercancel',evento=>{
+    if(empuje?.id===evento.pointerId)desplazarPasillo(Math.round(avancePasillo));
+    limpiarArrastre();
+  });
   escena.addEventListener('lostpointercapture',evento=>{
+    if(evento.target===empuje?.camino&&evento.pointerId===empuje.id)desplazarPasillo(Math.round(avancePasillo));
     if(evento.target===arrastre?.origen&&evento.pointerId===arrastre.id)limpiarArrastre();
   });
   addEventListener('resize',limpiarArrastre);
@@ -622,6 +697,7 @@
     if(ignorarClic&&evento.detail){ignorarClic=false;return;}
     const boton=evento.target.closest('button');
     if(!boton){
+      if(evento.target.closest('.camino-carrito'))desplazarPasillo(Math.round(avancePasillo)+1);
       if(fichaElegida!==null&&evento.target.closest('.mesa-libre'))moverEnMesa(fichaElegida,evento.clientX,evento.clientY);
       return;
     }
@@ -644,11 +720,8 @@
         completar();
       }else anunciar('Compara tu dinero con la etiqueta de precio.');
     }
-    else if(boton.hasAttribute('data-paso')){
-      const paso=Number(boton.dataset.paso);
-      situarCarrito(estacionCarrito+paso);
-      actualizarContenido();
-      (contenido.querySelector(`[data-paso="${paso}"]:enabled`)||contenido.querySelector('[data-paso]:enabled'))?.focus({preventScroll:true});
+    else if(boton.hasAttribute('data-paso')||boton.id==='empujarCarrito'){
+      desplazarPasillo(Math.round(avancePasillo)+Number(boton.dataset.paso||1));
     }
     else if(boton.hasAttribute('data-dinero')) agregarDinero(Number(boton.dataset.dinero));
     else if(boton.hasAttribute('data-producto')) {
@@ -681,6 +754,7 @@
   });
   function mostrarModo(vista) {
     limpiarArrastre();
+    detenerPasillo();
     window.speechSynthesis?.cancel();
     modo=vista;
     $('modos').hidden=Boolean(vista);
@@ -719,6 +793,11 @@
   }
   $('configurar').onclick=()=>{
     limpiarArrastre();
+    detenerPasillo();
+    if(fase==='elegir'){
+      avancePasillo=cicloPasillo(Math.round(avancePasillo));
+      pintarPasillo();
+    }
     rotularAjustes();
     $('ayudas').checked=opciones.ayudas;
     $('narracion').checked=opciones.narracion;

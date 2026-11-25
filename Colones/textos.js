@@ -121,5 +121,6 @@ Object.assign(window.TEXTOS_INGLES,{
   'Tamaño de los billetes':'Banknote size',
   'Avanzar':'Move forward',
   'Retroceder':'Move back',
-  'Mostrar los nombres de los productos en globos':'Show product names in speech bubbles'
+  'Mostrar los nombres de los productos en globos':'Show product names in speech bubbles',
+  'Empuja el carrito':'Push the cart'
 });
