@@ -358,10 +358,11 @@
     pasillo.style.setProperty('--rodar',avance);
     pasillo.style.setProperty('--marcha-carrito',llegadaCaja?.progreso||0);
     pintarSuelo(pasillo,avance);
+    // Al salir hacia la caja, las mesas que pasan dejan de volver al fondo.
+    const base=llegadaCaja?.inicio??avance, salida=llegadaCaja?.salida??0;
     for(const puesto of pasillo.querySelectorAll('[data-tramo]')){
       const tramo=Number(puesto.dataset.tramo)+(primeraMesa-inicioMesa)/pasoMesa;
-      // Cada mesa vuelve al otro extremo cuando ya quedó fuera de la escena.
-      const profundidad=inicioMesa+pasoMesa*vueltaPasillo(tramo+avance);
+      const profundidad=inicioMesa+pasoMesa*vueltaPasillo(tramo+base)+salida;
       puesto.hidden=profundidad<-.64||profundidad>1.48;
       if(!puesto.hidden){
         puesto.style.zIndex=Math.round((profundidad-inicioMesa)*100);
@@ -522,18 +523,21 @@
     };
     if(movimientoReducido.matches)return empezarPago();
     anunciar();
-    llegadaCaja={progreso:0};
+    llegadaCaja={inicio:avancePasillo,salida:0,progreso:0};
     contenido.querySelector('[data-ir-caja]').hidden=true;
-    contenido.querySelector('.caja-al-fondo').hidden=false;
+    const caja=contenido.querySelector('.caja-al-fondo');
     for(const control of contenido.querySelectorAll('.producto,.carrito-pasillo button,[data-paso]'))control.disabled=true;
-    const inicio=avancePasillo, comenzar=performance.now();
+    const comenzar=performance.now(), duracionSalida=1000, mostrarCajaEn=duracionSalida+120;
     function acercar(tiempo) {
-      const p=Math.min(1,(tiempo-comenzar)/720);
-      const progreso=1-(1-p)**3;
-      llegadaCaja.progreso=progreso;
-      avancePasillo=vueltaPasillo(inicio+.72*progreso);
+      const transcurrido=tiempo-comenzar;
+      const salida=Math.min(1,transcurrido/duracionSalida);
+      const llegada=Math.min(1,Math.max(0,(transcurrido-mostrarCajaEn)/680));
+      llegadaCaja.salida=mesasPorVuelta*pasoMesa*salida**2*(3-2*salida);
+      llegadaCaja.progreso=llegada**2*(3-2*llegada);
+      avancePasillo=vueltaPasillo(llegadaCaja.inicio+llegadaCaja.salida/pasoMesa+.72*llegadaCaja.progreso);
       pintarPasillo();
-      if(p<1)animacionPasillo=requestAnimationFrame(acercar);
+      if(transcurrido>=mostrarCajaEn)caja.hidden=false;
+      if(llegada<1)animacionPasillo=requestAnimationFrame(acercar);
       else empezarPago();
     }
     animacionPasillo=requestAnimationFrame(acercar);
@@ -930,6 +934,7 @@
   $('configurar').onclick=()=>{
     limpiarArrastre();
     const estabaLlegando=Boolean(llegadaCaja);
+    if(llegadaCaja)avancePasillo=llegadaCaja.inicio;
     cancelarRecorrido();
     if(estabaLlegando)actualizarContenido();
     rotularAjustes();
