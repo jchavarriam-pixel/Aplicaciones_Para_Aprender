@@ -40,11 +40,11 @@
       plano.addEventListener('keydown',e=>this.tecla(e));
       separar.onclick=()=>this.separarSeleccion();deshacer.onclick=()=>this.deshacerUltimo();
     }
-    iniciar(figuras,cantidad,{ayuda=true,nombreFigura='figura',disposicion='compactos',inercia=false,metodo='soltar',mostrarContornos=false}={}) {
+    iniciar(figuras,cantidad,{ayuda=true,nombreFigura='figura',disposicion='compactos',inercia=false,metodo='barrido',mostrarContornos=false}={}) {
       this.cancelar();this.nodos=figuras.map(f=>({...f,x:0,y:0}));this.enlaces=[];
       this.mostrarContornos=mostrarContornos;
       this.cantidad=cantidad;this.ayuda=ayuda;this.nombreFigura=nombreFigura;this.disposicion=['compactos','hileras','libre'].includes(disposicion)?disposicion:'compactos';this.inercia=inercia===true;this.plano.dataset.disposicion=this.disposicion;this.plano.dataset.movimiento='reposo';
-      this.metodo=metodo==='barrido'?'barrido':'soltar';
+      this.metodo=metodo==='soltar'?'soltar':'barrido';
       this.plano.dataset.metodo=this.metodo;
       this.historial=[];this.seleccion=null;this.resuelto=false;this.mundo={w:0,h:0,tam:50};
       this.capa.replaceChildren();this.botones=new Map();

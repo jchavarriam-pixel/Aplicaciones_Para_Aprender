@@ -26,7 +26,7 @@
     'Leer instrucciones y comentarios':'Read instructions and feedback aloud',
     'Máximo de grupos o cajas':'Maximum groups or boxes', 'Máximo de fichas por grupo':'Maximum counters per group',
     'Tipo de reparto':'Sharing type', 'Solo exacto':'Exact only', 'Solo con resto':'With remainder only', 'Mixto':'Mixed',
-    'Cómo unir las fichas':'How to join counters', 'Pasar sobre ellas':'Sweep over them',
+    'Cómo unir las fichas':'How to join counters', 'Recoger al pasar':'Sweep to collect',
     'Acercar y soltar':'Bring together and release', 'Marcar los grupos o cajas completos':'Mark complete groups or boxes',
     'Aplicar y cerrar':'Apply and close', 'Aplicar y volver':'Apply and return'
   });

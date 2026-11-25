@@ -14,7 +14,7 @@
    if(!c.tablas.length)c.tablas=[2,3,4,5];
    for(const[k,min,max,fallback]of [['cantidad',1,c.modo==='pareo'?12:24,6],['cantidadSobrantes',0,6,2],['porPagina',1,4,1]])c[k]=Math.max(min,Math.min(max,Number.isFinite(+c[k])?Math.round(+c[k]):fallback));
    if(c.modo==='seleccion')c.porPagina=1;
-   if(c.metodoGrupos!=='barrido')c.metodoGrupos='soltar';
+   if(c.metodoGrupos!=='soltar')c.metodoGrupos='barrido';
    c.opciones=Number(c.opciones)>=4?4:3;for(const k of ['sobrantes','sonidos'])if(typeof c[k]!=='boolean')c[k]=k==='sonidos';
    return c;
   }
@@ -31,8 +31,8 @@
    if(basic){fields+='<fieldset><legend>'+t('Tu práctica','Your practice')+'</legend>'+select('tipoRespuesta','Cómo responder','How to answer',[['multiplicacion','Completar la multiplicación','Complete the multiplication'],['producto','Solo el producto (total)','Only the product (total)']])+select('forma','Figuras','Shapes',[['azar','Cambiar en cada ronda','Change each round'],['circulo','Círculos','Circles'],['cuadrado','Cuadrados','Squares'],['triangulo','Triángulos','Triangles'],['pentagono','Pentágonos','Pentagons'],['estrella','Estrellas','Stars'],['rombo','Rombos','Diamonds'],['hexagono','Hexágonos','Hexagons'],['rectangulo','Rectángulos','Rectangles']]);
     if(modo==='filas')fields+=check('ayudaConteo','Conteo animado de las figuras','Animated counting of the shapes')+check('sonidoConteo','Campanitas durante el conteo','Chimes while counting');
     else fields+=select('metodoGrupos','Cómo recoger las fichas','How to collect shapes',[
-     ['soltar','Acercar y soltar','Move close and release'],
-     ['barrido','Recoger al pasar','Sweep to collect']
+     ['barrido','Recoger al pasar','Sweep to collect'],
+     ['soltar','Acercar y soltar','Move close and release']
     ])+select('disposicionGrupos','Forma de los grupos','Group layout',[['compactos','Compactos (en puños)','Compact clusters'],['hileras','En hileras','In rows'],['libre','Libre','Free']])+check('inerciaGrupos','Deslizar suavemente al soltar','Slide gently when released')+check('ayudaGrupos','Marcar y cerrar los grupos completos','Mark and close complete groups');fields+='</fieldset>';
    }else{
     fields+='<fieldset><legend>'+t('Tu ronda','Your round')+'</legend><div class="opciones-modo-grid">'+num('cantidad',match?'Parejas por ronda':'Preguntas por ronda',match?'Pairs per round':'Questions per round',1,match?12:24)+(modo==='completar'?select('porPagina','Preguntas por página','Questions per page',[[1,'1','1'],[2,'2','2'],[3,'3','3'],[4,'4','4']]):'')+(choice?select('opciones','Opciones por pregunta','Options per question',[[3,'3','3'],[4,'4','4']]):'')+'</div>';
