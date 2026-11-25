@@ -33,8 +33,10 @@
   let modo = null, fase, oferta, elegidos, piezas, sobre, dineroCliente, pagado;
   let arrastre = null, ignorarClic = false;
   let mesa, posicionesMesa, fichaElegida, animarSobre, cartera, mercanciaCliente, recibidos;
-  let avancePasillo=0, animacionPasillo=0, empuje=null;
-  const finPasillo=3, avancePorPaso=.42;
+  let avancePasillo=0, animacionPasillo=0, empuje=null, llegadaCaja=null;
+  const mesasPorVuelta=6, pasoMesa=.36, inicioMesa=-.66, primeraMesa=.14;
+  const vueltaPasillo=valor=>((valor%mesasPorVuelta)+mesasPorVuelta)%mesasPorVuelta;
+  const imagenCaja='imagenes/caja-con-cajera.webp';
   const movimientoReducido=matchMedia('(prefers-reduced-motion: reduce)');
   const t = texto => IdiomaVoz.t(texto);
   const en = () => IdiomaVoz.idioma==='en';
@@ -101,7 +103,7 @@
     if(!modo)return;
     oferta=prepararProductos();
     elegidos=[];
-    detenerPasillo();
+    cancelarRecorrido();
     avancePasillo=0;
     piezas=[];
     sobre=formar(modo==='contar'?entero(3,7):entero(2,5));
@@ -250,7 +252,7 @@
     const item=oferta[i];
     return `<button type="button" class="producto" data-producto="${i}">${producto(item)}<span><strong>${t(item.nombre)}</strong><b class="etiqueta-precio">${formato(item.precio)}</b></span></button>`;
   }
-  function verPuesto(i) {
+  function verPuesto(i,tramo) {
     const item=oferta[i];
     const nombre=t(item.nombre);
     const monto=formato(item.precio);
@@ -258,7 +260,7 @@
       `<button type="button" class="producto" data-producto="${i}" aria-label="${nombre}, ${monto}">
         ${producto(item)}${opciones.nombresProductos?`<span class="globo-producto" aria-hidden="true">${nombre}</span>`:''}
       </button>`;
-    return `<div class="puesto-estante" data-tramo="${Math.floor(i/2)}" data-lado="${i%2===0?-1:1}">
+    return `<div class="puesto-estante" data-tramo="${tramo}" data-lado="${i%2===0?-1:1}">
       <svg class="mesa-exhibicion" preserveAspectRatio="none" aria-hidden="true">
         <path class="sombra-mesa"></path><path class="patas-mesa"></path><path class="canto-mesa"></path><path class="tablero-exhibicion"></path>
       </svg>${mercancia}<div class="precio-estante"><b>${monto}</b></div></div>`;
@@ -267,27 +269,28 @@
     return elegidos.map(i=>`<button type="button" data-devolver="${i}" aria-label="${idioma('Devolver '+oferta[i].nombre,'Return '+t(oferta[i].nombre))}">${producto(oferta[i])}</button>`).join('');
   }
   function verPasillo() {
-    const columna=(lado,indices)=>`<div class="lado-estante ${lado}" data-estante>${indices.map(verPuesto).join('')}</div>`;
+    const columna=(lado,indice)=>`<div class="lado-estante ${lado}" data-estante>
+      ${Array.from({length:mesasPorVuelta},(_,tramo)=>verPuesto((tramo%(oferta.length/2))*2+indice,tramo)).join('')}</div>`;
     return `<div class="pasillo" id="estante">
       <svg class="suelo-en-marcha" aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none"><path></path></svg>
-      ${columna('izquierdo',[0,2,4])}
+      ${columna('izquierdo',0)}
       <div class="camino-carrito">
-        <div class="caja-al-fondo"><img src="imagenes/caja-destino.webp" alt="" draggable="false"><span>${t('Caja registradora')}</span></div>
+        <button class="meta-caja" type="button" data-ir-caja>${t('Ir a la caja')}</button>
+        <div class="caja-al-fondo" hidden><img src="${imagenCaja}" alt="" draggable="false"></div>
         <div id="cesta" class="carrito-pasillo" role="group" aria-label="${t('Tu carrito')}">
           <img src="imagenes/carrito-perspectiva.webp" alt="" draggable="false">
           <div class="carga-carrito">${productosEnCesta()}</div>
           <button id="empujarCarrito" type="button" aria-label="${t('Empuja el carrito')}"></button>
         </div>
       </div>
-      ${columna('derecho',[1,3,5])}
+      ${columna('derecho',1)}
     </div>
     <div class="controles-pasillo">
       <button type="button" data-paso="-1">${t('Retroceder')}</button>
-      <span><b>${formato(precio())}</b><small>${t('Empuja hacia arriba. Hala hacia abajo.')}</small></span>
+      <span><b>${formato(precio())}</b><small>${t('Mantén la manija arriba o abajo.')}</small></span>
       <button type="button" data-paso="1">${t('Avanzar')}</button>
     </div>`;
   }
-  const limitarPasillo=valor=>Math.min(finPasillo,Math.max(0,valor));
   // Cámara a 60 grados sobre el piso. La coordenada longitudinal crece hacia el carrito.
   const senoCamara=Math.sin(Math.PI/3),cosenoCamara=Math.cos(Math.PI/3);
   function perspectiva(profundidad,altura) {
@@ -303,10 +306,10 @@
   const trazar= puntos=>puntos.map(({x,y},i)=>`${i?'L':'M'}${x.toFixed(2)} ${y.toFixed(2)}`).join('')+'Z';
   function pintarSuelo(pasillo,avance) {
     const caminos=[];
-    const desfase=avance*avancePorPaso*6%2;
+    const desfase=avance*2%2;
     const punto=(columna,profundidad)=>proyectar(columna*.47,profundidad);
-    for(let fila=-2;fila<6;fila++){
-      const lejano=(fila+desfase)/6,cercano=lejano+1/6;
+    for(let fila=-3;fila<6;fila++){
+      const lejano=(fila+desfase)*pasoMesa/2,cercano=lejano+pasoMesa/2;
       for(let columna=-7;columna<7;columna++){
         if((fila+columna)%2===0)caminos.push(trazar([
           punto(columna,lejano),punto(columna+1,lejano),punto(columna+1,cercano),punto(columna,cercano)]));
@@ -336,6 +339,8 @@
     svg.querySelector('.tablero-exhibicion').setAttribute('d',trazar(tablero));
     const producto=proyectar((interior+exterior)/2,profundidad,altura);
     const precio=proyectar((interior+exterior)/2,cerca,altura-.045);
+    const ficha=puesto.querySelector('.producto');
+    if(ficha)ficha.tabIndex=producto.y>=0&&producto.y<=100?0:-1;
     puesto.style.left=(x-(lado===1?50:0))*2+'%';
     puesto.style.top=y+'%';
     puesto.style.width=ancho*2+'%';
@@ -349,45 +354,54 @@
   function pintarPasillo() {
     const pasillo=contenido.querySelector('.pasillo');
     if(!pasillo)return;
-    const avance=avancePasillo;
+    const avance=vueltaPasillo(avancePasillo);
     pasillo.style.setProperty('--rodar',avance);
-    pasillo.style.setProperty('--marcha-carrito',avance/finPasillo);
+    pasillo.style.setProperty('--marcha-carrito',llegadaCaja?.progreso||0);
     pintarSuelo(pasillo,avance);
     for(const puesto of pasillo.querySelectorAll('[data-tramo]')){
-      const profundidad=(Number(puesto.dataset.tramo)+.5)/3+avance*avancePorPaso;
-      puesto.hidden=profundidad>1.48;
-      if(!puesto.hidden)pintarMesa(puesto,profundidad);
+      const tramo=Number(puesto.dataset.tramo)+(primeraMesa-inicioMesa)/pasoMesa;
+      // Cada mesa vuelve al otro extremo cuando ya quedó fuera de la escena.
+      const profundidad=inicioMesa+pasoMesa*vueltaPasillo(tramo+avance);
+      puesto.hidden=profundidad<-.64||profundidad>1.48;
+      if(!puesto.hidden){
+        puesto.style.zIndex=Math.round((profundidad-inicioMesa)*100);
+        pintarMesa(puesto,profundidad);
+      }
     }
-    contenido.querySelector('[data-paso="-1"]').disabled=avance<=0;
-    contenido.querySelector('[data-paso="1"]').disabled=avance>=finPasillo;
   }
   function detenerPasillo() {
     cancelAnimationFrame(animacionPasillo);
     animacionPasillo=0;
     empuje=null;
   }
-  function desplazarPasillo(destino) {
+  function cancelarRecorrido() {
     detenerPasillo();
-    destino=limitarPasillo(destino);
+    llegadaCaja=null;
+  }
+  function avanzarConManija(tiempo) {
+    animacionPasillo=0;
+    if(!empuje?.velocidad)return;
+    const segundos=Math.min(40,tiempo-empuje.instante)/1000;
+    empuje.instante=tiempo;
+    avancePasillo=vueltaPasillo(avancePasillo+empuje.velocidad*segundos);
+    pintarPasillo();
+    animacionPasillo=requestAnimationFrame(avanzarConManija);
+  }
+  function desplazarPasillo(paso) {
+    if(llegadaCaja)return;
+    detenerPasillo();
     const inicio=avancePasillo;
-    if(movimientoReducido.matches||Math.abs(inicio-destino)<.015){
-      avancePasillo=destino;
+    if(movimientoReducido.matches){
+      avancePasillo=vueltaPasillo(inicio+paso);
       pintarPasillo();
-      if(destino===finPasillo)llegarCaja();
       return;
     }
     const comenzar=performance.now();
     const mover=tiempo=>{
       const p=Math.min(1,(tiempo-comenzar)/360);
-      const avance=1-(1-p)**3;
-      avancePasillo=inicio+(destino-inicio)*avance;
-      if(p<1)animacionPasillo=requestAnimationFrame(mover);
-      else{
-        avancePasillo=destino;
-        animacionPasillo=0;
-      }
+      avancePasillo=vueltaPasillo(inicio+paso*(1-(1-p)**3));
+      animacionPasillo=p<1?requestAnimationFrame(mover):0;
       pintarPasillo();
-      if(p===1&&destino===finPasillo)llegarCaja();
     };
     animacionPasillo=requestAnimationFrame(mover);
   }
@@ -414,6 +428,7 @@
       return `<li>${producto(item)}<span>${t(item.nombre)}</span><strong>${formato(item.precio)}</strong></li>`;
     }).join('');
     return `<section class="recibo">
+      ${fase==='pagar'?'<img class="cajera-pago" src="'+imagenCaja+'" alt="">':''}
       <ul ${esCajero?'aria-label="'+t('Productos del cliente')+'"':''}>${listado}</ul>
       ${etiquetaTotal('Precio total',precio())}
       ${esCajero&&(fase==='dar'||fase==='listo')?etiquetaTotal('El cliente paga',pagado):''}
@@ -479,7 +494,7 @@
     IdiomaVoz.hablar(texto.replace(/₡([\d.,\s\u00a0\u202f]*\d)/g,(_,n)=>n.replace(/\D/g,'')+' colones'));
   }
   function cambiarFase(nueva) {
-    detenerPasillo();
+    cancelarRecorrido();
     fase=nueva;
     monto.value='';
     escena.scrollTop=0;
@@ -495,13 +510,33 @@
     $('accion').focus({preventScroll:true});
   }
   function llegarCaja() {
-    if(fase!=='elegir'||avancePasillo<finPasillo)return;
+    if(fase!=='elegir'||llegadaCaja)return;
+    detenerPasillo();
     if(elegidos.length<(modo==='carrito'?2:1)){
-      anunciar(modo==='carrito'?'Retrocede y recoge dos o tres productos.':'Retrocede y recoge un producto.');
+      anunciar(modo==='carrito'?'Recoge dos o tres productos antes de ir a la caja.':'Recoge un producto antes de ir a la caja.');
       return;
     }
-    cambiarFase('pagar');
-    banco.firstElementChild.focus({preventScroll:true});
+    const empezarPago=()=>{
+      cambiarFase('pagar');
+      banco.firstElementChild.focus({preventScroll:true});
+    };
+    if(movimientoReducido.matches)return empezarPago();
+    anunciar();
+    llegadaCaja={progreso:0};
+    contenido.querySelector('[data-ir-caja]').hidden=true;
+    contenido.querySelector('.caja-al-fondo').hidden=false;
+    for(const control of contenido.querySelectorAll('.producto,.carrito-pasillo button,[data-paso]'))control.disabled=true;
+    const inicio=avancePasillo, comenzar=performance.now();
+    function acercar(tiempo) {
+      const p=Math.min(1,(tiempo-comenzar)/720);
+      const progreso=1-(1-p)**3;
+      llegadaCaja.progreso=progreso;
+      avancePasillo=vueltaPasillo(inicio+.72*progreso);
+      pintarPasillo();
+      if(p<1)animacionPasillo=requestAnimationFrame(acercar);
+      else empezarPago();
+    }
+    animacionPasillo=requestAnimationFrame(acercar);
   }
   function revisar() {
     if(fase==='listo'||fase==='medir') return nuevaRonda();
@@ -684,19 +719,19 @@
     {clave:'fichaMesa',destino:'.mesa-libre',soltar:(i,nodo,evento)=>moverEnMesa(i,evento.clientX,evento.clientY)}
   ];
   escena.addEventListener('pointerdown',evento=>{
-    ignorarClic=false;
     const origen=evento.target.closest('button[data-dinero],button[data-producto],button[data-devolver],button[data-recibir],button[data-ficha-mesa]');
-    if(evento.button!==0||evento.isPrimary===false||arrastre||empuje)return;
-    if(fase==='elegir')detenerPasillo();
+    if(evento.button!==0||evento.isPrimary===false||arrastre||empuje||llegadaCaja)return;
+    ignorarClic=false;
     const camino=evento.target.closest('.camino-carrito');
-    if(!origen&&camino){
+    if(!origen&&camino&&evento.target.closest('.carrito-pasillo')){
+      detenerPasillo();
       const alto=camino.getBoundingClientRect().height;
-      if(!alto)return;
-      empuje={id:evento.pointerId,camino,y:evento.clientY,carrera:avancePasillo,recorrido:0,alto};
+      empuje={id:evento.pointerId,camino,y:evento.clientY,recorrido:0,alto,velocidad:0,instante:0};
       camino.setPointerCapture(evento.pointerId);
       return;
     }
     if(!origen)return;
+    if(fase==='elegir')detenerPasillo();
     const fuente=fuentesArrastre.find(({clave})=>Object.hasOwn(origen.dataset,clave));
     if(!origen.firstElementChild)return;
     arrastre={id:evento.pointerId,origen,fuente,
@@ -707,10 +742,23 @@
     if(empuje?.id===evento.pointerId){
       const distancia=empuje.y-evento.clientY;
       empuje.recorrido=Math.max(empuje.recorrido,Math.abs(distancia));
-      if(empuje.recorrido>=5){
-        avancePasillo=limitarPasillo(empuje.carrera+distancia*4/empuje.alto);
-        if(avancePasillo<finPasillo&&$('mensaje').textContent)anunciar();
-        pintarPasillo();
+      const meta=contenido.querySelector('[data-ir-caja]').getBoundingClientRect();
+      if(distancia>empuje.alto*.35&&evento.clientY<=meta.bottom+8&&
+        evento.clientX>=meta.left-12&&evento.clientX<=meta.right+12){
+        ignorarClic=true;
+        llegarCaja();
+        return;
+      }
+      if(Math.abs(distancia)<5){
+        empuje.velocidad=0;
+        return;
+      }
+      const intensidad=Math.min(1,(Math.abs(distancia)-5)/(empuje.alto*.23));
+      empuje.velocidad=Math.sign(distancia)*(.6+intensidad*1.6);
+      if(!animacionPasillo){
+        if($('mensaje').textContent)anunciar();
+        empuje.instante=performance.now();
+        animacionPasillo=requestAnimationFrame(avanzarConManija);
       }
       return;
     }
@@ -737,12 +785,8 @@
   });
   addEventListener('pointerup',evento=>{
     if(empuje?.id===evento.pointerId){
-      const movido=empuje.recorrido>=5;
-      empuje=null;
-      if(movido){
-        ignorarClic=true;
-        if(avancePasillo>=finPasillo-.10)desplazarPasillo(finPasillo);
-      }
+      ignorarClic=empuje.recorrido>=5;
+      detenerPasillo();
       return;
     }
     const d=arrastre;
@@ -755,17 +799,23 @@
     limpiarArrastre();
   });
   escena.addEventListener('pointercancel',evento=>{
-    if(empuje?.id===evento.pointerId)empuje=null;
+    if(empuje?.id===evento.pointerId)detenerPasillo();
     limpiarArrastre();
   });
   escena.addEventListener('lostpointercapture',evento=>{
-    if(evento.target===empuje?.camino&&evento.pointerId===empuje.id)empuje=null;
+    if(evento.target===empuje?.camino&&evento.pointerId===empuje.id)detenerPasillo();
     if(evento.target===arrastre?.origen&&evento.pointerId===arrastre.id)limpiarArrastre();
   });
-  addEventListener('resize',limpiarArrastre);
-  document.addEventListener('fullscreenchange',limpiarArrastre);
+  function terminarGestos(){
+    if(empuje)detenerPasillo();
+    limpiarArrastre();
+  }
+  addEventListener('resize',terminarGestos);
+  addEventListener('blur',terminarGestos);
+  document.addEventListener('fullscreenchange',terminarGestos);
   escena.addEventListener('click',evento=>{
     if(ignorarClic&&evento.detail){ignorarClic=false;return;}
+    if(llegadaCaja)return;
     const boton=evento.target.closest('button');
     if(!boton){
       if(fichaElegida!==null&&evento.target.closest('.mesa-libre'))moverEnMesa(fichaElegida,evento.clientX,evento.clientY);
@@ -790,9 +840,10 @@
         completar();
       }else anunciar('Compara tu dinero con la etiqueta de precio.');
     }
+    else if(boton.hasAttribute('data-ir-caja')) llegarCaja();
     else if(boton.hasAttribute('data-paso')||boton.id==='empujarCarrito'){
       anunciar();
-      desplazarPasillo(avancePasillo+Number(boton.dataset.paso||1));
+      desplazarPasillo(Number(boton.dataset.paso||1));
     }
     else if(boton.hasAttribute('data-dinero')) agregarDinero(Number(boton.dataset.dinero));
     else if(boton.hasAttribute('data-producto')) {
@@ -803,7 +854,7 @@
     else if(boton.hasAttribute('data-devolver')) {
       const i=Number(boton.dataset.devolver);
       devolverProducto(i);
-      contenido.querySelector(`[data-producto="${i}"]`)?.focus({preventScroll:true});
+      contenido.querySelector(`.puesto-estante:not([hidden]) [data-producto="${i}"][tabindex="0"], .mostrador-cliente [data-producto="${i}"]`)?.focus({preventScroll:true});
     }
     else if(boton.hasAttribute('data-ficha-mesa')) tocarMesa(Number(boton.dataset.fichaMesa),boton);
     else if(boton.hasAttribute('data-recibir')){
@@ -819,7 +870,7 @@
     if(evento.target.id==='empujarCarrito'&&['ArrowUp','ArrowDown'].includes(evento.key)){
       evento.preventDefault();
       anunciar();
-      desplazarPasillo(avancePasillo+(evento.key==='ArrowUp'?1:-1));
+      desplazarPasillo(evento.key==='ArrowUp'?1:-1);
       return;
     }
     const ficha=evento.target.closest('button[data-ficha-mesa]');
@@ -831,7 +882,7 @@
   });
   function mostrarModo(vista) {
     limpiarArrastre();
-    detenerPasillo();
+    cancelarRecorrido();
     window.speechSynthesis?.cancel();
     modo=vista;
     $('modos').hidden=Boolean(vista);
@@ -878,7 +929,9 @@
   }
   $('configurar').onclick=()=>{
     limpiarArrastre();
-    detenerPasillo();
+    const estabaLlegando=Boolean(llegadaCaja);
+    cancelarRecorrido();
+    if(estabaLlegando)actualizarContenido();
     rotularAjustes();
     $('ayudas').checked=opciones.ayudas;
     $('narracion').checked=opciones.narracion;
