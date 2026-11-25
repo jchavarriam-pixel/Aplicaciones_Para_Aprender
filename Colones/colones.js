@@ -130,7 +130,10 @@
   }
   function mostrarModos() {
     $('modos').innerHTML=Object.entries(modos).map(([id,{nombre,guia}],i) =>
-      `<button type="button" class="tarjeta" data-modo="${id}"><span class="arte-modo" style="--col:${i%4};--fila:${Math.floor(i/4)}" aria-hidden="true"></span><strong>${t(nombre)}</strong><span>${t(guia)}</span></button>`
+      `<button type="button" class="tarjeta" data-modo="${id}" aria-labelledby="modo-${id}" aria-describedby="guia-${id}">
+        <span class="arte-modo" style="--col:${i%4};--fila:${Math.floor(i/4)}" aria-hidden="true"></span>
+        <span class="texto-modo"><strong id="modo-${id}">${t(nombre)}</strong><span id="guia-${id}" class="detalle-modo">${t(guia)}</span></span>
+      </button>`
     ).join('');
   }
   function producto(item) {
