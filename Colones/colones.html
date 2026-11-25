@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="../idioma-voz.css">
   <link rel="stylesheet" href="../pantalla-completa.css">
   <link rel="stylesheet" href="../panel-plegable.css?v=colones">
-  <link rel="stylesheet" href="colones.css?v=empuje-continuo">
+  <link rel="stylesheet" href="colones.css?v=caja-interactiva">
 </head>
 <body>
   <main id="appColones">
@@ -80,6 +80,15 @@
       <label class="casilla"><input type="checkbox" id="nombresProductos"> Mostrar los nombres de los productos en globos</label>
       <label class="casilla"><input type="checkbox" id="ayudas"> Mostrar pistas y el total del dinero que colocas</label>
       <label class="casilla"><input type="checkbox" id="narracion"> Leer las instrucciones y los resultados</label>
+      <fieldset>
+        <legend>Compras con vuelto</legend>
+        <label for="vueltoCaja">Vuelto que entrega la cajera</label>
+        <select id="vueltoCaja">
+          <option value="correcto">Siempre correcto</option>
+          <option value="incorrecto">Siempre incorrecto</option>
+          <option value="mixto">Mixto</option>
+        </select>
+      </fieldset>
       <section id="vozColones"></section>
       <button type="submit" class="principal">Aplicar y cerrar</button>
     </form>
@@ -90,7 +99,7 @@
   </footer>
   <script>window.IDIOMA_VOZ_APP = 'colones';</script>
   <script src="../idioma-voz-textos.js?v=creditos-msc"></script>
-  <script src="textos.js?v=empuje-continuo"></script>
+  <script src="textos.js?v=caja-interactiva"></script>
   <script src="../idioma-voz.js"></script>
   <script src="../matematicas-base.js"></script>
   <script src="../historial-modos.js"></script>
@@ -98,6 +107,6 @@
   <script src="../pantalla-completa.js"></script>
   <script src="../panel-plegable.js?v=colones"></script>
   <script src="../nombre-compartido.js"></script>
-  <script src="colones.js?v=salida-del-pasillo"></script>
+  <script src="colones.js?v=caja-interactiva"></script>
 </body>
 </html>

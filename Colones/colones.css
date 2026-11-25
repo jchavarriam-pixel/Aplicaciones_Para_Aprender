@@ -148,9 +148,8 @@ button.pieza-colocada:has(.moneda) { min-width:calc(29 * var(--u)); min-height:c
 .piezas-pago { gap:calc(5 * var(--u)); }
 .piezas-pago .moneda { --base-moneda:38; }
 .piezas-pago .billete { --base-billete:38; }
-.pago-entregado { background:#f2f9f4; border-radius:calc(7 * var(--u)); }
-.pago-entregado .moneda,.piezas-pago:has(>:nth-child(7)) .moneda { --base-moneda:31; }
-.pago-entregado .billete,.piezas-pago:has(>:nth-child(7)) .billete { --base-billete:31; }
+.piezas-pago:has(>:nth-child(7)) .moneda { --base-moneda:31; }
+.piezas-pago:has(>:nth-child(7)) .billete { --base-billete:31; }
 .pila-billetes {
   --borde-pila:calc(6 * var(--u));
   display:grid; padding-bottom:calc(var(--cantidad-pila) * var(--borde-pila));
@@ -201,11 +200,6 @@ button.pieza-colocada:has(.moneda) { min-width:calc(29 * var(--u)); min-height:c
 }
 .recibo ul { list-style:none; margin:0; padding:0; display:grid; gap:calc(2 * var(--u)); }
 .recibo li { display:grid; align-items:center; grid-template-columns:auto minmax(0,1fr) auto; gap:calc(6 * var(--u)); }
-.recibo:has(.cajera-pago) { grid-template-columns:auto minmax(0,1fr); align-items:center; }
-.cajera-pago {
-  grid-row:span 2; display:block; width:clamp(calc(59 * var(--u)),18vw,calc(115 * var(--u)));
-  height:calc(56 * var(--u)); object-fit:contain;
-}
 .pago-cliente { display:flex; justify-content:center; flex-wrap:wrap; gap:calc(4 * var(--u)); padding-bottom:calc(3 * var(--u)); }
 .pago-cliente .moneda { --base-moneda:30; }
 .pago-cliente .billete { --base-billete:30; }
@@ -309,9 +303,9 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
   #banco:has(>:nth-child(6)) .moneda { --tope-moneda:100cqi; }
   #banco > button { max-width:100%; }
   .recibo .foto-producto { width:calc(22 * var(--u)); }
-  .escena[data-fase=pagar] .recibo ul,.escena[data-fase=dar] .recibo ul { grid-template-columns:repeat(auto-fit,minmax(calc(72 * var(--u)),1fr)); gap:calc(4 * var(--u)); }
-  .escena[data-fase=pagar] .recibo li,.escena[data-fase=dar] .recibo li { grid-template-columns:auto minmax(0,1fr); font-size:calc(12 * var(--u)); gap:calc(2 * var(--u)); }
-  .escena[data-fase=pagar] .recibo li strong,.escena[data-fase=dar] .recibo li strong { grid-column:1/-1; text-align:center; }
+  .escena[data-fase=dar] .recibo ul { grid-template-columns:repeat(auto-fit,minmax(calc(72 * var(--u)),1fr)); gap:calc(4 * var(--u)); }
+  .escena[data-fase=dar] .recibo li { grid-template-columns:auto minmax(0,1fr); font-size:calc(12 * var(--u)); gap:calc(2 * var(--u)); }
+  .escena[data-fase=dar] .recibo li strong { grid-column:1/-1; text-align:center; }
   .dato-total strong,.cesta > strong { font-size:calc(16 * var(--u)); }
   .zona-dinero { min-height:calc(46 * var(--u)); }
   .mostrador { padding:calc(4 * var(--u)); }
@@ -577,7 +571,6 @@ button.ficha-mesa { cursor:grab; }
   .estante { grid-template-columns:repeat(6,minmax(0,1fr)); }
   .estante strong,.estante .etiqueta-precio { font-size:calc(12 * var(--u)); }
   .cliente img { width:calc(38 * var(--u)); height:calc(38 * var(--u)); }
-  .cajera-pago { height:calc(42 * var(--u)); }
 }
 @media (max-height:370px) and (orientation:landscape) {
   .pasillo { --alto-pasillo:clamp(calc(116 * var(--u)),calc(var(--alto,100dvh)*.39),calc(144 * var(--u))); }
@@ -591,4 +584,149 @@ button.ficha-mesa { cursor:grab; }
   .carrito-pasillo { transform:none; }
   .abriendo .solapa-sobre,.abriendo .mesa-libre .dinero,.llega-cliente,.llega-cliente + .mostrador-cliente .producto,
   .entrega-cliente.efectivo-nuevo .pago-cliente .origen-dinero { animation:none; }
+}
+
+/* Mostrador de las actividades de compra. */
+#vueltoCaja { display:block; width:100%; margin-top:5px; padding:6px; border:1px solid #9cbeae; border-radius:6px; background:#fff; }
+.escena:has(.compra-en-caja) { align-content:safe center; }
+.compra-en-caja {
+  --altura-caja:clamp(calc(136 * var(--u)),calc(var(--alto,100dvh)*.37),calc(390 * var(--u)));
+  display:grid; gap:calc(5 * var(--u)); min-width:0; justify-items:center;
+}
+.escena-caja {
+  position:relative; isolation:isolate; width:min(100%,calc(var(--altura-caja)*1.49));
+  aspect-ratio:520/351; container-type:inline-size;
+  border-radius:calc(19 * var(--u)); background:radial-gradient(ellipse at 50% 22%,#fff7da,#fde6b9 78%,#e8ba7c);
+}
+.arte-caja { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; user-select:none; pointer-events:none; }
+.pantalla-registro {
+  position:absolute; z-index:2; inset:4% 1.5% auto auto; width:34%; display:grid; align-items:center;
+  padding:1.5% 2.25%; border:1px solid #398f84; border-radius:calc(9 * var(--u));
+  color:#dcffd3; background:linear-gradient(145deg,#10413d,#102b30); box-shadow:0 calc(3 * var(--u)) 0 #114a4c; text-align:right;
+}
+.pantalla-registro small { font-size:clamp(calc(9 * var(--u)),2.6cqi,calc(15 * var(--u))); text-align:left; color:#9de5c4; }
+.pantalla-registro strong { font-size:clamp(calc(11 * var(--u)),4.7cqi,calc(32 * var(--u))); line-height:1.1; font-variant-numeric:tabular-nums; }
+[data-costo-producto] {
+  grid-column:1/-1; font-size:clamp(calc(9 * var(--u)),3.05cqi,calc(16 * var(--u)));
+  font-weight:800; line-height:1.12; text-align:left; padding-bottom:3%; color:#fff0b0; overflow-wrap:anywhere;
+}
+[data-costo-producto]:empty { display:none; }
+.zona-colocar {
+  position:absolute; left:45%; right:20%; top:55%; min-height:19%; display:grid; place-items:center; padding:2%;
+  border:2px dashed #fff0be; border-radius:calc(8 * var(--u)); background:#704014d6; color:#fff8d9;
+  font-size:clamp(calc(10 * var(--u)),3.3cqi,calc(17 * var(--u))); font-weight:900; line-height:1.1; text-align:center;
+}
+.escena-caja.sobre-destino { outline:none; }
+.escena-caja.sobre-destino .zona-colocar { background:#126958; border-color:#ffeb9c; box-shadow:0 0 0 calc(3 * var(--u)) #fff0a6; }
+.lector-caja {
+  position:absolute; left:31%; top:57%; width:12%; height:6%; transform:skewX(17deg) rotate(-6deg);
+  border:1px solid #497b75; border-radius:15%; background:linear-gradient(#25494d,#152934); box-shadow:0 calc(3 * var(--u)) 0 #153335;
+}
+.lector-caja::after { content:""; position:absolute; inset:46% 13% 36%; background:#8d3333; border-radius:20%; }
+.lector-caja[data-escaneando]::after { animation:destelloCajera 1250ms linear both; animation-delay:calc(-1 * var(--pasado,0ms)); }
+.bolsa-caja { position:absolute; left:7%; top:46%; width:17%; display:flex; align-items:center; justify-content:center; }
+.bolsa-caja span { width:47%; min-width:0; filter:drop-shadow(0 1px 1px #62392b); }
+.bolsa-caja .foto-producto { width:100%; }
+.producto-en-caja {
+  position:absolute; z-index:3; width:19%; left:59%; top:59%; pointer-events:none;
+  transform:translate(-50%,-58%); animation:escanearCompra 1250ms ease-in-out both; animation-delay:calc(-1 * var(--pasado,0ms));
+}
+.producto-en-caja .foto-producto { width:100%; filter:drop-shadow(0 calc(3 * var(--u)) calc(2 * var(--u)) #512f25a3); }
+@keyframes escanearCompra {
+  0% { left:59%; top:61%; transform:translate(-50%,-45%) scale(.86); }
+  16% { left:59%; top:59%; transform:translate(-50%,-58%) scale(1); }
+  39%,53% { left:37%; top:56%; transform:translate(-50%,-62%) scale(.98); }
+  80% { left:16%; top:40%; transform:translate(-50%,-50%) scale(.85); }
+  100% { left:16%; top:54%; transform:translate(-50%,-50%) scale(.30); }
+}
+@keyframes destelloCajera {
+  0%,31%,57%,100% { background:#8d3333; box-shadow:none; }
+  38%,49% { background:#ff9277; box-shadow:0 0 calc(9 * var(--u)) calc(4 * var(--u)) #ff614fd0; }
+}
+.carrito-en-caja {
+  display:flex; justify-content:center; align-items:center; flex-wrap:wrap; width:min(100%,calc(345 * var(--u)));
+  gap:calc(5 * var(--u)); padding:calc(6 * var(--u)) calc(10 * var(--u)) calc(12 * var(--u));
+  background:repeating-linear-gradient(90deg,transparent 0 11px,#589a9b6b 11px 13px),repeating-linear-gradient(0deg,#e8f4de 0 11px,#509d9270 11px 13px);
+  border:4px solid #318f87; border-bottom:calc(7 * var(--u)) solid #db664b; border-radius:calc(17 * var(--u));
+  box-shadow:0 calc(3 * var(--u)) 0 #82371e;
+}
+.carrito-en-caja:empty { visibility:hidden; min-height:calc(68 * var(--u)); }
+.carrito-en-caja button {
+  display:grid; place-items:center; min-width:calc(55 * var(--u)); padding:calc(3 * var(--u)); border:1px solid #8abbb1;
+  border-radius:calc(9 * var(--u)); background:#fff4d8; touch-action:none; cursor:grab; font-weight:800; font-size:calc(13 * var(--u));
+}
+.carrito-en-caja button:active { cursor:grabbing; }
+.carrito-en-caja .foto-producto { width:clamp(calc(42 * var(--u)),17cqi,calc(78 * var(--u))); }
+.bandeja-caja {
+  width:min(100%,max(calc(345 * var(--u)),calc(var(--altura-caja)*1.49)));
+  min-width:0; padding:calc(4 * var(--u)) calc(7 * var(--u)); color:#522e19;
+  border:2px solid #b87b45; border-radius:calc(10 * var(--u)); background:linear-gradient(#fdecce,#f5cf9c);
+  box-shadow:inset 0 calc(-3 * var(--u)) 0 #dfac74;
+}
+.bandeja-caja header { display:flex; flex-wrap:wrap; justify-content:space-between; gap:calc(3 * var(--u)); align-items:baseline; }
+.bandeja-caja h3 { font-size:calc(14 * var(--u)); }
+.bandeja-caja .piezas-colocadas { min-height:calc(28 * var(--u)); }
+.bandeja-caja .piezas-colocadas > span:not(.pieza-colocada) { font-size:calc(13 * var(--u)); text-align:center; }
+.bandeja-caja .moneda { --tope-moneda:calc(61 * var(--u)); }
+.bandeja-caja .billete { --tope-billete:calc(41 * var(--u)); }
+.bandeja-caja.sobre-destino { outline-color:#207c58; background:#d8f4d6; }
+.respuesta-vuelto { margin:0; }
+.respuesta-vuelto button { min-height:calc(38 * var(--u)); padding-inline:calc(4 * var(--u)); }
+.resultado-vuelto { text-align:center; font-weight:800; }
+.dinero-en-camino {
+  position:absolute; left:75%; top:64%; display:flex; gap:calc(2 * var(--u)); z-index:4; pointer-events:none;
+  animation:pasarVuelto 1.1s ease-in-out both;
+}
+.dinero-en-camino .moneda { --tope-moneda:calc(29 * var(--u)); }
+.dinero-en-camino .billete { --tope-billete:calc(24 * var(--u)); }
+@keyframes pasarVuelto {
+  0% { transform:translate(-50%,-50%) scale(.65); opacity:0; }
+  20% { opacity:1; }
+  100% { left:50%; top:99%; transform:translate(-50%,-50%); opacity:1; }
+}
+.banco.cartera-compra {
+  background:linear-gradient(165deg,#aa562f,#834524); color:#fff6d9; padding:calc(5 * var(--u));
+  border:2px solid #713e25; border-radius:calc(13 * var(--u)); box-shadow:inset 0 0 0 1px #e8ae72;
+}
+.cartera-compra #banco {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,calc(55 * var(--u))),1fr));
+  gap:calc(3 * var(--u)); padding:calc(3 * var(--u)); border:1px dashed #dcac78; border-radius:calc(7 * var(--u)); background:#f3dfba;
+}
+.cartera-compra #banco .origen-dinero {
+  position:relative; width:100%; min-width:0; min-height:calc(39 * var(--u)); container-type:inline-size; place-items:center;
+  background:#fff7e2; border-radius:calc(5 * var(--u));
+}
+.cartera-compra .origen-dinero:disabled { cursor:default; opacity:.45; }
+.cartera-compra #banco .billete { --tope-billete:min(calc(100cqi * 67 / 153),calc(42 * var(--u))); }
+.cartera-compra #banco .moneda { --tope-moneda:min(100cqi,calc(42 * var(--u))); }
+.cartera-compra .cantidad-piezas { top:auto; bottom:0; right:0; }
+@media (orientation:landscape) {
+  .escena:has(.compra-en-caja):has(>.banco:not([hidden]),>.respuesta:not([hidden])) {
+    grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);
+  }
+  .compra-en-caja:has(.carrito-en-caja) { grid-template-columns:minmax(0,1.7fr) minmax(0,1fr); align-items:center; }
+  .compra-en-caja { --altura-caja:clamp(calc(118 * var(--u)),calc(var(--alto,100dvh)*.46),calc(410 * var(--u))); }
+}
+@media (orientation:portrait) and (max-height:700px) {
+  #appColones:has(.compra-en-caja) .herramientas { max-height:calc(130 * var(--u)); }
+  .compra-en-caja:has(.bandeja-caja) { --altura-caja:clamp(calc(98 * var(--u)),calc(var(--alto,100dvh)*.19),calc(148 * var(--u))); }
+  .bandeja-caja .piezas-colocadas { min-height:calc(22 * var(--u)); padding-block:calc(2 * var(--u)); }
+  .cartera-compra #banco { grid-template-columns:repeat(auto-fit,minmax(min(100%,calc(42 * var(--u))),1fr)); }
+}
+@media (orientation:landscape) and (max-height:370px) {
+  .escena:has(.compra-en-caja):has(>.banco:not([hidden]),>.respuesta:not([hidden])) { grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); }
+  .compra-en-caja:has(.bandeja-caja) { --altura-caja:clamp(calc(82 * var(--u)),calc(var(--alto,100dvh)*.30),calc(120 * var(--u))); }
+  .bandeja-caja header { font-size:calc(12 * var(--u)); }
+  .bandeja-caja h3 { font-size:calc(13 * var(--u)); }
+  .bandeja-caja .piezas-colocadas { min-height:calc(24 * var(--u)); padding-block:calc(2 * var(--u)); }
+  .bandeja-caja .moneda { --tope-moneda:calc(35 * var(--u)); }
+  .cartera-compra #banco { grid-template-columns:repeat(auto-fit,minmax(min(100%,calc(35 * var(--u))),1fr)); }
+}
+@media (max-height:700px) and (orientation:portrait),(max-height:370px) and (orientation:landscape) {
+  .banco.cartera-compra { padding:calc(3 * var(--u)); }
+  .cartera-compra h3 { margin-bottom:calc(2 * var(--u)); line-height:1.14; }
+  .cartera-compra #banco { padding:calc(2 * var(--u)); }
+  .cartera-compra #banco .origen-dinero { min-height:calc(31 * var(--u)); }
+  .cartera-compra #banco .moneda { --tope-moneda:min(100cqi,calc(31 * var(--u))); }
+  .cartera-compra #banco .billete { --tope-billete:min(calc(100cqi * 67 / 153),calc(31 * var(--u))); }
 }
