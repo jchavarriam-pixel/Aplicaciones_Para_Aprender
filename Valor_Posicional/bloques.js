@@ -96,16 +96,50 @@
       ctx.stroke();
     }
   }
-  function distribucion(lugar, cantidad, width, height) {
+  function distribuirMillares(cantidad, width, height) {
+    const grupos = Math.ceil(cantidad/5);
+    const porGrupo = Math.min(cantidad,5);
+    const anchoGrupo = width/grupos;
+    const margen = Math.min(4,anchoGrupo*.045,height*.045);
+    const espacio = Math.min(8,Math.max(4,Math.min(anchoGrupo,height)*.08));
+    const proporcion = 16.8/18.4;
+    let mejor = {columnas:1, filas:porGrupo, alto:0};
+    // Conserva una columna por grupo mientras las piezas tengan un tamaño legible.
+    for(let columnas=1;columnas<=porGrupo;columnas++){
+      const filas = Math.ceil(porGrupo/columnas);
+      const alto = Math.max(0, Math.min(62,
+        (anchoGrupo-2*margen-espacio*(columnas-1))/columnas/proporcion,
+        (height-2*margen-espacio*(filas-1))/filas));
+      if(alto>mejor.alto) mejor = {columnas,filas,alto};
+      if(alto>=30) break;
+    }
+    const {columnas,filas,alto} = mejor;
+    const ancho = alto*proporcion;
     const posiciones = [];
-    if(lugar >= 2) {
+    for(let g=0;g<grupos;g++){
+      const total = Math.min(5,cantidad-g*5);
+      const columnasOcupadas = Math.min(columnas,Math.ceil(total/filas));
+      for(let i=0;i<total;i++){
+        const columna = Math.floor(i/filas);
+        const filasOcupadas = Math.min(filas,total-columna*filas);
+        posiciones.push({
+          x:(g+.5)*anchoGrupo+(columna-(columnasOcupadas-1)/2)*(ancho+espacio),
+          y:height/2+((filasOcupadas-1)/2-i%filas)*(alto+espacio),
+          ancho,alto
+        });
+      }
+    }
+    return posiciones;
+  }
+  function distribucion(lugar, cantidad, width, height) {
+    if(lugar === 3) return distribuirMillares(cantidad,width,height);
+    const posiciones = [];
+    if(lugar === 2) {
       const grupos = cantidad > 5 ? 2 : 1;
-      const placa = lugar === 2;
-      const w = placa ? Math.min(width * (grupos === 1 ? .82 : .44),120) :
-        Math.min(width * (grupos === 1 ? .64 : .34),82);
-      const h = placa ? Math.min(height*.60,90) : Math.min(height*.48,62);
-      const altoDibujado = placa ? Math.min(h,w*9.4/16.8) : h;
-      const paso = Math.min(altoDibujado*(placa ? .83 : .46), (height-altoDibujado)*.22);
+      const w = Math.min(width * (grupos === 1 ? .82 : .44),120);
+      const h = Math.min(height*.60,90);
+      const altoDibujado = Math.min(h,w*9.4/16.8);
+      const paso = Math.min(altoDibujado*.83, (height-altoDibujado)*.22);
       for(let g=0;g<grupos;g++){
         const total = Math.min(5,cantidad-g*5);
         const x = width * (grupos === 1 ? .5 : g === 0 ? .25 : .75);
