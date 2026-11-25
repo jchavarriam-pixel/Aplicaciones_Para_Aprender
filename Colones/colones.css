@@ -240,7 +240,8 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
 .control-escala input { flex:1; min-width:0; accent-color:var(--teal); }
 .control-escala output { width:4em; text-align:right; font-variant-numeric:tabular-nums; }
 .muestra-escala { container-type:inline-size; display:flex; align-items:center; justify-content:center; gap:8px; min-height:62px; }
-#muestraBilletes .billete { --base-billete:42; --tope-billete:calc((100cqi - 8px) * 67 / 278); }
+#muestraBilletes { flex-wrap:wrap; }
+#muestraBilletes .billete { --base-billete:42; --tope-billete:calc(100cqi * 67 / 153); }
 #muestraMonedas { min-height:102px; }
 #muestraMonedas .moneda { --base-moneda:40; --tope-moneda:calc((100cqi - 8px)/2); }
 #banco button:has(.moneda) { min-width:calc(38 * var(--u)); min-height:calc(38 * var(--u)); place-items:center; }
@@ -707,6 +708,11 @@ button.ficha-mesa { cursor:grab; }
 .cartera-compra #banco .billete { --tope-billete:min(calc(100cqi * 67 / 153),calc(42 * var(--u))); }
 .cartera-compra #banco .moneda { --tope-moneda:min(100cqi,calc(42 * var(--u))); }
 .cartera-compra .cantidad-piezas { top:auto; bottom:0; right:0; }
+@media (min-height:701px) {
+  .bandeja-caja { container-type:inline-size; }
+  .bandeja-caja .billete { --tope-billete:min(calc(var(--altura-caja)*.30),calc((100cqi - 5 * var(--u)) * 67 / 306)); }
+  .cartera-compra #banco:not(:has(>:nth-child(6))) .billete { --tope-billete:calc(100cqi * 67 / 153); }
+}
 @media (orientation:landscape) {
   .escena:has(.compra-en-caja):has(>.banco:not([hidden]),>.respuesta:not([hidden])) {
     grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);

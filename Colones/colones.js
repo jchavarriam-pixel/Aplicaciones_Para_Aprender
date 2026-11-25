@@ -26,11 +26,12 @@
   const guardado = Matematicas.leer(clave);
   const activas = valores.filter(valor => Array.isArray(guardado.activas) && guardado.activas.includes(valor));
   const tiposVuelto=['correcto','incorrecto','mixto'];
-  const limitarEscala = (valor,minimo,maximo) => Number.isFinite(valor) ? Math.max(minimo,Math.min(maximo,valor)) : 100;
+  const limitarEscala = (valor,control) => Number.isFinite(valor)
+    ? Math.max(Number(control.min),Math.min(Number(control.max),valor)) : Number(control.defaultValue);
   let opciones = {activas:activas.length ? activas : iniciales, ayudas:guardado.ayudas!==false,
     narracion:guardado.narracion!==false, apilarBilletes:guardado.apilarBilletes===true,
-    tamanoBilletes:limitarEscala(guardado.tamanoBilletes,70,150),
-    tamanoMonedas:limitarEscala(guardado.tamanoMonedas,50,250), nombresProductos:guardado.nombresProductos!==false,
+    tamanoBilletes:limitarEscala(guardado.tamanoBilletes,$('tamanoBilletes')),
+    tamanoMonedas:limitarEscala(guardado.tamanoMonedas,$('tamanoMonedas')), nombresProductos:guardado.nombresProductos!==false,
     vueltoCaja:tiposVuelto.includes(guardado.vueltoCaja)?guardado.vueltoCaja:'correcto'};
   let modo = null, fase, oferta, elegidos, piezas, sobre, dineroCliente, pagado;
   let compraCaja=null;
@@ -1128,8 +1129,8 @@
     const cambio=activas.join()!==opciones.activas.join();
     opciones={activas,ayudas:$('ayudas').checked,narracion:$('narracion').checked,
       apilarBilletes:$('apilarBilletes').checked,
-      tamanoBilletes:limitarEscala(Number($('tamanoBilletes').value),70,150),
-      tamanoMonedas:limitarEscala(Number($('tamanoMonedas').value),50,250),
+      tamanoBilletes:$('tamanoBilletes').valueAsNumber,
+      tamanoMonedas:$('tamanoMonedas').valueAsNumber,
       nombresProductos:$('nombresProductos').checked,
       vueltoCaja:$('vueltoCaja').value};
     Matematicas.guardar(clave,opciones);
