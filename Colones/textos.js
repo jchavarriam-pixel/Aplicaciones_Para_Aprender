@@ -162,6 +162,7 @@ Object.assign(window.TEXTOS_INGLES,{
   'Mostrar los nombres de los productos en globos':'Show product names in speech bubbles',
   'Empuja el carrito':'Push the cart',
   'Monedas':'Coins',
+  'Resaltar el número de las monedas':'Highlight the number on coins',
   'Tamaño de las monedas':'Coin size',
   'Mantén la manija arriba o abajo.':'Hold the handle up or down.',
   'Escoge dos o tres productos y empuja el carrito hasta la caja.':'Choose two or three items and push the cart to the checkout.',

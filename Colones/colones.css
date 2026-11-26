@@ -141,6 +141,7 @@ body:has(#control-pantalla-completa[data-fullscreen=true]) .acciones-juego { pad
   --ficha-ancho:calc(min(calc(var(--base-moneda,47px) * var(--escala-monedas,1)),var(--tope-moneda,100vw)) * var(--diametro-moneda));
   --ficha-alto:var(--ficha-ancho);
 }
+.moneda > img { position:absolute; inset:0; }
 .billete {
   --ficha-alto:min(calc(var(--base-billete,48px) * var(--escala-billetes,1)),var(--tope-billete,100vw));
   --ficha-ancho:calc(var(--ficha-alto) * var(--largo-billete) / 67);
@@ -154,6 +155,13 @@ body:has(#control-pantalla-completa[data-fullscreen=true]) .acciones-juego { pad
 }
 .mostrar-cifras-billetes :is(#appColones,.fantasma-colones) .valor-billete,
 #ajustes:has(#mostrarCifraBilletes:checked) .valor-billete { display:block; }
+.valor-moneda {
+  display:none; position:absolute; inset:0; width:100%; height:100%; pointer-events:none;
+  fill:#25272b; stroke:#f8fafb; stroke-width:1.8; stroke-linejoin:round; paint-order:stroke; fill-rule:evenodd;
+}
+.moneda:is([data-valor="25"],[data-valor="100"]) .valor-moneda { fill:#382a17; stroke:#fff3c4; }
+.mostrar-cifras-monedas :is(#appColones,.fantasma-colones) .valor-moneda,
+#ajustes:has(#mostrarCifraMonedas:checked) .valor-moneda { display:block; }
 .escena .moneda { --ficha-ancho:calc(var(--diametro-moneda-juego)*var(--diametro-moneda)); }
 .escena .billete { --ficha-alto:var(--alto-billete-juego); }
 .banco { background:#edf8f0; border:1px solid #c9e2d6; border-radius:calc(13 * var(--u)); padding:calc(5 * var(--u)); }
@@ -172,6 +180,7 @@ button.pieza-colocada:has(.moneda) { min-width:calc(29 * var(--u)); min-height:c
 .piezas-pago { gap:calc(5 * var(--u)); }
 .pila-dinero { --solape-pila:.67; display:flex; flex-direction:column; }
 .pila-contador { --solape-pila:.50; }
+.mostrar-cifras-monedas .pila-contador:has(> .moneda) { --solape-pila:.32; }
 .pila-dinero .dinero { filter:drop-shadow(0 1px 1px #193d4460); }
 .pila-dinero .dinero + .dinero { margin-block-start:calc(-1 * var(--ficha-alto) * var(--solape-pila)); }
 .pila-dinero > .billete {

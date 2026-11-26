@@ -7,7 +7,31 @@
   const clave = 'colones.practica.v1';
   const valores = [10,25,50,100,500,1000,2000,5000,10000,20000];
   const largosBillete = {1000:125,2000:132,5000:139,10000:146,20000:153};
-  const diametrosMoneda = {10:.76,25:.81,50:.87,100:.92,500:1};
+  // El relieve sigue el contorno de cada cifra en las coordenadas de su foto.
+  const monedas = {
+    10:{diametro:.76,vista:'0 0 99 102',grabado:[
+      'M38.8 33.8H43V62H37.4V42.2Q34.1 44.5 30.3 45.2V41Q35.5 38.7 38.8 33.8Z',
+      'M54.6 33.4C60.8 33.4 63.7 37.6 63.7 45.4V51C63.7 58.6 60.7 62.6 54.6 62.6S45.3 58.5 45.3 51V45.4C45.3 37.7 48.4 33.4 54.6 33.4ZM54.6 37.5C51.8 37.5 51.2 40.6 51.2 45.4V51C51.2 55.7 51.9 58.5 54.6 58.5S58.1 55.7 58.1 51V45.4C58.1 40.5 57.4 37.5 54.6 37.5Z'
+    ]},
+    25:{diametro:.81,vista:'0 0 103 102',grabado:[
+      'M39.6 30.9C45.4 30.9 48.6 34.9 48.6 39.8C48.6 45.1 45.3 48.6 41.4 52.5L37.4 56.8H48.6V62.4H29.8V59.4C30 54.6 34 50.7 37.7 46.8C40.1 43.9 42.7 41.8 42.7 39C42.7 36.9 41.6 35.6 39.5 35.6C36.8 35.6 35.8 38.2 35.8 41.6H29.6C29.6 35.4 33.8 30.9 39.6 30.9Z',
+      'M52.7 31.5H68.8V36.8H57.6L57.3 43.2Q59.3 41.2 62.3 41.2C67.6 41.2 70.1 44.9 70.1 50.1V54.1C70.1 59.6 67 62.6 61.1 62.6C54.7 62.6 51.1 59.5 51.1 53.6H56.7Q57 58.3 61 58.3C63.4 58.3 64.3 56.3 64.3 53.1V50.1C64.3 46.9 63.3 45.5 61.1 45.5Q58.4 45.5 57 48.7H51.9Z'
+    ]},
+    50:{diametro:.87,vista:'0 0 110 109',grabado:[
+      'M34.8 34H53.3V39.7H40.1L39.7 46.5Q41.8 44.4 45.7 44.4C51.6 44.4 54.5 48.9 54.5 54.5V59.5C54.5 65.6 50.5 68.8 44 68.8C37.5 68.8 33 65.5 33 57.6H39.8Q40 63.8 44 63.8C47.1 63.8 47.9 61.4 47.9 58.5V55.2C47.9 51.3 46.6 49.6 43.9 49.6Q41.1 49.6 39.8 52.5H34.1Z',
+      'M68.1 33.3C75.2 33.3 79 38.2 79 46.2V56.4C79 64.6 75.2 68.8 68.1 68.8C60.8 68.8 57.1 64.4 57.1 56.4V46.2C57.1 38.1 60.8 33.3 68.1 33.3ZM68.1 38C65 38 64.2 41.3 64.2 46.1V56.7C64.2 61.8 65.2 64.4 68.1 64.4C70.8 64.4 71.9 61.8 71.9 56.7V46.1C71.9 41.3 70.9 38 68.1 38Z'
+    ]},
+    100:{diametro:.92,vista:'0 0 115 115',grabado:[
+      'M34.5 35.5H39.6V70.7H32.5V46Q28.4 49.1 23.5 50.4V44.6Q29.9 41.9 34.5 35.5Z',
+      'M53.5 35.2C61 35.2 64.6 40.3 64.6 48.2V58.4C64.6 66.5 60.9 70.9 53.5 70.9S42.3 66.5 42.3 58.4V48.2C42.3 40.2 46.1 35.2 53.5 35.2ZM53.5 39.4C50.3 39.4 49.5 42.9 49.5 48.2V58.3C49.5 63.5 50.5 66.6 53.5 66.6S57.5 63.5 57.5 58.3V48.2C57.5 42.9 56.6 39.4 53.5 39.4Z',
+      'M78.5 35.2C86 35.2 89.7 40.3 89.7 48.2V58.4C89.7 66.5 86 71 78.5 71S67.4 66.5 67.4 58.4V48.2C67.4 40.2 71.1 35.2 78.5 35.2ZM78.5 39.4C75.5 39.4 74.5 43 74.5 48.2V58.3C74.5 63.5 75.5 66.7 78.5 66.7S82.6 63.5 82.6 58.3V48.2C82.6 43 81.7 39.4 78.5 39.4Z'
+    ]},
+    500:{diametro:1,vista:'0 0 123 123',grabado:[
+      'M28.9 36H47.8V42H33.9L33.4 50.5Q35.5 48 40 48C46.3 48 49.8 52.3 49.8 59.1V63.3C49.8 70.4 45.6 74 38.1 74C30.8 74 26 70 26 62.6H33.3Q33.5 69.4 38 69.4C41.2 69.4 42.3 66.9 42.3 62.9V59.4C42.3 55.2 41.1 53.2 38 53.2Q35.2 53.2 33.7 56.4H26.7Z',
+      'M63.2 35.8C71.1 35.8 75 40.8 75 49.1V61.3C75 69.6 71 74 63.2 74C55.2 74 51.3 69.5 51.3 61.3V49.1C51.3 40.8 55.2 35.8 63.2 35.8ZM63.2 39.7C59.9 39.7 59 43.5 59 49.1V61.3C59 66.7 60.1 69.8 63.2 69.8C66.3 69.8 67.5 66.7 67.5 61.3V49.1C67.5 43.5 66.5 39.7 63.2 39.7Z',
+      'M88.5 35.8C96.3 35.8 100.4 40.8 100.4 49.1V61.3C100.4 69.6 96.4 74 88.5 74C80.4 74 76.6 69.5 76.6 61.3V49.1C76.6 40.8 80.5 35.8 88.5 35.8ZM88.5 39.7C85.2 39.7 84.2 43.5 84.2 49.1V61.3C84.2 66.7 85.3 69.8 88.5 69.8C91.6 69.8 92.9 66.7 92.9 61.3V49.1C92.9 43.5 91.7 39.7 88.5 39.7Z'
+    ]}
+  };
   const tipoDinero = valor => valor<1000 ? 'moneda' : 'billete';
   const modos = {
     contador:{nombre:'Contador de dinero',guia:'Usa la máquina para contar monedas y billetes o formar un monto.'},
@@ -49,6 +73,7 @@
   let opciones = {activas:activas.length ? activas : iniciales, ayudas:guardado.ayudas!==false,
     narracion:guardado.narracion!==false, apilarBilletes:guardado.apilarBilletes===true,
     mostrarCifraBilletes:guardado.mostrarCifraBilletes===true,
+    mostrarCifraMonedas:guardado.mostrarCifraMonedas===true,
     apilarContador:guardado.apilarContador===true,
     sonidosTolva:guardado.sonidosTolva!==false,
     tamanoBilletes:limitarEscala(guardado.tamanoBilletes,$('tamanoBilletes')),
@@ -218,9 +243,11 @@
   }
   function pieza(valor) {
     const largo=largosBillete[valor];
-    const medida=largo?`--largo-billete:${largo}`:`--diametro-moneda:${diametrosMoneda[valor]}`;
+    const moneda=monedas[valor];
+    const medida=largo?`--largo-billete:${largo}`:`--diametro-moneda:${moneda.diametro}`;
     const imagen=`imagenes/dinero-${valor}.webp${largo?'?v=anverso':''}`;
-    const cifra=largo?`<span class="valor-billete">${valor}</span>`:'';
+    const cifra=largo?`<span class="valor-billete">${valor}</span>`:
+      `<svg class="valor-moneda" viewBox="${moneda.vista}" focusable="false"><path d="${moneda.grabado.join(' ')}"/></svg>`;
     return `<span class="dinero ${tipoDinero(valor)}" data-valor="${valor}" style="${medida}" aria-hidden="true"><img src="${imagen}" alt="" draggable="false">${cifra}</span>`;
   }
   const etiquetaDinero = valor => idioma(`${formato(valor)} en ${tipoDinero(valor)}`,`${formato(valor)} ${valor<1000?'coin':'banknote'}`);
@@ -993,7 +1020,7 @@
     aire.start(inicio);
   }
   function sonarMoneda(audio,inicio,valor) {
-    const tonoBase=1800*(1.12-diametrosMoneda[valor]*.22);
+    const tonoBase=1800*(1.12-monedas[valor].diametro*.22);
     // El primer golpe es más fuerte y los rebotes se acercan al asentarse.
     for(const [retardo,fuerza] of [[.045,1],[.108,.56],[.153,.29]]){
       const golpe=inicio+retardo;
@@ -1925,6 +1952,7 @@
   for(const {control} of controlesTamano)control.addEventListener('input',previsualizarTamano);
   function aplicarVistaDinero() {
     document.documentElement.classList.toggle('mostrar-cifras-billetes',opciones.mostrarCifraBilletes);
+    document.documentElement.classList.toggle('mostrar-cifras-monedas',opciones.mostrarCifraMonedas);
     for(const {clase,preferencia} of controlesTamano){
       document.documentElement.style.setProperty('--escala-'+clase,opciones[preferencia]/100);
     }
@@ -1945,6 +1973,7 @@
     $('narracion').checked=opciones.narracion;
     $('apilarBilletes').checked=opciones.apilarBilletes;
     $('mostrarCifraBilletes').checked=opciones.mostrarCifraBilletes;
+    $('mostrarCifraMonedas').checked=opciones.mostrarCifraMonedas;
     $('apilarContador').checked=opciones.apilarContador;
     $('sonidosTolva').checked=opciones.sonidosTolva;
     $('nombresProductos').checked=opciones.nombresProductos;
@@ -1968,6 +1997,7 @@
     opciones={activas,ayudas:$('ayudas').checked,narracion:$('narracion').checked,
       apilarBilletes:$('apilarBilletes').checked,
       mostrarCifraBilletes:$('mostrarCifraBilletes').checked,
+      mostrarCifraMonedas:$('mostrarCifraMonedas').checked,
       apilarContador:$('apilarContador').checked,
       sonidosTolva:$('sonidosTolva').checked,
       tamanoBilletes:$('tamanoBilletes').valueAsNumber,
