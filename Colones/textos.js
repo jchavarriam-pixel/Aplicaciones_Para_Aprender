@@ -87,10 +87,16 @@ Object.assign(window.TEXTOS_INGLES, {
 });
 Object.assign(window.TEXTOS_INGLES,{
   'Contador de dinero':'Money counter',
+  'Usa la tolva para contar dinero o formar un monto.':'Use the hopper to count money or make an amount.',
+  'Actividades del contador':'Money counter activities',
+  'Explorar':'Explore',
+  'Formar un monto':'Make an amount',
+  'Tolva':'Hopper',
+  'Pizarra del contador':'Counter display',
+  'Dinero contado':'Counted money',
+  'Toca el dinero del banco o arrástralo a la tolva.':'Tap money in the cash bank or drag it into the hopper.',
   'Apilar monedas y billetes del mismo valor':'Stack coins and banknotes of the same value',
   'Al apilar, queda visible la mitad de cada pieza de abajo.':'Half of each piece underneath stays visible when stacked.',
-  'Agrega dinero y escucha cuánto pusiste y cuánto hay en total.':'Add money and hear the value of each piece and the running total.',
-  'Toca o arrastra monedas y billetes al contador.':'Tap or drag coins and banknotes into the counter.',
   'Última pieza':'Last piece',
   'Total contado':'Total counted',
   'Vaciar contador':'Empty the counter',

@@ -9,7 +9,7 @@
   const diametrosMoneda = {10:.76,25:.81,50:.87,100:.92,500:1};
   const tipoDinero = valor => valor<1000 ? 'moneda' : 'billete';
   const modos = {
-    contador:{nombre:'Contador de dinero',guia:'Agrega dinero y escucha cuánto pusiste y cuánto hay en total.'},
+    contador:{nombre:'Contador de dinero',guia:'Usa la tolva para contar dinero o formar un monto.'},
     contar:{nombre:'Cantidad en el sobre',guia:'Abre el sobre, cuenta y escribe cuánto dinero hay.'},
     llenar:{nombre:'Preparar un sobre',guia:'Elige monedas y billetes para formar una cantidad.'},
     alcanza:{nombre:'¿Me alcanza?',guia:'Compara tu dinero con el precio de un producto.'},
@@ -35,6 +35,9 @@
     tamanoMonedas:limitarEscala(guardado.tamanoMonedas,$('tamanoMonedas')), nombresProductos:guardado.nombresProductos!==false,
     vueltoCaja:tiposVuelto.includes(guardado.vueltoCaja)?guardado.vueltoCaja:'correcto'};
   let modo = null, fase, oferta, elegidos, piezas, sobre, dineroCliente, pagado;
+  let varianteContador=guardado.varianteContador==='reto'?'reto':'explorar', metaContador=0;
+  const colaContador=[];
+  let temporizadorContador=0;
   let compraCaja=null;
   let audioLector;
   let arrastre = null, ignorarClic = false;
@@ -128,6 +131,7 @@
   function nuevaRonda() {
     if(!modo)return;
     limpiarArrastre();
+    cancelarContador();
     cerrarCompraCaja();
     cancelarAperturaSobre();
     oferta=prepararProductos();
@@ -143,6 +147,10 @@
     cartera=[];
     pagado=0;
     dineroCliente=[];
+    if(modo==='contador'&&varianteContador==='reto'){
+      const meta=sumar(formar(entero(2,5)));
+      metaContador=meta===metaContador?meta+tomar(opciones.activas):meta;
+    }
     if(modo==='cajero'){
       mercanciaCliente=oferta.slice(0,entero(2,3)).map((_,i)=>i);
       recibidos=new Set();
@@ -273,10 +281,69 @@
     else if(abajo>bandeja.scrollTop+bandeja.clientHeight)bandeja.scrollTop=abajo-bandeja.clientHeight;
     return ultima;
   }
+  function lecturaContador() {
+    const reto=varianteContador==='reto';
+    return (reto?etiquetaTotal('Monto pedido',metaContador):etiquetaTotal('Última pieza',piezas.at(-1)??0))+
+      (!reto||opciones.ayudas||fase==='listo'?etiquetaTotal('Total contado',sumar(piezas)):'');
+  }
+  function fichaEnTolva() {
+    return colaContador.length?pieza(colaContador[0]):'';
+  }
   function verContador() {
-    return `<section class="contador-caja"><div class="pantalla-contador">
-      ${etiquetaTotal('Última pieza',piezas.at(-1)??0)}${etiquetaTotal('Total contado',sumar(piezas))}</div>
-      ${destino('Pon aquí el dinero')}</section>`;
+    return `<section class="contador-caja" ${colaContador.length?'data-procesando':''}>
+      <div class="cabina-contador">
+        <section id="destinoDinero" class="tolva-contador" aria-labelledby="rotuloTolva">
+          <h3 id="rotuloTolva">${t('Tolva')}</h3>
+          <span class="embudo-contador" aria-hidden="true"><span class="boca-tolva">↓</span></span>
+          <div class="flujo-contador" id="flujoContador" aria-hidden="true">${fichaEnTolva()}</div>
+        </section>
+        <div class="pantalla-contador" id="lecturaContador" role="group" aria-label="${t('Pizarra del contador')}">${lecturaContador()}</div>
+      </div>
+      <section class="bandeja-contador" aria-labelledby="rotuloDineroContado">
+        <h3 id="rotuloDineroContado">${t('Dinero contado')}</h3>
+        <div class="piezas-colocadas" id="dineroContado">${fichasPago(fase==='medir')}</div>
+      </section>
+    </section>`;
+  }
+  function actualizarContador(recienContada=false) {
+    $('lecturaContador').innerHTML=lecturaContador();
+    const bandeja=$('dineroContado');
+    bandeja.innerHTML=fichasPago(fase==='medir');
+    if(!recienContada)return;
+    const nueva=mostrarUltimaPieza(bandeja);
+    nueva?.querySelector('.pila-contador > :last-child, :scope > .dinero')?.classList.add('pieza-contada');
+  }
+  function esperandoContador() {
+    return modo==='contador'&&varianteContador==='reto'&&colaContador.length>0;
+  }
+  function pintarTolva() {
+    const flujo=$('flujoContador');
+    flujo.innerHTML=fichaEnTolva();
+    flujo.closest('.contador-caja').toggleAttribute('data-procesando',colaContador.length>0);
+    $('accion').disabled=esperandoContador();
+  }
+  function cancelarContador() {
+    clearTimeout(temporizadorContador);
+    temporizadorContador=0;
+    colaContador.length=0;
+  }
+  function contarSiguiente() {
+    pintarTolva();
+    if(!colaContador.length)return;
+    const registrar=()=>{
+      const valor=colaContador.shift();
+      piezas.push(valor);
+      actualizarContador(true);
+      if(opciones.narracion&&!colaContador.length){
+        leer(varianteContador==='reto'&&!opciones.ayudas
+          ?idioma(`Ingresaste ${formato(valor)}.`,`You added ${formato(valor)}.`)
+          :idioma(`Ingresaste ${formato(valor)}. Hay ${formato(sumar(piezas))} en total.`,
+            `You added ${formato(valor)}. The total is ${formato(sumar(piezas))}.`));
+      }
+      contarSiguiente();
+    };
+    if(movimientoReducido.matches)registrar();
+    else temporizadorContador=setTimeout(registrar,310);
   }
   function verAlcance() {
     const item=oferta[0];
@@ -323,10 +390,9 @@
   }
   function destino(rotulo,estilo='mostrador') {
     const editable=fasesDinero.has(fase);
-    const esPago=modo!=='contador'&&modo!=='llenar';
     const fichas=fichasPago(editable);
-    return `<section id="destinoDinero" class="${estilo} zona-dinero"><header><h3>${t(rotulo)}</h3>${modo!=='contador'&&(opciones.ayudas||fase==='listo')&&fichas?`<b>${formato(sumar(piezas))}</b>`:''}</header>
-      <div class="piezas-colocadas ${esPago?'piezas-pago':''}">${fichas||`<span>${t(fase==='recibir'?'Guarda aquí el pago del cliente.':'Toca o arrastra una pieza.')}</span>`}</div></section>`;
+    return `<section id="destinoDinero" class="${estilo} zona-dinero"><header><h3>${t(rotulo)}</h3>${(opciones.ayudas||fase==='listo')&&fichas?`<b>${formato(sumar(piezas))}</b>`:''}</header>
+      <div class="piezas-colocadas piezas-pago">${fichas||`<span>${t(fase==='recibir'?'Guarda aquí el pago del cliente.':'Toca o arrastra una pieza.')}</span>`}</div></section>`;
   }
   function contarPiezas(lista) {
     const conteos=new Map();
@@ -732,7 +798,9 @@
   const instruccionContarSobre=()=>t('Acomoda el dinero y escribe cuánto hay en total.');
   function instruccion() {
     switch(fase){
-      case 'medir': return t('Toca o arrastra monedas y billetes al contador.');
+      case 'medir': return varianteContador==='reto'
+        ?idioma(`Forma ${formato(metaContador)} en la tolva y pulsa Revisar.`,`Make ${formato(metaContador)} using the hopper and press Check.`)
+        :t('Toca el dinero del banco o arrástralo a la tolva.');
       case 'decidir': return t('¿Te alcanza el dinero para comprarlo?');
       case 'cerrado': return instruccionAbrirSobre();
       case 'contar': return aperturaSobre?t('Mira cómo se abre el sobre y cae el dinero.'):instruccionContarSobre();
@@ -774,6 +842,9 @@
     if(!modo)return;
     $('tituloModo').textContent=t(modos[modo].nombre);
     $('instruccion').textContent=instruccion();
+    $('variantesContador').hidden=modo!=='contador';
+    $('explorarContador').setAttribute('aria-pressed',String(varianteContador==='explorar'));
+    $('retoContador').setAttribute('aria-pressed',String(varianteContador==='reto'));
     const lineas=$('textoInstruccion').dataset;
     if(compraCaja){
       lineas.inicio=instruccionCobro();
@@ -794,8 +865,9 @@
     escena.dataset.fase=fase;
     actualizarContenido();
     $('accion').hidden=['cerrado','decidir','elegir','cobro-productos','entregando','vuelto'].includes(fase);
-    $('accion').disabled=Boolean(aperturaSobre);
-    $('accion').textContent=t(({medir:'Vaciar contador',escanear:'Cobrar',recibir:'Registrar pago',pagar:'Pagar',dar:'Dar vuelto',listo:'Siguiente ronda'})[fase]||'Revisar');
+    $('accion').disabled=Boolean(aperturaSobre)||esperandoContador();
+    $('accion').textContent=t(({medir:varianteContador==='explorar'?'Vaciar contador':'Revisar',
+      escanear:'Cobrar',recibir:'Registrar pago',pagar:'Pagar',dar:'Dar vuelto',listo:'Siguiente ronda'})[fase]||'Revisar');
   }
   function anunciar(texto='',correcto=false) {
     const mensaje=t(texto);
@@ -858,7 +930,14 @@
   }
   function revisar() {
     if(aperturaSobre)return;
-    if(fase==='listo'||fase==='medir') return nuevaRonda();
+    if(fase==='listo') return nuevaRonda();
+    if(fase==='medir'){
+      if(varianteContador==='explorar')return nuevaRonda();
+      if(esperandoContador())return;
+      const total=sumar(piezas);
+      if(total===metaContador)return completar();
+      return anunciar(total<metaContador?'Falta dinero.':'Hay dinero de más. Quita alguna pieza.');
+    }
     if(['cerrado','decidir','elegir','cobro-productos','entregando','vuelto'].includes(fase)) return;
     if(fase==='escanear'){
       if(elegidos.length!==mercanciaCliente.length)return anunciar('Pasa todos los productos a la cesta antes de cobrar.');
@@ -894,19 +973,18 @@
   }
   function agregarDinero(valor) {
     if(!opciones.activas.includes(valor)||!fasesDinero.has(fase))return;
-    if(piezas.length>=24)return anunciar('Límite de piezas. Quita alguna para agregar otra.');
+    if(piezas.length+colaContador.length>=24)return anunciar('Límite de piezas. Quita alguna para agregar otra.');
     if(fase==='pagar'&&piezas.filter(ficha=>ficha===valor).length>=(compraCaja.cartera.get(valor)||0))return;
-    piezas.push(valor);
     anunciar();
+    if(fase==='medir'){
+      colaContador.push(valor);
+      if(colaContador.length===1)contarSiguiente();
+      return;
+    }
+    piezas.push(valor);
     if(fase==='llenar')return actualizarEfectivoSobre(true);
     actualizarContenido();
     actualizarCarteraCompra();
-    if(modo==='contador'){
-      mostrarUltimaPieza(contenido.querySelector('.piezas-colocadas'));
-      if(opciones.narracion)leer(idioma(
-        `Pusiste ${formato(valor)}. Hay ${formato(sumar(piezas))} en total.`,
-        `You added ${formato(valor)}. The total is ${formato(sumar(piezas))}.`));
-    }
   }
   function elegirProducto(i) {
     if(!['elegir','escanear'].includes(fase)||!oferta[i]||elegidos.includes(i))return;
@@ -1074,6 +1152,7 @@
     piezas.splice(i,1);
     anunciar();
     if(fase==='llenar')actualizarEfectivoSobre();
+    else if(fase==='medir')actualizarContador();
     else actualizarContenido();
     actualizarCarteraCompra();
     (contenido.querySelector(`[data-quitar="${valor}"]`)||banco.querySelector(`[data-dinero="${valor}"]`))?.focus({preventScroll:true});
@@ -1252,6 +1331,7 @@
   });
   function mostrarModo(vista) {
     limpiarArrastre();
+    cancelarContador();
     cancelarRecorrido();
     cerrarCompraCaja();
     cancelarAperturaSobre();
@@ -1272,6 +1352,14 @@
   $('nueva').onclick=nuevaRonda;
   $('accion').onclick=revisar;
   $('escuchar').onclick=()=>leer();
+  for(const [id,variante] of [['explorarContador','explorar'],['retoContador','reto']]){
+    $(id).onclick=()=>{
+      if(varianteContador===variante||modo!=='contador')return;
+      varianteContador=variante;
+      guardarAjustes();
+      nuevaRonda();
+    };
+  }
   monto.addEventListener('keydown',evento=>{if(evento.key==='Enter'){evento.preventDefault();revisar();}});
   monto.addEventListener('input',()=>anunciar());
   TecladoEnPantalla.instalar($('respuesta'),$('teclado'),{limpiar:true});
@@ -1318,6 +1406,9 @@
     IdiomaVoz.iniciarEdicion();
     ajustes.showModal();
   };
+  function guardarAjustes() {
+    Matematicas.guardar(clave,{...opciones,varianteContador});
+  }
   function aplicarAjustes() {
     const activas=[...$('denominaciones').querySelectorAll('input:checked')].map(input=>Number(input.value));
     if(!activas.length){$('errorAjustes').hidden=false;return;}
@@ -1329,7 +1420,7 @@
       tamanoMonedas:$('tamanoMonedas').valueAsNumber,
       nombresProductos:$('nombresProductos').checked,
       vueltoCaja:$('vueltoCaja').value};
-    Matematicas.guardar(clave,opciones);
+    guardarAjustes();
     aplicarTamano();
     ajustes.close();
     if(cambio&&modo)nuevaRonda();

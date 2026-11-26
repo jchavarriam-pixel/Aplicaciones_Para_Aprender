@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="../idioma-voz.css">
   <link rel="stylesheet" href="../pantalla-completa.css">
   <link rel="stylesheet" href="../panel-plegable.css?v=colones">
-  <link rel="stylesheet" href="colones.css?v=contar-piezas">
+  <link rel="stylesheet" href="colones.css?v=tolva">
 </head>
 <body>
   <main id="appColones">
@@ -33,7 +33,14 @@
     <nav class="actividad modos" id="modos" aria-label="Modos de práctica"></nav>
     <section class="actividad juego" id="juego" hidden aria-labelledby="tituloModo">
       <header class="reto">
-        <div><h2 id="tituloModo"></h2><div class="texto-instruccion" id="textoInstruccion"><p id="instruccion"></p></div></div>
+        <div>
+          <h2 id="tituloModo"></h2>
+          <div id="variantesContador" class="variantes-contador" role="group" aria-label="Actividades del contador" hidden>
+            <button type="button" id="explorarContador" aria-pressed="true">Explorar</button>
+            <button type="button" id="retoContador" aria-pressed="false">Formar un monto</button>
+          </div>
+          <div class="texto-instruccion" id="textoInstruccion"><p id="instruccion"></p></div>
+        </div>
         <button type="button" id="escuchar" aria-label="Escuchar ejercicio" title="Escuchar ejercicio">🔊</button>
         <button type="button" id="volverPlegado" hidden>Modos</button>
       </header>
@@ -104,7 +111,7 @@
   </footer>
   <script>window.IDIOMA_VOZ_APP = 'colones';</script>
   <script src="../idioma-voz-textos.js?v=creditos-msc"></script>
-  <script src="textos.js?v=contar-piezas"></script>
+  <script src="textos.js?v=tolva"></script>
   <script src="../idioma-voz.js"></script>
   <script src="../matematicas-base.js"></script>
   <script src="../historial-modos.js"></script>
@@ -112,6 +119,6 @@
   <script src="../pantalla-completa.js"></script>
   <script src="../panel-plegable.js?v=colones"></script>
   <script src="../nombre-compartido.js"></script>
-  <script src="colones.js?v=contar-piezas"></script>
+  <script src="colones.js?v=tolva"></script>
 </body>
 </html>
