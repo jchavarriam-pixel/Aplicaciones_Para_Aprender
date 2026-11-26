@@ -4,6 +4,8 @@
   const $=s=>document.querySelector(s),t=(es,en)=>IdiomaVoz.idioma==='en'?en:es,tr=s=>IdiomaVoz.t(s);
   const inicio=$('#inicioTemas'),lista=$('#vistaAplicaciones'),contenedor=$('#contenedorApps'),buscar=$('#buscar'),contador=$('#contador');
   const catalogo=$('.catalogo-indice'),rejillaMaterias=$('#navegacionMaterias');
+  const barraFiltros=$('#filtrosListado'),todosLosTemas=$('#todosLosTemas'),abrirFiltros=$('#abrirFiltrosTemas');
+  const modalTemas=$('#filtrosTemas'),opcionesTemas=$('#opcionesTemas'),aplicarFiltros=$('#aplicarFiltrosTemas');
   let actual=null,filtros={},plegado=false,narrar=false;
   try{filtros=JSON.parse(localStorage.getItem('filtrosMateriasApps'))||{};narrar=localStorage.getItem('indice.narrarTemas')==='true';}catch{}
   if(!filtros||typeof filtros!=='object'||Array.isArray(filtros))filtros={};
@@ -25,6 +27,53 @@
   const appsDe=id=>id==='todas'?mezcladas:ordenados.filter(a=>clasificacion[a.archivo]?.[0]===id);
   const buscarEn=apps=>{const q=normalizar(buscar.value);return apps.filter(a=>{const m=materias.find(m=>m.id===clasificacion[a.archivo]?.[0]),temas=clasificacion[a.archivo]?.[1]||[];return normalizar([a.nombre,tr(a.nombre),a.descripcion,tr(a.descripcion),m?.nombre,tr(m?.nombre||''),...temas,...temas.map(tr)].join(' ')).includes(q);});};
   const cantidad=n=>t(n===1?'1 aplicación':`${n} aplicaciones`,n===1?'1 app':`${n} apps`);
+  const temasDe=apps=>[...new Set(apps.flatMap(a=>clasificacion[a.archivo]?.[1]||[]))];
+  const conTemas=(apps,temas)=>temas.length
+   ?apps.filter(a=>clasificacion[a.archivo]?.[1].some(tema=>temas.includes(tema))):apps;
+  function temasActivos(temas){
+   const guardados=filtros[actual];
+   const seleccion=Array.isArray(guardados)?guardados:[guardados];
+   return temas.filter(tema=>seleccion.includes(tema));
+  }
+  function guardarTemas(temas){
+   if(actual&&actual!=='todas')filtros[actual]=temas;
+   try{localStorage.setItem('filtrosMateriasApps',JSON.stringify(filtros));}catch{}
+  }
+  const seleccionModal=()=>Array.from(opcionesTemas.querySelectorAll('input:checked'),input=>input.value);
+  function actualizarAplicar(){
+   const resultados=conTemas(buscarEn(appsDe(actual)),seleccionModal());
+   aplicarFiltros.textContent=t('Ver ','Show ')+cantidad(resultados.length);
+  }
+  abrirFiltros.onclick=()=>{
+   const apps=appsDe(actual),coincidencias=buscarEn(apps);
+   const temas=temasDe(apps).sort((a,b)=>tr(a).localeCompare(tr(b),IdiomaVoz.idioma));
+   const activos=temasActivos(temas);
+   opcionesTemas.replaceChildren(...temas.map(tema=>{
+    const opcion=document.createElement('label');
+    const casilla=document.createElement('input');
+    casilla.type='checkbox';
+    casilla.value=tema;
+    casilla.checked=activos.includes(tema);
+    const rotulo=document.createElement('span');
+    rotulo.textContent=tr(tema);
+    const numero=document.createElement('span');
+    numero.className='coincidencias-tema';
+    numero.textContent=conTemas(coincidencias,[tema]).length;
+    opcion.append(casilla,rotulo,numero);
+    return opcion;
+   }));
+   actualizarAplicar();
+   modalTemas.showModal();
+  };
+  opcionesTemas.onchange=actualizarAplicar;
+  $('#cerrarFiltrosTemas').onclick=()=>modalTemas.close();
+  modalTemas.querySelector('form').onsubmit=e=>{
+   e.preventDefault();
+   guardarTemas(seleccionModal());
+   modalTemas.close();
+   renderizar();
+  };
+  todosLosTemas.onclick=()=>{guardarTemas([]);renderizar();};
   function distribuirTarjetas(){
    const ancho=catalogo.getBoundingClientRect().width;
    const compacto=ancho<620;
@@ -50,15 +99,17 @@
    }
    if(actual===null){contador.textContent=cantidad(resultados.length);distribuirTarjetas();return;}
    $('#todasDesdeMateria').hidden=actual==='todas';
-   const ficha=fichas.find(f=>f.id===actual),apps=appsDe(actual),coincidencias=buscarEn(apps),temas=[...new Set(apps.flatMap(a=>clasificacion[a.archivo]?.[1]||[]))],activo=actual!=='todas'&&temas.includes(filtros[actual])?filtros[actual]:'';
-   const visibles=coincidencias.filter(a=>!activo||clasificacion[a.archivo][1].includes(activo));
+   const ficha=fichas.find(f=>f.id===actual),apps=appsDe(actual),coincidencias=buscarEn(apps);
+   const activos=actual==='todas'?[]:temasActivos(temasDe(apps));
+   const visibles=conTemas(coincidencias,activos);
    $('#tituloListado').textContent=tr(ficha.nombre);$('#descripcionListado').textContent=actual==='todas'?t('Todas juntas, combinando las distintas materias.','All together, with a mix of subjects.'):t('De lo más básico a actividades más completas. Puedes filtrar por tema.','From the basics to more complete activities. Filter by topic.');
    $('#totalListado').textContent=t(`${visibles.length} de ${apps.length}`,`${visibles.length} of ${apps.length}`);contador.textContent=cantidad(visibles.length);
-   const filtrosNodo=$('#filtrosListado');filtrosNodo.replaceChildren();filtrosNodo.hidden=actual==='todas';filtrosNodo.setAttribute('aria-label',t('Temas de ','Topics in ')+tr(ficha.nombre));
-   if(actual!=='todas')for(const [i,tema]of ['',...temas].entries()){
-    const b=document.createElement('button');b.type='button';b.className='filtro-tema';b.id='filtro-catalogo-'+i;b.setAttribute('aria-pressed',String(activo===tema));const n=coincidencias.filter(a=>!tema||clasificacion[a.archivo][1].includes(tema)).length;b.textContent=tr(tema||'Todas')+` (${n})`;
-    b.onclick=()=>{filtros[actual]=tema;try{localStorage.setItem('filtrosMateriasApps',JSON.stringify(filtros));}catch{}renderizar();document.getElementById(b.id)?.focus({preventScroll:true});};filtrosNodo.append(b);
-   }
+   barraFiltros.hidden=actual==='todas';
+   barraFiltros.setAttribute('aria-label',t('Temas de ','Topics in ')+tr(ficha.nombre));
+   todosLosTemas.setAttribute('aria-pressed',String(!activos.length));
+   todosLosTemas.textContent=`${tr('Todas')} (${coincidencias.length})`;
+   abrirFiltros.classList.toggle('filtros-aplicados',activos.length>0);
+   $('#rotuloFiltrosTemas').textContent=tr('Filtrar por tema')+(activos.length?` (${activos.length})`:'');
    contenedor.replaceChildren();
    for(const app of visibles){
     const card=crearTarjeta(app);card.querySelector('h3').textContent=tr(app.nombre);card.querySelector('p').textContent=tr(app.descripcion);card.setAttribute('aria-label',t('Abrir ','Open ')+tr(app.nombre));card.querySelector('.abrir').firstChild.textContent=t('Abrir actividad ','Open activity ');
@@ -67,6 +118,7 @@
    $('#sinResultados').hidden=visibles.length>0;
   }
   function seleccionar(id,{historial=true,enfocar=true}={}){
+   if(modalTemas.open)modalTemas.close();
    if(id!==null&&!fichas.some(f=>f.id===id))id=null;actual=id;
    if(historial)try{history.pushState({...history.state,catalogoMateria:id},'');}catch{}
    renderizar();if(enfocar){const e=id===null?$('#tituloTemas'):$('#tituloListado');e.focus({preventScroll:true});(id===null?inicio:lista).scrollIntoView({block:'start',behavior:'instant'});}
@@ -75,7 +127,7 @@
   function leer(){IdiomaVoz.hablar((actual?tr(fichas.find(f=>f.id===actual).nombre):t('Elige un tema para aprender.','Choose a subject to learn.'))+'. '+contador.textContent);}
   $('#volverTemas').onclick=()=>seleccionar(null);$('#todasDesdeMateria').onclick=()=>seleccionar('todas');$('#verResultados').onclick=()=>seleccionar('todas');
   buscar.addEventListener('input',renderizar);buscar.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();seleccionar('todas');}});
-  $('#limpiarBusqueda').onclick=()=>{buscar.value='';if(actual&&actual!=='todas')filtros[actual]='';try{localStorage.setItem('filtrosMateriasApps',JSON.stringify(filtros));}catch{}renderizar();buscar.focus();};$('#escucharCatalogo').onclick=leer;
+  $('#limpiarBusqueda').onclick=()=>{buscar.value='';guardarTemas([]);renderizar();buscar.focus();};$('#escucharCatalogo').onclick=leer;
   addEventListener('popstate',e=>seleccionar(e.state?.catalogoMateria??null,{historial:false}));try{history.replaceState({...history.state,catalogoMateria:null},'');}catch{}
   const modal=$('#configuracionIndice'),pendientes=new Set();let aplicando=false;
   $('#configurarIndice').onclick=()=>{pendientes.clear();$('#narrarTemas').checked=narrar;modal.style.zoom=String(1/(parseFloat(getComputedStyle(document.body).zoom)||1));modal.showModal();};$('#cerrarConfigIndice').onclick=()=>modal.close();

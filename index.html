@@ -526,17 +526,13 @@
     .materia-cabecera{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:8px}
     .materia h2{margin:0;font-size:clamp(1.5rem,3vw,2rem);color:#21436b}
     .materia-total{font-weight:750;color:#536575;font-size:.95rem}
-    .filtros-tema{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 20px}
-    .filtro-tema{font:inherit;font-size:.95rem;font-weight:750;min-height:44px;padding:9px 14px;border:2px solid #ccdaeb;border-radius:999px;background:#fff;color:#36536f;cursor:pointer;touch-action:manipulation}
-    .filtro-tema[aria-pressed="true"]{background:#245ac5;border-color:#245ac5;color:white}
-    .filtro-tema:hover{border-color:#245ac5}
-    .filtro-tema:focus-visible,.materias-nav button:focus-visible{outline:3px solid #b45309;outline-offset:3px}
+    .materias-nav button:focus-visible{outline:3px solid #b45309;outline-offset:3px}
     .tema-ayuda{margin:0;color:#536575;line-height:1.5}
     .materia .grid{margin:0}.materia .nota{grid-column:1/-1}
     @media(prefers-reduced-motion:reduce){.burbuja{animation:none}}
   </style>
   <link rel="stylesheet" href="creditos.css">
-  <link rel="stylesheet" href="pantalla-completa.css"><link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="indice.css?v=tarjetas-compactas-1"><script>window.IDIOMA_VOZ_APP='indiceAprender';</script><script src="idioma-voz-textos.js?v=creditos-msc"></script><script src="indice-textos.js?v=dinero-lab"></script><script src="idioma-voz.js"></script><script src="indice-catalogo.js?v=tarjetas-compactas-1"></script>
+  <link rel="stylesheet" href="pantalla-completa.css"><link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="indice.css?v=filtros-temas"><script>window.IDIOMA_VOZ_APP='indiceAprender';</script><script src="idioma-voz-textos.js?v=creditos-msc"></script><script src="indice-textos.js?v=filtros-temas"></script><script src="idioma-voz.js"></script><script src="indice-catalogo.js?v=filtros-temas"></script>
 </head>
 
 <body>
@@ -596,11 +592,41 @@
     <div class="acciones-indice"><button id="configurarIndice" class="boton-indice" type="button">⚙ Configuración</button><button id="escucharCatalogo" class="boton-indice" type="button">🔊 Escuchar</button></div></aside>
     <section class="catalogo-indice" aria-label="Aplicaciones">
       <section id="inicioTemas"><div class="cabecera-temas"><h2 id="tituloTemas" tabindex="-1">¿Qué quieres practicar?</h2><p>Elige una materia o explora todas las aplicaciones juntas.</p></div><nav class="tarjetas-materias" id="navegacionMaterias" aria-label="Materias"></nav></section>
-      <section id="vistaAplicaciones" aria-labelledby="tituloListado" hidden><nav class="navegar-catalogo" aria-label="Materias"><button id="volverTemas" class="boton-indice" type="button">← Volver a los temas</button><button id="todasDesdeMateria" class="boton-indice" type="button">Todas las aplicaciones</button></nav><div class="encabezado-listado"><h2 id="tituloListado" tabindex="-1"></h2><span id="totalListado"></span></div><p id="descripcionListado" class="tema-ayuda"></p><div id="filtrosListado" class="filtros-tema" role="group"></div><div id="contenedorApps" class="grid"></div><div id="sinResultados" class="mensaje-vacio" hidden><h3>Sin coincidencias</h3><p>Prueba otra búsqueda o vuelve a los temas.</p><button id="limpiarBusqueda" class="boton-indice" type="button">Limpiar búsqueda y filtros</button></div></section>
+      <section id="vistaAplicaciones" aria-labelledby="tituloListado" hidden>
+        <nav class="navegar-catalogo" aria-label="Materias">
+          <button id="volverTemas" class="boton-indice" type="button">← Volver a los temas</button>
+          <button id="todasDesdeMateria" class="boton-indice" type="button">Todas las aplicaciones</button>
+        </nav>
+        <div class="encabezado-listado"><h2 id="tituloListado" tabindex="-1"></h2><span id="totalListado"></span></div>
+        <p id="descripcionListado" class="tema-ayuda"></p>
+        <div id="filtrosListado" class="filtros-tema" role="group">
+          <button id="todosLosTemas" class="boton-indice" type="button" aria-pressed="true">Todas</button>
+          <button id="abrirFiltrosTemas" class="boton-indice" type="button" aria-haspopup="dialog" aria-controls="filtrosTemas">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M7 12h10m-7 6h4"/></svg>
+            <span id="rotuloFiltrosTemas">Filtrar por tema</span>
+          </button>
+        </div>
+        <div id="contenedorApps" class="grid"></div>
+        <div id="sinResultados" class="mensaje-vacio" hidden>
+          <h3>Sin coincidencias</h3><p>Prueba otra búsqueda o vuelve a los temas.</p>
+          <button id="limpiarBusqueda" class="boton-indice" type="button">Limpiar búsqueda y filtros</button>
+        </div>
+      </section>
     </section>
   </main>
 
   <button id="plegarIndice" type="button" aria-controls="panelIndice" aria-expanded="true" aria-label="Ocultar panel"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16"/></svg></button>
+  <dialog id="filtrosTemas" aria-labelledby="tituloFiltrosTemas" aria-describedby="ayudaFiltrosTemas">
+    <form>
+      <div class="encabezado-config">
+        <h2 id="tituloFiltrosTemas">Filtrar por tema</h2>
+        <button id="cerrarFiltrosTemas" type="button" aria-label="Cancelar">×</button>
+      </div>
+      <p id="ayudaFiltrosTemas">Marca los temas que quieres ver.</p>
+      <div id="opcionesTemas" role="group" aria-labelledby="tituloFiltrosTemas"></div>
+      <button id="aplicarFiltrosTemas" class="boton-indice destacado" type="submit">Aplicar filtros</button>
+    </form>
+  </dialog>
   <dialog id="configuracionIndice" aria-labelledby="tituloConfigIndice"><div class="encabezado-config"><h2 id="tituloConfigIndice">Configuración</h2><button id="cerrarConfigIndice" type="button" aria-label="Aplicar y cerrar">✕</button></div><form method="dialog"><label class="opcion-indice"><input id="narrarTemas" type="checkbox"> Leer los temas al abrirlos</label><section id="vozIndice"></section><button class="boton-indice destacado" type="submit">Aplicar y cerrar</button></form></dialog>
   <script>
     const URL_GOOGLE_SCRIPT = "https://script.google.com/macros/s/AKfycbyENiFqFkDqiesWvdNQuBVBAiAhMtyHc2QLXYOA-rB9uCb8P1Tb6LGKMxDKrXFa8Ow3DA/exec";
