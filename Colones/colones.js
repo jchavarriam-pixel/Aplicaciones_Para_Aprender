@@ -266,20 +266,17 @@
     const saldo=$('saldoSobre')?.querySelector('strong');
     if(saldo)saldo.textContent=formato(sumar(piezas));
     if(!entrando)return;
-    const agregada=mostrarUltimaPieza(interior);
-    if(!agregada)return;
-    const imagen=agregada.querySelector('.pila-billetes > span:last-child .dinero')||agregada.firstElementChild;
-    imagen.classList.add('dinero-entrando');
+    mostrarUltimaPieza(interior)?.classList.add('dinero-entrando');
   }
   function mostrarUltimaPieza(bandeja) {
-    const ultima=bandeja.querySelector(`[data-indice-efectivo="${piezas.length-1}"]`);
+    const ultima=bandeja?.querySelector(`[data-indice-efectivo="${piezas.length-1}"]`);
     if(!ultima)return null;
-    const frente=ultima.querySelector('.pila-contador > :last-child');
+    const frente=ultima.querySelector('.pila-dinero > :last-child');
     const arriba=ultima.offsetTop+(frente?.offsetTop||0);
     const abajo=arriba+(frente||ultima).offsetHeight;
     if(arriba<bandeja.scrollTop)bandeja.scrollTop=arriba;
     else if(abajo>bandeja.scrollTop+bandeja.clientHeight)bandeja.scrollTop=abajo-bandeja.clientHeight;
-    return ultima;
+    return frente||ultima.firstElementChild;
   }
   function lecturaContador() {
     const reto=varianteContador==='reto';
@@ -310,8 +307,7 @@
     const bandeja=$('dineroContado');
     bandeja.innerHTML=fichasPago(fase==='medir');
     if(!recienContada)return;
-    const nueva=mostrarUltimaPieza(bandeja);
-    nueva?.querySelector('.pila-contador > :last-child, :scope > .dinero')?.classList.add('pieza-contada');
+    mostrarUltimaPieza(bandeja)?.classList.add('pieza-contada');
   }
   function esperandoContador() {
     return modo==='contador'&&varianteContador==='reto'&&colaContador.length>0;
@@ -360,7 +356,7 @@
       const agrupar=enContador?opciones.apilarContador:largosBillete[valor]&&opciones.apilarBilletes;
       const pila=agrupar?agrupados.get(valor):null;
       // Varias pilas cortas permiten recorrer el efectivo con menos desplazamiento.
-      if(pila&&(!enContador||pila.cantidad<4)){
+      if(pila&&pila.cantidad<4){
         pila.cantidad++;
         pila.indice=indice;
       }
@@ -371,20 +367,16 @@
       }
     }
     return grupos.map(({valor,cantidad,indice})=>{
-      let imagen=pieza(valor);
-      if(cantidad>1){
-        imagen=enContador
-          ? `<span class="pila-contador" aria-hidden="true">${imagen.repeat(cantidad)}</span>`
-          : `<span class="pila-billetes" style="--cantidad-pila:${cantidad-1}" aria-hidden="true">${Array.from({length:cantidad},(_,i)=>
-            `<span style="--capa:${cantidad-1-i}">${imagen}</span>`).join('')}</span>`;
-      }
+      const ficha=pieza(valor);
+      const tipoPila=enContador?'pila-contador':'pila-billetes';
+      const imagen=cantidad>1?`<span class="pila-dinero ${tipoPila}" aria-hidden="true">${ficha.repeat(cantidad)}</span>`:ficha;
       const etiqueta=cantidad>1?idioma(
         `${cantidad} ${valor<1000?'monedas':'billetes'} de ${formato(valor)}`,
         `${cantidad} ${valor<1000?'coins':'banknotes'} of ${formato(valor)}`):etiquetaDinero(valor);
       const quitar=cantidad>1?idioma(`${etiqueta}. Quitar una pieza.`,`${etiqueta}. Remove one piece.`):
         idioma(`Quitar ${etiqueta}`,`Remove ${etiqueta}`);
       return editable
-        ? `<button type="button" class="pieza-colocada" data-quitar="${valor}" ${enContador||modo==='llenar'?`data-indice-efectivo="${indice}"`:''} aria-label="${quitar}">${imagen}</button>`
+        ? `<button type="button" class="pieza-colocada" data-quitar="${valor}" data-indice-efectivo="${indice}" aria-label="${quitar}">${imagen}</button>`
         : `<span class="pieza-colocada" role="img" aria-label="${etiqueta}">${imagen}</span>`;
     }).join('');
   }
@@ -984,6 +976,7 @@
     piezas.push(valor);
     if(fase==='llenar')return actualizarEfectivoSobre(true);
     actualizarContenido();
+    mostrarUltimaPieza(contenido.querySelector('#destinoDinero .piezas-colocadas'));
     actualizarCarteraCompra();
   }
   function elegirProducto(i) {
@@ -1147,9 +1140,8 @@
     }
   }
   function quitarDinero(valor,indice) {
-    const i=Number.isInteger(indice)?indice:piezas.lastIndexOf(valor);
-    if(piezas[i]!==valor||!fasesDinero.has(fase))return;
-    piezas.splice(i,1);
+    if(piezas[indice]!==valor||!fasesDinero.has(fase))return;
+    piezas.splice(indice,1);
     anunciar();
     if(fase==='llenar')actualizarEfectivoSobre();
     else if(fase==='medir')actualizarContador();

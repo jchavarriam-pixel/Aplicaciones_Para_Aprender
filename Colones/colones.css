@@ -159,13 +159,10 @@ body:has(#control-pantalla-completa[data-fullscreen=true]) .acciones-juego { pad
 .pieza-colocada { position:relative; }
 button.pieza-colocada:has(.moneda) { min-width:calc(29 * var(--u)); min-height:calc(29 * var(--u)); place-items:center; }
 .piezas-pago { gap:calc(5 * var(--u)); }
-.pila-billetes {
-  --borde-pila:calc(6 * var(--u));
-  display:grid; padding-bottom:calc(var(--cantidad-pila) * var(--borde-pila));
-}
-.pila-billetes > span {
-  grid-area:1/1; transform:translateY(calc(var(--capa) * var(--borde-pila)));
-}
+.pila-dinero { --solape-pila:.67; display:flex; flex-direction:column; }
+.pila-contador { --solape-pila:.50; }
+.pila-dinero .dinero { filter:drop-shadow(0 1px 1px #193d4460); }
+.pila-dinero .dinero + .dinero { margin-block-start:calc(-1 * var(--ficha-alto) * var(--solape-pila)); }
 .pila-billetes .billete { outline:1px solid #2c484d; }
 .cantidad-piezas {
   position:absolute; right:calc(-3 * var(--u)); top:0; background:#174541; color:white; padding:0 calc(3 * var(--u));
@@ -176,7 +173,7 @@ button.pieza-colocada:has(.moneda) { min-width:calc(29 * var(--u)); min-height:c
 .mostrador { border:2px dashed #5c9c87; border-radius:calc(12 * var(--u)); background:#e7f6ee; padding:calc(6 * var(--u)); }
 .mostrador .piezas-colocadas,.zona-dinero .piezas-colocadas { min-height:calc(25 * var(--u)); }
 .zona-dinero .piezas-colocadas,.bandeja-caja .piezas-colocadas {
-  max-height:max(calc(56 * var(--u)),34cqh); overflow-y:auto; scrollbar-width:thin; align-content:flex-start;
+  position:relative; max-height:max(calc(56 * var(--u)),34cqh); overflow-y:auto; scrollbar-width:thin; align-content:flex-start;
 }
 .sobre-destino { outline:calc(3 * var(--u)) solid #168958; outline-offset:calc(-3 * var(--u)); background-color:#d7fae0; }
 .dato-total {
@@ -580,9 +577,6 @@ button.ficha-mesa { cursor:grab; }
   100% { opacity:0; transform:translateY(66%) scale(.18); }
 }
 @keyframes recibirEnContador { from { opacity:.50; translate:0 calc(-6 * var(--u)); } }
-.pila-contador { display:flex; flex-direction:column; }
-.pila-contador .dinero { filter:drop-shadow(0 1px 1px #193d4460); }
-.pila-contador .dinero + .dinero { margin-top:calc(var(--ficha-alto) / -2); }
 @media (orientation:landscape) {
   #escena[data-fase=medir]:has(>#bancoPanel) { grid-template-rows:minmax(0,1fr); }
   #escena[data-fase=medir] #bancoPanel { max-height:100%; }

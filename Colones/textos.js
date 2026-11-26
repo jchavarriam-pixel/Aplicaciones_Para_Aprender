@@ -129,6 +129,7 @@ Object.assign(window.TEXTOS_INGLES,{
   '¿Me das el vuelto?':'Can I have my change?',
   'Billetes':'Banknotes',
   'Apilar billetes iguales en compras y al preparar un sobre':'Stack matching banknotes when shopping or filling an envelope',
+  'Se ve al menos el 30 % de cada billete de abajo.':'At least 30% of each banknote underneath remains visible.',
   'Tamaño de los billetes':'Banknote size',
   'Avanzar':'Move forward',
   'Retroceder':'Move back',
