@@ -38,9 +38,11 @@
     sonidosTolva:guardado.sonidosTolva!==false,
     tamanoBilletes:limitarEscala(guardado.tamanoBilletes,$('tamanoBilletes')),
     tamanoMonedas:limitarEscala(guardado.tamanoMonedas,$('tamanoMonedas')), nombresProductos:guardado.nombresProductos!==false,
+    cantidadAlcance:guardado.cantidadAlcance===4?4:3,
     vueltoCaja:tiposVuelto.includes(guardado.vueltoCaja)?guardado.vueltoCaja:'correcto'};
   let modo = null, fase, oferta, elegidos, piezas, sobre, dineroCliente, pagado;
   let varianteContador=guardado.varianteContador==='reto'?'reto':'explorar', metaContador=0;
+  let varianteAlcance=guardado.varianteAlcance==='seleccion'?'seleccion':'uno';
   const colaContador=[];
   let temporizadorContador=0;
   let compraCaja=null;
@@ -171,7 +173,9 @@
       const conVuelto=entero(1,4)===1?null:pagoQueRequiereVuelto(sumar(exacto));
       dineroCliente=conVuelto||compactar(exacto);
     }
-    if(modo==='alcanza'){
+    if(modo==='alcanza'&&varianteAlcance==='seleccion'){
+      prepararSeleccionAlcance();
+    }else if(modo==='alcanza'){
       const item=oferta[0];
       const tieneSuficiente=entero(0,1)===0;
       if(tieneSuficiente){
@@ -185,7 +189,8 @@
       }
       cartera=barajar(cartera);
     }
-    cambiarFase(({contador:'medir',contar:'cerrado',llenar:'llenar',alcanza:'decidir',cajero:'escanear'})[modo]||'elegir');
+    cambiarFase(({contador:'medir',contar:'cerrado',llenar:'llenar',
+      alcanza:varianteAlcance==='seleccion'?'seleccionar-alcance':'decidir',cajero:'escanear'})[modo]||'elegir');
   }
   function pieza(valor) {
     const largo=largosBillete[valor];
@@ -505,11 +510,41 @@
     if(movimientoReducido.matches)registrar();
     else temporizadorContador=setTimeout(registrar,310);
   }
+  function prepararSeleccionAlcance() {
+    oferta=oferta.slice(0,opciones.cantidadAlcance);
+    let mayor=Math.max(...oferta.map(articulo=>articulo.precio));
+    if(oferta.every(articulo=>articulo.precio===mayor)){
+      // Con una sola denominación activa pueden coincidir todos los precios.
+      const articulo=tomar(oferta),diferencia=opciones.activas[0];
+      articulo.precio+=diferencia;
+      articulo.monedas=[...articulo.monedas,diferencia];
+      mayor=articulo.precio;
+    }
+    const referencia=tomar(oferta.filter(articulo=>articulo.precio<mayor));
+    cartera=barajar(referencia.monedas);
+  }
+  function verCarteraAlcance() {
+    return `<section class="cartera"><h3>${t('Tu dinero')}</h3><div class="dinero-en-sobre">${cartera.map(valor=>`<span role="img" aria-label="${etiquetaDinero(valor)}">${pieza(valor)}</span>`).join('')}</div>
+      ${opciones.ayudas||fase==='listo'?etiquetaTotal('Total disponible',sumar(cartera)):''}</section>`;
+  }
   function verAlcance() {
+    if(varianteAlcance==='seleccion'){
+      return `<div class="alcance-varios">
+        ${verCarteraAlcance()}
+        <div class="opciones-alcance" style="--opciones-alcance:${oferta.length}" role="group" aria-label="${t('Artículos para comparar')}">
+          ${oferta.map((articulo,i)=>`<button type="button" class="articulo-alcance" data-alcance-articulo="${i}"
+            aria-pressed="${elegidos.includes(i)}" ${fase==='listo'?'disabled':''}>
+            <span class="marca-alcance" aria-hidden="true">✓</span>
+            ${producto(articulo)}
+            <span class="nombre-alcance">${t(articulo.nombre)}</span>
+            <strong class="etiqueta-precio">${formato(articulo.precio)}</strong>
+          </button>`).join('')}
+        </div>
+      </div>`;
+    }
     const item=oferta[0];
     return `<div class="reto-alcance"><section class="producto-alcance">${producto(item)}<h3>${t(item.nombre)}</h3><b class="etiqueta-precio">${formato(item.precio)}</b></section>
-      <section class="cartera"><h3>${t('Tu dinero')}</h3><div class="dinero-en-sobre">${cartera.map(valor=>`<span role="img" aria-label="${etiquetaDinero(valor)}">${pieza(valor)}</span>`).join('')}</div>
-      ${opciones.ayudas||fase==='listo'?etiquetaTotal('Total disponible',sumar(cartera)):''}</section></div>
+      ${verCarteraAlcance()}</div>
       ${fase==='decidir'?`<div class="decidir"><button type="button" data-alcanza="si">${t('Sí me alcanza')}</button><button type="button" data-alcanza="no">${t('No me alcanza')}</button></div>`:''}`;
   }
   function fichasPago(editable=false,efectivo=piezas) {
@@ -1013,6 +1048,7 @@
         ?idioma(`Ingresa ${formato(metaContador)} en la máquina y pulsa Revisar.`,`Put ${formato(metaContador)} into the machine and press Check.`)
         :t('Toca el dinero del banco o arrástralo a las ranuras.');
       case 'decidir': return t('¿Te alcanza el dinero para comprarlo?');
+      case 'seleccionar-alcance': return t('Marca todos los artículos que puedes pagar por separado.');
       case 'cerrado': return instruccionAbrirSobre();
       case 'contar': return aperturaSobre?t('Mira cómo se abre el sobre y cae el dinero.'):instruccionContarSobre();
       case 'llenar': return instruccionPrepararSobre();
@@ -1063,6 +1099,11 @@
     $('variantesContador').hidden=modo!=='contador';
     $('explorarContador').setAttribute('aria-pressed',String(varianteContador==='explorar'));
     $('retoContador').setAttribute('aria-pressed',String(varianteContador==='reto'));
+    $('variantesAlcance').hidden=modo!=='alcanza';
+    $('decidirAlcance').setAttribute('aria-pressed',String(varianteAlcance==='uno'));
+    $('seleccionAlcance').setAttribute('aria-pressed',String(varianteAlcance==='seleccion'));
+    if(modo==='alcanza')$('guiaModo').textContent=t(varianteAlcance==='seleccion'?
+      'Compara cada precio con el dinero de tu cartera.':modos.alcanza.guia);
     const lineas=$('textoInstruccion').dataset;
     if(compraCaja){
       lineas.inicio=instruccionCobro();
@@ -1073,6 +1114,9 @@
     }else if(modo==='llenar'){
       lineas.inicio=instruccionPrepararSobre();
       lineas.siguiente=t('Mira cómo entra el dinero en el sobre.');
+    }else if(modo==='alcanza'&&varianteAlcance==='seleccion'){
+      lineas.inicio=t('Marca todos los artículos que puedes pagar por separado.');
+      delete lineas.siguiente;
     }else{
       delete lineas.inicio;
       delete lineas.siguiente;
@@ -1180,6 +1224,12 @@
   function revisar() {
     if(aperturaSobre||fase==='guardando-sobre')return;
     if(fase==='listo') return modo==='contar'?mostrarResultadoSobre():nuevaRonda();
+    if(fase==='seleccionar-alcance'){
+      if(!elegidos.length)return anunciar('Marca al menos un artículo.');
+      const total=sumar(cartera);
+      if(oferta.every((articulo,i)=>(articulo.precio<=total)===elegidos.includes(i)))return completar();
+      return anunciar('Compara cada precio con el dinero de tu cartera.');
+    }
     if(fase==='medir'){
       if(varianteContador==='explorar')return nuevaRonda();
       if(esperandoContador())return;
@@ -1690,6 +1740,13 @@
       actualizarContenido();
       $('ordenarMesa').focus({preventScroll:true});
     }
+    else if(boton.hasAttribute('data-alcance-articulo')&&fase==='seleccionar-alcance'){
+      const i=Number(boton.dataset.alcanceArticulo);
+      const seleccionado=elegidos.includes(i);
+      elegidos=seleccionado?elegidos.filter(indice=>indice!==i):[...elegidos,i];
+      boton.setAttribute('aria-pressed',String(!seleccionado));
+      anunciar();
+    }
     else if(boton.hasAttribute('data-alcanza')){
       const afirmativa=boton.dataset.alcanza==='si';
       if(afirmativa===(sumar(cartera)>=oferta[0].precio)){
@@ -1782,6 +1839,14 @@
       nuevaRonda();
     };
   }
+  for(const [id,variante] of [['decidirAlcance','uno'],['seleccionAlcance','seleccion']]){
+    $(id).onclick=()=>{
+      if(varianteAlcance===variante||modo!=='alcanza')return;
+      varianteAlcance=variante;
+      guardarAjustes();
+      nuevaRonda();
+    };
+  }
   monto.addEventListener('keydown',evento=>{if(evento.key==='Enter'){evento.preventDefault();revisar();}});
   monto.addEventListener('input',()=>anunciar());
   TecladoEnPantalla.instalar($('respuesta'),$('teclado'),{limpiar:true});
@@ -1826,6 +1891,7 @@
     $('apilarContador').checked=opciones.apilarContador;
     $('sonidosTolva').checked=opciones.sonidosTolva;
     $('nombresProductos').checked=opciones.nombresProductos;
+    $('cantidadAlcance').value=opciones.cantidadAlcance;
     $('vueltoCaja').value=opciones.vueltoCaja;
     for(const {control,preferencia} of controlesTamano)control.value=opciones[preferencia];
     previsualizarTamano();
@@ -1834,12 +1900,14 @@
     ajustes.showModal();
   };
   function guardarAjustes() {
-    Matematicas.guardar(clave,{...opciones,varianteContador});
+    Matematicas.guardar(clave,{...opciones,varianteContador,varianteAlcance});
   }
   function aplicarAjustes() {
     const activas=[...$('denominaciones').querySelectorAll('input:checked')].map(input=>Number(input.value));
     if(!activas.length){$('errorAjustes').hidden=false;return;}
-    const cambio=activas.join()!==opciones.activas.join();
+    const cantidadAlcance=$('cantidadAlcance').value==='4'?4:3;
+    const cambio=activas.join()!==opciones.activas.join()||
+      (modo==='alcanza'&&varianteAlcance==='seleccion'&&cantidadAlcance!==opciones.cantidadAlcance);
     opciones={activas,ayudas:$('ayudas').checked,narracion:$('narracion').checked,
       apilarBilletes:$('apilarBilletes').checked,
       mostrarCifraBilletes:$('mostrarCifraBilletes').checked,
@@ -1848,6 +1916,7 @@
       tamanoBilletes:$('tamanoBilletes').valueAsNumber,
       tamanoMonedas:$('tamanoMonedas').valueAsNumber,
       nombresProductos:$('nombresProductos').checked,
+      cantidadAlcance,
       vueltoCaja:$('vueltoCaja').value};
     guardarAjustes();
     aplicarVistaDinero();

@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="../idioma-voz.css">
   <link rel="stylesheet" href="../pantalla-completa.css">
   <link rel="stylesheet" href="../panel-plegable.css?v=colones">
-  <link rel="stylesheet" href="colones.css?v=sellar-sobre">
+  <link rel="stylesheet" href="colones.css?v=alcanza-articulos">
   <link rel="stylesheet" href="../teclado-en-pantalla.css?v=teclas-claras">
 </head>
 <body>
@@ -37,9 +37,13 @@
       <header class="reto">
         <div>
           <h2 id="tituloModo"></h2>
-          <div id="variantesContador" class="variantes-contador" role="group" aria-label="Actividades del contador" hidden>
+          <div id="variantesContador" class="variantes-actividad" role="group" aria-label="Actividades del contador" hidden>
             <button type="button" id="explorarContador" aria-pressed="true">Explorar</button>
             <button type="button" id="retoContador" aria-pressed="false">Formar un monto</button>
+          </div>
+          <div id="variantesAlcance" class="variantes-actividad" role="group" aria-label="Actividades de ¿Me alcanza?" hidden>
+            <button type="button" id="decidirAlcance" aria-pressed="true">Un artículo</button>
+            <button type="button" id="seleccionAlcance" aria-pressed="false">Elige artículos</button>
           </div>
           <div class="texto-instruccion" id="textoInstruccion"><p id="instruccion"></p></div>
         </div>
@@ -109,6 +113,14 @@
         <label class="casilla"><input type="checkbox" id="apilarContador" aria-describedby="explicacionPila"> Apilar monedas y billetes del mismo valor</label>
         <p id="explicacionPila">Al apilar, queda visible al menos la mitad de cada pieza de abajo.</p>
       </fieldset>
+      <fieldset>
+        <legend>¿Me alcanza?</legend>
+        <label for="cantidadAlcance">Cantidad de opciones en «Elige artículos»</label>
+        <select id="cantidadAlcance">
+          <option value="3">3 artículos</option>
+          <option value="4">4 artículos</option>
+        </select>
+      </fieldset>
       <label class="casilla"><input type="checkbox" id="nombresProductos"> Mostrar los nombres de los productos en globos</label>
       <label class="casilla"><input type="checkbox" id="ayudas"> Mostrar pistas y el total del dinero que colocas</label>
       <label class="casilla"><input type="checkbox" id="narracion"> Leer las instrucciones y los resultados</label>
@@ -131,7 +143,7 @@
   </footer>
   <script>window.IDIOMA_VOZ_APP = 'colones';</script>
   <script src="../idioma-voz-textos.js?v=creditos-msc"></script>
-  <script src="textos.js?v=sellar-sobre"></script>
+  <script src="textos.js?v=alcanza-articulos"></script>
   <script src="../idioma-voz.js"></script>
   <script src="../matematicas-base.js"></script>
   <script src="../historial-modos.js"></script>
@@ -139,6 +151,6 @@
   <script src="../pantalla-completa.js"></script>
   <script src="../panel-plegable.js?v=colones"></script>
   <script src="../nombre-compartido.js"></script>
-  <script src="colones.js?v=sellar-sobre"></script>
+  <script src="colones.js?v=alcanza-articulos"></script>
 </body>
 </html>
