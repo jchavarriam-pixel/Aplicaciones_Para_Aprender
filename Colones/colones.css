@@ -241,21 +241,26 @@ button.pieza-colocada:has(.moneda) { min-width:calc(29 * var(--u)); min-height:c
 .pago-cliente { display:flex; justify-content:center; flex-wrap:wrap; gap:calc(4 * var(--u)); padding-bottom:calc(3 * var(--u)); }
 .respuesta { justify-self:center; width:min(100%,calc(380 * var(--u))); display:grid; justify-items:center; gap:calc(4 * var(--u)); font-weight:800 }
 .monto {
-  display:flex; align-items:center; justify-content:center; gap:.18em;
-  width:min(100%,calc(160 * var(--u))); color:#163f45; font-size:calc(25 * var(--u)); font-weight:900;
+  display:flex; align-items:center; gap:calc(6 * var(--u));
+  width:min(100%,calc(204 * var(--u))); min-height:calc(38 * var(--u)); padding-inline:calc(9 * var(--u));
+  border:calc(2 * var(--u)) solid #88b7aa; border-radius:calc(10 * var(--u));
+  background:#f2fcf7; color:#184a45; font-size:calc(25 * var(--u)); font-weight:900;
 }
-.monto input { width:min(7ch,83%); min-width:0; padding:0; border:0; background:transparent; text-align:start; font-variant-numeric:tabular-nums; }
+.monto > span { padding-inline-end:calc(8 * var(--u)); border-inline-end:1px solid #badbd0; color:#277563; }
+.monto input { flex:1; width:0; min-width:0; padding:0; border:0; background:transparent; text-align:center; font-variant-numeric:tabular-nums; }
 .monto input::placeholder { color:#627c80; opacity:1; }
 .cabecera h1 { display:flex; align-items:center; gap:calc(4 * var(--u)); }
 .marca-dinero { flex:none; width:clamp(calc(27 * var(--u)),14%,calc(47 * var(--u))); height:auto; }
-#teclado { width:100%; display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:calc(3 * var(--u)); }
-#teclado button {
-  min-height:calc(39 * var(--u)); padding:0; font-size:calc(21 * var(--u)); font-weight:900;
-  background-color:#eee9ff; border:1px solid #ccbae9; border-radius:calc(7 * var(--u)); color:#463174;
+#teclado {
+  width:100%; display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:calc(5 * var(--u)); padding:calc(4 * var(--u));
+  border:1px solid #cad9e9; border-radius:calc(13 * var(--u)); background:linear-gradient(145deg,#eaf6f2,#eef0fb);
 }
-#teclado button:nth-child(3n+1) { background-color:#daefe8; border-color:#a5d1bb; color:#15524a; }
-#teclado button:nth-child(3n+2) { background-color:#ffedc9; border-color:#eacc95; color:#68432b; }
-#teclado button:is([data-tecla=Backspace],[data-tecla=Delete]) { background-color:#fce6eb; border-color:#dda8b3; color:#822c48; }
+#teclado button {
+  min-height:calc(38 * var(--u)); padding:0; font-size:calc(21 * var(--u)); font-weight:900;
+  border:1px solid #91bdc4; background-color:#ccecf0; color:#194f59;
+}
+#teclado button:nth-child(n+7):nth-child(-n+10) { background-color:#e3dcfa; border-color:#b6a8dc; color:#493b71; }
+#teclado button:is([data-tecla=Backspace],[data-tecla=Delete]) { background-color:#f9d5df; border-color:#cc8a9e; color:#812143; }
 .fantasma-colones { --u:1px; position:fixed; z-index:1100; pointer-events:none; filter:drop-shadow(0 4px 4px #18463e60); }
 .fantasma-colones > * { width:100%; height:100%; }
 dialog {
@@ -358,6 +363,7 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
   .zona-dinero { min-height:calc(49 * var(--u)); }
   #escena:has(.tablero-mesa[data-sobre=abierto]:not(.tablero-preparar)) #teclado { grid-template-columns:repeat(4,minmax(0,1fr)); }
   #escena:has(.tablero-mesa[data-sobre=abierto]:not(.tablero-preparar)) #teclado button { min-height:calc(33 * var(--u)); }
+  .monto { font-size:calc(21 * var(--u)); }
 }
 @media (orientation:portrait) and (max-height:680px) {
   .herramientas { max-height:calc(144 * var(--u)); }
@@ -374,6 +380,7 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
   .producto .foto-producto { width:calc(42 * var(--u)); }
   .dinero-en-sobre { padding-block:calc(2 * var(--u)); gap:calc(4 * var(--u)); }
   .banco { padding:calc(4 * var(--u)); }
+  #teclado button { min-height:calc(33 * var(--u)); }
   .banco h3 { font-size:calc(13 * var(--u)); margin-bottom:calc(3 * var(--u)); }
   #banco { column-gap:calc(3 * var(--u)); }
   .recibo .foto-producto { width:calc(22 * var(--u)); }
@@ -522,6 +529,16 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
 .mesa-desplazable {
   --altura-mesa:clamp(calc(125 * var(--u)),calc(54cqh - 30 * var(--u)),calc(340 * var(--u)));
   height:var(--altura-mesa); overflow:auto; scrollbar-width:thin; border-radius:calc(8 * var(--u));
+}
+@media (orientation:portrait) and (max-height:620px) {
+  #escena:has(.tablero-mesa:not(.tablero-preparar)) { gap:calc(5 * var(--u)); }
+  #escena:has(.tablero-mesa:not(.tablero-preparar)) #respuesta {
+    grid-template-columns:auto minmax(0,1fr); align-items:center; justify-items:start; gap:calc(4 * var(--u)) calc(8 * var(--u));
+  }
+  #escena:has(.tablero-mesa:not(.tablero-preparar)) #teclado { grid-column:1/-1; }
+  .tablero-mesa:not(.tablero-preparar) .mesa-desplazable {
+    --altura-mesa:clamp(calc(84 * var(--u)),calc(42cqh - 27 * var(--u)),calc(125 * var(--u)));
+  }
 }
 .mesa-libre {
   position:relative; container-type:inline-size; height:100%;

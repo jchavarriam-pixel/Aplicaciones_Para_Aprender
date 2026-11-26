@@ -218,7 +218,6 @@ h1,h2,h3,p { margin:0; }
 .ecuacion { display:flex; gap:clamp(3px,1vw,14px); align-items:end; justify-content:center; }
 .ecuacion label { display:grid; text-align:center; gap:2px; min-width:0; color:#453b70; font-size:clamp(10px,1.3vw,13px); }
 .ecuacion input { width:clamp(42px,11vw,70px); min-width:0; padding:4px; border:2px solid #9d95d7; border-radius:8px; text-align:center; color:#35275d; font-size:clamp(17px,3vw,24px); background:white; }
-.ecuacion input.casilla-activa { border-color:#6842b9; box-shadow:0 0 0 2px #cfb9fa; }
 .ecuacion b { padding-bottom:4px; color:#4c368a; font-size:22px; }
 .ecuacion input[aria-invalid=true] { background:#ffe9d7; border-color:#a94c25; }
 .acciones { display:flex; align-items:center; flex-wrap:wrap; gap:4px; padding-inline-end:54px; }
