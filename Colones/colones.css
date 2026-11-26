@@ -8,11 +8,24 @@ button,a { touch-action:manipulation }
 button { cursor:pointer }
 :focus-visible { outline:3px solid #a64920; outline-offset:2px }
 #appColones {
+  --fraccion-ancho-billete:.22;
+  --ancho-maximo-billete:min(calc(var(--ancho,100dvw)*var(--fraccion-ancho-billete)),calc(58 * var(--u) + max(0px,var(--alto,100dvh) - 400 * var(--u))*.52));
+  --tope-billete:calc(var(--ancho-maximo-billete)*67/153);
+  --tope-moneda:min(calc(var(--ancho,100dvw)*.14),calc(30 * var(--u) + max(0px,var(--alto,100dvh) - 400 * var(--u))*.18));
+  --base-billete:min(calc(48 * var(--u)),calc(var(--tope-billete)*.63));
+  --base-moneda:min(calc(47 * var(--u)),calc(var(--tope-moneda)*.82));
   height:var(--alto,100dvh); width:100%; display:grid; grid-template:min-content minmax(0,1fr) / minmax(0,1fr);
   gap:calc(9 * var(--u)); padding:calc(8 * var(--u));
   font-size:calc(15 * var(--u)); background:radial-gradient(at top left,#d5f5e5,transparent 55%),#fff8e7;
 }
 #appColones.horizontal { grid-template:minmax(0,1fr) / clamp(calc(155 * var(--u)),21%,calc(315 * var(--u))) minmax(0,1fr) }
+#appColones.horizontal[data-muchos-billetes] { --fraccion-ancho-billete:.145; }
+@media (orientation:portrait) {
+  #appColones {
+    --ancho-maximo-billete:min(calc(var(--ancho,100dvw)*.30),calc(50 * var(--u) + max(0px,var(--alto,100dvh) - 600 * var(--u))*.36));
+    --tope-moneda:min(calc(var(--ancho,100dvw)*.16),calc(36 * var(--u) + max(0px,var(--alto,100dvh) - 600 * var(--u))*.14));
+  }
+}
 .herramientas {
   display:grid; align-content:start; gap:calc(9 * var(--u)); min-height:0; min-width:0;
   max-height:calc(163 * var(--u)); overflow:auto; scrollbar-width:thin;
@@ -127,29 +140,25 @@ body:has(#control-pantalla-completa[data-fullscreen=true]) .acciones-juego { pad
 .dinero-en-sobre,.piezas-colocadas {
   display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:calc(5 * var(--u)); padding-block:calc(4 * var(--u));
 }
-.dinero { position:relative; display:grid; place-items:center; width:var(--ficha-ancho); height:var(--ficha-alto); max-width:100%; }
+.dinero { position:relative; display:grid; place-items:center; width:var(--ficha-ancho); height:var(--ficha-alto); }
 .moneda {
-  --ficha-ancho:calc(min(calc(var(--base-moneda,47) * var(--u) * var(--escala-monedas,1)),var(--tope-moneda,100vw)) * var(--diametro-moneda));
+  --ficha-ancho:calc(min(calc(var(--base-moneda,47px) * var(--escala-monedas,1)),var(--tope-moneda,100vw)) * var(--diametro-moneda));
   --ficha-alto:var(--ficha-ancho);
 }
 .billete {
-  --ficha-alto:min(calc(var(--base-billete,48) * var(--u) * var(--escala-billetes,1)),var(--tope-billete,100vw));
+  --ficha-alto:min(calc(var(--base-billete,48px) * var(--escala-billetes,1)),var(--tope-billete,100vw));
   --ficha-ancho:calc(var(--ficha-alto) * var(--largo-billete) / 67);
 }
 .banco { background:#edf8f0; border:1px solid #c9e2d6; border-radius:calc(13 * var(--u)); padding:calc(5 * var(--u)); }
 .banco h3,.zona-dinero h3,.sobre h3,.cesta h3 { font-size:calc(15 * var(--u)); }
 .banco h3 { text-align:center; margin-bottom:calc(4 * var(--u)); }
 #banco { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:calc(5 * var(--u)); }
-.origen-dinero,.pieza-colocada { display:grid; padding:0; border:0; background:none; border-radius:calc(8 * var(--u)); }
+.origen-dinero,.pieza-colocada { display:grid; flex:none; padding:0; border:0; background:none; border-radius:calc(8 * var(--u)); }
 .origen-dinero,.producto { touch-action:none; cursor:grab; user-select:none; }
 .origen-dinero:active,.producto:active { cursor:grabbing }
 .pieza-colocada { position:relative; }
 button.pieza-colocada:has(.moneda) { min-width:calc(29 * var(--u)); min-height:calc(29 * var(--u)); place-items:center; }
 .piezas-pago { gap:calc(5 * var(--u)); }
-.piezas-pago .moneda { --base-moneda:38; }
-.piezas-pago .billete { --base-billete:38; }
-.piezas-pago:has(>:nth-child(7)) .moneda { --base-moneda:31; }
-.piezas-pago:has(>:nth-child(7)) .billete { --base-billete:31; }
 .pila-billetes {
   --borde-pila:calc(6 * var(--u));
   display:grid; padding-bottom:calc(var(--cantidad-pila) * var(--borde-pila));
@@ -201,8 +210,6 @@ button.pieza-colocada:has(.moneda) { min-width:calc(29 * var(--u)); min-height:c
 .recibo ul { list-style:none; margin:0; padding:0; display:grid; gap:calc(2 * var(--u)); }
 .recibo li { display:grid; align-items:center; grid-template-columns:auto minmax(0,1fr) auto; gap:calc(6 * var(--u)); }
 .pago-cliente { display:flex; justify-content:center; flex-wrap:wrap; gap:calc(4 * var(--u)); padding-bottom:calc(3 * var(--u)); }
-.pago-cliente .moneda { --base-moneda:30; }
-.pago-cliente .billete { --base-billete:30; }
 .respuesta { justify-self:center; width:min(100%,calc(380 * var(--u))); display:grid; justify-items:center; gap:calc(4 * var(--u)); font-weight:800 }
 .monto {
   display:flex; align-items:center; width:min(100%,calc(170 * var(--u))); background:#eff8f5; border:2px solid #769f95;
@@ -233,17 +240,17 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
 .opciones-dinero { display:grid; grid-template-columns:repeat(auto-fit,minmax(90px,1fr)); gap:4px; }
 .opciones-dinero label { container-type:inline-size; display:grid; justify-items:center; gap:3px; padding:3px; border-radius:8px; background:#f5f8f0; cursor:pointer; }
 .opciones-dinero input,.casilla input { width:19px; height:19px; accent-color:var(--teal); }
-.opciones-dinero .billete { --base-billete:38; --tope-billete:calc(100cqi * 67 / 153); }
-.opciones-dinero .moneda { --base-moneda:42; --tope-moneda:100cqi; }
+.opciones-dinero .billete { --base-billete:38px; --tope-billete:calc(100cqi * 67 / 153); }
+.opciones-dinero .moneda { --base-moneda:42px; --tope-moneda:100cqi; }
 .ajustes-escala { display:grid; gap:7px; }
 .control-escala { display:flex; align-items:center; gap:9px; }
 .control-escala input { flex:1; min-width:0; accent-color:var(--teal); }
 .control-escala output { width:4em; text-align:right; font-variant-numeric:tabular-nums; }
 .muestra-escala { container-type:inline-size; display:flex; align-items:center; justify-content:center; gap:8px; min-height:62px; }
 #muestraBilletes { flex-wrap:wrap; }
-#muestraBilletes .billete { --base-billete:42; --tope-billete:calc(100cqi * 67 / 153); }
+#muestraBilletes .billete { --base-billete:42px; --tope-billete:calc(100cqi * 67 / 153); }
 #muestraMonedas { min-height:102px; }
-#muestraMonedas .moneda { --base-moneda:40; --tope-moneda:calc((100cqi - 8px)/2); }
+#muestraMonedas .moneda { --base-moneda:40px; --tope-moneda:calc((100cqi - 8px)/2); }
 #banco button:has(.moneda) { min-width:calc(38 * var(--u)); min-height:calc(38 * var(--u)); place-items:center; }
 .casilla { display:flex; align-items:center; gap:6px; }
 .casilla input { flex:none; }
@@ -267,12 +274,6 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
   .reto p { font-size:calc(14 * var(--u)); }
   .producto .foto-producto { width:min(100%,calc(58 * var(--u))); }
   .estante { grid-template-columns:repeat(3,minmax(0,1fr)); }
-  #banco .billete { --base-billete:37; }
-  #banco:has(>:nth-child(6)) { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); }
-  #banco:has(>:nth-child(6)) .origen-dinero { container-type:inline-size; width:100%; justify-items:center; }
-  #banco:has(>:nth-child(6)) .billete { --tope-billete:calc(100cqi * 67 / 153); }
-  #banco .moneda { --base-moneda:36; }
-  #banco:has(>:nth-child(6)) .moneda { --tope-moneda:100cqi; }
   .recibo .foto-producto { width:calc(19 * var(--u)); }
   .recibo ul { gap:calc(1 * var(--u)); }
   .recibo li { font-size:calc(13 * var(--u)); }
@@ -291,18 +292,10 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
   .reto p,.guia p { font-size:calc(13 * var(--u)); }
   .juego { padding:calc(5 * var(--u)); }
   .producto .foto-producto { width:calc(42 * var(--u)); }
-  #appColones { --base-moneda:42; }
-  #appColones { --base-billete:38; }
   .dinero-en-sobre { padding-block:calc(2 * var(--u)); gap:calc(4 * var(--u)); }
   .banco { padding:calc(4 * var(--u)); }
   .banco h3 { font-size:calc(13 * var(--u)); margin-bottom:calc(3 * var(--u)); }
-  .banco .moneda { --base-moneda:38; }
   #banco { column-gap:calc(3 * var(--u)); }
-  #banco:has(>:nth-child(6)) { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); justify-items:center; }
-  #banco:has(>:nth-child(6)) .origen-dinero { container-type:inline-size; width:100%; justify-items:center; }
-  #banco:has(>:nth-child(6)) .billete { --tope-billete:calc(100cqi * 67 / 153); }
-  #banco:has(>:nth-child(6)) .moneda { --tope-moneda:100cqi; }
-  #banco > button { max-width:100%; }
   .recibo .foto-producto { width:calc(22 * var(--u)); }
   .escena[data-fase=dar] .recibo ul { grid-template-columns:repeat(auto-fit,minmax(calc(72 * var(--u)),1fr)); gap:calc(4 * var(--u)); }
   .escena[data-fase=dar] .recibo li { grid-template-columns:auto minmax(0,1fr); font-size:calc(12 * var(--u)); gap:calc(2 * var(--u)); }
@@ -338,7 +331,7 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
 .abriendo .mesa-libre .dinero { animation:caerEnMesa .44s ease-out both; animation-delay:calc(.24s + var(--turno)*.07s); }
 @keyframes abrirSolapa { from {transform:rotateX(0)} to {transform:rotateX(160deg)} }
 @keyframes caerEnMesa {
-  from { opacity:0; transform:translate(var(--desde-x),var(--desde-y)) rotate(-8deg) scale(.52); }
+  from { opacity:0; transform:translate(var(--desde-x),var(--desde-y)) rotate(-8deg); }
   65% { opacity:1; }
   to { opacity:1; transform:none; }
 }
@@ -368,10 +361,6 @@ button.ficha-mesa { cursor:grab; }
 .ficha-mesa[aria-pressed=true] { outline:2px solid #864921; }
 .ficha-mesa.moviendo-ficha { opacity:.22; }
 .ficha-mesa .dinero { filter:drop-shadow(0 calc(2 * var(--u)) calc(1 * var(--u)) #5f391f66); }
-.ficha-mesa .billete { --tope-billete:min(calc((100cqi - 26 * var(--u)) * 67 / 459),calc(36 * var(--u))); }
-.ficha-mesa .moneda {
-  --base-moneda:37; --tope-moneda:min(calc((var(--altura-mesa) - 28 * var(--u))/3),calc((100cqi - 26 * var(--u))/3));
-}
 .contador-caja { border:calc(3 * var(--u)) solid #064b4e; border-radius:calc(18 * var(--u)); padding:calc(8 * var(--u)); background:linear-gradient(#3fafaa,#147977); }
 .pantalla-contador { display:grid; gap:calc(3 * var(--u)); padding:calc(4 * var(--u)); border-radius:calc(9 * var(--u)); background:#09373b; color:#defcbb; }
 .pantalla-contador .dato-total { background:transparent; color:inherit; }
@@ -691,8 +680,6 @@ button.ficha-mesa { cursor:grab; }
 .bandeja-caja h3 { font-size:calc(14 * var(--u)); }
 .bandeja-caja .piezas-colocadas { min-height:calc(28 * var(--u)); }
 .bandeja-caja .piezas-colocadas > span:not(.pieza-colocada) { font-size:calc(13 * var(--u)); text-align:center; }
-.bandeja-caja .moneda { --tope-moneda:calc(61 * var(--u)); }
-.bandeja-caja .billete { --tope-billete:calc(41 * var(--u)); }
 .bandeja-caja.sobre-destino { outline-color:#207c58; background:#d8f4d6; }
 .respuesta-vuelto { margin:0; }
 .respuesta-vuelto button { min-height:calc(38 * var(--u)); padding-inline:calc(4 * var(--u)); }
@@ -713,22 +700,14 @@ button.ficha-mesa { cursor:grab; }
   border:2px solid #713e25; border-radius:calc(13 * var(--u)); box-shadow:inset 0 0 0 1px #e8ae72;
 }
 .cartera-compra #banco {
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,calc(55 * var(--u))),1fr));
   gap:calc(3 * var(--u)); padding:calc(3 * var(--u)); border:1px dashed #dcac78; border-radius:calc(7 * var(--u)); background:#f3dfba;
 }
 .cartera-compra #banco .origen-dinero {
-  position:relative; width:100%; min-width:0; min-height:calc(39 * var(--u)); container-type:inline-size; place-items:center;
+  position:relative; min-height:calc(39 * var(--u)); place-items:center;
   background:#fff7e2; border-radius:calc(5 * var(--u));
 }
 .cartera-compra .origen-dinero:disabled { cursor:default; opacity:.45; }
-.cartera-compra #banco .billete { --tope-billete:min(calc(100cqi * 67 / 153),calc(42 * var(--u))); }
-.cartera-compra #banco .moneda { --tope-moneda:min(100cqi,calc(42 * var(--u))); }
 .cartera-compra .cantidad-piezas { top:auto; bottom:0; right:0; }
-@media (min-height:701px) {
-  .bandeja-caja { container-type:inline-size; }
-  .bandeja-caja .billete { --tope-billete:min(calc(var(--altura-caja)*.30),calc((100cqi - 5 * var(--u)) * 67 / 306)); }
-  .cartera-compra #banco:not(:has(>:nth-child(6))) .billete { --tope-billete:calc(100cqi * 67 / 153); }
-}
 @media (orientation:landscape) {
   .escena:has(.compra-en-caja):has(>.banco:not([hidden]),>.respuesta:not([hidden])) {
     grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);
@@ -740,22 +719,23 @@ button.ficha-mesa { cursor:grab; }
   #appColones:has(.compra-en-caja) .herramientas { max-height:calc(130 * var(--u)); }
   .compra-en-caja:has(.bandeja-caja) { --altura-caja:clamp(calc(98 * var(--u)),calc(var(--alto,100dvh)*.19),calc(148 * var(--u))); }
   .bandeja-caja .piezas-colocadas { min-height:calc(22 * var(--u)); padding-block:calc(2 * var(--u)); }
-  .cartera-compra #banco { grid-template-columns:repeat(auto-fit,minmax(min(100%,calc(42 * var(--u))),1fr)); }
+}
+@media (orientation:portrait) and (min-height:701px) and (max-width:520px) {
+  .escena:has(.cartera-compra:not([hidden]) #banco>:nth-child(8)) .compra-en-caja {
+    --altura-caja:calc(var(--alto,100dvh)*.20);
+  }
 }
 @media (orientation:landscape) and (max-height:370px) {
-  .escena:has(.compra-en-caja):has(>.banco:not([hidden]),>.respuesta:not([hidden])) { grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); }
+  .escena:has(.compra-en-caja):has(>.banco:not([hidden])) { grid-template-columns:minmax(0,1.25fr) minmax(0,1fr); }
+  .escena:has(.compra-en-caja):has(>.respuesta:not([hidden])) { grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); }
   .compra-en-caja:has(.bandeja-caja) { --altura-caja:clamp(calc(82 * var(--u)),calc(var(--alto,100dvh)*.30),calc(120 * var(--u))); }
   .bandeja-caja header { font-size:calc(12 * var(--u)); }
   .bandeja-caja h3 { font-size:calc(13 * var(--u)); }
   .bandeja-caja .piezas-colocadas { min-height:calc(24 * var(--u)); padding-block:calc(2 * var(--u)); }
-  .bandeja-caja .moneda { --tope-moneda:calc(35 * var(--u)); }
-  .cartera-compra #banco { grid-template-columns:repeat(auto-fit,minmax(min(100%,calc(35 * var(--u))),1fr)); }
 }
 @media (max-height:700px) and (orientation:portrait),(max-height:370px) and (orientation:landscape) {
   .banco.cartera-compra { padding:calc(3 * var(--u)); }
   .cartera-compra h3 { margin-bottom:calc(2 * var(--u)); line-height:1.14; }
   .cartera-compra #banco { padding:calc(2 * var(--u)); }
-  .cartera-compra #banco .origen-dinero { min-height:calc(31 * var(--u)); }
-  .cartera-compra #banco .moneda { --tope-moneda:min(100cqi,calc(31 * var(--u))); }
-  .cartera-compra #banco .billete { --tope-billete:min(calc(100cqi * 67 / 153),calc(31 * var(--u))); }
+  .cartera-compra #banco .origen-dinero { min-width:calc(34 * var(--u)); min-height:calc(31 * var(--u)); }
 }

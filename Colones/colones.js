@@ -829,15 +829,15 @@
       x:punto.x+(Math.random()-.5)*.10,y:punto.y+(Math.random()-.5)*.13
     }:punto);
   }
+  const margenMesa=3, separacionMesa=5;
   function posicionLibre(punto,ficha,ocupadas,ancho,alto) {
-    const margen=3, separacion=5;
-    const minX=ficha.ancho/2+margen,maxX=ancho-minX;
-    const minY=ficha.alto/2+margen,maxY=alto-minY;
+    const minX=ficha.ancho/2+margenMesa,maxX=ancho-minX;
+    const minY=ficha.alto/2+margenMesa,maxY=alto-minY;
     const limitar=(valor,min,max)=>Math.min(max,Math.max(min,valor));
     const xOpciones=[punto.x,minX,maxX],yOpciones=[punto.y,minY,maxY];
     for(const otra of ocupadas){
-      const dx=(otra.ancho+ficha.ancho)/2+separacion;
-      const dy=(otra.alto+ficha.alto)/2+separacion;
+      const dx=(otra.ancho+ficha.ancho)/2+separacionMesa;
+      const dy=(otra.alto+ficha.alto)/2+separacionMesa;
       xOpciones.push(otra.x-dx,otra.x+dx);
       yOpciones.push(otra.y-dy,otra.y+dy);
     }
@@ -846,7 +846,7 @@
       const x=limitar(candidatoX,minX,maxX),y=limitar(candidatoY,minY,maxY);
       const distancia2=(x-punto.x)**2+(y-punto.y)**2;
       if(distancia2>=distancia)continue;
-      if(ocupadas.some(otra=>Math.abs(x-otra.x)<(otra.ancho+ficha.ancho)/2+separacion-.01&&Math.abs(y-otra.y)<(otra.alto+ficha.alto)/2+separacion-.01))continue;
+      if(ocupadas.some(otra=>Math.abs(x-otra.x)<(otra.ancho+ficha.ancho)/2+separacionMesa-.01&&Math.abs(y-otra.y)<(otra.alto+ficha.alto)/2+separacionMesa-.01))continue;
       mejor={x,y};
       distancia=distancia2;
     }
@@ -855,6 +855,7 @@
   function distribuirMesa(movida=-1,destino=null) {
     const superficie=contenido.querySelector('.mesa-libre');
     if(!superficie)return;
+    if(movida<0)superficie.style.minHeight='';
     const rect=superficie.getBoundingClientRect();
     if(!rect.width||!rect.height)return;
     const fichas=[...superficie.children].map((nodo,i)=>{
@@ -871,14 +872,32 @@
       const lugar=posicionLibre(preferida,ficha,ocupadas,ancho,alto)||
         posicionLibre({x:p.x*ancho,y:p.y*alto},ficha,ocupadas,ancho,alto);
       if(!lugar){
-        posicionesMesa=posicionesIniciales(false);
-        dibujarMesa(fichas,rect);
+        if(movida<0)distribuirMesaEnFilas(superficie,fichas,rect);
         return;
       }
       ocupadas.push({...ficha,...lugar});
     }
     for(const p of ocupadas)posicionesMesa[p.i]={x:p.x/ancho,y:p.y/alto};
     dibujarMesa(fichas,rect);
+  }
+  function distribuirMesaEnFilas(superficie,fichas,rect) {
+    const centros=[];
+    let x=margenMesa,y=margenMesa,altoFila=0;
+    for(const ficha of fichas){
+      if(altoFila&&x+ficha.ancho>rect.width-margenMesa){
+        x=margenMesa;
+        y+=altoFila+separacionMesa;
+        altoFila=0;
+      }
+      centros[ficha.i]={x:x+ficha.ancho/2,y:y+ficha.alto/2};
+      x+=ficha.ancho+separacionMesa;
+      altoFila=Math.max(altoFila,ficha.alto);
+    }
+    const altoNecesario=y+altoFila+margenMesa;
+    if(altoNecesario>rect.height)superficie.style.minHeight=altoNecesario/Matematicas.escala()+'px';
+    const destino=superficie.getBoundingClientRect();
+    posicionesMesa=centros.map(p=>({x:p.x/destino.width,y:p.y/destino.height}));
+    dibujarMesa(fichas,destino);
   }
   function dibujarMesa(fichas,rect) {
     const sobreAbierto=contenido.querySelector('.sobre-mini').getBoundingClientRect();
@@ -1145,6 +1164,7 @@
     for(const {clase,preferencia} of controlesTamano){
       document.documentElement.style.setProperty('--escala-'+clase,opciones[preferencia]/100);
     }
+    app.toggleAttribute('data-muchos-billetes',opciones.activas.filter(valor=>largosBillete[valor]).length>=4);
   }
   function rotularAjustes() {
     $('denominaciones').innerHTML=valores.map(valor=>`<label><input type="checkbox" value="${valor}" aria-label="${etiquetaDinero(valor)}" ${opciones.activas.includes(valor)?'checked':''}>${pieza(valor)}</label>`).join('');
