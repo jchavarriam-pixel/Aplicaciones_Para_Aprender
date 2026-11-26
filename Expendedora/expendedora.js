@@ -3,6 +3,8 @@
 
   Object.assign(window.TEXTOS_INGLES, {
     'Máquina expendedora':'Vending machine',
+    'Máquina expendedora · Dinero Lab':'Vending machine · Money Lab',
+    'Volver a Dinero Lab':'Back to Money Lab',
     'Simulación de compra':'Shopping simulation',
     'Elige un producto.':'Choose a product.',
     'Introduce el dinero.':'Insert your money.',

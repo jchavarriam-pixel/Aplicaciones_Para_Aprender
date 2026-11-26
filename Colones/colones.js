@@ -3,6 +3,7 @@
   const $ = id => document.getElementById(id);
   const app = $('appColones'), escena = $('escena');
   const contenido = $('contenido'), banco = $('banco'), monto = $('monto');
+  const resultadoSobre = $('resultadoSobre');
   const clave = 'colones.practica.v1';
   const valores = [10,25,50,100,500,1000,2000,5000,10000,20000];
   const largosBillete = {1000:125,2000:132,5000:139,10000:146,20000:153};
@@ -16,7 +17,9 @@
     exacto:{nombre:'Compra exacta',guia:'Elige un producto y paga su precio exacto en la caja.'},
     compra:{nombre:'Compra con vuelto',guia:'Compra un producto y revisa el vuelto cuando haga falta.'},
     carrito:{nombre:'Carrito de compras',guia:'Compra dos o tres productos y revisa el vuelto cuando haga falta.'},
-    cajero:{nombre:'Soy el cajero',guia:'Pasa los productos, recibe el pago y entrega el vuelto.'}
+    cajero:{nombre:'Soy el cajero',guia:'Pasa los productos, recibe el pago y entrega el vuelto.'},
+    expendedora:{nombre:'Máquina expendedora',guia:'Elige una bebida o merienda, paga en colones y recoge tu compra y el vuelto.',
+      enlace:'../Expendedora/expendedora.html',imagen:'../Expendedora/imagenes/expendedora.png'}
   };
   const productos = ['Manzana','Pan','Leche','Jugo','Cuaderno','Lápiz','Bananas','Pelota','Mochila'];
   const imagenesProductos = ['manzana','pan','leche','jugo','cuaderno','lapiz','bananas','pelota','mochila'];
@@ -134,6 +137,7 @@
   }
   function nuevaRonda() {
     if(!modo)return;
+    resultadoSobre.close();
     limpiarArrastre();
     detenerDeslizamiento();
     cancelarContador();
@@ -207,12 +211,16 @@
     actualizarCarteraCompra();
   }
   function mostrarModos() {
-    $('modos').innerHTML=Object.entries(modos).map(([id,{nombre,guia}],i) =>
-      `<button type="button" class="tarjeta" data-modo="${id}" aria-labelledby="modo-${id}" aria-describedby="guia-${id}">
-        <span class="arte-modo" style="--col:${i%4};--fila:${Math.floor(i/4)}" aria-hidden="true"></span>
+    $('modos').innerHTML=Object.entries(modos).map(([id,{nombre,guia,enlace,imagen}],i)=>{
+      const control=enlace?'a':'button';
+      const destino=enlace?`href="${enlace}"`:`type="button" data-modo="${id}"`;
+      const arte=imagen?`<img class="arte-modo arte-modo-individual" src="${imagen}" alt="">`:
+        `<span class="arte-modo" style="--col:${i%4};--fila:${Math.floor(i/4)}" aria-hidden="true"></span>`;
+      return `<${control} class="tarjeta" ${destino} aria-labelledby="modo-${id}" aria-describedby="guia-${id}">
+        ${arte}
         <span class="texto-modo"><strong id="modo-${id}">${t(nombre)}</strong><span id="guia-${id}" class="detalle-modo">${t(guia)}</span></span>
-      </button>`
-    ).join('');
+      </${control}>`;
+    }).join('');
   }
   function producto(item) {
     return `<img class="foto-producto" src="imagenes/productos/${imagenesProductos[item.id]}.png" alt="" draggable="false">`;
@@ -227,7 +235,7 @@
   }
   function verMesa() {
     const cerrado=fase==='cerrado';
-    const editable=fase==='contar';
+    const editable=fase==='contar'||fase==='listo';
     const ocupado=Boolean(aperturaSobre);
     const fichas=mesa.map((valor,i)=>{
       const interior=pieza(valor);
@@ -246,7 +254,6 @@
         <button class="sobre-mesa" type="button" id="abrirSobre" ${cerrado?'':'disabled aria-hidden="true"'}>${envoltura()}<span class="rotulo-sobre">${t('Abrir sobre')}</span></button>
         ${fichas}
       </div></div>
-      ${fase==='listo'?etiquetaTotal('Monto del sobre',sumar(sobre)):''}
       </section>`;
   }
   function efectivoSobre() {
@@ -994,14 +1001,15 @@
     $('bancoPanel').classList.toggle('cartera-compra',fase==='pagar');
     $('bancoTitulo').textContent=t(fase==='pagar'?'Tu cartera':fase==='dar'?'Caja registradora':'Banco de dinero');
     if(fasesDinero.has(fase))mostrarBanco();
-    $('respuesta').hidden=!fasesNumericas.has(fase);
-    $('respuesta').inert=Boolean(aperturaSobre);
+    const sobreRevisado=modo==='contar'&&fase==='listo';
+    $('respuesta').hidden=!(sobreRevisado||fasesNumericas.has(fase));
+    $('respuesta').inert=Boolean(aperturaSobre)||sobreRevisado;
     escena.dataset.fase=fase;
     actualizarContenido();
     $('accion').hidden=['cerrado','decidir','elegir','cobro-productos','entregando','vuelto'].includes(fase);
     $('accion').disabled=Boolean(aperturaSobre)||esperandoContador();
     $('accion').textContent=t(({medir:varianteContador==='explorar'?'Vaciar contador':'Revisar',
-      escanear:'Cobrar',recibir:'Registrar pago',pagar:'Pagar',dar:'Dar vuelto',listo:'Siguiente ronda'})[fase]||'Revisar');
+      escanear:'Cobrar',recibir:'Registrar pago',pagar:'Pagar',dar:'Dar vuelto',listo:sobreRevisado?'Revisar':'Siguiente ronda'})[fase]||'Revisar');
   }
   function anunciar(texto='',correcto=false) {
     const mensaje=t(texto);
@@ -1028,6 +1036,28 @@
     const mensaje=nombre?idioma(`¡Muy bien, ${nombre}!`,`Well done, ${nombre}!`):t('¡Lo lograste!');
     anunciar(mensaje,true);
     $('accion').focus({preventScroll:true});
+  }
+  function fraseResultadoSobre() {
+    const total=formato(sumar(sobre));
+    return idioma(`En el sobre había ${total}.`,`The envelope held ${total}.`);
+  }
+  function mostrarResultadoSobre() {
+    const nombre=window.NombreCompartido?.obtener();
+    const titulo=nombre?idioma(`¡Muy bien, ${nombre}!`,`Well done, ${nombre}!`):t('¡Lo lograste!');
+    $('tituloResultadoSobre').textContent=titulo;
+    $('montoResultadoSobre').textContent=formato(sumar(sobre));
+    resultadoSobre.showModal();
+    if(opciones.narracion)leer(titulo+' '+fraseResultadoSobre());
+  }
+  function completarSobre() {
+    detenerDeslizamiento();
+    limpiarArrastre();
+    fase='listo';
+    escena.dataset.fase=fase;
+    $('respuesta').inert=true;
+    $('instruccion').textContent=instruccion();
+    anunciar();
+    mostrarResultadoSobre();
   }
   function llegarCaja() {
     if(fase!=='elegir'||llegadaCaja)return;
@@ -1064,7 +1094,7 @@
   }
   function revisar() {
     if(aperturaSobre)return;
-    if(fase==='listo') return nuevaRonda();
+    if(fase==='listo') return modo==='contar'?mostrarResultadoSobre():nuevaRonda();
     if(fase==='medir'){
       if(varianteContador==='explorar')return nuevaRonda();
       if(esperandoContador())return;
@@ -1088,7 +1118,7 @@
       if(!monto.value)return anunciar('Escribe un monto con el teclado.');
       const meta=fase==='contar'?sumar(sobre):aCambio();
       if(Number(monto.value)!==meta)return anunciar(fase==='contar'?'Cuenta el dinero otra vez.':'Resta el precio total al dinero que pagaste.');
-      return completar();
+      return fase==='contar'?completarSobre():completar();
     }
     const total=sumar(piezas);
     const meta=({llenar:()=>sumar(sobre),dar:aCambio,pagar:precio})[fase]();
@@ -1288,7 +1318,7 @@
     aperturaSobre.temporizador=setTimeout(terminarAperturaSobre,Math.max(0,duracion-(performance.now()-aperturaSobre.inicio)));
   }
   function moverEnMesa(origen,x,y,impulso) {
-    if(fase!=='contar'||aperturaSobre||!mesa[origen])return;
+    if(!['contar','listo'].includes(fase)||aperturaSobre||!mesa[origen])return;
     fichaElegida=null;
     contenido.querySelector('[data-ficha-mesa][aria-pressed=true]')?.setAttribute('aria-pressed','false');
     const nodo=contenido.querySelector(`[data-ficha-mesa="${origen}"]`);
@@ -1609,6 +1639,7 @@
     else moverEfectivo(superficie,ficha,x,y);
   });
   function mostrarModo(vista) {
+    resultadoSobre.close();
     limpiarArrastre();
     detenerDeslizamiento();
     cancelarContador();
@@ -1623,7 +1654,7 @@
     $('guiaModo').textContent=t(vista?modos[vista].guia:'Elige una actividad para practicar con monedas y billetes de Costa Rica.');
     if(vista)nuevaRonda();
   }
-  const historial=HistorialModos.crear(Object.keys(modos),mostrarModo);
+  const historial=HistorialModos.crear(Object.keys(modos).filter(id=>!modos[id].enlace),mostrarModo);
   $('modos').addEventListener('click',evento=>{
     const tarjeta=evento.target.closest('[data-modo]');
     if(tarjeta)historial.ir(tarjeta.dataset.modo);
@@ -1632,6 +1663,16 @@
   $('nueva').onclick=nuevaRonda;
   $('accion').onclick=revisar;
   $('escuchar').onclick=()=>leer();
+  $('iconoResultadoSobre').innerHTML=envoltura()+'<span class="marca-resultado-sobre">✓</span>';
+  $('cerrarResultadoSobre').onclick=()=>resultadoSobre.close();
+  $('leerResultadoSobre').onclick=()=>leer(fraseResultadoSobre());
+  $('seguirResultadoSobre').onclick=()=>{
+    nuevaRonda();
+    $('abrirSobre').focus({preventScroll:true});
+  };
+  resultadoSobre.addEventListener('close',()=>{
+    if(modo==='contar'&&fase==='listo')$('accion').focus({preventScroll:true});
+  });
   for(const [id,variante] of [['explorarContador','explorar'],['retoContador','reto']]){
     $(id).onclick=()=>{
       if(varianteContador===variante||modo!=='contador')return;

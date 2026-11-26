@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Máquina expendedora</title>
+  <title>Máquina expendedora · Dinero Lab</title>
   <link rel="icon" href="imagenes/expendedora.png" type="image/png">
   <link rel="stylesheet" href="../creditos.css">
   <link rel="stylesheet" href="../idioma-voz.css">
@@ -15,7 +15,7 @@
   <main id="appExpendedora">
     <aside class="herramientas">
       <header class="cabecera">
-        <a class="casa" href="../index.html" aria-label="Todas las aplicaciones" title="Todas las aplicaciones">⌂</a>
+        <a class="casa" href="../Colones/colones.html" aria-label="Volver a Dinero Lab" title="Volver a Dinero Lab">⌂</a>
         <h1><img src="imagenes/expendedora.png" alt="" width="46" height="46">Máquina expendedora</h1>
         <label for="nombre">Nombre del estudiante</label>
         <input id="nombre" autocomplete="given-name" maxlength="40">
@@ -91,13 +91,21 @@
     <div class="creditos-dedicatoria"><span class="creditos-gabriel">Creado para <strong>Gabriel</strong></span><span class="creditos-familia">Por su familia, con ayuda de la IA.</span></div>
     <div class="creditos-equipo"><span class="creditos-autores">M.Sc. Jeffry Chavarría-Molina y M.Sc. Natalia Rodríguez-Granados</span><span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span></div>
   </footer>
-  <script>window.IDIOMA_VOZ_APP = 'expendedora';</script>
+  <script>
+    window.IDIOMA_VOZ_APP = 'colones';
+    try {
+      const vozAnterior = localStorage.getItem('idiomaVoz.expendedora.v1');
+      if (vozAnterior && !localStorage.getItem('idiomaVoz.colones.v1')) {
+        localStorage.setItem('idiomaVoz.colones.v1', vozAnterior);
+      }
+    } catch {}
+  </script>
   <script src="../idioma-voz-textos.js"></script>
   <script src="../idioma-voz.js"></script>
   <script src="../matematicas-base.js"></script>
   <script src="../nombre-compartido.js"></script>
   <script src="../pantalla-completa.js"></script>
   <script src="../panel-plegable.js?v=expendedora"></script>
-  <script src="expendedora.js"></script>
+  <script src="expendedora.js?v=dinero-lab"></script>
 </body>
 </html>

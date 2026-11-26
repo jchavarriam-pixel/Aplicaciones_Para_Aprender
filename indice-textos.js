@@ -44,8 +44,6 @@ Object.assign(window.TEXTOS_INGLES||={}, {
  'Dinero Lab':'Money Lab',
  'Dinero y compras':'Money and shopping',
  'Filtrar por tema':'Filter by topic','Marca los temas que quieres ver.':'Select the topics you want to see.','Aplicar filtros':'Apply filters','Cancelar':'Cancel',
- 'Máquina expendedora':'Vending machine',
- 'Elige una bebida o merienda, paga en colones y recoge tu compra y el vuelto.':'Choose a drink or snack, pay in colones, and collect your purchase and change.',
  'Cuenta colones, averigua si te alcanza para comprar y practica cómo cobrar y dar vuelto.':'Count colones, check what you can afford, and practise taking payments and giving change.',
  'Práctica de sumas, restas y valor posicional en formato UM | C | D | U.':'Practise addition, subtraction and place value with thousands, hundreds, tens and units.',
  'Situaciones problema animadas para plantear y resolver sumas y restas paso a paso.':'Animated word problems to set up and solve addition and subtraction step by step.',
