@@ -44,6 +44,7 @@
   let audioEfectos, aireTolva;
   let arrastre = null, ignorarClic = false;
   let mesa, posicionesMesa, fichaElegida, aperturaSobre, cartera, mercanciaCliente, recibidos;
+  let posicionesEfectivo=[], posicionesCliente=[], cuadroDeslizamiento=0;
   const tiemposSobre={abrir:560,pausa:160,salir:520,intervalo:90};
   let avancePasillo=0, animacionPasillo=0, empuje=null, llegadaCaja=null;
   const velocidadInicialPasillo=1.25;
@@ -134,6 +135,7 @@
   function nuevaRonda() {
     if(!modo)return;
     limpiarArrastre();
+    detenerDeslizamiento();
     cancelarContador();
     cerrarCompraCaja();
     cancelarAperturaSobre();
@@ -143,6 +145,8 @@
     avancePasillo=0;
     velocidadPasillo=velocidadInicialPasillo;
     piezas=[];
+    posicionesEfectivo=[];
+    posicionesCliente=[];
     sobre=formar(modo==='contar'?entero(3,7):entero(2,5));
     mesa=[...sobre];
     posicionesMesa=posicionesIniciales();
@@ -227,7 +231,7 @@
     const ocupado=Boolean(aperturaSobre);
     const fichas=mesa.map((valor,i)=>{
       const interior=pieza(valor);
-      const marca=`class="ficha-mesa" data-ficha-mesa="${i}" style="--turno:${i}" aria-label="${etiquetaDinero(valor)}"`;
+      const marca=`class="ficha-mesa" data-ficha-mesa="${i}" style="--turno:${i}" aria-label="${etiquetaDinero(valor)}" ${cerrado||ocupado?'aria-hidden="true"':''}`;
       return editable
         ? `<button type="button" ${marca} aria-pressed="${fichaElegida===i}" ${ocupado?'disabled':''}>${interior}</button>`
         : `<span ${marca} role="img">${interior}</span>`;
@@ -235,13 +239,13 @@
     const {abrir,pausa,salir,intervalo}=tiemposSobre;
     const animacion=ocupado?`data-apertura style="--tiempo-solapa:${abrir}ms;--inicio-vaciado:${abrir+pausa}ms;--tiempo-salida:${salir}ms;--intervalo-salida:${intervalo}ms;--tiempo-vaciado:${salir+(mesa.length-1)*intervalo}ms;--transcurrido:${performance.now()-aperturaSobre.inicio}ms"`:'';
     return `<section class="tablero-mesa" data-sobre="${cerrado?'cerrado':'abierto'}" ${animacion}>
-      <header>
-        <button class="sobre-mesa" type="button" id="abrirSobre" ${cerrado?'':'disabled aria-hidden="true"'}>${envoltura()}<span class="rotulo-sobre">${t('Abrir sobre')}</span></button>
-        <div class="controles-mesa"><h3>${t('Dinero sobre la mesa')}</h3>
+      <header class="controles-mesa"><h3>${t('Dinero sobre la mesa')}</h3>
           ${cerrado||editable?`<button type="button" id="ordenarMesa" ${cerrado||ocupado?'disabled':''}>${t('Agrupar por valor')}</button>`:''}
-        </div>
       </header>
-      <div class="mesa-libre" role="group" aria-label="${t('Dinero sobre la mesa')}" ${cerrado||ocupado?'aria-hidden="true"':''}>${fichas}</div>
+      <div class="mesa-desplazable"><div class="mesa-libre" data-superficie-efectivo role="group" aria-label="${t('Dinero sobre la mesa')}">
+        <button class="sobre-mesa" type="button" id="abrirSobre" ${cerrado?'':'disabled aria-hidden="true"'}>${envoltura()}<span class="rotulo-sobre">${t('Abrir sobre')}</span></button>
+        ${fichas}
+      </div></div>
       ${fase==='listo'?etiquetaTotal('Monto del sobre',sumar(sobre)):''}
       </section>`;
   }
@@ -253,26 +257,31 @@
     return `<section class="preparar-sobre">
       <div class="montos-preparar">
         ${etiquetaTotal('Monto pedido',sumar(sobre))}
-        ${opciones.ayudas||!editable?`<div id="saldoSobre" aria-live="polite" aria-atomic="true">${etiquetaTotal('Ya guardaste',sumar(piezas))}</div>`:''}
+        ${opciones.ayudas||!editable?`<div id="saldoSobre" aria-live="polite" aria-atomic="true">${etiquetaTotal('Preparaste',sumar(piezas))}</div>`:''}
       </div>
-      <section id="destinoDinero" class="sobre-preparar" aria-labelledby="tituloInteriorSobre">
-        <header class="entrada-sobre">
-          <h3 id="tituloInteriorSobre">${t('Dinero en el sobre')}</h3><span aria-hidden="true">${editable?'↓':'✓'}</span>
-        </header>
-        <div class="interior-sobre" id="interiorSobre">${efectivoSobre()}</div>
-        <footer class="frente-preparar"><span aria-hidden="true">₡</span>
-          ${editable?`<small>${t('Toca una pieza del sobre para sacarla.')}</small>`:''}
-        </footer>
+      <section id="destinoDinero" class="tablero-mesa tablero-preparar" data-sobre="abierto" aria-labelledby="tituloInteriorSobre">
+        <header class="controles-mesa"><h3 id="tituloInteriorSobre">${t('Dinero para el sobre')}</h3></header>
+        <div class="mesa-desplazable"><div class="mesa-libre interior-sobre" id="interiorSobre" data-superficie-efectivo>
+          <span class="sobre-mesa" aria-hidden="true">${envoltura()}</span>
+          <div id="efectivoSobre" class="efectivo-sobre">${efectivoSobre()}</div>
+        </div></div>
+        ${editable?`<p class="ayuda-preparar">${t('Arrastra para acomodar. Toca una pieza para quitarla.')}</p>`:''}
       </section>
     </section>`;
   }
-  function actualizarEfectivoSobre(entrando=false) {
+  function actualizarEfectivoSobre(entrada) {
     const interior=$('interiorSobre');
-    interior.innerHTML=efectivoSobre();
+    $('efectivoSobre').innerHTML=efectivoSobre();
     const saldo=$('saldoSobre')?.querySelector('strong');
     if(saldo)saldo.textContent=formato(sumar(piezas));
-    if(!entrando)return;
-    mostrarUltimaPieza(interior)?.classList.add('dinero-entrando');
+    distribuirMesa();
+    if(!entrada)return;
+    const ficha=interior.querySelector(`[data-indice-efectivo="${piezas.length-1}"]`);
+    if(entrada.evento&&ficha){
+      moverEfectivo(interior,ficha,entrada.evento.clientX,entrada.evento.clientY,entrada.impulso);
+    }else{
+      (ficha?.querySelector('.pila-dinero > :last-child')||ficha?.firstElementChild)?.classList.add('dinero-entrando');
+    }
   }
   function mostrarUltimaPieza(bandeja) {
     const ultima=bandeja?.querySelector(`[data-indice-efectivo="${piezas.length-1}"]`);
@@ -317,7 +326,7 @@
         <header class="salida-contador">
           <h3 id="rotuloDineroContado">${t('Dinero contado')}</h3><span class="rodillos-contador" aria-hidden="true"></span>
         </header>
-        <div class="piezas-colocadas" id="dineroContado">${fichasPago(fase==='medir')}</div>
+        <div class="piezas-colocadas" id="dineroContado" data-superficie-efectivo>${fichasPago(fase==='medir')}</div>
       </section>
     </section>`;
   }
@@ -325,6 +334,7 @@
     $('lecturaContador').innerHTML=lecturaContador();
     const bandeja=$('dineroContado');
     bandeja.innerHTML=fichasPago(fase==='medir');
+    dibujarEfectivoGuardado(bandeja);
     if(!recienContada)return;
     mostrarUltimaPieza(bandeja)?.classList.add('pieza-contada');
   }
@@ -382,12 +392,12 @@
         pila.indice=indice;
       }
       else{
-        const ficha={valor,cantidad:1,indice};
+        const ficha={valor,cantidad:1,indice,primera:indice};
         grupos.push(ficha);
         if(agrupar)agrupados.set(valor,ficha);
       }
     }
-    return grupos.map(({valor,cantidad,indice})=>{
+    return grupos.map(({valor,cantidad,indice,primera})=>{
       const ficha=pieza(valor);
       const tipoPila=enContador?'pila-contador':'pila-billetes';
       const imagen=cantidad>1?`<span class="pila-dinero ${tipoPila}" aria-hidden="true">${ficha.repeat(cantidad)}</span>`:ficha;
@@ -396,16 +406,17 @@
         `${cantidad} ${valor<1000?'coins':'banknotes'} of ${formato(valor)}`):etiquetaDinero(valor);
       const quitar=cantidad>1?idioma(`${etiqueta}. Quitar una pieza.`,`${etiqueta}. Remove one piece.`):
         idioma(`Quitar ${etiqueta}`,`Remove ${etiqueta}`);
+      const marca=`class="pieza-colocada${modo==='llenar'?' ficha-mesa':''}" data-posicion-efectivo="${primera}"`;
       return editable
-        ? `<button type="button" class="pieza-colocada" data-quitar="${valor}" data-indice-efectivo="${indice}" aria-label="${quitar}">${imagen}</button>`
-        : `<span class="pieza-colocada" role="img" aria-label="${etiqueta}">${imagen}</span>`;
+        ? `<button type="button" ${marca} data-quitar="${valor}" data-indice-efectivo="${indice}" aria-label="${quitar}">${imagen}</button>`
+        : `<span ${marca} role="img" aria-label="${etiqueta}">${imagen}</span>`;
     }).join('');
   }
   function destino(rotulo,estilo='mostrador') {
     const editable=fasesDinero.has(fase);
     const fichas=fichasPago(editable);
     return `<section id="destinoDinero" class="${estilo} zona-dinero"><header><h3>${t(rotulo)}</h3>${(opciones.ayudas||fase==='listo')&&fichas?`<b>${formato(sumar(piezas))}</b>`:''}</header>
-      <div class="piezas-colocadas piezas-pago">${fichas||`<span>${t(fase==='recibir'?'Guarda aquí el pago del cliente.':'Toca o arrastra una pieza.')}</span>`}</div></section>`;
+      <div class="piezas-colocadas piezas-pago" ${editable?'data-superficie-efectivo':''}>${fichas||`<span>${t(fase==='recibir'?'Guarda aquí el pago del cliente.':'Toca o arrastra una pieza.')}</span>`}</div></section>`;
   }
   function contarPiezas(lista) {
     const conteos=new Map();
@@ -625,9 +636,9 @@
   }
   function recibirPago() {
     const efectivo=dineroCliente.map((valor,i)=>recibidos.has(i)?'':
-      `<button type="button" class="origen-dinero" data-recibir="${i}" aria-label="${etiquetaDinero(valor)}">${pieza(valor)}</button>`).join('');
+      `<button type="button" class="origen-dinero" data-recibir="${i}" data-posicion-efectivo="${i}" aria-label="${etiquetaDinero(valor)}">${pieza(valor)}</button>`).join('');
     return vistaCliente('Aquí está mi pago.')+
-      `<div class="entrega-cliente ${recibidos.size?'':'efectivo-nuevo'}"><h3>${t('Dinero en el mostrador')}</h3><div class="pago-cliente">${efectivo||`<span>${t('Pago guardado en la caja.')}</span>`}</div></div>`+
+      `<div class="entrega-cliente ${recibidos.size?'':'efectivo-nuevo'}"><h3>${t('Dinero en el mostrador')}</h3><div class="pago-cliente" data-superficie-efectivo>${efectivo||`<span>${t('Pago guardado en la caja.')}</span>`}</div></div>`+
       destino('Caja registradora','mostrador caja-registradora');
   }
   function iniciarCompraCaja() {
@@ -699,7 +710,7 @@
       <header><h3>${t(titulo)}</h3>
         ${pagado?`<span>${t('Pagaste')} <b>${formato(pagado)}</b></span>`:opciones.ayudas&&piezas.length?`<b>${formato(sumar(piezas))}</b>`:''}
       </header>
-      <div class="piezas-colocadas piezas-pago">${fichas||`<span>${t(fase==='entregando'?'La cajera prepara el vuelto…':'Pon el dinero aquí')}</span>`}</div>
+      <div class="piezas-colocadas piezas-pago" ${pagando?'data-superficie-efectivo':''}>${fichas||`<span>${t(fase==='entregando'?'La cajera prepara el vuelto…':'Pon el dinero aquí')}</span>`}</div>
       ${fase==='vuelto'?`<div class="decidir respuesta-vuelto">
         <button type="button" data-revisar-vuelto="si">${t('Sí, está bien')}</button>
         <button type="button" data-revisar-vuelto="no">${t('No, está mal')}</button>
@@ -869,7 +880,7 @@
       case 'decidir': return t('¿Te alcanza el dinero para comprarlo?');
       case 'cerrado': return instruccionAbrirSobre();
       case 'contar': return aperturaSobre?t('Mira cómo se abre el sobre y cae el dinero.'):instruccionContarSobre();
-      case 'llenar': return idioma(`Pon ${formato(sumar(sobre))} en el sobre y pulsa Revisar.`,`Put ${formato(sumar(sobre))} in the envelope and press Check.`);
+      case 'llenar': return idioma(`Prepara ${formato(sumar(sobre))} en la mesa para el sobre y pulsa Revisar.`,`Lay out ${formato(sumar(sobre))} for the envelope and press Check.`);
       case 'elegir': return t(modo==='carrito'?'Escoge dos o tres productos y empuja el carrito hasta la caja.':'Escoge un producto y empuja el carrito hasta la caja.');
       case 'cobro-productos': return instruccionCobro();
       case 'pagar': return instruccionPago();
@@ -883,11 +894,15 @@
     }
   }
   function actualizarContenido() {
+    detenerDeslizamiento();
     if(modo==='contar'){
       contenido.innerHTML=verMesa();
       distribuirMesa();
     }
-    else if(modo==='llenar') contenido.innerHTML=verSobreParaLlenar();
+    else if(modo==='llenar'){
+      contenido.innerHTML=verSobreParaLlenar();
+      distribuirMesa();
+    }
     else if(modo==='contador') contenido.innerHTML=verContador();
     else if(modo==='alcanza') contenido.innerHTML=verAlcance();
     else if(fase==='elegir'){
@@ -902,6 +917,7 @@
         (fase==='dar'?destino('Vuelto para el cliente'):
           fase==='listo'&&modo==='cajero'&&aCambio()>0?destino('Vuelto para el cliente'):'');
     }
+    for(const bandeja of contenido.querySelectorAll('[data-superficie-efectivo]:not(.mesa-libre)'))dibujarEfectivoGuardado(bandeja);
   }
   function render() {
     if(!modo)return;
@@ -1036,7 +1052,7 @@
     }
     anunciar(fase==='dar'?'El cliente necesita un vuelto distinto. Revisa la diferencia.':total<meta?'Falta dinero.':'Hay dinero de más. Quita alguna pieza.');
   }
-  function agregarDinero(valor) {
+  function agregarDinero(valor,destino,evento,impulso) {
     if(!opciones.activas.includes(valor)||!fasesDinero.has(fase))return;
     if(piezas.length+colaContador.length>=24)return anunciar('Límite de piezas. Quita alguna para agregar otra.');
     if(fase==='pagar'&&piezas.filter(ficha=>ficha===valor).length>=(compraCaja.cartera.get(valor)||0))return;
@@ -1048,9 +1064,14 @@
       return;
     }
     piezas.push(valor);
-    if(fase==='llenar')return actualizarEfectivoSobre(true);
+    if(fase==='llenar')return actualizarEfectivoSobre({evento,impulso});
     actualizarContenido();
     mostrarUltimaPieza(contenido.querySelector('#destinoDinero .piezas-colocadas'));
+    if(evento){
+      const bandeja=contenido.querySelector('#destinoDinero [data-superficie-efectivo]');
+      const ficha=bandeja?.querySelector(`[data-indice-efectivo="${piezas.length-1}"]`);
+      if(ficha)moverEfectivo(bandeja,ficha,evento.clientX,evento.clientY,impulso);
+    }
     actualizarCarteraCompra();
   }
   function elegirProducto(i) {
@@ -1083,9 +1104,18 @@
     }:punto);
   }
   const margenMesa=3, separacionMesa=5;
+  function cajaEnSuperficie(nodo,superficie) {
+    const rect=nodo.getBoundingClientRect();
+    return {x:rect.left-superficie.left+rect.width/2,y:rect.top-superficie.top+rect.height/2,ancho:rect.width,alto:rect.height};
+  }
+  function seCruzan(punto,ficha,otra) {
+    return Math.abs(punto.x-otra.x)<(otra.ancho+ficha.ancho)/2+separacionMesa-.01&&
+      Math.abs(punto.y-otra.y)<(otra.alto+ficha.alto)/2+separacionMesa-.01;
+  }
   function posicionLibre(punto,ficha,ocupadas,ancho,alto) {
     const minX=ficha.ancho/2+margenMesa,maxX=ancho-minX;
     const minY=ficha.alto/2+margenMesa,maxY=alto-minY;
+    if(minX>maxX||minY>maxY)return null;
     const limitar=(valor,min,max)=>Math.min(max,Math.max(min,valor));
     const xOpciones=[punto.x,minX,maxX],yOpciones=[punto.y,minY,maxY];
     for(const otra of ocupadas){
@@ -1099,41 +1129,47 @@
       const x=limitar(candidatoX,minX,maxX),y=limitar(candidatoY,minY,maxY);
       const distancia2=(x-punto.x)**2+(y-punto.y)**2;
       if(distancia2>=distancia)continue;
-      if(ocupadas.some(otra=>Math.abs(x-otra.x)<(otra.ancho+ficha.ancho)/2+separacionMesa-.01&&Math.abs(y-otra.y)<(otra.alto+ficha.alto)/2+separacionMesa-.01))continue;
+      if(ocupadas.some(otra=>seCruzan({x,y},ficha,otra)))continue;
       mejor={x,y};
       distancia=distancia2;
     }
     return mejor;
   }
-  function distribuirMesa(movida=-1,destino=null) {
+  function distribuirMesa() {
     const superficie=contenido.querySelector('.mesa-libre');
     if(!superficie)return;
-    if(movida<0)superficie.style.minHeight='';
+    const desplazable=superficie.parentElement;
+    const desplazamiento=desplazable.scrollTop;
+    superficie.style.minHeight='';
     const rect=superficie.getBoundingClientRect();
     if(!rect.width||!rect.height)return;
-    const fichas=[...superficie.children].map((nodo,i)=>{
+    const fichas=[...superficie.querySelectorAll('.ficha-mesa')].map(nodo=>{
       const {width,height}=nodo.getBoundingClientRect();
+      const i=Number(nodo.dataset.fichaMesa??nodo.dataset.posicionEfectivo);
       return {i,nodo,ancho:width,alto:height};
     });
-    const orden=fichas.filter(ficha=>ficha.i!==movida);
-    if(movida>=0)orden.push(fichas[movida]);
+    const posiciones=modo==='contar'?posicionesMesa:posicionesEfectivo;
     const {width:ancho,height:alto}=rect;
-    const ocupadas=[];
-    for(const ficha of orden){
-      const p=posicionesMesa[ficha.i];
-      const preferida=ficha.i===movida?destino:{x:p.x*ancho,y:p.y*alto};
-      const lugar=posicionLibre(preferida,ficha,ocupadas,ancho,alto)||
-        posicionLibre({x:p.x*ancho,y:p.y*alto},ficha,ocupadas,ancho,alto);
+    const sobre=superficie.querySelector('.sobre-mesa');
+    const ocupadas=[cajaEnSuperficie(sobre,rect)];
+    const ubicadas=[];
+    for(const [orden,ficha] of fichas.entries()){
+      const p=posiciones[ficha.i]||{x:.73+(orden%2)*.1,y:.26+(orden%3)*.22};
+      const lugar=posicionLibre({x:p.x*ancho,y:p.y*alto},ficha,ocupadas,ancho,alto);
       if(!lugar){
-        if(movida<0)distribuirMesaEnFilas(superficie,fichas,rect);
+        distribuirMesaEnFilas(superficie,fichas,rect,sobre,posiciones);
+        desplazable.scrollTop=desplazamiento;
         return;
       }
-      ocupadas.push({...ficha,...lugar});
+      const ubicada={...ficha,...lugar};
+      ubicadas.push(ubicada);
+      ocupadas.push(ubicada);
     }
-    for(const p of ocupadas)posicionesMesa[p.i]={x:p.x/ancho,y:p.y/alto};
-    dibujarMesa(fichas,rect);
+    for(const p of ubicadas)posiciones[p.i]={x:p.x/ancho,y:p.y/alto};
+    dibujarMesa(fichas,rect,posiciones);
+    desplazable.scrollTop=desplazamiento;
   }
-  function distribuirMesaEnFilas(superficie,fichas,rect) {
+  function distribuirMesaEnFilas(superficie,fichas,rect,sobre,posiciones) {
     const centros=[];
     let x=margenMesa,y=margenMesa,altoFila=0;
     for(const ficha of fichas){
@@ -1146,17 +1182,17 @@
       x+=ficha.ancho+separacionMesa;
       altoFila=Math.max(altoFila,ficha.alto);
     }
-    const altoNecesario=y+altoFila+margenMesa;
+    const altoNecesario=y+altoFila+sobre.getBoundingClientRect().height+2*margenMesa+separacionMesa;
     if(altoNecesario>rect.height)superficie.style.minHeight=altoNecesario/Matematicas.escala()+'px';
     const destino=superficie.getBoundingClientRect();
-    posicionesMesa=centros.map(p=>({x:p.x/destino.width,y:p.y/destino.height}));
-    dibujarMesa(fichas,destino);
+    for(const {i} of fichas)posiciones[i]={x:centros[i].x/destino.width,y:centros[i].y/destino.height};
+    dibujarMesa(fichas,destino,posiciones);
   }
-  function dibujarMesa(fichas,rect) {
+  function dibujarMesa(fichas,rect,posiciones) {
     const boca=aperturaSobre?contenido.querySelector('.boca-sobre').getBoundingClientRect():null;
     const escala=boca?Matematicas.escala():1;
     for(const {i,nodo} of fichas){
-      const {x,y}=posicionesMesa[i];
+      const {x,y}=posiciones[i];
       nodo.style.left=x*100+'%';
       nodo.style.top=y*100+'%';
       if(boca){
@@ -1173,8 +1209,10 @@
     cancelarAperturaSobre();
     const tablero=contenido.querySelector('.tablero-mesa');
     tablero.removeAttribute('data-apertura');
-    tablero.querySelector('.mesa-libre').removeAttribute('aria-hidden');
-    for(const boton of tablero.querySelectorAll('#ordenarMesa,.ficha-mesa'))boton.disabled=false;
+    for(const boton of tablero.querySelectorAll('#ordenarMesa,.ficha-mesa')){
+      boton.disabled=false;
+      boton.removeAttribute('aria-hidden');
+    }
     $('respuesta').inert=false;
     $('accion').disabled=false;
     $('instruccion').textContent=instruccionContarSobre();
@@ -1196,12 +1234,92 @@
     const duracion=abrir+pausa+salir+(mesa.length-1)*intervalo+40;
     aperturaSobre.temporizador=setTimeout(terminarAperturaSobre,Math.max(0,duracion-(performance.now()-aperturaSobre.inicio)));
   }
-  function moverEnMesa(origen,x,y) {
+  function moverEnMesa(origen,x,y,impulso) {
     if(fase!=='contar'||aperturaSobre||!mesa[origen])return;
-    const rect=contenido.querySelector('.mesa-libre').getBoundingClientRect();
     fichaElegida=null;
     contenido.querySelector('[data-ficha-mesa][aria-pressed=true]')?.setAttribute('aria-pressed','false');
-    distribuirMesa(origen,{x:x-rect.x,y:y-rect.y});
+    const nodo=contenido.querySelector(`[data-ficha-mesa="${origen}"]`);
+    moverEfectivo(nodo.closest('.mesa-libre'),nodo,x,y,impulso);
+  }
+  function detenerDeslizamiento() {
+    cancelAnimationFrame(cuadroDeslizamiento);
+    cuadroDeslizamiento=0;
+  }
+  function deslizarEfectivo(punto,impulso,ficha,rect,ocupadas,dibujar,nodo) {
+    if(!impulso||movimientoReducido.matches)return;
+    let {x:vx,y:vy}=impulso;
+    const minX=ficha.ancho/2+margenMesa,maxX=rect.width-minX;
+    const minY=ficha.alto/2+margenMesa,maxY=rect.height-minY;
+    let anterior=performance.now(),recorrido=0;
+    function paso(ahora) {
+      if(!nodo.isConnected)return detenerDeslizamiento();
+      const lapso=Math.max(0,Math.min(24,ahora-anterior));
+      anterior=ahora;
+      recorrido+=lapso;
+      // Los pasos cortos evitan atravesar una moneda al lanzar rápido.
+      const pasos=Math.max(1,Math.ceil(lapso/6));
+      const dt=lapso/pasos;
+      for(let i=0;i<pasos;i++){
+        const x=Math.max(minX,Math.min(maxX,punto.x+vx*dt));
+        const y=Math.max(minY,Math.min(maxY,punto.y+vy*dt));
+        if(ocupadas.some(otra=>seCruzan({x,y:punto.y},ficha,otra)))vx*=-.52;
+        else{
+          punto.x=x;
+          if(x===minX||x===maxX)vx*=-.58;
+        }
+        if(ocupadas.some(otra=>seCruzan({x:punto.x,y},ficha,otra)))vy*=-.52;
+        else{
+          punto.y=y;
+          if(y===minY||y===maxY)vy*=-.58;
+        }
+        const freno=Math.exp(-.004*dt);
+        vx*=freno;
+        vy*=freno;
+      }
+      dibujar(punto);
+      if(Math.hypot(vx,vy)>.045&&recorrido<1200)cuadroDeslizamiento=requestAnimationFrame(paso);
+      else detenerDeslizamiento();
+    }
+    cuadroDeslizamiento=requestAnimationFrame(paso);
+  }
+  function moverEfectivo(superficie,nodo,clienteX,clienteY,impulso) {
+    detenerDeslizamiento();
+    const rect=superficie.getBoundingClientRect();
+    const libre=superficie.classList.contains('mesa-libre');
+    const ficha=cajaEnSuperficie(nodo,rect);
+    if(ficha.ancho+2*margenMesa>rect.width||ficha.alto+2*margenMesa>rect.height)return;
+    const ocupadas=[...superficie.querySelectorAll('.ficha-mesa,.sobre-mesa,.pieza-colocada,[data-recibir]')].filter(otra=>otra!==nodo)
+      .map(otra=>cajaEnSuperficie(otra,rect));
+    const punto=posicionLibre({x:clienteX-rect.left,y:clienteY-rect.top},ficha,ocupadas,rect.width,rect.height);
+    if(!punto)return;
+    const posiciones=posicionesDe(superficie);
+    const indice=Number(nodo.dataset.fichaMesa??nodo.dataset.posicionEfectivo);
+    const escala=Matematicas.escala();
+    if(!libre)nodo.style.translate='';
+    const base=cajaEnSuperficie(nodo,rect);
+    function dibujar({x,y}){
+      const relativa={x:x/rect.width,y:y/rect.height};
+      posiciones[indice]=relativa;
+      if(libre){
+        nodo.style.left=relativa.x*100+'%';
+        nodo.style.top=relativa.y*100+'%';
+      }else nodo.style.translate=`${(x-base.x)/escala}px ${(y-base.y)/escala}px`;
+    }
+    dibujar(punto);
+    deslizarEfectivo(punto,impulso,ficha,rect,ocupadas,dibujar,nodo);
+  }
+  function posicionesDe(superficie) {
+    if(superficie.classList.contains('pago-cliente'))return posicionesCliente;
+    return modo==='contar'?posicionesMesa:posicionesEfectivo;
+  }
+  function dibujarEfectivoGuardado(superficie) {
+    const posiciones=posicionesDe(superficie);
+    if(!posiciones.some(Boolean))return;
+    const rect=superficie.getBoundingClientRect();
+    for(const ficha of superficie.querySelectorAll('[data-posicion-efectivo]')){
+      const p=posiciones[Number(ficha.dataset.posicionEfectivo)];
+      if(p)moverEfectivo(superficie,ficha,rect.x+p.x*rect.width,rect.y+p.y*rect.height);
+    }
   }
   function tocarMesa(i,boton) {
     if(fichaElegida!==null&&fichaElegida!==i){
@@ -1216,6 +1334,7 @@
   function quitarDinero(valor,indice) {
     if(piezas[indice]!==valor||!fasesDinero.has(fase))return;
     piezas.splice(indice,1);
+    posicionesEfectivo.splice(indice,1);
     anunciar();
     if(fase==='llenar')actualizarEfectivoSobre();
     else if(fase==='medir')actualizarContador();
@@ -1234,11 +1353,27 @@
     {clave:'producto',destino:'#cesta',soltar:elegirProducto},
     {clave:'ponerCaja',destino:'.escena-caja',soltar:ponerProductoCaja},
     {clave:'devolver',destino:'[data-estante],.mostrador-cliente',soltar:devolverProducto},
-    {clave:'recibir',destino:'#destinoDinero',soltar:guardarPago},
-    {clave:'fichaMesa',destino:'.mesa-libre',soltar:(i,nodo,evento)=>moverEnMesa(i,evento.clientX,evento.clientY)}
+    {clave:'recibir',destino:'#destinoDinero,.pago-cliente',soltar:(i,nodo,evento,impulso,origen)=>{
+      if(nodo.id==='destinoDinero')guardarPago(i);
+      else moverEfectivo(nodo,origen,evento.clientX,evento.clientY,impulso);
+    }},
+    {clave:'fichaMesa',destino:'.mesa-libre',soltar:(i,nodo,evento,impulso)=>moverEnMesa(i,evento.clientX,evento.clientY,impulso)},
+    {clave:'indiceEfectivo',destino:'[data-superficie-efectivo]',
+      soltar:(i,nodo,evento,impulso,origen)=>moverEfectivo(nodo,origen,evento.clientX,evento.clientY,impulso)}
   ];
+  function impulsoAlSoltar(d,evento) {
+    const reciente=d.muestras.at(-1);
+    if(evento.timeStamp-reciente.t>80)return null;
+    const primera=d.muestras.find(p=>reciente.t-p.t<=100)||reciente;
+    const tiempo=evento.timeStamp-primera.t;
+    const dx=evento.clientX-primera.x,dy=evento.clientY-primera.y;
+    const distancia=Math.hypot(dx,dy);
+    if(tiempo<8||distancia<13||distancia/tiempo<.36)return null;
+    const velocidad=Math.min(2.1,distancia/tiempo)*.82;
+    return {x:dx/distancia*velocidad,y:dy/distancia*velocidad};
+  }
   escena.addEventListener('pointerdown',evento=>{
-    const origen=evento.target.closest('button[data-dinero],button[data-producto],button[data-poner-caja],button[data-devolver],button[data-recibir],button[data-ficha-mesa]');
+    const origen=evento.target.closest('button[data-dinero],button[data-producto],button[data-poner-caja],button[data-devolver],button[data-recibir],button[data-ficha-mesa],button[data-indice-efectivo]');
     if(evento.button!==0||evento.isPrimary===false||arrastre||empuje||llegadaCaja)return;
     ignorarClic=false;
     const camino=evento.target.closest('.camino-carrito');
@@ -1250,11 +1385,13 @@
       return;
     }
     if(!origen||origen.disabled)return;
+    detenerDeslizamiento();
     if(fase==='elegir')detenerPasillo();
     const fuente=fuentesArrastre.find(({clave})=>Object.hasOwn(origen.dataset,clave));
     if(!origen.firstElementChild)return;
     arrastre={id:evento.pointerId,origen,fuente,
-      x:evento.clientX,y:evento.clientY,valor:Number(origen.dataset[fuente.clave])};
+      x:evento.clientX,y:evento.clientY,valor:Number(origen.dataset[fuente.clave]),
+      muestras:[{x:evento.clientX,y:evento.clientY,t:evento.timeStamp}]};
     origen.setPointerCapture(evento.pointerId);
   });
   escena.addEventListener('pointermove',evento=>{
@@ -1284,9 +1421,11 @@
     const d=arrastre;
     if(d?.id!==evento.pointerId)return;
     const {clientX:x,clientY:y}=evento;
+    d.muestras.push({x,y,t:evento.timeStamp});
+    while(d.muestras.length>2&&evento.timeStamp-d.muestras[0].t>100)d.muestras.shift();
     if(!d.fantasma){
       if(Math.hypot(x-d.x,y-d.y)<7)return;
-      const original=d.origen.firstElementChild;
+      const original=d.origen.querySelector('.pila-dinero .dinero:last-child')||d.origen.firstElementChild;
       const rect=original.getBoundingClientRect();
       d.fantasma=document.createElement('div');
       d.fantasma.className='fantasma-colones';
@@ -1295,7 +1434,7 @@
       d.fantasma.style.height=rect.height+'px';
       d.fantasma.append(original.cloneNode(true));
       document.body.append(d.fantasma);
-      if(d.fuente.clave==='fichaMesa')d.origen.classList.add('moviendo-ficha');
+      if(d.origen.closest('[data-superficie-efectivo]'))d.origen.classList.add('moviendo-ficha');
     }
     Matematicas.fantasma(d.fantasma,x,y);
     d.destino?.classList.remove('sobre-destino');
@@ -1312,8 +1451,10 @@
     if(d?.id!==evento.pointerId)return;
     if(d.fantasma){
       ignorarClic=true;
-      const destino=document.elementFromPoint(evento.clientX,evento.clientY)?.closest(d.fuente.destino);
-      if(destino)d.fuente.soltar(d.valor,destino,evento);
+      const tocado=document.elementFromPoint(evento.clientX,evento.clientY)?.closest(d.fuente.destino);
+      const destino=d.fuente.clave==='recibir'&&tocado?.id==='destinoDinero'?tocado:
+        d.origen.closest('[data-superficie-efectivo]')||tocado;
+      if(destino)d.fuente.soltar(d.valor,destino,evento,impulsoAlSoltar(d,evento),d.origen);
     }
     limpiarArrastre();
   });
@@ -1328,6 +1469,7 @@
   function terminarGestos(){
     if(empuje)detenerPasillo();
     limpiarArrastre();
+    detenerDeslizamiento();
   }
   addEventListener('resize',terminarGestos);
   addEventListener('blur',terminarGestos);
@@ -1391,15 +1533,19 @@
       desplazarPasillo(evento.key==='ArrowUp'?1:-1);
       return;
     }
-    const ficha=evento.target.closest('button[data-ficha-mesa]');
+    const ficha=evento.target.closest('button[data-ficha-mesa],button[data-indice-efectivo],button[data-recibir]');
     const paso={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]}[evento.key];
-    if(!ficha||!paso)return;
+    const superficie=ficha?.closest('[data-superficie-efectivo]');
+    if(!superficie||!paso)return;
     evento.preventDefault();
     const r=ficha.getBoundingClientRect();
-    moverEnMesa(Number(ficha.dataset.fichaMesa),r.x+r.width/2+paso[0]*16,r.y+r.height/2+paso[1]*16);
+    const x=r.x+r.width/2+paso[0]*16,y=r.y+r.height/2+paso[1]*16;
+    if(ficha.hasAttribute('data-ficha-mesa'))moverEnMesa(Number(ficha.dataset.fichaMesa),x,y);
+    else moverEfectivo(superficie,ficha,x,y);
   });
   function mostrarModo(vista) {
     limpiarArrastre();
+    detenerDeslizamiento();
     cancelarContador();
     cancelarRecorrido();
     cerrarCompraCaja();
@@ -1459,6 +1605,7 @@
   }
   $('configurar').onclick=()=>{
     limpiarArrastre();
+    detenerDeslizamiento();
     const estabaLlegando=Boolean(llegadaCaja);
     if(llegadaCaja)avancePasillo=llegadaCaja.inicio;
     cancelarRecorrido();
@@ -1516,11 +1663,13 @@
   const observarPanel=new MutationObserver(()=>{$('volverPlegado').hidden=!app.classList.contains('panel-lateral-oculto');});
   observarPanel.observe(app,{attributes:true,attributeFilter:['class']});
   Matematicas.pantalla(app,(alto,z)=>{
+    detenerDeslizamiento();
     const estilo=document.documentElement.style;
     estilo.setProperty('--u',1/z+'px');
     estilo.setProperty('--alto',alto+'px');
     estilo.setProperty('--ancho',document.documentElement.clientWidth/z+'px');
     distribuirMesa();
+    for(const bandeja of contenido.querySelectorAll('[data-superficie-efectivo]:not(.mesa-libre)'))dibujarEfectivoGuardado(bandeja);
   });
   aplicarVistaDinero();
   localizar();
