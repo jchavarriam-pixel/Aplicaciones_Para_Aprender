@@ -475,7 +475,7 @@
           <h3 id="rotuloDineroContado">${t('Dinero contado')}</h3>
           ${fase==='medir'?`<small class="ayuda-contador">${t('Arrastra para acomodar')}</small>`:''}
         </header>
-        <div class="bandeja-desplazable" id="dineroContado">
+        <div class="superficie-contador" id="dineroContado">
           <div class="plano-contador" id="planoContador" data-superficie-efectivo>${fichasPago(fase==='medir')}</div>
         </div>
       </section>
@@ -487,50 +487,85 @@
     plano.innerHTML=fichasPago(fase==='medir');
     distribuirContador(plano,recienContada);
     if(!recienContada)return;
-    const ficha=mostrarUltimaPieza($('dineroContado'));
+    const ultima=plano.querySelector(`[data-indice-efectivo="${piezas.length-1}"]`);
+    const ficha=ultima?.querySelector('.pila-dinero > :last-child')||ultima?.firstElementChild;
     if(!ficha||movimientoReducido.matches)return;
     const boca=contenido.querySelector('.boca-contador').getBoundingClientRect();
     const lugar=ficha.getBoundingClientRect();
-    const escala=Matematicas.escala();
+    const escala=Matematicas.escala()*(Number(plano.style.getPropertyValue('--escala-bandeja'))||1);
     ficha.style.setProperty('--salida-x',((boca.left+boca.width/2-lugar.left-lugar.width/2)/escala)+'px');
     ficha.style.setProperty('--salida-y',((boca.bottom-lugar.top-lugar.height/2)/escala)+'px');
     ficha.classList.add('pieza-contada');
   }
   function distribuirContador(plano,recienContada=false) {
-    const altoVisible=plano.parentElement.getBoundingClientRect().height;
-    const ancho=plano.getBoundingClientRect().width;
-    if(!ancho||!altoVisible)return;
-    const fichas=[...plano.children];
+    const {width:ancho,height:alto}=plano.getBoundingClientRect();
+    if(!ancho||!alto||!plano.childElementCount)return;
+    const escalaAnterior=Number(plano.style.getPropertyValue('--escala-bandeja'))||1;
+    const fichas=[...plano.children].map(nodo=>{
+      const {width,height}=nodo.getBoundingClientRect();
+      return {nodo,i:Number(nodo.dataset.posicionEfectivo),ancho:width/escalaAnterior,alto:height/escalaAnterior};
+    });
     if(recienContada){
-      const nueva=fichas.findIndex(ficha=>Number(ficha.dataset.indiceEfectivo)===piezas.length-1);
+      const nueva=fichas.findIndex(({nodo})=>Number(nodo.dataset.indiceEfectivo)===piezas.length-1);
       // Si crece una pila, busca sitio para ella después de ubicar las demás piezas.
       if(nueva>=0)fichas.push(...fichas.splice(nueva,1));
     }
-    const ocupadas=[];
-    let alto=altoVisible;
-    for(const nodo of fichas){
-      const {width:anchoFicha,height:altoFicha}=nodo.getBoundingClientRect();
-      const ficha={ancho:anchoFicha,alto:altoFicha};
-      const i=Number(nodo.dataset.posicionEfectivo);
-      const p=posicionesEfectivo[i];
-      // La altura añadida para más efectivo no desplaza lo que ya está acomodado.
-      const destino={x:(p?.x??.55)*ancho,y:p?.y??altoVisible*.35};
-      alto=Math.max(alto,destino.y+altoFicha/2+margenMesa);
-      let lugar=posicionLibre(destino,ficha,ocupadas,ancho,alto);
-      if(!lugar){
-        alto+=altoFicha+separacionMesa+2*margenMesa;
-        lugar=posicionLibre(destino,ficha,ocupadas,ancho,alto);
+    let escala=recienContada?escalaAnterior:1;
+    let ubicadas=[];
+    for(const ficha of fichas){
+      const p=posicionesEfectivo[ficha.i];
+      const medidas={ancho:ficha.ancho*escala,alto:ficha.alto*escala};
+      const lugar=posicionLibre({x:(p?.x??.55)*ancho,y:(p?.y??.35)*alto},medidas,ubicadas,ancho,alto);
+      if(!lugar)break;
+      ubicadas.push({...ficha,...medidas,...lugar});
+    }
+    if(ubicadas.length!==fichas.length)({escala,ubicadas}=compactarBandejaContador(fichas,ancho,alto));
+    plano.style.setProperty('--escala-bandeja',escala);
+    for(const {nodo,i,x,y} of ubicadas){
+      const posicion={x:x/ancho,y:y/alto};
+      posicionesEfectivo[i]=posicion;
+      nodo.style.left=posicion.x*100+'%';
+      nodo.style.top=posicion.y*100+'%';
+    }
+  }
+  function compactarBandejaContador(fichas,ancho,alto) {
+    const orden=[...fichas].sort((a,b)=>b.alto-a.alto||b.ancho-a.ancho);
+    const margen=Math.min(margenMesa,ancho*.05,alto*.05);
+    const anchoUtil=ancho-2*margen,altoUtil=alto-2*margen;
+    const separacion=Math.min(separacionMesa,anchoUtil/(2*orden.length));
+    function distribuirEnFilas(escala){
+      const ubicadas=[];
+      let x=0,y=0,altoFila=0;
+      for(const ficha of orden){
+        const w=ficha.ancho*escala,h=ficha.alto*escala;
+        if(w>anchoUtil)return null;
+        if(x+w>anchoUtil){
+          x=0;
+          y+=altoFila+separacion;
+          altoFila=0;
+        }
+        if(y+h>altoUtil)return null;
+        ubicadas.push({...ficha,x:margen+x+w/2,y:margen+y+h/2});
+        x+=w+separacion;
+        altoFila=Math.max(altoFila,h);
       }
-      if(!lugar)continue;
-      posicionesEfectivo[i]={x:lugar.x/ancho,y:lugar.y};
-      ocupadas.push({...ficha,...lugar,nodo});
+      return ubicadas;
     }
-    alto=Math.max(altoVisible,...ocupadas.map(ficha=>ficha.y+ficha.alto/2+margenMesa));
-    plano.style.height=alto/Matematicas.escala()+'px';
-    for(const {nodo,x,y} of ocupadas){
-      nodo.style.left=x/ancho*100+'%';
-      nodo.style.top=y/alto*100+'%';
+    const completas=distribuirEnFilas(1);
+    if(completas)return {escala:1,ubicadas:completas};
+    // Una fila cabe a esta escala. Busca desde ahí el mayor tamaño que admite la bandeja.
+    const anchoEnFila=orden.reduce((suma,ficha)=>suma+ficha.ancho,0);
+    let escala=Math.min((anchoUtil-(orden.length-1)*separacion)/anchoEnFila,altoUtil/orden[0].alto)*.99;
+    let ubicadas=distribuirEnFilas(escala),tope=1;
+    for(let i=0;i<8;i++){
+      const prueba=(escala+tope)/2;
+      const resultado=distribuirEnFilas(prueba);
+      if(resultado){
+        escala=prueba;
+        ubicadas=resultado;
+      }else tope=prueba;
     }
+    return {escala,ubicadas};
   }
   function esperandoContador() {
     return modo==='contador'&&varianteContador==='reto'&&colaContador.length>0;
@@ -1595,8 +1630,7 @@
   function moverEfectivo(superficie,nodo,clienteX,clienteY,impulso) {
     detenerDeslizamiento();
     const rect=superficie.getBoundingClientRect();
-    const enContador=superficie.id==='planoContador';
-    const libre=enContador||superficie.classList.contains('mesa-libre');
+    const libre=superficie.id==='planoContador'||superficie.classList.contains('mesa-libre');
     const ficha=cajaEnSuperficie(nodo,rect);
     if(ficha.ancho+2*margenMesa>rect.width||ficha.alto+2*margenMesa>rect.height)return;
     const ocupadas=[...superficie.querySelectorAll('.ficha-mesa,.sobre-mesa,.pieza-colocada,[data-recibir]')].filter(otra=>otra!==nodo)
@@ -1611,7 +1645,7 @@
     if(!libre)nodo.style.translate='';
     const base=cajaEnSuperficie(nodo,rect);
     function dibujar({x,y}){
-      const relativa={x:x/rect.width,y:enContador?y:y/rect.height};
+      const relativa={x:x/rect.width,y:y/rect.height};
       posiciones[indice]=relativa;
       if(libre){
         nodo.style.left=relativa.x*100+'%';

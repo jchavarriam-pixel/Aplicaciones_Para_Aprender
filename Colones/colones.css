@@ -586,13 +586,18 @@ button.ficha-mesa { cursor:grab; }
   .tablero-mesa:not(.tablero-preparar) .mesa-desplazable { --altura-mesa:clamp(calc(91 * var(--u)),calc(100cqh - 46 * var(--u)),calc(177 * var(--u))); }
 }
 #escena[data-fase=medir]:has(>#bancoPanel) {
-  grid-template-rows:minmax(0,1fr) auto; align-content:stretch; align-items:center;
+  grid-template-rows:minmax(0,1fr) auto; align-content:stretch; align-items:start;
 }
+#escena:has(.contador-caja) { overflow:clip; }
 #escena:has(.contador-caja) #contenido {
   grid-template-rows:minmax(0,1fr); align-content:stretch; align-self:stretch; min-height:0;
 }
 #escena[data-fase=listo]:has(.contador-caja) { grid-template-rows:minmax(0,1fr); align-content:stretch; }
-#escena[data-fase=medir] #bancoPanel { max-height:42cqh; }
+#escena[data-fase=medir] #bancoPanel { max-height:min(33cqh,calc(118 * var(--u))); }
+#escena[data-fase=medir] #banco { container-type:inline-size; }
+#escena[data-fase=medir] #banco .billete {
+  --ficha-alto:min(var(--alto-billete-juego),calc((100cqi - 4 * var(--u)) * 67 / 153));
+}
 .juego:has(#escena[data-fase=medir]) .acciones-juego { grid-template-rows:calc(34 * var(--u)) auto; gap:0; }
 .juego:has(#escena[data-fase=medir]) #mensaje { grid-row:1; align-self:center; }
 .juego:has(#escena[data-fase=medir]) #accion { grid-row:2; }
@@ -605,8 +610,8 @@ button.ficha-mesa { cursor:grab; }
   border-color:#136961; background:#136961; color:#fff;
 }
 .contador-caja {
-  display:grid; grid-template-rows:clamp(calc(55 * var(--u)),22cqh,calc(100 * var(--u))) minmax(0,1fr);
-  gap:calc(5 * var(--u)); min-height:0; min-width:0; max-height:calc(375 * var(--u)); align-self:center; height:100%;
+  display:grid; grid-template-rows:clamp(calc(55 * var(--u)),18cqh,calc(90 * var(--u))) minmax(0,1fr);
+  gap:calc(5 * var(--u)); min-height:0; min-width:0; height:100%;
   border:calc(3 * var(--u)) solid #134b53; border-bottom-width:calc(5 * var(--u)); border-radius:calc(16 * var(--u)) calc(16 * var(--u)) calc(12 * var(--u)) calc(12 * var(--u));
   padding:calc(6 * var(--u));
   background:linear-gradient(155deg,#83d4c5 0%,#3d9e93 32%,#247776 72%,#19535c);
@@ -720,12 +725,11 @@ button.ficha-mesa { cursor:grab; }
   padding-block:calc(2 * var(--u)); color:#214b42; font-size:calc(13 * var(--u)); line-height:1.18;
 }
 .ayuda-contador { color:#29534b; font-size:calc(11 * var(--u)); line-height:1.2; text-align:right; }
-.bandeja-desplazable {
-  min-height:0; overflow:auto; scrollbar-width:thin; scrollbar-gutter:stable;
-}
-.plano-contador { position:relative; min-height:100%; }
+.superficie-contador { min-height:0; overflow:clip; }
+.plano-contador { position:relative; height:100%; overflow:clip; }
 .plano-contador .pieza-colocada {
-  position:absolute; left:50%; top:50%; width:max-content; transform:translate(-50%,-50%);
+  position:absolute; left:50%; top:50%; width:max-content;
+  transform:translate(-50%,-50%) scale(var(--escala-bandeja,1));
   filter:drop-shadow(0 1px 1px #193d4440);
 }
 @media (prefers-reduced-motion:no-preference) {
@@ -751,7 +755,7 @@ button.ficha-mesa { cursor:grab; }
   to { translate:0 0; scale:1; }
 }
 @media (orientation:landscape) {
-  #escena[data-fase=medir]:has(>#bancoPanel) { grid-template:minmax(0,1fr) / minmax(0,1.35fr) minmax(0,1fr); }
+  #escena[data-fase=medir]:has(>#bancoPanel) { grid-template:minmax(0,1fr) / minmax(0,1fr) clamp(calc(112 * var(--u)),31%,calc(300 * var(--u))); }
   #escena[data-fase=medir] #bancoPanel { max-height:100%; }
 }
 @media (min-width:560px) {
@@ -759,7 +763,21 @@ button.ficha-mesa { cursor:grab; }
 }
 @media (orientation:portrait) and (max-height:650px) {
   #appColones:has(#escena[data-fase=medir]) .herramientas { max-height:calc(111 * var(--u)); }
-  #escena[data-fase=medir] #bancoPanel { max-height:33cqh; }
+}
+@media (orientation:portrait) and (max-width:360px), (orientation:landscape) and (max-height:350px) {
+  .ayuda-contador { display:none; }
+}
+@media (orientation:portrait) and (max-height:550px) {
+  #appColones:has(#escena[data-fase=medir]) .herramientas { max-height:calc(93 * var(--u)); }
+}
+@media (orientation:portrait) and (max-height:550px), (orientation:landscape) and (max-height:350px) {
+  .juego:has(.contador-caja) .reto h2 { font-size:calc(20 * var(--u)); }
+  .juego:has(.contador-caja) .variantes-actividad { margin-block:calc(2 * var(--u)); }
+  .juego:has(#escena[data-fase=medir]) #mensaje { font-size:calc(12 * var(--u)); margin-inline:calc(-30 * var(--u)); }
+  .contador-caja {
+    grid-template-rows:clamp(calc(50 * var(--u)),18cqh,calc(70 * var(--u))) minmax(0,1fr);
+    gap:calc(4 * var(--u)); padding:calc(4 * var(--u)); border-bottom-width:calc(3 * var(--u));
+  }
 }
 @media (orientation:landscape) and (max-height:430px),(orientation:portrait) and (max-width:375px) {
   .variantes-actividad { flex-wrap:nowrap; }
