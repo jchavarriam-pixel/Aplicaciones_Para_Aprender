@@ -8,22 +8,24 @@ button,a { touch-action:manipulation }
 button { cursor:pointer }
 :focus-visible { outline:3px solid #a64920; outline-offset:2px }
 #appColones {
-  --fraccion-ancho-billete:.22;
-  --ancho-maximo-billete:min(calc(var(--ancho,100dvw)*var(--fraccion-ancho-billete)),calc(58 * var(--u) + max(0px,var(--alto,100dvh) - 400 * var(--u))*.52));
-  --tope-billete:calc(var(--ancho-maximo-billete)*67/153);
-  --tope-moneda:min(calc(var(--ancho,100dvw)*.14),calc(30 * var(--u) + max(0px,var(--alto,100dvh) - 400 * var(--u))*.18));
-  --base-billete:min(calc(48 * var(--u)),calc(var(--tope-billete)*.63));
-  --base-moneda:min(calc(47 * var(--u)),calc(var(--tope-moneda)*.82));
+  --ancho-maximo-billete:min(max(calc(70 * var(--u)),calc(var(--ancho,100dvw)*.30 - 72 * var(--u))),calc(92 * var(--u) + max(0px,var(--alto,100dvh) - 430 * var(--u))*.48));
+  --diametro-disponible-moneda:min(calc(var(--ancho,100dvw)*.175),calc(49 * var(--u) + max(0px,var(--alto,100dvh) - 430 * var(--u))*.17));
+  --alto-maximo-billete:min(calc(120 * var(--u)),calc(var(--ancho-maximo-billete)*67/153));
+  --diametro-maximo-moneda:min(calc(117.5 * var(--u)),var(--diametro-disponible-moneda));
+  --alto-billete-base:min(calc(48 * var(--u)),calc(var(--alto-maximo-billete)*.60));
+  --diametro-moneda-base:min(calc(47 * var(--u)),calc(var(--diametro-maximo-moneda)*.74));
+  /* Una sola medida por tipo en todo el juego. El deslizador sigue aumentando el tamaño hasta el máximo disponible. */
+  --alto-billete-juego:calc(var(--alto-billete-base)*min(1,var(--escala-billetes,1)) + (var(--alto-maximo-billete) - var(--alto-billete-base))*max(0,var(--escala-billetes,1) - 1)/1.5);
+  --diametro-moneda-juego:calc(var(--diametro-moneda-base)*min(1,var(--escala-monedas,1)) + (var(--diametro-maximo-moneda) - var(--diametro-moneda-base))*max(0,var(--escala-monedas,1) - 1)/1.5);
   height:var(--alto,100dvh); width:100%; display:grid; grid-template:min-content minmax(0,1fr) / minmax(0,1fr);
   gap:calc(9 * var(--u)); padding:calc(8 * var(--u));
   font-size:calc(15 * var(--u)); background:radial-gradient(at top left,#d5f5e5,transparent 55%),#fff8e7;
 }
 #appColones.horizontal { grid-template:minmax(0,1fr) / clamp(calc(155 * var(--u)),21%,calc(315 * var(--u))) minmax(0,1fr) }
-#appColones.horizontal[data-muchos-billetes] { --fraccion-ancho-billete:.145; }
 @media (orientation:portrait) {
   #appColones {
-    --ancho-maximo-billete:min(calc(var(--ancho,100dvw)*.30),calc(50 * var(--u) + max(0px,var(--alto,100dvh) - 600 * var(--u))*.36));
-    --tope-moneda:min(calc(var(--ancho,100dvw)*.16),calc(36 * var(--u) + max(0px,var(--alto,100dvh) - 600 * var(--u))*.14));
+    --ancho-maximo-billete:min(calc(var(--ancho,100dvw)*.38),calc(106 * var(--u) + max(0px,var(--alto,100dvh) - 600 * var(--u))*.32));
+    --diametro-disponible-moneda:min(calc(var(--ancho,100dvw)*.19),calc(57 * var(--u) + max(0px,var(--alto,100dvh) - 600 * var(--u))*.14));
   }
 }
 .herramientas {
@@ -111,11 +113,12 @@ h1 { font-size:calc(29 * var(--u)); letter-spacing:-.035em; line-height:1.03; co
 .texto-instruccion[data-cobro]::before { content:attr(data-cobro); }
 .texto-instruccion[data-pago]::after { content:attr(data-pago); }
 .escena {
-  container-type:inline-size; min-height:0; display:grid; align-content:center;
+  container-type:size; min-height:0; display:grid; align-content:center;
   gap:calc(7 * var(--u)); padding:calc(4 * var(--u)); overflow:auto; scrollbar-width:thin;
 }
 .escena:has(>.banco:not([hidden])),
 .escena:has(>.respuesta:not([hidden])) { align-content:start; }
+#escena:has(>#bancoPanel:not([hidden])) { grid-template-rows:auto minmax(0,1fr); }
 #contenido { display:grid; align-content:start; min-width:0; gap:calc(5 * var(--u)); }
 .acciones-juego { display:grid; justify-items:center; gap:calc(3 * var(--u)); padding-inline:calc(48 * var(--u)); text-align:center; }
 body:has(#control-pantalla-completa[data-fullscreen=true]) .acciones-juego { padding-inline:calc(90 * var(--u)); }
@@ -153,10 +156,16 @@ body:has(#control-pantalla-completa[data-fullscreen=true]) .acciones-juego { pad
   --ficha-alto:min(calc(var(--base-billete,48px) * var(--escala-billetes,1)),var(--tope-billete,100vw));
   --ficha-ancho:calc(var(--ficha-alto) * var(--largo-billete) / 67);
 }
+.escena .moneda { --ficha-ancho:calc(var(--diametro-moneda-juego)*var(--diametro-moneda)); }
+.escena .billete { --ficha-alto:var(--alto-billete-juego); }
 .banco { background:#edf8f0; border:1px solid #c9e2d6; border-radius:calc(13 * var(--u)); padding:calc(5 * var(--u)); }
+#bancoPanel { display:grid; grid-template-rows:auto minmax(0,1fr); min-height:0; max-height:100%; }
 .banco h3,.zona-dinero h3,.sobre h3,.cesta h3 { font-size:calc(15 * var(--u)); }
 .banco h3 { text-align:center; margin-bottom:calc(4 * var(--u)); }
-#banco { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:calc(5 * var(--u)); }
+#banco {
+  display:flex; flex-wrap:wrap; justify-content:center; align-items:center; align-content:flex-start; gap:calc(5 * var(--u));
+  overflow-y:auto; scrollbar-width:thin; padding-inline:calc(8 * var(--u));
+}
 .origen-dinero,.pieza-colocada { display:grid; flex:none; padding:0; border:0; background:none; border-radius:calc(8 * var(--u)); }
 .origen-dinero,.producto { touch-action:none; cursor:grab; user-select:none; }
 .origen-dinero:active,.producto:active { cursor:grabbing }
@@ -179,6 +188,9 @@ button.pieza-colocada:has(.moneda) { min-width:calc(29 * var(--u)); min-height:c
 .zona-dinero header { display:flex; justify-content:space-between; gap:calc(4 * var(--u)); }
 .mostrador { border:2px dashed #5c9c87; border-radius:calc(12 * var(--u)); background:#e7f6ee; padding:calc(6 * var(--u)); }
 .mostrador .piezas-colocadas,.zona-dinero .piezas-colocadas { min-height:calc(25 * var(--u)); }
+.zona-dinero .piezas-colocadas,.bandeja-caja .piezas-colocadas {
+  max-height:max(calc(56 * var(--u)),34cqh); overflow-y:auto; scrollbar-width:thin; align-content:flex-start;
+}
 .sobre-destino { outline:calc(3 * var(--u)) solid #168958; outline-offset:calc(-3 * var(--u)); background-color:#d7fae0; }
 .meta-sobre { justify-self:center }
 .dato-total {
@@ -270,6 +282,11 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
   .escena:has(>.banco:not([hidden])),.escena:has(>.respuesta:not([hidden])) {
     grid-template-columns:minmax(0,1fr) minmax(0,1fr); align-items:center; align-content:safe center;
   }
+  #escena:has(>#bancoPanel:not([hidden])) { grid-template-rows:minmax(0,1fr); }
+  #escena[data-fase=contar] {
+    grid-template-columns:minmax(0,1fr) minmax(calc(100 * var(--u)),30%); align-content:start; align-items:start;
+  }
+  #escena[data-fase=contar] > #respuesta { position:sticky; top:0; }
 }
 @media (orientation:landscape) and (max-height:500px) {
   .mercado-lateral,.horizontal .mercado-lateral { display:none; }
@@ -282,6 +299,8 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
   .recibo ul { gap:calc(1 * var(--u)); }
   .recibo li { font-size:calc(13 * var(--u)); }
   .zona-dinero { min-height:calc(49 * var(--u)); }
+  #escena[data-fase=contar] #teclado { grid-template-columns:repeat(4,minmax(0,1fr)); }
+  #escena[data-fase=contar] #teclado button { min-height:calc(33 * var(--u)); }
 }
 @media (orientation:portrait) and (max-height:680px) {
   .herramientas { max-height:calc(144 * var(--u)); }
@@ -698,8 +717,10 @@ button.ficha-mesa { cursor:grab; }
   position:absolute; left:75%; top:64%; display:flex; gap:calc(2 * var(--u)); z-index:4; pointer-events:none;
   animation:pasarVuelto 1.1s ease-in-out both;
 }
-.dinero-en-camino .moneda { --tope-moneda:calc(29 * var(--u)); }
-.dinero-en-camino .billete { --tope-billete:calc(24 * var(--u)); }
+.dinero-en-camino {
+  --diametro-moneda-juego:min(calc(29 * var(--u)),var(--diametro-maximo-moneda));
+  --alto-billete-juego:min(calc(24 * var(--u)),var(--alto-maximo-billete));
+}
 @keyframes pasarVuelto {
   0% { transform:translate(-50%,-50%) scale(.65); opacity:0; }
   20% { opacity:1; }
@@ -710,7 +731,7 @@ button.ficha-mesa { cursor:grab; }
   border:2px solid #713e25; border-radius:calc(13 * var(--u)); box-shadow:inset 0 0 0 1px #e8ae72;
 }
 .cartera-compra #banco {
-  gap:calc(3 * var(--u)); padding:calc(3 * var(--u)); border:1px dashed #dcac78; border-radius:calc(7 * var(--u)); background:#f3dfba;
+  gap:calc(3 * var(--u)); padding:calc(3 * var(--u)) calc(8 * var(--u)); border:1px dashed #dcac78; border-radius:calc(7 * var(--u)); background:#f3dfba;
 }
 .cartera-compra #banco .origen-dinero {
   position:relative; min-height:calc(39 * var(--u)); place-items:center;
@@ -723,7 +744,9 @@ button.ficha-mesa { cursor:grab; }
     grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);
   }
   #escena:has(.compra-en-caja) > :is(#bancoPanel,#respuesta),.carrito-en-caja { grid-area:1/2; }
-  .compra-en-caja { --altura-caja:clamp(calc(118 * var(--u)),calc(var(--alto,100dvh)*.46),calc(410 * var(--u))); }
+  .compra-en-caja {
+    --altura-caja:clamp(calc(75 * var(--u)),min(calc(var(--alto,100dvh)*.46),calc(100cqh - max(var(--diametro-moneda-juego),var(--alto-billete-juego)) - 50 * var(--u))),calc(410 * var(--u)));
+  }
 }
 @media (orientation:portrait) and (max-height:700px) {
   #appColones:has(.compra-en-caja) .herramientas { max-height:calc(130 * var(--u)); }
@@ -737,7 +760,9 @@ button.ficha-mesa { cursor:grab; }
 }
 @media (orientation:landscape) and (max-height:370px) {
   #escena:has(.compra-en-caja) { grid-template-columns:minmax(0,1.25fr) minmax(0,1fr); }
-  .compra-en-caja { --altura-caja:clamp(calc(82 * var(--u)),calc(var(--alto,100dvh)*.30),calc(120 * var(--u))); }
+  .compra-en-caja {
+    --altura-caja:clamp(calc(64 * var(--u)),min(calc(var(--alto,100dvh)*.30),calc(100cqh - max(var(--diametro-moneda-juego),var(--alto-billete-juego)) - 37 * var(--u))),calc(120 * var(--u)));
+  }
   .bandeja-caja header { font-size:calc(12 * var(--u)); }
   .bandeja-caja h3 { font-size:calc(13 * var(--u)); }
   .bandeja-caja .piezas-colocadas { min-height:calc(24 * var(--u)); padding-block:calc(2 * var(--u)); }
@@ -745,6 +770,6 @@ button.ficha-mesa { cursor:grab; }
 @media (max-height:700px) and (orientation:portrait),(max-height:370px) and (orientation:landscape) {
   .banco.cartera-compra { padding:calc(3 * var(--u)); }
   .cartera-compra h3 { margin-bottom:calc(2 * var(--u)); line-height:1.14; }
-  .cartera-compra #banco { padding:calc(2 * var(--u)); }
+  .cartera-compra #banco { padding-block:calc(2 * var(--u)); }
   .cartera-compra #banco .origen-dinero { min-width:calc(34 * var(--u)); min-height:calc(31 * var(--u)); }
 }

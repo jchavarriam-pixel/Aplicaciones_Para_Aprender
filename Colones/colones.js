@@ -1183,7 +1183,6 @@
     for(const {clase,preferencia} of controlesTamano){
       document.documentElement.style.setProperty('--escala-'+clase,opciones[preferencia]/100);
     }
-    app.toggleAttribute('data-muchos-billetes',opciones.activas.filter(valor=>largosBillete[valor]).length>=4);
   }
   function rotularAjustes() {
     $('denominaciones').innerHTML=valores.map(valor=>`<label><input type="checkbox" value="${valor}" aria-label="${etiquetaDinero(valor)}" ${opciones.activas.includes(valor)?'checked':''}>${pieza(valor)}</label>`).join('');
