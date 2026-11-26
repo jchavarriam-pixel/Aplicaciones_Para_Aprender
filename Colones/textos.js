@@ -28,6 +28,7 @@ Object.assign(window.TEXTOS_INGLES, {
   'Soy el cajero':'Be the cashier',
   'Cobra los productos y entrega el vuelto al cliente.':'Charge for the items and give the customer their change.',
   'Toca el sobre para abrirlo.':'Tap the envelope to open it.',
+  'Mira cómo se abre el sobre y cae el dinero.':'Watch the envelope open and the money fall out.',
   'Abrir sobre':'Open envelope',
   'Dinero en el sobre':'Money in the envelope',
   '¿Cuánto dinero hay en total?':'How much money is there altogether?',

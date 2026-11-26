@@ -37,7 +37,8 @@
   let compraCaja=null;
   let audioLector;
   let arrastre = null, ignorarClic = false;
-  let mesa, posicionesMesa, fichaElegida, animarSobre, cartera, mercanciaCliente, recibidos;
+  let mesa, posicionesMesa, fichaElegida, aperturaSobre, cartera, mercanciaCliente, recibidos;
+  const tiemposSobre={abrir:560,pausa:160,salir:520,intervalo:90};
   let avancePasillo=0, animacionPasillo=0, empuje=null, llegadaCaja=null;
   const velocidadInicialPasillo=1.25;
   let velocidadPasillo=velocidadInicialPasillo;
@@ -117,6 +118,7 @@
     if(!modo)return;
     limpiarArrastre();
     cerrarCompraCaja();
+    cancelarAperturaSobre();
     oferta=prepararProductos();
     elegidos=[];
     cancelarRecorrido();
@@ -127,7 +129,6 @@
     mesa=[...sobre];
     posicionesMesa=posicionesIniciales();
     fichaElegida=null;
-    animarSobre=false;
     cartera=[];
     pagado=0;
     dineroCliente=[];
@@ -191,26 +192,33 @@
   const fasesDinero = new Set(['medir','llenar','pagar','dar']);
   const fasesNumericas = new Set(['contar','corregir-vuelto']);
   function envoltura() {
-    return '<span class="cuerpo-sobre" aria-hidden="true"><span class="solapa-sobre"></span><span class="sello">₡</span></span>';
+    return '<span class="cuerpo-sobre" aria-hidden="true"><span class="boca-sobre"></span><span class="bolsillo-sobre"></span><span class="solapa-sobre"></span><span class="sello">₡</span></span>';
   }
   function verMesa() {
+    const cerrado=fase==='cerrado';
     const editable=fase==='contar';
+    const ocupado=Boolean(aperturaSobre);
     const fichas=mesa.map((valor,i)=>{
       const interior=pieza(valor);
       const marca=`class="ficha-mesa" data-ficha-mesa="${i}" style="--turno:${i}" aria-label="${etiquetaDinero(valor)}"`;
       return editable
-        ? `<button type="button" ${marca} aria-pressed="${fichaElegida===i}">${interior}</button>`
+        ? `<button type="button" ${marca} aria-pressed="${fichaElegida===i}" ${ocupado?'disabled':''}>${interior}</button>`
         : `<span ${marca} role="img">${interior}</span>`;
     }).join('');
-    return `<section class="tablero-mesa ${animarSobre?'abriendo':''}">
-      <header><div class="sobre-mini">${envoltura()}</div><h3>${t('Dinero sobre la mesa')}</h3>
-      ${editable?`<button type="button" id="ordenarMesa">${t('Agrupar por valor')}</button>`:''}</header>
-      <div class="mesa-libre" role="group" aria-label="${t('Dinero sobre la mesa')}">${fichas}</div>
-      ${editable?'':etiquetaTotal('Monto del sobre',sumar(sobre))}
+    const {abrir,pausa,salir,intervalo}=tiemposSobre;
+    const animacion=ocupado?`data-apertura style="--tiempo-solapa:${abrir}ms;--inicio-vaciado:${abrir+pausa}ms;--tiempo-salida:${salir}ms;--intervalo-salida:${intervalo}ms;--tiempo-vaciado:${salir+(mesa.length-1)*intervalo}ms;--transcurrido:${performance.now()-aperturaSobre.inicio}ms"`:'';
+    return `<section class="tablero-mesa" data-sobre="${cerrado?'cerrado':'abierto'}" ${animacion}>
+      <header>
+        <button class="sobre-mesa" type="button" id="abrirSobre" ${cerrado?'':'disabled aria-hidden="true"'}>${envoltura()}<span class="rotulo-sobre">${t('Abrir sobre')}</span></button>
+        <div class="controles-mesa"><h3>${t('Dinero sobre la mesa')}</h3>
+          ${cerrado||editable?`<button type="button" id="ordenarMesa" ${cerrado||ocupado?'disabled':''}>${t('Agrupar por valor')}</button>`:''}
+        </div>
+      </header>
+      <div class="mesa-libre" role="group" aria-label="${t('Dinero sobre la mesa')}" ${cerrado||ocupado?'aria-hidden="true"':''}>${fichas}</div>
+      ${fase==='listo'?etiquetaTotal('Monto del sobre',sumar(sobre)):''}
       </section>`;
   }
   function verSobre() {
-    if(fase==='cerrado') return `<button type="button" class="sobre cerrado" id="abrirSobre">${envoltura()}<strong>${t('Abrir sobre')}</strong></button>`;
     if(modo==='contar')return verMesa();
     return `<div class="meta-sobre">${etiquetaTotal('Tu sobre',sumar(sobre))}</div>`+destino('Dinero en el sobre','sobre abierto');
   }
@@ -651,12 +659,14 @@
   }
   const instruccionCobro=()=>t('Lleva los productos del carrito al mostrador, uno por uno.');
   const instruccionPago=()=>t(modo==='exacto'?'Saca de la cartera el monto exacto y ponlo en el mostrador.':'Pon en el mostrador más dinero que el total y espera el vuelto.');
+  const instruccionAbrirSobre=()=>t('Toca el sobre para abrirlo.');
+  const instruccionContarSobre=()=>t('Acomoda el dinero y escribe cuánto hay en total.');
   function instruccion() {
     switch(fase){
       case 'medir': return t('Toca o arrastra monedas y billetes al contador.');
       case 'decidir': return t('¿Te alcanza el dinero para comprarlo?');
-      case 'cerrado': return t('Toca el sobre para abrirlo.');
-      case 'contar': return t('Acomoda el dinero y escribe cuánto hay en total.');
+      case 'cerrado': return instruccionAbrirSobre();
+      case 'contar': return aperturaSobre?t('Mira cómo se abre el sobre y cae el dinero.'):instruccionContarSobre();
       case 'llenar': return idioma(`Pon ${formato(sumar(sobre))} en el sobre.`,`Put ${formato(sumar(sobre))} in the envelope.`);
       case 'elegir': return t(modo==='carrito'?'Escoge dos o tres productos y empuja el carrito hasta la caja.':'Escoge un producto y empuja el carrito hasta la caja.');
       case 'cobro-productos': return instruccionCobro();
@@ -696,20 +706,25 @@
     $('instruccion').textContent=instruccion();
     const lineas=$('textoInstruccion').dataset;
     if(compraCaja){
-      lineas.cobro=instruccionCobro();
-      lineas.pago=instruccionPago();
+      lineas.inicio=instruccionCobro();
+      lineas.siguiente=instruccionPago();
+    }else if(modo==='contar'){
+      lineas.inicio=instruccionAbrirSobre();
+      lineas.siguiente=instruccionContarSobre();
     }else{
-      delete lineas.cobro;
-      delete lineas.pago;
+      delete lineas.inicio;
+      delete lineas.siguiente;
     }
     $('bancoPanel').hidden=!fasesDinero.has(fase);
     $('bancoPanel').classList.toggle('cartera-compra',fase==='pagar');
     $('bancoTitulo').textContent=t(fase==='pagar'?'Tu cartera':fase==='dar'?'Caja registradora':'Banco de dinero');
     if(fasesDinero.has(fase))mostrarBanco();
     $('respuesta').hidden=!fasesNumericas.has(fase);
+    $('respuesta').inert=Boolean(aperturaSobre);
     escena.dataset.fase=fase;
     actualizarContenido();
     $('accion').hidden=['cerrado','decidir','elegir','cobro-productos','entregando','vuelto'].includes(fase);
+    $('accion').disabled=Boolean(aperturaSobre);
     $('accion').textContent=t(({medir:'Vaciar contador',escanear:'Cobrar',recibir:'Registrar pago',pagar:'Pagar',dar:'Dar vuelto',listo:'Siguiente ronda'})[fase]||'Revisar');
   }
   function anunciar(texto='',correcto=false) {
@@ -723,7 +738,7 @@
   }
   function cambiarFase(nueva,narrar=true) {
     cancelarRecorrido();
-    const conservarVista=fase==='cobro-productos'&&nueva==='pagar';
+    const conservarVista=(fase==='cobro-productos'&&nueva==='pagar')||(fase==='cerrado'&&nueva==='contar');
     fase=nueva;
     monto.value='';
     if(!conservarVista)escena.scrollTop=0;
@@ -772,6 +787,7 @@
     animacionPasillo=requestAnimationFrame(acercar);
   }
   function revisar() {
+    if(aperturaSobre)return;
     if(fase==='listo'||fase==='medir') return nuevaRonda();
     if(['cerrado','decidir','elegir','cobro-productos','entregando','vuelto'].includes(fase)) return;
     if(fase==='escanear'){
@@ -919,24 +935,53 @@
     dibujarMesa(fichas,destino);
   }
   function dibujarMesa(fichas,rect) {
-    const sobreAbierto=contenido.querySelector('.sobre-mini').getBoundingClientRect();
-    const escala=Matematicas.escala();
+    const boca=aperturaSobre?contenido.querySelector('.boca-sobre').getBoundingClientRect():null;
+    const escala=boca?Matematicas.escala():1;
     for(const {i,nodo} of fichas){
       const {x,y}=posicionesMesa[i];
       nodo.style.left=x*100+'%';
       nodo.style.top=y*100+'%';
-      if(animarSobre){
-        nodo.style.setProperty('--desde-x',(sobreAbierto.x+sobreAbierto.width/2-rect.x-x*rect.width)/escala+'px');
-        nodo.style.setProperty('--desde-y',(sobreAbierto.bottom-rect.y-y*rect.height)/escala+'px');
+      if(boca){
+        nodo.style.setProperty('--desde-x',(boca.x+boca.width/2-rect.x-x*rect.width)/escala+'px');
+        nodo.style.setProperty('--desde-y',(boca.y+boca.height*.48-rect.y-y*rect.height)/escala+'px');
       }
     }
   }
+  function cancelarAperturaSobre() {
+    if(aperturaSobre)clearTimeout(aperturaSobre.temporizador);
+    aperturaSobre=null;
+  }
+  function terminarAperturaSobre() {
+    cancelarAperturaSobre();
+    const tablero=contenido.querySelector('.tablero-mesa');
+    tablero.removeAttribute('data-apertura');
+    tablero.querySelector('.mesa-libre').removeAttribute('aria-hidden');
+    for(const boton of tablero.querySelectorAll('#ordenarMesa,.ficha-mesa'))boton.disabled=false;
+    $('respuesta').inert=false;
+    $('accion').disabled=false;
+    $('instruccion').textContent=instruccionContarSobre();
+    if(!ajustes.open){
+      monto.focus({preventScroll:true});
+      if(opciones.narracion)leer();
+    }
+  }
+  function abrirSobre() {
+    if(fase!=='cerrado')return;
+    if(movimientoReducido.matches){
+      cambiarFase('contar');
+      monto.focus({preventScroll:true});
+      return;
+    }
+    aperturaSobre={inicio:performance.now()};
+    cambiarFase('contar',false);
+    const {abrir,pausa,salir,intervalo}=tiemposSobre;
+    const duracion=abrir+pausa+salir+(mesa.length-1)*intervalo+40;
+    aperturaSobre.temporizador=setTimeout(terminarAperturaSobre,Math.max(0,duracion-(performance.now()-aperturaSobre.inicio)));
+  }
   function moverEnMesa(origen,x,y) {
-    if(fase!=='contar'||!mesa[origen])return;
+    if(fase!=='contar'||aperturaSobre||!mesa[origen])return;
     const rect=contenido.querySelector('.mesa-libre').getBoundingClientRect();
     fichaElegida=null;
-    animarSobre=false;
-    contenido.querySelector('.tablero-mesa').classList.remove('abriendo');
     contenido.querySelector('[data-ficha-mesa][aria-pressed=true]')?.setAttribute('aria-pressed','false');
     distribuirMesa(origen,{x:x-rect.x,y:y-rect.y});
   }
@@ -947,8 +992,6 @@
     }
     else{
       fichaElegida=fichaElegida!==i ? i : null;
-      animarSobre=false;
-      contenido.querySelector('.tablero-mesa').classList.remove('abriendo');
       boton.setAttribute('aria-pressed',String(fichaElegida===i));
     }
   }
@@ -1079,15 +1122,12 @@
       return;
     }
     if(boton.id==='abrirSobre') {
-      animarSobre=true;
-      cambiarFase('contar');
-      monto.focus({preventScroll:true});
+      abrirSobre();
     }
     else if(boton.id==='ordenarMesa') {
       mesa.sort((a,b)=>a-b);
       posicionesMesa=posicionesIniciales(false);
       fichaElegida=null;
-      animarSobre=false;
       actualizarContenido();
       $('ordenarMesa').focus({preventScroll:true});
     }
@@ -1122,9 +1162,6 @@
     }
     else if(boton.hasAttribute('data-quitar')) quitarDinero(Number(boton.dataset.quitar));
   });
-  escena.addEventListener('animationend',evento=>{
-    if(evento.animationName==='abrirSolapa')animarSobre=false;
-  });
   escena.addEventListener('keydown',evento=>{
     if(evento.target.id==='empujarCarrito'&&['ArrowUp','ArrowDown'].includes(evento.key)){
       evento.preventDefault();
@@ -1143,6 +1180,7 @@
     limpiarArrastre();
     cancelarRecorrido();
     cerrarCompraCaja();
+    cancelarAperturaSobre();
     window.speechSynthesis?.cancel();
     modo=vista;
     $('modos').hidden=Boolean(vista);
