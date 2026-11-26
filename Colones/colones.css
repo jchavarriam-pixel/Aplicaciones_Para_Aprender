@@ -774,6 +774,7 @@ button.ficha-mesa { cursor:grab; }
   position:relative; min-height:calc(39 * var(--u)); place-items:center;
   background:#fff7e2; border-radius:calc(5 * var(--u));
 }
+.cartera-compra #banco .origen-dinero:has(.moneda) { background:transparent; border-radius:50%; }
 .cartera-compra .origen-dinero:disabled { cursor:default; opacity:.45; }
 .cartera-compra .cantidad-piezas { top:auto; bottom:0; right:0; }
 @media (orientation:landscape) {

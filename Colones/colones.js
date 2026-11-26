@@ -14,8 +14,8 @@
     llenar:{nombre:'Preparar un sobre',guia:'Elige monedas y billetes para formar una cantidad.'},
     alcanza:{nombre:'¿Me alcanza?',guia:'Compara tu dinero con el precio de un producto.'},
     exacto:{nombre:'Compra exacta',guia:'Elige un producto y paga su precio exacto en la caja.'},
-    compra:{nombre:'Compra con vuelto',guia:'Compra un producto, paga de más y calcula el vuelto.'},
-    carrito:{nombre:'Carrito de compras',guia:'Compra de dos a tres productos, paga y calcula el vuelto.'},
+    compra:{nombre:'Compra con vuelto',guia:'Compra un producto y revisa el vuelto cuando haga falta.'},
+    carrito:{nombre:'Carrito de compras',guia:'Compra dos o tres productos y revisa el vuelto cuando haga falta.'},
     cajero:{nombre:'Soy el cajero',guia:'Pasa los productos, recibe el pago y entrega el vuelto.'}
   };
   const productos = ['Manzana','Pan','Leche','Jugo','Cuaderno','Lápiz','Bananas','Pelota','Mochila'];
@@ -89,25 +89,35 @@
       return {nombre,id,monedas:candidatos.get(precio),precio};
     })).slice(0,6);
   }
-  // Busca combinaciones de vuelto sin asumir que las denominaciones son múltiplos entre sí.
-  function formarVuelto(cantidad) {
+  // El conteo opcional limita la búsqueda al dinero que hay en la cartera.
+  function formarEfectivo(cantidad,existencias) {
     const orden=[...opciones.activas].reverse();
     const memo=new Set();
     function buscar(resto,i,libres) {
       if(resto===0) return [];
       const valor=orden[i];
       if(!valor || resto>valor*libres) return null;
-      if(i===orden.length-1) return resto%valor===0?Array(resto/valor).fill(valor):null;
+      const disponibles=existencias?(existencias.get(valor)||0):libres;
+      const posibles=Math.min(libres,disponibles,Math.floor(resto/valor));
+      if(i===orden.length-1) return resto===posibles*valor?Array(posibles).fill(valor):null;
       const estado=resto+':'+i+':'+libres;
       if(memo.has(estado)) return null;
       memo.add(estado);
-      for(let n=Math.min(libres,Math.floor(resto/valor));n>=0;n--){
+      for(let n=posibles;n>=0;n--){
         const cola=buscar(resto-n*valor,i+1,libres-n);
         if(cola)return Array(n).fill(valor).concat(cola);
       }
       return null;
     }
     return buscar(cantidad,0,24);
+  }
+  function pagoQueRequiereVuelto(total) {
+    const alternativas=opciones.activas.filter(valor=>total%valor!==0).map(valor=>{
+      const cantidad=Math.floor(total/valor)+1;
+      return {valor,cantidad,vuelto:cantidad*valor-total};
+    }).filter(pago=>pago.cantidad<=24).sort((a,b)=>a.cantidad-b.cantidad||a.vuelto-b.vuelto);
+    const pago=alternativas.find(({vuelto})=>formarEfectivo(vuelto));
+    return pago?Array(pago.cantidad).fill(pago.valor):null;
   }
   function cerrarCompraCaja(){
     if(!compraCaja)return;
@@ -135,8 +145,9 @@
     if(modo==='cajero'){
       mercanciaCliente=oferta.slice(0,entero(2,3)).map((_,i)=>i);
       recibidos=new Set();
-      const extra=entero(1,4)===1?[]:formar(entero(1,3));
-      dineroCliente=compactar(mercanciaCliente.flatMap(i=>oferta[i].monedas).concat(extra));
+      const exacto=mercanciaCliente.flatMap(i=>oferta[i].monedas);
+      const conVuelto=entero(1,4)===1?null:pagoQueRequiereVuelto(sumar(exacto));
+      dineroCliente=conVuelto||compactar(exacto);
     }
     if(modo==='alcanza'){
       const item=oferta[0];
@@ -172,7 +183,8 @@
   }
   function mostrarBanco() {
     const carteraAbierta=Boolean(compraCaja&&fase==='pagar');
-    banco.innerHTML=opciones.activas.map(valor=>`<button type="button" class="origen-dinero" data-dinero="${valor}" aria-label="${etiquetaDinero(valor)}">${pieza(valor)}${carteraAbierta?'<b class="cantidad-piezas" aria-hidden="true"></b>':''}</button>`).join('');
+    const disponibles=carteraAbierta?opciones.activas.filter(valor=>compraCaja.cartera.has(valor)):opciones.activas;
+    banco.innerHTML=disponibles.map(valor=>`<button type="button" class="origen-dinero" data-dinero="${valor}" aria-label="${etiquetaDinero(valor)}">${pieza(valor)}${carteraAbierta?'<b class="cantidad-piezas" aria-hidden="true"></b>':''}</button>`).join('');
     actualizarCarteraCompra();
   }
   function mostrarModos() {
@@ -493,18 +505,27 @@
   }
   function iniciarCompraCaja() {
     const existencias=contarPiezas(elegidos.flatMap(i=>oferta[i].monedas));
-    const cartera=new Map(opciones.activas.map(valor=>[valor,Math.max(2,existencias.get(valor)||0)]));
-    if(modo!=='exacto'){
-      const menor=opciones.activas[0];
-      cartera.set(menor,cartera.get(menor)+1);
+    const total=precio();
+    const conVuelto=modo!=='exacto'&&entero(0,1)===1?pagoQueRequiereVuelto(total):null;
+    const cartera=conVuelto?contarPiezas(conVuelto):new Map(opciones.activas.map(valor=>[valor,Math.max(2,existencias.get(valor)||0)]));
+    if(conVuelto){
+      // Agrega algunas piezas de sobra sin habilitar una combinación exacta.
+      for(const valor of barajar(opciones.activas).slice(0,3)){
+        const previas=cartera.get(valor)||0;
+        cartera.set(valor,previas+1);
+        if(formarEfectivo(total,cartera)){
+          if(previas)cartera.set(valor,previas);
+          else cartera.delete(valor);
+        }
+      }
     }
-    compraCaja={cartera,escaneados:[],pasando:null,cobrado:null,importe:0,vuelto:[],temporizadores:[]};
+    compraCaja={cartera,pagoExacto:!conVuelto,escaneados:[],pasando:null,cobrado:null,importe:0,vuelto:[],temporizadores:[]};
     cambiarFase('cobro-productos');
     contenido.querySelector('[data-poner-caja]')?.focus({preventScroll:true});
   }
   function actualizarCajaCompra() {
     if(!contenido.querySelector('.escena-caja')){
-      contenido.innerHTML=`<div class="compra-en-caja" ${opciones.activas.length>=8?'data-cartera-amplia':''}>
+      contenido.innerHTML=`<div class="compra-en-caja" ${compraCaja.cartera.size>=8?'data-cartera-amplia':''}>
         <div class="escena-caja" role="group">
           <img class="arte-caja" src="${imagenCaja}" alt="" draggable="false">
           <div class="estado-mostrador"></div>
@@ -543,7 +564,7 @@
   }
   function verBandejaCompra(vuelto) {
     const pagando=fase==='pagar';
-    const mostrandoVuelto=['vuelto','corregir-vuelto','entregando'].includes(fase)||(fase==='listo'&&modo!=='exacto');
+    const mostrandoVuelto=['vuelto','corregir-vuelto','entregando'].includes(fase)||(fase==='listo'&&aCambio()>0);
     const efectivo=mostrandoVuelto?vuelto:piezas;
     const fichas=fase==='entregando'?'':fichasPago(pagando,efectivo);
     const titulo=mostrandoVuelto?'Vuelto de la cajera':'Tu pago';
@@ -658,7 +679,7 @@
       </section>`;
   }
   const instruccionCobro=()=>t('Lleva los productos del carrito al mostrador, uno por uno.');
-  const instruccionPago=()=>t(modo==='exacto'?'Saca de la cartera el monto exacto y ponlo en el mostrador.':'Pon en el mostrador más dinero que el total y espera el vuelto.');
+  const instruccionPago=()=>t(compraCaja.pagoExacto?'Saca de la cartera el monto exacto y ponlo en el mostrador.':'Tu cartera no tiene el monto exacto. Paga de más y revisa el vuelto.');
   const instruccionAbrirSobre=()=>t('Toca el sobre para abrirlo.');
   const instruccionContarSobre=()=>t('Acomoda el dinero y escribe cuánto hay en total.');
   function instruccion() {
@@ -809,24 +830,23 @@
     }
     const total=sumar(piezas);
     const meta=({llenar:()=>sumar(sobre),dar:aCambio,pagar:precio})[fase]();
-    if(fase==='pagar'&&modo!=='exacto'){
-      if(total<meta)return anunciar('Falta dinero.');
-      if(total===meta)return anunciar('Entrega más dinero que el precio para practicar el vuelto.');
-      const vuelto=formarVuelto(total-meta);
-      if(!vuelto)return anunciar('Con ese pago, la caja no puede dar vuelto con las denominaciones activas. Prueba otro monto.');
-      pagado=total;
-      return entregarVuelto(vuelto);
-    }
     if(total===meta){
       if(fase==='pagar')pagado=total;
       return completar();
+    }
+    if(fase==='pagar'&&total>meta&&modo!=='exacto'){
+      if(compraCaja.pagoExacto)return anunciar('Puedes pagar el monto exacto con el dinero de tu cartera.');
+      const vuelto=formarEfectivo(total-meta);
+      if(!vuelto)return anunciar('Con ese pago, la caja no puede dar vuelto con las denominaciones activas. Prueba otro monto.');
+      pagado=total;
+      return entregarVuelto(vuelto);
     }
     anunciar(fase==='dar'?'El cliente necesita un vuelto distinto. Revisa la diferencia.':total<meta?'Falta dinero.':'Hay dinero de más. Quita alguna pieza.');
   }
   function agregarDinero(valor) {
     if(!opciones.activas.includes(valor)||!fasesDinero.has(fase))return;
     if(piezas.length>=24)return anunciar('Límite de piezas. Quita alguna para agregar otra.');
-    if(fase==='pagar'&&piezas.filter(ficha=>ficha===valor).length>=compraCaja.cartera.get(valor))return;
+    if(fase==='pagar'&&piezas.filter(ficha=>ficha===valor).length>=(compraCaja.cartera.get(valor)||0))return;
     piezas.push(valor);
     anunciar();
     actualizarContenido();
