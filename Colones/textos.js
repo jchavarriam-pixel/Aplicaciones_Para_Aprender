@@ -96,7 +96,7 @@ Object.assign(window.TEXTOS_INGLES,{
   'Dinero contado':'Counted money',
   'Toca el dinero del banco o arrástralo a la tolva.':'Tap money in the cash bank or drag it into the hopper.',
   'Apilar monedas y billetes del mismo valor':'Stack coins and banknotes of the same value',
-  'Al apilar, queda visible la mitad de cada pieza de abajo.':'Half of each piece underneath stays visible when stacked.',
+  'Al apilar, queda visible al menos la mitad de cada pieza de abajo.':'At least half of each piece underneath stays visible when stacked.',
   'Última pieza':'Last piece',
   'Total contado':'Total counted',
   'Vaciar contador':'Empty the counter',

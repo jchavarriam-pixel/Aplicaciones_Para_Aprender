@@ -142,6 +142,13 @@ body:has(#control-pantalla-completa[data-fullscreen=true]) .acciones-juego { pad
 .billete {
   --ficha-alto:min(calc(var(--base-billete,48px) * var(--escala-billetes,1)),var(--tope-billete,100vw));
   --ficha-ancho:calc(var(--ficha-alto) * var(--largo-billete) / 67);
+  container-type:size;
+}
+.valor-billete {
+  position:absolute; inset-block-start:calc(1 * var(--u)); inset-inline-start:10%; padding-inline:.22em;
+  border-radius:.23em; background:#182e40; color:#fff;
+  font-size:clamp(calc(10 * var(--u)),26cqh,calc(19 * var(--u)));
+  font-weight:900; font-variant-numeric:tabular-nums; line-height:1.07; pointer-events:none;
 }
 .escena .moneda { --ficha-ancho:calc(var(--diametro-moneda-juego)*var(--diametro-moneda)); }
 .escena .billete { --ficha-alto:var(--alto-billete-juego); }
@@ -163,6 +170,10 @@ button.pieza-colocada:has(.moneda) { min-width:calc(29 * var(--u)); min-height:c
 .pila-contador { --solape-pila:.50; }
 .pila-dinero .dinero { filter:drop-shadow(0 1px 1px #193d4460); }
 .pila-dinero .dinero + .dinero { margin-block-start:calc(-1 * var(--ficha-alto) * var(--solape-pila)); }
+.pila-dinero .billete + .billete {
+  /* A tamaños pequeños, reserva también el alto de la cifra del billete inferior. */
+  margin-block-start:calc(-1 * min(var(--ficha-alto) * var(--solape-pila),max(0px,var(--ficha-alto) - 13 * var(--u))));
+}
 .pila-billetes .billete { outline:1px solid #2c484d; }
 .cantidad-piezas {
   position:absolute; right:calc(-3 * var(--u)); top:0; background:#174541; color:white; padding:0 calc(3 * var(--u));

@@ -175,8 +175,11 @@
     cambiarFase(({contador:'medir',contar:'cerrado',llenar:'llenar',alcanza:'decidir',cajero:'escanear'})[modo]||'elegir');
   }
   function pieza(valor) {
-    const medida=largosBillete[valor]?`--largo-billete:${largosBillete[valor]}`:`--diametro-moneda:${diametrosMoneda[valor]}`;
-    return `<span class="dinero ${tipoDinero(valor)}" data-valor="${valor}" style="${medida}" aria-hidden="true"><img src="imagenes/dinero-${valor}.webp" alt="" draggable="false"></span>`;
+    const largo=largosBillete[valor];
+    const medida=largo?`--largo-billete:${largo}`:`--diametro-moneda:${diametrosMoneda[valor]}`;
+    const imagen=`imagenes/dinero-${valor}.webp${largo?'?v=anverso':''}`;
+    const cifra=largo?`<span class="valor-billete">${valor}</span>`:'';
+    return `<span class="dinero ${tipoDinero(valor)}" data-valor="${valor}" style="${medida}" aria-hidden="true"><img src="${imagen}" alt="" draggable="false">${cifra}</span>`;
   }
   const etiquetaDinero = valor => idioma(`${formato(valor)} en ${tipoDinero(valor)}`,`${formato(valor)} ${valor<1000?'coin':'banknote'}`);
   function actualizarCarteraCompra() {
