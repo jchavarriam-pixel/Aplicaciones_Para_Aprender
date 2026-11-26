@@ -230,9 +230,40 @@
       ${fase==='listo'?etiquetaTotal('Monto del sobre',sumar(sobre)):''}
       </section>`;
   }
-  function verSobre() {
-    if(modo==='contar')return verMesa();
-    return `<div class="meta-sobre">${etiquetaTotal('Tu sobre',sumar(sobre))}</div>`+destino('Dinero en el sobre','sobre abierto');
+  function efectivoSobre() {
+    return fichasPago(fase==='llenar')||`<p class="sobre-vacio">${t('Arrastra el dinero aquí o tócalo en el banco.')}</p>`;
+  }
+  function verSobreParaLlenar() {
+    const editable=fase==='llenar';
+    return `<section class="preparar-sobre">
+      <div class="montos-preparar">
+        ${etiquetaTotal('Monto pedido',sumar(sobre))}
+        ${opciones.ayudas||!editable?`<div id="saldoSobre" aria-live="polite" aria-atomic="true">${etiquetaTotal('Ya guardaste',sumar(piezas))}</div>`:''}
+      </div>
+      <section id="destinoDinero" class="sobre-preparar" aria-labelledby="tituloInteriorSobre">
+        <header class="entrada-sobre">
+          <h3 id="tituloInteriorSobre">${t('Dinero en el sobre')}</h3><span aria-hidden="true">${editable?'↓':'✓'}</span>
+        </header>
+        <div class="interior-sobre" id="interiorSobre">${efectivoSobre()}</div>
+        <footer class="frente-preparar"><span aria-hidden="true">₡</span>
+          ${editable?`<small>${t('Toca una pieza del sobre para sacarla.')}</small>`:''}
+        </footer>
+      </section>
+    </section>`;
+  }
+  function actualizarEfectivoSobre(entrando=false) {
+    const interior=$('interiorSobre');
+    interior.innerHTML=efectivoSobre();
+    const saldo=$('saldoSobre')?.querySelector('strong');
+    if(saldo)saldo.textContent=formato(sumar(piezas));
+    if(!entrando)return;
+    const agregada=interior.querySelector(`[data-indice-sobre="${piezas.length-1}"]`);
+    if(!agregada)return;
+    const arriba=agregada.offsetTop, abajo=arriba+agregada.offsetHeight;
+    if(arriba<interior.scrollTop)interior.scrollTop=arriba;
+    else if(abajo>interior.scrollTop+interior.clientHeight)interior.scrollTop=abajo-interior.clientHeight;
+    const imagen=agregada.querySelector('.pila-billetes > span:last-child .dinero')||agregada.firstElementChild;
+    imagen.classList.add('dinero-entrando');
   }
   function verContador() {
     return `<section class="contador-caja"><div class="pantalla-contador">
@@ -247,19 +278,23 @@
       ${fase==='decidir'?`<div class="decidir"><button type="button" data-alcanza="si">${t('Sí me alcanza')}</button><button type="button" data-alcanza="no">${t('No me alcanza')}</button></div>`:''}`;
   }
   function fichasPago(editable=false,efectivo=piezas) {
-    const agruparMonedas=modo==='contador'||modo==='llenar';
+    const agruparMonedas=modo==='contador';
     const grupos=[];
     const agrupados=new Map();
-    for(const valor of efectivo){
+    for(const [indice,valor] of efectivo.entries()){
       const agrupar=largosBillete[valor]?opciones.apilarBilletes:agruparMonedas;
-      if(agrupar&&agrupados.has(valor))agrupados.get(valor).cantidad++;
+      if(agrupar&&agrupados.has(valor)){
+        const ficha=agrupados.get(valor);
+        ficha.cantidad++;
+        ficha.indice=indice;
+      }
       else{
-        const ficha={valor,cantidad:1};
+        const ficha={valor,cantidad:1,indice};
         grupos.push(ficha);
         if(agrupar)agrupados.set(valor,ficha);
       }
     }
-    return grupos.map(({valor,cantidad})=>{
+    return grupos.map(({valor,cantidad,indice})=>{
       const apilado=cantidad>1&&largosBillete[valor];
       const imagen=apilado
         ? `<span class="pila-billetes" style="--cantidad-pila:${cantidad-1}" aria-hidden="true">${Array.from({length:cantidad},(_,i)=>
@@ -269,7 +304,7 @@
       const quitar=cantidad>1?idioma(`${etiqueta}. Quitar una pieza.`,`${etiqueta}. Remove one piece.`):
         idioma(`Quitar ${etiqueta}`,`Remove ${etiqueta}`);
       return editable
-        ? `<button type="button" class="pieza-colocada" data-quitar="${valor}" aria-label="${quitar}">${imagen}</button>`
+        ? `<button type="button" class="pieza-colocada" data-quitar="${valor}" ${modo==='llenar'?`data-indice-sobre="${indice}"`:''} aria-label="${quitar}">${imagen}</button>`
         : `<span class="pieza-colocada" role="img" aria-label="${etiqueta}">${imagen}</span>`;
     }).join('');
   }
@@ -688,7 +723,7 @@
       case 'decidir': return t('¿Te alcanza el dinero para comprarlo?');
       case 'cerrado': return instruccionAbrirSobre();
       case 'contar': return aperturaSobre?t('Mira cómo se abre el sobre y cae el dinero.'):instruccionContarSobre();
-      case 'llenar': return idioma(`Pon ${formato(sumar(sobre))} en el sobre.`,`Put ${formato(sumar(sobre))} in the envelope.`);
+      case 'llenar': return idioma(`Pon ${formato(sumar(sobre))} en el sobre y pulsa Revisar.`,`Put ${formato(sumar(sobre))} in the envelope and press Check.`);
       case 'elegir': return t(modo==='carrito'?'Escoge dos o tres productos y empuja el carrito hasta la caja.':'Escoge un producto y empuja el carrito hasta la caja.');
       case 'cobro-productos': return instruccionCobro();
       case 'pagar': return instruccionPago();
@@ -702,10 +737,11 @@
     }
   }
   function actualizarContenido() {
-    if(modo==='contar'||modo==='llenar'){
-      contenido.innerHTML=verSobre();
+    if(modo==='contar'){
+      contenido.innerHTML=verMesa();
       distribuirMesa();
     }
+    else if(modo==='llenar') contenido.innerHTML=verSobreParaLlenar();
     else if(modo==='contador') contenido.innerHTML=verContador();
     else if(modo==='alcanza') contenido.innerHTML=verAlcance();
     else if(fase==='elegir'){
@@ -849,6 +885,7 @@
     if(fase==='pagar'&&piezas.filter(ficha=>ficha===valor).length>=(compraCaja.cartera.get(valor)||0))return;
     piezas.push(valor);
     anunciar();
+    if(fase==='llenar')return actualizarEfectivoSobre(true);
     actualizarContenido();
     actualizarCarteraCompra();
     if(modo==='contador'&&opciones.narracion)leer(idioma(
@@ -1015,12 +1052,13 @@
       boton.setAttribute('aria-pressed',String(fichaElegida===i));
     }
   }
-  function quitarDinero(valor) {
-    const i=piezas.lastIndexOf(valor);
-    if(i<0||!fasesDinero.has(fase))return;
+  function quitarDinero(valor,indice) {
+    const i=fase==='llenar'?indice:piezas.lastIndexOf(valor);
+    if(piezas[i]!==valor||!fasesDinero.has(fase))return;
     piezas.splice(i,1);
     anunciar();
-    actualizarContenido();
+    if(fase==='llenar')actualizarEfectivoSobre();
+    else actualizarContenido();
     actualizarCarteraCompra();
     (contenido.querySelector(`[data-quitar="${valor}"]`)||banco.querySelector(`[data-dinero="${valor}"]`))?.focus({preventScroll:true});
   }
@@ -1180,7 +1218,7 @@
       guardarPago(Number(boton.dataset.recibir));
       escena.querySelector('[data-recibir]')?.focus({preventScroll:true});
     }
-    else if(boton.hasAttribute('data-quitar')) quitarDinero(Number(boton.dataset.quitar));
+    else if(boton.hasAttribute('data-quitar')) quitarDinero(Number(boton.dataset.quitar),Number(boton.dataset.indiceSobre));
   });
   escena.addEventListener('keydown',evento=>{
     if(evento.target.id==='empujarCarrito'&&['ArrowUp','ArrowDown'].includes(evento.key)){

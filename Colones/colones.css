@@ -131,11 +131,6 @@ body:has(#control-pantalla-completa[data-fullscreen=true]) .acciones-juego { pad
   box-shadow:inset 0 calc(-3 * var(--u)) 0 #004c47;
 }
 .principal:hover { background:#065951 }
-.sobre {
-  padding:calc(8 * var(--u)); border:2px solid #bd9f6c; border-radius:calc(10 * var(--u)); color:#674218; background:#ffedbc;
-  background-image:linear-gradient(148deg,transparent 51%,#eac681 52%,transparent 53%),linear-gradient(212deg,transparent 51%,#eac681 52%,transparent 53%);
-  text-align:center;
-}
 .dinero-en-sobre,.piezas-colocadas {
   display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:calc(5 * var(--u)); padding-block:calc(4 * var(--u));
 }
@@ -152,7 +147,7 @@ body:has(#control-pantalla-completa[data-fullscreen=true]) .acciones-juego { pad
 .escena .billete { --ficha-alto:var(--alto-billete-juego); }
 .banco { background:#edf8f0; border:1px solid #c9e2d6; border-radius:calc(13 * var(--u)); padding:calc(5 * var(--u)); }
 #bancoPanel { display:grid; grid-template-rows:auto minmax(0,1fr); min-height:0; max-height:100%; }
-.banco h3,.zona-dinero h3,.sobre h3,.cesta h3 { font-size:calc(15 * var(--u)); }
+.banco h3,.zona-dinero h3,.cesta h3 { font-size:calc(15 * var(--u)); }
 .banco h3 { text-align:center; margin-bottom:calc(4 * var(--u)); }
 #banco {
   display:flex; flex-wrap:wrap; justify-content:center; align-items:center; align-content:flex-start; gap:calc(5 * var(--u));
@@ -184,7 +179,6 @@ button.pieza-colocada:has(.moneda) { min-width:calc(29 * var(--u)); min-height:c
   max-height:max(calc(56 * var(--u)),34cqh); overflow-y:auto; scrollbar-width:thin; align-content:flex-start;
 }
 .sobre-destino { outline:calc(3 * var(--u)) solid #168958; outline-offset:calc(-3 * var(--u)); background-color:#d7fae0; }
-.meta-sobre { justify-self:center }
 .dato-total {
   display:flex; align-items:center; justify-content:space-between; gap:calc(8 * var(--u)); padding:calc(3 * var(--u)) calc(7 * var(--u));
   border-radius:calc(7 * var(--u)); background:#e8f7ef; color:#185342; font-weight:800;
@@ -324,6 +318,88 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
 /* Recortes del material de práctica y escenas de la tienda. */
 .dinero img { width:100%; height:100%; display:block; object-fit:contain; pointer-events:none; }
 .dinero { flex:none; }
+
+#escena[data-fase=llenar] {
+  --alto-sobre:clamp(max(calc(60 * var(--u)),calc(max(var(--diametro-moneda-juego),var(--alto-billete-juego)) + 12 * var(--u))),
+    calc(43cqh - 74 * var(--u)),calc(205 * var(--u)));
+  align-items:center; align-content:safe center;
+}
+#escena[data-fase=llenar] #bancoPanel { align-self:center; min-height:min(100%,calc(70 * var(--u))); }
+#escena[data-fase=llenar] #banco {
+  padding:calc(4 * var(--u)); gap:calc(6 * var(--u));
+}
+#escena[data-fase=llenar] .origen-dinero {
+  min-width:calc(42 * var(--u)); min-height:calc(42 * var(--u)); place-items:center;
+  filter:drop-shadow(0 calc(2 * var(--u)) calc(1 * var(--u)) #15493a40);
+}
+.preparar-sobre { display:grid; gap:calc(7 * var(--u)); min-width:0; }
+.montos-preparar { display:flex; gap:calc(6 * var(--u)); justify-content:center; }
+.montos-preparar > * { flex:1 1 0; min-width:0; }
+.montos-preparar .dato-total {
+  height:100%; flex-direction:column; justify-content:center; gap:0; text-align:center;
+  border:1px solid #c2d5ee; background:#eef5ff; color:#224971;
+  font-size:calc(13 * var(--u)); line-height:1.16;
+}
+.montos-preparar #saldoSobre .dato-total { background:#eaf8ec; color:#185342; border-color:#bedbca; }
+.montos-preparar .dato-total strong { font-size:calc(24 * var(--u)); }
+.sobre-preparar {
+  position:relative; margin-top:calc(16 * var(--u)); min-width:0; isolation:isolate;
+  display:grid; grid-template-rows:auto auto auto;
+  border:2px solid #b17d44; border-radius:calc(9 * var(--u));
+  background:#f9e5ba; color:#60401f; box-shadow:0 calc(3 * var(--u)) calc(6 * var(--u)) #80553326;
+}
+.sobre-preparar::before {
+  content:""; position:absolute; z-index:-1; bottom:100%; left:-2px; right:-2px; height:calc(18 * var(--u));
+  background:linear-gradient(#db9e56 0 calc(2 * var(--u)),#f4cf93 calc(2 * var(--u)),#dca561);
+  clip-path:polygon(0 100%,12% 0,88% 0,100% 100%);
+}
+.entrada-sobre {
+  display:flex; align-items:center; justify-content:center; gap:calc(7 * var(--u)); text-align:center;
+  padding:calc(3 * var(--u)) calc(6 * var(--u)); border-radius:calc(7 * var(--u)) calc(7 * var(--u)) 0 0;
+  background:linear-gradient(#f5d89f,#eabe7e); border-bottom:1px solid #bf8d55;
+}
+.entrada-sobre h3 { font-size:calc(15 * var(--u)); line-height:1.15; }
+.entrada-sobre > span { font-size:calc(16 * var(--u)); line-height:1; font-weight:900; }
+.interior-sobre {
+  position:relative; height:var(--alto-sobre,calc(130 * var(--u))); overflow:auto; scrollbar-width:thin;
+  display:flex; flex-wrap:wrap; align-items:center; align-content:safe center; justify-content:center;
+  gap:calc(6 * var(--u)); padding:calc(6 * var(--u)); background:linear-gradient(#f4d69d,#fff3d5 32%,#fceac4);
+  scrollbar-gutter:stable both-edges;
+}
+.sobre-vacio { max-width:26ch; text-align:center; font-size:calc(14 * var(--u)); line-height:1.2; }
+.interior-sobre .pieza-colocada { filter:drop-shadow(0 calc(2 * var(--u)) calc(1 * var(--u)) #754b274d); }
+.interior-sobre button.pieza-colocada { place-items:center; min-width:calc(38 * var(--u)); min-height:calc(38 * var(--u)); }
+.interior-sobre button.pieza-colocada:hover { outline:2px solid #ae7746; outline-offset:1px; }
+.frente-preparar {
+  display:flex; justify-content:center; align-items:center; gap:calc(6 * var(--u)); text-align:center;
+  padding:calc(3 * var(--u)) calc(6 * var(--u)); border-top:1px solid #d0a264; border-radius:0 0 calc(7 * var(--u)) calc(7 * var(--u));
+  background:linear-gradient(155deg,transparent 49%,#b67b382a 50%,transparent 51%),
+    linear-gradient(205deg,transparent 49%,#b67b382a 50%,transparent 51%),#f4ce8e;
+}
+.frente-preparar > span {
+  display:grid; place-items:center; flex:none; width:calc(19 * var(--u)); aspect-ratio:1;
+  background:#9a4e35; color:#fff9df; border-radius:50%; font-size:calc(12 * var(--u)); font-weight:900;
+}
+.frente-preparar small { font-size:calc(12 * var(--u)); line-height:1.15; font-weight:bold; }
+.sobre-preparar.sobre-destino { outline-offset:0; }
+.sobre-preparar.sobre-destino .entrada-sobre { background:#d1f5de; color:#185342; }
+@media (prefers-reduced-motion:no-preference) {
+  .interior-sobre .dinero-entrando { animation:guardarEnSobre .28s ease-out both; }
+}
+@keyframes guardarEnSobre {
+  from { opacity:.35; transform:translateY(calc(-20 * var(--u))) rotate(-8deg); }
+  to { opacity:1; transform:none; }
+}
+@media (orientation:landscape) {
+  #escena[data-fase=llenar] {
+    --alto-sobre:clamp(calc(65 * var(--u)),calc(100cqh - 139 * var(--u)),calc(245 * var(--u)));
+    grid-template-columns:minmax(0,1.14fr) minmax(0,1fr);
+  }
+}
+@media (orientation:portrait) and (max-height:650px) {
+  #appColones:has(#escena[data-fase=llenar]) .herramientas { max-height:calc(120 * var(--u)); }
+}
+
 .sobre-mesa {
   display:block; position:relative; justify-self:center; width:min(100%,calc(178 * var(--u)));
   padding:calc(37 * var(--u)) 0 0; border:0; border-radius:calc(9 * var(--u)); background:none;
