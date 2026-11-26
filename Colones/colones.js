@@ -9,7 +9,7 @@
   const diametrosMoneda = {10:.76,25:.81,50:.87,100:.92,500:1};
   const tipoDinero = valor => valor<1000 ? 'moneda' : 'billete';
   const modos = {
-    contador:{nombre:'Contador de dinero',guia:'Usa la tolva para contar dinero o formar un monto.'},
+    contador:{nombre:'Contador de dinero',guia:'Usa la máquina para contar monedas y billetes o formar un monto.'},
     contar:{nombre:'Cantidad en el sobre',guia:'Abre el sobre, cuenta y escribe cuánto dinero hay.'},
     llenar:{nombre:'Preparar un sobre',guia:'Elige monedas y billetes para formar una cantidad.'},
     alcanza:{nombre:'¿Me alcanza?',guia:'Compara tu dinero con el precio de un producto.'},
@@ -306,16 +306,23 @@
     return (reto?etiquetaTotal('Monto pedido',metaContador):etiquetaTotal('Última pieza',piezas.at(-1)??0))+
       (!reto||opciones.ayudas||fase==='listo'?etiquetaTotal('Total contado',sumar(piezas)):'');
   }
-  function fichaEnTolva() {
-    return colaContador.length?pieza(colaContador[0]):'';
+  function fichaEnRanura(tipo) {
+    const valor=colaContador[0];
+    return valor!==undefined&&tipoDinero(valor)===tipo?pieza(valor):'';
+  }
+  function ranuraContador(tipo,rotulo) {
+    return `<div class="entrada-contador" data-ranura="${tipo}">
+      <span class="rotulo-ranura">${t(rotulo)} <span aria-hidden="true">↓</span></span>
+      <span class="ranura-contador" aria-hidden="true"></span>
+      <div class="flujo-contador" aria-hidden="true">${fichaEnRanura(tipo)}</div>
+    </div>`;
   }
   function verContador() {
     return `<section class="contador-caja" ${colaContador.length?'data-procesando':''}>
       <div class="cabina-contador">
-        <section id="destinoDinero" class="tolva-contador" aria-labelledby="rotuloTolva">
-          <h3 id="rotuloTolva">${t('Tolva')}</h3>
-          <span class="embudo-contador" aria-hidden="true"><span class="boca-tolva">↓</span><span class="cuello-tolva"></span></span>
-          <div class="flujo-contador" id="flujoContador" aria-hidden="true">${fichaEnTolva()}</div>
+        <section id="destinoDinero" class="entradas-contador" aria-label="${t('Ranuras para el dinero')}">
+          ${ranuraContador('moneda','Monedas')}
+          ${ranuraContador('billete','Billetes')}
         </section>
         <div class="frente-contador">
           <div class="pantalla-contador" id="lecturaContador" role="group" aria-label="${t('Pizarra del contador')}">${lecturaContador()}</div>
@@ -341,10 +348,12 @@
   function esperandoContador() {
     return modo==='contador'&&varianteContador==='reto'&&colaContador.length>0;
   }
-  function pintarTolva() {
-    const flujo=$('flujoContador');
-    flujo.innerHTML=fichaEnTolva();
-    flujo.closest('.contador-caja').toggleAttribute('data-procesando',colaContador.length>0);
+  function pintarRanuras() {
+    const entradas=$('destinoDinero');
+    for(const ranura of entradas.children){
+      ranura.querySelector('.flujo-contador').innerHTML=fichaEnRanura(ranura.dataset.ranura);
+    }
+    entradas.closest('.contador-caja').toggleAttribute('data-procesando',colaContador.length>0);
     $('accion').disabled=esperandoContador();
   }
   function cancelarContador() {
@@ -353,7 +362,7 @@
     colaContador.length=0;
   }
   function contarSiguiente() {
-    pintarTolva();
+    pintarRanuras();
     if(!colaContador.length)return;
     sonarTolva(colaContador[0]);
     const registrar=()=>{
@@ -875,8 +884,8 @@
   function instruccion() {
     switch(fase){
       case 'medir': return varianteContador==='reto'
-        ?idioma(`Forma ${formato(metaContador)} en la tolva y pulsa Revisar.`,`Make ${formato(metaContador)} using the hopper and press Check.`)
-        :t('Toca el dinero del banco o arrástralo a la tolva.');
+        ?idioma(`Ingresa ${formato(metaContador)} en la máquina y pulsa Revisar.`,`Put ${formato(metaContador)} into the machine and press Check.`)
+        :t('Toca el dinero del banco o arrástralo a las ranuras.');
       case 'decidir': return t('¿Te alcanza el dinero para comprarlo?');
       case 'cerrado': return instruccionAbrirSobre();
       case 'contar': return aperturaSobre?t('Mira cómo se abre el sobre y cae el dinero.'):instruccionContarSobre();
