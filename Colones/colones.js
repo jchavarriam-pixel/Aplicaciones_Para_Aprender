@@ -40,8 +40,9 @@
   let mesa, posicionesMesa, fichaElegida, animarSobre, cartera, mercanciaCliente, recibidos;
   let avancePasillo=0, animacionPasillo=0, empuje=null, llegadaCaja=null;
   const mesasPorVuelta=6, pasoMesa=.36, inicioMesa=-.66, primeraMesa=.14;
+  const profundidadCajaInicial=.30, profundidadCajaFinal=.75, alturaReferenciaCaja=.34;
   const vueltaPasillo=valor=>((valor%mesasPorVuelta)+mesasPorVuelta)%mesasPorVuelta;
-  const imagenCaja='imagenes/caja-con-cajera.webp';
+  const imagenCaja='imagenes/caja-registro-frontal.webp';
   const movimientoReducido=matchMedia('(prefers-reduced-motion: reduce)');
   const t = texto => IdiomaVoz.t(texto);
   const en = () => IdiomaVoz.idioma==='en';
@@ -300,9 +301,9 @@
     return `<div class="pasillo" id="estante">
       <svg class="suelo-en-marcha" aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none"><path></path></svg>
       ${columna('izquierdo',0)}
+      <div class="caja-al-fondo" hidden><img src="${imagenCaja}" alt="" draggable="false"></div>
       <div class="camino-carrito">
         <button class="meta-caja" type="button" data-ir-caja>${t('Ir a la caja')}</button>
-        <div class="caja-al-fondo" hidden><img src="${imagenCaja}" alt="" draggable="false"></div>
         <div id="cesta" class="carrito-pasillo" role="group" aria-label="${t('Tu carrito')}">
           <img src="imagenes/carrito-perspectiva.webp" alt="" draggable="false">
           <div class="carga-carrito">${productosEnCesta()}</div>
@@ -329,6 +330,17 @@
     const p=perspectiva(profundidad,altura);
     return {x:50+45*x/p.fondo,y:100*(p.vertical-horizonte)/(recorteCercano-horizonte),fondo:p.fondo};
   };
+  const fondoCajaAlLlegar=perspectiva(profundidadCajaFinal,alturaReferenciaCaja).fondo;
+  function proyectarCaja(pasillo) {
+    const caja=pasillo.querySelector('.caja-al-fondo');
+    caja.hidden=!llegadaCaja;
+    if(!llegadaCaja)return;
+    const profundidad=profundidadCajaInicial+llegadaCaja.salida;
+    const fondo=perspectiva(profundidad,alturaReferenciaCaja).fondo;
+    caja.style.top=proyectar(0,profundidad).y+'%';
+    caja.style.zIndex=Math.round((profundidad-inicioMesa)*100);
+    caja.style.setProperty('--escala-caja',.43*fondoCajaAlLlegar/fondo);
+  }
   const trazar= puntos=>puntos.map(({x,y},i)=>`${i?'L':'M'}${x.toFixed(2)} ${y.toFixed(2)}`).join('')+'Z';
   function pintarSuelo(pasillo,avance) {
     const caminos=[];
@@ -382,8 +394,8 @@
     if(!pasillo)return;
     const avance=vueltaPasillo(avancePasillo);
     pasillo.style.setProperty('--rodar',avance);
-    pasillo.style.setProperty('--marcha-carrito',llegadaCaja?.progreso||0);
     pintarSuelo(pasillo,avance);
+    proyectarCaja(pasillo);
     // Al salir hacia la caja, las mesas que pasan dejan de volver al fondo.
     const base=llegadaCaja?.inicio??avance, salida=llegadaCaja?.salida??0;
     for(const puesto of pasillo.querySelectorAll('[data-tramo]')){
@@ -463,22 +475,26 @@
     const {escaneados,pasando,cobrado,importe,vuelto}=compraCaja;
     const escaneando=fase==='cobro-productos';
     const entregando=fase==='entregando';
-    const paso=pasando===null?'':`<span class="producto-en-caja" aria-hidden="true" style="--pasado:${performance.now()-pasando.inicio}ms">${producto(oferta[pasando.i])}</span>`;
+    const paso=pasando===null?'':`<span class="producto-en-caja" aria-hidden="true" style="--pasado:${performance.now()-pasando.inicio}ms;--posicion-caja:${11.3+escaneados.length*12.7}%">${producto(oferta[pasando.i])}</span>`;
     const restantes=elegidos.filter(i=>!escaneados.includes(i)&&i!==pasando?.i);
     const entrega=entregando?`<div class="dinero-en-camino" aria-hidden="true">${vuelto.slice(0,3).map(pieza).join('')}</div>`:'';
     const carrito=escaneando?`<section class="carrito-en-caja" aria-label="${t('Tu carrito')}">
       ${restantes.map(i=>`<button type="button" data-poner-caja="${i}" aria-label="${t('Poner en el mostrador')} · ${t(oferta[i].nombre)}" ${pasando!==null?'disabled':''}>${producto(oferta[i])}<span>${t(oferta[i].nombre)}</span></button>`).join('')}</section>`:'';
-    const pantalla=`<div class="pantalla-registro" aria-live="polite">
+    const pantalla=`<div class="lectura-registro" aria-live="polite">
+      <div class="pantalla-registro"><small>${t('Total')}</small><strong data-importe-caja>${formato(importe)}</strong></div>
       <span data-costo-producto>${cobrado===null?'':t(oferta[cobrado].nombre)+' · '+formato(oferta[cobrado].precio)}</span>
-      <small>${t('Total')}</small><strong data-importe-caja>${formato(importe)}</strong></div>`;
+    </div>`;
     return `<div class="compra-en-caja">
       <div class="escena-caja" role="group" aria-label="${t('Mostrador y caja registradora')}">
         <img class="arte-caja" src="${imagenCaja}" alt="" draggable="false">
         ${pantalla}
         <div class="lector-caja" aria-hidden="true" ${pasando!==null?`data-escaneando style="--pasado:${performance.now()-pasando.inicio}ms"`:''}></div>
         ${escaneando&&pasando===null?`<div class="zona-colocar">${t('Pon el producto aquí')}</div>`:''}
-        <div class="bandeja-productos-caja" role="group" aria-label="${t('Bandeja de productos escaneados')}">
-          ${escaneados.map(i=>`<span role="img" aria-label="${t(oferta[i].nombre)}">${producto(oferta[i])}</span>`).join('')}
+        <div class="caja-productos" role="group" aria-label="${t('Caja transparente de productos escaneados')}">
+          <div class="productos-dentro">
+            ${escaneados.map(i=>`<span role="img" aria-label="${t(oferta[i].nombre)}">${producto(oferta[i])}</span>`).join('')}
+          </div>
+          <i class="costado-caja-productos" aria-hidden="true"></i>
         </div>
         ${paso}${entrega}
       </div>
@@ -682,6 +698,7 @@
   }
   function llegarCaja() {
     if(fase!=='elegir'||llegadaCaja)return;
+    const velocidad=(empuje?.velocidad>0?empuje.velocidad:1.25)*pasoMesa;
     detenerPasillo();
     if(elegidos.length<(modo==='carrito'?2:1)){
       anunciar(modo==='carrito'?'Recoge dos o tres productos antes de ir a la caja.':'Recoge un producto antes de ir a la caja.');
@@ -689,23 +706,27 @@
     }
     if(movimientoReducido.matches)return iniciarCompraCaja();
     anunciar();
-    llegadaCaja={inicio:avancePasillo,salida:0,progreso:0};
+    llegadaCaja={inicio:avancePasillo,salida:0};
     contenido.querySelector('[data-ir-caja]').hidden=true;
-    const caja=contenido.querySelector('.caja-al-fondo');
     for(const control of contenido.querySelectorAll('.producto,.carrito-pasillo button,[data-paso]'))control.disabled=true;
-    const comenzar=performance.now(), duracionSalida=1000, mostrarCajaEn=duracionSalida+120;
+    const distancia=profundidadCajaFinal-profundidadCajaInicial, freno=.08;
+    const tiempoCrucero=(distancia-freno)/velocidad, tiempoFreno=2*freno/velocidad;
+    const comenzar=performance.now();
     function acercar(tiempo) {
-      const transcurrido=tiempo-comenzar;
-      const salida=Math.min(1,transcurrido/duracionSalida);
-      const llegada=Math.min(1,Math.max(0,(transcurrido-mostrarCajaEn)/680));
-      llegadaCaja.salida=mesasPorVuelta*pasoMesa*salida**2*(3-2*salida);
-      llegadaCaja.progreso=llegada**2*(3-2*llegada);
-      avancePasillo=vueltaPasillo(llegadaCaja.inicio+llegadaCaja.salida/pasoMesa+.72*llegadaCaja.progreso);
-      pintarPasillo();
-      if(transcurrido>=mostrarCajaEn)caja.hidden=false;
-      if(llegada<1)animacionPasillo=requestAnimationFrame(acercar);
+      const segundos=Math.max(0,(tiempo-comenzar)/1000);
+      if(segundos<tiempoCrucero+tiempoFreno+.30){
+        const frenado=Math.min(1,Math.max(0,(segundos-tiempoCrucero)/tiempoFreno));
+        const salida=Math.min(segundos,tiempoCrucero)*velocidad+freno*frenado*(2-frenado);
+        if(salida!==llegadaCaja.salida){
+          llegadaCaja.salida=salida;
+          avancePasillo=vueltaPasillo(llegadaCaja.inicio+salida/pasoMesa);
+          pintarPasillo();
+        }
+        animacionPasillo=requestAnimationFrame(acercar);
+      }
       else iniciarCompraCaja();
     }
+    pintarPasillo();
     animacionPasillo=requestAnimationFrame(acercar);
   }
   function revisar() {

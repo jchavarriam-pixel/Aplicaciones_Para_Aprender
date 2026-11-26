@@ -143,7 +143,7 @@ Object.assign(window.TEXTOS_INGLES,{
   'Poner en el mostrador':'Put on the counter',
   'Mostrador y caja registradora':'Checkout counter and cash register',
   'Pon el producto aquí':'Put the item here',
-  'Bandeja de productos escaneados':'Tray of scanned items',
+  'Caja transparente de productos escaneados':'Clear box of scanned items',
   'Tu cartera':'Your wallet',
   'Pon el dinero aquí':'Put the money here',
   'Vuelto de la cajera':'Change from the cashier',
