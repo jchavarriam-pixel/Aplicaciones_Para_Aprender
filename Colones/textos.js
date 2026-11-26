@@ -92,6 +92,7 @@ Object.assign(window.TEXTOS_INGLES,{
   'Explorar':'Explore',
   'Formar un monto':'Make an amount',
   'Tolva':'Hopper',
+  'Sonidos de la tolva':'Hopper sounds',
   'Pizarra del contador':'Counter display',
   'Dinero contado':'Counted money',
   'Toca el dinero del banco o arrástralo a la tolva.':'Tap money in the cash bank or drag it into the hopper.',

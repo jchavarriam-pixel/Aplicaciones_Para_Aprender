@@ -539,34 +539,58 @@ button.ficha-mesa { cursor:grab; }
 }
 .contador-caja {
   display:grid; grid-template-rows:auto minmax(0,1fr); gap:calc(5 * var(--u)); min-height:0; min-width:0;
-  border:calc(3 * var(--u)) solid #064b4e; border-radius:calc(17 * var(--u));
-  padding:calc(6 * var(--u)); background:linear-gradient(145deg,#42a9a1,#197770);
-  box-shadow:inset 0 calc(-4 * var(--u)) 0 #115e58,0 calc(2 * var(--u)) calc(4 * var(--u)) #064b4e40;
+  border:calc(3 * var(--u)) solid #134b53; border-bottom-width:calc(5 * var(--u)); border-radius:calc(16 * var(--u)) calc(16 * var(--u)) calc(12 * var(--u)) calc(12 * var(--u));
+  padding:calc(6 * var(--u));
+  background:linear-gradient(155deg,#83d4c5 0%,#3d9e93 32%,#247776 72%,#19535c);
+  box-shadow:inset 0 calc(2 * var(--u)) 0 #caefe1,inset calc(-4 * var(--u)) 0 0 #1755604a,
+    0 calc(4 * var(--u)) calc(5 * var(--u)) #183d4550;
 }
 .cabina-contador {
   display:grid; grid-template-columns:minmax(calc(66 * var(--u)),.66fr) minmax(0,1.5fr); gap:calc(5 * var(--u));
 }
 .tolva-contador {
   position:relative; display:grid; grid-template-rows:auto minmax(calc(30 * var(--u)),1fr); justify-items:center; align-items:center;
-  min-height:calc(55 * var(--u)); padding:calc(3 * var(--u)); border:1px solid #8bd4c8; border-radius:calc(9 * var(--u));
-  background:linear-gradient(#e4faf1,#adddd6); color:#16433f; text-align:center;
+  min-height:calc(55 * var(--u)); padding:calc(2 * var(--u)) calc(3 * var(--u)) calc(3 * var(--u));
+  border:1px solid #2b6a66; border-radius:calc(8 * var(--u));
+  background:linear-gradient(142deg,#e0f7eb,#8ac8bd); color:#16433f; text-align:center;
+  box-shadow:inset 0 calc(1 * var(--u)) 0 #f0fff5,0 calc(2 * var(--u)) 0 #1d6869;
 }
 .tolva-contador h3 { font-size:calc(14 * var(--u)); line-height:1.1; }
 .embudo-contador {
-  display:grid; place-items:start center; width:94%; height:100%; padding-top:calc(2 * var(--u));
-  background:linear-gradient(112deg,#bf6e29,#f5bc67 24%,#ffdb88 60%,#bd6d2b);
-  clip-path:polygon(0 0,100% 0,70% 62%,70% 78%,61% 100%,39% 100%,30% 78%,30% 62%);
+  position:relative; display:grid; place-items:start center; width:97%; height:100%; padding-top:calc(3 * var(--u));
+  background:linear-gradient(180deg,#fff5c2 0 11%,transparent 12%),linear-gradient(102deg,#a45d24,#f5b85d 31%,#ffde8a 57%,#b56c2a 92%);
+  clip-path:polygon(2% 0,98% 0,100% 10%,82% 53%,67% 71%,64% 100%,36% 100%,33% 71%,18% 53%,0 10%);
 }
 .boca-tolva {
-  display:grid; place-items:center; width:84%; height:58%; border-radius:calc(7 * var(--u)) calc(7 * var(--u)) 45% 45%;
-  background:linear-gradient(#112f31,#284746); color:#f9e1a3; line-height:1; font-weight:900;
-  box-shadow:inset 0 calc(2 * var(--u)) calc(3 * var(--u)) #0c222c;
+  display:grid; place-items:center; width:87%; height:53%; border-radius:calc(8 * var(--u)) calc(8 * var(--u)) 45% 45%;
+  background:linear-gradient(#0a2026,#2c5155); color:#fbe6a8; line-height:1; font-weight:900; font-size:calc(14 * var(--u));
+  box-shadow:inset 0 calc(2 * var(--u)) calc(3 * var(--u)) #06171e,0 calc(1 * var(--u)) 0 #ffebaa;
+}
+.cuello-tolva {
+  position:absolute; inset:auto 33% 0; height:26%;
+  background:linear-gradient(90deg,#9a5427,#eab261 32%,#ffdf94 58%,#a55929);
+  border-top:calc(2 * var(--u)) solid #985128;
 }
 .tolva-contador.sobre-destino { background:#fff7cb; outline-color:#ffe685; outline-offset:calc(1 * var(--u)); }
 .tolva-contador.sobre-destino .boca-tolva,.contador-caja[data-procesando] .boca-tolva { color:#fff6bc; background:#22724c; }
 .flujo-contador {
   position:absolute; z-index:1; pointer-events:none; overflow:hidden; inset:0;
   display:grid; place-items:center; border-radius:inherit;
+}
+.frente-contador {
+  position:relative; min-width:0; display:grid; padding:calc(6 * var(--u)) calc(4 * var(--u)) calc(3 * var(--u));
+  border:1px solid #235f60; border-radius:calc(8 * var(--u));
+  background:linear-gradient(#71bbb0,#2c7f7a);
+  box-shadow:inset 0 calc(1 * var(--u)) 0 #b5e8d7,0 calc(2 * var(--u)) 0 #184d52;
+}
+.piloto-contador {
+  position:absolute; inset:0 calc(8 * var(--u)) auto auto; transform:translateY(-29%);
+  width:calc(9 * var(--u)); height:calc(9 * var(--u)); border-radius:50%; border:1px solid #1f5649;
+  background:radial-gradient(at 35% 30%,#e7ffc9,#78bd5a 66%,#487c45);
+}
+.contador-caja[data-procesando] .piloto-contador {
+  background:radial-gradient(at 35% 30%,#fffddd,#ffe269 66%,#bf8c26);
+  box-shadow:0 0 calc(6 * var(--u)) #ffe67c;
 }
 .pantalla-contador {
   display:grid; grid-auto-flow:column; grid-auto-columns:minmax(0,1fr); gap:calc(3 * var(--u));
@@ -585,10 +609,21 @@ button.ficha-mesa { cursor:grab; }
 .bandeja-contador {
   display:grid; grid-template-rows:auto minmax(0,1fr); overflow:hidden;
   min-height:calc(26 * var(--u) + min(max(var(--diametro-moneda-juego),var(--alto-billete-juego)),50 * var(--u)));
-  border:1px solid #8fc4b5; border-radius:calc(8 * var(--u)); background:#f0f8ec;
+  border:1px solid #235b5c; border-radius:calc(7 * var(--u)) calc(7 * var(--u)) calc(10 * var(--u)) calc(10 * var(--u));
+  background:linear-gradient(#bbd9ce,#f0f8ec 24%,#e0eee4);
+  box-shadow:inset 0 calc(-3 * var(--u)) 0 #82b9ac,0 calc(2 * var(--u)) 0 #174952;
+}
+.salida-contador {
+  display:flex; align-items:center; justify-content:space-between; gap:calc(4 * var(--u));
+  padding-inline:calc(6 * var(--u)); border-bottom:1px solid #75aaa3; background:linear-gradient(#cee7da,#9cc7bb);
 }
 .bandeja-contador h3 {
-  padding:calc(2 * var(--u)) calc(6 * var(--u)); color:#214b42; background:#d4eadd; font-size:calc(13 * var(--u)); line-height:1.18;
+  padding-block:calc(2 * var(--u)); color:#214b42; font-size:calc(13 * var(--u)); line-height:1.18;
+}
+.rodillos-contador {
+  flex:none; width:24%; height:calc(8 * var(--u)); border-radius:calc(6 * var(--u));
+  background:repeating-linear-gradient(110deg,#122c35 0 calc(3 * var(--u)),#3d646b calc(3 * var(--u)) calc(5 * var(--u)));
+  box-shadow:0 calc(1 * var(--u)) 0 #e5f8ec,inset 0 calc(2 * var(--u)) 0 #102c35;
 }
 .contador-caja .piezas-colocadas {
   position:relative; min-height:0; overflow:auto; align-items:flex-start; align-content:flex-start; scrollbar-width:thin;
@@ -597,13 +632,22 @@ button.ficha-mesa { cursor:grab; }
 .contador-caja .pieza-colocada { filter:drop-shadow(0 1px 1px #193d4440); }
 @media (prefers-reduced-motion:no-preference) {
   .flujo-contador .dinero { animation:pasarPorTolva .30s ease-in both; }
+  .flujo-contador .moneda { animation-name:caerMonedaTolva; }
+  .contador-caja[data-procesando] .rodillos-contador { animation:girarRodillos .26s linear infinite; }
   .pieza-contada { animation:recibirEnContador .24s ease-out; }
 }
 @keyframes pasarPorTolva {
-  0% { transform:translateY(-37%) rotate(-9deg) scale(.83); }
-  68% { opacity:1; transform:translateY(22%) scale(.48); }
-  100% { opacity:0; transform:translateY(66%) scale(.18); }
+  0% { transform:translateY(-55%) rotate(-14deg) scale(.83); }
+  63% { opacity:1; transform:translateY(3%) rotate(-7deg) scale(.52,.39); }
+  100% { opacity:0; transform:translateY(32%) rotate(4deg) scale(.21,.11); }
 }
+@keyframes caerMonedaTolva {
+  0% { transform:translateY(-65%) rotateY(0deg) scale(.90); }
+  49% { transform:translateY(0) rotateY(155deg) scale(.63); }
+  70% { opacity:1; transform:translateY(-17%) rotateY(205deg) scale(.46); }
+  100% { opacity:0; transform:translateY(36%) rotateY(325deg) scale(.23); }
+}
+@keyframes girarRodillos { to { background-position:calc(5 * var(--u)) 0; } }
 @keyframes recibirEnContador { from { opacity:.50; translate:0 calc(-6 * var(--u)); } }
 @media (orientation:landscape) {
   #escena[data-fase=medir]:has(>#bancoPanel) { grid-template-rows:minmax(0,1fr); }

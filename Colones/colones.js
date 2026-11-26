@@ -32,6 +32,7 @@
     narracion:guardado.narracion!==false, apilarBilletes:guardado.apilarBilletes===true,
     mostrarCifraBilletes:guardado.mostrarCifraBilletes===true,
     apilarContador:guardado.apilarContador===true,
+    sonidosTolva:guardado.sonidosTolva!==false,
     tamanoBilletes:limitarEscala(guardado.tamanoBilletes,$('tamanoBilletes')),
     tamanoMonedas:limitarEscala(guardado.tamanoMonedas,$('tamanoMonedas')), nombresProductos:guardado.nombresProductos!==false,
     vueltoCaja:tiposVuelto.includes(guardado.vueltoCaja)?guardado.vueltoCaja:'correcto'};
@@ -40,7 +41,7 @@
   const colaContador=[];
   let temporizadorContador=0;
   let compraCaja=null;
-  let audioLector;
+  let audioEfectos, aireTolva;
   let arrastre = null, ignorarClic = false;
   let mesa, posicionesMesa, fichaElegida, aperturaSobre, cartera, mercanciaCliente, recibidos;
   const tiemposSobre={abrir:560,pausa:160,salir:520,intervalo:90};
@@ -304,13 +305,18 @@
       <div class="cabina-contador">
         <section id="destinoDinero" class="tolva-contador" aria-labelledby="rotuloTolva">
           <h3 id="rotuloTolva">${t('Tolva')}</h3>
-          <span class="embudo-contador" aria-hidden="true"><span class="boca-tolva">↓</span></span>
+          <span class="embudo-contador" aria-hidden="true"><span class="boca-tolva">↓</span><span class="cuello-tolva"></span></span>
           <div class="flujo-contador" id="flujoContador" aria-hidden="true">${fichaEnTolva()}</div>
         </section>
-        <div class="pantalla-contador" id="lecturaContador" role="group" aria-label="${t('Pizarra del contador')}">${lecturaContador()}</div>
+        <div class="frente-contador">
+          <div class="pantalla-contador" id="lecturaContador" role="group" aria-label="${t('Pizarra del contador')}">${lecturaContador()}</div>
+          <span class="piloto-contador" aria-hidden="true"></span>
+        </div>
       </div>
       <section class="bandeja-contador" aria-labelledby="rotuloDineroContado">
-        <h3 id="rotuloDineroContado">${t('Dinero contado')}</h3>
+        <header class="salida-contador">
+          <h3 id="rotuloDineroContado">${t('Dinero contado')}</h3><span class="rodillos-contador" aria-hidden="true"></span>
+        </header>
         <div class="piezas-colocadas" id="dineroContado">${fichasPago(fase==='medir')}</div>
       </section>
     </section>`;
@@ -339,6 +345,7 @@
   function contarSiguiente() {
     pintarTolva();
     if(!colaContador.length)return;
+    sonarTolva(colaContador[0]);
     const registrar=()=>{
       const valor=colaContador.shift();
       piezas.push(valor);
@@ -700,34 +707,86 @@
       ${fase==='listo'&&mostrandoVuelto?`<p class="resultado-vuelto">${t('Vuelto correcto')} <strong>${formato(aCambio())}</strong></p>`:''}
     </section>`;
   }
-  function prepararSonidoLector() {
+  function prepararAudioEfectos() {
     const Audio=window.AudioContext||window.webkitAudioContext;
     if(!Audio)return;
     try{
-      audioLector??=new Audio();
-      if(audioLector.state!=='running')audioLector.resume().catch(()=>{});
+      audioEfectos??=new Audio();
+      if(audioEfectos.state!=='running')audioEfectos.resume().catch(()=>{});
     }catch{}
   }
   function sonarLector() {
-    if(!audioLector)return;
+    if(!audioEfectos)return;
     try{
-      const inicio=audioLector.currentTime;
-      const tono=audioLector.createOscillator(), volumen=audioLector.createGain();
+      const inicio=audioEfectos.currentTime;
+      const tono=audioEfectos.createOscillator(), volumen=audioEfectos.createGain();
       tono.frequency.value=2340;
       volumen.gain.setValueAtTime(.001,inicio);
       volumen.gain.linearRampToValueAtTime(.08,inicio+.004);
       volumen.gain.setValueAtTime(.08,inicio+.062);
       volumen.gain.exponentialRampToValueAtTime(.001,inicio+.087);
       tono.connect(volumen);
-      volumen.connect(audioLector.destination);
+      volumen.connect(audioEfectos.destination);
       tono.onended=()=>{tono.disconnect();volumen.disconnect();};
       tono.start(inicio);
       tono.stop(inicio+.09);
     }catch{}
   }
+  function sonarSuccion(audio,inicio) {
+    if(!aireTolva){
+      aireTolva=audio.createBuffer(1,Math.ceil(audio.sampleRate*.25),audio.sampleRate);
+      const muestras=aireTolva.getChannelData(0);
+      for(let i=0;i<muestras.length;i++)muestras[i]=Math.random()*2-1;
+    }
+    const aire=audio.createBufferSource(), filtro=audio.createBiquadFilter(), volumen=audio.createGain();
+    aire.buffer=aireTolva;
+    filtro.type='bandpass';
+    filtro.Q.value=.85;
+    filtro.frequency.setValueAtTime(460,inicio);
+    filtro.frequency.exponentialRampToValueAtTime(2100,inicio+.135);
+    filtro.frequency.exponentialRampToValueAtTime(650,inicio+.24);
+    volumen.gain.setValueAtTime(.001,inicio);
+    volumen.gain.linearRampToValueAtTime(.33,inicio+.065);
+    volumen.gain.linearRampToValueAtTime(.23,inicio+.155);
+    volumen.gain.exponentialRampToValueAtTime(.001,inicio+.247);
+    aire.connect(filtro);
+    filtro.connect(volumen);
+    volumen.connect(audio.destination);
+    aire.onended=()=>{aire.disconnect();filtro.disconnect();volumen.disconnect();};
+    aire.start(inicio);
+  }
+  function sonarMoneda(audio,inicio,valor) {
+    const tonoBase=1800*(1.12-diametrosMoneda[valor]*.22);
+    // El primer golpe es más fuerte y los rebotes se acercan al asentarse.
+    for(const [retardo,fuerza] of [[.045,1],[.108,.56],[.153,.29]]){
+      const golpe=inicio+retardo;
+      for(const [parcial,nivel,caida] of [[1,.12,.095],[2.34,.08,.052],[3.61,.035,.027]]){
+        const resonancia=audio.createOscillator(), volumen=audio.createGain();
+        resonancia.frequency.setValueAtTime(tonoBase*parcial*(1+retardo*.7),golpe);
+        volumen.gain.setValueAtTime(.001,golpe);
+        volumen.gain.linearRampToValueAtTime(nivel*fuerza,golpe+.003);
+        volumen.gain.exponentialRampToValueAtTime(.001,golpe+caida);
+        resonancia.connect(volumen);
+        volumen.connect(audio.destination);
+        resonancia.onended=()=>{resonancia.disconnect();volumen.disconnect();};
+        resonancia.start(golpe);
+        resonancia.stop(golpe+caida+.003);
+      }
+    }
+  }
+  function sonarTolva(valor) {
+    if(!opciones.sonidosTolva||!audioEfectos)return;
+    try{
+      const inicio=audioEfectos.currentTime+.008;
+      if(largosBillete[valor])sonarSuccion(audioEfectos,inicio);
+      else sonarMoneda(audioEfectos,inicio,valor);
+    }catch{
+      // Contar dinero también funciona en dispositivos sin salida de audio.
+    }
+  }
   function ponerProductoCaja(i) {
     if(fase!=='cobro-productos'||compraCaja.pasando!==null||!elegidos.includes(i)||compraCaja.escaneados.includes(i))return;
-    prepararSonidoLector();
+    prepararAudioEfectos();
     const item=oferta[i];
     const ultimo=compraCaja.escaneados.length+1===elegidos.length;
     const pasoInmediato=movimientoReducido.matches;
@@ -983,6 +1042,7 @@
     if(fase==='pagar'&&piezas.filter(ficha=>ficha===valor).length>=(compraCaja.cartera.get(valor)||0))return;
     anunciar();
     if(fase==='medir'){
+      if(opciones.sonidosTolva)prepararAudioEfectos();
       colaContador.push(valor);
       if(colaContador.length===1)contarSiguiente();
       return;
@@ -1409,6 +1469,7 @@
     $('apilarBilletes').checked=opciones.apilarBilletes;
     $('mostrarCifraBilletes').checked=opciones.mostrarCifraBilletes;
     $('apilarContador').checked=opciones.apilarContador;
+    $('sonidosTolva').checked=opciones.sonidosTolva;
     $('nombresProductos').checked=opciones.nombresProductos;
     $('vueltoCaja').value=opciones.vueltoCaja;
     for(const {control,preferencia} of controlesTamano)control.value=opciones[preferencia];
@@ -1428,6 +1489,7 @@
       apilarBilletes:$('apilarBilletes').checked,
       mostrarCifraBilletes:$('mostrarCifraBilletes').checked,
       apilarContador:$('apilarContador').checked,
+      sonidosTolva:$('sonidosTolva').checked,
       tamanoBilletes:$('tamanoBilletes').valueAsNumber,
       tamanoMonedas:$('tamanoMonedas').valueAsNumber,
       nombresProductos:$('nombresProductos').checked,
