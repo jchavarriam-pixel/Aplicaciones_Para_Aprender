@@ -31,6 +31,8 @@ Object.assign(window.TEXTOS_INGLES, {
   'Mira cómo se abre el sobre y cae el dinero.':'Watch the envelope open and the money fall out.',
   'Abrir sobre':'Open envelope',
   'Dinero para el sobre':'Money for the envelope',
+  'Mira cómo entra el dinero en el sobre.':'Watch the money go into the envelope.',
+  '¡El sobre está listo!':'The envelope is ready!',
   '¿Cuánto dinero hay en total?':'How much money is there altogether?',
   'Escoge un producto y llévalo a la caja.':'Choose one item and take it to the checkout.',
   'Escoge de dos a tres productos y llévalos a la caja.':'Choose two or three items and take them to the checkout.',

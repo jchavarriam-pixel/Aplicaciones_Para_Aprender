@@ -397,16 +397,16 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
 .dinero img { width:100%; height:100%; display:block; object-fit:contain; pointer-events:none; }
 .dinero { flex:none; }
 
-#escena[data-fase=llenar] {
+#escena:has(.tablero-preparar) {
   --alto-sobre:clamp(max(calc(60 * var(--u)),calc(max(var(--diametro-moneda-juego),var(--alto-billete-juego)) + 12 * var(--u))),
     calc(43cqh - 74 * var(--u)),calc(205 * var(--u)));
   align-items:center; align-content:safe center;
 }
-#escena[data-fase=llenar] #bancoPanel { align-self:center; min-height:min(100%,calc(70 * var(--u))); }
-#escena[data-fase=llenar] #banco {
+#escena:has(.tablero-preparar) #bancoPanel { align-self:center; min-height:min(100%,calc(70 * var(--u))); }
+#escena:has(.tablero-preparar) #banco {
   padding:calc(4 * var(--u)); gap:calc(6 * var(--u));
 }
-#escena[data-fase=llenar] .origen-dinero {
+#escena:has(.tablero-preparar) .origen-dinero {
   min-width:calc(42 * var(--u)); min-height:calc(42 * var(--u)); place-items:center;
   filter:drop-shadow(0 calc(2 * var(--u)) calc(1 * var(--u)) #15493a40);
 }
@@ -420,13 +420,22 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
 }
 .montos-preparar #saldoSobre .dato-total { background:#eaf8ec; color:#185342; border-color:#bedbca; }
 .montos-preparar .dato-total strong { font-size:calc(24 * var(--u)); }
+.marco-mesa-preparar { position:relative; }
 .tablero-preparar .mesa-desplazable { --altura-mesa:var(--alto-sobre,calc(130 * var(--u))); }
 .efectivo-sobre { display:contents; }
 .sobre-vacio {
   position:absolute; left:38%; right:calc(6 * var(--u)); top:50%; transform:translateY(-50%);
   text-align:center; font-size:calc(14 * var(--u)); line-height:1.2;
 }
-.ayuda-preparar { margin-top:calc(4 * var(--u)); text-align:center; font-size:calc(12 * var(--u)); line-height:1.15; }
+.nota-preparar {
+  position:relative; margin-top:calc(4 * var(--u)); text-align:center; font-size:calc(12 * var(--u)); line-height:1.15;
+}
+#avisoPrepararSobre {
+  position:absolute; inset:0; display:grid; place-content:center; color:#873b21; font-weight:800; pointer-events:none;
+}
+.nota-preparar:has(#avisoPrepararSobre:not(:empty)) .ayuda-preparar,
+#escena:not([data-fase=llenar]) .ayuda-preparar { visibility:hidden; }
+.juego:has(.tablero-preparar) #accion { white-space:nowrap; font-size:calc(15 * var(--u)); }
 .tablero-preparar.sobre-destino .mesa-libre { background-color:#e8e8b8; }
 @media (prefers-reduced-motion:no-preference) {
   .interior-sobre .dinero-entrando { animation:guardarEnSobre .28s ease-out both; }
@@ -436,16 +445,16 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
   to { opacity:1; transform:none; }
 }
 @media (orientation:landscape) {
-  #escena[data-fase=llenar] {
+  #escena:has(.tablero-preparar) {
     --alto-sobre:clamp(calc(65 * var(--u)),calc(100cqh - 139 * var(--u)),calc(245 * var(--u)));
     grid-template-columns:minmax(0,1.14fr) minmax(0,1fr);
   }
 }
 @media (orientation:portrait) and (max-height:650px) {
-  #appColones:has(#escena[data-fase=llenar]) .herramientas { max-height:calc(120 * var(--u)); }
+  #appColones:has(.tablero-preparar) .herramientas { max-height:calc(120 * var(--u)); }
 }
 @media (orientation:portrait) and (min-height:651px) {
-  #escena[data-fase=llenar] {
+  #escena:has(.tablero-preparar) {
     --alto-sobre:clamp(calc(95 * var(--u)),calc(61cqh - 79 * var(--u)),calc(320 * var(--u)));
   }
 }
@@ -456,6 +465,13 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
   padding:calc(18 * var(--u)) 0 0; border:0; border-radius:calc(9 * var(--u)); background:none;
 }
 .sobre-mesa:disabled { cursor:default; }
+.tablero-preparar .sobre-mesa { container-type:inline-size; pointer-events:none; }
+#montoSobrePreparado {
+  position:absolute; z-index:5; inset:auto 5% 12% 30%; padding:calc(2 * var(--u)) 0;
+  overflow:hidden; border-radius:calc(4 * var(--u)); background:#fff3d6; color:#603713;
+  font-size:clamp(calc(8 * var(--u)),12cqi,calc(17 * var(--u))); font-weight:900;
+  font-variant-numeric:tabular-nums; text-align:center; white-space:nowrap;
+}
 .cuerpo-sobre {
   position:relative; display:block; width:100%; aspect-ratio:1.83;
   border-radius:calc(8 * var(--u)); border:1px solid #af7836;
@@ -488,7 +504,8 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
   font-weight:900; font-size:clamp(calc(9 * var(--u)),3cqi,calc(13 * var(--u))); line-height:1.05;
 }
 .sobre-mesa:not(:disabled):hover .rotulo-sobre { background:#fff8eb; }
-.tablero-mesa[data-sobre=cerrado] :is(.controles-mesa,.ficha-mesa),.tablero-mesa[data-sobre=abierto] .rotulo-sobre { visibility:hidden; }
+.tablero-mesa[data-sobre=cerrado]:not(.tablero-preparar) :is(.controles-mesa,.ficha-mesa),
+.tablero-mesa[data-sobre=abierto] .rotulo-sobre { visibility:hidden; }
 .tablero-mesa[data-sobre=abierto] .solapa-sobre { transform:rotateX(124deg); }
 .tablero-mesa[data-sobre=abierto] .boca-sobre { opacity:1; }
 .tablero-mesa[data-apertura] .solapa-sobre { animation:abrirSolapa var(--tiempo-solapa) ease-in-out calc(-1 * var(--transcurrido)) both; }
