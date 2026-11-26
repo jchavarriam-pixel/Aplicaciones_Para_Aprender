@@ -608,11 +608,13 @@ button.ficha-mesa { cursor:grab; }
   display:grid; grid-template:minmax(0,1fr) / minmax(0,1.1fr) minmax(0,1fr); gap:calc(5 * var(--u));
 }
 .entradas-contador {
+  position:relative;
   display:grid; grid-template:minmax(0,1fr) / repeat(2,minmax(0,1fr)); gap:calc(4 * var(--u)); padding:calc(3 * var(--u));
   border:1px solid #235f60; border-radius:calc(8 * var(--u));
   background:linear-gradient(#71bbb0,#2c7f7a); box-shadow:inset 0 calc(1 * var(--u)) 0 #b5e8d7,0 calc(2 * var(--u)) 0 #184d52;
 }
 .entrada-contador {
+  position:relative;
   display:grid; grid-template-rows:auto minmax(0,1fr); justify-items:center; min-width:0;
   padding-block:calc(3 * var(--u)); border:1px solid #347067; border-radius:calc(7 * var(--u));
   background:linear-gradient(#e6f6ec,#a1d2c9); color:#16433f;
@@ -638,7 +640,31 @@ button.ficha-mesa { cursor:grab; }
 }
 .flujo-contador {
   position:absolute; grid-area:2/1; inset:0; z-index:1; pointer-events:none;
-  display:grid; grid-template:minmax(0,1fr) / minmax(0,1fr); place-items:center; overflow:clip;
+  display:grid; grid-template:minmax(0,1fr) / minmax(0,1fr); place-items:center;
+}
+.flujo-contador .dinero { max-width:94%; max-height:90%; }
+.conductos-contador {
+  position:absolute; z-index:2; inset:auto 25% calc(-4 * var(--u)); height:clamp(calc(12 * var(--u)),4cqh,calc(21 * var(--u)));
+  pointer-events:none;
+}
+.conductos-contador::before,.conductos-contador::after {
+  content:""; position:absolute; inset:0 50% calc(4 * var(--u)) 0;
+  border:solid #234f55; border-width:0 0 calc(3 * var(--u)) calc(3 * var(--u));
+  border-bottom-left-radius:calc(7 * var(--u)); filter:drop-shadow(0 1px #b6e8d6);
+}
+.conductos-contador::after {
+  inset-inline:50% 0; border-width:0 calc(3 * var(--u)) calc(3 * var(--u)) 0;
+  border-radius:0 0 calc(7 * var(--u)) 0;
+}
+[data-procesando=moneda] .conductos-contador::before,[data-procesando=billete] .conductos-contador::after {
+  border-color:#ffdd70; filter:drop-shadow(0 0 calc(3 * var(--u)) #ffda64);
+}
+.boca-contador {
+  position:absolute; inset:auto auto 0 50%; translate:-50% 0;
+  width:clamp(calc(23 * var(--u)),54%,calc(76 * var(--u))); height:calc(9 * var(--u));
+  border:1px solid #8cb8ac; border-radius:calc(5 * var(--u));
+  background:repeating-linear-gradient(110deg,#122c35 0 calc(3 * var(--u)),#436d70 calc(3 * var(--u)) calc(5 * var(--u)));
+  box-shadow:0 calc(1 * var(--u)) 0 #dff9ee,inset 0 calc(2 * var(--u)) 0 #102c35;
 }
 .frente-contador {
   position:relative; min-width:0; display:grid; padding:calc(6 * var(--u)) calc(4 * var(--u)) calc(3 * var(--u));
@@ -685,11 +711,6 @@ button.ficha-mesa { cursor:grab; }
   padding-block:calc(2 * var(--u)); color:#214b42; font-size:calc(13 * var(--u)); line-height:1.18;
 }
 .ayuda-contador { color:#29534b; font-size:calc(11 * var(--u)); line-height:1.2; text-align:right; }
-.rodillos-contador {
-  flex:none; width:15%; height:calc(8 * var(--u)); border-radius:calc(6 * var(--u));
-  background:repeating-linear-gradient(110deg,#122c35 0 calc(3 * var(--u)),#3d646b calc(3 * var(--u)) calc(5 * var(--u)));
-  box-shadow:0 calc(1 * var(--u)) 0 #e5f8ec,inset 0 calc(2 * var(--u)) 0 #102c35;
-}
 .bandeja-desplazable {
   min-height:0; overflow:auto; scrollbar-width:thin; scrollbar-gutter:stable;
 }
@@ -698,28 +719,28 @@ button.ficha-mesa { cursor:grab; }
   position:absolute; left:50%; top:50%; width:max-content; transform:translate(-50%,-50%);
   filter:drop-shadow(0 1px 1px #193d4440);
 }
-@container (max-width:360px) {
-  .salida-contador .rodillos-contador { display:none; }
-}
 @media (prefers-reduced-motion:no-preference) {
-  .flujo-contador .dinero { animation:ingresarBillete .30s ease-in both; }
+  .flujo-contador .dinero { animation:ingresarBillete var(--tiempo-paso) ease-in calc(-1 * var(--avance-paso,0ms)) both; }
   .flujo-contador .moneda { animation-name:ingresarMoneda; }
-  .contador-caja[data-procesando] .rodillos-contador { animation:girarRodillos .26s linear infinite; }
-  .pieza-contada { animation:recibirEnContador .24s ease-out; }
+  .contador-caja[data-procesando] .boca-contador { animation:girarRodillos .26s linear infinite; }
+  .pieza-contada { animation:recibirEnContador .34s ease-out; }
 }
 @keyframes ingresarBillete {
-  0% { transform:translateY(-55%) rotate(-14deg) scale(.83); }
-  63% { opacity:1; transform:translateY(3%) rotate(-7deg) scale(.52,.39); }
-  100% { opacity:0; transform:scale(.34,.08); }
+  0% { clip-path:inset(0); transform:translateY(-30%) rotate(-10deg) scale(.88); }
+  32% { clip-path:inset(0 0 26%); transform:translateY(-9%) scale(.85,.66); }
+  55%,100% { clip-path:inset(0 0 100%); transform:translateY(12%) scale(.81,.12); }
 }
 @keyframes ingresarMoneda {
-  0% { transform:translateY(-65%) rotateY(0deg) scale(.90); }
-  49% { transform:translateY(0) rotateY(155deg) scale(.63); }
-  70% { opacity:1; transform:translateY(-17%) rotateY(205deg) scale(.46); }
-  100% { opacity:0; transform:rotateY(270deg) scale(.56); }
+  0% { transform:translate(-31%,-20%) rotate(-15deg) rotateY(0deg) scale(.94); opacity:1; }
+  37% { transform:translate(0,0) rotateY(72deg) scale(.78); opacity:1; }
+  55%,100% { transform:translate(8%,7%) rotateY(90deg) scale(.68); opacity:0; }
 }
 @keyframes girarRodillos { to { background-position:calc(5 * var(--u)) 0; } }
-@keyframes recibirEnContador { from { opacity:.50; translate:0 calc(-6 * var(--u)); } }
+@keyframes recibirEnContador {
+  from { translate:var(--salida-x) var(--salida-y); scale:.60 .30; }
+  55% { scale:.92 .93; }
+  to { translate:0 0; scale:1; }
+}
 @media (orientation:landscape) {
   #escena[data-fase=medir]:has(>#bancoPanel) { grid-template:minmax(0,1fr) / minmax(0,1.35fr) minmax(0,1fr); }
   #escena[data-fase=medir] #bancoPanel { max-height:100%; }

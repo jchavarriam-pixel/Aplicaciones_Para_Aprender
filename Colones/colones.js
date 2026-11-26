@@ -59,7 +59,8 @@
   let varianteContador=guardado.varianteContador==='reto'?'reto':'explorar', metaContador=0;
   let varianteAlcance=guardado.varianteAlcance==='seleccion'?'seleccion':'uno';
   const colaContador=[];
-  let temporizadorContador=0;
+  const tiempoPasoContador=560;
+  let temporizadorContador=0, inicioPasoContador=0;
   let compraCaja=null;
   let audioEfectos, aireTolva;
   let arrastre = null, ignorarClic = false;
@@ -417,7 +418,7 @@
   }
   function fichaEnRanura(tipo) {
     const valor=colaContador[0];
-    return valor!==undefined&&tipoDinero(valor)===tipo?pieza(valor):'';
+    return !movimientoReducido.matches&&valor!==undefined&&tipoDinero(valor)===tipo?pieza(valor):'';
   }
   function ranuraContador(tipo,rotulo) {
     return `<div class="entrada-contador" data-ranura="${tipo}">
@@ -427,11 +428,15 @@
     </div>`;
   }
   function verContador() {
-    return `<section class="contador-caja" ${colaContador.length?'data-procesando':''}>
+    const valor=colaContador[0];
+    const procesando=valor===undefined?'':`data-procesando="${tipoDinero(valor)}"`;
+    const avance=valor===undefined?0:performance.now()-inicioPasoContador;
+    return `<section class="contador-caja" ${procesando} style="--tiempo-paso:${tiempoPasoContador}ms;--avance-paso:${avance}ms">
       <div class="cabina-contador">
         <section id="destinoDinero" class="entradas-contador" aria-label="${t('Ranuras para el dinero')}">
           ${ranuraContador('moneda','Monedas')}
           ${ranuraContador('billete','Billetes')}
+          <div class="conductos-contador" aria-hidden="true"><span class="boca-contador"></span></div>
         </section>
         <div class="frente-contador">
           <div class="pantalla-contador" id="lecturaContador" role="group" aria-label="${t('Pizarra del contador')}">${lecturaContador()}</div>
@@ -442,7 +447,6 @@
         <header class="salida-contador">
           <h3 id="rotuloDineroContado">${t('Dinero contado')}</h3>
           ${fase==='medir'?`<small class="ayuda-contador">${t('Arrastra para acomodar')}</small>`:''}
-          <span class="rodillos-contador" aria-hidden="true"></span>
         </header>
         <div class="bandeja-desplazable" id="dineroContado">
           <div class="plano-contador" id="planoContador" data-superficie-efectivo>${fichasPago(fase==='medir')}</div>
@@ -455,7 +459,15 @@
     const plano=$('planoContador');
     plano.innerHTML=fichasPago(fase==='medir');
     distribuirContador(plano,recienContada);
-    if(recienContada)mostrarUltimaPieza($('dineroContado'))?.classList.add('pieza-contada');
+    if(!recienContada)return;
+    const ficha=mostrarUltimaPieza($('dineroContado'));
+    if(!ficha||movimientoReducido.matches)return;
+    const boca=contenido.querySelector('.boca-contador').getBoundingClientRect();
+    const lugar=ficha.getBoundingClientRect();
+    const escala=Matematicas.escala();
+    ficha.style.setProperty('--salida-x',((boca.left+boca.width/2-lugar.left-lugar.width/2)/escala)+'px');
+    ficha.style.setProperty('--salida-y',((boca.bottom-lugar.top-lugar.height/2)/escala)+'px');
+    ficha.classList.add('pieza-contada');
   }
   function distribuirContador(plano,recienContada=false) {
     const altoVisible=plano.parentElement.getBoundingClientRect().height;
@@ -498,10 +510,14 @@
   }
   function pintarRanuras() {
     const entradas=$('destinoDinero');
-    for(const ranura of entradas.children){
+    for(const ranura of entradas.querySelectorAll('[data-ranura]')){
       ranura.querySelector('.flujo-contador').innerHTML=fichaEnRanura(ranura.dataset.ranura);
     }
-    entradas.closest('.contador-caja').toggleAttribute('data-procesando',colaContador.length>0);
+    const maquina=entradas.closest('.contador-caja');
+    maquina.style.removeProperty('--avance-paso');
+    const valor=colaContador[0];
+    if(valor!==undefined)maquina.dataset.procesando=tipoDinero(valor);
+    else delete maquina.dataset.procesando;
     $('accion').disabled=esperandoContador();
   }
   function cancelarContador() {
@@ -510,9 +526,10 @@
     colaContador.length=0;
   }
   function contarSiguiente() {
+    inicioPasoContador=performance.now();
     pintarRanuras();
     if(!colaContador.length)return;
-    sonarTolva(colaContador[0]);
+    if(largosBillete[colaContador[0]])sonarTolva(colaContador[0]);
     const registrar=()=>{
       // No reconstruir la bandeja mientras un dedo sostiene una de sus piezas.
       if(arrastre?.origen.closest('#planoContador')){
@@ -520,6 +537,7 @@
         return;
       }
       const valor=colaContador.shift();
+      if(!largosBillete[valor])sonarTolva(valor);
       piezas.push(valor);
       actualizarContador(true);
       if(opciones.narracion&&!colaContador.length){
@@ -531,7 +549,7 @@
       contarSiguiente();
     };
     if(movimientoReducido.matches)registrar();
-    else temporizadorContador=setTimeout(registrar,310);
+    else temporizadorContador=setTimeout(registrar,tiempoPasoContador);
   }
   function prepararSeleccionAlcance() {
     oferta=oferta.slice(0,opciones.cantidadAlcance);
