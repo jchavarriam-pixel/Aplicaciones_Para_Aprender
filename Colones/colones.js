@@ -494,7 +494,17 @@
     cambiarFase('cobro-productos');
     contenido.querySelector('[data-poner-caja]')?.focus({preventScroll:true});
   }
-  function verCajaCompra() {
+  function actualizarCajaCompra() {
+    if(!contenido.querySelector('.escena-caja')){
+      contenido.innerHTML=`<div class="compra-en-caja" ${opciones.activas.length>=8?'data-cartera-amplia':''}>
+        <div class="escena-caja" role="group">
+          <img class="arte-caja" src="${imagenCaja}" alt="" draggable="false">
+          <div class="estado-mostrador"></div>
+        </div>
+        <div class="espacio-pago"></div>
+      </div>
+      <div class="espacio-carrito"></div>`;
+    }
     const {escaneados,pasando,cobrado,importe,vuelto}=compraCaja;
     const escaneando=fase==='cobro-productos';
     const entregando=fase==='entregando';
@@ -507,9 +517,9 @@
       <div class="pantalla-registro"><small>${t('Total')}</small><strong data-importe-caja>${formato(importe)}</strong></div>
       <span data-costo-producto>${cobrado===null?'':t(oferta[cobrado].nombre)+' · '+formato(oferta[cobrado].precio)}</span>
     </div>`;
-    return `<div class="compra-en-caja">
-      <div class="escena-caja" role="group" aria-label="${t('Mostrador y caja registradora')}">
-        <img class="arte-caja" src="${imagenCaja}" alt="" draggable="false">
+    const mostrador=contenido.querySelector('.escena-caja');
+    mostrador.setAttribute('aria-label',t('Mostrador y caja registradora'));
+    mostrador.querySelector('.estado-mostrador').innerHTML=`
         ${pantalla}
         <div class="lector-caja" aria-hidden="true" ${pasando!==null?`data-escaneando style="--pasado:${performance.now()-pasando.inicio}ms"`:''}></div>
         ${escaneando&&pasando===null?`<div class="zona-colocar">${t('Pon el producto aquí')}</div>`:''}
@@ -519,11 +529,9 @@
           </div>
           <i class="costado-caja-productos" aria-hidden="true"></i>
         </div>
-        ${paso}${entrega}
-      </div>
-      ${carrito}
-      ${!escaneando?verBandejaCompra(vuelto):''}
-    </div>`;
+        ${paso}${entrega}`;
+    contenido.querySelector('.espacio-pago').innerHTML=escaneando?'':verBandejaCompra(vuelto);
+    contenido.querySelector('.espacio-carrito').innerHTML=carrito;
   }
   function verBandejaCompra(vuelto) {
     const pagando=fase==='pagar';
@@ -641,6 +649,8 @@
       ${fase==='listo'&&pagado?etiquetaTotal('Vuelto',aCambio()):''}
       </section>`;
   }
+  const instruccionCobro=()=>t('Lleva los productos del carrito al mostrador, uno por uno.');
+  const instruccionPago=()=>t(modo==='exacto'?'Saca de la cartera el monto exacto y ponlo en el mostrador.':'Pon en el mostrador más dinero que el total y espera el vuelto.');
   function instruccion() {
     switch(fase){
       case 'medir': return t('Toca o arrastra monedas y billetes al contador.');
@@ -649,8 +659,8 @@
       case 'contar': return t('Acomoda el dinero y escribe cuánto hay en total.');
       case 'llenar': return idioma(`Pon ${formato(sumar(sobre))} en el sobre.`,`Put ${formato(sumar(sobre))} in the envelope.`);
       case 'elegir': return t(modo==='carrito'?'Escoge dos o tres productos y empuja el carrito hasta la caja.':'Escoge un producto y empuja el carrito hasta la caja.');
-      case 'cobro-productos': return t('Lleva los productos del carrito al mostrador, uno por uno.');
-      case 'pagar': return t(modo==='exacto'?'Saca de la cartera el monto exacto y ponlo en el mostrador.':'Pon en el mostrador más dinero que el total y espera el vuelto.');
+      case 'cobro-productos': return instruccionCobro();
+      case 'pagar': return instruccionPago();
       case 'entregando': return t('Espera a que la cajera te entregue el vuelto.');
       case 'vuelto': return t('Cuenta el dinero. ¿Está bien el vuelto?');
       case 'corregir-vuelto': return t('¿Cuánto vuelto deben darte?');
@@ -673,7 +683,7 @@
     }
     else if(fase==='escanear') contenido.innerHTML=vistaCliente('Estos son mis productos.')+estante();
     else if(fase==='recibir') contenido.innerHTML=recibirPago();
-    else if(compraCaja) contenido.innerHTML=verCajaCompra();
+    else if(compraCaja) actualizarCajaCompra();
     else{
       contenido.innerHTML=(fase==='dar'?vistaCliente('¿Me das el vuelto?'):'')+comprobante()+
         (fase==='dar'?destino('Vuelto para el cliente'):
@@ -684,6 +694,14 @@
     if(!modo)return;
     $('tituloModo').textContent=t(modos[modo].nombre);
     $('instruccion').textContent=instruccion();
+    const lineas=$('textoInstruccion').dataset;
+    if(compraCaja){
+      lineas.cobro=instruccionCobro();
+      lineas.pago=instruccionPago();
+    }else{
+      delete lineas.cobro;
+      delete lineas.pago;
+    }
     $('bancoPanel').hidden=!fasesDinero.has(fase);
     $('bancoPanel').classList.toggle('cartera-compra',fase==='pagar');
     $('bancoTitulo').textContent=t(fase==='pagar'?'Tu cartera':fase==='dar'?'Caja registradora':'Banco de dinero');
@@ -705,9 +723,10 @@
   }
   function cambiarFase(nueva,narrar=true) {
     cancelarRecorrido();
+    const conservarVista=fase==='cobro-productos'&&nueva==='pagar';
     fase=nueva;
     monto.value='';
-    escena.scrollTop=0;
+    if(!conservarVista)escena.scrollTop=0;
     anunciar();
     render();
     if(narrar&&opciones.narracion&&nueva!=='listo') leer();

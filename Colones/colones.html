@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="../idioma-voz.css">
   <link rel="stylesheet" href="../pantalla-completa.css">
   <link rel="stylesheet" href="../panel-plegable.css?v=colones">
-  <link rel="stylesheet" href="colones.css?v=tamano-dinero-compartido">
+  <link rel="stylesheet" href="colones.css?v=mostrador-estable">
 </head>
 <body>
   <main id="appColones">
@@ -33,7 +33,7 @@
     <nav class="actividad modos" id="modos" aria-label="Modos de práctica"></nav>
     <section class="actividad juego" id="juego" hidden aria-labelledby="tituloModo">
       <header class="reto">
-        <div><h2 id="tituloModo"></h2><p id="instruccion"></p></div>
+        <div><h2 id="tituloModo"></h2><div class="texto-instruccion" id="textoInstruccion"><p id="instruccion"></p></div></div>
         <button type="button" id="escuchar" aria-label="Escuchar ejercicio" title="Escuchar ejercicio">🔊</button>
         <button type="button" id="volverPlegado" hidden>Modos</button>
       </header>
@@ -107,6 +107,6 @@
   <script src="../pantalla-completa.js"></script>
   <script src="../panel-plegable.js?v=colones"></script>
   <script src="../nombre-compartido.js"></script>
-  <script src="colones.js?v=tamano-dinero-compartido"></script>
+  <script src="colones.js?v=mostrador-estable"></script>
 </body>
 </html>

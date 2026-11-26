@@ -105,7 +105,11 @@ h1 { font-size:calc(29 * var(--u)); letter-spacing:-.035em; line-height:1.03; co
 .con-panel-plegable.panel-lateral-oculto .juego .reto { margin-top:calc(36 * var(--u)); }
 .reto > div { flex:1; min-width:0 }
 .reto h2 { font-size:calc(25 * var(--u)); line-height:1.08; margin-bottom:calc(3 * var(--u)); }
-.reto p { font-size:calc(16 * var(--u)); line-height:1.22; }
+.texto-instruccion { display:grid; font-size:calc(16 * var(--u)); line-height:1.22; }
+.texto-instruccion > p,.texto-instruccion::before,.texto-instruccion::after { grid-area:1/1; }
+.texto-instruccion[data-cobro]::before,.texto-instruccion[data-pago]::after { visibility:hidden; }
+.texto-instruccion[data-cobro]::before { content:attr(data-cobro); }
+.texto-instruccion[data-pago]::after { content:attr(data-pago); }
 .escena {
   container-type:inline-size; min-height:0; display:grid; align-content:center;
   gap:calc(7 * var(--u)); padding:calc(4 * var(--u)); overflow:auto; scrollbar-width:thin;
@@ -271,7 +275,7 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
   .mercado-lateral,.horizontal .mercado-lateral { display:none; }
   h1 { font-size:calc(24 * var(--u)); }
   .reto h2 { font-size:calc(21 * var(--u)); }
-  .reto p { font-size:calc(14 * var(--u)); }
+  .texto-instruccion { font-size:calc(14 * var(--u)); }
   .producto .foto-producto { width:min(100%,calc(58 * var(--u))); }
   .estante { grid-template-columns:repeat(3,minmax(0,1fr)); }
   .recibo .foto-producto { width:calc(19 * var(--u)); }
@@ -289,7 +293,7 @@ dialog fieldset > p { font-size:14px; margin-bottom:6px; }
   .guia { padding:calc(6 * var(--u)); }
   .guia h2 { font-size:calc(14 * var(--u)); }
   .reto h2 { font-size:calc(20 * var(--u)); }
-  .reto p,.guia p { font-size:calc(13 * var(--u)); }
+  .texto-instruccion,.guia p { font-size:calc(13 * var(--u)); }
   .juego { padding:calc(5 * var(--u)); }
   .producto .foto-producto { width:calc(42 * var(--u)); }
   .dinero-en-sobre { padding-block:calc(2 * var(--u)); gap:calc(4 * var(--u)); }
@@ -577,10 +581,16 @@ button.ficha-mesa { cursor:grab; }
 
 /* Mostrador de las actividades de compra. */
 #vueltoCaja { display:block; width:100%; margin-top:5px; padding:6px; border:1px solid #9cbeae; border-radius:6px; background:#fff; }
-.escena:has(.compra-en-caja) { align-content:safe center; }
+#escena:has(.compra-en-caja) {
+  grid-template-columns:minmax(0,1fr); align-content:start; align-items:start; scrollbar-gutter:stable;
+  overflow-anchor:none;
+}
+#escena:has(.compra-en-caja) > #contenido,.estado-mostrador,.espacio-pago,.espacio-carrito { display:contents; }
+#escena:has(.compra-en-caja) > :is(#bancoPanel,#respuesta),.carrito-en-caja { grid-area:2/1; }
+.juego:has(.compra-en-caja) .acciones-juego { min-height:calc(43 * var(--u)); }
 .compra-en-caja {
   --altura-caja:clamp(calc(136 * var(--u)),calc(var(--alto,100dvh)*.37),calc(390 * var(--u)));
-  display:grid; gap:calc(5 * var(--u)); min-width:0; justify-items:center;
+  grid-area:1/1; display:grid; gap:calc(5 * var(--u)); min-width:0; justify-items:center;
 }
 .escena-caja {
   position:relative; isolation:isolate; width:min(100%,calc(var(--altura-caja)*1.5));
@@ -657,7 +667,7 @@ button.ficha-mesa { cursor:grab; }
   38%,49% { background:#ff9277; box-shadow:0 0 calc(9 * var(--u)) calc(4 * var(--u)) #ff614fd0; }
 }
 .carrito-en-caja {
-  display:flex; justify-content:center; align-items:center; flex-wrap:wrap; width:min(100%,calc(345 * var(--u)));
+  display:flex; justify-content:center; align-items:center; justify-self:center; flex-wrap:wrap; width:min(100%,calc(345 * var(--u)));
   gap:calc(5 * var(--u)); padding:calc(6 * var(--u)) calc(10 * var(--u)) calc(12 * var(--u));
   background:repeating-linear-gradient(90deg,transparent 0 11px,#589a9b6b 11px 13px),repeating-linear-gradient(0deg,#e8f4de 0 11px,#509d9270 11px 13px);
   border:4px solid #318f87; border-bottom:calc(7 * var(--u)) solid #db664b; border-radius:calc(17 * var(--u));
@@ -709,26 +719,25 @@ button.ficha-mesa { cursor:grab; }
 .cartera-compra .origen-dinero:disabled { cursor:default; opacity:.45; }
 .cartera-compra .cantidad-piezas { top:auto; bottom:0; right:0; }
 @media (orientation:landscape) {
-  .escena:has(.compra-en-caja):has(>.banco:not([hidden]),>.respuesta:not([hidden])) {
+  #escena:has(.compra-en-caja) {
     grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);
   }
-  .compra-en-caja:has(.carrito-en-caja) { grid-template-columns:minmax(0,1.7fr) minmax(0,1fr); align-items:center; }
+  #escena:has(.compra-en-caja) > :is(#bancoPanel,#respuesta),.carrito-en-caja { grid-area:1/2; }
   .compra-en-caja { --altura-caja:clamp(calc(118 * var(--u)),calc(var(--alto,100dvh)*.46),calc(410 * var(--u))); }
 }
 @media (orientation:portrait) and (max-height:700px) {
   #appColones:has(.compra-en-caja) .herramientas { max-height:calc(130 * var(--u)); }
-  .compra-en-caja:has(.bandeja-caja) { --altura-caja:clamp(calc(98 * var(--u)),calc(var(--alto,100dvh)*.19),calc(148 * var(--u))); }
+  .compra-en-caja { --altura-caja:clamp(calc(98 * var(--u)),calc(var(--alto,100dvh)*.19),calc(148 * var(--u))); }
   .bandeja-caja .piezas-colocadas { min-height:calc(22 * var(--u)); padding-block:calc(2 * var(--u)); }
 }
 @media (orientation:portrait) and (min-height:701px) and (max-width:520px) {
-  .escena:has(.cartera-compra:not([hidden]) #banco>:nth-child(8)) .compra-en-caja {
+  .compra-en-caja[data-cartera-amplia] {
     --altura-caja:calc(var(--alto,100dvh)*.20);
   }
 }
 @media (orientation:landscape) and (max-height:370px) {
-  .escena:has(.compra-en-caja):has(>.banco:not([hidden])) { grid-template-columns:minmax(0,1.25fr) minmax(0,1fr); }
-  .escena:has(.compra-en-caja):has(>.respuesta:not([hidden])) { grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); }
-  .compra-en-caja:has(.bandeja-caja) { --altura-caja:clamp(calc(82 * var(--u)),calc(var(--alto,100dvh)*.30),calc(120 * var(--u))); }
+  #escena:has(.compra-en-caja) { grid-template-columns:minmax(0,1.25fr) minmax(0,1fr); }
+  .compra-en-caja { --altura-caja:clamp(calc(82 * var(--u)),calc(var(--alto,100dvh)*.30),calc(120 * var(--u))); }
   .bandeja-caja header { font-size:calc(12 * var(--u)); }
   .bandeja-caja h3 { font-size:calc(13 * var(--u)); }
   .bandeja-caja .piezas-colocadas { min-height:calc(24 * var(--u)); padding-block:calc(2 * var(--u)); }
