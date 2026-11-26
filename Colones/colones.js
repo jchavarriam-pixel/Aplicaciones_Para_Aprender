@@ -21,10 +21,25 @@
     expendedora:{nombre:'Máquina expendedora',guia:'Elige una bebida o merienda, paga en colones y recoge tu compra y el vuelto.',
       enlace:'../Expendedora/expendedora.html',imagen:'../Expendedora/imagenes/expendedora.png'}
   };
-  const productos = ['Manzana','Pan','Leche','Jugo','Cuaderno','Lápiz','Bananas','Pelota','Mochila'];
-  const imagenesProductos = ['manzana','pan','leche','jugo','cuaderno','lapiz','bananas','pelota','mochila'];
-  const rangosPrecio = [[250,650],[350,1000],[700,1450],[400,1100],[800,3800],
-    [100,550],[175,525],[1800,8000],[6500,24500]];
+  const productos = [
+    ['Manzana','imagenes/productos/manzana.png',250,650],
+    ['Pan','imagenes/productos/pan.png',350,1000],
+    ['Leche','imagenes/productos/leche.png',700,1450],
+    ['Jugo','imagenes/productos/jugo.png',400,1100],
+    ['Cuaderno','imagenes/productos/cuaderno.png',800,3800],
+    ['Lápiz','imagenes/productos/lapiz.png',100,550],
+    ['Bananas','imagenes/productos/bananas.png',175,525],
+    ['Pelota','imagenes/productos/pelota.png',1800,8000],
+    ['Mochila','imagenes/productos/mochila.png',6500,24500],
+    ['Confite','imagenes/productos/confite.png',10,50],
+    ['Borrador','imagenes/productos/borrador.png',25,100],
+    ['Zanahoria','imagenes/productos/zanahoria.png',50,150],
+    ['Pera','../ImagenesSituacionesProblemas/Ilustraciones/pera.webp',75,250],
+    ['Galletas','../Expendedora/imagenes/galletas.png',75,300],
+    ['Agua','../Expendedora/imagenes/agua.png',100,350],
+    ['Papas fritas','../Expendedora/imagenes/papas.png',150,450]
+  ];
+  const modosConPasillo=new Set(['exacto','compra','carrito']);
   const iniciales = [10,25,50,100,500,1000,2000];
   const guardado = Matematicas.leer(clave);
   const activas = valores.filter(valor => Array.isArray(guardado.activas) && guardado.activas.includes(valor));
@@ -93,15 +108,23 @@
       }
     }
     candidatos.delete(0);
-    const montos=[...candidatos.keys()];
-    return barajar(productos.map((nombre,id)=>{
-      const [min,max]=rangosPrecio[id];
+    const soloMonedas=opciones.activas.at(-1)<1000;
+    const montos=[...candidatos.keys()].filter(monto=>!soloMonedas||monto<=1000);
+    const surtido=barajar(productos.filter(([, ,min])=>!soloMonedas||min<=500)).map(([nombre,imagen,min,max])=>{
       const dentro=montos.filter(x=>x>=min&&x<=max);
       const distancia=x=>Math.max(min-x,x-max,0);
       const cercanos=dentro.length?dentro:[...montos].sort((a,b)=>distancia(a)-distancia(b)).slice(0,2);
       const precio=tomar(cercanos);
-      return {nombre,id,monedas:candidatos.get(precio),precio};
-    })).slice(0,6);
+      return {nombre,imagen,monedas:candidatos.get(precio),precio};
+    });
+    const pasillo=modosConPasillo.has(modo);
+    const cantidad=pasillo?mesasPorVuelta*2:6;
+    if(!soloMonedas)return surtido.slice(0,cantidad);
+    const limiteEconomico=Math.max(200,opciones.activas[0]);
+    const economicos=surtido.filter(item=>item.precio<=limiteEconomico).slice(0,3);
+    const resto=surtido.filter(item=>!economicos.includes(item));
+    const seleccion=economicos.concat(resto).slice(0,cantidad);
+    return pasillo?seleccion:barajar(seleccion);
   }
   // El conteo opcional limita la búsqueda al dinero que hay en la cartera.
   function formarEfectivo(cantidad,existencias) {
@@ -230,7 +253,7 @@
     }).join('');
   }
   function producto(item) {
-    return `<img class="foto-producto" src="imagenes/productos/${imagenesProductos[item.id]}.png" alt="" draggable="false">`;
+    return `<img class="foto-producto" src="${item.imagen}" alt="" draggable="false">`;
   }
   function etiquetaTotal(texto,valor) {
     return `<div class="dato-total"><span>${t(texto)}</span><strong>${formato(valor)}</strong></div>`;
@@ -643,7 +666,7 @@
   }
   function verPasillo() {
     const columna=(lado,indice)=>`<div class="lado-estante ${lado}" data-estante>
-      ${Array.from({length:mesasPorVuelta},(_,tramo)=>verPuesto((tramo%(oferta.length/2))*2+indice,tramo)).join('')}</div>`;
+      ${Array.from({length:mesasPorVuelta},(_,tramo)=>verPuesto(tramo*2+indice,tramo)).join('')}</div>`;
     return `<div class="pasillo" id="estante">
       <svg class="suelo-en-marcha" aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none"><path></path></svg>
       ${columna('izquierdo',0)}
