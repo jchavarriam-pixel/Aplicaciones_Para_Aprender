@@ -39,8 +39,10 @@
   let arrastre = null, ignorarClic = false;
   let mesa, posicionesMesa, fichaElegida, animarSobre, cartera, mercanciaCliente, recibidos;
   let avancePasillo=0, animacionPasillo=0, empuje=null, llegadaCaja=null;
+  const velocidadInicialPasillo=1.25;
+  let velocidadPasillo=velocidadInicialPasillo;
   const mesasPorVuelta=6, pasoMesa=.36, inicioMesa=-.66, primeraMesa=.14;
-  const profundidadCajaInicial=.30, profundidadCajaFinal=.75, alturaReferenciaCaja=.34;
+  const distanciaDesdeUltimaMesa=1.40, profundidadCajaFinal=.75, alturaReferenciaCaja=.34;
   const vueltaPasillo=valor=>((valor%mesasPorVuelta)+mesasPorVuelta)%mesasPorVuelta;
   const imagenCaja='imagenes/caja-registro-frontal.webp';
   const movimientoReducido=matchMedia('(prefers-reduced-motion: reduce)');
@@ -119,6 +121,7 @@
     elegidos=[];
     cancelarRecorrido();
     avancePasillo=0;
+    velocidadPasillo=velocidadInicialPasillo;
     piezas=[];
     sobre=formar(modo==='contar'?entero(3,7):entero(2,5));
     mesa=[...sobre];
@@ -333,11 +336,13 @@
   const fondoCajaAlLlegar=perspectiva(profundidadCajaFinal,alturaReferenciaCaja).fondo;
   function proyectarCaja(pasillo) {
     const caja=pasillo.querySelector('.caja-al-fondo');
-    caja.hidden=!llegadaCaja;
-    if(!llegadaCaja)return;
-    const profundidad=profundidadCajaInicial+llegadaCaja.salida;
+    if(!llegadaCaja){caja.hidden=true;return;}
+    const profundidad=llegadaCaja.profundidadCaja+llegadaCaja.salida;
+    const borde=proyectar(0,profundidad).y;
+    caja.hidden=borde<=0;
+    if(caja.hidden)return;
     const fondo=perspectiva(profundidad,alturaReferenciaCaja).fondo;
-    caja.style.top=proyectar(0,profundidad).y+'%';
+    caja.style.top=borde+'%';
     caja.style.zIndex=Math.round((profundidad-inicioMesa)*100);
     caja.style.setProperty('--escala-caja',.43*fondoCajaAlLlegar/fondo);
   }
@@ -389,6 +394,23 @@
     puesto.style.setProperty('--precio-y',(precio.y-y)/alto*100+'%');
     puesto.style.setProperty('--escala-producto',Math.min(1.15,1.65/producto.fondo));
   }
+  const profundidadMesa=(tramo,avance)=>inicioMesa+pasoMesa*vueltaPasillo(tramo+(primeraMesa-inicioMesa)/pasoMesa+avance);
+  function prepararLlegadaCaja(pasillo) {
+    const marco=pasillo.getBoundingClientRect();
+    const mesas=new Set();
+    const enPantalla=nodo=>{
+      const rect=nodo.getBoundingClientRect();
+      return rect.bottom>marco.top&&rect.top<marco.bottom;
+    };
+    for(const puesto of pasillo.querySelectorAll('[data-tramo]:not([hidden])')){
+      if(enPantalla(puesto)||[...puesto.querySelectorAll('.producto,.precio-estante')].some(enPantalla)){
+        mesas.add(Number(puesto.dataset.tramo));
+      }
+    }
+    const ultima=Math.min(...[...mesas].map(tramo=>profundidadMesa(tramo,avancePasillo)));
+    // La caja queda detrás de la última mesa y entra por el mismo borde que el resto del pasillo.
+    return {inicio:avancePasillo,salida:0,mesas,profundidadCaja:Math.min(-.47,ultima-distanciaDesdeUltimaMesa)};
+  }
   function pintarPasillo() {
     const pasillo=contenido.querySelector('.pasillo');
     if(!pasillo)return;
@@ -399,9 +421,9 @@
     // Al salir hacia la caja, las mesas que pasan dejan de volver al fondo.
     const base=llegadaCaja?.inicio??avance, salida=llegadaCaja?.salida??0;
     for(const puesto of pasillo.querySelectorAll('[data-tramo]')){
-      const tramo=Number(puesto.dataset.tramo)+(primeraMesa-inicioMesa)/pasoMesa;
-      const profundidad=inicioMesa+pasoMesa*vueltaPasillo(tramo+base)+salida;
-      puesto.hidden=profundidad<-.64||profundidad>1.48;
+      const tramo=Number(puesto.dataset.tramo);
+      const profundidad=profundidadMesa(tramo,base)+salida;
+      puesto.hidden=(llegadaCaja&&!llegadaCaja.mesas.has(tramo))||profundidad<-.64||profundidad>1.48;
       if(!puesto.hidden){
         puesto.style.zIndex=Math.round((profundidad-inicioMesa)*100);
         pintarMesa(puesto,profundidad);
@@ -422,6 +444,7 @@
     if(!empuje?.velocidad)return;
     const segundos=Math.min(40,tiempo-empuje.instante)/1000;
     empuje.instante=tiempo;
+    if(empuje.velocidad>0)velocidadPasillo=empuje.velocidad;
     avancePasillo=vueltaPasillo(avancePasillo+empuje.velocidad*segundos);
     pintarPasillo();
     animacionPasillo=requestAnimationFrame(avanzarConManija);
@@ -698,7 +721,7 @@
   }
   function llegarCaja() {
     if(fase!=='elegir'||llegadaCaja)return;
-    const velocidad=(empuje?.velocidad>0?empuje.velocidad:1.25)*pasoMesa;
+    const velocidad=(empuje?.velocidad>0?empuje.velocidad:velocidadPasillo)*pasoMesa;
     detenerPasillo();
     if(elegidos.length<(modo==='carrito'?2:1)){
       anunciar(modo==='carrito'?'Recoge dos o tres productos antes de ir a la caja.':'Recoge un producto antes de ir a la caja.');
@@ -706,10 +729,10 @@
     }
     if(movimientoReducido.matches)return iniciarCompraCaja();
     anunciar();
-    llegadaCaja={inicio:avancePasillo,salida:0};
+    llegadaCaja=prepararLlegadaCaja(contenido.querySelector('.pasillo'));
     contenido.querySelector('[data-ir-caja]').hidden=true;
     for(const control of contenido.querySelectorAll('.producto,.carrito-pasillo button,[data-paso]'))control.disabled=true;
-    const distancia=profundidadCajaFinal-profundidadCajaInicial, freno=.08;
+    const distancia=profundidadCajaFinal-llegadaCaja.profundidadCaja, freno=.08;
     const tiempoCrucero=(distancia-freno)/velocidad, tiempoFreno=2*freno/velocidad;
     const comenzar=performance.now();
     function acercar(tiempo) {
