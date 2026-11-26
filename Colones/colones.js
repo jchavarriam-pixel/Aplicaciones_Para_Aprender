@@ -524,18 +524,26 @@
     cartera=barajar(referencia.monedas);
   }
   function verCarteraAlcance() {
-    return `<section class="cartera"><h3>${t('Tu dinero')}</h3><div class="dinero-en-sobre">${cartera.map(valor=>`<span role="img" aria-label="${etiquetaDinero(valor)}">${pieza(valor)}</span>`).join('')}</div>
+    return `<section class="cartera" aria-labelledby="tituloCarteraAlcance">
+      <header class="cartera-cabecera">
+        <img src="imagenes/cartera-alcance.png" alt="" width="224" height="213">
+        <h3 id="tituloCarteraAlcance">${t('Tu dinero')}</h3>
+      </header>
+      <div class="dinero-en-sobre" style="--piezas-cartera:${Math.max(1,cartera.length)}">${cartera.map(valor=>`<span role="img" aria-label="${etiquetaDinero(valor)}">${pieza(valor)}</span>`).join('')}</div>
       ${opciones.ayudas||fase==='listo'?etiquetaTotal('Total disponible',sumar(cartera)):''}</section>`;
+  }
+  function exhibirArticuloAlcance(articulo) {
+    return `<span class="vitrina-alcance" aria-hidden="true">${producto(articulo)}</span>`;
   }
   function verAlcance() {
     if(varianteAlcance==='seleccion'){
-      return `<div class="alcance-varios">
+      return `<div class="escaparate-alcance alcance-varios">
         ${verCarteraAlcance()}
         <div class="opciones-alcance" style="--opciones-alcance:${oferta.length}" role="group" aria-label="${t('Artículos para comparar')}">
           ${oferta.map((articulo,i)=>`<button type="button" class="articulo-alcance" data-alcance-articulo="${i}"
             aria-pressed="${elegidos.includes(i)}" ${fase==='listo'?'disabled':''}>
             <span class="marca-alcance" aria-hidden="true">✓</span>
-            ${producto(articulo)}
+            ${exhibirArticuloAlcance(articulo)}
             <span class="nombre-alcance">${t(articulo.nombre)}</span>
             <strong class="etiqueta-precio">${formato(articulo.precio)}</strong>
           </button>`).join('')}
@@ -543,9 +551,17 @@
       </div>`;
     }
     const item=oferta[0];
-    return `<div class="reto-alcance"><section class="producto-alcance">${producto(item)}<h3>${t(item.nombre)}</h3><b class="etiqueta-precio">${formato(item.precio)}</b></section>
-      ${verCarteraAlcance()}</div>
-      ${fase==='decidir'?`<div class="decidir"><button type="button" data-alcanza="si">${t('Sí me alcanza')}</button><button type="button" data-alcanza="no">${t('No me alcanza')}</button></div>`:''}`;
+    return `<div class="escaparate-alcance reto-alcance">
+      ${verCarteraAlcance()}
+      <section class="producto-alcance">
+        ${exhibirArticuloAlcance(item)}
+        <h3 class="nombre-alcance">${t(item.nombre)}</h3><b class="etiqueta-precio">${formato(item.precio)}</b>
+      </section>
+      ${fase==='decidir'?`<div class="decidir decisiones-alcance">
+        <button type="button" data-alcanza="si"><span aria-hidden="true">✓</span>${t('Sí me alcanza')}</button>
+        <button type="button" data-alcanza="no"><span aria-hidden="true">×</span>${t('No me alcanza')}</button>
+      </div>`:''}
+    </div>`;
   }
   function fichasPago(editable=false,efectivo=piezas) {
     const enContador=modo==='contador';
