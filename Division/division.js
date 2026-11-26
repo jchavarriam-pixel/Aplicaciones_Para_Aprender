@@ -496,6 +496,7 @@
   }
   const borrar = document.createElement('button');
   borrar.type = 'button';
+  borrar.className = 'key-borrar';
   borrar.textContent = '⌫';
   borrar.setAttribute('aria-label','Borrar cifra');
   borrar.onclick = () => {

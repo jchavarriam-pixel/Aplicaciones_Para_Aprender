@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="../panel-plegable.css">
   <link rel="stylesheet" href="division.css?v=sillita-editable-1">
   <script src="../historial-modos.js"></script>
+<link rel="stylesheet" href="../teclado-en-pantalla.css?v=teclas">
 </head>
 <body>
   <main id="appDivision">
@@ -101,14 +102,14 @@
           <form id="respuesta" novalidate hidden>
             <p id="tituloRespuesta">Escribe la división completa.</p>
             <div class="ecuacion" role="group" aria-labelledby="tituloRespuesta">
-              <label><span>Dividendo</span><input id="dividendo" inputmode="none" readonly maxlength="2" size="2" autocomplete="off"></label>
+              <label><span>Dividendo</span><input id="dividendo" data-respuesta-teclado inputmode="none" readonly maxlength="2" size="2" autocomplete="off"></label>
               <b aria-hidden="true">÷</b>
-              <label><span>Divisor</span><input id="divisor" inputmode="none" readonly maxlength="2" size="2" autocomplete="off"></label>
+              <label><span>Divisor</span><input id="divisor" data-respuesta-teclado inputmode="none" readonly maxlength="2" size="2" autocomplete="off"></label>
               <b aria-hidden="true">=</b>
-              <label><span>Cociente</span><input id="cociente" inputmode="none" readonly maxlength="2" size="2" autocomplete="off"></label>
-              <label id="campoResto"><span>Resto</span><input id="residuo" inputmode="none" readonly maxlength="2" size="2" autocomplete="off"></label>
+              <label><span>Cociente</span><input id="cociente" data-respuesta-teclado inputmode="none" readonly maxlength="2" size="2" autocomplete="off"></label>
+              <label id="campoResto"><span>Resto</span><input id="residuo" data-respuesta-teclado inputmode="none" readonly maxlength="2" size="2" autocomplete="off"></label>
             </div>
-            <div id="tecladoReparto" role="group" aria-label="Teclado numérico"></div>
+            <div id="tecladoReparto" data-teclado-visual role="group" aria-label="Teclado numérico"></div>
           </form>
           <div class="acciones">
             <button type="button" id="nuevaRonda">↻ Nueva ronda</button>
@@ -149,7 +150,7 @@
   <script src="../idioma-voz.js"></script>
   <script src="../matematicas-base.js"></script>
   <script src="../Multiplicacion/grupos-magneticos.js?v=barrido-defecto"></script>
-  <script src="division.js?v=concordancia"></script>
+  <script src="division.js?v=teclas"></script>
   <script src="../pantalla-completa.js"></script>
   <script src="../panel-plegable.js?v=division-1"></script>
   <script src="../nombre-compartido.js"></script>

@@ -52,6 +52,7 @@ button,select,input{font:inherit}.hidden{display:none!important}.app{max-width:1
 </style>
   <link rel="stylesheet" href="../creditos.css">
   <link rel="stylesheet" href="../pantalla-completa.css">
+<link rel="stylesheet" href="../teclado-en-pantalla.css?v=teclas">
 </head>
 <body>
 <main class="app">
@@ -141,7 +142,7 @@ function renderAnswer(){const a=$("#answerArea"),q=state.question;if(state.confi
  }else if(state.config.mode==="drag")a.innerHTML=`<div class="dropZone" id="dropZone">${getLang()==="en"?"Drag the correct place here from the map":"Arrastra aquí el lugar correcto desde el croquis"}</div>`;else renderKeyboard();
 }
 function selectAnswer(key){if(state.locked)return;state.pendingAnswer=key;document.querySelectorAll(".option").forEach(b=>b.classList.toggle("selected",b.dataset.key===key));clearFeedbackForEdit()}
-function renderKeyboard(){const en=getLang()==="en",letters=(en?"ABCDEFGHIJKLMNOPQRSTUVWXYZ":"ABCDEFGHIJKLMNÑOPQRSTUVWXYZ").split(""),a=$("#answerArea"),hint=en?"Type the name":"Escribe el nombre";a.innerHTML=`<div class="keyboardDisplay" id="keyboardDisplay">${state.typed||hint}</div><div class="keyboard">${letters.map(x=>`<button class="key" data-v="${x}">${x}</button>`).join("")}<button class="key wide" data-v=" ">${en?"SPACE":"ESPACIO"}</button><button class="key wide" data-v="back">⌫ ${en?"DELETE":"BORRAR"}</button><button class="key wide" data-v="clear">${en?"CLEAR":"LIMPIAR"}</button></div>`;a.querySelectorAll(".key").forEach(k=>k.onclick=()=>keyPress(k.dataset.v))}
+function renderKeyboard(){const en=getLang()==="en",letters=(en?"ABCDEFGHIJKLMNOPQRSTUVWXYZ":"ABCDEFGHIJKLMNÑOPQRSTUVWXYZ").split(""),a=$("#answerArea"),hint=en?"Type the name":"Escribe el nombre";a.innerHTML=`<div class="keyboardDisplay" id="keyboardDisplay" data-lectura-teclado>${state.typed||hint}</div><div class="keyboard" data-teclado-visual>${letters.map(x=>`<button class="key" data-v="${x}">${x}</button>`).join("")}<button class="key wide" data-v=" ">${en?"SPACE":"ESPACIO"}</button><button class="key wide" data-v="back">⌫ ${en?"DELETE":"BORRAR"}</button><button class="key wide" data-v="clear">${en?"CLEAR":"LIMPIAR"}</button></div>`;a.querySelectorAll(".key").forEach(k=>k.onclick=()=>keyPress(k.dataset.v))}
 function keyPress(v){if(state.locked)return;if(v==="back")state.typed=state.typed.slice(0,-1);else if(v==="clear")state.typed="";else state.typed+=v;$("#keyboardDisplay").textContent=state.typed||(getLang()==="en"?"Type the name":"Escribe el nombre");clearFeedbackForEdit()}
 function normalize(s){return s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-zñ0-9]/g,"")}
 function answerText(){answer(normalize(state.typed)===normalize(nameOf(state.question.target))?state.question.target:"__wrong")}

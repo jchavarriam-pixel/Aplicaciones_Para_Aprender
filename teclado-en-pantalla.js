@@ -6,7 +6,7 @@
     function seleccionar(entrada) {
       campo?.removeAttribute('data-campo-activo');
       campo = entrada;
-      campo?.setAttribute('data-campo-activo', '');
+      campo?.toggleAttribute('data-campo-activo', campos().length > 1);
     }
     function pulsar(tecla) {
       if (!campos().includes(campo)) seleccionar(campos()[0]);

@@ -133,10 +133,10 @@ button:disabled { opacity: .62; cursor: default; }
 #respuestaPractica { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:5px; }
 #respuestaPractica label { font-size:.85rem; }
 #resultadoPractica {
-  width:3.5em; min-height:38px; padding:2px 4px; border:2px solid #8298db; border-radius:9px;
-  background:white; text-align:center; font-size:1.12rem; font-weight:900;
+  width:3.5em; min-height:38px; padding:2px 4px; border:0;
+  background:transparent; text-align:center; font-size:1.12rem; font-weight:900;
 }
-#resultadoPractica[aria-invalid=true] { border-color:#ad4f32; background:#fff0e4; }
+#resultadoPractica[aria-invalid=true] { box-shadow:inset 0 -2px 0 #ad4f32; color:#ad4f32; }
 #respuestaPractica button { font-size:.87rem; }
 .tipo-practica { display:grid; gap:4px; }
 .caida-abaco { position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:998; }

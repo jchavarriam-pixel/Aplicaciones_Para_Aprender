@@ -1,5 +1,5 @@
 Object.assign(window.TEXTOS_INGLES, {
-  'La tiendita de colones':'The Colón Shop',
+  'Dinero Lab':'Money Lab',
   'Elige una actividad para practicar con monedas y billetes de Costa Rica.':'Choose an activity to practise with Costa Rican coins and banknotes.',
   'Así jugamos':'How to play',
   'Modos':'Activities',

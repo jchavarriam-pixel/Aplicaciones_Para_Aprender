@@ -41,7 +41,7 @@ Object.assign(window.TEXTOS_INGLES||={}, {
  'Identificación, lectura y práctica de números.':'Identify, read and practise numbers.',
  'Práctica para completar secuencias con el antecesor y el sucesor de un número.':'Complete sequences using the previous and next number.',
  'Ejercicios combinados para practicar cálculo básico.':'Mixed exercises to practise basic arithmetic.',
- 'La tiendita de colones':'The Colón Shop',
+ 'Dinero Lab':'Money Lab',
  'Dinero y compras':'Money and shopping',
  'Cuenta colones, averigua si te alcanza para comprar y practica cómo cobrar y dar vuelto.':'Count colones, check what you can afford, and practise taking payments and giving change.',
  'Práctica de sumas, restas y valor posicional en formato UM | C | D | U.':'Practise addition, subtraction and place value with thousands, hundreds, tens and units.',

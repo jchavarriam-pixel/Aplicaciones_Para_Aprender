@@ -239,18 +239,21 @@ button.pieza-colocada:has(.moneda) { min-width:calc(29 * var(--u)); min-height:c
 .pago-cliente { display:flex; justify-content:center; flex-wrap:wrap; gap:calc(4 * var(--u)); padding-bottom:calc(3 * var(--u)); }
 .respuesta { justify-self:center; width:min(100%,calc(380 * var(--u))); display:grid; justify-items:center; gap:calc(4 * var(--u)); font-weight:800 }
 .monto {
-  display:flex; align-items:center; width:min(100%,calc(170 * var(--u))); background:#eff8f5; border:2px solid #769f95;
-  border-radius:calc(9 * var(--u)); padding-inline:calc(6 * var(--u)); font-size:calc(23 * var(--u)); font-weight:900;
+  display:flex; align-items:center; justify-content:center; gap:.18em;
+  width:min(100%,calc(160 * var(--u))); color:#163f45; font-size:calc(25 * var(--u)); font-weight:900;
 }
-.monto input { width:100%; min-width:0; border:0; background:transparent; text-align:center; font-variant-numeric:tabular-nums; }
+.monto input { width:min(7ch,83%); min-width:0; padding:0; border:0; background:transparent; text-align:start; font-variant-numeric:tabular-nums; }
+.monto input::placeholder { color:#627c80; opacity:1; }
+.cabecera h1 { display:flex; align-items:center; gap:calc(4 * var(--u)); }
+.marca-dinero { flex:none; width:clamp(calc(27 * var(--u)),14%,calc(47 * var(--u))); height:auto; }
 #teclado { width:100%; display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:calc(3 * var(--u)); }
 #teclado button {
-  min-height:calc(39 * var(--u)); padding:0; font-size:calc(19 * var(--u)); font-weight:800;
-  background:#eee9ff; border:1px solid #ccbae9; border-radius:calc(7 * var(--u)); color:#463174;
+  min-height:calc(39 * var(--u)); padding:0; font-size:calc(21 * var(--u)); font-weight:900;
+  background-color:#eee9ff; border:1px solid #ccbae9; border-radius:calc(7 * var(--u)); color:#463174;
 }
-#teclado button:nth-child(3n+1) { background:#daefe8; border-color:#a5d1bb; color:#15524a; }
-#teclado button:nth-child(3n+2) { background:#ffedc9; border-color:#eacc95; color:#68432b; }
-#teclado button[data-tecla=Backspace],#teclado button[data-tecla=Delete] { background:#f6dce0; border-color:#dbb6bd; }
+#teclado button:nth-child(3n+1) { background-color:#daefe8; border-color:#a5d1bb; color:#15524a; }
+#teclado button:nth-child(3n+2) { background-color:#ffedc9; border-color:#eacc95; color:#68432b; }
+#teclado button:is([data-tecla=Backspace],[data-tecla=Delete]) { background-color:#fce6eb; border-color:#dda8b3; color:#822c48; }
 .fantasma-colones { --u:1px; position:fixed; z-index:1100; pointer-events:none; filter:drop-shadow(0 4px 4px #18463e60); }
 .fantasma-colones > * { width:100%; height:100%; }
 dialog {
