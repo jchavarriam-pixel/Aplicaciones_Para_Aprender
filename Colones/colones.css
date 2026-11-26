@@ -170,10 +170,25 @@ button.pieza-colocada:has(.moneda) { min-width:calc(29 * var(--u)); min-height:c
 .pila-contador { --solape-pila:.50; }
 .pila-dinero .dinero { filter:drop-shadow(0 1px 1px #193d4460); }
 .pila-dinero .dinero + .dinero { margin-block-start:calc(-1 * var(--ficha-alto) * var(--solape-pila)); }
-.pila-dinero .billete + .billete {
-  /* A tamaños pequeños, reserva también el alto de la cifra del billete inferior. */
-  margin-block-start:calc(-1 * min(var(--ficha-alto) * var(--solape-pila),max(0px,var(--ficha-alto) - 13 * var(--u))));
+.pila-dinero > .billete {
+  --fuente-cifra:clamp(calc(10 * var(--u)),calc(var(--ficha-alto) * .26),calc(19 * var(--u)));
+  --franja-cifra:calc(var(--fuente-cifra) * 1.07 + 4 * var(--u));
+  align-self:flex-start; overflow:hidden;
+  /* También deja al descubierto el número impreso en el margen izquierdo. */
+  margin-inline-start:calc(var(--ficha-ancho) * .105 * var(--nivel-pila,0));
 }
+.pila-dinero > .billete:nth-child(2) { --nivel-pila:1; }
+.pila-dinero > .billete:nth-child(3) { --nivel-pila:2; }
+.pila-dinero > .billete:nth-child(4) { --nivel-pila:3; }
+.pila-dinero > .billete + .billete {
+  margin-block-start:calc(min(0px,max(var(--franja-cifra) - var(--ficha-alto),-1 * var(--ficha-alto) * var(--solape-pila))));
+}
+.pila-dinero .valor-billete { font-size:var(--fuente-cifra); }
+.pila-dinero > .billete:is(.dinero-entrando,.pieza-contada) { animation:none; }
+@media (prefers-reduced-motion:no-preference) {
+  .pila-dinero > .billete:is(.dinero-entrando,.pieza-contada) img { animation:asentarBilleteApilado .24s ease-out; }
+}
+@keyframes asentarBilleteApilado { from { opacity:.60; transform:translateY(-22%); } }
 .pila-billetes .billete { outline:1px solid #2c484d; }
 .cantidad-piezas {
   position:absolute; right:calc(-3 * var(--u)); top:0; background:#174541; color:white; padding:0 calc(3 * var(--u));

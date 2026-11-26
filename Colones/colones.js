@@ -51,6 +51,7 @@
   const vueltaPasillo=valor=>((valor%mesasPorVuelta)+mesasPorVuelta)%mesasPorVuelta;
   const imagenCaja='imagenes/caja-registro-frontal.webp';
   const movimientoReducido=matchMedia('(prefers-reduced-motion: reduce)');
+  const contadorCompacto=matchMedia('(orientation:portrait) and (max-height:700px)');
   const t = texto => IdiomaVoz.t(texto);
   const en = () => IdiomaVoz.idioma==='en';
   const idioma = (es,ingles) => en() ? ingles : es;
@@ -275,10 +276,16 @@
     const ultima=bandeja?.querySelector(`[data-indice-efectivo="${piezas.length-1}"]`);
     if(!ultima)return null;
     const frente=ultima.querySelector('.pila-dinero > :last-child');
-    const arriba=ultima.offsetTop+(frente?.offsetTop||0);
-    const abajo=arriba+(frente||ultima).offsetHeight;
+    const inicioPila=ultima.offsetTop;
+    const inicioFrente=inicioPila+(frente?.offsetTop||0);
+    const finalFrente=inicioFrente+(frente||ultima).offsetHeight;
+    const cifra=frente?.querySelector('.valor-billete');
+    const altoVisible=bandeja.clientHeight;
+    const abajo=cifra&&finalFrente-inicioPila>altoVisible
+      ?inicioFrente+cifra.offsetTop+cifra.offsetHeight:finalFrente;
+    const arriba=cifra&&abajo-inicioPila<=altoVisible?inicioPila:inicioFrente;
     if(arriba<bandeja.scrollTop)bandeja.scrollTop=arriba;
-    else if(abajo>bandeja.scrollTop+bandeja.clientHeight)bandeja.scrollTop=abajo-bandeja.clientHeight;
+    else if(abajo>bandeja.scrollTop+altoVisible)bandeja.scrollTop=abajo-altoVisible;
     return frente||ultima.firstElementChild;
   }
   function lecturaContador() {
@@ -359,7 +366,8 @@
       const agrupar=enContador?opciones.apilarContador:largosBillete[valor]&&opciones.apilarBilletes;
       const pila=agrupar?agrupados.get(valor):null;
       // Varias pilas cortas permiten recorrer el efectivo con menos desplazamiento.
-      if(pila&&pila.cantidad<4){
+      const limite=enContador&&largosBillete[valor]&&contadorCompacto.matches?2:4;
+      if(pila&&pila.cantidad<limite){
         pila.cantidad++;
         pila.indice=indice;
       }
@@ -1261,6 +1269,9 @@
   addEventListener('resize',terminarGestos);
   addEventListener('blur',terminarGestos);
   document.addEventListener('fullscreenchange',terminarGestos);
+  contadorCompacto.addEventListener('change',()=>{
+    if(modo==='contador'&&opciones.apilarContador)actualizarContador();
+  });
   escena.addEventListener('click',evento=>{
     if(ignorarClic&&evento.detail){ignorarClic=false;return;}
     if(llegadaCaja)return;
