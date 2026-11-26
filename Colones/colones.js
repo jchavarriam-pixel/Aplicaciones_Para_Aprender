@@ -287,7 +287,7 @@
     const ultima=bandeja?.querySelector(`[data-indice-efectivo="${piezas.length-1}"]`);
     if(!ultima)return null;
     const frente=ultima.querySelector('.pila-dinero > :last-child');
-    const inicioPila=ultima.offsetTop;
+    const inicioPila=bandeja.scrollTop+(ultima.getBoundingClientRect().top-bandeja.getBoundingClientRect().top)/Matematicas.escala();
     const inicioFrente=inicioPila+(frente?.offsetTop||0);
     const altoFrente=(frente||ultima).offsetHeight;
     const finalFrente=inicioFrente+altoFrente;
@@ -331,19 +331,58 @@
       </div>
       <section class="bandeja-contador" aria-labelledby="rotuloDineroContado">
         <header class="salida-contador">
-          <h3 id="rotuloDineroContado">${t('Dinero contado')}</h3><span class="rodillos-contador" aria-hidden="true"></span>
+          <h3 id="rotuloDineroContado">${t('Dinero contado')}</h3>
+          ${fase==='medir'?`<small class="ayuda-contador">${t('Arrastra para acomodar')}</small>`:''}
+          <span class="rodillos-contador" aria-hidden="true"></span>
         </header>
-        <div class="piezas-colocadas" id="dineroContado" data-superficie-efectivo>${fichasPago(fase==='medir')}</div>
+        <div class="bandeja-desplazable" id="dineroContado">
+          <div class="plano-contador" id="planoContador" data-superficie-efectivo>${fichasPago(fase==='medir')}</div>
+        </div>
       </section>
     </section>`;
   }
   function actualizarContador(recienContada=false) {
     $('lecturaContador').innerHTML=lecturaContador();
-    const bandeja=$('dineroContado');
-    bandeja.innerHTML=fichasPago(fase==='medir');
-    dibujarEfectivoGuardado(bandeja);
-    if(!recienContada)return;
-    mostrarUltimaPieza(bandeja)?.classList.add('pieza-contada');
+    const plano=$('planoContador');
+    plano.innerHTML=fichasPago(fase==='medir');
+    distribuirContador(plano,recienContada);
+    if(recienContada)mostrarUltimaPieza($('dineroContado'))?.classList.add('pieza-contada');
+  }
+  function distribuirContador(plano,recienContada=false) {
+    const altoVisible=plano.parentElement.getBoundingClientRect().height;
+    const ancho=plano.getBoundingClientRect().width;
+    if(!ancho||!altoVisible)return;
+    const fichas=[...plano.children];
+    if(recienContada){
+      const nueva=fichas.findIndex(ficha=>Number(ficha.dataset.indiceEfectivo)===piezas.length-1);
+      // Si crece una pila, busca sitio para ella después de ubicar las demás piezas.
+      if(nueva>=0)fichas.push(...fichas.splice(nueva,1));
+    }
+    const ocupadas=[];
+    let alto=altoVisible;
+    for(const nodo of fichas){
+      const {width:anchoFicha,height:altoFicha}=nodo.getBoundingClientRect();
+      const ficha={ancho:anchoFicha,alto:altoFicha};
+      const i=Number(nodo.dataset.posicionEfectivo);
+      const p=posicionesEfectivo[i];
+      // La altura añadida para más efectivo no desplaza lo que ya está acomodado.
+      const destino={x:(p?.x??.55)*ancho,y:p?.y??altoVisible*.35};
+      alto=Math.max(alto,destino.y+altoFicha/2+margenMesa);
+      let lugar=posicionLibre(destino,ficha,ocupadas,ancho,alto);
+      if(!lugar){
+        alto+=altoFicha+separacionMesa+2*margenMesa;
+        lugar=posicionLibre(destino,ficha,ocupadas,ancho,alto);
+      }
+      if(!lugar)continue;
+      posicionesEfectivo[i]={x:lugar.x/ancho,y:lugar.y};
+      ocupadas.push({...ficha,...lugar,nodo});
+    }
+    alto=Math.max(altoVisible,...ocupadas.map(ficha=>ficha.y+ficha.alto/2+margenMesa));
+    plano.style.height=alto/Matematicas.escala()+'px';
+    for(const {nodo,x,y} of ocupadas){
+      nodo.style.left=x/ancho*100+'%';
+      nodo.style.top=y/alto*100+'%';
+    }
   }
   function esperandoContador() {
     return modo==='contador'&&varianteContador==='reto'&&colaContador.length>0;
@@ -366,6 +405,11 @@
     if(!colaContador.length)return;
     sonarTolva(colaContador[0]);
     const registrar=()=>{
+      // No reconstruir la bandeja mientras un dedo sostiene una de sus piezas.
+      if(arrastre?.origen.closest('#planoContador')){
+        temporizadorContador=setTimeout(registrar,70);
+        return;
+      }
       const valor=colaContador.shift();
       piezas.push(valor);
       actualizarContador(true);
@@ -1294,7 +1338,8 @@
   function moverEfectivo(superficie,nodo,clienteX,clienteY,impulso) {
     detenerDeslizamiento();
     const rect=superficie.getBoundingClientRect();
-    const libre=superficie.classList.contains('mesa-libre');
+    const enContador=superficie.id==='planoContador';
+    const libre=enContador||superficie.classList.contains('mesa-libre');
     const ficha=cajaEnSuperficie(nodo,rect);
     if(ficha.ancho+2*margenMesa>rect.width||ficha.alto+2*margenMesa>rect.height)return;
     const ocupadas=[...superficie.querySelectorAll('.ficha-mesa,.sobre-mesa,.pieza-colocada,[data-recibir]')].filter(otra=>otra!==nodo)
@@ -1307,11 +1352,11 @@
     if(!libre)nodo.style.translate='';
     const base=cajaEnSuperficie(nodo,rect);
     function dibujar({x,y}){
-      const relativa={x:x/rect.width,y:y/rect.height};
+      const relativa={x:x/rect.width,y:enContador?y:y/rect.height};
       posiciones[indice]=relativa;
       if(libre){
         nodo.style.left=relativa.x*100+'%';
-        nodo.style.top=relativa.y*100+'%';
+        nodo.style.top=y/rect.height*100+'%';
       }else nodo.style.translate=`${(x-base.x)/escala}px ${(y-base.y)/escala}px`;
     }
     dibujar(punto);
@@ -1322,6 +1367,7 @@
     return modo==='contar'?posicionesMesa:posicionesEfectivo;
   }
   function dibujarEfectivoGuardado(superficie) {
+    if(superficie.id==='planoContador')return distribuirContador(superficie);
     const posiciones=posicionesDe(superficie);
     if(!posiciones.some(Boolean))return;
     const rect=superficie.getBoundingClientRect();
@@ -1434,14 +1480,24 @@
     while(d.muestras.length>2&&evento.timeStamp-d.muestras[0].t>100)d.muestras.shift();
     if(!d.fantasma){
       if(Math.hypot(x-d.x,y-d.y)<7)return;
-      const original=d.origen.querySelector('.pila-dinero .dinero:last-child')||d.origen.firstElementChild;
+      const grupo=d.origen.closest('#planoContador')?d.origen.querySelector('.pila-contador'):null;
+      const original=grupo||d.origen.querySelector('.pila-dinero .dinero:last-child')||d.origen.firstElementChild;
       const rect=original.getBoundingClientRect();
       d.fantasma=document.createElement('div');
       d.fantasma.className='fantasma-colones';
       d.fantasma.setAttribute('aria-hidden','true');
       d.fantasma.style.width=rect.width+'px';
       d.fantasma.style.height=rect.height+'px';
-      d.fantasma.append(original.cloneNode(true));
+      const copia=original.cloneNode(true);
+      if(grupo){
+        const piezasOriginales=grupo.querySelectorAll('.dinero');
+        copia.querySelectorAll('.dinero').forEach((ficha,i)=>{
+          const {width,height}=piezasOriginales[i].getBoundingClientRect();
+          ficha.style.setProperty('--ficha-ancho',width+'px');
+          ficha.style.setProperty('--ficha-alto',height+'px');
+        });
+      }
+      d.fantasma.append(copia);
       document.body.append(d.fantasma);
       if(d.origen.closest('[data-superficie-efectivo]'))d.origen.classList.add('moviendo-ficha');
     }

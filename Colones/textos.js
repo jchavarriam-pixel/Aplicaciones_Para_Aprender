@@ -95,6 +95,7 @@ Object.assign(window.TEXTOS_INGLES,{
   'Sonidos de la máquina':'Machine sounds',
   'Pizarra del contador':'Counter display',
   'Dinero contado':'Counted money',
+  'Arrastra para acomodar':'Drag to arrange',
   'Toca el dinero del banco o arrástralo a las ranuras.':'Tap money in the cash bank or drag it to the slots.',
   'Apilar monedas y billetes del mismo valor':'Stack coins and banknotes of the same value',
   'Al apilar, queda visible al menos la mitad de cada pieza de abajo.':'At least half of each piece underneath stays visible when stacked.',

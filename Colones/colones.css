@@ -502,9 +502,10 @@ button.ficha-mesa { cursor:grab; }
 #escena[data-fase=medir]:has(>#bancoPanel) {
   grid-template-rows:minmax(0,1fr) auto; align-content:stretch; align-items:center;
 }
-#escena[data-fase=medir] #contenido {
+#escena:has(.contador-caja) #contenido {
   grid-template-rows:minmax(0,1fr); align-content:stretch; align-self:stretch; min-height:0;
 }
+#escena[data-fase=listo]:has(.contador-caja) { grid-template-rows:minmax(0,1fr); align-content:stretch; }
 #escena[data-fase=medir] #bancoPanel { max-height:42cqh; }
 .juego:has(#escena[data-fase=medir]) .acciones-juego { grid-template-rows:calc(34 * var(--u)) auto; gap:0; }
 .juego:has(#escena[data-fase=medir]) #mensaje { grid-row:1; align-self:center; }
@@ -606,16 +607,23 @@ button.ficha-mesa { cursor:grab; }
 .bandeja-contador h3 {
   padding-block:calc(2 * var(--u)); color:#214b42; font-size:calc(13 * var(--u)); line-height:1.18;
 }
+.ayuda-contador { color:#29534b; font-size:calc(11 * var(--u)); line-height:1.2; text-align:right; }
 .rodillos-contador {
-  flex:none; width:24%; height:calc(8 * var(--u)); border-radius:calc(6 * var(--u));
+  flex:none; width:15%; height:calc(8 * var(--u)); border-radius:calc(6 * var(--u));
   background:repeating-linear-gradient(110deg,#122c35 0 calc(3 * var(--u)),#3d646b calc(3 * var(--u)) calc(5 * var(--u)));
   box-shadow:0 calc(1 * var(--u)) 0 #e5f8ec,inset 0 calc(2 * var(--u)) 0 #102c35;
 }
-.contador-caja .piezas-colocadas {
-  position:relative; min-height:0; overflow:auto; align-items:flex-start; align-content:flex-start; scrollbar-width:thin;
-  padding-inline:calc(4 * var(--u));
+.bandeja-desplazable {
+  min-height:0; overflow:auto; scrollbar-width:thin; scrollbar-gutter:stable;
 }
-.contador-caja .pieza-colocada { filter:drop-shadow(0 1px 1px #193d4440); }
+.plano-contador { position:relative; min-height:100%; }
+.plano-contador .pieza-colocada {
+  position:absolute; left:50%; top:50%; width:max-content; transform:translate(-50%,-50%);
+  filter:drop-shadow(0 1px 1px #193d4440);
+}
+@container (max-width:360px) {
+  .salida-contador .rodillos-contador { display:none; }
+}
 @media (prefers-reduced-motion:no-preference) {
   .flujo-contador .dinero { animation:ingresarBillete .30s ease-in both; }
   .flujo-contador .moneda { animation-name:ingresarMoneda; }
@@ -644,6 +652,7 @@ button.ficha-mesa { cursor:grab; }
 }
 @media (orientation:portrait) and (max-height:650px) {
   #appColones:has(#escena[data-fase=medir]) .herramientas { max-height:calc(111 * var(--u)); }
+  #escena[data-fase=medir] #bancoPanel { max-height:33cqh; }
 }
 @media (orientation:landscape) and (max-height:430px),(orientation:portrait) and (max-width:375px) {
   .variantes-contador { flex-wrap:nowrap; }
