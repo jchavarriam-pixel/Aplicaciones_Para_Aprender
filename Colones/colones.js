@@ -135,13 +135,22 @@
     }
     candidatos.delete(0);
     const soloMonedas=opciones.activas.at(-1)<1000;
-    const montos=[...candidatos.keys()].filter(monto=>!soloMonedas||monto<=1000);
+    let montos=[...candidatos.keys()].filter(monto=>!soloMonedas||monto<=1000);
+    const pagosConVuelto=new Map();
+    // Cuatro de cada cinco rondas intentan ofrecer precios que obliguen a dar vuelto.
+    if(modo==='compra'&&entero(1,5)!==1){
+      for(const monto of montos){
+        const pago=pagoQueRequiereVuelto(monto);
+        if(pago)pagosConVuelto.set(monto,pago);
+      }
+      if(pagosConVuelto.size)montos=[...pagosConVuelto.keys()];
+    }
     const surtido=barajar(productos.filter(([, ,min])=>!soloMonedas||min<=500)).map(([nombre,imagen,min,max])=>{
       const dentro=montos.filter(x=>x>=min&&x<=max);
       const distancia=x=>Math.max(min-x,x-max,0);
       const cercanos=dentro.length?dentro:[...montos].sort((a,b)=>distancia(a)-distancia(b)).slice(0,2);
       const precio=tomar(cercanos);
-      return {nombre,imagen,monedas:candidatos.get(precio),precio};
+      return {nombre,imagen,monedas:candidatos.get(precio),precio,pagoConVuelto:pagosConVuelto.get(precio)};
     });
     const pasillo=modosConPasillo.has(modo);
     const cantidad=pasillo?mesasPorVuelta*2:6;
@@ -932,7 +941,9 @@
   function iniciarCompraCaja() {
     const existencias=contarPiezas(elegidos.flatMap(i=>oferta[i].monedas));
     const total=precio();
-    const conVuelto=modo!=='exacto'&&entero(0,1)===1?pagoQueRequiereVuelto(total):null;
+    const conVuelto=modo==='compra'
+      ?oferta[elegidos[0]].pagoConVuelto
+      :modo==='carrito'&&entero(0,1)===1?pagoQueRequiereVuelto(total):null;
     const cartera=conVuelto?contarPiezas(conVuelto):new Map(opciones.activas.map(valor=>[valor,Math.max(2,existencias.get(valor)||0)]));
     if(conVuelto){
       // Agrega algunas piezas de sobra sin habilitar una combinación exacta.
