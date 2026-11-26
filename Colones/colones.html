@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="../idioma-voz.css">
   <link rel="stylesheet" href="../pantalla-completa.css">
   <link rel="stylesheet" href="../panel-plegable.css?v=colones">
-  <link rel="stylesheet" href="colones.css?v=preparar-sobre">
+  <link rel="stylesheet" href="colones.css?v=contar-piezas">
 </head>
 <body>
   <main id="appColones">
@@ -66,7 +66,7 @@
       </fieldset>
       <fieldset class="ajustes-escala">
         <legend>Billetes</legend>
-        <label class="casilla"><input type="checkbox" id="apilarBilletes"> Apilar billetes del mismo valor</label>
+        <label class="casilla"><input type="checkbox" id="apilarBilletes"> Apilar billetes iguales en compras y al preparar un sobre</label>
         <label for="tamanoBilletes">Tamaño de los billetes</label>
         <div class="control-escala"><input id="tamanoBilletes" type="range" min="70" max="250" step="5" value="150"><output id="porcentajeBilletes" for="tamanoBilletes">150 %</output></div>
         <div class="muestra-escala" id="muestraBilletes" aria-hidden="true"></div>
@@ -76,6 +76,11 @@
         <label for="tamanoMonedas">Tamaño de las monedas</label>
         <div class="control-escala"><input id="tamanoMonedas" type="range" min="50" max="250" step="5" value="100"><output id="porcentajeMonedas" for="tamanoMonedas">100 %</output></div>
         <div class="muestra-escala" id="muestraMonedas" aria-hidden="true"></div>
+      </fieldset>
+      <fieldset>
+        <legend>Contador de dinero</legend>
+        <label class="casilla"><input type="checkbox" id="apilarContador" aria-describedby="explicacionPila"> Apilar monedas y billetes del mismo valor</label>
+        <p id="explicacionPila">Al apilar, queda visible la mitad de cada pieza de abajo.</p>
       </fieldset>
       <label class="casilla"><input type="checkbox" id="nombresProductos"> Mostrar los nombres de los productos en globos</label>
       <label class="casilla"><input type="checkbox" id="ayudas"> Mostrar pistas y el total del dinero que colocas</label>
@@ -99,7 +104,7 @@
   </footer>
   <script>window.IDIOMA_VOZ_APP = 'colones';</script>
   <script src="../idioma-voz-textos.js?v=creditos-msc"></script>
-  <script src="textos.js?v=preparar-sobre"></script>
+  <script src="textos.js?v=contar-piezas"></script>
   <script src="../idioma-voz.js"></script>
   <script src="../matematicas-base.js"></script>
   <script src="../historial-modos.js"></script>
@@ -107,6 +112,6 @@
   <script src="../pantalla-completa.js"></script>
   <script src="../panel-plegable.js?v=colones"></script>
   <script src="../nombre-compartido.js"></script>
-  <script src="colones.js?v=preparar-sobre"></script>
+  <script src="colones.js?v=contar-piezas"></script>
 </body>
 </html>

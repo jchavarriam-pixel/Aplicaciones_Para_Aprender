@@ -87,6 +87,8 @@ Object.assign(window.TEXTOS_INGLES, {
 });
 Object.assign(window.TEXTOS_INGLES,{
   'Contador de dinero':'Money counter',
+  'Apilar monedas y billetes del mismo valor':'Stack coins and banknotes of the same value',
+  'Al apilar, queda visible la mitad de cada pieza de abajo.':'Half of each piece underneath stays visible when stacked.',
   'Agrega dinero y escucha cuánto pusiste y cuánto hay en total.':'Add money and hear the value of each piece and the running total.',
   'Toca o arrastra monedas y billetes al contador.':'Tap or drag coins and banknotes into the counter.',
   'Última pieza':'Last piece',
@@ -120,7 +122,7 @@ Object.assign(window.TEXTOS_INGLES,{
   'Pago guardado en la caja.':'Payment is in the register.',
   '¿Me das el vuelto?':'Can I have my change?',
   'Billetes':'Banknotes',
-  'Apilar billetes del mismo valor':'Stack banknotes of the same value',
+  'Apilar billetes iguales en compras y al preparar un sobre':'Stack matching banknotes when shopping or filling an envelope',
   'Tamaño de los billetes':'Banknote size',
   'Avanzar':'Move forward',
   'Retroceder':'Move back',

@@ -497,10 +497,43 @@ button.ficha-mesa { cursor:grab; }
   .rotulo-sobre { font-size:calc(11 * var(--u)); }
   .tablero-mesa .mesa-libre { --altura-mesa:clamp(calc(84 * var(--u)),calc(100cqh - 96 * var(--u)),calc(177 * var(--u))); }
 }
-.contador-caja { border:calc(3 * var(--u)) solid #064b4e; border-radius:calc(18 * var(--u)); padding:calc(8 * var(--u)); background:linear-gradient(#3fafaa,#147977); }
-.pantalla-contador { display:grid; gap:calc(3 * var(--u)); padding:calc(4 * var(--u)); border-radius:calc(9 * var(--u)); background:#09373b; color:#defcbb; }
-.pantalla-contador .dato-total { background:transparent; color:inherit; }
-.contador-caja .mostrador { margin-top:calc(6 * var(--u)); box-shadow:inset 0 3px 0 #b5d8ca; }
+#escena[data-fase=medir]:has(>#bancoPanel) {
+  grid-template-rows:minmax(0,1fr) auto; align-content:stretch; align-items:center;
+}
+#escena[data-fase=medir] #contenido {
+  grid-template-rows:minmax(0,1fr); max-height:100%; min-height:0;
+}
+#escena[data-fase=medir] #bancoPanel { max-height:42cqh; }
+.contador-caja {
+  display:grid; grid-template-rows:auto minmax(0,1fr); min-height:0;
+  border:calc(3 * var(--u)) solid #064b4e; border-radius:calc(18 * var(--u));
+  padding:calc(6 * var(--u)); background:linear-gradient(#3fafaa,#147977);
+}
+.pantalla-contador {
+  display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:calc(3 * var(--u)); padding:calc(4 * var(--u));
+  border-radius:calc(9 * var(--u)); background:#09373b; color:#defcbb;
+}
+.pantalla-contador > .dato-total {
+  flex-direction:column; justify-content:center; gap:0; text-align:center;
+  font-size:calc(13 * var(--u)); line-height:1.18; background:transparent; color:inherit;
+}
+.contador-caja .mostrador {
+  display:grid; grid-template-rows:auto minmax(0,1fr); min-height:0;
+  margin-top:calc(6 * var(--u)); box-shadow:inset 0 3px 0 #b5d8ca;
+}
+.contador-caja .piezas-colocadas {
+  position:relative; max-height:none; min-height:0; align-items:flex-start; padding-inline:calc(4 * var(--u));
+}
+.pila-contador { display:flex; flex-direction:column; }
+.pila-contador .dinero { filter:drop-shadow(0 1px 1px #193d4460); }
+.pila-contador .dinero + .dinero { margin-top:calc(var(--ficha-alto) / -2); }
+@media (orientation:landscape) {
+  #escena[data-fase=medir]:has(>#bancoPanel) { grid-template-rows:minmax(0,1fr); }
+  #escena[data-fase=medir] #bancoPanel { max-height:100%; }
+}
+@media (orientation:portrait) and (max-height:650px) {
+  #appColones:has(#escena[data-fase=medir]) .herramientas { max-height:calc(120 * var(--u)); }
+}
 .reto-alcance { display:grid; grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr); gap:calc(6 * var(--u)); align-items:stretch; }
 .producto-alcance,.cartera {
   display:grid; justify-items:center; align-content:center; gap:calc(4 * var(--u)); min-width:0;

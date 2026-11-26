@@ -30,6 +30,7 @@
     ? Math.max(Number(control.min),Math.min(Number(control.max),valor)) : Number(control.defaultValue);
   let opciones = {activas:activas.length ? activas : iniciales, ayudas:guardado.ayudas!==false,
     narracion:guardado.narracion!==false, apilarBilletes:guardado.apilarBilletes===true,
+    apilarContador:guardado.apilarContador===true,
     tamanoBilletes:limitarEscala(guardado.tamanoBilletes,$('tamanoBilletes')),
     tamanoMonedas:limitarEscala(guardado.tamanoMonedas,$('tamanoMonedas')), nombresProductos:guardado.nombresProductos!==false,
     vueltoCaja:tiposVuelto.includes(guardado.vueltoCaja)?guardado.vueltoCaja:'correcto'};
@@ -257,13 +258,20 @@
     const saldo=$('saldoSobre')?.querySelector('strong');
     if(saldo)saldo.textContent=formato(sumar(piezas));
     if(!entrando)return;
-    const agregada=interior.querySelector(`[data-indice-sobre="${piezas.length-1}"]`);
+    const agregada=mostrarUltimaPieza(interior);
     if(!agregada)return;
-    const arriba=agregada.offsetTop, abajo=arriba+agregada.offsetHeight;
-    if(arriba<interior.scrollTop)interior.scrollTop=arriba;
-    else if(abajo>interior.scrollTop+interior.clientHeight)interior.scrollTop=abajo-interior.clientHeight;
     const imagen=agregada.querySelector('.pila-billetes > span:last-child .dinero')||agregada.firstElementChild;
     imagen.classList.add('dinero-entrando');
+  }
+  function mostrarUltimaPieza(bandeja) {
+    const ultima=bandeja.querySelector(`[data-indice-efectivo="${piezas.length-1}"]`);
+    if(!ultima)return null;
+    const frente=ultima.querySelector('.pila-contador > :last-child');
+    const arriba=ultima.offsetTop+(frente?.offsetTop||0);
+    const abajo=arriba+(frente||ultima).offsetHeight;
+    if(arriba<bandeja.scrollTop)bandeja.scrollTop=arriba;
+    else if(abajo>bandeja.scrollTop+bandeja.clientHeight)bandeja.scrollTop=abajo-bandeja.clientHeight;
+    return ultima;
   }
   function verContador() {
     return `<section class="contador-caja"><div class="pantalla-contador">
@@ -278,15 +286,16 @@
       ${fase==='decidir'?`<div class="decidir"><button type="button" data-alcanza="si">${t('Sí me alcanza')}</button><button type="button" data-alcanza="no">${t('No me alcanza')}</button></div>`:''}`;
   }
   function fichasPago(editable=false,efectivo=piezas) {
-    const agruparMonedas=modo==='contador';
+    const enContador=modo==='contador';
     const grupos=[];
     const agrupados=new Map();
     for(const [indice,valor] of efectivo.entries()){
-      const agrupar=largosBillete[valor]?opciones.apilarBilletes:agruparMonedas;
-      if(agrupar&&agrupados.has(valor)){
-        const ficha=agrupados.get(valor);
-        ficha.cantidad++;
-        ficha.indice=indice;
+      const agrupar=enContador?opciones.apilarContador:largosBillete[valor]&&opciones.apilarBilletes;
+      const pila=agrupar?agrupados.get(valor):null;
+      // Varias pilas cortas permiten recorrer el efectivo con menos desplazamiento.
+      if(pila&&(!enContador||pila.cantidad<4)){
+        pila.cantidad++;
+        pila.indice=indice;
       }
       else{
         const ficha={valor,cantidad:1,indice};
@@ -295,16 +304,20 @@
       }
     }
     return grupos.map(({valor,cantidad,indice})=>{
-      const apilado=cantidad>1&&largosBillete[valor];
-      const imagen=apilado
-        ? `<span class="pila-billetes" style="--cantidad-pila:${cantidad-1}" aria-hidden="true">${Array.from({length:cantidad},(_,i)=>
-          `<span style="--capa:${cantidad-1-i}">${pieza(valor)}</span>`).join('')}</span>`
-        : pieza(valor)+(cantidad>1?`<b class="cantidad-piezas">×${cantidad}</b>`:'');
-      const etiqueta=cantidad>1?`${cantidad} × ${etiquetaDinero(valor)}`:etiquetaDinero(valor);
+      let imagen=pieza(valor);
+      if(cantidad>1){
+        imagen=enContador
+          ? `<span class="pila-contador" aria-hidden="true">${imagen.repeat(cantidad)}</span>`
+          : `<span class="pila-billetes" style="--cantidad-pila:${cantidad-1}" aria-hidden="true">${Array.from({length:cantidad},(_,i)=>
+            `<span style="--capa:${cantidad-1-i}">${imagen}</span>`).join('')}</span>`;
+      }
+      const etiqueta=cantidad>1?idioma(
+        `${cantidad} ${valor<1000?'monedas':'billetes'} de ${formato(valor)}`,
+        `${cantidad} ${valor<1000?'coins':'banknotes'} of ${formato(valor)}`):etiquetaDinero(valor);
       const quitar=cantidad>1?idioma(`${etiqueta}. Quitar una pieza.`,`${etiqueta}. Remove one piece.`):
         idioma(`Quitar ${etiqueta}`,`Remove ${etiqueta}`);
       return editable
-        ? `<button type="button" class="pieza-colocada" data-quitar="${valor}" ${modo==='llenar'?`data-indice-sobre="${indice}"`:''} aria-label="${quitar}">${imagen}</button>`
+        ? `<button type="button" class="pieza-colocada" data-quitar="${valor}" ${enContador||modo==='llenar'?`data-indice-efectivo="${indice}"`:''} aria-label="${quitar}">${imagen}</button>`
         : `<span class="pieza-colocada" role="img" aria-label="${etiqueta}">${imagen}</span>`;
     }).join('');
   }
@@ -888,9 +901,12 @@
     if(fase==='llenar')return actualizarEfectivoSobre(true);
     actualizarContenido();
     actualizarCarteraCompra();
-    if(modo==='contador'&&opciones.narracion)leer(idioma(
-      `Pusiste ${formato(valor)}. Hay ${formato(sumar(piezas))} en total.`,
-      `You added ${formato(valor)}. The total is ${formato(sumar(piezas))}.`));
+    if(modo==='contador'){
+      mostrarUltimaPieza(contenido.querySelector('.piezas-colocadas'));
+      if(opciones.narracion)leer(idioma(
+        `Pusiste ${formato(valor)}. Hay ${formato(sumar(piezas))} en total.`,
+        `You added ${formato(valor)}. The total is ${formato(sumar(piezas))}.`));
+    }
   }
   function elegirProducto(i) {
     if(!['elegir','escanear'].includes(fase)||!oferta[i]||elegidos.includes(i))return;
@@ -1053,7 +1069,7 @@
     }
   }
   function quitarDinero(valor,indice) {
-    const i=fase==='llenar'?indice:piezas.lastIndexOf(valor);
+    const i=Number.isInteger(indice)?indice:piezas.lastIndexOf(valor);
     if(piezas[i]!==valor||!fasesDinero.has(fase))return;
     piezas.splice(i,1);
     anunciar();
@@ -1218,7 +1234,7 @@
       guardarPago(Number(boton.dataset.recibir));
       escena.querySelector('[data-recibir]')?.focus({preventScroll:true});
     }
-    else if(boton.hasAttribute('data-quitar')) quitarDinero(Number(boton.dataset.quitar),Number(boton.dataset.indiceSobre));
+    else if(boton.hasAttribute('data-quitar')) quitarDinero(Number(boton.dataset.quitar),Number(boton.dataset.indiceEfectivo));
   });
   escena.addEventListener('keydown',evento=>{
     if(evento.target.id==='empujarCarrito'&&['ArrowUp','ArrowDown'].includes(evento.key)){
@@ -1293,6 +1309,7 @@
     $('ayudas').checked=opciones.ayudas;
     $('narracion').checked=opciones.narracion;
     $('apilarBilletes').checked=opciones.apilarBilletes;
+    $('apilarContador').checked=opciones.apilarContador;
     $('nombresProductos').checked=opciones.nombresProductos;
     $('vueltoCaja').value=opciones.vueltoCaja;
     for(const {control,preferencia} of controlesTamano)control.value=opciones[preferencia];
@@ -1307,6 +1324,7 @@
     const cambio=activas.join()!==opciones.activas.join();
     opciones={activas,ayudas:$('ayudas').checked,narracion:$('narracion').checked,
       apilarBilletes:$('apilarBilletes').checked,
+      apilarContador:$('apilarContador').checked,
       tamanoBilletes:$('tamanoBilletes').valueAsNumber,
       tamanoMonedas:$('tamanoMonedas').valueAsNumber,
       nombresProductos:$('nombresProductos').checked,
