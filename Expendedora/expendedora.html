@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Máquina expendedora</title>
+  <link rel="icon" href="imagenes/expendedora.png" type="image/png">
+  <link rel="stylesheet" href="../creditos.css">
+  <link rel="stylesheet" href="../idioma-voz.css">
+  <link rel="stylesheet" href="../pantalla-completa.css">
+  <link rel="stylesheet" href="../panel-plegable.css">
+  <link rel="stylesheet" href="expendedora.css">
+</head>
+<body>
+  <main id="appExpendedora">
+    <aside class="herramientas">
+      <header class="cabecera">
+        <a class="casa" href="../index.html" aria-label="Todas las aplicaciones" title="Todas las aplicaciones">⌂</a>
+        <h1><img src="imagenes/expendedora.png" alt="" width="46" height="46">Máquina expendedora</h1>
+        <label for="nombre">Nombre del estudiante</label>
+        <input id="nombre" autocomplete="given-name" maxlength="40">
+      </header>
+      <section class="guia">
+        <h2>Así jugamos</h2>
+        <ol>
+          <li>Elige un producto.</li>
+          <li>Introduce el dinero.</li>
+          <li>Recoge tu compra.</li>
+        </ol>
+      </section>
+      <div class="herramientas-botones">
+        <button id="configurar" type="button">Configuración</button>
+        <button id="nueva" type="button">Nueva compra</button>
+      </div>
+    </aside>
+
+    <section class="actividad" aria-label="Simulación de compra">
+      <header class="instrucciones">
+        <p id="instruccion" role="status"></p>
+        <button id="escuchar" type="button" aria-label="Escuchar instrucción" title="Escuchar instrucción">🔊</button>
+      </header>
+      <div class="escena">
+        <section class="maquina" id="maquina" aria-label="Máquina expendedora">
+          <div class="marquesina"><span aria-hidden="true">✦</span><strong>Bebidas y meriendas</strong><span aria-hidden="true">✦</span></div>
+          <div class="frente">
+            <div class="vitrina" id="vitrina" aria-label="Productos disponibles"></div>
+            <div class="terminal">
+              <div class="pantalla" id="pantalla" aria-live="polite"></div>
+              <div class="ranuras" aria-label="Entradas de dinero">
+                <div class="ranura" id="entradaMoneda" data-entrada="moneda"><span>Monedas</span><i aria-hidden="true"></i></div>
+                <div class="ranura" id="entradaBillete" data-entrada="billete"><span>Billetes</span><i aria-hidden="true"></i></div>
+              </div>
+              <button type="button" class="comprar" id="comprar" disabled>Comprar</button>
+              <button type="button" class="devolver" id="devolver" aria-label="Devolver dinero" disabled>Devolver</button>
+            </div>
+          </div>
+          <div class="salidas">
+            <button type="button" class="dispensador" id="recoger" disabled>
+              <span id="rotuloProducto">Bandeja</span><span id="productoEntregado" class="hueco-producto" aria-hidden="true"></span>
+            </button>
+            <button type="button" class="dispensador" id="recogerVuelto" disabled>
+              <span id="rotuloVuelto">Vuelto</span><span id="dineroEntregado" class="hueco-vuelto" aria-hidden="true"></span>
+            </button>
+          </div>
+        </section>
+        <section class="cartera" aria-labelledby="tituloCartera">
+          <h2 id="tituloCartera">Tu cartera</h2>
+          <div id="efectivo" class="efectivo"></div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="ajustes" aria-labelledby="tituloAjustes">
+    <form>
+      <header><h2 id="tituloAjustes">Configuración</h2><button class="cerrar" type="button" id="cerrar" aria-label="Aplicar y cerrar">✕</button></header>
+      <fieldset>
+        <legend>Denominaciones para practicar</legend>
+        <div id="denominaciones"></div>
+        <p role="alert" id="errorAjustes" hidden>Elige al menos una denominación.</p>
+      </fieldset>
+      <label class="opcion"><input id="conVuelto" type="checkbox"> Permitir pagos con vuelto</label>
+      <label class="opcion"><input id="ayuda" type="checkbox"> Mostrar cuánto falta</label>
+      <label class="opcion"><input id="narracion" type="checkbox"> Leer precios e instrucciones</label>
+      <label class="opcion"><input id="sonidos" type="checkbox"> Sonidos de la máquina</label>
+      <section id="vozExpendedora"></section>
+      <button class="aplicar" type="submit">Aplicar y cerrar</button>
+    </form>
+  </dialog>
+  <footer id="creditos-aplicaciones" aria-label="Dedicatoria y créditos">
+    <div class="creditos-dedicatoria"><span class="creditos-gabriel">Creado para <strong>Gabriel</strong></span><span class="creditos-familia">Por su familia, con ayuda de la IA.</span></div>
+    <div class="creditos-equipo"><span class="creditos-autores">M.Sc. Jeffry Chavarría-Molina y M.Sc. Natalia Rodríguez-Granados</span><span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span></div>
+  </footer>
+  <script>window.IDIOMA_VOZ_APP = 'expendedora';</script>
+  <script src="../idioma-voz-textos.js"></script>
+  <script src="../idioma-voz.js"></script>
+  <script src="../matematicas-base.js"></script>
+  <script src="../nombre-compartido.js"></script>
+  <script src="../pantalla-completa.js"></script>
+  <script src="../panel-plegable.js?v=expendedora"></script>
+  <script src="expendedora.js"></script>
+</body>
+</html>
