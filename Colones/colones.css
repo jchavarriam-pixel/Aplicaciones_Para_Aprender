@@ -145,11 +145,13 @@ body:has(#control-pantalla-completa[data-fullscreen=true]) .acciones-juego { pad
   container-type:size;
 }
 .valor-billete {
-  position:absolute; inset-block-start:calc(1 * var(--u)); inset-inline-start:10%; padding-inline:.22em;
+  display:none; position:absolute; inset-block-start:calc(1 * var(--u)); inset-inline-start:10%; padding-inline:.22em;
   border-radius:.23em; background:#182e40; color:#fff;
   font-size:clamp(calc(10 * var(--u)),26cqh,calc(19 * var(--u)));
   font-weight:900; font-variant-numeric:tabular-nums; line-height:1.07; pointer-events:none;
 }
+.mostrar-cifras-billetes :is(#appColones,.fantasma-colones) .valor-billete,
+#ajustes:has(#mostrarCifraBilletes:checked) .valor-billete { display:block; }
 .escena .moneda { --ficha-ancho:calc(var(--diametro-moneda-juego)*var(--diametro-moneda)); }
 .escena .billete { --ficha-alto:var(--alto-billete-juego); }
 .banco { background:#edf8f0; border:1px solid #c9e2d6; border-radius:calc(13 * var(--u)); padding:calc(5 * var(--u)); }

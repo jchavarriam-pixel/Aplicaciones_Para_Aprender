@@ -130,6 +130,7 @@ Object.assign(window.TEXTOS_INGLES,{
   'Billetes':'Banknotes',
   'Apilar billetes iguales en compras y al preparar un sobre':'Stack matching banknotes when shopping or filling an envelope',
   'Se ve al menos el 30 % de cada billete de abajo.':'At least 30% of each banknote underneath remains visible.',
+  'Mostrar número grande sobre los billetes':'Show a large number on banknotes',
   'Tamaño de los billetes':'Banknote size',
   'Avanzar':'Move forward',
   'Retroceder':'Move back',

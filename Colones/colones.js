@@ -30,6 +30,7 @@
     ? Math.max(Number(control.min),Math.min(Number(control.max),valor)) : Number(control.defaultValue);
   let opciones = {activas:activas.length ? activas : iniciales, ayudas:guardado.ayudas!==false,
     narracion:guardado.narracion!==false, apilarBilletes:guardado.apilarBilletes===true,
+    mostrarCifraBilletes:guardado.mostrarCifraBilletes===true,
     apilarContador:guardado.apilarContador===true,
     tamanoBilletes:limitarEscala(guardado.tamanoBilletes,$('tamanoBilletes')),
     tamanoMonedas:limitarEscala(guardado.tamanoMonedas,$('tamanoMonedas')), nombresProductos:guardado.nombresProductos!==false,
@@ -278,11 +279,13 @@
     const frente=ultima.querySelector('.pila-dinero > :last-child');
     const inicioPila=ultima.offsetTop;
     const inicioFrente=inicioPila+(frente?.offsetTop||0);
-    const finalFrente=inicioFrente+(frente||ultima).offsetHeight;
+    const altoFrente=(frente||ultima).offsetHeight;
+    const finalFrente=inicioFrente+altoFrente;
     const cifra=frente?.querySelector('.valor-billete');
     const altoVisible=bandeja.clientHeight;
+    // La cifra impresa del margen izquierdo ocupa la parte superior del billete.
     const abajo=cifra&&finalFrente-inicioPila>altoVisible
-      ?inicioFrente+cifra.offsetTop+cifra.offsetHeight:finalFrente;
+      ?inicioFrente+Math.max(altoFrente*.45,cifra.offsetTop+cifra.offsetHeight):finalFrente;
     const arriba=cifra&&abajo-inicioPila<=altoVisible?inicioPila:inicioFrente;
     if(arriba<bandeja.scrollTop)bandeja.scrollTop=arriba;
     else if(abajo>bandeja.scrollTop+altoVisible)bandeja.scrollTop=abajo-altoVisible;
@@ -1385,7 +1388,8 @@
     }
   }
   for(const {control} of controlesTamano)control.addEventListener('input',previsualizarTamano);
-  function aplicarTamano() {
+  function aplicarVistaDinero() {
+    document.documentElement.classList.toggle('mostrar-cifras-billetes',opciones.mostrarCifraBilletes);
     for(const {clase,preferencia} of controlesTamano){
       document.documentElement.style.setProperty('--escala-'+clase,opciones[preferencia]/100);
     }
@@ -1403,6 +1407,7 @@
     $('ayudas').checked=opciones.ayudas;
     $('narracion').checked=opciones.narracion;
     $('apilarBilletes').checked=opciones.apilarBilletes;
+    $('mostrarCifraBilletes').checked=opciones.mostrarCifraBilletes;
     $('apilarContador').checked=opciones.apilarContador;
     $('nombresProductos').checked=opciones.nombresProductos;
     $('vueltoCaja').value=opciones.vueltoCaja;
@@ -1421,13 +1426,14 @@
     const cambio=activas.join()!==opciones.activas.join();
     opciones={activas,ayudas:$('ayudas').checked,narracion:$('narracion').checked,
       apilarBilletes:$('apilarBilletes').checked,
+      mostrarCifraBilletes:$('mostrarCifraBilletes').checked,
       apilarContador:$('apilarContador').checked,
       tamanoBilletes:$('tamanoBilletes').valueAsNumber,
       tamanoMonedas:$('tamanoMonedas').valueAsNumber,
       nombresProductos:$('nombresProductos').checked,
       vueltoCaja:$('vueltoCaja').value};
     guardarAjustes();
-    aplicarTamano();
+    aplicarVistaDinero();
     ajustes.close();
     if(cambio&&modo)nuevaRonda();
     else render();
@@ -1454,7 +1460,7 @@
     estilo.setProperty('--ancho',document.documentElement.clientWidth/z+'px');
     distribuirMesa();
   });
-  aplicarTamano();
+  aplicarVistaDinero();
   localizar();
   historial.restaurar();
 })();
