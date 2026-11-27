@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aplicaciones para aprender</title>
+  <title>CAMINA · Aplicaciones para aprender</title>
 
   <style>
     :root {
@@ -79,19 +79,6 @@
       justify-content: space-between;
       gap: 24px;
       align-items: center;
-    }
-
-    .etiqueta {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 14px;
-      border-radius: 999px;
-      background: #fff7ed;
-      color: #9a3412;
-      font-weight: 800;
-      border: 2px solid #fed7aa;
-      margin-bottom: 12px;
     }
 
     h1 {
@@ -532,7 +519,7 @@
     @media(prefers-reduced-motion:reduce){.burbuja{animation:none}}
   </style>
   <link rel="stylesheet" href="creditos.css">
-  <link rel="stylesheet" href="pantalla-completa.css"><link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="indice.css?v=filtros-temas"><script>window.IDIOMA_VOZ_APP='indiceAprender';</script><script src="idioma-voz-textos.js?v=creditos-msc"></script><script src="indice-textos.js?v=filtros-temas"></script><script src="idioma-voz.js"></script><script src="indice-catalogo.js?v=filtros-temas"></script>
+  <link rel="stylesheet" href="pantalla-completa.css"><link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="indice.css?v=camina"><script>window.IDIOMA_VOZ_APP='indiceAprender';</script><script src="idioma-voz-textos.js?v=creditos-msc"></script><script src="indice-textos.js?v=camina"></script><script src="idioma-voz.js"></script><script src="indice-catalogo.js?v=filtros-temas"></script>
 </head>
 
 <body>
@@ -562,8 +549,13 @@
   <main class="app">
     <aside id="panelIndice" class="panel-indice"><header>
       <section class="encabezado-intro">
-        <div class="marca-indice"><span class="simbolo-indice" aria-hidden="true"><img src="iconos/indice-aprender.svg" width="54" height="50" alt=""></span><div class="etiqueta">Centro de juegos educativos</div></div>
-        <h1>Aplicaciones para aprender</h1>
+        <div class="marca-indice">
+          <img class="imagen-camina" src="imagenes-indice/camina.webp" width="240" height="240" alt="" />
+          <div class="identidad-camina">
+            <h1>CAMINA</h1>
+            <p class="nombre-camina">Centro de Aplicaciones para la Mediación INclusiva y Accesible</p>
+          </div>
+        </div>
       <aside class="panel-nino" aria-label="Configuración del nombre del niño">
         <label for="nombreNino">Nombre del niño</label>
         <input id="nombreNino" type="text" placeholder="Ej.: Gabriel" autocomplete="off" />

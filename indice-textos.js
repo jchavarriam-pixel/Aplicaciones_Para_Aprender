@@ -1,4 +1,6 @@
 Object.assign(window.TEXTOS_INGLES||={}, {
+ 'CAMINA · Aplicaciones para aprender':'CAMINA · Learning apps',
+ 'Centro de Aplicaciones para la Mediación INclusiva y Accesible':'Centre for Apps for Inclusive and Accessible Learning',
  'Centro de juegos educativos':'Educational games','Tu nombre te acompaña en todas las actividades.':'Your name stays with you in every activity.','Elige un tema, juega y descubre algo nuevo.':'Pick a subject, play and discover something new.','Busca una actividad':'Find an activity','Nombre o tema...':'Name or topic...',
  'Aplicaciones para aprender':'Learning apps','🌟 Centro de juegos educativos':'🌟 Educational games',
  'Un espacio alegre para jugar, practicar y aprender paso a paso con actividades de números, palabras, sonidos, ordenamiento y pensamiento lógico.':'A cheerful place to play, practise and learn with numbers, words, sounds, sequences and logical thinking.',
