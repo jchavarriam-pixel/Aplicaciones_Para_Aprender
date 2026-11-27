@@ -159,6 +159,8 @@
     app.style.setProperty("--unidad",1/zoom+"px");
     app.style.setProperty("--escala-modelo",String(1/zoom));
     app.classList.toggle("compacta",height<500);
+    app.classList.toggle("pareo-bajo",height<640);
+    app.classList.toggle("pareo-estrecho",width<365&&height<640&&width<=height);
     updateLayout();
     for(const board of $$(".matching-board")){
       const n=board.querySelector(".matching-list").children.length||1;
@@ -224,13 +226,24 @@ function installSolidMatching(mode){
   const match=evaluation?setEvalMatch:setMatch;
   const scroller=board.parentElement;
   let selected=null, drag=null, scrollFrame=0;
+  function targetAt(event){
+    const target=document.elementFromPoint(event.clientX,event.clientY)?.closest(".match-target");
+    return target?.closest(".matching-board")===board?target:null;
+  }
   function scrollWithPointer(){
     if(!drag?.moved)return;
     const bounds=scroller.getBoundingClientRect();
     const direction=drag.point.clientY>bounds.bottom-24?1:drag.point.clientY<bounds.top+24?-1:0;
-    const before=scroller.scrollTop;
-    scroller.scrollTop+=direction*7/Matematicas.escala();
-    if(scroller.scrollTop!==before)preview(drag.point,drag.source);
+    if(direction){
+      const target=targetAt(drag.point);
+      const planet=target?.querySelector(".match-dot").getBoundingClientRect();
+      const center=planet?planet.top+planet.height/2:null;
+      if(center===null||center<bounds.top||center>bounds.bottom){
+        const before=scroller.scrollTop;
+        scroller.scrollTop+=direction*7/Matematicas.escala();
+        if(scroller.scrollTop!==before)preview(drag.point,drag.source);
+      }
+    }
     scrollFrame=requestAnimationFrame(scrollWithPointer);
   }
   function select(source){
@@ -287,8 +300,8 @@ function installSolidMatching(mode){
       cancelAnimationFrame(scrollFrame);
       endRocketFlight();
       if(event.type==="pointerup"&&moved){
-        const target=document.elementFromPoint(event.clientX,event.clientY)?.closest(".match-target");
-        if(target?.closest(".matching-board")===board){connect(target);return;}
+        const target=targetAt(event);
+        if(target){connect(target);return;}
       }
       if(moved||event.type!=="pointerup")select(null);
       draw();

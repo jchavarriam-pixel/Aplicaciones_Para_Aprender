@@ -72,7 +72,7 @@ footer{text-align:center;color:#59667c;padding:28px 10px 8px;font-weight:700;fon
 </style>
   <link rel="stylesheet" href="creditos.css">
   <link rel="stylesheet" href="pantalla-completa.css">
-<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-solidos.css?v=pareo-movil-2"><script>window.IDIOMA_VOZ_APP='solidos';try{if(!localStorage.getItem('idiomaVoz.solidos.v1')){let pref;const c=JSON.parse(localStorage.getItem('configModeladorSolidos3D_v1')||'null');if(c)pref={idioma:c.language,voces:{[c.language||'es']:c.voice||''}};if(pref)localStorage.setItem('idiomaVoz.solidos.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js?v=creditos-msc"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script><link rel="stylesheet" href="iconos/cabeceras.css"><script src="historial-modos.js"></script></head>
+<link rel="stylesheet" href="idioma-voz.css"><link rel="stylesheet" href="panel-plegable.css"><link rel="stylesheet" href="matematicas-solidos.css?v=pareo-compacto-6"><script>window.IDIOMA_VOZ_APP='solidos';try{if(!localStorage.getItem('idiomaVoz.solidos.v1')){let pref;const c=JSON.parse(localStorage.getItem('configModeladorSolidos3D_v1')||'null');if(c)pref={idioma:c.language,voces:{[c.language||'es']:c.voice||''}};if(pref)localStorage.setItem('idiomaVoz.solidos.v1',JSON.stringify(pref));}}catch{}</script><script src="idioma-voz-textos.js?v=creditos-msc"></script><script src="idioma-voz.js?v=edicion-1"></script><script src="matematicas-base.js"></script><link rel="stylesheet" href="iconos/cabeceras.css"><script src="historial-modos.js"></script></head>
 <body>
 <div class="app-shell" data-modo="menu">
   <header class="topbar">
@@ -498,7 +498,7 @@ class GLShapeRenderer{
     c.addEventListener("pointerdown",e=>{down=true;lastX=e.clientX;lastY=e.clientY;c.setPointerCapture(e.pointerId)});
     c.addEventListener("pointermove",e=>{if(!down)return;const dx=e.clientX-lastX,dy=e.clientY-lastY;lastX=e.clientX;lastY=e.clientY;this.rotation.y+=dx*.012;this.rotation.x+=dy*.012;syncRotationUI(this)});
     c.addEventListener("pointerup",()=>down=false);c.addEventListener("pointercancel",()=>down=false);
-    c.addEventListener("wheel",e=>{e.preventDefault();this.zoom=clamp(this.zoom-e.deltaY*.0008,.65,1.6)},{passive:false});
+    c.addEventListener("wheel",e=>{e.preventDefault();this.zoom=clamp(this.zoom-e.deltaY*.0008,.65,this.matchingRadius ? .96/.92 : 1.6)},{passive:false});
   }
   attrib(program,name,buffer,size){const g=this.gl,loc=g.getAttribLocation(program,name);if(loc<0)return;g.bindBuffer(g.ARRAY_BUFFER,buffer);g.enableVertexAttribArray(loc);g.vertexAttribPointer(loc,size,g.FLOAT,false,0,0)}
   uniforms(program,model){const g=this.gl,w=this.canvas.clientWidth||300,h=this.canvas.clientHeight||300,proj=mPerspective(deg(42),w/h,.1,100),view=mTranslate(0,0,-7.2);
@@ -519,7 +519,7 @@ class GLShapeRenderer{
   render(dt=0){
     if(!this.gl||!this.mesh)return;this.clearFeatureLabels();const g=this.gl,dpr=Math.min(devicePixelRatio||1,2),w=Math.max(1,Math.floor(this.canvas.clientWidth*dpr)),h=Math.max(1,Math.floor(this.canvas.clientHeight*dpr));if(this.canvas.width!==w||this.canvas.height!==h){this.canvas.width=w;this.canvas.height=h}g.viewport(0,0,w,h);g.clearColor(0,0,0,0);g.clear(g.COLOR_BUFFER_BIT|g.DEPTH_BUFFER_BIT);g.enable(g.DEPTH_TEST);g.enable(g.BLEND);g.blendFunc(g.SRC_ALPHA,g.ONE_MINUS_SRC_ALPHA);g.enable(g.POLYGON_OFFSET_FILL);g.polygonOffset(1,1);
     if(this.auto)this.rotation.y+=dt*.00055;if(this.spinBoost>0){this.rotation.y+=dt*.003;this.spinBoost-=dt}
-    const rot=mMultiply(mRotZ(this.rotation.z),mMultiply(mRotY(this.rotation.y),mRotX(this.rotation.x))),sceneScale=this.zoom,faceAmount=this.featureAnimation?.feature==="faces"?this.animationAmount(performance.now()-this.featureAnimation.start):0,sceneCenter=this.featureAnimation?.feature==="faces"&&this.mesh.curved?this.curvedSceneCenter(faceAmount):[0,0,0];this.rotationMatrix=rot;this.sceneScale=sceneScale;this.sceneCenter=sceneCenter;this.cameraObject=[sceneCenter[0]+rot[2]*7.2/sceneScale,sceneCenter[1]+rot[6]*7.2/sceneScale,sceneCenter[2]+rot[10]*7.2/sceneScale];this.model=mMultiply(rot,mMultiply(mScale(sceneScale,sceneScale,sceneScale),mTranslate(-sceneCenter[0],-sceneCenter[1],-sceneCenter[2])));
+    const rot=mMultiply(mRotZ(this.rotation.z),mMultiply(mRotY(this.rotation.y),mRotX(this.rotation.x))),sceneScale=this.matchingRadius?matchingModelScale(this.matchingRadius,w,h,this.zoom):this.zoom,faceAmount=this.featureAnimation?.feature==="faces"?this.animationAmount(performance.now()-this.featureAnimation.start):0,sceneCenter=this.featureAnimation?.feature==="faces"&&this.mesh.curved?this.curvedSceneCenter(faceAmount):[0,0,0];this.rotationMatrix=rot;this.sceneScale=sceneScale;this.sceneCenter=sceneCenter;this.cameraObject=[sceneCenter[0]+rot[2]*7.2/sceneScale,sceneCenter[1]+rot[6]*7.2/sceneScale,sceneCenter[2]+rot[10]*7.2/sceneScale];this.model=mMultiply(rot,mMultiply(mScale(sceneScale,sceneScale,sceneScale),mTranslate(-sceneCenter[0],-sceneCenter[1],-sceneCenter[2])));
     const p=this.fillP,faceDetach=this.featureAnimation?.feature==="faces"?this.animationAmount(performance.now()-this.featureAnimation.start):0,baseFaceAlpha=this.transparent ? (this.show.faces ? .72 : (this.mesh.transparentAlpha??.60)) : 1,hideOriginalFaces=this.mesh.emptyStructureOnFaceAnimation&&this.featureAnimation?.feature==="faces",mainFaceAlpha=hideOriginalFaces?0:baseFaceAlpha*(1-.78*faceDetach);g.useProgram(p);this.attrib(p,"aPosition",this.buffers.pos,3);this.attrib(p,"aNormal",this.buffers.nor,3);this.attrib(p,"aColor",this.show.faces?this.buffers.faceCol:(this.transparent?this.buffers.col:this.buffers.solidCol),3);this.uniforms(p,this.model);g.uniform3fv(g.getUniformLocation(p,"uColor"),this.baseColor);g.uniform1f(g.getUniformLocation(p,"uAlpha"),mainFaceAlpha);g.uniform1f(g.getUniformLocation(p,"uUseFaceColors"),this.show.faces||this.mesh.curved||this.mesh.useFaceColors?1:0);g.uniform1f(g.getUniformLocation(p,"uSoftLight"),this.mesh.curved?1:0);g.uniform1f(g.getUniformLocation(p,"uPlastic"),(!this.transparent||this.mesh.transparentSatin)?1:0);g.uniform1f(g.getUniformLocation(p,"uReflectionScale"),this.mesh.reflectionScale??1.15);
     if(!this.transparent){g.enable(g.CULL_FACE);g.cullFace(g.BACK);g.depthMask(true);g.depthFunc(g.LEQUAL);g.drawArrays(g.TRIANGLES,0,this.mesh.positions.length/3);g.disable(g.CULL_FACE)}else if(this.mesh.curved){g.colorMask(false,false,false,false);g.enable(g.CULL_FACE);g.cullFace(g.BACK);g.depthMask(true);g.depthFunc(g.LEQUAL);g.drawArrays(g.TRIANGLES,0,this.mesh.positions.length/3);g.colorMask(true,true,true,true);g.disable(g.CULL_FACE);const curvedColors=this.show.faces?this.mesh.colors:(this.mesh.normalColors||this.mesh.colors),curvedPalette=this.show.faces?this.mesh.facePalette:(this.mesh.normalFacePalette||this.mesh.facePalette);this.drawCurvedFaceGroups(p,{positions:this.mesh.positions,normals:this.mesh.normals,colors:curvedColors},"mainCurved",curvedPalette)}else{g.colorMask(false,false,false,false);g.depthMask(true);g.depthFunc(g.LEQUAL);g.drawArrays(g.TRIANGLES,0,this.mesh.positions.length/3);g.colorMask(true,true,true,true);const faceColors=this.show.faces?(this.mesh.faceColors||this.mesh.colors):this.mesh.colors,sortedFaces=this.sortTriangleData({positions:this.mesh.positions,normals:this.mesh.normals,colors:faceColors});this.attrib(p,"aPosition",this.uploadDynamic("assembledFacePos",sortedFaces.positions),3);this.attrib(p,"aNormal",this.uploadDynamic("assembledFaceNor",sortedFaces.normals),3);this.attrib(p,"aColor",this.uploadDynamic("assembledFaceCol",sortedFaces.colors),3);g.depthMask(false);g.depthFunc(g.ALWAYS);g.drawArrays(g.TRIANGLES,0,sortedFaces.positions.length/3);g.depthMask(true);g.depthFunc(g.LEQUAL)}
     const edgeActive=this.show.edges&&!this.featureAnimation;
@@ -745,7 +745,37 @@ const CRITERIA={
 let classRenderers=[];
 function randomParams(id){const p={...SOLIDS[id].defaults},vary=(min,max)=>Math.round((min+Math.random()*(max-min))*10)/10;if(id==="box"){p.width=vary(2.4,3.4);p.height=vary(1,1.8);p.depth=vary(1,1.8);enforceRectangularPrism(p)}if(id==="cylinder"||id==="cone"){p.radius=vary(.7,1.8);p.height=vary(1.3,3.5)}if(id==="pyramid"){p.sides=pick([3,4,5,6]);p.radius=vary(.8,1.8);p.height=vary(1.4,3.5)}if(id==="triPrism"||id==="pentPrism"){p.radius=vary(.8,1.8);p.height=vary(1.3,3.5)}if(id==="octahedron"||id==="dodecahedron")p.size=vary(.9,2.2);return p}
 function solidDisplayName(id,params){if(id==="pyramid"){const names=isEnglish()?{3:"Pyramid with a triangular base",4:"Pyramid with a square base",5:"Pyramid with a pentagonal base",6:"Pyramid with a hexagonal base"}:{3:"Pirámide de base triangular",4:"Pirámide de base cuadrada",5:"Pirámide de base pentagonal",6:"Pirámide de base hexagonal"};return names[params.sides]}return SOLIDS[id].short}
-function buildClassificationRenderers(){classRenderers=[];$$(".classification-card .mini-solid").forEach(canvas=>{const card=canvas.closest(".classification-card"),id=card.dataset.solid,params=JSON.parse(card.dataset.params),renderer=new GLShapeRenderer(canvas);renderer.setMesh(createSolidMesh(id,params),SOLIDS[id].color);renderer.rotation={x:deg(-18),y:deg(28),z:0};renderer.zoom=1.22;renderer.transparent=!state.config.classSolidMode;renderer.show={vertices:false,edges:false,faces:false};classRenderers.push(renderer)})}
+function createMatchingRenderer(canvas,id,params,transparent){
+  const renderer=new GLShapeRenderer(canvas);
+  const mesh=createSolidMesh(id,params);
+  renderer.setMesh(mesh,SOLIDS[id].color);
+  renderer.rotation={x:deg(-18),y:deg(28),z:0};
+  let radius=0;
+  for(let index=0;index<mesh.positions.length;index+=3){
+    radius=Math.max(radius,Math.hypot(mesh.positions[index],mesh.positions[index+1],mesh.positions[index+2]));
+  }
+  renderer.matchingRadius=radius;
+  renderer.zoom=1;
+  renderer.transparent=transparent;
+  renderer.show={vertices:false,edges:false,faces:false};
+  return renderer;
+}
+
+function matchingModelScale(radius,width,height,zoom){
+  // Fit the rotation envelope to the narrower side of the canvas.
+  const side=Math.min(width,height);
+  const drawableFraction=Math.max(1,side-6)/side;
+  const frameFraction=Math.min(.96,drawableFraction,.92*zoom)*Math.min(1,width/height);
+  const tangent=Math.tan(deg(21))*frameFraction;
+  return 7.2*tangent/(Math.hypot(1,tangent)*radius);
+}
+
+function buildClassificationRenderers(){
+  classRenderers=$$(".classification-card .mini-solid").map(canvas=>{
+    const card=canvas.closest(".classification-card");
+    return createMatchingRenderer(canvas,card.dataset.solid,JSON.parse(card.dataset.params),!state.config.classSolidMode);
+  });
+}
 function setClassificationAppearance(solid){state.config.classSolidMode=solid;classRenderers.forEach(renderer=>renderer.transparent=!solid);Matematicas.almacen.setItem(CONFIG_KEY,JSON.stringify(state.config));requestAnimationFrame(renderMatchLines)}
 function puntoEnPareo(svg,x,y){
   const rect=svg.getBoundingClientRect(),vista=svg.viewBox.baseVal;
@@ -904,7 +934,13 @@ function edgeBreakdown(item){if(item.id==="cylinder")return{straight:0,curved:2}
 function edgeDescription(item){const {straight,curved}=edgeBreakdown(item),parts=[];if(isEnglish())return [straight?`${straight} straight edge${straight===1?"":"s"}`:"",curved?`${curved} curved edge${curved===1?"":"s"}`:""].filter(Boolean).join(" and ")||"no edges";if(straight)parts.push(`${straight} arista${straight===1?"":"s"} recta${straight===1?"":"s"}`);if(curved)parts.push(`${curved} arista${curved===1?"":"s"} curva${curved===1?"":"s"}`);return parts.join(" y ")||"sin aristas"}
 function flatFacePieces(item){const id=item.id,p=item.params,tag=kind=>`<i class="face-piece ${kind}"></i>`;if(id==="cube")return Array.from({length:6},()=>tag("square")).join("");if(id==="box")return Array.from({length:6},()=>tag("rectangle")).join("");if(id==="pyramid"){const base={3:"triangle",4:"square",5:"pentagon",6:"hexagon"}[p.sides];return tag(base)+Array.from({length:p.sides},()=>tag("triangle")).join("")}if(id==="triPrism")return tag("triangle")+tag("triangle")+Array.from({length:3},()=>tag("rectangle")).join("");if(id==="pentPrism")return tag("pentagon")+tag("pentagon")+Array.from({length:5},()=>tag("rectangle")).join("");if(id==="octahedron")return Array.from({length:8},()=>tag("triangle")).join("");if(id==="dodecahedron")return Array.from({length:12},()=>tag("pentagon")).join("");return ""}
 function evalVisual(value,prop,item){const id=item.id,number=`<strong class="eval-visual-number">${value}</strong>`;if(prop==="vertices")return `<span class="eval-visual-answer vertices">${number}<span class="visual-glyphs">${Array.from({length:value},()=>"<i>●</i>").join("")}</span></span>`;if(prop==="edges"&&id==="cylinder")return `<span class="eval-visual-answer edges cylinder-edges">${number}<span class="cylinder-rings"><i></i><i></i></span><small>${edgeDescription(item)}</small></span>`;if(prop==="edges"&&id==="cone")return `<span class="eval-visual-answer edges cone-edges">${number}<span class="cone-ring"></span><small>${edgeDescription(item)}</small></span>`;if(prop==="faces"&&id==="cylinder")return `<span class="eval-visual-answer faces cylinder-faces">${number}<span class="cylinder-face-model"><i class="top"></i><i class="side"></i><i class="bottom"></i></span><small>${faceDescription(item)}</small></span>`;if(prop==="faces"&&id==="cone")return `<span class="eval-visual-answer faces cone-faces">${number}<span class="cone-face-model"><i></i><b></b></span><small>${faceDescription(item)}</small></span>`;if(prop==="faces"&&id==="sphere")return `<span class="eval-visual-answer faces sphere-face">${number}<span class="satin-sphere"></span><small>${faceDescription(item)}</small></span>`;if(prop==="faces")return `<span class="eval-visual-answer faces flat-faces">${number}<span class="flat-face-pieces">${flatFacePieces(item)}</span><small>${faceDescription(item)}</small></span>`;const icon="━";return `<span class="eval-visual-answer ${prop}">${number}<span class="visual-glyphs">${Array.from({length:value},()=>`<i>${icon}</i>`).join("")}</span><small>${edgeDescription(item)}</small></span>`}
-function buildEvalRenderers(){evalMatchRenderers=[];$$(".eval-figure .mini-solid").forEach(canvas=>{const card=canvas.closest(".eval-figure"),item=state.evalItems.find(x=>x.uid===card.dataset.evalUid),renderer=new GLShapeRenderer(canvas);renderer.setMesh(createSolidMesh(item.id,item.params),SOLIDS[item.id].color);renderer.rotation={x:deg(-18),y:deg(28),z:0};renderer.zoom=1.22;renderer.transparent=true;renderer.show={vertices:false,edges:false,faces:false};evalMatchRenderers.push(renderer)})}
+function buildEvalRenderers(){
+  evalMatchRenderers=$$(".eval-figure .mini-solid").map(canvas=>{
+    const card=canvas.closest(".eval-figure");
+    const item=state.evalItems.find(candidate=>candidate.uid===card.dataset.evalUid);
+    return createMatchingRenderer(canvas,item.id,item.params,true);
+  });
+}
 function renderEvalMatchLines(preview=null){const board=$("#evalMatchingBoard"),svg=$("#evalMatchingLines");if(!board||!svg)return;const w=board.clientWidth,h=board.clientHeight;svg.setAttribute("viewBox",`0 0 ${w} ${h}`);let paths="";Object.entries(state.evalMatches||{}).forEach(([uid,targetId])=>{const source=$(`.eval-source[data-eval-uid="${uid}"]`),target=$(`.eval-dot[data-eval-target="${targetId}"]`);if(source&&target)paths+=`<path data-cohete="${uid}" d="${curvePath(pointCenter(source,board),pointCenter(target,board))}" stroke="${source.dataset.color}"/>`});if(preview){const source=$(`.eval-source[data-eval-uid="${preview.uid}"]`);if(source)paths+=`<path class="preview" d="${curvePath(pointCenter(source,board),preview)}" stroke="${source.dataset.color}"/>`}svg.innerHTML=paths}
 function setEvalMatch(uid,targetId){state.evalMatches??={};Object.keys(state.evalMatches).forEach(key=>{if(state.evalMatches[key]===targetId)delete state.evalMatches[key]});state.evalMatches[uid]=targetId;const source=$(`.eval-source[data-eval-uid="${uid}"]`),target=$(`.eval-target[data-eval-target="${targetId}"]`);if(source&&target){target.classList.add("matched");target.style.setProperty("--match-color",source.dataset.color)}$$('.eval-target').forEach(item=>{if(!Object.values(state.evalMatches).includes(item.dataset.evalTarget)){item.classList.remove("matched");item.style.removeProperty("--match-color")}});renderEvalMatchLines();updateEvalProgress()}
 
@@ -997,7 +1033,7 @@ window.addEventListener('nombre-estudiante-cambiado',e=>{state.name=e.detail.nom
     <span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span>
   </div>
 </footer>
-<script src="matematicas-solidos.js?v=concordancia"></script><script src="pantalla-completa.js"></script>
+<script src="matematicas-solidos.js?v=pareo-compacto-5"></script><script src="pantalla-completa.js"></script>
 <script src="panel-plegable.js?v=solidos-1"></script>
 <script src="nombre-compartido.js"></script>
 </body>
