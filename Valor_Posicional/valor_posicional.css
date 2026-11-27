@@ -83,6 +83,7 @@ button:disabled { cursor:default; }
 }
 .reto { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:calc(3 * var(--u)); }
 .juego > :is(.bloques,.flechas,#sorpresas) { grid-area:2/1; }
+.juego:has(> #sorpresas:not([hidden])) > :is(.bloques,.flechas) { display:none; }
 .juego > .acciones-juego { grid-row:3; }
 .reto h2 { font-size:calc(19 * var(--u)); line-height:1.1; }
 .reto p { grid-column:1/-1; grid-row:2; font-size:calc(14 * var(--u)); line-height:1.2; }

@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="../pantalla-completa.css">
   <link rel="stylesheet" href="../panel-plegable.css">
 
-  <link rel="stylesheet" href="valor_posicional.css?v=plastico">
+  <link rel="stylesheet" href="valor_posicional.css?v=valor-y-sorpresas">
   <link rel="stylesheet" href="sorpresas.css?v=10-sorpresas">
 <link rel="stylesheet" href="../teclado-en-pantalla.css?v=teclas-claras">
 </head>
@@ -42,7 +42,7 @@
       </button>
       <button class="tarjeta" type="button" data-modo="flechas">
         <span class="arte-flechas" aria-hidden="true"><b>2</b><b>5</b><b>6</b><i>↓</i><i>↓</i><i>↓</i><b>200</b><b>50</b><b>6</b></span>
-        <span class="texto-tarjeta"><strong>Cifras y flechas</strong>
+        <span class="texto-tarjeta"><strong>Encontrar el valor posicional</strong>
           <span>Encuentra el valor de una cifra o usa su valor para descubrirla.</span>
         </span>
         <span class="ir-tarjeta" aria-hidden="true">›</span>
@@ -87,7 +87,7 @@
     <form method="dialog">
       <header><h2 id="tituloAjustes">Configuración</h2><button aria-label="Aplicar y cerrar" title="Aplicar y cerrar">✕</button></header>
       <label>Cifras del número<select id="digitos"><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></label>
-      <label>Práctica con flechas<select id="practica"><option value="ambas">Alternar los dos ejercicios</option><option value="valores">Escribir el valor de cada cifra</option><option value="cifra">Encontrar la cifra que falta</option></select></label>
+      <label>Práctica de valor posicional<select id="practica"><option value="ambas">Alternar los dos ejercicios</option><option value="valores">Escribir el valor de cada cifra</option><option value="cifra">Encontrar la cifra que falta</option></select></label>
       <label class="casilla"><input type="checkbox" id="ayudas"> Mostrar el nombre de las posiciones y el conteo de bloques</label>
       <label class="casilla"><input type="checkbox" id="narracion"> Leer automáticamente las instrucciones y los resultados</label>
       <section id="vozValor"></section>
@@ -112,6 +112,6 @@
   <script src="../nombre-compartido.js"></script>
   <script src="bloques.js?v=millares-separados"></script>
   <script src="sorpresas.js?v=10-sorpresas"></script>
-  <script src="valor_posicional.js?v=sorpresas-pantalla"></script>
+  <script src="valor_posicional.js?v=valor-y-sorpresas"></script>
 </body>
 </html>

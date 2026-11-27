@@ -6,10 +6,10 @@
     'Modos de práctica':'Practice modes', 'Todas las aplicaciones':'All apps', 'Ej.: Gabriel':'E.g. Gabriel',
     '⚙ Configuración':'⚙ Settings', '‹ Modos':'‹ Modes', '↻ Nueva ronda':'↻ New round',
     'Bloques multibase':'Base-ten blocks', 'Construye el número con piezas de uno, diez, cien o mil.':'Build the number with pieces worth one, ten, one hundred or one thousand.',
-    'Cifras y flechas':'Digits and arrows', 'Encuentra el valor de una cifra o usa su valor para descubrirla.':'Find a digit’s value or use its value to find the digit.',
+    'Encontrar el valor posicional':'Find the place value', 'Encuentra el valor de una cifra o usa su valor para descubrirla.':'Find a digit’s value or use its value to find the digit.',
     'Escuchar ejercicio':'Listen to the exercise', 'Cifras del número':'Digits in the number',
     'Valores de las cifras':'Digit values', 'Siguiente pregunta':'Next question', '✓ Revisar':'✓ Check',
-    'Práctica con flechas':'Arrow practice', 'Alternar los dos ejercicios':'Alternate both activities',
+    'Práctica de valor posicional':'Place-value practice', 'Alternar los dos ejercicios':'Alternate both activities',
     'Escribir el valor de cada cifra':'Write the value of each digit', 'Encontrar la cifra que falta':'Find the missing digit',
     'Mostrar el nombre de las posiciones y el conteo de bloques':'Show place names and block counts',
     'Leer automáticamente las instrucciones y los resultados':'Automatically read instructions and feedback aloud',
@@ -369,7 +369,7 @@
   new ResizeObserver(dibujarLineas).observe(tablero);
 
   function actualizarRotulos() {
-    get('tituloReto').textContent = t(modo === 'bloques' ? 'Bloques multibase' : 'Cifras y flechas');
+    get('tituloReto').textContent = t(modo === 'bloques' ? 'Bloques multibase' : 'Encontrar el valor posicional');
     get('instruccion').textContent = instruccion();
     if(modo === 'bloques') get('numeroMeta').setAttribute('aria-label', bilingue(`Número por construir ${numero}`, `Number to build ${numero}`));
   }
