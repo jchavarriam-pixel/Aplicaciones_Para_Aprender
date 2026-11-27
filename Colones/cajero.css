@@ -1,0 +1,461 @@
+/* Mostrador de Soy el cajero. Los otros modos conservan su propia escena. */
+#escena:has(.estacion-cajero) { align-content:start; align-items:start; overflow-anchor:none; }
+#escena:has(.estacion-cajero) > #contenido { grid-template-columns:minmax(0,1fr); }
+#escena:has(.estacion-cajero)[data-fase=dar] {
+  display:flex; flex-direction:column; align-items:stretch;
+}
+#escena:has(.estacion-cajero)[data-fase=dar] > :is(#contenido,#bancoPanel) {
+  flex:none; max-height:none;
+}
+
+.estacion-cajero {
+  --marco-cajero:#1d5262;
+  --acento-cajero:#006957;
+  --alto-articulo:clamp(calc(44 * var(--u)),24cqh,calc(104 * var(--u)));
+  min-width:0; isolation:isolate; color:#26384a; border:1px solid #8bafaa;
+  border-radius:calc(16 * var(--u));
+  background:#d7eae4;
+  box-shadow:0 calc(3 * var(--u)) calc(9 * var(--u)) #05364a1f;
+}
+.fondo-cajero {
+  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,min(44%,calc(300 * var(--u)))); align-items:center;
+  gap:calc(8 * var(--u)); padding:calc(7 * var(--u)) calc(12 * var(--u));
+  border-radius:inherit; border-bottom-left-radius:0; border-bottom-right-radius:0;
+  background:linear-gradient(165deg,#e5f6ed,#d0e8e5);
+}
+#escena .cliente-cajero { grid-column:auto; min-width:0; gap:calc(6 * var(--u)); }
+.cliente-cajero img {
+  width:clamp(calc(37 * var(--u)),14cqh,calc(69 * var(--u))); height:auto; aspect-ratio:1;
+  object-position:center 42%; border:1px solid #76ae99; border-radius:50%;
+}
+.cliente-cajero p {
+  padding:calc(4 * var(--u)) calc(7 * var(--u)); border:1px solid #a1c8b7;
+  background:#fffefa; font-size:calc(13 * var(--u)); line-height:1.2; overflow-wrap:break-word;
+}
+.registradora-cajero {
+  display:grid; gap:calc(3 * var(--u)); align-self:end; min-width:0;
+  padding:calc(6 * var(--u)) calc(7 * var(--u)) calc(5 * var(--u));
+  border-radius:calc(11 * var(--u)) calc(11 * var(--u)) calc(6 * var(--u)) calc(6 * var(--u));
+  background:linear-gradient(#436774,#264651); border:1px solid #1c3c49;
+  box-shadow:0 calc(3 * var(--u)) 0 #102d3b;
+}
+.display-cajero {
+  display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap;
+  gap:0 calc(5 * var(--u)); padding:calc(3 * var(--u)) calc(6 * var(--u));
+  border:1px solid #0b2630; border-radius:calc(5 * var(--u));
+  color:#c9ffad; background:#0a2830; font-variant-numeric:tabular-nums; line-height:1.04;
+}
+.display-cajero small { font-size:calc(12 * var(--u)); font-weight:750; }
+.display-cajero strong { font-size:clamp(calc(20 * var(--u)),5.8cqi,calc(34 * var(--u))); white-space:nowrap; }
+.ultima-lectura-cajero {
+  block-size:2.4em; overflow:hidden; color:#fff; font-size:calc(11 * var(--u));
+  font-weight:700; line-height:1.2; text-align:end; overflow-wrap:break-word;
+}
+.ultima-lectura-cajero[data-aviso] { color:#ffe798; }
+.teclas-registradora-cajero {
+  display:block; width:44%; height:calc(7 * var(--u)); justify-self:end;
+  border-radius:calc(2 * var(--u)); transform:skewX(-15deg);
+  background:repeating-linear-gradient(90deg,#e8f2f6 0 14%,#355768 14% 19%);
+}
+.cubierta-cajero {
+  border-top:calc(3 * var(--u)) solid #e8b27b; border-bottom:calc(9 * var(--u)) solid var(--marco-cajero);
+  border-radius:0 0 calc(15 * var(--u)) calc(15 * var(--u));
+  padding:calc(10 * var(--u));
+  background:
+    repeating-linear-gradient(178deg,#a8663724 0 1px,transparent 1px 15px),
+    linear-gradient(110deg,#ffe7ba,#ffedc7 62%,#f3ce9b);
+}
+.recorrido-cajero,.pago-en-cajero {
+  display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,.75fr) minmax(0,1fr);
+  gap:calc(9 * var(--u)); min-width:0;
+}
+.origen-articulos-cajero,.lector-cajero,.empaque-cajero {
+  display:grid; grid-template-rows:auto minmax(0,1fr); align-items:center;
+  min-width:0; gap:calc(5 * var(--u)); padding:calc(5 * var(--u)); border-radius:calc(10 * var(--u));
+  border:2px solid #95664144; background:#fff4df; color:#274150;
+}
+.rotulo-estacion {
+  display:flex; align-items:center; gap:calc(4 * var(--u)); justify-content:center; min-width:0;
+  line-height:1.12; font-size:clamp(calc(13 * var(--u)),2cqi,calc(18 * var(--u))); font-weight:860;
+}
+.rotulo-estacion b {
+  display:grid; flex:none; place-items:center; inline-size:calc(19 * var(--u)); block-size:calc(19 * var(--u));
+  color:white; background:#285d6e; border-radius:50%; font-size:calc(11 * var(--u));
+}
+.resumen-empaque-cajero .rotulo-estacion { flex-wrap:wrap; }
+.rotulo-estacion small { color:#355f61; font-size:.78em; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.articulos-cajero { display:grid; grid-template-columns:repeat(var(--cantidad-articulos),minmax(0,1fr)); gap:calc(5 * var(--u)); }
+.articulo-cajero,.puesto-vacio-cajero {
+  position:relative; display:grid; grid-template-rows:var(--alto-articulo) auto; justify-items:center;
+  min-width:0; min-height:calc(48 * var(--u)); padding:calc(3 * var(--u)); border-radius:calc(9 * var(--u));
+  border:1px solid #d2ac7e; background:linear-gradient(#fffefa,#fff3d9); color:#3e4c55;
+}
+.articulo-cajero { touch-action:none; cursor:grab; }
+.articulo-cajero:active { cursor:grabbing; }
+.articulo-cajero .foto-producto {
+  width:100%; height:100%; min-height:0; object-fit:contain;
+  filter:drop-shadow(0 calc(3 * var(--u)) calc(2 * var(--u)) #73431545);
+}
+.nombre-articulo-cajero { font-size:clamp(calc(11 * var(--u)),1.45cqi,calc(15 * var(--u))); line-height:1.13; font-weight:800; overflow-wrap:anywhere; }
+.articulo-cajero[aria-pressed=true],.lector-cajero[data-listo],.empaque-cajero[data-listo],.empaque-cajero.sobre-destino {
+  border-color:#007158; outline:2px solid #007158; outline-offset:-1px; background:#e9fff1;
+}
+.moviendo-ficha.articulo-cajero .foto-producto { opacity:.16; }
+.leido-cajero,.puesto-vacio-cajero { color:#0b593a; font-weight:900; }
+.leido-cajero {
+  position:absolute; right:calc(3 * var(--u)); top:calc(3 * var(--u)); display:grid; place-items:center;
+  width:calc(20 * var(--u)); height:calc(20 * var(--u)); border-radius:50%; border:1px solid #309466; background:#d7f9df;
+}
+.puesto-vacio-cajero { align-content:center; align-items:center; font-size:calc(20 * var(--u)); background:#fff4df; border-style:dashed; }
+.lector-cajero,.empaque-cajero { padding-inline:calc(5 * var(--u)); touch-action:manipulation; }
+.cuerpo-lector-cajero {
+  position:relative; display:grid; place-items:center; overflow:hidden;
+  min-height:calc(47 * var(--u)); height:min(var(--alto-articulo),calc(85 * var(--u)));
+  border:calc(5 * var(--u)) solid #486575; border-radius:calc(10 * var(--u));
+  background:linear-gradient(145deg,#41566b,#182a3e 55%,#233e51); box-shadow:0 calc(3 * var(--u)) 0 #132d3e;
+}
+.cuerpo-lector-cajero i:first-child {
+  width:86%; height:calc(3 * var(--u)); border-radius:3px; background:#ff7d6f;
+  box-shadow:0 0 calc(7 * var(--u)) #ff583e,0 calc(3 * var(--u)) calc(9 * var(--u)) #ff583e80;
+}
+.cuerpo-lector-cajero i:last-child {
+  position:absolute; right:calc(4 * var(--u)); bottom:calc(4 * var(--u));
+  width:calc(6 * var(--u)); height:calc(6 * var(--u)); border-radius:50%; background:#a7ff90;
+}
+.bandeja-empaque-cajero {
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); align-items:end; justify-items:center;
+  gap:calc(2 * var(--u)); position:relative; padding:calc(5 * var(--u)) calc(4 * var(--u)) calc(8 * var(--u));
+  min-height:calc(53 * var(--u)); height:min(var(--alto-articulo),calc(94 * var(--u)));
+  border:2px solid #408382; border-radius:calc(8 * var(--u)) calc(8 * var(--u)) calc(12 * var(--u)) calc(12 * var(--u));
+  background:linear-gradient(170deg,#f2fdfbbb,#b5e9db 70%,#7ec5b8); box-shadow:inset 0 calc(4 * var(--u)) calc(1 * var(--u)) #ffffffb8;
+}
+.bandeja-empaque-cajero::after {
+  content:""; position:absolute; inset:auto calc(-1 * var(--u)) calc(-1 * var(--u)); height:28%; pointer-events:none;
+  border:1px solid #488c87; border-radius:0 0 calc(10 * var(--u)) calc(10 * var(--u)); background:linear-gradient(#ffffffa0,#73bcbb8c);
+}
+.bandeja-empaque-cajero > span[data-producto-empaquetado] { width:100%; height:100%; min-height:0; }
+.bandeja-empaque-cajero .foto-producto { width:100%; height:100%; object-fit:contain; }
+.flecha-empaque-cajero {
+  grid-column:1/-1; place-self:center; color:#286c65;
+  line-height:1; font-weight:900; font-size:calc(27 * var(--u));
+}
+.pago-en-cajero { grid-template-columns:minmax(0,1fr) minmax(0,24%); align-items:start; }
+.cobro-cajero {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,calc(181 * var(--u))),1fr));
+  gap:calc(6 * var(--u)); min-width:0;
+}
+.cobro-cajero .pago-cliente { flex-wrap:wrap; }
+.escena[data-fase=dar] .cobro-cajero .dato-total { align-self:start; background:#fff7e3; }
+.escena[data-fase=dar] .resumen-empaque-cajero .bandeja-empaque-cajero {
+  min-height:calc(38 * var(--u)); height:calc(42 * var(--u));
+}
+.cobro-cajero .recibo { background:#fffdf5; }
+.cobro-cajero .caja-registradora { border:2px solid #42636b; background:linear-gradient(#e6f1f0,#c2dedb); }
+.juego:has(.estacion-cajero) #accion:disabled { color:#37635d; background:#e0eeea; box-shadow:none; }
+@media (orientation:portrait) and (max-width:640px) {
+  .estacion-cajero { --alto-articulo:clamp(calc(42 * var(--u)),17cqh,calc(76 * var(--u))); }
+  .fondo-cajero { padding:calc(6 * var(--u)); grid-template-columns:minmax(0,1fr) minmax(0,45%); }
+  .cubierta-cajero { padding:calc(6 * var(--u)); }
+  .recorrido-cajero { grid-template-columns:repeat(2,minmax(0,1fr)); gap:calc(6 * var(--u)); }
+  .origen-articulos-cajero { grid-column:1/-1; }
+  .pago-en-cajero { grid-template-columns:minmax(0,1fr); gap:calc(5 * var(--u)); }
+  .pago-en-cajero .resumen-empaque-cajero {
+    grid-template-columns:auto minmax(0,1fr); grid-template-rows:auto; align-items:center;
+  }
+  .resumen-empaque-cajero .bandeja-empaque-cajero { min-height:calc(38 * var(--u)); height:calc(38 * var(--u)); padding-block:calc(2 * var(--u)); }
+}
+
+@media (orientation:portrait) and (max-height:650px) {
+  .estacion-cajero { --alto-articulo:clamp(calc(38 * var(--u)),15cqh,calc(58 * var(--u))); }
+  .estacion-cajero .cliente-cajero img { width:calc(35 * var(--u)); }
+  .registradora-cajero { padding:calc(3 * var(--u)) calc(4 * var(--u)); gap:calc(2 * var(--u)); }
+  .teclas-registradora-cajero { display:none; }
+  .cubierta-cajero { border-bottom-width:calc(6 * var(--u)); }
+  .origen-articulos-cajero,.lector-cajero,.empaque-cajero { padding:calc(4 * var(--u)); gap:calc(4 * var(--u)); }
+  .cuerpo-lector-cajero,.bandeja-empaque-cajero { min-height:calc(44 * var(--u)); }
+}
+@media (orientation:landscape) and (min-height:600px) {
+  .estacion-cajero { --alto-articulo:clamp(calc(85 * var(--u)),28cqh,calc(157 * var(--u))); }
+  .cuerpo-lector-cajero { height:min(var(--alto-articulo),calc(115 * var(--u))); }
+  .bandeja-empaque-cajero { height:min(var(--alto-articulo),calc(125 * var(--u))); }
+}
+
+@media (orientation:portrait) and (max-width:410px) and (max-height:650px) {
+  #appColones:not(.horizontal):has(.estacion-cajero) .herramientas {
+    grid-template-columns:minmax(0,1fr);
+  }
+  #appColones:not(.horizontal):has(.estacion-cajero) .herramientas .cabecera {
+    grid-row:auto; grid-template-columns:minmax(0,1fr) minmax(0,44%); align-items:center;
+    padding:calc(8 * var(--u)) calc(41 * var(--u)) calc(8 * var(--u)) calc(43 * var(--u)) !important;
+  }
+  #appColones:not(.horizontal):has(.estacion-cajero) .cabecera h1 {
+    font-size:calc(16 * var(--u));
+  }
+  #appColones:has(.estacion-cajero) .cabecera .marca-dinero {
+    width:calc(19 * var(--u)); height:calc(19 * var(--u));
+  }
+  #appColones:has(.estacion-cajero) .herramientas .guia { display:none; }
+  .escena[data-fase=recibir] .cobro-cajero { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .cobro-cajero :is(.entrega-cliente,.caja-registradora) h3 { font-size:calc(12 * var(--u)); }
+}
+
+@media (orientation:landscape) and (max-height:490px) {
+  .fondo-cajero { padding-block:calc(4 * var(--u)); }
+  .display-cajero strong { font-size:calc(26 * var(--u)); }
+  .teclas-registradora-cajero { display:none; }
+  .cubierta-cajero { padding-block:calc(6 * var(--u)); border-bottom-width:calc(6 * var(--u)); }
+  #escena:has(.estacion-cajero)[data-fase=dar] > #bancoPanel {
+    grid-template-columns:auto minmax(0,1fr); grid-template-rows:auto; align-items:center;
+    gap:calc(4 * var(--u));
+  }
+  #escena:has(.estacion-cajero)[data-fase=dar] #bancoTitulo { margin:0; }
+}
+
+/* Acabado del mostrador de supermercado. Las zonas interactivas siguen en la cuadrícula. */
+.estacion-cajero {
+  --alto-cliente:clamp(calc(65 * var(--u)),17cqh,calc(132 * var(--u)));
+  --marco-cajero:#18545a;
+  border-color:#789d8e;
+  box-shadow:0 calc(7 * var(--u)) calc(14 * var(--u)) #173e422e;
+}
+.fondo-cajero {
+  align-items:end; overflow:hidden;
+  background:#a9dbc6 url("imagenes/estantes-caja.webp") center 18% / cover no-repeat;
+  box-shadow:inset 0 calc(-6 * var(--u)) calc(12 * var(--u)) #31564c43;
+}
+#escena .cliente-cajero {
+  justify-self:stretch; gap:calc(5 * var(--u)); margin-block-end:calc(-7 * var(--u)); align-self:end;
+}
+#escena .cliente-cajero img {
+  width:auto; height:var(--alto-cliente); max-width:50%; aspect-ratio:auto;
+  object-fit:contain; object-position:center bottom; border:0; border-radius:0; background:none;
+  filter:drop-shadow(calc(1 * var(--u)) calc(2 * var(--u)) calc(2 * var(--u)) #31564c45);
+}
+.cliente-cajero p {
+  position:relative; max-width:21ch; align-self:center; z-index:1;
+  border-color:#7e9c8a; background:#fffcf1; color:#173f3b;
+  font-size:clamp(calc(12 * var(--u)),1.6cqi,calc(15 * var(--u)));
+  line-height:1.17; box-shadow:0 calc(2 * var(--u)) calc(4 * var(--u)) #37675a2d;
+}
+.cliente-cajero p::before {
+  content:""; position:absolute; inset-inline-start:calc(-4 * var(--u)); top:45%;
+  width:calc(6 * var(--u)); height:calc(6 * var(--u)); transform:rotate(45deg);
+  border-left:1px solid #7e9c8a; border-bottom:1px solid #7e9c8a; background:#fffcf1;
+}
+.registradora-cajero {
+  border-color:#923e32;
+  background:linear-gradient(154deg,#ffc48f,#f18a64 45%,#ce5542 91%);
+  box-shadow:inset 0 calc(1.5 * var(--u)) 0 #ffe0b9,0 calc(3 * var(--u)) 0 #8d4239,
+    0 calc(5 * var(--u)) calc(8 * var(--u)) #554a3957;
+}
+.display-cajero {
+  color:#dbffb8; border-color:#07322c; background:linear-gradient(155deg,#22454b,#062523 75%);
+  box-shadow:inset 0 calc(2 * var(--u)) calc(4 * var(--u)) #001b1e;
+}
+.ultima-lectura-cajero { color:#351a14; }
+.ultima-lectura-cajero[data-aviso] { color:#48170a; }
+.teclas-registradora-cajero {
+  height:calc(11 * var(--u)); border:1px solid #9a503d;
+  background:repeating-linear-gradient(0deg,transparent 0 40%,#9a503d 40% 57%),
+    repeating-linear-gradient(90deg,#f9ebd0 0 12%,#9a503d 12% 17%);
+}
+.cubierta-cajero {
+  border-top-color:#fef0cd;
+  background:repeating-linear-gradient(177deg,#ac794e16 0 1px,transparent 1px 18px),
+    linear-gradient(112deg,#f8dbad,#fff0ce 55%,#edc393);
+  box-shadow:inset 0 calc(3 * var(--u)) calc(4 * var(--u)) #a3654b36,
+    inset 0 calc(-2 * var(--u)) 0 #c8966b;
+}
+.origen-articulos-cajero,.lector-cajero,.empaque-cajero {
+  border-color:transparent; background:transparent;
+}
+.articulos-cajero {
+  padding-inline:calc(9 * var(--u)); border:1px solid #263e44; border-radius:calc(11 * var(--u));
+  background:linear-gradient(90deg,#84a09a 0 3%,transparent 3% 97%,#84a09a 97%),
+    repeating-linear-gradient(0deg,#30484a 0 calc(3 * var(--u)),#294142 calc(3 * var(--u)) calc(7 * var(--u)));
+  box-shadow:inset 0 calc(3 * var(--u)) calc(4 * var(--u)) #162a2e,
+    0 calc(3 * var(--u)) 0 #23464a,0 calc(5 * var(--u)) calc(5 * var(--u)) #54382f50;
+}
+.articulo-cajero,.puesto-vacio-cajero { border-color:transparent; background:transparent; color:#eaffc9; }
+.articulo-cajero .foto-producto { filter:drop-shadow(0 calc(4 * var(--u)) calc(2 * var(--u)) #091a20b5); }
+.nombre-articulo-cajero { color:#fffbed; text-shadow:0 1px #142f34; }
+.articulo-cajero[aria-pressed=true] {
+  border-color:#e6ffae; outline:0; background:#63855762; box-shadow:inset 0 0 0 1px #e6ffae;
+}
+.lector-cajero[data-listo],.empaque-cajero:is([data-listo],.sobre-destino) {
+  border-color:transparent; outline:0; background:transparent;
+}
+.lector-cajero[data-listo] .cuerpo-lector-cajero,
+.empaque-cajero:is([data-listo],.sobre-destino) .bandeja-empaque-cajero {
+  outline:calc(3 * var(--u)) solid #007859; outline-offset:calc(1 * var(--u));
+}
+:is(.articulo-cajero,.lector-cajero,.empaque-cajero):focus-visible {
+  outline:calc(3 * var(--u)) solid #ffbc55; outline-offset:calc(-1 * var(--u));
+}
+:is(.lector-cajero,.empaque-cajero):focus-visible { outline-color:#91501a; }
+.cuerpo-lector-cajero {
+  border-color:#8ca5a4; border-radius:calc(12 * var(--u));
+  background:linear-gradient(150deg,#435e6c,#122939 55%,#213e49);
+  box-shadow:inset 0 0 0 1px #071d25,inset 0 calc(3 * var(--u)) calc(4 * var(--u)) #102725,
+    0 calc(3 * var(--u)) 0 #446765,0 calc(6 * var(--u)) calc(5 * var(--u)) #523d3153;
+}
+.cuerpo-lector-cajero::before {
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(158deg,#effcff39 0 29%,transparent 30% 73%,#8eeed81f 74%);
+}
+.bandeja-empaque-cajero {
+  border-color:#277b75; border-radius:calc(14 * var(--u)) calc(14 * var(--u)) calc(12 * var(--u)) calc(12 * var(--u));
+  background:linear-gradient(112deg,#35868324 0 10%,transparent 11% 89%,#3586832a 90%),
+    linear-gradient(170deg,#e8fff0bd,#ceeddf 47%,#83cfc0 48%,#a8e7db);
+  box-shadow:inset 0 calc(4 * var(--u)) 0 #fffa,inset 0 calc(-2 * var(--u)) 0 #208581,
+    0 calc(4 * var(--u)) calc(4 * var(--u)) #78534258;
+}
+.bandeja-empaque-cajero::after {
+  height:24%; border-color:#438d84; background:linear-gradient(#ecfff580,#71c6be7a);
+  box-shadow:inset 0 calc(1 * var(--u)) #fff9;
+}
+.bandeja-empaque-cajero .foto-producto { filter:drop-shadow(0 calc(2 * var(--u)) calc(2 * var(--u)) #26624b55); }
+@media (min-width:720px) and (min-height:640px) {
+  #escena:has(.estacion-cajero) {
+    background:radial-gradient(ellipse at 50% 6%,#e2f2e9 0,transparent 52%);
+    border-radius:calc(14 * var(--u));
+  }
+}
+@media (orientation:portrait) and (max-height:650px) {
+  .estacion-cajero { --alto-cliente:calc(61 * var(--u)); }
+}
+@media (orientation:landscape) and (max-height:490px) {
+  .estacion-cajero { --alto-cliente:calc(63 * var(--u)); }
+  #escena .cliente-cajero { margin-block-end:calc(-4 * var(--u)); }
+}
+
+
+@media (orientation:portrait) and (max-width:410px) {
+  .empaque-cajero .rotulo-estacion {
+    gap:calc(3 * var(--u)); font-size:calc(12 * var(--u));
+  }
+}
+@media (orientation:landscape) and (min-width:1080px) and (min-height:680px) {
+  .juego:has(.estacion-cajero) {
+    grid-template-rows:auto minmax(0,max-content) auto;
+    align-content:start;
+  }
+  #escena:has(.estacion-cajero) {
+    container-type:inline-size;
+    max-height:calc(var(--alto,100dvh) - 145 * var(--u));
+  }
+}
+
+
+/* Las medidas del mueble se calculan con el área de juego, antes de colocar efectivo. */
+#escena:has(.estacion-cajero) {
+  --alto-mayor-efectivo-cajero:max(
+    calc(var(--diametro-moneda-juego) * var(--moneda-mayor-cajero,1)),
+    calc(var(--alto-billete-juego) * var(--usa-billetes-cajero,1)));
+  --alto-fila-banco-cajero:max(calc(38 * var(--u)),var(--alto-mayor-efectivo-cajero));
+  --alto-banco-cajero:max(clamp(calc(62 * var(--u)),calc(var(--alto,100dvh) * .124),calc(100 * var(--u))),
+    calc(var(--alto-fila-banco-cajero) + 36 * var(--u) + 2px));
+  display:flex; flex-direction:column; align-items:stretch;
+  scrollbar-gutter:stable;
+}
+#escena:has(.estacion-cajero) > #contenido { flex:none; }
+#escena:has(.estacion-cajero)[data-fase=dar] > #bancoPanel {
+  block-size:var(--alto-banco-cajero);
+}
+#escena:has(.estacion-cajero) #bancoTitulo { line-height:1.15; }
+#escena:has(.estacion-cajero) #banco {
+  min-height:calc(var(--alto-fila-banco-cajero) + 2 * var(--u));
+  padding-block:calc(1 * var(--u));
+}
+
+.estacion-cajero {
+  --alto-fondo-cajero:clamp(calc(88 * var(--u)),calc(var(--alto,100dvh) * .17),calc(174 * var(--u)));
+  --alto-superficie-minimo:max(calc(105 * var(--u)),calc(var(--alto-mayor-efectivo-cajero) + 54 * var(--u) + 6px));
+  --alto-superficie-cajero:clamp(var(--alto-superficie-minimo),
+    calc(100cqh - var(--alto-fondo-cajero) - var(--alto-banco-cajero) - 12 * var(--u)),
+    calc(395 * var(--u)));
+}
+.fondo-cajero { block-size:var(--alto-fondo-cajero); }
+#escena .cliente-cajero img { max-height:calc(var(--alto-fondo-cajero) - 5 * var(--u)); }
+.registradora-cajero {
+  align-self:stretch;
+  grid-template-rows:auto minmax(0,1fr) auto;
+}
+.display-cajero { display:grid; grid-template-columns:auto minmax(0,1fr); }
+.display-cajero strong { justify-self:end; }
+.ultima-lectura-cajero[data-acierto] { color:#123e21; }
+
+.cubierta-cajero {
+  block-size:var(--alto-superficie-cajero);
+  display:grid; grid-template-rows:minmax(0,1fr);
+}
+.recorrido-cajero,.pago-en-cajero { min-height:0; }
+.recorrido-cajero { grid-template-rows:minmax(0,1fr); }
+.recorrido-cajero > :is(.origen-articulos-cajero,.lector-cajero,.empaque-cajero) { min-height:0; }
+.origen-articulos-cajero { align-items:stretch; }
+.articulos-cajero { grid-template-rows:minmax(0,1fr); min-height:0; }
+.articulo-cajero,.puesto-vacio-cajero {
+  grid-template-rows:minmax(0,1fr) auto; min-height:0;
+}
+.puesto-vacio-cajero { place-content:center; }
+.articulo-cajero { grid-template-rows:minmax(0,var(--alto-articulo)) auto; align-content:center; }
+.recorrido-cajero :is(.cuerpo-lector-cajero,.bandeja-empaque-cajero) { max-height:100%; }
+
+.pago-en-cajero { align-items:stretch; grid-template-rows:minmax(0,1fr); }
+.cobro-cajero { min-height:0; }
+.escena:is([data-fase=recibir],[data-fase=dar]) .cobro-cajero {
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-template-rows:minmax(0,1fr);
+}
+.pago-en-cajero .entrega-cliente,.pago-en-cajero .zona-dinero {
+  display:grid; grid-template-rows:auto minmax(0,1fr); min-width:0; min-height:0;
+}
+.pago-en-cajero .caja-registradora { grid-template-rows:auto minmax(0,1fr) auto; }
+.pago-en-cajero .caja-registradora::after { margin:0 auto; }
+.pago-en-cajero :is(.pago-cliente,.piezas-pago) {
+  min-height:calc(var(--alto-mayor-efectivo-cajero) + 4 * var(--u));
+  max-height:none; align-content:flex-start; justify-content:safe center; padding-block:calc(2 * var(--u));
+  overflow:auto; scrollbar-width:thin; overscroll-behavior:contain;
+}
+.escena[data-fase=listo] .cobro-cajero { overflow:auto; }
+.escena[data-fase=listo] .cobro-cajero .zona-dinero { grid-template-rows:auto auto; }
+
+@media (orientation:portrait) and (max-width:640px) {
+  .estacion-cajero {
+    --alto-superficie-minimo:max(calc(175 * var(--u)),calc(var(--alto-mayor-efectivo-cajero) + 122 * var(--u) + 4px));
+  }
+  .recorrido-cajero { grid-template-rows:minmax(0,1.1fr) minmax(0,1fr); }
+  .pago-en-cajero { grid-template-rows:minmax(0,1fr) auto; }
+  .pago-en-cajero :is(.entrega-cliente,.zona-dinero) { padding-inline:calc(3 * var(--u)); }
+}
+@media (orientation:portrait) and (max-width:420px) {
+  .display-cajero { grid-template-columns:minmax(0,1fr); }
+}
+@media (orientation:landscape) and (max-height:490px) {
+  #escena:has(.estacion-cajero) {
+    --alto-banco-cajero:max(calc(51 * var(--u)),calc(var(--alto-fila-banco-cajero) + 14 * var(--u) + 2px));
+  }
+  .estacion-cajero {
+    --alto-superficie-minimo:max(calc(105 * var(--u)),calc(var(--alto-mayor-efectivo-cajero) + 48 * var(--u) + 6px));
+    --alto-fondo-cajero:clamp(calc(73 * var(--u)),
+      calc(100cqh - var(--alto-superficie-minimo) - var(--alto-banco-cajero) - 12 * var(--u)),
+      calc(88 * var(--u)));
+  }
+  .pago-en-cajero :is(.entrega-cliente,.zona-dinero) { padding:calc(4 * var(--u)); }
+  .pago-en-cajero :is(.entrega-cliente,.zona-dinero) h3 { font-size:calc(13 * var(--u)); line-height:1.15; }
+  .pago-en-cajero .caja-registradora::after { height:calc(3 * var(--u)); }
+  .registradora-cajero { padding-block:calc(3 * var(--u)); }
+}
+@media (orientation:landscape) and (min-width:1080px) and (min-height:680px) {
+  .estacion-cajero {
+    --alto-superficie-cajero:clamp(var(--alto-superficie-minimo),
+      calc(var(--alto,100dvh) - 154 * var(--u) - var(--alto-fondo-cajero) - var(--alto-banco-cajero)),
+      calc(395 * var(--u)));
+  }
+}
+
+@media (orientation:landscape) and (min-height:680px) {
+  .recorrido-cajero :is(.cuerpo-lector-cajero,.bandeja-empaque-cajero) {
+    height:clamp(calc(84 * var(--u)),calc(var(--alto-superficie-cajero) * .53),calc(182 * var(--u)));
+  }
+}
