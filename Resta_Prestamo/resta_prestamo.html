@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="es">
 <head>
@@ -8,15 +9,20 @@
   <link rel="stylesheet" href="../idioma-voz.css">
   <link rel="stylesheet" href="../pantalla-completa.css">
   <link rel="stylesheet" href="../panel-plegable.css">
-  <link rel="stylesheet" href="resta.css">
-<link rel="stylesheet" href="../teclado-en-pantalla.css?v=teclas-claras">
+  <link rel="stylesheet" href="../teclado-en-pantalla.css?v=teclas-claras">
+  <link rel="stylesheet" href="../Abaco/cuentas.css">
+  <link rel="stylesheet" href="../Abaco/flotante-operaciones.css?v=boton-opcional">
+  <link rel="stylesheet" href="resta.css?v=sorpresas-en-pantalla">
+  <link rel="stylesheet" href="huevos-resta.css?v=sorpresas-variadas">
+  <link rel="stylesheet" href="abaco-resta.css?v=revision-final">
+  <link rel="stylesheet" href="arrastre-resta.css?v=revision-final">
 </head>
 <body>
   <main id="appRestaPrestamo">
     <aside class="herramientas-resta">
       <header class="portada">
         <a id="inicio" href="../index.html" aria-label="Aplicaciones" title="Aplicaciones">⌂</a>
-        <h1>Resta con préstamo de abajo</h1>
+        <h1><img src="../iconos/resta-prestamo-abajo.webp" width="40" height="40" alt="">Resta con préstamo de abajo</h1>
         <label for="nombre">Nombre del niño</label>
         <input id="nombre" autocomplete="given-name" maxlength="40" placeholder="Ej.: Gabriel">
       </header>
@@ -24,10 +30,10 @@
         <h2>Así jugamos</h2>
         <ol>
           <li>Empieza por las unidades.</li>
-          <li>Si arriba hay menos, suma 10 arriba en esta columna y 1 abajo en la siguiente.</li>
-          <li>Escribe el resultado de cada columna.</li>
+          <li>Si arriba hay menos, suma 10 arriba en esta columna y 1 abajo en la columna de la izquierda.</li>
+          <li>Completa todas las casillas y luego pulsa Revisar.</li>
         </ol>
-        <p class="guia-breve">Empieza por las unidades. Pide prestado si arriba hay menos.</p>
+        <p class="guia-breve">Empieza por las unidades. Revisa al final.</p>
       </section>
       <div class="opciones">
         <button type="button" id="ejemplo">Ejemplo 45 − 28</button>
@@ -40,51 +46,92 @@
           <p id="progreso" data-no-traducir></p>
           <h2 id="indicacion" data-no-traducir></h2>
         </div>
-        <button type="button" id="escuchar" aria-label="Escuchar instrucción" title="Escuchar instrucción">🔊</button>
+        <div class="paso-herramientas">
+          <button type="button" id="escuchar" aria-label="Escuchar ayuda verbal" title="Escuchar ayuda verbal">🔊</button>
+          <button type="button" id="abacoResta" class="boton-abaco-operaciones" aria-label="Ábaco">🧮</button>
+        </div>
       </header>
       <div class="practica">
         <div class="planteamiento">
           <div id="operacion" role="group" aria-label="Resta en columnas"></div>
-          <p id="resultado" role="status" data-no-traducir hidden></p>
         </div>
         <div class="responder">
-          <button type="button" id="prestamo">↑ Pedir prestado</button>
-          <div id="teclado" data-teclado-visual role="group" aria-label="Teclado numérico"></div>
+          <div class="entrada">
+            <div class="operar">
+              <button type="button" id="prestamo" data-no-traducir>↑ Pedir prestado</button>
+              <button type="button" id="fichaSigno" data-ficha-signo aria-label="Ficha del signo menos" hidden>−</button>
+              <button type="button" id="borrar" aria-label="Borrar respuesta" title="Borrar respuesta">⌫</button>
+            </div>
+            <div id="teclado" data-teclado-visual role="group" aria-label="Teclado numérico"></div>
+            <button type="button" id="revisar" class="principal" aria-label="Revisar toda la resta" disabled>✓ Revisar</button>
+          </div>
         </div>
       </div>
-      <p id="estado" role="status" data-no-traducir></p>
+      <section id="premio" aria-labelledby="tituloHuevosResta" hidden></section>
+      <div class="retroalimentacion">
+        <p id="estado" role="status" data-no-traducir></p>
+        <p id="resultado" role="status" data-no-traducir aria-hidden="true"></p>
+      </div>
       <div class="acciones">
-        <button type="button" id="revisar" class="principal">✓ Revisar</button>
-        <button type="button" id="nueva">Nueva ronda</button>
+        <button type="button" id="nueva" aria-label="Nueva ronda" title="Nueva ronda"><span class="nueva-icono" aria-hidden="true">↻</span><span class="nueva-texto">Nueva ronda</span></button>
       </div>
     </section>
   </main>
   <dialog id="configuracion" aria-labelledby="tituloConfig">
     <form method="dialog">
       <h2 id="tituloConfig">Configuración</h2>
-      <label for="cifras">Cifras del número de arriba</label>
-      <select id="cifras">
-        <option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option>
-      </select>
-      <label><input type="checkbox" id="siemprePrestamo"> Practicar solo restas con préstamo</label>
-      <label><input type="checkbox" id="guia"> Mostrar la guía de cada columna</label>
-      <label><input type="checkbox" id="animacion"> Animar el préstamo</label>
-      <label><input type="checkbox" id="narracion"> Leer las instrucciones automáticamente</label>
-      <div id="idiomaResta"></div>
+      <div class="configuracion-controles">
+        <fieldset class="ajustes-grupo">
+          <legend>Pantalla</legend>
+          <label for="tamanoActividad">Tamaño de la actividad</label>
+          <select id="tamanoActividad">
+            <option value="85">85 %</option><option value="100">100 %</option>
+            <option value="115">115 %</option><option value="130">130 %</option>
+          </select>
+          <p class="nota-tamano">El tamaño se adapta al espacio disponible.</p>
+        </fieldset>
+        <fieldset class="ajustes-grupo">
+          <legend>Práctica</legend>
+          <label for="cifras">Cifras del número de arriba</label>
+          <select id="cifras">
+            <option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option>
+          </select>
+          <label><input type="checkbox" id="siemprePrestamo"> Practicar solo restas con préstamo</label>
+          <label><input type="checkbox" id="colocarSigno"> Practicar colocando el signo menos</label>
+        </fieldset>
+        <fieldset class="ajustes-grupo">
+          <legend>Ayudas</legend>
+          <label><input type="checkbox" id="guia"> Mostrar ayuda visual</label>
+          <label><input type="checkbox" id="narracion"> Activar la ayuda verbal automática</label>
+          <label><input type="checkbox" id="decirResultado"> Decir también el resultado en la ayuda verbal</label>
+          <label><input type="checkbox" id="animacion"> Animar el préstamo</label>
+          <label><input type="checkbox" id="narrarPrestamo"> Narrar los pasos del préstamo</label>
+          <label><input type="checkbox" id="sonidoSorpresas"> Sonidos de los huevos sorpresa</label>
+        </fieldset>
+        <div id="idiomaResta"></div>
+      </div>
       <button class="principal">Aplicar y cerrar</button>
     </form>
   </dialog>
   <div id="efectos" aria-hidden="true"></div>
+  <canvas id="vueloSorpresas" class="huevos-resta-escena" aria-hidden="true" hidden></canvas>
   <footer id="creditos-aplicaciones">
     <div class="creditos-dedicatoria"><span class="creditos-gabriel">Creado para <strong>Gabriel</strong></span><span class="creditos-familia">Por su familia, con ayuda de la IA.</span></div>
     <div class="creditos-equipo"><span class="creditos-autores">M.Sc. Jeffry Chavarría-Molina y M.Sc. Natalia Rodríguez-Granados</span><span class="creditos-institucion">Instituto Tecnológico de Costa Rica</span></div>
   </footer>
   <script>window.IDIOMA_VOZ_APP='restaPrestamoAbajo';</script>
   <script src="../idioma-voz-textos.js?v=creditos-msc"></script>
-  <script src="textos.js"></script>
+  <script src="textos.js?v=sorpresas-variadas"></script>
   <script src="../idioma-voz.js"></script>
   <script src="../matematicas-base.js"></script>
-  <script src="resta.js"></script>
+  <script src="../Abaco/cuentas.js"></script>
+  <script src="../Abaco/flotante-operaciones.js?v=boton-opcional"></script>
+  <script src="abaco-resta.js?v=revision-final"></script>
+  <script src="arrastre-resta.js?v=revision-final"></script>
+  <script src="huevos-efectos.js?v=1"></script>
+  <script src="huevos-sonidos.js?v=1"></script>
+  <script src="huevos-resta.js?v=sorpresas-variadas"></script>
+  <script src="resta.js?v=sorpresas-variadas"></script>
   <script src="../pantalla-completa.js"></script>
   <script src="../panel-plegable.js?v=resta-abajo"></script>
   <script src="../nombre-compartido.js"></script>

@@ -1,0 +1,59 @@
+#abacoResta {
+  --unidad:var(--u,1px);
+  min-width:calc(38 * var(--unidad));
+  min-height:calc(38 * var(--unidad));
+  white-space:nowrap;
+}
+
+#abaco-flotante.abaco-resta {
+  background:#f7f5ff;
+  color:#332969;
+}
+
+#abaco-flotante.abaco-resta > header {
+  background:#52409a;
+  color:#fff;
+}
+
+#abaco-flotante.abaco-resta > header button {
+  min-height:40px;
+}
+
+#abaco-flotante.abaco-resta [data-abaco="cerrar"] {
+  min-width:40px;
+}
+
+#abaco-flotante.abaco-resta > header button:focus-visible {
+  outline:2px solid #fff;
+  outline-offset:-3px;
+}
+
+#abaco-flotante.abaco-resta .interior-abaco {
+  padding:4px 8px 7px;
+}
+
+#abaco-flotante.abaco-resta .abaco-cuentas {
+  padding-inline-end:clamp(52px,16cqw,70px);
+}
+
+#abaco-flotante.abaco-resta .rotulo-fila-abaco {
+  color:inherit;
+  font-variant-numeric:tabular-nums;
+  font-size:clamp(12px,4cqw,15px);
+}
+
+#abaco-flotante.abaco-resta [data-abaco="mensaje"] {
+  min-height:1.25em;
+}
+
+@media (max-width:760px), (max-height:600px) {
+  #abacoResta {
+    width:calc(38 * var(--unidad));
+    padding:0;
+    font-size:calc(18 * var(--unidad));
+  }
+
+  #abacoResta .rotulo-boton-abaco {
+    display:none;
+  }
+}

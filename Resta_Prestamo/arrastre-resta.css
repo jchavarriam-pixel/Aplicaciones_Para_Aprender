@@ -1,0 +1,39 @@
+#teclado button[data-valor],
+button[data-ficha-signo] {
+  touch-action:none;
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-touch-callout:none;
+  cursor:grab;
+}
+#teclado button[data-valor]:disabled,
+button[data-ficha-signo]:disabled {
+  cursor:default;
+}
+.arrastre-resta-origen {
+  opacity:.62;
+  cursor:grabbing;
+}
+.arrastre-resta-activo .arrastre-resta-destino {
+  outline:calc(2 * var(--u,1px)) solid #7a4ad1;
+  outline-offset:calc(2 * var(--u,1px));
+  background:#efe7ff;
+}
+.arrastre-resta-fantasma {
+  position:fixed;
+  z-index:1500;
+  box-sizing:border-box;
+  pointer-events:none;
+  display:grid;
+  place-items:center;
+  border:2px solid #8273b6;
+  border-radius:10px;
+  box-shadow:0 4px 12px #31276545;
+  font-weight:850;
+  line-height:1;
+}
+@media (forced-colors:active) {
+  .arrastre-resta-activo .arrastre-resta-destino {
+    outline-color:Highlight;
+  }
+}
